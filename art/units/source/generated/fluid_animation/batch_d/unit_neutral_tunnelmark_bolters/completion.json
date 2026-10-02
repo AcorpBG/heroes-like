@@ -1,0 +1,76 @@
+{
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "workflow": "Solo local MiniMax H3 original video and extracted transparent frames; one unit fully completed.",
+  "new_takes": [
+    "attack_h3_v1",
+    "attack_h3_v2",
+    "cast_h3_v1",
+    "cast_h3_v2",
+    "death_h3_v1",
+    "defend_h3_v1",
+    "hit_h3_v1",
+    "move_h3_v1",
+    "move_h3_v2",
+    "ranged_h3_v1",
+    "ranged_h3_v2"
+  ],
+  "new_clip_frames": {
+    "move": 69,
+    "attack": 48,
+    "hit": 17,
+    "defend": 23,
+    "cast": 53,
+    "ranged": 76,
+    "death": 48
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo reviewed all124 chronological original frames in each of eleven H3 takes, enlarged boots/near-far hands/stock/string/fist/collapse, and every selected native128px pose in original and actual reflected rendering. Accepted grounded reciprocal heel/toe travel with two-hand lowered carry; near RIGHT fist melee anticipation/extension/contact/recovery while LEFT cradles original crossbow; dedicated recoil/low guard/physical fist encouragement; original aim/trigger-string release/empty lowering/stock reload; descent and grounded head-right corpse. Initial movement fired unwanted fragments and held knee lifts, rejected. One new built-in original forward-contact/downward-carry guide and fewer H3 guides improve travel; two attempted opposed contact keys did not swap leg roles and are not used. Initial punch snapped26->27; corrected take retains original active elbow extension and recovery. Initial support fired fragments and snapped to ready; corrected dedicated salute has no projectile and returns smoothly. Dry-fire correction emits repeated volleys and is rejected. Reviewed first ranged take retains actual release; only fully detached source34/35 projectile layers separated atx725 across empty665-789 gap, preserving all character/held equipment pixels throughx664. Original unmodified matte/video preserved; runtime owns flight. Selected334 original new poses run42ms per observed source frame; shorten unchanged holds only. No interpolation, reversal, duplicate padding, whole-sprite warping or per-pose normalization. 1100 candidate and1100 reflected focused checks pass: Normal/Fast/reduced motion, ranged projectile/audio arrival timing, actual shell clock showing all48 melee poses including recovery, simulation/RNG/occupancy/save invariance. Preserve eight accepted articulated idle frames and all232 overworld pixels/timing. Review used complete chronological stills, enlarged details, every native phase and actual clock-driven captures; no claim of continuous manual movie playback or manual game playtest. Focused Windows checks only; no full suite."
+  },
+  "validation": {
+    "candidate_checks": 1100,
+    "mirrored_checks": 1100,
+    "live_checks": 1114,
+    "failures": 0,
+    "imported_atlas": "Exact RGBA after Godot alpha-border processing",
+    "atlas_dimensions": [
+      3128,
+      3932
+    ],
+    "rgba_bytes": 49197184,
+    "new_original_action_frames": 334,
+    "preserved_idle_frames": 8,
+    "verified_accepted_take_rgb_frames": 868,
+    "retained_original_rgb_frames_including_rejected": 1364,
+    "overworld_visuals_preserved": 232,
+    "other_battle_rows_preserved": 231,
+    "platform": "Windows Godot4.6.2 offscreen",
+    "full_suite_run": false,
+    "manual_playtest": false,
+    "continuous_browser_playback_review": false,
+    "linux_run": false
+  },
+  "roster_after": {
+    "complete": 203,
+    "remaining": 29,
+    "total": 232
+  },
+  "progress_note": "2026-10-02 SOLO COMPLETE: Tunnelmark Bolters seven H3 actions, 334 original poses plus retained eight-frame idle; reciprocal two-leg walk, right-fist melee/recovery, clean recoil, held crossbow guard, physical fist salute, original crossbow aim/release/reload and grounded corpse reviewed. 1100/1100/1114 candidate/mirrored/live focused checks pass; exact imported atlas, all232 map pixels/timing and other231 battle rows preserved. Roster203/232 complete,29 remaining. Broad goal stays in_progress; solo, no full suite.",
+  "cleanup": {
+    "deleted_verified_duplicate_or_unselected_files": 2444,
+    "deleted_verified_duplicate_or_unselected_bytes": 783453205,
+    "ephemeral_review_test_files": 138,
+    "ephemeral_review_test_bytes": 127157238,
+    "recovered_bytes_total": 910610443,
+    "rebuildable": true,
+    "original_rgb_frames_retained": 1364,
+    "preserved": "All original art/video/latents, prompts, workflows, guides, source and provenance; unrelated files/caches/saves/backups and RMG material untouched.",
+    "temporary_directories_to_remove": [
+      "D:\\Games\\godot\\heroes-like\\.artifacts\\tunnelmark_solo",
+      "D:\\Games\\godot\\heroes-like\\.artifacts\\tunnelmark_bolter_h3"
+    ]
+  }
+}

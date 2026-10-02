@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "3fbd9ef1ab10edd8a51ecfe9261cf839b1971ddb64d015c941ddc48961b1ea1c",
+  "latent_sha256": "6085dafeb31cbaa27f134c3530b2b82b011a557292d477efd22239e6f884c607",
+  "decode_workflow_sha256": "1c195b07f59d7b629b01023f0c5986207c45b1beb1b4a4413c68a783eb1257b4",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "tunnelmark_bolter_h3\\attack_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

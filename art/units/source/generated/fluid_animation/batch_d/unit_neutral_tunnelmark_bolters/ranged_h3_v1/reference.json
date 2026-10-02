@@ -1,0 +1,147 @@
+{
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            514
+          ]
+        ],
+        "anchor": [
+          177,
+          507
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "78671a62c1a3640acc8d9faff329a17c300e741500e1acaca9721d9286336417",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "181a1cbc9f1283f28906c6e3db7108004378fc9b92789196fe859cbaf90c3210",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "loaded_aim",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+        "rects": [
+          [
+            720,
+            624,
+            837,
+            645
+          ],
+          [
+            641,
+            645,
+            920,
+            942
+          ]
+        ],
+        "anchor": [
+          780,
+          935
+        ],
+        "scale": 1.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "777d3d698814327944e1dbfbf29c02f7a1c4121062dcc5d062678b2d0912a62a",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e9585025bd4d735fa60fd2e826d4ef152781337103bb77d796ea1fa538917c62",
+      "runtime_source_scale": 0.68
+    },
+    {
+      "source_frame": {
+        "name": "empty_release_front_string",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/fired-front-nocks-corrected.png",
+        "rects": [
+          [
+            0,
+            0,
+            830,
+            1024
+          ]
+        ],
+        "anchor": [
+          414,
+          940
+        ],
+        "scale": 0.48,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9cb156b7560bbd1f836255037ddc51951cded6e402b9d311b2500ac948e2cd24",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "2045af30df5b1c475084f0b34c6032bd368a1978cc033b491f95c8c2b35f8309",
+      "runtime_source_scale": 0.24
+    },
+    {
+      "source_frame": {
+        "name": "empty_recovery_front_string",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/fired-front-nocks-corrected.png",
+        "rects": [
+          [
+            830,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1185,
+          969
+        ],
+        "scale": 0.48,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9cb156b7560bbd1f836255037ddc51951cded6e402b9d311b2500ac948e2cd24",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "b8c00e043a3f66aaa2961cbd66316bc3a86a27214febb723137036cd892935a9",
+      "runtime_source_scale": 0.24
+    },
+    {
+      "source_frame": {
+        "name": "reload",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+        "rects": [
+          [
+            412,
+            617,
+            509,
+            639
+          ],
+          [
+            365,
+            639,
+            573,
+            954
+          ]
+        ],
+        "anchor": [
+          469,
+          947
+        ],
+        "scale": 1.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "777d3d698814327944e1dbfbf29c02f7a1c4121062dcc5d062678b2d0912a62a",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "2b4c4885db38a7305b717eefc98852c19b4ef31256791572feea89acc4e869a3",
+      "runtime_source_scale": 0.68
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

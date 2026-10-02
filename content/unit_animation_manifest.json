@@ -6936,7 +6936,3923 @@
     "death",
     "idle"
   ]
-},{"id":"unit_neutral_emberpack_lobbers","unit_id":"unit_neutral_emberpack_lobbers","name":"Emberpack Lobbers","faction_id":"neutral","tier":2,"role":"ranged","motif":"ranged","sprite_sheet":"res://art/animation/runtime/units/unit_neutral_emberpack_lobbers.png","states":["idle_hold","ready_active","move_path_step","melee_windup_release","ranged_aim_release","hit_stagger","death_rout_remove","cast_support_anchor","status_applied","status_expired","defend_brace","retaliation_release","retreat_withdraw_column","surrender_stand_down"],"art_source_kind":"curated_original_character_v1","curated_source":"res://art/units/source/curated/unit_neutral_emberpack_lobbers.png","curated_source_sha256":"61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead","pose_sheet":"res://art/animation/runtime/fluid/unit_neutral_emberpack_lobbers.png","pose_frame_size":{"width":256,"height":236},"pose_columns":9,"pose_review_status":"accepted_selected_fluid_clips","pose_provenance":"res://art/animation/source/fluid/unit_neutral_emberpack_lobbers/provenance.json","pose_source_facing":"right","pose_clips":{"dead":{"indices":[32],"frames":1,"frame_msec":100,"loop":false,"static_frame":0,"authored_timing":true},"idle":{"indices":[1,2,3,4,5,6,7,8],"frame_msec":120,"loop":true,"static_frame":0,"frames":8,"authored_timing":true},"attack":{"indices":[9,10,11,12,13,14,15,16],"frame_msec":110,"loop":false,"contact_frame":4,"frames":8,"authored_timing":true,"static_frame":0},"hit":{"indices":[17,18,19,20],"frame_msec":110,"loop":false,"frames":4,"authored_timing":true,"static_frame":0},"defend":{"indices":[21,22,23,24],"frame_msec":120,"loop":false,"hold_last":true,"frames":4,"authored_timing":true,"static_frame":3},"death":{"indices":[25,26,27,28,29,30,31,32],"frame_msec":120,"loop":false,"frames":8,"authored_timing":true,"static_frame":7},"cast":{"indices":[33,34,35,36,37,38,39,40],"frame_msec":110,"loop":false,"contact_frame":4,"frames":8,"authored_timing":true,"static_frame":0},"ranged":{"indices":[41,42,43,44,45,46,47,48],"frame_msec":110,"loop":false,"contact_frame":4,"frames":8,"authored_timing":true,"static_frame":0},"move":{"indices":[49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80],"frame_msec":55,"loop":true,"static_frame":0,"frames":32,"authored_timing":true}},"pose_aliases":{},"pose_ground_margin":44,"pose_reference_height":256,"pose_accepted_clips":["idle","attack","hit","defend","death","cast","ranged","move"]},{"id":"unit_neutral_basalt_wardens","unit_id":"unit_neutral_basalt_wardens","name":"Basalt Wardens","faction_id":"neutral","tier":3,"role":"melee","motif":"shield","sprite_sheet":"res://art/animation/runtime/units/unit_neutral_basalt_wardens.png","states":["idle_hold","ready_active","move_path_step","melee_windup_release","ranged_aim_release","hit_stagger","death_rout_remove","cast_support_anchor","status_applied","status_expired","defend_brace","retaliation_release","retreat_withdraw_column","surrender_stand_down"],"art_source_kind":"curated_original_character_v1","curated_source":"res://art/units/source/curated/unit_neutral_basalt_wardens.png","curated_source_sha256":"81f748fafeec18bd318af244059458edc22ca3646acfad8e16685a804dc509c8","pose_sheet":"res://art/animation/runtime/fluid/unit_neutral_basalt_wardens.png","pose_frame_size":{"width":280,"height":280},"pose_columns":7,"pose_review_status":"accepted_selected_fluid_clips","pose_provenance":"res://art/animation/source/fluid/unit_neutral_basalt_wardens/provenance.json","pose_source_facing":"right","pose_clips":{"idle":{"frames":8,"indices":[0,1,2,3,4,5,6,7],"loop":true,"frame_msec":240,"static_frame":0},"dead":{"indices":[32],"frames":1,"frame_msec":100,"loop":false,"static_frame":0,"authored_timing":true},"attack":{"indices":[9,10,11,12,13,14,15,16],"frame_msec":105,"loop":false,"static_frame":0,"contact_frame":4,"frames":8,"authored_timing":true},"hit":{"indices":[17,18,19,20],"frame_msec":105,"loop":false,"static_frame":0,"frames":4,"authored_timing":true},"defend":{"indices":[21,22,23,24],"frame_msec":125,"loop":false,"static_frame":0,"frames":4,"authored_timing":true},"death":{"indices":[25,26,27,28,29,30,31,32],"frame_msec":145,"loop":false,"static_frame":0,"frames":8,"authored_timing":true},"cast":{"indices":[33,34,35,36,37,38,39,40],"frame_msec":125,"loop":false,"static_frame":0,"contact_frame":4,"frames":8,"authored_timing":true},"move":{"indices":[41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60],"frame_msec":70,"loop":true,"static_frame":0,"frames":20,"authored_timing":true}},"pose_aliases":{"ranged":"attack"},"pose_ground_margin":20,"pose_reference_height":256,"pose_accepted_clips":["attack","hit","defend","death","cast","move","idle"]},{"id":"unit_neutral_tunnelmark_bolters","unit_id":"unit_neutral_tunnelmark_bolters","name":"Tunnelmark Bolters","faction_id":"neutral","tier":3,"role":"ranged","motif":"ranged","sprite_sheet":"res://art/animation/runtime/units/unit_neutral_tunnelmark_bolters.png","states":["idle_hold","ready_active","move_path_step","melee_windup_release","ranged_aim_release","hit_stagger","death_rout_remove","cast_support_anchor","status_applied","status_expired","defend_brace","retaliation_release","retreat_withdraw_column","surrender_stand_down"],"art_source_kind":"curated_original_character_v1","curated_source":"res://art/units/source/curated/unit_neutral_tunnelmark_bolters.png","curated_source_sha256":"376c11173412cf401b9177089d7a106281b5dd8c62d59ad563d1e89881aedc73","pose_sheet":"res://art/animation/runtime/poses/unit_neutral_tunnelmark_bolters.png","pose_frame_size":{"width":512,"height":256},"pose_columns":4,"pose_review_status":"accepted_idle_articulation_20260919","pose_provenance":"res://art/animation/source/poses/unit_neutral_tunnelmark_bolters/provenance.json","pose_source_facing":"right","pose_clips":{"idle":{"frames":8,"indices":[17,18,19,20,21,22,23,24],"loop":true,"frame_msec":240,"static_frame":0},"move":{"frames":4,"indices":[2,3,2,4],"loop":true,"frame_msec":160},"attack":{"frames":3,"indices":[5,6,7],"loop":false,"frame_msec":190,"static_frame":0},"defend":{"frames":2,"indices":[7,8],"loop":false,"frame_msec":210,"static_frame":1},"hit":{"frames":2,"indices":[9,7],"loop":false,"frame_msec":180,"static_frame":0},"ranged":{"frames":4,"indices":[10,11,12,13],"loop":false,"frame_msec":210,"static_frame":0},"death":{"frames":3,"indices":[14,15,16],"loop":false,"frame_msec":270,"static_frame":0},"dead":{"frames":1,"indices":[16],"loop":false,"frame_msec":180,"static_frame":0}},"pose_aliases":{"cast":"idle"},"pose_ground_margin":20,"pose_review_evidence":"docs/battle-unit-animation-acceptance.json"},{"id":"unit_thornwake_canopy_rammers","unit_id":"unit_thornwake_canopy_rammers","name":"Canopy Rammers","faction_id":"faction_thornwake","tier":5,"role":"melee","motif":"melee","sprite_sheet":"res://art/animation/runtime/units/unit_thornwake_canopy_rammers.png","states":["idle_hold","ready_active","move_path_step","melee_windup_release","ranged_aim_release","hit_stagger","death_rout_remove","cast_support_anchor","status_applied","status_expired","defend_brace","retaliation_release","retreat_withdraw_column","surrender_stand_down"],"art_source_kind":"curated_original_character_v1","curated_source":"res://art/units/source/curated/unit_thornwake_canopy_rammers.png","curated_source_sha256":"a072a8af177c4f41dcae2b28a775f018a9793a22c4a6e51dbd670bf7ebc4c8ae","pose_sheet":"res://art/animation/runtime/fluid/unit_thornwake_canopy_rammers.png","pose_frame_size":{"width":296,"height":228},"pose_columns":8,"pose_review_status":"accepted_selected_fluid_clips","pose_provenance":"res://art/animation/source/fluid/unit_thornwake_canopy_rammers/provenance.json","pose_clips":{"idle":{"frames":8,"indices":[0,1,2,3,4,5,6,7],"loop":true,"frame_msec":260,"static_frame":0},"dead":{"indices":[32],"frames":1,"frame_msec":100,"loop":false,"static_frame":0,"authored_timing":true},"attack":{"indices":[9,10,11,12,13,14,15,16],"frame_msec":100,"loop":false,"static_frame":0,"contact_frame":4,"frames":8,"authored_timing":true},"hit":{"indices":[17,18,19,20],"frame_msec":115,"loop":false,"static_frame":0,"frames":4,"authored_timing":true},"defend":{"indices":[21,22,23,24],"frame_msec":115,"loop":false,"static_frame":0,"frames":4,"authored_timing":true},"death":{"indices":[25,26,27,28,29,30,31,32],"frame_msec":115,"loop":false,"static_frame":0,"frames":8,"authored_timing":true},"cast":{"indices":[33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67],"frame_msec":50,"loop":false,"static_frame":0,"contact_frame":15,"frames":35,"authored_timing":true},"move":{"indices":[68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87],"frame_msec":70,"loop":true,"static_frame":0,"frames":20,"authored_timing":true}},"pose_aliases":{"ranged":"attack"},"pose_ground_margin":12,"pose_reference_height":256,"pose_source_facing":"right","pose_accepted_clips":["attack","hit","defend","death","cast","move","idle"]},{
+},{"id":"unit_neutral_emberpack_lobbers","unit_id":"unit_neutral_emberpack_lobbers","name":"Emberpack Lobbers","faction_id":"neutral","tier":2,"role":"ranged","motif":"ranged","sprite_sheet":"res://art/animation/runtime/units/unit_neutral_emberpack_lobbers.png","states":["idle_hold","ready_active","move_path_step","melee_windup_release","ranged_aim_release","hit_stagger","death_rout_remove","cast_support_anchor","status_applied","status_expired","defend_brace","retaliation_release","retreat_withdraw_column","surrender_stand_down"],"art_source_kind":"curated_original_character_v1","curated_source":"res://art/units/source/curated/unit_neutral_emberpack_lobbers.png","curated_source_sha256":"61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead","pose_sheet":"res://art/animation/runtime/fluid/unit_neutral_emberpack_lobbers.png","pose_frame_size":{"width":256,"height":236},"pose_columns":9,"pose_review_status":"accepted_selected_fluid_clips","pose_provenance":"res://art/animation/source/fluid/unit_neutral_emberpack_lobbers/provenance.json","pose_source_facing":"right","pose_clips":{"dead":{"indices":[32],"frames":1,"frame_msec":100,"loop":false,"static_frame":0,"authored_timing":true},"idle":{"indices":[1,2,3,4,5,6,7,8],"frame_msec":120,"loop":true,"static_frame":0,"frames":8,"authored_timing":true},"attack":{"indices":[9,10,11,12,13,14,15,16],"frame_msec":110,"loop":false,"contact_frame":4,"frames":8,"authored_timing":true,"static_frame":0},"hit":{"indices":[17,18,19,20],"frame_msec":110,"loop":false,"frames":4,"authored_timing":true,"static_frame":0},"defend":{"indices":[21,22,23,24],"frame_msec":120,"loop":false,"hold_last":true,"frames":4,"authored_timing":true,"static_frame":3},"death":{"indices":[25,26,27,28,29,30,31,32],"frame_msec":120,"loop":false,"frames":8,"authored_timing":true,"static_frame":7},"cast":{"indices":[33,34,35,36,37,38,39,40],"frame_msec":110,"loop":false,"contact_frame":4,"frames":8,"authored_timing":true,"static_frame":0},"ranged":{"indices":[41,42,43,44,45,46,47,48],"frame_msec":110,"loop":false,"contact_frame":4,"frames":8,"authored_timing":true,"static_frame":0},"move":{"indices":[49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80],"frame_msec":55,"loop":true,"static_frame":0,"frames":32,"authored_timing":true}},"pose_aliases":{},"pose_ground_margin":44,"pose_reference_height":256,"pose_accepted_clips":["idle","attack","hit","defend","death","cast","ranged","move"]},{"id":"unit_neutral_basalt_wardens","unit_id":"unit_neutral_basalt_wardens","name":"Basalt Wardens","faction_id":"neutral","tier":3,"role":"melee","motif":"shield","sprite_sheet":"res://art/animation/runtime/units/unit_neutral_basalt_wardens.png","states":["idle_hold","ready_active","move_path_step","melee_windup_release","ranged_aim_release","hit_stagger","death_rout_remove","cast_support_anchor","status_applied","status_expired","defend_brace","retaliation_release","retreat_withdraw_column","surrender_stand_down"],"art_source_kind":"curated_original_character_v1","curated_source":"res://art/units/source/curated/unit_neutral_basalt_wardens.png","curated_source_sha256":"81f748fafeec18bd318af244059458edc22ca3646acfad8e16685a804dc509c8","pose_sheet":"res://art/animation/runtime/fluid/unit_neutral_basalt_wardens.png","pose_frame_size":{"width":280,"height":280},"pose_columns":7,"pose_review_status":"accepted_selected_fluid_clips","pose_provenance":"res://art/animation/source/fluid/unit_neutral_basalt_wardens/provenance.json","pose_source_facing":"right","pose_clips":{"idle":{"frames":8,"indices":[0,1,2,3,4,5,6,7],"loop":true,"frame_msec":240,"static_frame":0},"dead":{"indices":[32],"frames":1,"frame_msec":100,"loop":false,"static_frame":0,"authored_timing":true},"attack":{"indices":[9,10,11,12,13,14,15,16],"frame_msec":105,"loop":false,"static_frame":0,"contact_frame":4,"frames":8,"authored_timing":true},"hit":{"indices":[17,18,19,20],"frame_msec":105,"loop":false,"static_frame":0,"frames":4,"authored_timing":true},"defend":{"indices":[21,22,23,24],"frame_msec":125,"loop":false,"static_frame":0,"frames":4,"authored_timing":true},"death":{"indices":[25,26,27,28,29,30,31,32],"frame_msec":145,"loop":false,"static_frame":0,"frames":8,"authored_timing":true},"cast":{"indices":[33,34,35,36,37,38,39,40],"frame_msec":125,"loop":false,"static_frame":0,"contact_frame":4,"frames":8,"authored_timing":true},"move":{"indices":[41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60],"frame_msec":70,"loop":true,"static_frame":0,"frames":20,"authored_timing":true}},"pose_aliases":{"ranged":"attack"},"pose_ground_margin":20,"pose_reference_height":256,"pose_accepted_clips":["attack","hit","defend","death","cast","move","idle"]},{
+  "id": "unit_neutral_tunnelmark_bolters",
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "name": "Tunnelmark Bolters",
+  "faction_id": "neutral",
+  "tier": 3,
+  "role": "ranged",
+  "motif": "ranged",
+  "sprite_sheet": "res://art/animation/runtime/units/unit_neutral_tunnelmark_bolters.png",
+  "states": [
+    "idle_hold",
+    "ready_active",
+    "move_path_step",
+    "melee_windup_release",
+    "ranged_aim_release",
+    "hit_stagger",
+    "death_rout_remove",
+    "cast_support_anchor",
+    "status_applied",
+    "status_expired",
+    "defend_brace",
+    "retaliation_release",
+    "retreat_withdraw_column",
+    "surrender_stand_down"
+  ],
+  "art_source_kind": "curated_original_character_v1",
+  "curated_source": "res://art/units/source/curated/unit_neutral_tunnelmark_bolters.png",
+  "curated_source_sha256": "376c11173412cf401b9177089d7a106281b5dd8c62d59ad563d1e89881aedc73",
+  "pose_sheet": "res://art/animation/runtime/fluid/unit_neutral_tunnelmark_bolters.png",
+  "pose_frame_size": {
+    "width": 272,
+    "height": 260
+  },
+  "pose_columns": 1,
+  "pose_review_status": "accepted_selected_fluid_clips",
+  "pose_provenance": "res://art/animation/source/fluid/unit_neutral_tunnelmark_bolters/provenance.json",
+  "pose_source_facing": "right",
+  "pose_clips": {
+    "idle": {
+      "frames": 8,
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "loop": true,
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "dead": {
+      "indices": [
+        266
+      ],
+      "frames": 1,
+      "frame_msec": 100,
+      "loop": false,
+      "static_frame": 0,
+      "authored_timing": true
+    },
+    "move": {
+      "indices": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77
+      ],
+      "frame_msec": 42,
+      "loop": true,
+      "static_frame": 0,
+      "frames": 69,
+      "authored_timing": true
+    },
+    "attack": {
+      "indices": [
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125
+      ],
+      "frame_msec": 42,
+      "loop": false,
+      "static_frame": 0,
+      "contact_frame": 19,
+      "frames": 48,
+      "authored_timing": true
+    },
+    "hit": {
+      "indices": [
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142
+      ],
+      "frame_msec": 42,
+      "loop": false,
+      "static_frame": 0,
+      "frames": 17,
+      "authored_timing": true
+    },
+    "defend": {
+      "indices": [
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165
+      ],
+      "frame_msec": 42,
+      "loop": false,
+      "static_frame": 22,
+      "frames": 23,
+      "authored_timing": true
+    },
+    "cast": {
+      "indices": [
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218
+      ],
+      "frame_msec": 42,
+      "loop": false,
+      "static_frame": 0,
+      "frames": 53,
+      "authored_timing": true
+    },
+    "death": {
+      "indices": [
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        232,
+        233,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        254,
+        255,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266
+      ],
+      "frame_msec": 42,
+      "loop": false,
+      "static_frame": 47,
+      "frames": 48,
+      "authored_timing": true
+    },
+    "ranged": {
+      "indices": [
+        267,
+        268,
+        269,
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277,
+        278,
+        279,
+        280,
+        281,
+        282,
+        283,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289,
+        290,
+        291,
+        292,
+        293,
+        294,
+        295,
+        296,
+        297,
+        298,
+        299,
+        300,
+        301,
+        302,
+        303,
+        304,
+        305,
+        306,
+        307,
+        308,
+        309,
+        310,
+        311,
+        312,
+        313,
+        314,
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        325,
+        326,
+        327,
+        328,
+        329,
+        330,
+        331,
+        332,
+        333,
+        334,
+        335,
+        336,
+        337,
+        338,
+        339,
+        340,
+        341,
+        342
+      ],
+      "frame_msec": 42,
+      "loop": false,
+      "static_frame": 0,
+      "contact_frame": 16,
+      "frames": 76,
+      "authored_timing": true
+    }
+  },
+  "pose_aliases": {},
+  "pose_ground_margin": 24,
+  "pose_reference_height": 256,
+  "pose_frame_rects": [
+    [
+      0,
+      1892,
+      148,
+      232
+    ],
+    [
+      148,
+      1892,
+      148,
+      232
+    ],
+    [
+      2244,
+      1660,
+      152,
+      232
+    ],
+    [
+      296,
+      1892,
+      148,
+      232
+    ],
+    [
+      2396,
+      1660,
+      152,
+      232
+    ],
+    [
+      444,
+      1892,
+      148,
+      232
+    ],
+    [
+      592,
+      1892,
+      148,
+      232
+    ],
+    [
+      740,
+      1892,
+      148,
+      232
+    ],
+    [
+      484,
+      3824,
+      216,
+      96
+    ],
+    [
+      0,
+      2124,
+      144,
+      232
+    ],
+    [
+      2304,
+      2124,
+      136,
+      232
+    ],
+    [
+      2440,
+      2124,
+      136,
+      232
+    ],
+    [
+      2576,
+      2124,
+      136,
+      232
+    ],
+    [
+      860,
+      960,
+      136,
+      236
+    ],
+    [
+      1132,
+      960,
+      132,
+      236
+    ],
+    [
+      1264,
+      960,
+      132,
+      236
+    ],
+    [
+      1396,
+      960,
+      132,
+      236
+    ],
+    [
+      1528,
+      960,
+      132,
+      236
+    ],
+    [
+      1660,
+      960,
+      132,
+      236
+    ],
+    [
+      1792,
+      960,
+      132,
+      236
+    ],
+    [
+      1924,
+      960,
+      128,
+      236
+    ],
+    [
+      2912,
+      244,
+      132,
+      240
+    ],
+    [
+      792,
+      484,
+      128,
+      240
+    ],
+    [
+      268,
+      0,
+      128,
+      244
+    ],
+    [
+      136,
+      0,
+      132,
+      244
+    ],
+    [
+      1960,
+      244,
+      136,
+      240
+    ],
+    [
+      2096,
+      244,
+      136,
+      240
+    ],
+    [
+      2868,
+      0,
+      140,
+      240
+    ],
+    [
+      0,
+      244,
+      140,
+      240
+    ],
+    [
+      140,
+      244,
+      140,
+      240
+    ],
+    [
+      2004,
+      0,
+      144,
+      240
+    ],
+    [
+      2148,
+      0,
+      144,
+      240
+    ],
+    [
+      2292,
+      0,
+      144,
+      240
+    ],
+    [
+      280,
+      244,
+      140,
+      240
+    ],
+    [
+      420,
+      244,
+      140,
+      240
+    ],
+    [
+      560,
+      244,
+      140,
+      240
+    ],
+    [
+      700,
+      244,
+      140,
+      240
+    ],
+    [
+      840,
+      244,
+      140,
+      240
+    ],
+    [
+      980,
+      244,
+      140,
+      240
+    ],
+    [
+      2232,
+      244,
+      136,
+      240
+    ],
+    [
+      0,
+      484,
+      132,
+      240
+    ],
+    [
+      132,
+      484,
+      132,
+      240
+    ],
+    [
+      396,
+      0,
+      128,
+      244
+    ],
+    [
+      920,
+      484,
+      128,
+      240
+    ],
+    [
+      1048,
+      484,
+      128,
+      240
+    ],
+    [
+      1176,
+      484,
+      128,
+      240
+    ],
+    [
+      1304,
+      484,
+      128,
+      240
+    ],
+    [
+      1432,
+      484,
+      128,
+      240
+    ],
+    [
+      1560,
+      484,
+      128,
+      240
+    ],
+    [
+      264,
+      484,
+      132,
+      240
+    ],
+    [
+      2368,
+      244,
+      136,
+      240
+    ],
+    [
+      2504,
+      244,
+      136,
+      240
+    ],
+    [
+      2640,
+      244,
+      136,
+      240
+    ],
+    [
+      1120,
+      244,
+      140,
+      240
+    ],
+    [
+      996,
+      960,
+      136,
+      236
+    ],
+    [
+      1260,
+      244,
+      140,
+      240
+    ],
+    [
+      1400,
+      244,
+      140,
+      240
+    ],
+    [
+      1540,
+      244,
+      140,
+      240
+    ],
+    [
+      2436,
+      0,
+      144,
+      240
+    ],
+    [
+      2580,
+      0,
+      144,
+      240
+    ],
+    [
+      2724,
+      0,
+      144,
+      240
+    ],
+    [
+      1680,
+      244,
+      140,
+      240
+    ],
+    [
+      1820,
+      244,
+      140,
+      240
+    ],
+    [
+      0,
+      0,
+      136,
+      244
+    ],
+    [
+      396,
+      484,
+      132,
+      240
+    ],
+    [
+      524,
+      0,
+      128,
+      244
+    ],
+    [
+      652,
+      0,
+      128,
+      244
+    ],
+    [
+      780,
+      0,
+      128,
+      244
+    ],
+    [
+      908,
+      0,
+      128,
+      244
+    ],
+    [
+      1036,
+      0,
+      128,
+      244
+    ],
+    [
+      1164,
+      0,
+      128,
+      244
+    ],
+    [
+      1292,
+      0,
+      128,
+      244
+    ],
+    [
+      1420,
+      0,
+      128,
+      244
+    ],
+    [
+      1548,
+      0,
+      128,
+      244
+    ],
+    [
+      528,
+      484,
+      132,
+      240
+    ],
+    [
+      660,
+      484,
+      132,
+      240
+    ],
+    [
+      2776,
+      244,
+      136,
+      240
+    ],
+    [
+      144,
+      2124,
+      144,
+      232
+    ],
+    [
+      888,
+      1892,
+      148,
+      232
+    ],
+    [
+      1036,
+      1892,
+      148,
+      232
+    ],
+    [
+      2548,
+      1660,
+      152,
+      232
+    ],
+    [
+      1620,
+      1660,
+      156,
+      232
+    ],
+    [
+      500,
+      1660,
+      160,
+      232
+    ],
+    [
+      336,
+      1660,
+      164,
+      232
+    ],
+    [
+      712,
+      1196,
+      168,
+      232
+    ],
+    [
+      880,
+      1196,
+      168,
+      232
+    ],
+    [
+      1048,
+      1196,
+      168,
+      232
+    ],
+    [
+      1216,
+      1196,
+      168,
+      232
+    ],
+    [
+      1384,
+      1196,
+      168,
+      232
+    ],
+    [
+      1552,
+      1196,
+      168,
+      232
+    ],
+    [
+      1720,
+      1196,
+      168,
+      232
+    ],
+    [
+      1888,
+      1196,
+      168,
+      232
+    ],
+    [
+      2056,
+      1196,
+      168,
+      232
+    ],
+    [
+      2224,
+      1196,
+      168,
+      232
+    ],
+    [
+      2392,
+      1196,
+      168,
+      232
+    ],
+    [
+      2560,
+      1196,
+      168,
+      232
+    ],
+    [
+      2728,
+      1196,
+      168,
+      232
+    ],
+    [
+      2896,
+      1196,
+      168,
+      232
+    ],
+    [
+      0,
+      1428,
+      168,
+      232
+    ],
+    [
+      168,
+      1428,
+      168,
+      232
+    ],
+    [
+      336,
+      1428,
+      168,
+      232
+    ],
+    [
+      504,
+      1428,
+      168,
+      232
+    ],
+    [
+      672,
+      1428,
+      168,
+      232
+    ],
+    [
+      840,
+      1428,
+      168,
+      232
+    ],
+    [
+      1008,
+      1428,
+      168,
+      232
+    ],
+    [
+      1176,
+      1428,
+      168,
+      232
+    ],
+    [
+      1344,
+      1428,
+      168,
+      232
+    ],
+    [
+      1512,
+      1428,
+      168,
+      232
+    ],
+    [
+      1680,
+      1428,
+      168,
+      232
+    ],
+    [
+      1848,
+      1428,
+      168,
+      232
+    ],
+    [
+      2016,
+      1428,
+      168,
+      232
+    ],
+    [
+      2184,
+      1428,
+      168,
+      232
+    ],
+    [
+      2352,
+      1428,
+      168,
+      232
+    ],
+    [
+      2520,
+      1428,
+      168,
+      232
+    ],
+    [
+      2688,
+      1428,
+      168,
+      232
+    ],
+    [
+      368,
+      1196,
+      172,
+      232
+    ],
+    [
+      2856,
+      1428,
+      168,
+      232
+    ],
+    [
+      0,
+      1660,
+      168,
+      232
+    ],
+    [
+      660,
+      1660,
+      160,
+      232
+    ],
+    [
+      1776,
+      1660,
+      156,
+      232
+    ],
+    [
+      2700,
+      1660,
+      152,
+      232
+    ],
+    [
+      1184,
+      1892,
+      148,
+      232
+    ],
+    [
+      288,
+      2124,
+      144,
+      232
+    ],
+    [
+      1332,
+      1892,
+      148,
+      232
+    ],
+    [
+      432,
+      2124,
+      144,
+      232
+    ],
+    [
+      576,
+      2124,
+      144,
+      232
+    ],
+    [
+      720,
+      2124,
+      144,
+      232
+    ],
+    [
+      864,
+      2124,
+      144,
+      232
+    ],
+    [
+      2604,
+      2356,
+      144,
+      228
+    ],
+    [
+      1536,
+      2584,
+      148,
+      224
+    ],
+    [
+      936,
+      2356,
+      156,
+      228
+    ],
+    [
+      820,
+      1660,
+      160,
+      232
+    ],
+    [
+      2272,
+      2584,
+      164,
+      220
+    ],
+    [
+      768,
+      2808,
+      160,
+      216
+    ],
+    [
+      928,
+      2808,
+      160,
+      216
+    ],
+    [
+      1088,
+      2808,
+      160,
+      216
+    ],
+    [
+      2436,
+      2584,
+      160,
+      220
+    ],
+    [
+      2596,
+      2584,
+      160,
+      220
+    ],
+    [
+      776,
+      2356,
+      160,
+      228
+    ],
+    [
+      2852,
+      1660,
+      152,
+      232
+    ],
+    [
+      1008,
+      2124,
+      144,
+      232
+    ],
+    [
+      1152,
+      2124,
+      144,
+      232
+    ],
+    [
+      1296,
+      2124,
+      144,
+      232
+    ],
+    [
+      1092,
+      2356,
+      152,
+      228
+    ],
+    [
+      776,
+      2584,
+      152,
+      224
+    ],
+    [
+      2756,
+      2584,
+      160,
+      220
+    ],
+    [
+      604,
+      2808,
+      164,
+      216
+    ],
+    [
+      592,
+      3244,
+      172,
+      212
+    ],
+    [
+      1800,
+      3244,
+      176,
+      200
+    ],
+    [
+      2124,
+      3244,
+      184,
+      196
+    ],
+    [
+      2900,
+      3244,
+      192,
+      188
+    ],
+    [
+      1004,
+      3460,
+      192,
+      184
+    ],
+    [
+      2008,
+      3460,
+      196,
+      180
+    ],
+    [
+      2204,
+      3460,
+      196,
+      180
+    ],
+    [
+      2400,
+      3460,
+      196,
+      180
+    ],
+    [
+      2932,
+      3460,
+      196,
+      176
+    ],
+    [
+      0,
+      3648,
+      196,
+      176
+    ],
+    [
+      2596,
+      3460,
+      196,
+      180
+    ],
+    [
+      196,
+      3648,
+      196,
+      176
+    ],
+    [
+      392,
+      3648,
+      196,
+      176
+    ],
+    [
+      588,
+      3648,
+      196,
+      176
+    ],
+    [
+      784,
+      3648,
+      196,
+      176
+    ],
+    [
+      980,
+      3648,
+      196,
+      176
+    ],
+    [
+      1176,
+      3648,
+      196,
+      176
+    ],
+    [
+      1372,
+      3648,
+      196,
+      176
+    ],
+    [
+      1568,
+      3648,
+      196,
+      176
+    ],
+    [
+      1480,
+      1892,
+      148,
+      232
+    ],
+    [
+      1244,
+      2356,
+      152,
+      228
+    ],
+    [
+      1396,
+      2356,
+      152,
+      228
+    ],
+    [
+      1548,
+      2356,
+      152,
+      228
+    ],
+    [
+      928,
+      2584,
+      152,
+      224
+    ],
+    [
+      1080,
+      2584,
+      152,
+      224
+    ],
+    [
+      156,
+      2808,
+      152,
+      220
+    ],
+    [
+      2916,
+      2584,
+      156,
+      220
+    ],
+    [
+      1248,
+      2808,
+      156,
+      216
+    ],
+    [
+      1404,
+      2808,
+      156,
+      216
+    ],
+    [
+      1560,
+      2808,
+      156,
+      216
+    ],
+    [
+      1716,
+      2808,
+      156,
+      216
+    ],
+    [
+      1872,
+      2808,
+      156,
+      216
+    ],
+    [
+      2028,
+      2808,
+      156,
+      216
+    ],
+    [
+      2184,
+      2808,
+      156,
+      216
+    ],
+    [
+      2340,
+      2808,
+      156,
+      216
+    ],
+    [
+      2496,
+      2808,
+      156,
+      216
+    ],
+    [
+      2652,
+      2808,
+      156,
+      216
+    ],
+    [
+      2808,
+      2808,
+      156,
+      216
+    ],
+    [
+      2964,
+      2808,
+      156,
+      216
+    ],
+    [
+      0,
+      3028,
+      156,
+      216
+    ],
+    [
+      156,
+      3028,
+      156,
+      216
+    ],
+    [
+      312,
+      3028,
+      156,
+      216
+    ],
+    [
+      468,
+      3028,
+      156,
+      216
+    ],
+    [
+      624,
+      3028,
+      156,
+      216
+    ],
+    [
+      780,
+      3028,
+      156,
+      216
+    ],
+    [
+      936,
+      3028,
+      156,
+      216
+    ],
+    [
+      1092,
+      3028,
+      156,
+      216
+    ],
+    [
+      1248,
+      3028,
+      156,
+      216
+    ],
+    [
+      1404,
+      3028,
+      156,
+      216
+    ],
+    [
+      1560,
+      3028,
+      156,
+      216
+    ],
+    [
+      1716,
+      3028,
+      156,
+      216
+    ],
+    [
+      1872,
+      3028,
+      156,
+      216
+    ],
+    [
+      2028,
+      3028,
+      156,
+      216
+    ],
+    [
+      2184,
+      3028,
+      156,
+      216
+    ],
+    [
+      2340,
+      3028,
+      156,
+      216
+    ],
+    [
+      2496,
+      3028,
+      156,
+      216
+    ],
+    [
+      2652,
+      3028,
+      156,
+      216
+    ],
+    [
+      2808,
+      3028,
+      156,
+      216
+    ],
+    [
+      2948,
+      2356,
+      156,
+      220
+    ],
+    [
+      0,
+      2808,
+      156,
+      220
+    ],
+    [
+      1232,
+      2584,
+      152,
+      224
+    ],
+    [
+      1384,
+      2584,
+      152,
+      224
+    ],
+    [
+      1700,
+      2356,
+      152,
+      228
+    ],
+    [
+      1852,
+      2356,
+      152,
+      228
+    ],
+    [
+      2004,
+      2356,
+      152,
+      228
+    ],
+    [
+      2156,
+      2356,
+      152,
+      228
+    ],
+    [
+      2308,
+      2356,
+      148,
+      228
+    ],
+    [
+      2456,
+      2356,
+      148,
+      228
+    ],
+    [
+      1628,
+      1892,
+      148,
+      232
+    ],
+    [
+      1440,
+      2124,
+      144,
+      232
+    ],
+    [
+      1584,
+      2124,
+      144,
+      232
+    ],
+    [
+      1728,
+      2124,
+      144,
+      232
+    ],
+    [
+      308,
+      2808,
+      148,
+      220
+    ],
+    [
+      456,
+      2808,
+      148,
+      220
+    ],
+    [
+      2964,
+      3028,
+      148,
+      216
+    ],
+    [
+      0,
+      3244,
+      148,
+      216
+    ],
+    [
+      148,
+      3244,
+      148,
+      216
+    ],
+    [
+      296,
+      3244,
+      148,
+      216
+    ],
+    [
+      444,
+      3244,
+      148,
+      216
+    ],
+    [
+      764,
+      3244,
+      148,
+      212
+    ],
+    [
+      912,
+      3244,
+      148,
+      212
+    ],
+    [
+      1060,
+      3244,
+      148,
+      212
+    ],
+    [
+      1208,
+      3244,
+      148,
+      208
+    ],
+    [
+      1356,
+      3244,
+      148,
+      208
+    ],
+    [
+      1504,
+      3244,
+      148,
+      204
+    ],
+    [
+      1652,
+      3244,
+      148,
+      204
+    ],
+    [
+      1976,
+      3244,
+      148,
+      200
+    ],
+    [
+      2308,
+      3244,
+      148,
+      196
+    ],
+    [
+      2456,
+      3244,
+      148,
+      192
+    ],
+    [
+      0,
+      3460,
+      148,
+      188
+    ],
+    [
+      2604,
+      3244,
+      148,
+      192
+    ],
+    [
+      2752,
+      3244,
+      148,
+      192
+    ],
+    [
+      148,
+      3460,
+      144,
+      188
+    ],
+    [
+      292,
+      3460,
+      144,
+      188
+    ],
+    [
+      436,
+      3460,
+      144,
+      188
+    ],
+    [
+      724,
+      3460,
+      140,
+      188
+    ],
+    [
+      864,
+      3460,
+      140,
+      188
+    ],
+    [
+      1196,
+      3460,
+      140,
+      184
+    ],
+    [
+      580,
+      3460,
+      144,
+      188
+    ],
+    [
+      1612,
+      3460,
+      132,
+      184
+    ],
+    [
+      1744,
+      3460,
+      132,
+      184
+    ],
+    [
+      1876,
+      3460,
+      132,
+      184
+    ],
+    [
+      1476,
+      3460,
+      136,
+      184
+    ],
+    [
+      1336,
+      3460,
+      140,
+      184
+    ],
+    [
+      2792,
+      3460,
+      140,
+      180
+    ],
+    [
+      1764,
+      3648,
+      156,
+      172
+    ],
+    [
+      2100,
+      3648,
+      164,
+      168
+    ],
+    [
+      1920,
+      3648,
+      180,
+      168
+    ],
+    [
+      2264,
+      3648,
+      200,
+      164
+    ],
+    [
+      2464,
+      3648,
+      236,
+      132
+    ],
+    [
+      2700,
+      3648,
+      240,
+      120
+    ],
+    [
+      0,
+      3824,
+      244,
+      108
+    ],
+    [
+      244,
+      3824,
+      240,
+      96
+    ],
+    [
+      700,
+      3824,
+      236,
+      92
+    ],
+    [
+      936,
+      3824,
+      236,
+      92
+    ],
+    [
+      1172,
+      3824,
+      232,
+      92
+    ],
+    [
+      1404,
+      3824,
+      228,
+      92
+    ],
+    [
+      1632,
+      3824,
+      220,
+      88
+    ],
+    [
+      2068,
+      3824,
+      220,
+      84
+    ],
+    [
+      1852,
+      3824,
+      216,
+      88
+    ],
+    [
+      168,
+      1660,
+      168,
+      232
+    ],
+    [
+      540,
+      1196,
+      172,
+      232
+    ],
+    [
+      2120,
+      484,
+      204,
+      236
+    ],
+    [
+      2324,
+      484,
+      204,
+      236
+    ],
+    [
+      1688,
+      484,
+      216,
+      236
+    ],
+    [
+      1904,
+      484,
+      216,
+      236
+    ],
+    [
+      2052,
+      960,
+      208,
+      232
+    ],
+    [
+      2260,
+      960,
+      208,
+      232
+    ],
+    [
+      2468,
+      960,
+      196,
+      232
+    ],
+    [
+      2664,
+      960,
+      196,
+      232
+    ],
+    [
+      392,
+      2356,
+      192,
+      228
+    ],
+    [
+      584,
+      2356,
+      192,
+      228
+    ],
+    [
+      200,
+      2584,
+      192,
+      224
+    ],
+    [
+      1684,
+      2584,
+      196,
+      220
+    ],
+    [
+      1880,
+      2584,
+      196,
+      220
+    ],
+    [
+      2076,
+      2584,
+      196,
+      220
+    ],
+    [
+      2748,
+      2356,
+      200,
+      224
+    ],
+    [
+      0,
+      2584,
+      200,
+      224
+    ],
+    [
+      392,
+      2584,
+      192,
+      224
+    ],
+    [
+      584,
+      2584,
+      192,
+      224
+    ],
+    [
+      2712,
+      2124,
+      196,
+      228
+    ],
+    [
+      2908,
+      2124,
+      196,
+      228
+    ],
+    [
+      0,
+      2356,
+      196,
+      228
+    ],
+    [
+      196,
+      2356,
+      196,
+      228
+    ],
+    [
+      2860,
+      960,
+      192,
+      232
+    ],
+    [
+      0,
+      1196,
+      184,
+      232
+    ],
+    [
+      184,
+      1196,
+      184,
+      232
+    ],
+    [
+      2528,
+      484,
+      180,
+      236
+    ],
+    [
+      2708,
+      484,
+      180,
+      236
+    ],
+    [
+      2888,
+      484,
+      172,
+      236
+    ],
+    [
+      0,
+      724,
+      172,
+      236
+    ],
+    [
+      1676,
+      0,
+      164,
+      240
+    ],
+    [
+      1840,
+      0,
+      164,
+      240
+    ],
+    [
+      172,
+      724,
+      164,
+      236
+    ],
+    [
+      336,
+      724,
+      164,
+      236
+    ],
+    [
+      500,
+      724,
+      160,
+      236
+    ],
+    [
+      660,
+      724,
+      160,
+      236
+    ],
+    [
+      820,
+      724,
+      160,
+      236
+    ],
+    [
+      980,
+      724,
+      160,
+      236
+    ],
+    [
+      1140,
+      724,
+      160,
+      236
+    ],
+    [
+      1300,
+      724,
+      160,
+      236
+    ],
+    [
+      1460,
+      724,
+      160,
+      236
+    ],
+    [
+      1620,
+      724,
+      160,
+      236
+    ],
+    [
+      980,
+      1660,
+      160,
+      232
+    ],
+    [
+      1140,
+      1660,
+      160,
+      232
+    ],
+    [
+      1300,
+      1660,
+      160,
+      232
+    ],
+    [
+      1460,
+      1660,
+      160,
+      232
+    ],
+    [
+      1932,
+      1660,
+      156,
+      232
+    ],
+    [
+      2088,
+      1660,
+      156,
+      232
+    ],
+    [
+      1776,
+      1892,
+      148,
+      232
+    ],
+    [
+      1924,
+      1892,
+      148,
+      232
+    ],
+    [
+      1780,
+      724,
+      148,
+      236
+    ],
+    [
+      2072,
+      1892,
+      148,
+      232
+    ],
+    [
+      2076,
+      724,
+      144,
+      236
+    ],
+    [
+      2220,
+      724,
+      144,
+      236
+    ],
+    [
+      2364,
+      724,
+      144,
+      236
+    ],
+    [
+      2508,
+      724,
+      144,
+      236
+    ],
+    [
+      2652,
+      724,
+      144,
+      236
+    ],
+    [
+      720,
+      960,
+      140,
+      236
+    ],
+    [
+      2796,
+      724,
+      144,
+      236
+    ],
+    [
+      2940,
+      724,
+      144,
+      236
+    ],
+    [
+      0,
+      960,
+      144,
+      236
+    ],
+    [
+      144,
+      960,
+      144,
+      236
+    ],
+    [
+      288,
+      960,
+      144,
+      236
+    ],
+    [
+      432,
+      960,
+      144,
+      236
+    ],
+    [
+      576,
+      960,
+      144,
+      236
+    ],
+    [
+      2220,
+      1892,
+      148,
+      232
+    ],
+    [
+      1928,
+      724,
+      148,
+      236
+    ],
+    [
+      2368,
+      1892,
+      148,
+      232
+    ],
+    [
+      2516,
+      1892,
+      148,
+      232
+    ],
+    [
+      2664,
+      1892,
+      148,
+      232
+    ],
+    [
+      1872,
+      2124,
+      144,
+      232
+    ],
+    [
+      2016,
+      2124,
+      144,
+      232
+    ],
+    [
+      2812,
+      1892,
+      148,
+      232
+    ],
+    [
+      2960,
+      1892,
+      148,
+      232
+    ],
+    [
+      2160,
+      2124,
+      144,
+      232
+    ]
+  ],
+  "pose_region_anchors": {
+    "0,1892": [
+      69,
+      224
+    ],
+    "148,1892": [
+      68,
+      224
+    ],
+    "2244,1660": [
+      68,
+      224
+    ],
+    "296,1892": [
+      69,
+      225
+    ],
+    "2396,1660": [
+      69,
+      224
+    ],
+    "444,1892": [
+      68,
+      223
+    ],
+    "592,1892": [
+      68,
+      224
+    ],
+    "740,1892": [
+      69,
+      223
+    ],
+    "484,3824": [
+      107,
+      84
+    ],
+    "0,2124": [
+      67,
+      225
+    ],
+    "2304,2124": [
+      58,
+      223
+    ],
+    "2440,2124": [
+      57,
+      224
+    ],
+    "2576,2124": [
+      56,
+      225
+    ],
+    "860,960": [
+      57,
+      227
+    ],
+    "1132,960": [
+      55,
+      228
+    ],
+    "1264,960": [
+      56,
+      229
+    ],
+    "1396,960": [
+      55,
+      230
+    ],
+    "1528,960": [
+      54,
+      230
+    ],
+    "1660,960": [
+      55,
+      231
+    ],
+    "1792,960": [
+      55,
+      231
+    ],
+    "1924,960": [
+      55,
+      231
+    ],
+    "2912,244": [
+      55,
+      232
+    ],
+    "792,484": [
+      55,
+      233
+    ],
+    "268,0": [
+      55,
+      234
+    ],
+    "136,0": [
+      58,
+      235
+    ],
+    "1960,244": [
+      62,
+      234
+    ],
+    "2096,244": [
+      63,
+      233
+    ],
+    "2868,0": [
+      64,
+      232
+    ],
+    "0,244": [
+      66,
+      232
+    ],
+    "140,244": [
+      68,
+      229
+    ],
+    "2004,0": [
+      69,
+      227
+    ],
+    "2148,0": [
+      69,
+      225
+    ],
+    "2292,0": [
+      69,
+      223
+    ],
+    "280,244": [
+      68,
+      223
+    ],
+    "420,244": [
+      67,
+      223
+    ],
+    "560,244": [
+      68,
+      224
+    ],
+    "700,244": [
+      68,
+      225
+    ],
+    "840,244": [
+      67,
+      225
+    ],
+    "980,244": [
+      66,
+      226
+    ],
+    "2232,244": [
+      61,
+      227
+    ],
+    "0,484": [
+      58,
+      228
+    ],
+    "132,484": [
+      55,
+      229
+    ],
+    "396,0": [
+      55,
+      230
+    ],
+    "920,484": [
+      55,
+      230
+    ],
+    "1048,484": [
+      55,
+      231
+    ],
+    "1176,484": [
+      55,
+      231
+    ],
+    "1304,484": [
+      55,
+      233
+    ],
+    "1432,484": [
+      55,
+      234
+    ],
+    "1560,484": [
+      55,
+      234
+    ],
+    "264,484": [
+      59,
+      235
+    ],
+    "2368,244": [
+      61,
+      233
+    ],
+    "2504,244": [
+      61,
+      233
+    ],
+    "2640,244": [
+      62,
+      232
+    ],
+    "1120,244": [
+      66,
+      231
+    ],
+    "996,960": [
+      65,
+      228
+    ],
+    "1260,244": [
+      68,
+      228
+    ],
+    "1400,244": [
+      68,
+      225
+    ],
+    "1540,244": [
+      68,
+      223
+    ],
+    "2436,0": [
+      69,
+      223
+    ],
+    "2580,0": [
+      68,
+      225
+    ],
+    "2724,0": [
+      69,
+      225
+    ],
+    "1680,244": [
+      67,
+      225
+    ],
+    "1820,244": [
+      67,
+      227
+    ],
+    "0,0": [
+      61,
+      228
+    ],
+    "396,484": [
+      57,
+      228
+    ],
+    "524,0": [
+      54,
+      229
+    ],
+    "652,0": [
+      54,
+      231
+    ],
+    "780,0": [
+      52,
+      231
+    ],
+    "908,0": [
+      53,
+      231
+    ],
+    "1036,0": [
+      53,
+      231
+    ],
+    "1164,0": [
+      53,
+      232
+    ],
+    "1292,0": [
+      52,
+      232
+    ],
+    "1420,0": [
+      52,
+      233
+    ],
+    "1548,0": [
+      53,
+      232
+    ],
+    "528,484": [
+      55,
+      231
+    ],
+    "660,484": [
+      57,
+      231
+    ],
+    "2776,244": [
+      59,
+      229
+    ],
+    "144,2124": [
+      65,
+      225
+    ],
+    "888,1892": [
+      69,
+      223
+    ],
+    "1036,1892": [
+      70,
+      225
+    ],
+    "2548,1660": [
+      73,
+      223
+    ],
+    "1620,1660": [
+      77,
+      223
+    ],
+    "500,1660": [
+      80,
+      223
+    ],
+    "336,1660": [
+      83,
+      222
+    ],
+    "712,1196": [
+      84,
+      222
+    ],
+    "880,1196": [
+      84,
+      222
+    ],
+    "1048,1196": [
+      84,
+      222
+    ],
+    "1216,1196": [
+      84,
+      222
+    ],
+    "1384,1196": [
+      84,
+      222
+    ],
+    "1552,1196": [
+      84,
+      222
+    ],
+    "1720,1196": [
+      84,
+      222
+    ],
+    "1888,1196": [
+      84,
+      222
+    ],
+    "2056,1196": [
+      84,
+      222
+    ],
+    "2224,1196": [
+      84,
+      222
+    ],
+    "2392,1196": [
+      84,
+      222
+    ],
+    "2560,1196": [
+      84,
+      222
+    ],
+    "2728,1196": [
+      84,
+      222
+    ],
+    "2896,1196": [
+      84,
+      222
+    ],
+    "0,1428": [
+      84,
+      222
+    ],
+    "168,1428": [
+      84,
+      222
+    ],
+    "336,1428": [
+      84,
+      222
+    ],
+    "504,1428": [
+      84,
+      222
+    ],
+    "672,1428": [
+      84,
+      222
+    ],
+    "840,1428": [
+      84,
+      222
+    ],
+    "1008,1428": [
+      84,
+      222
+    ],
+    "1176,1428": [
+      84,
+      222
+    ],
+    "1344,1428": [
+      84,
+      222
+    ],
+    "1512,1428": [
+      84,
+      222
+    ],
+    "1680,1428": [
+      84,
+      222
+    ],
+    "1848,1428": [
+      84,
+      222
+    ],
+    "2016,1428": [
+      84,
+      222
+    ],
+    "2184,1428": [
+      84,
+      222
+    ],
+    "2352,1428": [
+      84,
+      222
+    ],
+    "2520,1428": [
+      84,
+      222
+    ],
+    "2688,1428": [
+      84,
+      222
+    ],
+    "368,1196": [
+      86,
+      222
+    ],
+    "2856,1428": [
+      85,
+      222
+    ],
+    "0,1660": [
+      84,
+      222
+    ],
+    "660,1660": [
+      80,
+      223
+    ],
+    "1776,1660": [
+      77,
+      223
+    ],
+    "2700,1660": [
+      72,
+      223
+    ],
+    "1184,1892": [
+      69,
+      223
+    ],
+    "288,2124": [
+      68,
+      223
+    ],
+    "1332,1892": [
+      69,
+      223
+    ],
+    "432,2124": [
+      69,
+      223
+    ],
+    "576,2124": [
+      69,
+      223
+    ],
+    "720,2124": [
+      67,
+      223
+    ],
+    "864,2124": [
+      67,
+      223
+    ],
+    "2604,2356": [
+      74,
+      221
+    ],
+    "1536,2584": [
+      79,
+      217
+    ],
+    "936,2356": [
+      79,
+      220
+    ],
+    "820,1660": [
+      79,
+      223
+    ],
+    "2272,2584": [
+      78,
+      210
+    ],
+    "768,2808": [
+      76,
+      209
+    ],
+    "928,2808": [
+      76,
+      209
+    ],
+    "1088,2808": [
+      76,
+      210
+    ],
+    "2436,2584": [
+      70,
+      212
+    ],
+    "2596,2584": [
+      70,
+      212
+    ],
+    "776,2356": [
+      70,
+      219
+    ],
+    "2852,1660": [
+      70,
+      223
+    ],
+    "1008,2124": [
+      67,
+      225
+    ],
+    "1152,2124": [
+      67,
+      225
+    ],
+    "1296,2124": [
+      67,
+      223
+    ],
+    "1092,2356": [
+      67,
+      219
+    ],
+    "776,2584": [
+      67,
+      217
+    ],
+    "2756,2584": [
+      69,
+      212
+    ],
+    "604,2808": [
+      71,
+      208
+    ],
+    "592,3244": [
+      77,
+      202
+    ],
+    "1800,3244": [
+      83,
+      193
+    ],
+    "2124,3244": [
+      88,
+      187
+    ],
+    "2900,3244": [
+      91,
+      181
+    ],
+    "1004,3460": [
+      93,
+      176
+    ],
+    "2008,3460": [
+      93,
+      172
+    ],
+    "2204,3460": [
+      93,
+      170
+    ],
+    "2400,3460": [
+      94,
+      170
+    ],
+    "2932,3460": [
+      93,
+      169
+    ],
+    "0,3648": [
+      94,
+      169
+    ],
+    "2596,3460": [
+      94,
+      171
+    ],
+    "196,3648": [
+      94,
+      169
+    ],
+    "392,3648": [
+      94,
+      169
+    ],
+    "588,3648": [
+      94,
+      169
+    ],
+    "784,3648": [
+      94,
+      169
+    ],
+    "980,3648": [
+      94,
+      169
+    ],
+    "1176,3648": [
+      94,
+      169
+    ],
+    "1372,3648": [
+      94,
+      169
+    ],
+    "1568,3648": [
+      94,
+      169
+    ],
+    "1480,1892": [
+      71,
+      222
+    ],
+    "1244,2356": [
+      73,
+      221
+    ],
+    "1396,2356": [
+      75,
+      219
+    ],
+    "1548,2356": [
+      75,
+      219
+    ],
+    "928,2584": [
+      79,
+      215
+    ],
+    "1080,2584": [
+      79,
+      215
+    ],
+    "156,2808": [
+      79,
+      212
+    ],
+    "2916,2584": [
+      80,
+      212
+    ],
+    "1248,2808": [
+      81,
+      208
+    ],
+    "1404,2808": [
+      80,
+      208
+    ],
+    "1560,2808": [
+      80,
+      207
+    ],
+    "1716,2808": [
+      81,
+      205
+    ],
+    "1872,2808": [
+      80,
+      207
+    ],
+    "2028,2808": [
+      80,
+      207
+    ],
+    "2184,2808": [
+      80,
+      207
+    ],
+    "2340,2808": [
+      81,
+      207
+    ],
+    "2496,2808": [
+      81,
+      207
+    ],
+    "2652,2808": [
+      80,
+      207
+    ],
+    "2808,2808": [
+      80,
+      207
+    ],
+    "2964,2808": [
+      81,
+      207
+    ],
+    "0,3028": [
+      81,
+      207
+    ],
+    "156,3028": [
+      80,
+      207
+    ],
+    "312,3028": [
+      80,
+      207
+    ],
+    "468,3028": [
+      80,
+      207
+    ],
+    "624,3028": [
+      81,
+      207
+    ],
+    "780,3028": [
+      80,
+      207
+    ],
+    "936,3028": [
+      80,
+      207
+    ],
+    "1092,3028": [
+      80,
+      207
+    ],
+    "1248,3028": [
+      80,
+      207
+    ],
+    "1404,3028": [
+      81,
+      207
+    ],
+    "1560,3028": [
+      81,
+      207
+    ],
+    "1716,3028": [
+      80,
+      207
+    ],
+    "1872,3028": [
+      81,
+      207
+    ],
+    "2028,3028": [
+      81,
+      207
+    ],
+    "2184,3028": [
+      80,
+      207
+    ],
+    "2340,3028": [
+      81,
+      208
+    ],
+    "2496,3028": [
+      80,
+      208
+    ],
+    "2652,3028": [
+      80,
+      208
+    ],
+    "2808,3028": [
+      81,
+      209
+    ],
+    "2948,2356": [
+      80,
+      211
+    ],
+    "0,2808": [
+      80,
+      211
+    ],
+    "1232,2584": [
+      79,
+      215
+    ],
+    "1384,2584": [
+      79,
+      215
+    ],
+    "1700,2356": [
+      76,
+      218
+    ],
+    "1852,2356": [
+      76,
+      218
+    ],
+    "2004,2356": [
+      73,
+      220
+    ],
+    "2156,2356": [
+      73,
+      220
+    ],
+    "2308,2356": [
+      71,
+      221
+    ],
+    "2456,2356": [
+      71,
+      221
+    ],
+    "1628,1892": [
+      68,
+      223
+    ],
+    "1440,2124": [
+      68,
+      223
+    ],
+    "1584,2124": [
+      68,
+      223
+    ],
+    "1728,2124": [
+      68,
+      223
+    ],
+    "308,2808": [
+      67,
+      210
+    ],
+    "456,2808": [
+      67,
+      210
+    ],
+    "2964,3028": [
+      67,
+      209
+    ],
+    "0,3244": [
+      67,
+      209
+    ],
+    "148,3244": [
+      69,
+      207
+    ],
+    "296,3244": [
+      67,
+      208
+    ],
+    "444,3244": [
+      69,
+      207
+    ],
+    "764,3244": [
+      69,
+      205
+    ],
+    "912,3244": [
+      67,
+      203
+    ],
+    "1060,3244": [
+      67,
+      202
+    ],
+    "1208,3244": [
+      67,
+      200
+    ],
+    "1356,3244": [
+      69,
+      199
+    ],
+    "1504,3244": [
+      69,
+      195
+    ],
+    "1652,3244": [
+      69,
+      194
+    ],
+    "1976,3244": [
+      69,
+      191
+    ],
+    "2308,3244": [
+      69,
+      189
+    ],
+    "2456,3244": [
+      68,
+      183
+    ],
+    "0,3460": [
+      69,
+      175
+    ],
+    "2604,3244": [
+      69,
+      177
+    ],
+    "2752,3244": [
+      68,
+      179
+    ],
+    "148,3460": [
+      67,
+      178
+    ],
+    "292,3460": [
+      68,
+      177
+    ],
+    "436,3460": [
+      71,
+      175
+    ],
+    "724,3460": [
+      70,
+      173
+    ],
+    "864,3460": [
+      71,
+      175
+    ],
+    "1196,3460": [
+      72,
+      174
+    ],
+    "580,3460": [
+      71,
+      175
+    ],
+    "1612,3460": [
+      69,
+      175
+    ],
+    "1744,3460": [
+      69,
+      175
+    ],
+    "1876,3460": [
+      71,
+      175
+    ],
+    "1476,3460": [
+      72,
+      173
+    ],
+    "1336,3460": [
+      74,
+      173
+    ],
+    "2792,3460": [
+      75,
+      171
+    ],
+    "1764,3648": [
+      85,
+      165
+    ],
+    "2100,3648": [
+      93,
+      161
+    ],
+    "1920,3648": [
+      103,
+      156
+    ],
+    "2264,3648": [
+      117,
+      149
+    ],
+    "2464,3648": [
+      135,
+      111
+    ],
+    "2700,3648": [
+      135,
+      95
+    ],
+    "0,3824": [
+      137,
+      82
+    ],
+    "244,3824": [
+      137,
+      85
+    ],
+    "700,3824": [
+      130,
+      92
+    ],
+    "936,3824": [
+      127,
+      95
+    ],
+    "1172,3824": [
+      126,
+      95
+    ],
+    "1404,3824": [
+      121,
+      89
+    ],
+    "1632,3824": [
+      115,
+      84
+    ],
+    "2068,3824": [
+      112,
+      82
+    ],
+    "1852,3824": [
+      110,
+      82
+    ],
+    "168,1660": [
+      72,
+      225
+    ],
+    "540,1196": [
+      75,
+      225
+    ],
+    "2120,484": [
+      79,
+      227
+    ],
+    "2324,484": [
+      79,
+      226
+    ],
+    "1688,484": [
+      83,
+      226
+    ],
+    "1904,484": [
+      83,
+      226
+    ],
+    "2052,960": [
+      87,
+      224
+    ],
+    "2260,960": [
+      88,
+      224
+    ],
+    "2468,960": [
+      88,
+      224
+    ],
+    "2664,960": [
+      89,
+      223
+    ],
+    "392,2356": [
+      89,
+      220
+    ],
+    "584,2356": [
+      91,
+      219
+    ],
+    "200,2584": [
+      93,
+      215
+    ],
+    "1684,2584": [
+      99,
+      212
+    ],
+    "1880,2584": [
+      97,
+      212
+    ],
+    "2076,2584": [
+      98,
+      212
+    ],
+    "2748,2356": [
+      100,
+      214
+    ],
+    "0,2584": [
+      100,
+      215
+    ],
+    "392,2584": [
+      95,
+      216
+    ],
+    "584,2584": [
+      95,
+      217
+    ],
+    "2712,2124": [
+      94,
+      219
+    ],
+    "2908,2124": [
+      93,
+      220
+    ],
+    "0,2356": [
+      93,
+      220
+    ],
+    "196,2356": [
+      93,
+      220
+    ],
+    "2860,960": [
+      90,
+      222
+    ],
+    "0,1196": [
+      88,
+      223
+    ],
+    "184,1196": [
+      87,
+      223
+    ],
+    "2528,484": [
+      87,
+      224
+    ],
+    "2708,484": [
+      87,
+      225
+    ],
+    "2888,484": [
+      86,
+      226
+    ],
+    "0,724": [
+      85,
+      226
+    ],
+    "1676,0": [
+      82,
+      228
+    ],
+    "1840,0": [
+      82,
+      228
+    ],
+    "172,724": [
+      81,
+      227
+    ],
+    "336,724": [
+      81,
+      228
+    ],
+    "500,724": [
+      80,
+      226
+    ],
+    "660,724": [
+      81,
+      226
+    ],
+    "820,724": [
+      80,
+      227
+    ],
+    "980,724": [
+      80,
+      227
+    ],
+    "1140,724": [
+      80,
+      227
+    ],
+    "1300,724": [
+      79,
+      227
+    ],
+    "1460,724": [
+      79,
+      226
+    ],
+    "1620,724": [
+      79,
+      227
+    ],
+    "980,1660": [
+      79,
+      223
+    ],
+    "1140,1660": [
+      79,
+      223
+    ],
+    "1300,1660": [
+      78,
+      223
+    ],
+    "1460,1660": [
+      78,
+      223
+    ],
+    "1932,1660": [
+      78,
+      223
+    ],
+    "2088,1660": [
+      77,
+      223
+    ],
+    "1776,1892": [
+      73,
+      224
+    ],
+    "1924,1892": [
+      73,
+      224
+    ],
+    "1780,724": [
+      72,
+      226
+    ],
+    "2072,1892": [
+      72,
+      225
+    ],
+    "2076,724": [
+      71,
+      227
+    ],
+    "2220,724": [
+      71,
+      227
+    ],
+    "2364,724": [
+      71,
+      226
+    ],
+    "2508,724": [
+      71,
+      228
+    ],
+    "2652,724": [
+      71,
+      228
+    ],
+    "720,960": [
+      70,
+      228
+    ],
+    "2796,724": [
+      70,
+      228
+    ],
+    "2940,724": [
+      70,
+      227
+    ],
+    "0,960": [
+      70,
+      226
+    ],
+    "144,960": [
+      70,
+      228
+    ],
+    "288,960": [
+      70,
+      228
+    ],
+    "432,960": [
+      70,
+      226
+    ],
+    "576,960": [
+      70,
+      226
+    ],
+    "2220,1892": [
+      74,
+      225
+    ],
+    "1928,724": [
+      72,
+      226
+    ],
+    "2368,1892": [
+      71,
+      225
+    ],
+    "2516,1892": [
+      71,
+      225
+    ],
+    "2664,1892": [
+      69,
+      224
+    ],
+    "1872,2124": [
+      68,
+      224
+    ],
+    "2016,2124": [
+      68,
+      224
+    ],
+    "2812,1892": [
+      69,
+      223
+    ],
+    "2960,1892": [
+      69,
+      225
+    ],
+    "2160,2124": [
+      67,
+      225
+    ]
+  },
+  "pose_sheet_size": {
+    "width": 3128,
+    "height": 3932
+  },
+  "pose_anchor_x": 140,
+  "pose_accepted_clips": [
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "ranged",
+    "idle"
+  ]
+},{"id":"unit_thornwake_canopy_rammers","unit_id":"unit_thornwake_canopy_rammers","name":"Canopy Rammers","faction_id":"faction_thornwake","tier":5,"role":"melee","motif":"melee","sprite_sheet":"res://art/animation/runtime/units/unit_thornwake_canopy_rammers.png","states":["idle_hold","ready_active","move_path_step","melee_windup_release","ranged_aim_release","hit_stagger","death_rout_remove","cast_support_anchor","status_applied","status_expired","defend_brace","retaliation_release","retreat_withdraw_column","surrender_stand_down"],"art_source_kind":"curated_original_character_v1","curated_source":"res://art/units/source/curated/unit_thornwake_canopy_rammers.png","curated_source_sha256":"a072a8af177c4f41dcae2b28a775f018a9793a22c4a6e51dbd670bf7ebc4c8ae","pose_sheet":"res://art/animation/runtime/fluid/unit_thornwake_canopy_rammers.png","pose_frame_size":{"width":296,"height":228},"pose_columns":8,"pose_review_status":"accepted_selected_fluid_clips","pose_provenance":"res://art/animation/source/fluid/unit_thornwake_canopy_rammers/provenance.json","pose_clips":{"idle":{"frames":8,"indices":[0,1,2,3,4,5,6,7],"loop":true,"frame_msec":260,"static_frame":0},"dead":{"indices":[32],"frames":1,"frame_msec":100,"loop":false,"static_frame":0,"authored_timing":true},"attack":{"indices":[9,10,11,12,13,14,15,16],"frame_msec":100,"loop":false,"static_frame":0,"contact_frame":4,"frames":8,"authored_timing":true},"hit":{"indices":[17,18,19,20],"frame_msec":115,"loop":false,"static_frame":0,"frames":4,"authored_timing":true},"defend":{"indices":[21,22,23,24],"frame_msec":115,"loop":false,"static_frame":0,"frames":4,"authored_timing":true},"death":{"indices":[25,26,27,28,29,30,31,32],"frame_msec":115,"loop":false,"static_frame":0,"frames":8,"authored_timing":true},"cast":{"indices":[33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67],"frame_msec":50,"loop":false,"static_frame":0,"contact_frame":15,"frames":35,"authored_timing":true},"move":{"indices":[68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87],"frame_msec":70,"loop":true,"static_frame":0,"frames":20,"authored_timing":true}},"pose_aliases":{"ranged":"attack"},"pose_ground_margin":12,"pose_reference_height":256,"pose_source_facing":"right","pose_accepted_clips":["attack","hit","defend","death","cast","move","idle"]},{
   "id": "unit_brasshollow_pressure_lancers",
   "unit_id": "unit_brasshollow_pressure_lancers",
   "name": "Pressure Lancers",

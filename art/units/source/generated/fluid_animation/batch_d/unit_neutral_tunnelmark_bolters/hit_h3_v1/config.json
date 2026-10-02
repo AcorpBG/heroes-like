@@ -1,0 +1,78 @@
+{
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "clip": "hit",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102203,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          514
+        ]
+      ],
+      "anchor": [
+        177,
+        507
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit_retained_bow",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+      "rects": [
+        [
+          46,
+          620,
+          177,
+          649
+        ],
+        [
+          46,
+          649,
+          281,
+          930
+        ]
+      ],
+      "anchor": [
+        160,
+        928
+      ],
+      "scale": 0.68,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Tunnelmark Bolter: slender adult human, youthful pale face, dark charcoal pointed hood and long split coat, weathered riveted grey shoulder armor and vambraces, mustard-yellow neck scarf, brown leather belts and hip pouches, tan wood bolt quiver at SCREEN LEFT hip with several short dark bolts, grey trousers, metal knee plates and brown strapped boots. Exactly TWO arms and TWO legs. ONE compact wooden crossbow with original dark steel limbs, intact stock, stirrup and front string. At ready SCREEN LEFT/near gloved right hand holds rear stock and trigger, SCREEN RIGHT/far left hand supports wooden fore-end. Same original face, costume, body proportions and weapon dimensions. No extra arms, crossbow, sword or shield. One plain backward BALANCE LEAN. Both knees flex and chest/head lean backwards30, BOTH original hands keep the SAME crossbow in their original stock and fore-end grips. Boots stay supported; recover through shoulders and bent knees into original upright ready. No incoming object, collision effect, fall or extra hands. Locked original elevated three-quarter orthographic camera facing screen right, entire body, hands, boots and crossbow inside960x544 with safe margins, fixed anatomical scale and centered root. Uniform saturated GREEN RGB0,255,0 background, no floor, shadow, scenery, other people, text, particles, glow, smoke, trails, incoming objects or flying bolts. Real limb/weapon articulation, no whole-sprite warping or motion-blurred duplicate limbs.",
+  "protected_foreground_chroma": 7,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

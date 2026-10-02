@@ -1,0 +1,229 @@
+{
+  "prompt": [
+    245,
+    "53a63685-7e38-458d-a259-0cd9c93f72cf",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Tunnelmark Bolter: slender adult human, youthful pale face, dark charcoal pointed hood and long split coat, weathered riveted grey shoulder armor and vambraces, mustard-yellow neck scarf, brown leather belts and hip pouches, tan wood bolt quiver at SCREEN LEFT hip with several short dark bolts, grey trousers, metal knee plates and brown strapped boots. Exactly TWO arms and TWO legs. ONE compact wooden crossbow with original dark steel limbs, intact stock, stirrup and front string. At ready SCREEN LEFT/near gloved right hand holds rear stock and trigger, SCREEN RIGHT/far left hand supports wooden fore-end. Same original face, costume, body proportions and weapon dimensions. No extra arms, crossbow, sword or shield. One plain backward BALANCE LEAN. Both knees flex and chest/head lean backwards30, BOTH original hands keep the SAME crossbow in their original stock and fore-end grips. Boots stay supported; recover through shoulders and bent knees into original upright ready. No incoming object, collision effect, fall or extra hands. Locked original elevated three-quarter orthographic camera facing screen right, entire body, hands, boots and crossbow inside960x544 with safe margins, fixed anatomical scale and centered root. Uniform saturated GREEN RGB0,255,0 background, no floor, shadow, scenery, other people, text, particles, glow, smoke, trails, incoming objects or flying bolts. Real limb/weapon articulation, no whole-sprite warping or motion-blurred duplicate limbs.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026102203
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tunnelmark_bolter_hit_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tunnelmark_bolter_hit_h3_v1_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 30,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "tunnelmark_bolter_h3/hit_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "tunnelmark_bolter_h3",
+      "create_time": 1790918078703
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "tunnelmark_bolter_h3\\hit_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "53a63685-7e38-458d-a259-0cd9c93f72cf",
+          "timestamp": 1790918078704
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "53a63685-7e38-458d-a259-0cd9c93f72cf",
+          "timestamp": 1790918078719
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "53a63685-7e38-458d-a259-0cd9c93f72cf",
+          "timestamp": 1790918206624
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

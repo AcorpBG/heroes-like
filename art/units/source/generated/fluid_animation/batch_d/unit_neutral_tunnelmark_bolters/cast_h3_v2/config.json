@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "clip": "cast",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102303,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          514
+        ]
+      ],
+      "anchor": [
+        177,
+        507
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "right_fist_windup",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+      "rects": [
+        [
+          357,
+          324,
+          583,
+          617
+        ],
+        [
+          357,
+          617,
+          427,
+          631
+        ],
+        [
+          485,
+          617,
+          583,
+          631
+        ]
+      ],
+      "anchor": [
+        474,
+        624
+      ],
+      "scale": 0.68,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      60,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Tunnelmark Bolter: slender adult human, youthful pale face, dark charcoal pointed hood and long split coat, weathered riveted grey shoulder armor and vambraces, mustard-yellow neck scarf, brown leather belts and hip pouches, tan wood bolt quiver at SCREEN LEFT hip with several short dark bolts, grey trousers, metal knee plates and brown strapped boots. Exactly TWO arms and TWO legs. ONE compact wooden crossbow with original dark steel limbs, intact stock, stirrup and front string. At ready SCREEN LEFT/near gloved right hand holds rear stock and trigger, SCREEN RIGHT/far left hand supports wooden fore-end. Same original face, costume, body proportions and weapon dimensions. No extra arms, crossbow, sword or shield. The hooded traveler makes one slow visible physical greeting salute with RIGHT fist. LEFT arm supports unchanged wood equipment LOW at waist with front pointed DOWN, never lifts it to aim. RIGHT hand leaves stock, elbow bends and CLOSED FIST rises beside own right shoulder at60, then smoothly lowers and regrips rear stock. This is a friendly fist salute with grounded boots and relaxed chest, no fighting. Exactly two original arms, one unchanged carried object. Continuous elbow/wrist movement, no snap to another stance. Entire surrounding green area remains completely empty for whole clip. Locked original elevated three-quarter orthographic camera facing screen right, entire body, hands, boots and crossbow inside960x544 with safe margins, fixed anatomical scale and centered root. Uniform saturated GREEN RGB0,255,0 background, no floor, shadow, scenery, other people, text, particles, glow, smoke, trails, incoming objects or flying bolts. Real limb/weapon articulation, no whole-sprite warping or motion-blurred duplicate limbs.",
+  "protected_foreground_chroma": 7,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

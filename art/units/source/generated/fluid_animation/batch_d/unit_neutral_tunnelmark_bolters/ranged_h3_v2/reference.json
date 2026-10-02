@@ -1,0 +1,69 @@
+{
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "loaded_aim",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+        "rects": [
+          [
+            720,
+            624,
+            837,
+            645
+          ],
+          [
+            641,
+            645,
+            920,
+            942
+          ]
+        ],
+        "anchor": [
+          780,
+          935
+        ],
+        "scale": 1.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "777d3d698814327944e1dbfbf29c02f7a1c4121062dcc5d062678b2d0912a62a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e9585025bd4d735fa60fd2e826d4ef152781337103bb77d796ea1fa538917c62",
+      "runtime_source_scale": 0.68
+    },
+    {
+      "source_frame": {
+        "name": "empty_release_front_string",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/fired-front-nocks-corrected.png",
+        "rects": [
+          [
+            0,
+            0,
+            830,
+            1024
+          ]
+        ],
+        "anchor": [
+          414,
+          940
+        ],
+        "scale": 0.48,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9cb156b7560bbd1f836255037ddc51951cded6e402b9d311b2500ac948e2cd24",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "2045af30df5b1c475084f0b34c6032bd368a1978cc033b491f95c8c2b35f8309",
+      "runtime_source_scale": 0.24
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

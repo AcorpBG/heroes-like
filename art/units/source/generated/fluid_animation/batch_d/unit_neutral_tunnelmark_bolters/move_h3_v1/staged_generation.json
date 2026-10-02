@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "0f74376fc33681515189e3d138044b021f1d4893a24ae386431241df9fb60e47",
+  "latent_sha256": "3010c41dc574bbe32e67bcadd2a9a00dcf4eb9aac9b1b3c7eb6bec2dcc29d96b",
+  "decode_workflow_sha256": "f515cd5a598efc43adcf193594a7d4999a41015b911244eb4cc8c8c9ec0c4386",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "tunnelmark_bolter_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19571566912,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

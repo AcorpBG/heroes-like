@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "source_family_scaling": "Retain existing legacy source-resolution scales (.68/.255/.24/.185/.44) unchanged; no per-pose normalization.",
+  "measured_reference_height": 223,
+  "reason": "Accepted articulated idle221-224px; original ready215-216, movement213-219 and firing212-227 are compatible with the same authored body scale. Corpse82px retains original folded anatomy."
+}

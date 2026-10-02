@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            514
+          ]
+        ],
+        "anchor": [
+          177,
+          507
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "78671a62c1a3640acc8d9faff329a17c300e741500e1acaca9721d9286336417",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "181a1cbc9f1283f28906c6e3db7108004378fc9b92789196fe859cbaf90c3210",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "travel_near_foot_lift",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/alpha/near-lift-selected.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          591,
+          1195
+        ],
+        "scale": 0.37,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "39f82849ef7f555cf05dc3fc1609e87f3b2c3db0304d01e539ff8f219e76791e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f0c7eaa7ca76774ebc0de704d390cb81993d968757149bcb41455c9c29c3459d",
+      "runtime_source_scale": 0.185
+    },
+    {
+      "source_frame": {
+        "name": "travel_far_foot_lift",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/alpha/far-lift.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          591,
+          1195
+        ],
+        "scale": 0.37,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2e2fb442340c7bdcadb3309405d561928c3210871c05db3fbe994409c9ef2ad4",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "32c960db9ce70e2c600a8e84152b649821d12dbb67a33e263c3314758de51f59",
+      "runtime_source_scale": 0.185
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

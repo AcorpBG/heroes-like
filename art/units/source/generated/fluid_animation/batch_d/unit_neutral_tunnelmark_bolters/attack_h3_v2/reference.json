@@ -1,0 +1,69 @@
+{
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            514
+          ]
+        ],
+        "anchor": [
+          177,
+          507
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "78671a62c1a3640acc8d9faff329a17c300e741500e1acaca9721d9286336417",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "181a1cbc9f1283f28906c6e3db7108004378fc9b92789196fe859cbaf90c3210",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "right_cross_left_cradled_bow",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/right-cross-recovery-and-loaded-passing.png",
+        "rects": [
+          [
+            0,
+            0,
+            625,
+            810
+          ],
+          [
+            0,
+            810,
+            650,
+            887
+          ]
+        ],
+        "anchor": [
+          341,
+          862
+        ],
+        "scale": 0.51,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "bf99bcc7b91d25add608eaae5a324ad3cbc5d54679abb7b10cdebbb535976202",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "584d9106465e8cef8029c11f9d13565bc2dce9483706395d8221ad8c39762f0c",
+      "runtime_source_scale": 0.255
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

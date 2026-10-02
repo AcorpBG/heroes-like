@@ -1,0 +1,19 @@
+{
+  "tool": "built-in image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnelmark_bolters/walk_contact_original.png",
+    "sha256": "6c196036b996619d30af120570abe57e2abc96be3272b90d96926af8002dc1b0"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnelmark_bolters/walk_contact_prompt.txt",
+    "sha256": "8149b4f3cb986f0bc4d88b45ebaa267fc0d0e371f9a4937f8dfaa161683b8dcf"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnelmark_bolters/accepted_idle_reference.png",
+      "sha256": "94f51a01b820a47cc294b710e8314086a75d3cc31bf1a54f8f99b5873f01803f"
+    }
+  ],
+  "source_wide_scale": 0.155,
+  "review": "One reviewed original forward-contact reference with original low carry. Two opposed-contact attempts failed to swap leg phases and were rejected; not used as authored gait phases."
+}

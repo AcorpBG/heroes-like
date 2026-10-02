@@ -1,0 +1,150 @@
+{
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102206,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          514
+        ]
+      ],
+      "anchor": [
+        177,
+        507
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "loaded_aim",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+      "rects": [
+        [
+          720,
+          624,
+          837,
+          645
+        ],
+        [
+          641,
+          645,
+          920,
+          942
+        ]
+      ],
+      "anchor": [
+        780,
+        935
+      ],
+      "scale": 0.68,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "empty_release_front_string",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/fired-front-nocks-corrected.png",
+      "rects": [
+        [
+          0,
+          0,
+          830,
+          1024
+        ]
+      ],
+      "anchor": [
+        414,
+        940
+      ],
+      "scale": 0.24,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "empty_recovery_front_string",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/fired-front-nocks-corrected.png",
+      "rects": [
+        [
+          830,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1185,
+        969
+      ],
+      "scale": 0.24,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "reload",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+      "rects": [
+        [
+          412,
+          617,
+          509,
+          639
+        ],
+        [
+          365,
+          639,
+          573,
+          954
+        ]
+      ],
+      "anchor": [
+        469,
+        947
+      ],
+      "scale": 0.68,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      38,
+      2
+    ],
+    [
+      60,
+      3
+    ],
+    [
+      88,
+      4
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Tunnelmark Bolter: slender adult human, youthful pale face, dark charcoal pointed hood and long split coat, weathered riveted grey shoulder armor and vambraces, mustard-yellow neck scarf, brown leather belts and hip pouches, tan wood bolt quiver at SCREEN LEFT hip with several short dark bolts, grey trousers, metal knee plates and brown strapped boots. Exactly TWO arms and TWO legs. ONE compact wooden crossbow with original dark steel limbs, intact stock, stirrup and front string. At ready SCREEN LEFT/near gloved right hand holds rear stock and trigger, SCREEN RIGHT/far left hand supports wooden fore-end. Same original face, costume, body proportions and weapon dimensions. No extra arms, crossbow, sword or shield. One measured crossbow trigger-and-reload exercise, no visible projectile: runtime owns bolt flight. Raise original compact WOODEN crossbow from waist to supplied horizontal shoulder aim24. Original RIGHT hand remains on rear trigger/stock, LEFT hand supports fore-end. Bow limbs stay fixed; ORIGINAL drawn string releases FORWARD to front nocks38 with slight shoulder recoil, fore-end and both grips intact, no extra string. Keep empty crossbow during lowering60. RIGHT hand operates a short reload adjustment at stock88 while LEFT cradles original fore-end, then return original loaded waist-ready. No flying bolt, projectile trail, energy, elongated bow, additional weapon, disembodied hand or duplicated forearm. Locked original elevated three-quarter orthographic camera facing screen right, entire body, hands, boots and crossbow inside960x544 with safe margins, fixed anatomical scale and centered root. Uniform saturated GREEN RGB0,255,0 background, no floor, shadow, scenery, other people, text, particles, glow, smoke, trails, incoming objects or flying bolts. Real limb/weapon articulation, no whole-sprite warping or motion-blurred duplicate limbs.",
+  "protected_foreground_chroma": 46,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

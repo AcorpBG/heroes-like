@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            514
+          ]
+        ],
+        "anchor": [
+          177,
+          507
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "78671a62c1a3640acc8d9faff329a17c300e741500e1acaca9721d9286336417",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "181a1cbc9f1283f28906c6e3db7108004378fc9b92789196fe859cbaf90c3210",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "right_fist_windup",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+        "rects": [
+          [
+            357,
+            324,
+            583,
+            617
+          ],
+          [
+            357,
+            617,
+            427,
+            631
+          ],
+          [
+            485,
+            617,
+            583,
+            631
+          ]
+        ],
+        "anchor": [
+          474,
+          624
+        ],
+        "scale": 1.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "777d3d698814327944e1dbfbf29c02f7a1c4121062dcc5d062678b2d0912a62a",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "838ad1aff175343895bf88d35f9205313daf67171d727acb0a9416f32181262e",
+      "runtime_source_scale": 0.68
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

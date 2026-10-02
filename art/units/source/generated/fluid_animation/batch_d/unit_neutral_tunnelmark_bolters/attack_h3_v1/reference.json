@@ -1,0 +1,141 @@
+{
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            514
+          ]
+        ],
+        "anchor": [
+          177,
+          507
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "78671a62c1a3640acc8d9faff329a17c300e741500e1acaca9721d9286336417",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "181a1cbc9f1283f28906c6e3db7108004378fc9b92789196fe859cbaf90c3210",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "right_fist_windup",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+        "rects": [
+          [
+            357,
+            324,
+            583,
+            617
+          ],
+          [
+            357,
+            617,
+            427,
+            631
+          ],
+          [
+            485,
+            617,
+            583,
+            631
+          ]
+        ],
+        "anchor": [
+          474,
+          624
+        ],
+        "scale": 1.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "777d3d698814327944e1dbfbf29c02f7a1c4121062dcc5d062678b2d0912a62a",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "838ad1aff175343895bf88d35f9205313daf67171d727acb0a9416f32181262e",
+      "runtime_source_scale": 0.68
+    },
+    {
+      "source_frame": {
+        "name": "right_cross_left_cradled_bow",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/right-cross-recovery-and-loaded-passing.png",
+        "rects": [
+          [
+            0,
+            0,
+            625,
+            810
+          ],
+          [
+            0,
+            810,
+            650,
+            887
+          ]
+        ],
+        "anchor": [
+          341,
+          862
+        ],
+        "scale": 0.51,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "bf99bcc7b91d25add608eaae5a324ad3cbc5d54679abb7b10cdebbb535976202",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "584d9106465e8cef8029c11f9d13565bc2dce9483706395d8221ad8c39762f0c",
+      "runtime_source_scale": 0.255
+    },
+    {
+      "source_frame": {
+        "name": "right_cross_recovery_left_cradled_bow",
+        "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/right-cross-recovery-and-loaded-passing.png",
+        "rects": [
+          [
+            650,
+            0,
+            1217,
+            730
+          ],
+          [
+            622,
+            730,
+            1217,
+            810
+          ],
+          [
+            650,
+            810,
+            1217,
+            887
+          ]
+        ],
+        "anchor": [
+          918,
+          862
+        ],
+        "scale": 0.51,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "bf99bcc7b91d25add608eaae5a324ad3cbc5d54679abb7b10cdebbb535976202",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "01ceb72c6f1a886b5add57e2edbf9f14e15d8994b293321abfab121779d6d660",
+      "runtime_source_scale": 0.255
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

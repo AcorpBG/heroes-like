@@ -1,0 +1,73 @@
+{
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102304,
+  "references": [
+    {
+      "name": "loaded_aim",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+      "rects": [
+        [
+          720,
+          624,
+          837,
+          645
+        ],
+        [
+          641,
+          645,
+          920,
+          942
+        ]
+      ],
+      "anchor": [
+        780,
+        935
+      ],
+      "scale": 0.68,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "empty_release_front_string",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/fired-front-nocks-corrected.png",
+      "rects": [
+        [
+          0,
+          0,
+          830,
+          1024
+        ]
+      ],
+      "anchor": [
+        414,
+        940
+      ],
+      "scale": 0.24,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 1,
+  "prompt": "One original Tunnelmark Bolter: slender adult human, youthful pale face, dark charcoal pointed hood and long split coat, weathered riveted grey shoulder armor and vambraces, mustard-yellow neck scarf, brown leather belts and hip pouches, tan wood bolt quiver at SCREEN LEFT hip with several short dark bolts, grey trousers, metal knee plates and brown strapped boots. Exactly TWO arms and TWO legs. ONE compact wooden crossbow with original dark steel limbs, intact stock, stirrup and front string. At ready SCREEN LEFT/near gloved right hand holds rear stock and trigger, SCREEN RIGHT/far left hand supports wooden fore-end. Same original face, costume, body proportions and weapon dimensions. No extra arms, crossbow, sword or shield. Close controlled DRY-FIRE mechanical exercise of an UNLOADED wooden crossbow. Same original two hands remain on rear stock and front fore-end. Keep fixed wooden stock and original dark limbs. Index finger presses original trigger, bow string moves gradually forward from drawn position to FRONT NOCKS, slight natural backward shoulder recoil, unchanged torso size and grounded feet. There is NO ammunition on the rail and NOTHING leaves the crossbow. The quiver stays fixed at hip. End in supplied empty device pose, string FORWARD at front nocks. Do not lower or reload in this clip. Empty green surrounding area throughout. No other objects enter or leave the image. Locked original elevated three-quarter orthographic camera facing screen right, entire body, hands, boots and crossbow inside960x544 with safe margins, fixed anatomical scale and centered root. Uniform saturated GREEN RGB0,255,0 background, no floor, shadow, scenery, other people, text, particles, glow, smoke, trails, incoming objects or flying bolts. Real limb/weapon articulation, no whole-sprite warping or motion-blurred duplicate limbs.",
+  "protected_foreground_chroma": 46,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}
