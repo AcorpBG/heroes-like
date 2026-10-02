@@ -15,10 +15,26 @@ import os
 from pathlib import Path
 import subprocess
 import sys
-import time
+import threading
 
 ROOT = Path(__file__).resolve().parents[1]
 SCOPES = ('gpu', 'content', 'git')
+
+
+@contextlib.contextmanager
+def waiting_heartbeat(scope):
+    """Report a blocked wait without cancelling/restarting the kernel wait."""
+    stopped = threading.Event()
+    def report():
+        while not stopped.wait(45):
+            print(f'Waiting for shared {scope}; pid={os.getpid()}', flush=True)
+    reporter = threading.Thread(target=report, daemon=True)
+    reporter.start()
+    try:
+        yield
+    finally:
+        stopped.set()
+        reporter.join()
 
 
 @contextlib.contextmanager
@@ -43,16 +59,16 @@ def exclusive(scope: str):
             raise ctypes.WinError(ctypes.get_last_error())
         acquired = False
         try:
-            while True:
-                result = kernel.WaitForSingleObject(handle, 45000)
-                if result in (0, 0x80):
-                    acquired = True
-                    if result == 0x80:
-                        print(f'Previous {scope} owner exited; recheck queue/index before mutation.', flush=True)
-                    break
-                if result != 0x102:
-                    raise ctypes.WinError(ctypes.get_last_error())
-                print(f'Waiting for shared {scope}; pid={os.getpid()}', flush=True)
+            # Timed waits rejoin the kernel wait queue after every timeout;
+            # this allowed repeatedly renewed leases to beat older workers.
+            # Keep one continuous wait. Windows still does not promise FIFO.
+            with waiting_heartbeat(scope):
+                result = kernel.WaitForSingleObject(handle, 0xFFFFFFFF)
+            if result not in (0, 0x80):
+                raise ctypes.WinError(ctypes.get_last_error())
+            acquired = True
+            if result == 0x80:
+                print(f'Previous {scope} owner exited; recheck queue/index before mutation.', flush=True)
             print(f'Acquired shared {scope}; pid={os.getpid()}', flush=True)
             yield
         finally:
@@ -64,13 +80,8 @@ def exclusive(scope: str):
         directory = ROOT / '.artifacts' / 'creature_animation_locks'
         directory.mkdir(parents=True, exist_ok=True)
         with (directory / f'{identity}_{scope}.lock').open('a+b') as stream:
-            while True:
-                try:
-                    fcntl.flock(stream, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                    break
-                except BlockingIOError:
-                    print(f'Waiting for shared {scope}; pid={os.getpid()}', flush=True)
-                    time.sleep(45)
+            with waiting_heartbeat(scope):
+                fcntl.flock(stream, fcntl.LOCK_EX)
             try:
                 print(f'Acquired shared {scope}; pid={os.getpid()}', flush=True)
                 yield
