@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "85983d0ed72dd4c753bc4fdf2918f0b0bc7e7ee72440426a38d6166d992a9165",
+  "latent_sha256": "34890c96137ea8a95df6ccfdb535994fba8c40dd667e665bcec787c09b7b1961",
+  "decode_workflow_sha256": "b9415e0afc2a9ad36d5f738eea13c6bb805600a38916646e7fd05c50da223f88",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "sunscale_lanternmoth_h3\\attack_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

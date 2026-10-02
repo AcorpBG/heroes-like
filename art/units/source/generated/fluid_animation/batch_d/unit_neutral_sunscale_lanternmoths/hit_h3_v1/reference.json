@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_sunscale_lanternmoths",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_v2_0",
+        "source": "art/animation/source/poses/unit_neutral_sunscale_lanternmoths/idle-v2/alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            394,
+            512
+          ]
+        ],
+        "anchor": [
+          216,
+          483
+        ],
+        "scale": 1.1,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "942b47428b1c1843cf54e76baa8d26c65d665df3812def622dcd310f037c304c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "bec6a8a033381f64e112a94239dbc397a27042b41427b4b73a980513c5d7344b",
+      "runtime_source_scale": 0.55
+    },
+    {
+      "source_frame": {
+        "name": "recoil",
+        "source": "art/animation/source/poses/unit_neutral_sunscale_lanternmoths/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            800,
+            390,
+            1024
+          ]
+        ],
+        "anchor": [
+          220,
+          1015
+        ],
+        "scale": 1.38,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "668d7f9b2919c12d5e42079ac7a5c6278385149538e0828b51ed9040be252361",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "608d96b5b9693aaaf151db116809ba65dc9f50628fcaf87de05d95c943554733",
+      "runtime_source_scale": 0.69
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

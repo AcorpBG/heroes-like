@@ -1,0 +1,135 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Original SUNSCALE LANTERNMOTH from the supplied painting. One furry charcoal/ivory moth thorax, one glowing faceted amber lantern abdomen pointing down and back SCREEN LEFT, head with the original golden eye facing SCREEN RIGHT. Exactly FOUR blue-and-gold mineral-patterned wings: two large forewings and two smaller hindwings, all attached at their original thorax roots. Preserve their gold crescent markings and cobalt panels, near/far pairing and proportions. Exactly TWO curved feather antennae and SIX slender insect legs attached below the thorax, three near-side and three partly occluded far-side legs; no arms, rider, human hands or equipment. Never add wings, legs, antennae, bells or ornaments. Keep original painted fantasy style, fixed side three-quarter camera, original body scale/facing. One innate Lanternscale support signal: lift and slowly fan the two original forewings while smaller hindwings counterflex, bow the two feather antennae and bring the original front pair of legs together beneath the head. The existing faceted abdomen makes one gentle warm pulse, then legs and four wings return smoothly to original ready. No human spellcasting, new arms, rings, particles or projectile.  Entire backdrop flat magenta RGB255,0,255 throughout, no scenery, floor, cast shadow, text, camera movement, zoom or cuts. Preserve ALL wing tips, antennae and legitimate legs inside generous canvas margins. Anatomical hover reference remains stable; no global translation stands in for articulated motion. No detached particles, beams, bolts, shards or invented props.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026107006
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "sunscale_lanternmoth_cast_h3_v1_guide_0.png"
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "sunscale_lanternmoth_h3/cast_h3_v1/sampled"
+    }
+  }
+}

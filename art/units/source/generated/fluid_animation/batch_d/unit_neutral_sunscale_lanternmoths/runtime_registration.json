@@ -1,0 +1,50 @@
+{
+  "unit_id": "unit_neutral_sunscale_lanternmoths",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "ready_guide": {
+    "name": "idle_v2_0",
+    "source": "art/animation/source/poses/unit_neutral_sunscale_lanternmoths/idle-v2/alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        394,
+        512
+      ]
+    ],
+    "anchor": [
+      216,
+      483
+    ],
+    "scale": 0.55,
+    "alpha_noise_cutoff": 8
+  },
+  "corpse_guide": {
+    "name": "dead",
+    "source": "art/animation/source/poses/unit_neutral_sunscale_lanternmoths/alpha/poses.png",
+    "rects": [
+      [
+        1160,
+        840,
+        1536,
+        1024
+      ]
+    ],
+    "anchor": [
+      1372,
+      1014
+    ],
+    "scale": 0.69,
+    "alpha_noise_cutoff": 8
+  },
+  "reason": "Original ready/legacy action source scales retained. One fixed extraction scale and canvas anchor; physical corpse contact registered once. No per-frame scale or bounding-box anchoring."
+}

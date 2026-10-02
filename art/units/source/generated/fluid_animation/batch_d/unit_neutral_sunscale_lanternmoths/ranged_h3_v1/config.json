@@ -1,0 +1,48 @@
+{
+  "unit_id": "unit_neutral_sunscale_lanternmoths",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026107003,
+  "references": [
+    {
+      "name": "idle_v2_0",
+      "source": "art/animation/source/poses/unit_neutral_sunscale_lanternmoths/idle-v2/alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          394,
+          512
+        ]
+      ],
+      "anchor": [
+        216,
+        483
+      ],
+      "scale": 0.55,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "Original SUNSCALE LANTERNMOTH from the supplied painting. One furry charcoal/ivory moth thorax, one glowing faceted amber lantern abdomen pointing down and back SCREEN LEFT, head with the original golden eye facing SCREEN RIGHT. Exactly FOUR blue-and-gold mineral-patterned wings: two large forewings and two smaller hindwings, all attached at their original thorax roots. Preserve their gold crescent markings and cobalt panels, near/far pairing and proportions. Exactly TWO curved feather antennae and SIX slender insect legs attached below the thorax, three near-side and three partly occluded far-side legs; no arms, rider, human hands or equipment. Never add wings, legs, antennae, bells or ornaments. Keep original painted fantasy style, fixed side three-quarter camera, original body scale/facing. One Sunscale Fan release. Aim the head SCREEN RIGHT, arch both original forewings to expose the lantern abdomen, tense the four wing roots as the original amber facets brighten, then make one clear coordinated outward wing snap and abdominal pulse. Recoil and recover to exact ready. Light stays entirely within the existing abdomen; no detached projectile or beam because the game renders flight separately. One charge, one release, one recovery only.  Entire backdrop flat magenta RGB255,0,255 throughout, no scenery, floor, cast shadow, text, camera movement, zoom or cuts. Preserve ALL wing tips, antennae and legitimate legs inside generous canvas margins. Anatomical hover reference remains stable; no global translation stands in for articulated motion. No detached particles, beams, bolts, shards or invented props.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

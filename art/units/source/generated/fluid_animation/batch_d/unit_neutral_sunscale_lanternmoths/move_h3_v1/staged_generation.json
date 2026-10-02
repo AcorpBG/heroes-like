@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "668dbb7d75668abe1128dceea61ab6943646ddb43558ec2e375acc8da901f9cc",
+  "latent_sha256": "93bc40bb55901fdb12ebde02f7e15f95061bb7e3f8b6c51632f31d2296641b56",
+  "decode_workflow_sha256": "557b30c9dd844e7da7367234e2570637486d1bae0a79801bba5e891f10cb451c",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "sunscale_lanternmoth_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18362543936,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

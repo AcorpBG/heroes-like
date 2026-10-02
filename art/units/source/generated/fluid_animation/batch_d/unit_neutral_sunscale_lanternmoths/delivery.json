@@ -1,0 +1,18 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "ranged_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Solo review: all124 original temporal frames per seven takes, enlarged light/dark anatomy and edges, all native/reflected poses, and eight actual melee/ranged captures inspected. Four mineral wings, two feather antennae and six attached/occluded insect legs remain coherent. Select three complete flight cycles, one front-pair claw rake, one charged fan release, recoil/recovery, held wing shield, innate slow support fan, grounded collapse and settled corpse. Remove repeated hovering intervals via matching original poses and exclude malformed melee frame47. Exact renderer-selected atlas region observation confirms full actual melee/ranged playback without a late-clock readback artifact. Preserve eight original reviewed idle poses and130ms timing. Focused candidate checks pass; live/import/source/map checks follow."
+  }
+}

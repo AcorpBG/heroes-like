@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_sunscale_lanternmoths",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_v2_0",
+        "source": "art/animation/source/poses/unit_neutral_sunscale_lanternmoths/idle-v2/alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            394,
+            512
+          ]
+        ],
+        "anchor": [
+          216,
+          483
+        ],
+        "scale": 1.1,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "942b47428b1c1843cf54e76baa8d26c65d665df3812def622dcd310f037c304c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "bec6a8a033381f64e112a94239dbc397a27042b41427b4b73a980513c5d7344b",
+      "runtime_source_scale": 0.55
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

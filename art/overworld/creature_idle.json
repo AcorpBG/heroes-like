@@ -4410,29 +4410,29 @@
       "frame_msec": 130,
       "static_frame": 0,
       "ground_anchor": [
-        121.0,
+        121,
         252
       ],
       "painted_extent": 232,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_sunscale_lanternmoths.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_sunscale_lanternmoths.png",
       "source_indices": [
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        135,
-        -4,
-        370,
-        244
+        43,
+        4,
+        278,
+        252
       ],
-      "source_sha256": "e64084483947afaa118a64d6b0b7d019f4f37b576429d7a41190c8dfa196cda7",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_sunscale_lanternmoths/provenance.json",
+      "source_sha256": "0c8cfdf6768d1b090285f5d337b1197ef7b154220f6119d990f29295d333b2df",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_sunscale_lanternmoths/provenance.json",
       "sha256": "ac0ff87b8bc1feceda8039b05f8b5fe736d85279612fac806dc7e4e0ee69ffe0"
     },
     "unit_neutral_rimebell_skyrakers": {
