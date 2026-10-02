@@ -1,0 +1,197 @@
+{
+  "source_frames": [
+    0,
+    8,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    24,
+    36,
+    48,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    74,
+    96,
+    123
+  ],
+  "frame_msec": 42,
+  "review_note": "All124 chronological originals plus enlarged empty palm/fingers/regrip reviewed. Far hand releases11-13, raises14-18, holds clear empty rally palm18-56, lowers57-64 and grips65-66. Near hand maintains crank; two arms/two legs and loaded two-wheel cart unchanged. Fixed guarded matte crop removes only personally reviewed translucent background rectangle beside cap, preserves every opaque subject pixel and complete originals. No magic/firing, duplicates/interpolation or frame normalization. Native review required.",
+  "contact_frame": 10,
+  "frame_durations_msec": [
+    42,
+    42,
+    42,
+    42,
+    42,
+    42,
+    42,
+    42,
+    42,
+    42,
+    42,
+    42,
+    42,
+    42,
+    168,
+    42,
+    42,
+    42,
+    42,
+    42,
+    42,
+    42,
+    42,
+    42,
+    42,
+    42,
+    42,
+    42
+  ],
+  "original_pixel_exclusions": {
+    "8": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "10": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "12": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "60": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "61": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "62": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "63": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "64": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "65": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "66": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "74": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "96": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "123": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    }
+  }
+}

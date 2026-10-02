@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "f16eea525c1a7bb2e31ad6153cb50a28b04ed73d484a945331436f0ce558c3d8",
+  "latent_sha256": "a1354ed6227ab2f8cc90a0990e9d05e0bd76de813890f8170f184188538f43c1",
+  "decode_workflow_sha256": "279764874e31da5b862e63bc58bddb8641ba5410b09cbbbd51dc321d1f16b1b3",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "cartbow_tender_h3\\attack_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

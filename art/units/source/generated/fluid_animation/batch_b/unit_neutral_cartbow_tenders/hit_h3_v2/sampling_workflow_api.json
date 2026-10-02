@@ -1,0 +1,163 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "One original Cartbow Tender, one adult human man with exactly TWO arms and TWO legs. Brown leather cap with goggles, red scarf and headband tails, mustard yellow coat, rolled cream sleeves, dark brown leather apron, brown gloves, strapped brown trousers and boots, belt tools and side bolt case. He stands behind his ONE original two-wheel wooden crossbow cart, facing screen right. Exactly TWO wooden spoked wheels with iron rims, same wooden chassis, metal rail, bronze rear crank, original curved wooden bow limbs and ONE continuous string. Original red/white fletched reserve bolts remain in the side rack. Near arm is screen-left arm on rear crank/handle; far arm crosses to screen-right rail/handle. Both are ordinary human hands, never extra arms or fingers. Original body proportions, face, clothing, loaded bolt and cart geometry remain coherent.  One deliberate balance-and-knee-flex exercise with all equipment safely stationary. Slowly flex both knees, lean chest BACK as supplied34 pose, keep elbows bent and both hands firmly on original cart handles, then straighten knees and return naturally to ready. Clear torso lean and recovery with boots supported, exact original loaded bow/string/bolt throughout. The only visible elements are this man and his unchanged wooden cart. Plain isolated sprite motion, no additional visible objects, lines, flashes, smoke, particles, striking weapons or light effects. Two arms, two legs, two wheels, unchanged original face. Locked original elevated three-quarter orthographic camera; full man, both boots, both cart wheels and entire bow inside960x544 with generous margins, fixed body scale and centered root. Uniform saturated GREEN RGB0,255,0 background in EVERY frame, no floor, gradient, ground shadow, text, other characters, smoke, flashes, beams or magic. Genuine human joints, hands and cart mechanism; no whole-sprite warping.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026101012
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "cartbow_tender_hit_h3_v2_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "cartbow_tender_hit_h3_v2_guide_1.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 34,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "40",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "cartbow_tender_h3/hit_h3_v2/sampled"
+    }
+  }
+}

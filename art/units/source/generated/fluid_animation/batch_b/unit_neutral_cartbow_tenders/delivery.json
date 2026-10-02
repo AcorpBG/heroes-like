@@ -1,0 +1,182 @@
+{
+  "takes": [
+    "move_h3_v2",
+    "attack_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1",
+    "ranged_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo reviewed all124 chronological original phases per take, enlarged hands/legs/loaded bow and two-wheel cart, every selected native128px pose and actual mirrored rendering, plus battle phase-clock captures. Accepted complete middle reciprocal walk, physical cart shove/recovery, dedicated crouching guard, empty-palm support gesture, shot/recoil/crank-reload cycle and grounded two-leg corpse. Clean recoil0-34 from corrected take matches original clean recovery36-123 at the shared backward-lean pose; personally reviewed seam without blending/warping. Rejected first one-legged walk, unwanted firing outside accepted middle walking cycle, incoming hit effects, late extra recoil bolt and brief collapse flash. Guarded matte crop removes only reviewed alpha<64 rectangular background pixels beside cap. Runtime-owned bolt flight separated only across empty gaps after release; held reload bolt remains.940 focused candidate and940 actual reflected checks pass. Preserve eight accepted idle poses and all overworld pixels/timing. Review used chronological stills and native clock-driven captures; no claim of continuous manual movie playback. No broad suite."
+  },
+  "clip_sequences": {
+    "hit": {
+      "frames": [
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 0
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 8
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 16
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 18
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 19
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 20
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 21
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 22
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 23
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 24
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 25
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 26
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 27
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 28
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 29
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 30
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 31
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 32
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 33
+        },
+        {
+          "take": "hit_h3_v2",
+          "video_frame": 34
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 36
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 40
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 44
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 48
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 50
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 52
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 54
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 56
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 58
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 60
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 62
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 64
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 66
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 68
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 70
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 72
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 78
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 96
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 123
+        }
+      ],
+      "timing": {
+        "frame_msec": 35
+      }
+    }
+  }
+}

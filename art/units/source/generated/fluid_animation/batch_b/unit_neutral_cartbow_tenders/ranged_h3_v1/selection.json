@@ -1,0 +1,177 @@
+{
+  "source_frames": [
+    0,
+    8,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    37,
+    38,
+    39,
+    40,
+    42,
+    44,
+    46,
+    48,
+    50,
+    52,
+    54,
+    56,
+    58,
+    60,
+    62,
+    64,
+    66,
+    68,
+    72,
+    76,
+    80,
+    84,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    104,
+    110,
+    116,
+    123
+  ],
+  "frame_msec": 35,
+  "review_note": "All124 chronological originals and enlarged bow/string/hand/reload phases reviewed. Aim18-40, release42, visible recoil48-56, followthrough58-68, crank/reload72-94 and ready96-123. Keep two hands/two legs/two wheels and reserve bolts; held reload bolt86-94 retained. Runtime owns projectile: separate only fully detached flying bolt42/44 across verified empty gaps; discard blurred release41, original flight/video fully retained. Fixed guarded matte crop removes only translucent cap-side plate, no subject pixels. No duplicates/reversal/interpolation or normalization. Native review required.",
+  "contact_frame": 17,
+  "frame_durations_msec": [
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    105,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35,
+    35
+  ],
+  "runtime_projectile_separation": {
+    "42": {
+      "axis": "x",
+      "split_x": 660,
+      "reason": "Body ends640, fully detached flying bolt starts682; empty gap, game renders projectile."
+    },
+    "44": {
+      "axis": "x",
+      "split_x": 700,
+      "reason": "Body ends586, fully detached bolt starts832; empty gap, game renders projectile."
+    }
+  },
+  "original_pixel_exclusions": {
+    "8": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "16": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "110": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "116": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "123": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "move_h3_v1": "Only near/rear leg swings; far leg never completes opposing swing. Replace with explicit two painted opposed-leg controls.",
+  "hit_h3_v1": "Incoming red arrow15-18 and invented flash/purple swirls18-28 contaminate recoil transition. Regenerate as plain balance/knee motion, all equipment stationary.",
+  "attack_h3_v1_tail": "Retain complete original loaded-cart anticipation/shove/recovery0-88 only; unwanted separate shot89-101 occurs after recovery and is excluded, no erased projectile or invented frames.",
+  "death_h3_v1_flash": "Exclude original49-51 unwanted bow flash. Adjacent48/52 have matching same kneeling posture; no erased flash or synthetic frames.",
+  "move_h3_v2_outside_cycle": "Shots10-18 and89-93 are excluded. Retain complete clean opposed-leg walking interval30-78; shared-anchor native loop reviewed.",
+  "hit_h3_v2_late_bolt": "Reject added attached white bolt44-64. Retain clean torso recoil0-34 and match exact controlled backward lean to first take36, which has clean original recovery.",
+  "hit_h3_v1_early_effects": "Reject incoming arrow, flash and particles15-28. Retain only clean original36-123 recovery after all effects have left.",
+  "background_plate": "Several takes produce faint translucent rectangular background pixels beside cap. Exact reviewed rectangle525,119,578,146 may be excluded only when every pixel alpha<64; all subject pixels and complete originals preserved."
+}

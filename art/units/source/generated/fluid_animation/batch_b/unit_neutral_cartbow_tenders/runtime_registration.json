@@ -1,0 +1,15 @@
+{
+  "unit_id": "unit_neutral_cartbow_tenders",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "fixed_source_family_multipliers": {
+    "alpha/poses.png": 0.9,
+    "continuity-alpha": 0.85,
+    "idle-v2/hands-alpha.png": 1
+  },
+  "reason": "Original standing212px and separate continuity223px versus accepted192px articulated idle; one anatomical factor per original family, crouches/corpse not normalized, idle unchanged."
+}

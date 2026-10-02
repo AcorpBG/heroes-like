@@ -1,0 +1,19 @@
+{
+  "image": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/move-opposed-v1.png",
+  "image_sha256": "6943e867907013b18789a693426ac97bbc7488574d0ed551cb15e01963f4c620",
+  "prompt_file": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/move-opposed-v1.prompt.txt",
+  "prompt_sha256": "b99db0e929dfe1c14665aa10045b74b5bae10d0728eb81a8d511f6bb57d205d6",
+  "tool": "built-in image_gen",
+  "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-d1c7757c-5f1f-46bd-8ce1-2da294d770cb.png",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/move_h3_v1/guide_0_rgba.png",
+      "sha256": "98b1772917784078b71757a253f6b12e9a140b9b097800bd1b1ff35b9f54905d"
+    },
+    {
+      "path": "art/units/source/curated/unit_neutral_cartbow_tenders.png",
+      "sha256": "bfeba892cf64a2edff1225f81cc73b723fe6f916017e8b956fa5a409ca59abd8"
+    }
+  ],
+  "review": "Two independently painted opposite-leg contact/passing guides, two human arms and legs, intact two-wheel loaded cart and original camera/costume. One fixed .275 source scale; no warped or fabricated articulation."
+}

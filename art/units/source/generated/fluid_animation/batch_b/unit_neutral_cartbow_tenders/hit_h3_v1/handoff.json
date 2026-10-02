@@ -1,0 +1,586 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_cartbow_tenders",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "hit_h3_050",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "hit_h3_052",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "hit_h3_054",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "hit_h3_056",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "hit_h3_058",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "hit_h3_060",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "hit_h3_062",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "hit_h3_064",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "hit_h3_066",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "hit_h3_068",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "hit_h3_070",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_h3_078",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              119
+            ],
+            [
+              0,
+              119,
+              525,
+              146
+            ],
+            [
+              578,
+              119,
+              960,
+              146
+            ],
+            [
+              0,
+              146,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "reviewed_translucent_background_plate",
+            "background_rect": [
+              525,
+              119,
+              578,
+              146
+            ],
+            "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+          }
+        },
+        {
+          "name": "hit_h3_096",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              119
+            ],
+            [
+              0,
+              119,
+              525,
+              146
+            ],
+            [
+              578,
+              119,
+              960,
+              146
+            ],
+            [
+              0,
+              146,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "reviewed_translucent_background_plate",
+            "background_rect": [
+              525,
+              119,
+              578,
+              146
+            ],
+            "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+          }
+        },
+        {
+          "name": "hit_h3_123",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              119
+            ],
+            [
+              0,
+              119,
+              525,
+              146
+            ],
+            [
+              578,
+              119,
+              960,
+              146
+            ],
+            [
+              0,
+              146,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "reviewed_translucent_background_plate",
+            "background_rect": [
+              525,
+              119,
+              578,
+              146
+            ],
+            "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+          }
+        }
+      ],
+      "clips": {
+        "hit": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/config.json",
+          "sha256": "d12d849f47ef361d82a5683174b658daf014f69b82f2bdddd48d313a7e35421b"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/selection.json",
+          "sha256": "ad9c432de455bd6f305ecc7d345d287c469f5bbedf9133e011488ba1971fa3e9"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/original_lossless.mkv",
+          "sha256": "d23425ce833fa96802dbf94b8d2a4f430b51ba2cee26bd41d0a3a63e6f46386a"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/original.json",
+          "sha256": "18ea733aa255bc2a587426067cd8838e6ec83ea6fe3a8f909c2116186547c160"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/workflow_api.json",
+          "sha256": "85414bd98c44cbce8cb669542ce1421707f510baba5642123a2201661507b72d"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/prompt.txt",
+          "sha256": "c7b8b8d503c243e8a18c3b9e21b3ec49123478c2c16b3e180b295fdf9247ff95"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/reference.json",
+          "sha256": "ee3a403c9027b8a7a84ae7b498fce1277a93a8b460ac726b49f5a4efa075d81b"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/matte.json",
+          "sha256": "ffde50c743b8baaa42b0424c44e4807d0b61774d41ad08c6b2b310e2d3c7c0ed"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/staged_generation.json",
+          "sha256": "99e3700632b0c6b5eef0a97e931ea0f83d3eaef88342561e44021331925f4b2f"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/sampling_workflow_api.json",
+          "sha256": "a4e4902eda2cef6c281d6fb353f341c19b02a934504f2eb4da0356ff6d3f0290"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/sampling_submission.json",
+          "sha256": "a3ed093d629d8899b36da42adab46f191f5f19d0c83b1456856e5a0d8f1c7f73"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/sampling_history.json",
+          "sha256": "4a30cba687b07688de8a12c0e068268a6e73fed1e7e9db6523220d1a7657b743"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/hit_h3_v1/original.latent",
+          "sha256": "c8ffbb6678668c5a88ca426c77704a3dc0b54ed6ef2634228960ca1fe395eff5"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 chronological originals and enlarged clean36-123 recovery reviewed. Reject incoming arrow/flash/particles15-28; clean held lean36 matches corrected take34. Continuous original recovery40-72 returns chest/knees/arms to ready, preserve two boots/two cart wheels and loaded original bow. Native shared-anchor seam34(v2) to36(v1) reviewed enlarged without blending/warping. Guarded matte crop removes translucent background rectangle only. No duplicates/reversal/interpolation or per-frame normalization. Native review required."
+      }
+    }
+  ]
+}

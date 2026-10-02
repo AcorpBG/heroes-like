@@ -1,0 +1,1105 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_cartbow_tenders",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "cast_h3_000",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "cast_h3_008",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              119
+            ],
+            [
+              0,
+              119,
+              525,
+              146
+            ],
+            [
+              578,
+              119,
+              960,
+              146
+            ],
+            [
+              0,
+              146,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "reviewed_translucent_background_plate",
+            "background_rect": [
+              525,
+              119,
+              578,
+              146
+            ],
+            "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+          }
+        },
+        {
+          "name": "cast_h3_010",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              119
+            ],
+            [
+              0,
+              119,
+              525,
+              146
+            ],
+            [
+              578,
+              119,
+              960,
+              146
+            ],
+            [
+              0,
+              146,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "reviewed_translucent_background_plate",
+            "background_rect": [
+              525,
+              119,
+              578,
+              146
+            ],
+            "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+          }
+        },
+        {
+          "name": "cast_h3_011",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583333333333333
+        },
+        {
+          "name": "cast_h3_012",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              119
+            ],
+            [
+              0,
+              119,
+              525,
+              146
+            ],
+            [
+              578,
+              119,
+              960,
+              146
+            ],
+            [
+              0,
+              146,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "reviewed_translucent_background_plate",
+            "background_rect": [
+              525,
+              119,
+              578,
+              146
+            ],
+            "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+          }
+        },
+        {
+          "name": "cast_h3_013",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5416666666666666
+        },
+        {
+          "name": "cast_h3_014",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "cast_h3_015",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "cast_h3_016",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "cast_h3_017",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "cast_h3_018",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "cast_h3_024",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "cast_h3_036",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "cast_h3_048",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "cast_h3_056",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "cast_h3_057",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "cast_h3_058",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "cast_h3_059",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583333333333335
+        },
+        {
+          "name": "cast_h3_060",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              119
+            ],
+            [
+              0,
+              119,
+              525,
+              146
+            ],
+            [
+              578,
+              119,
+              960,
+              146
+            ],
+            [
+              0,
+              146,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "reviewed_translucent_background_plate",
+            "background_rect": [
+              525,
+              119,
+              578,
+              146
+            ],
+            "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+          }
+        },
+        {
+          "name": "cast_h3_061",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              119
+            ],
+            [
+              0,
+              119,
+              525,
+              146
+            ],
+            [
+              578,
+              119,
+              960,
+              146
+            ],
+            [
+              0,
+              146,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "reviewed_translucent_background_plate",
+            "background_rect": [
+              525,
+              119,
+              578,
+              146
+            ],
+            "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+          }
+        },
+        {
+          "name": "cast_h3_062",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              119
+            ],
+            [
+              0,
+              119,
+              525,
+              146
+            ],
+            [
+              578,
+              119,
+              960,
+              146
+            ],
+            [
+              0,
+              146,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "reviewed_translucent_background_plate",
+            "background_rect": [
+              525,
+              119,
+              578,
+              146
+            ],
+            "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+          }
+        },
+        {
+          "name": "cast_h3_063",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              119
+            ],
+            [
+              0,
+              119,
+              525,
+              146
+            ],
+            [
+              578,
+              119,
+              960,
+              146
+            ],
+            [
+              0,
+              146,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "reviewed_translucent_background_plate",
+            "background_rect": [
+              525,
+              119,
+              578,
+              146
+            ],
+            "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+          }
+        },
+        {
+          "name": "cast_h3_064",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              119
+            ],
+            [
+              0,
+              119,
+              525,
+              146
+            ],
+            [
+              578,
+              119,
+              960,
+              146
+            ],
+            [
+              0,
+              146,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "reviewed_translucent_background_plate",
+            "background_rect": [
+              525,
+              119,
+              578,
+              146
+            ],
+            "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+          }
+        },
+        {
+          "name": "cast_h3_065",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              119
+            ],
+            [
+              0,
+              119,
+              525,
+              146
+            ],
+            [
+              578,
+              119,
+              960,
+              146
+            ],
+            [
+              0,
+              146,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "reviewed_translucent_background_plate",
+            "background_rect": [
+              525,
+              119,
+              578,
+              146
+            ],
+            "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+          }
+        },
+        {
+          "name": "cast_h3_066",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              119
+            ],
+            [
+              0,
+              119,
+              525,
+              146
+            ],
+            [
+              578,
+              119,
+              960,
+              146
+            ],
+            [
+              0,
+              146,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "reviewed_translucent_background_plate",
+            "background_rect": [
+              525,
+              119,
+              578,
+              146
+            ],
+            "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+          }
+        },
+        {
+          "name": "cast_h3_074",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              119
+            ],
+            [
+              0,
+              119,
+              525,
+              146
+            ],
+            [
+              578,
+              119,
+              960,
+              146
+            ],
+            [
+              0,
+              146,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "reviewed_translucent_background_plate",
+            "background_rect": [
+              525,
+              119,
+              578,
+              146
+            ],
+            "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+          }
+        },
+        {
+          "name": "cast_h3_096",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              119
+            ],
+            [
+              0,
+              119,
+              525,
+              146
+            ],
+            [
+              578,
+              119,
+              960,
+              146
+            ],
+            [
+              0,
+              146,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "reviewed_translucent_background_plate",
+            "background_rect": [
+              525,
+              119,
+              578,
+              146
+            ],
+            "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+          }
+        },
+        {
+          "name": "cast_h3_123",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              119
+            ],
+            [
+              0,
+              119,
+              525,
+              146
+            ],
+            [
+              578,
+              119,
+              960,
+              146
+            ],
+            [
+              0,
+              146,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "reviewed_translucent_background_plate",
+            "background_rect": [
+              525,
+              119,
+              578,
+              146
+            ],
+            "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+          }
+        }
+      ],
+      "clips": {
+        "cast": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 10,
+          "frame_durations_msec": [
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            168,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42
+          ]
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/config.json",
+          "sha256": "0bc98f023fc7be9cf2df1d81e51e594e1db752f51b515ed487283fbc9260f363"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/selection.json",
+          "sha256": "14d3b1e57dc365c3b80c1dfb09b61d371ba8b8a29c7dea2345a083399865ada1"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/original_lossless.mkv",
+          "sha256": "153257336ec8300271be98287df3a3d7d50e3571430b111129062dbf3ed81571"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/original.json",
+          "sha256": "e441b5c86b0be9f5eefd7c31817f930dcacdeefa92cc01bd8b056b62131ae779"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/workflow_api.json",
+          "sha256": "3b7e9a2ac70a23b1695f658c2e3ce4a0197561e38d7c2c068632cf16b854da52"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/prompt.txt",
+          "sha256": "6bb9641e3b9afe5e1dca4ee5ef3c3cb0350555f6458c4e666dce9414afcfac42"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/reference.json",
+          "sha256": "d9743378c306627f04bf337b76ed8ee5be3fa4ee696f08c30fb199e598f3b863"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/matte.json",
+          "sha256": "e354e465b2b58d4569749317e756da723f37fc4c65e9c0a0a3e8cb85a7931bfc"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/staged_generation.json",
+          "sha256": "beb9bbfb95fa300dc3e0d270ae25e8934a78c5328b0dbdf5967bfe33255d6e70"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/sampling_workflow_api.json",
+          "sha256": "c76fe08611574f811338c6d47bfeba08ee32796581945a7b966e981b0943d569"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/sampling_submission.json",
+          "sha256": "4d3536ef51ec182febcf4087bc58b47f0c5ad11fc4327637955e861c759483a3"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/sampling_history.json",
+          "sha256": "5b0e7e1bdcd2cb1726c55216c9d920ad124986c67c28828feaa7cf2530a8f769"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/cast_h3_v1/original.latent",
+          "sha256": "58b919893b20df0c4fb90ad00fa09def2a5c0ade27528708c1a89208754021b4"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 chronological originals plus enlarged empty palm/fingers/regrip reviewed. Far hand releases11-13, raises14-18, holds clear empty rally palm18-56, lowers57-64 and grips65-66. Near hand maintains crank; two arms/two legs and loaded two-wheel cart unchanged. Fixed guarded matte crop removes only personally reviewed translucent background rectangle beside cap, preserves every opaque subject pixel and complete originals. No magic/firing, duplicates/interpolation or frame normalization. Native review required."
+      }
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_neutral_cartbow_tenders",
+  "workflow": "Solo local MiniMax H3 original video and extracted transparent frames; one unit fully completed.",
+  "new_takes": [
+    "attack_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1",
+    "defend_h3_v1",
+    "hit_h3_v1",
+    "hit_h3_v2",
+    "move_h3_v1",
+    "move_h3_v2",
+    "ranged_h3_v1"
+  ],
+  "new_clip_frames": {
+    "move": 46,
+    "attack": 42,
+    "defend": 29,
+    "cast": 28,
+    "death": 44,
+    "ranged": 52,
+    "hit": 39
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo reviewed all124 chronological original phases per take, enlarged hands/legs/loaded bow and two-wheel cart, every selected native128px pose and actual mirrored rendering, plus battle phase-clock captures. Accepted complete middle reciprocal walk, physical cart shove/recovery, dedicated crouching guard, empty-palm support gesture, shot/recoil/crank-reload cycle and grounded two-leg corpse. Clean recoil0-34 from corrected take matches original clean recovery36-123 at the shared backward-lean pose; personally reviewed seam without blending/warping. Rejected first one-legged walk, unwanted firing outside accepted middle walking cycle, incoming hit effects, late extra recoil bolt and brief collapse flash. Guarded matte crop removes only reviewed alpha<64 rectangular background pixels beside cap. Runtime-owned bolt flight separated only across empty gaps after release; held reload bolt remains.940 focused candidate and940 actual reflected checks pass. Preserve eight accepted idle poses and all overworld pixels/timing. Review used chronological stills and native clock-driven captures; no claim of continuous manual movie playback. No broad suite."
+  },
+  "validation": {
+    "candidate_checks": 940,
+    "mirrored_checks": 940,
+    "live_checks": 954,
+    "failures": 0,
+    "imported_atlas": "Exact RGBA after Godot alpha-border processing",
+    "atlas_dimensions": [
+      3068,
+      3608
+    ],
+    "rgba_bytes": 44277376,
+    "new_original_action_frames": 280,
+    "preserved_idle_frames": 8,
+    "verified_accepted_take_rgb_frames": 992,
+    "retained_original_rgb_frames_including_rejected": 1116,
+    "overworld_visuals_preserved": 232,
+    "other_battle_rows_preserved": 231,
+    "platform": "Windows Godot4.6.2 offscreen",
+    "full_suite_run": false,
+    "manual_playtest": false,
+    "continuous_browser_playback_review": false,
+    "linux_run": false
+  },
+  "roster_after": {
+    "complete": 200,
+    "remaining": 32,
+    "total": 232
+  },
+  "progress_note": "2026-10-02 SOLO COMPLETE: Cartbow Tenders seven H3 actions280 original poses plus retained8-frame idle; reciprocal cart walk, physical shove, matched clean recoil/recovery, crouching guard, empty-palm rally, draw/release/reload and grounded corpse reviewed. 940/940/954 candidate/mirrored/live focused checks pass; exact imported atlas, all232 map pixels/timing and other231 battle rows preserved. Roster200/232 complete,32 remaining. Broad goal stays in_progress; solo, no full suite.",
+  "cleanup": {
+    "files_removed": 2113,
+    "bytes_recovered": 820190614,
+    "retained_original_rgb_frames": 1116,
+    "rebuildable": true,
+    "rule": "Only unselected reproducible mattes, hash/pixel-verified Comfy duplicates and inactive preview/test/import profiles. Preserve all original videos/latents/guides/prompt/workflows, corrections, provenance, required art and every pre-existing cache/save/unrelated file."
+  }
+}

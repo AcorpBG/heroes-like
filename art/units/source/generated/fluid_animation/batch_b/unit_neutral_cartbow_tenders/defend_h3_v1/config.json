@@ -1,0 +1,234 @@
+{
+  "unit_id": "unit_neutral_cartbow_tenders",
+  "clip": "defend",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026101004,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          220
+        ],
+        [
+          0,
+          220,
+          430,
+          390
+        ],
+        [
+          0,
+          390,
+          403,
+          391
+        ],
+        [
+          0,
+          391,
+          404,
+          396
+        ],
+        [
+          0,
+          396,
+          405,
+          400
+        ],
+        [
+          0,
+          400,
+          406,
+          419
+        ],
+        [
+          0,
+          419,
+          405,
+          424
+        ],
+        [
+          0,
+          424,
+          404,
+          428
+        ],
+        [
+          0,
+          428,
+          403,
+          431
+        ],
+        [
+          0,
+          431,
+          402,
+          434
+        ],
+        [
+          0,
+          434,
+          401,
+          436
+        ],
+        [
+          0,
+          436,
+          400,
+          438
+        ],
+        [
+          0,
+          438,
+          399,
+          440
+        ],
+        [
+          0,
+          440,
+          398,
+          442
+        ],
+        [
+          0,
+          442,
+          397,
+          443
+        ],
+        [
+          0,
+          443,
+          396,
+          445
+        ],
+        [
+          0,
+          445,
+          395,
+          446
+        ],
+        [
+          0,
+          446,
+          394,
+          447
+        ],
+        [
+          0,
+          447,
+          393,
+          448
+        ],
+        [
+          0,
+          448,
+          392,
+          449
+        ],
+        [
+          0,
+          449,
+          391,
+          450
+        ],
+        [
+          0,
+          450,
+          390,
+          451
+        ],
+        [
+          0,
+          451,
+          389,
+          452
+        ],
+        [
+          0,
+          452,
+          388,
+          453
+        ],
+        [
+          0,
+          453,
+          387,
+          454
+        ],
+        [
+          0,
+          454,
+          386,
+          455
+        ],
+        [
+          0,
+          455,
+          385,
+          456
+        ],
+        [
+          0,
+          456,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        212,
+        475
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "crouch_guard_loaded",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/alpha/poses.png",
+      "rects": [
+        [
+          970,
+          369,
+          1254,
+          610
+        ]
+      ],
+      "anchor": [
+        1106,
+        599
+      ],
+      "scale": 0.63,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      44,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "One original Cartbow Tender, one adult human man with exactly TWO arms and TWO legs. Brown leather cap with goggles, red scarf and headband tails, mustard yellow coat, rolled cream sleeves, dark brown leather apron, brown gloves, strapped brown trousers and boots, belt tools and side bolt case. He stands behind his ONE original two-wheel wooden crossbow cart, facing screen right. Exactly TWO wooden spoked wheels with iron rims, same wooden chassis, metal rail, bronze rear crank, original curved wooden bow limbs and ONE continuous string. Original red/white fletched reserve bolts remain in the side rack. Near arm is screen-left arm on rear crank/handle; far arm crosses to screen-right rail/handle. Both are ordinary human hands, never extra arms or fingers. Original body proportions, face, clothing, loaded bolt and cart geometry remain coherent. One dedicated defensive human crouch behind the loaded crossbow cart. Flex both knees and lower torso behind bow/rail, bend both elbows without losing two grips; cap and face remain visible. HOLD final low planted guard. Cart remains upright, exactly two wheels, bolt loaded and string drawn. No new shield, firing, prone fall or return to standing. Locked original elevated three-quarter orthographic camera; full man, both boots, both cart wheels and entire bow inside960x544 with generous margins, fixed body scale and centered root. Uniform saturated GREEN RGB0,255,0 background in EVERY frame, no floor, gradient, ground shadow, text, other characters, smoke, flashes, beams or magic. Genuine human joints, hands and cart mechanism; no whole-sprite warping.",
+  "protected_foreground_chroma": 13,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,281 @@
+{
+  "unit_id": "unit_neutral_cartbow_tenders",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            220
+          ],
+          [
+            0,
+            220,
+            430,
+            390
+          ],
+          [
+            0,
+            390,
+            403,
+            391
+          ],
+          [
+            0,
+            391,
+            404,
+            396
+          ],
+          [
+            0,
+            396,
+            405,
+            400
+          ],
+          [
+            0,
+            400,
+            406,
+            419
+          ],
+          [
+            0,
+            419,
+            405,
+            424
+          ],
+          [
+            0,
+            424,
+            404,
+            428
+          ],
+          [
+            0,
+            428,
+            403,
+            431
+          ],
+          [
+            0,
+            431,
+            402,
+            434
+          ],
+          [
+            0,
+            434,
+            401,
+            436
+          ],
+          [
+            0,
+            436,
+            400,
+            438
+          ],
+          [
+            0,
+            438,
+            399,
+            440
+          ],
+          [
+            0,
+            440,
+            398,
+            442
+          ],
+          [
+            0,
+            442,
+            397,
+            443
+          ],
+          [
+            0,
+            443,
+            396,
+            445
+          ],
+          [
+            0,
+            445,
+            395,
+            446
+          ],
+          [
+            0,
+            446,
+            394,
+            447
+          ],
+          [
+            0,
+            447,
+            393,
+            448
+          ],
+          [
+            0,
+            448,
+            392,
+            449
+          ],
+          [
+            0,
+            449,
+            391,
+            450
+          ],
+          [
+            0,
+            450,
+            390,
+            451
+          ],
+          [
+            0,
+            451,
+            389,
+            452
+          ],
+          [
+            0,
+            452,
+            388,
+            453
+          ],
+          [
+            0,
+            453,
+            387,
+            454
+          ],
+          [
+            0,
+            454,
+            386,
+            455
+          ],
+          [
+            0,
+            455,
+            385,
+            456
+          ],
+          [
+            0,
+            456,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          212,
+          475
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "494b70cc542b51ff3f3238aff66f199e9a078350891c1744e032629c671ae48f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "05a0f02269e4fd2d3f9f505825a53f2bf9accd2fb51b87fa9fdc415db9e1d12a",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "push_passing_loaded",
+        "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/continuity-alpha/loaded-passing-and-shove-recovery.png",
+        "rects": [
+          [
+            0,
+            0,
+            911,
+            869
+          ]
+        ],
+        "anchor": [
+          635,
+          826
+        ],
+        "scale": 0.48449999999999993,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3b0d2ff06c53fecaad64962ff62952f98841c98074d23a7c8996c4af4b41041e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d527ebd3905352028cc9647eee340659b6685200828a12b89e9009615ac82cc8",
+      "runtime_source_scale": 0.24224999999999997
+    },
+    {
+      "source_frame": {
+        "name": "near_passing",
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/move-opposed-v1.png",
+        "rects": [
+          [
+            1135,
+            20,
+            1850,
+            748
+          ]
+        ],
+        "anchor": [
+          1386,
+          730
+        ],
+        "scale": 0.55,
+        "alpha_noise_cutoff": 8,
+        "crop_recipe": {
+          "kind": "original_two_cutout_guides",
+          "reason": "Separate observed opaque figures across empty central gap; preserve complete hands, boots, bow tips and wheels."
+        }
+      },
+      "source_sha256": "6943e867907013b18789a693426ac97bbc7488574d0ed551cb15e01963f4c620",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "2bb54574a24936e082ea1c643df04e8e9c5980a9033398f7fb2e9b563569c0dd",
+      "runtime_source_scale": 0.275
+    },
+    {
+      "source_frame": {
+        "name": "near_contact",
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_cartbow_tenders/move-opposed-v1.png",
+        "rects": [
+          [
+            300,
+            20,
+            993,
+            744
+          ]
+        ],
+        "anchor": [
+          550,
+          730
+        ],
+        "scale": 0.55,
+        "alpha_noise_cutoff": 8,
+        "crop_recipe": {
+          "kind": "original_two_cutout_guides",
+          "reason": "Separate observed opaque figures across empty central gap; preserve complete hands, boots, bow tips and wheels."
+        }
+      },
+      "source_sha256": "6943e867907013b18789a693426ac97bbc7488574d0ed551cb15e01963f4c620",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "a8b18a0d0d251470170dff53021cd2a4fa312915ba3278d64d92600f75d613ec",
+      "runtime_source_scale": 0.275
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

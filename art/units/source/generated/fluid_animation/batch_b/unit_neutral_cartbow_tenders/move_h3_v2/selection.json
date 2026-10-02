@@ -1,0 +1,84 @@
+{
+  "source_frames": [
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    78
+  ],
+  "frame_msec": 35,
+  "review_note": "All124 chronological originals and enlarged30-84 opposed legs/grips/two-wheel axle reviewed. Retain complete middle reciprocal cycle30-78: near knee/boot swings forward34-46, near contact50-54 with far leg lifted behind, opposed support/swing58-70 and original ready74-78. Both arms retain handles and two wheels rotate. Loop ready78 to30 at fixed original anchor and anatomical scale. Reject unwanted shots10-18 and89-93 outside this interval. Keep dense original transition phases, shorten terminal ready only. No duplicate/reversed/interpolated poses or per-frame normalization. Native review required.",
+  "original_pixel_exclusions": {
+    "42": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "47": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "48": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    }
+  }
+}

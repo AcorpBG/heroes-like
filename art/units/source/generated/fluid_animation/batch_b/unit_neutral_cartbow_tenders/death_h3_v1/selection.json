@@ -1,0 +1,62 @@
+{
+  "source_frames": [
+    0,
+    8,
+    16,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    38,
+    40,
+    42,
+    44,
+    46,
+    48,
+    52,
+    56,
+    60,
+    62,
+    64,
+    66,
+    68,
+    70,
+    72,
+    74,
+    76,
+    78,
+    80,
+    82,
+    84,
+    86,
+    88,
+    90,
+    92,
+    94,
+    96,
+    98,
+    100,
+    102,
+    110,
+    123
+  ],
+  "frame_msec": 42,
+  "review_note": "All124 chronological originals and enlarged knees/arms/collapse/terminal corpse reviewed. Knees buckle22-30, kneel32-44, hand drops44-64, sit65-78, roll80-96, two legs settle97-102 into grounded head-left corpse through123. Loaded cart remains intact on two wheels. Reject brief unintended bow flash49-51 during otherwise held kneel; adjacent48/52 preserve continuous same kneeling posture. Guarded matte crop removes translucent background rectangle beside cap only. No painted repair, duplicate/reversed/interpolated poses or per-frame normalization. Native review required.",
+  "original_pixel_exclusions": {
+    "8": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    }
+  }
+}

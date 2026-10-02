@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "9adc7903a78a6aa874137cd0f0e49bd9e1633f91f7179530caa9a0e0d6bd8873",
+  "latent_sha256": "eb89fee59663c1b989ca4de11c8ef148c05b161314b740e5c940f0243cea9e62",
+  "decode_workflow_sha256": "70e74746f5e15f9dd7ed995386f5f872b9e8c6558cd1eee31339a755e38897bb",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "cartbow_tender_h3\\move_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17482597696,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

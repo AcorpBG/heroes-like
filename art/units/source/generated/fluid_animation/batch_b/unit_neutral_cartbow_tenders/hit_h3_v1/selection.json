@@ -1,0 +1,57 @@
+{
+  "source_frames": [
+    36,
+    40,
+    44,
+    48,
+    50,
+    52,
+    54,
+    56,
+    58,
+    60,
+    62,
+    64,
+    66,
+    68,
+    70,
+    72,
+    78,
+    96,
+    123
+  ],
+  "frame_msec": 35,
+  "review_note": "All124 chronological originals and enlarged clean36-123 recovery reviewed. Reject incoming arrow/flash/particles15-28; clean held lean36 matches corrected take34. Continuous original recovery40-72 returns chest/knees/arms to ready, preserve two boots/two cart wheels and loaded original bow. Native shared-anchor seam34(v2) to36(v1) reviewed enlarged without blending/warping. Guarded matte crop removes translucent background rectangle only. No duplicates/reversal/interpolation or per-frame normalization. Native review required.",
+  "original_pixel_exclusions": {
+    "78": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "96": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    },
+    "123": {
+      "kind": "reviewed_translucent_background_plate",
+      "background_rect": [
+        525,
+        119,
+        578,
+        146
+      ],
+      "reason": "Faint generated rectangular background fragment beside cap. This reviewed background region has no alpha>=64 subject pixels; preserve cap/scarf/hands and original matte/video."
+    }
+  }
+}

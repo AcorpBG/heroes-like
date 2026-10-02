@@ -1,0 +1,301 @@
+{
+  "prompt": [
+    203,
+    "1b3003d5-a3df-49c5-b4ed-09e588f46183",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Cartbow Tender, one adult human man with exactly TWO arms and TWO legs. Brown leather cap with goggles, red scarf and headband tails, mustard yellow coat, rolled cream sleeves, dark brown leather apron, brown gloves, strapped brown trousers and boots, belt tools and side bolt case. He stands behind his ONE original two-wheel wooden crossbow cart, facing screen right. Exactly TWO wooden spoked wheels with iron rims, same wooden chassis, metal rail, bronze rear crank, original curved wooden bow limbs and ONE continuous string. Original red/white fletched reserve bolts remain in the side rack. Near arm is screen-left arm on rear crank/handle; far arm crosses to screen-right rail/handle. Both are ordinary human hands, never extra arms or fingers. Original body proportions, face, clothing, loaded bolt and cart geometry remain coherent.  One slow complete reciprocal walking cycle in place, explicitly follow original opposed-leg guides24,48,72,96. From ready, near prominent-kneepad leg lifts backward24 then swings FORWARD with knee flexed48 while far foot supports. Near boot PLANTS forward72 while FAR leg is lifted behind, then far boot swings forward and plants96 as near leg moves back into original ready. BOTH feet must alternate contact, toe-off, passing and landing. No one-leg hopping or permanently planted far foot. Both hands keep original cart grips; two spoked wheels roll forward on their fixed centered axle, bow stays loaded. Camera/root and human proportions fixed. End exact original ready. Locked original elevated three-quarter orthographic camera; full man, both boots, both cart wheels and entire bow inside960x544 with generous margins, fixed body scale and centered root. Uniform saturated GREEN RGB0,255,0 background in EVERY frame, no floor, gradient, ground shadow, text, other characters, smoke, flashes, beams or magic. Genuine human joints, hands and cart mechanism; no whole-sprite warping.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026101011
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "cartbow_tender_move_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "cartbow_tender_move_h3_v2_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "cartbow_tender_move_h3_v2_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "cartbow_tender_move_h3_v2_guide_3.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 24,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 48,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 72,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "43": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "42",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 96,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "43",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "cartbow_tender_h3/move_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "cartbow_tender_h3",
+      "create_time": 1790907700078
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "cartbow_tender_h3\\move_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "1b3003d5-a3df-49c5-b4ed-09e588f46183",
+          "timestamp": 1790907700602
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "1b3003d5-a3df-49c5-b4ed-09e588f46183",
+          "timestamp": 1790907700634
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "1b3003d5-a3df-49c5-b4ed-09e588f46183",
+          "timestamp": 1790907875501
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}
