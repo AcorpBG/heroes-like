@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "b722e65ca1598f1fe41e17335f605052b289360b80b0623edb224d8d2be43cfe",
+  "latent_sha256": "53c69f47a5db9cc136ce30e8778e4dda75fd4022083f52c7a6ae713dd05beaf8",
+  "decode_workflow_sha256": "c7510c639788147d05a5e2af69f86cd9c2888ff727f770a0c2a51cf1512cac0c",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "beaconline_writguard_h3\\attack_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17247411520,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

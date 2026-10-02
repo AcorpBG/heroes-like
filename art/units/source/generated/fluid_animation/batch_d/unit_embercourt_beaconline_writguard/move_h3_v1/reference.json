@@ -1,0 +1,141 @@
+{
+  "unit_id": "unit_embercourt_beaconline_writguard",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          209,
+          488
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b40ea57d2a192e70433c4c5ebcccb3231bd0332d756ece8582ccc8282da898d3",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0ac9751b248db73e2faca8985f12b236b448b6cfc631d33dc12cede171728875",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "contact_standard_side",
+        "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/continuity-alpha/poses.png",
+        "rects": [
+          [
+            732,
+            4,
+            990,
+            385
+          ],
+          [
+            825,
+            385,
+            990,
+            401
+          ]
+        ],
+        "anchor": [
+          867,
+          389
+        ],
+        "scale": 1.1,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c651a3eed515da7c2cfe8e8417244b1895b7128ec2386bfda13186165b483da1",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b57a809b16d2aa969a699464ac3c2fa6f55b4fc5f4a343430f89831b5280166f",
+      "runtime_source_scale": 0.55
+    },
+    {
+      "source_frame": {
+        "name": "passing_shield_side",
+        "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/continuity-alpha/walk-shield-side-lift-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1020,
+            1542
+          ]
+        ],
+        "anchor": [
+          560,
+          1460
+        ],
+        "scale": 0.29,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "11d449f1018494a722d0f3084e36db1125c9e4ee77d7529fe929c7f81d9d5b05",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e1b9d439825bfeb443cbf73b7b7303eed51b855dfd009ea6f49af8969cac3a48",
+      "runtime_source_scale": 0.145
+    },
+    {
+      "source_frame": {
+        "name": "contact_shield_side",
+        "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/continuity-alpha/poses.png",
+        "rects": [
+          [
+            1134,
+            4,
+            1399,
+            389
+          ]
+        ],
+        "anchor": [
+          1290,
+          382
+        ],
+        "scale": 1.1,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c651a3eed515da7c2cfe8e8417244b1895b7128ec2386bfda13186165b483da1",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "7bd6268714f31a76116ffee2a3ac03420e99eba0cbb5f1a04262bd99faf87da3",
+      "runtime_source_scale": 0.55
+    },
+    {
+      "source_frame": {
+        "name": "passing_standard_side",
+        "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/continuity-alpha/walk-standard-side-lift-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1020,
+            1542
+          ]
+        ],
+        "anchor": [
+          560,
+          1460
+        ],
+        "scale": 0.29,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "717fa47fce019f3754cb56334e27df322b9b70693f387d9f4b3d38cbec0416d8",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "350816d8b75e54dda7d9edbc83bf6355a5c79b710b09a1bbe33b35c43d1f3271",
+      "runtime_source_scale": 0.145
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

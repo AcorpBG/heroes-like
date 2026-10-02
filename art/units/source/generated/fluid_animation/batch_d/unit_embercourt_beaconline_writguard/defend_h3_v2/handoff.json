@@ -1,0 +1,781 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_beaconline_writguard",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_019",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_021",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              78
+            ],
+            [
+              0,
+              78,
+              542,
+              89
+            ],
+            [
+              566,
+              78,
+              960,
+              89
+            ],
+            [
+              0,
+              89,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              542,
+              78,
+              566,
+              89
+            ],
+            "kind": "reviewed_disconnected_background_speck",
+            "reason": "Isolated horizontal dark artifact above/right of standard and helmet, inherited from legacy brace source;<=150 original pixels, never original equipment/anatomy. Unmodified matte/video preserved."
+          }
+        },
+        {
+          "name": "defend_h3_023",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              78
+            ],
+            [
+              0,
+              78,
+              542,
+              89
+            ],
+            [
+              566,
+              78,
+              960,
+              89
+            ],
+            [
+              0,
+              89,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              542,
+              78,
+              566,
+              89
+            ],
+            "kind": "reviewed_disconnected_background_speck",
+            "reason": "Isolated horizontal dark artifact above/right of standard and helmet, inherited from legacy brace source;<=150 original pixels, never original equipment/anatomy. Unmodified matte/video preserved."
+          }
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              78
+            ],
+            [
+              0,
+              78,
+              542,
+              89
+            ],
+            [
+              566,
+              78,
+              960,
+              89
+            ],
+            [
+              0,
+              89,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              542,
+              78,
+              566,
+              89
+            ],
+            "kind": "reviewed_disconnected_background_speck",
+            "reason": "Isolated horizontal dark artifact above/right of standard and helmet, inherited from legacy brace source;<=150 original pixels, never original equipment/anatomy. Unmodified matte/video preserved."
+          }
+        },
+        {
+          "name": "defend_h3_025",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              78
+            ],
+            [
+              0,
+              78,
+              542,
+              89
+            ],
+            [
+              566,
+              78,
+              960,
+              89
+            ],
+            [
+              0,
+              89,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              542,
+              78,
+              566,
+              89
+            ],
+            "kind": "reviewed_disconnected_background_speck",
+            "reason": "Isolated horizontal dark artifact above/right of standard and helmet, inherited from legacy brace source;<=150 original pixels, never original equipment/anatomy. Unmodified matte/video preserved."
+          }
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              78
+            ],
+            [
+              0,
+              78,
+              542,
+              89
+            ],
+            [
+              566,
+              78,
+              960,
+              89
+            ],
+            [
+              0,
+              89,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              542,
+              78,
+              566,
+              89
+            ],
+            "kind": "reviewed_disconnected_background_speck",
+            "reason": "Isolated horizontal dark artifact above/right of standard and helmet, inherited from legacy brace source;<=150 original pixels, never original equipment/anatomy. Unmodified matte/video preserved."
+          }
+        },
+        {
+          "name": "defend_h3_027",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              78
+            ],
+            [
+              0,
+              78,
+              542,
+              89
+            ],
+            [
+              566,
+              78,
+              960,
+              89
+            ],
+            [
+              0,
+              89,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              542,
+              78,
+              566,
+              89
+            ],
+            "kind": "reviewed_disconnected_background_speck",
+            "reason": "Isolated horizontal dark artifact above/right of standard and helmet, inherited from legacy brace source;<=150 original pixels, never original equipment/anatomy. Unmodified matte/video preserved."
+          }
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              78
+            ],
+            [
+              0,
+              78,
+              542,
+              89
+            ],
+            [
+              566,
+              78,
+              960,
+              89
+            ],
+            [
+              0,
+              89,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              542,
+              78,
+              566,
+              89
+            ],
+            "kind": "reviewed_disconnected_background_speck",
+            "reason": "Isolated horizontal dark artifact above/right of standard and helmet, inherited from legacy brace source;<=150 original pixels, never original equipment/anatomy. Unmodified matte/video preserved."
+          }
+        },
+        {
+          "name": "defend_h3_029",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              78
+            ],
+            [
+              0,
+              78,
+              542,
+              89
+            ],
+            [
+              566,
+              78,
+              960,
+              89
+            ],
+            [
+              0,
+              89,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              542,
+              78,
+              566,
+              89
+            ],
+            "kind": "reviewed_disconnected_background_speck",
+            "reason": "Isolated horizontal dark artifact above/right of standard and helmet, inherited from legacy brace source;<=150 original pixels, never original equipment/anatomy. Unmodified matte/video preserved."
+          }
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              78
+            ],
+            [
+              0,
+              78,
+              542,
+              89
+            ],
+            [
+              566,
+              78,
+              960,
+              89
+            ],
+            [
+              0,
+              89,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              542,
+              78,
+              566,
+              89
+            ],
+            "kind": "reviewed_disconnected_background_speck",
+            "reason": "Isolated horizontal dark artifact above/right of standard and helmet, inherited from legacy brace source;<=150 original pixels, never original equipment/anatomy. Unmodified matte/video preserved."
+          }
+        },
+        {
+          "name": "defend_h3_031",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              78
+            ],
+            [
+              0,
+              78,
+              542,
+              89
+            ],
+            [
+              566,
+              78,
+              960,
+              89
+            ],
+            [
+              0,
+              89,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              542,
+              78,
+              566,
+              89
+            ],
+            "kind": "reviewed_disconnected_background_speck",
+            "reason": "Isolated horizontal dark artifact above/right of standard and helmet, inherited from legacy brace source;<=150 original pixels, never original equipment/anatomy. Unmodified matte/video preserved."
+          }
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              78
+            ],
+            [
+              0,
+              78,
+              542,
+              89
+            ],
+            [
+              566,
+              78,
+              960,
+              89
+            ],
+            [
+              0,
+              89,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              542,
+              78,
+              566,
+              89
+            ],
+            "kind": "reviewed_disconnected_background_speck",
+            "reason": "Isolated horizontal dark artifact above/right of standard and helmet, inherited from legacy brace source;<=150 original pixels, never original equipment/anatomy. Unmodified matte/video preserved."
+          }
+        },
+        {
+          "name": "defend_h3_033",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              78
+            ],
+            [
+              0,
+              78,
+              542,
+              89
+            ],
+            [
+              566,
+              78,
+              960,
+              89
+            ],
+            [
+              0,
+              89,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              542,
+              78,
+              566,
+              89
+            ],
+            "kind": "reviewed_disconnected_background_speck",
+            "reason": "Isolated horizontal dark artifact above/right of standard and helmet, inherited from legacy brace source;<=150 original pixels, never original equipment/anatomy. Unmodified matte/video preserved."
+          }
+        }
+      ],
+      "clips": {
+        "defend": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 15
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/config.json",
+          "sha256": "c5367b5113f78189f2fc4c357d8d9d06caa2a82d8c09b5e67dd9d99d7b6e8345"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/selection.json",
+          "sha256": "fbd36beab837ab094b0ac296ae0d7d6cd1cdbf66e06718296821994cc93177d1"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/original_lossless.mkv",
+          "sha256": "f90c928f37dd9710d2d83d9be007111a93d3370d3d594f9734a0437224e4df76"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/original.json",
+          "sha256": "5d06fa3e51229585e906b65e87eb70727ad328d672b9fbcb6ac5bed84c537ff3"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/workflow_api.json",
+          "sha256": "2f380db3cf6736d0167a8b653dbfa5088f8a57dea1ec19cc147cb62c3d3efc9a"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/prompt.txt",
+          "sha256": "45e677bbab7505830e6b606f894edf25131dd9439215130350010fc19f2a6d00"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/reference.json",
+          "sha256": "b88ef46e2d463577a44611e97ff897aa88063a8749c4eebe895defc431210f36"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/matte.json",
+          "sha256": "f2f0d197d0ad94ba26d4b4b1ac3773caac77252bfb1117b2fa39570070c30695"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/staged_generation.json",
+          "sha256": "6fa0df006b25ab622787fe2959bc48c66bba807962839145d2a621a818810a17"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/sampling_workflow_api.json",
+          "sha256": "b5e678c478557a7cee56c8eef1de866f3317201921b24d7ba8b05ad443a49867"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/sampling_submission.json",
+          "sha256": "99d1a464a010ac55d735a2738157b77894e925034f57b709d0f9a9285c3e8381"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/sampling_history.json",
+          "sha256": "2876f4fcdf66b19430b8f0ea1a5ab56855ce13b33fc89b31e19f390e368cd8e0"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/defend_h3_v2/original.latent",
+          "sha256": "ca9a0580b213d5bfc80941a8894d2a506f962b414bb385f85114dc849cce826f"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Dedicated planted knee/shield brace with stable original standard head, two original arms and held guard. Isolated inherited backdrop dash removed through original-pixel crop only."
+      }
+    }
+  ]
+}

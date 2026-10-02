@@ -1,0 +1,1074 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_beaconline_writguard",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "death_h3_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_019",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_h3_021",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_023",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_025",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_027",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_029",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              462
+            ],
+            [
+              0,
+              462,
+              258,
+              480
+            ],
+            [
+              280,
+              462,
+              960,
+              480
+            ],
+            [
+              0,
+              480,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rects": [
+              [
+                258,
+                462,
+                280,
+                480
+              ]
+            ],
+            "kind": "reviewed_disconnected_background_specks",
+            "reason": "Personally inspected original pixels: two isolated pale backdrop flecks above/right of body and below/left of standard; never cloth, anatomy, lamps, equipment or overlapping effects. <=150 pixels per rectangle; full original matte/video retained."
+          }
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              264
+            ],
+            [
+              0,
+              264,
+              580,
+              292
+            ],
+            [
+              601,
+              264,
+              960,
+              292
+            ],
+            [
+              0,
+              292,
+              960,
+              462
+            ],
+            [
+              0,
+              462,
+              258,
+              480
+            ],
+            [
+              280,
+              462,
+              960,
+              480
+            ],
+            [
+              0,
+              480,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rects": [
+              [
+                580,
+                264,
+                601,
+                292
+              ],
+              [
+                258,
+                462,
+                280,
+                480
+              ]
+            ],
+            "kind": "reviewed_disconnected_background_specks",
+            "reason": "Personally inspected original pixels: two isolated pale backdrop flecks above/right of body and below/left of standard; never cloth, anatomy, lamps, equipment or overlapping effects. <=150 pixels per rectangle; full original matte/video retained."
+          }
+        },
+        {
+          "name": "death_h3_031",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              264
+            ],
+            [
+              0,
+              264,
+              580,
+              292
+            ],
+            [
+              601,
+              264,
+              960,
+              292
+            ],
+            [
+              0,
+              292,
+              960,
+              462
+            ],
+            [
+              0,
+              462,
+              258,
+              480
+            ],
+            [
+              280,
+              462,
+              960,
+              480
+            ],
+            [
+              0,
+              480,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rects": [
+              [
+                580,
+                264,
+                601,
+                292
+              ],
+              [
+                258,
+                462,
+                280,
+                480
+              ]
+            ],
+            "kind": "reviewed_disconnected_background_specks",
+            "reason": "Personally inspected original pixels: two isolated pale backdrop flecks above/right of body and below/left of standard; never cloth, anatomy, lamps, equipment or overlapping effects. <=150 pixels per rectangle; full original matte/video retained."
+          }
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              264
+            ],
+            [
+              0,
+              264,
+              580,
+              292
+            ],
+            [
+              601,
+              264,
+              960,
+              292
+            ],
+            [
+              0,
+              292,
+              960,
+              462
+            ],
+            [
+              0,
+              462,
+              258,
+              480
+            ],
+            [
+              280,
+              462,
+              960,
+              480
+            ],
+            [
+              0,
+              480,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rects": [
+              [
+                580,
+                264,
+                601,
+                292
+              ],
+              [
+                258,
+                462,
+                280,
+                480
+              ]
+            ],
+            "kind": "reviewed_disconnected_background_specks",
+            "reason": "Personally inspected original pixels: two isolated pale backdrop flecks above/right of body and below/left of standard; never cloth, anatomy, lamps, equipment or overlapping effects. <=150 pixels per rectangle; full original matte/video retained."
+          }
+        },
+        {
+          "name": "death_h3_033",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              264
+            ],
+            [
+              0,
+              264,
+              580,
+              292
+            ],
+            [
+              601,
+              264,
+              960,
+              292
+            ],
+            [
+              0,
+              292,
+              960,
+              462
+            ],
+            [
+              0,
+              462,
+              258,
+              480
+            ],
+            [
+              280,
+              462,
+              960,
+              480
+            ],
+            [
+              0,
+              480,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rects": [
+              [
+                580,
+                264,
+                601,
+                292
+              ],
+              [
+                258,
+                462,
+                280,
+                480
+              ]
+            ],
+            "kind": "reviewed_disconnected_background_specks",
+            "reason": "Personally inspected original pixels: two isolated pale backdrop flecks above/right of body and below/left of standard; never cloth, anatomy, lamps, equipment or overlapping effects. <=150 pixels per rectangle; full original matte/video retained."
+          }
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              264
+            ],
+            [
+              0,
+              264,
+              580,
+              292
+            ],
+            [
+              601,
+              264,
+              960,
+              292
+            ],
+            [
+              0,
+              292,
+              960,
+              462
+            ],
+            [
+              0,
+              462,
+              258,
+              480
+            ],
+            [
+              280,
+              462,
+              960,
+              480
+            ],
+            [
+              0,
+              480,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rects": [
+              [
+                580,
+                264,
+                601,
+                292
+              ],
+              [
+                258,
+                462,
+                280,
+                480
+              ]
+            ],
+            "kind": "reviewed_disconnected_background_specks",
+            "reason": "Personally inspected original pixels: two isolated pale backdrop flecks above/right of body and below/left of standard; never cloth, anatomy, lamps, equipment or overlapping effects. <=150 pixels per rectangle; full original matte/video retained."
+          }
+        },
+        {
+          "name": "death_h3_035",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              264
+            ],
+            [
+              0,
+              264,
+              580,
+              292
+            ],
+            [
+              601,
+              264,
+              960,
+              292
+            ],
+            [
+              0,
+              292,
+              960,
+              462
+            ],
+            [
+              0,
+              462,
+              258,
+              480
+            ],
+            [
+              280,
+              462,
+              960,
+              480
+            ],
+            [
+              0,
+              480,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rects": [
+              [
+                580,
+                264,
+                601,
+                292
+              ],
+              [
+                258,
+                462,
+                280,
+                480
+              ]
+            ],
+            "kind": "reviewed_disconnected_background_specks",
+            "reason": "Personally inspected original pixels: two isolated pale backdrop flecks above/right of body and below/left of standard; never cloth, anatomy, lamps, equipment or overlapping effects. <=150 pixels per rectangle; full original matte/video retained."
+          }
+        },
+        {
+          "name": "death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              264
+            ],
+            [
+              0,
+              264,
+              580,
+              292
+            ],
+            [
+              601,
+              264,
+              960,
+              292
+            ],
+            [
+              0,
+              292,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rects": [
+              [
+                580,
+                264,
+                601,
+                292
+              ]
+            ],
+            "kind": "reviewed_disconnected_background_specks",
+            "reason": "Personally inspected original pixels: two isolated pale backdrop flecks above/right of body and below/left of standard; never cloth, anatomy, lamps, equipment or overlapping effects. <=150 pixels per rectangle; full original matte/video retained."
+          }
+        },
+        {
+          "name": "death_h3_037",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              264
+            ],
+            [
+              0,
+              264,
+              580,
+              292
+            ],
+            [
+              601,
+              264,
+              960,
+              292
+            ],
+            [
+              0,
+              292,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rects": [
+              [
+                580,
+                264,
+                601,
+                292
+              ]
+            ],
+            "kind": "reviewed_disconnected_background_specks",
+            "reason": "Personally inspected original pixels: two isolated pale backdrop flecks above/right of body and below/left of standard; never cloth, anatomy, lamps, equipment or overlapping effects. <=150 pixels per rectangle; full original matte/video retained."
+          }
+        },
+        {
+          "name": "death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              264
+            ],
+            [
+              0,
+              264,
+              580,
+              292
+            ],
+            [
+              601,
+              264,
+              960,
+              292
+            ],
+            [
+              0,
+              292,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rects": [
+              [
+                580,
+                264,
+                601,
+                292
+              ]
+            ],
+            "kind": "reviewed_disconnected_background_specks",
+            "reason": "Personally inspected original pixels: two isolated pale backdrop flecks above/right of body and below/left of standard; never cloth, anatomy, lamps, equipment or overlapping effects. <=150 pixels per rectangle; full original matte/video retained."
+          }
+        },
+        {
+          "name": "death_h3_039",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              264
+            ],
+            [
+              0,
+              264,
+              580,
+              292
+            ],
+            [
+              601,
+              264,
+              960,
+              292
+            ],
+            [
+              0,
+              292,
+              960,
+              462
+            ],
+            [
+              0,
+              462,
+              258,
+              480
+            ],
+            [
+              280,
+              462,
+              960,
+              480
+            ],
+            [
+              0,
+              480,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rects": [
+              [
+                580,
+                264,
+                601,
+                292
+              ],
+              [
+                258,
+                462,
+                280,
+                480
+              ]
+            ],
+            "kind": "reviewed_disconnected_background_specks",
+            "reason": "Personally inspected original pixels: two isolated pale backdrop flecks above/right of body and below/left of standard; never cloth, anatomy, lamps, equipment or overlapping effects. <=150 pixels per rectangle; full original matte/video retained."
+          }
+        }
+      ],
+      "clips": {
+        "death": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 21
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/config.json",
+          "sha256": "34d3da4c403c60a8fbe522e6a972cab7ab7cce7d32cec24ba6ea0ac859dceb6a"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/selection.json",
+          "sha256": "a6a572ac0b6838c0e7915a659ad4f1d5fc52d824caea92fe2c44117011d02941"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/original_lossless.mkv",
+          "sha256": "fc763e0d1ecf1c93eb80a299793e1e3d75464a2f9ccb5ea39268b372ca533702"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/original.json",
+          "sha256": "ac256be8c47da655b721dfa84198a71ab2d5fc5d6359f94aa59fad4ec9f81bd0"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/workflow_api.json",
+          "sha256": "bcf81e13ed5803a5b7a0f34c194e5b6472ef5c68eb0a7a1e3936b046a0665db4"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/prompt.txt",
+          "sha256": "cb8581ae8a4e95c0ad1b5b609a9f3629a52b1e62459bbed215bed3f3f1d83560"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/reference.json",
+          "sha256": "42bc9203310796169b743fd5f524d402ae077cf17a7f829c81a42a3f51b57770"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/matte.json",
+          "sha256": "564176b630c7f37606996defef2efdc1890eaf04d111e372997e49134573b878"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/staged_generation.json",
+          "sha256": "9056988cc9ad074b52077cbfd5c29bf17f2b1854dd9976fa6bbc2cbe94ae1e35"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "6ba5d1bc8db6b77d37b8573f3f3530cc11c6680a5f91822c1f8fb6050431214b"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/sampling_submission.json",
+          "sha256": "b422173f594f86317ba4fc0558b1b798f5501684cbee034f671813f7c343b1b2"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/sampling_history.json",
+          "sha256": "6e051e7614007130670018683509dbedd4e99e727e5fff7ede7f67075af39613"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/death_h3_v1/original.latent",
+          "sha256": "0c90996a0422ce424ae21f65c674ed7793240e18e254009532ad894c49dd3ce1"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Continuous knee bend, descent, sideways roll and grounded head-left corpse with standard/axe resting down and shield on left forearm. Original poses retain source-wide scale; sparse independently reviewed backdrop flecks excluded only via original-pixel rectangles."
+      }
+    }
+  ]
+}

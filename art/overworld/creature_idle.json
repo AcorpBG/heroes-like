@@ -4088,40 +4088,40 @@
       "sha256": "08cc543ffb6174df9de355d77bb9c5704b5c21fe918f4dccb1dcd909d89dba8c"
     },
     "unit_embercourt_beaconline_writguard": {
-      "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_beaconline_writguard.png",
-      "frame_size": [
-        180,
-        227
-      ],
-      "frames": 8,
-      "frame_msec": 240,
-      "static_frame": 0,
-      "ground_anchor": [
-        92.0,
-        217
-      ],
-      "painted_extent": 211,
-      "source_sheet": "res://art/animation/runtime/poses/unit_embercourt_beaconline_writguard.png",
-      "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
-      ],
-      "source_crop": [
-        164,
-        14,
-        344,
-        241
-      ],
-      "source_sha256": "29a44d5f659e0d75c8229d4b1f4b57b01b475d2aa9c03fc9149736180b187233",
-      "source_provenance": "res://art/animation/source/poses/unit_embercourt_beaconline_writguard/provenance.json",
-      "sha256": "60907a8551e2cdb419de05e9737365a380b1e383fd5c15dc6c8263d5cd0a4abf"
-    },
+  "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_beaconline_writguard.png",
+  "frame_size": [
+    180,
+    227
+  ],
+  "frames": 8,
+  "frame_msec": 240,
+  "static_frame": 0,
+  "ground_anchor": [
+    92.0,
+    217
+  ],
+  "painted_extent": 211,
+  "source_sheet": "res://art/animation/runtime/fluid/unit_embercourt_beaconline_writguard.png",
+  "source_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "source_crop": [
+    60,
+    7,
+    240,
+    234
+  ],
+  "source_sha256": "e0c084dc60de5855797ec78391e95a24662c211a43d796b34c37d1842b11cf9a",
+  "source_provenance": "res://art/animation/source/fluid/unit_embercourt_beaconline_writguard/provenance.json",
+  "sha256": "60907a8551e2cdb419de05e9737365a380b1e383fd5c15dc6c8263d5cd0a4abf"
+},
     "unit_mireclaw_fenbell_chainstalkers": {
       "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_fenbell_chainstalkers.png",
       "frame_size": [

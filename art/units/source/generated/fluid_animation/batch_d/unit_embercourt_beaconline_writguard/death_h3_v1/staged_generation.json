@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "6ba5d1bc8db6b77d37b8573f3f3530cc11c6680a5f91822c1f8fb6050431214b",
+  "latent_sha256": "0c90996a0422ce424ae21f65c674ed7793240e18e254009532ad894c49dd3ce1",
+  "decode_workflow_sha256": "bcf81e13ed5803a5b7a0f34c194e5b6472ef5c68eb0a7a1e3936b046a0665db4",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "beaconline_writguard_h3\\death_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

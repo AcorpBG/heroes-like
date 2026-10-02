@@ -1,0 +1,25 @@
+{
+  "unit_id": "unit_embercourt_beaconline_writguard",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "source_family_scaling": "Retain original .55/.145/.44 source-wide scales unchanged.",
+  "measured_reference_height": 211,
+  "reason": "Reviewed articulated idle208-211px; inherited ready/contact212-221px and brace207px share original armored body/standard scale. Fallen101px keeps folded anatomy and grounded equipment. No per-frame normalization.",
+  "support_key_registration": {
+    "source": "support_rally_original.png",
+    "source_dimensions": [
+      1047,
+      1502
+    ],
+    "source_scale": 0.16,
+    "source_ground_anchor": [
+      684,
+      1392
+    ],
+    "reason": "One source-wide scale keeps helmet-to-boots adult proportions compatible with accepted ready while raised standard extends upward/left; midpoint between grounded boots sets root, not changing equipment bounds."
+  }
+}

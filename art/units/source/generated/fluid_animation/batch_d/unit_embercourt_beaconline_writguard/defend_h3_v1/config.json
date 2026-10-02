@@ -1,0 +1,72 @@
+{
+  "unit_id": "unit_embercourt_beaconline_writguard",
+  "clip": "defend",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102304,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        209,
+        488
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "defend",
+      "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/continuity-alpha/poses.png",
+      "rects": [
+        [
+          1110,
+          389,
+          1405,
+          766
+        ]
+      ],
+      "anchor": [
+        1254,
+        750
+      ],
+      "scale": 0.55,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      42,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "One original Beaconline Writguard, adult bearded human man, charcoal steel plate armor with brass trim, red-plumed closed crown helmet with open bearded face, red scarf and torn red-black cloak, black armored trousers and metal boots. Exactly TWO arms and TWO legs. SCREEN LEFT RIGHT hand grips the tall single wooden lantern STANDARD with brass finial, one large amber lantern, two smaller hanging lanterns and red-gold pennon strips; standard is NOT a weapon or staff with magic. SCREEN RIGHT LEFT hand holds ONE long wooden-shafted single steel axe blade while the red charcoal brass-rimmed lantern-emblem shield is strapped to that SAME LEFT FOREARM. Original axe, shield and standard remain separate identifiable equipment, never held by extra hands. Same face, armor and original weapon proportions throughout. One gradual SHIELD BRACE. Bend knees and lower hips, bring original SCREEN RIGHT LEFT forearm shield before torso42 while LEFT hand still retains its axe. SCREEN LEFT RIGHT hand holds original lantern standard upright. HOLD final supported guard, no return to ready and no axe swing, shield growth or extra arm. Locked original elevated three-quarter orthographic camera facing screen right, full body and ALL standard/axe/shield tips in960x544 with generous margins, fixed body scale and root centered. Uniform saturated GREEN RGB0,255,0 background, no floor, shadow, scenery, text, other people, sparks, magic, smoke or trails. No root drift, body resizing, duplicate limbs or extra weapons.",
+  "protected_foreground_chroma": 11,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

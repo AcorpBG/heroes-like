@@ -1,0 +1,62 @@
+{
+  "unit_id": "unit_embercourt_beaconline_writguard",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          209,
+          488
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b40ea57d2a192e70433c4c5ebcccb3231bd0332d756ece8582ccc8282da898d3",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0ac9751b248db73e2faca8985f12b236b448b6cfc631d33dc12cede171728875",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_embercourt_beaconline_writguard/support_rally_original.png",
+        "rects": [
+          [
+            0,
+            0,
+            1047,
+            1502
+          ]
+        ],
+        "anchor": [
+          684,
+          1392
+        ],
+        "scale": 0.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ec98a4e1ac6a14dfc7752811a6682a5a3fa3ad98d401c89bb583bdd9eb03253d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ca183df3bda129c5d26356178e3cfa2628477250bc28307071b4a4bbce319320",
+      "runtime_source_scale": 0.16
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

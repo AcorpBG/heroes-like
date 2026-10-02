@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_embercourt_beaconline_writguard",
+  "workflow": "Solo MiniMax H3 original video/extracted transparent frames; built-in image_gen for one missing rally guide.",
+  "new_clip_frames": {
+    "move": 33,
+    "attack": 65,
+    "hit": 25,
+    "defend": 16,
+    "cast": 36,
+    "death": 22
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo review: all 124 chronological RGB frames of eight original H3 takes inspected; attack v1 rejected for a baked swing trail and defend v1 for lantern simplification. Selected move33, attack65, hit25, defend16, physical standard-rally cast36 and death22: 197 new poses. Two arms, original right-hand lantern standard, left-hand axe and shield on the same left forearm retained. Reciprocal knee/heel/toe gait, planted rally, axe windup/contact/recovery and grounded head-left corpse reviewed. Attack contact source44/index26; rally source36/index14. Attack33ms, other actions42ms; only matching stationary holds shortened. Recorded disconnected pale background flecks excluded from defend/death; unmodified originals and matte extraction recipes retained as provenance. Every candidate and mirrored native phase inspected at actual128px reference height, plus eight actual battle-clock captures covering axe contact and recovery. Candidate and mirrored focused fixtures each272 checks with zero failures and all65 attack poses observed. Eight existing articulated idle poses reviewed and preserved. No continuous browser movie review, manual gameplay, Linux run or full suite claimed."
+  },
+  "validation": {
+    "candidate_checks": 272,
+    "mirrored_checks": 272,
+    "live_checks": 286,
+    "failures": 0,
+    "new_original_action_frames": 197,
+    "preserved_idle_frames": 8,
+    "retained_original_rgb_frames_including_rejected": 992,
+    "atlas_dimensions": [
+      3952,
+      3840
+    ],
+    "rgba_bytes": 60702720,
+    "overworld_visuals_preserved": 232,
+    "other_battle_rows_preserved": 231,
+    "platform": "Windows Godot4.6.2 offscreen",
+    "full_suite_run": false,
+    "manual_playtest": false,
+    "continuous_browser_playback_review": false,
+    "linux_run": false,
+    "live_all_phases_and_eight_actual_clock_captures_visually_reviewed": true,
+    "live_overworld_idle_visually_reviewed": true
+  },
+  "roster_after": {
+    "complete": 204,
+    "remaining": 28,
+    "total": 232
+  },
+  "progress_note": "2026-10-02 SOLO COMPLETE: Beaconline Writguard six original H3 actions, 197 new poses plus eight preserved articulated idle phases. Reciprocal gait, original left-hand axe/forearm shield and right-hand lantern standard, dedicated recoil/brace/rally and grounded corpse reviewed. Focused candidate/mirrored/live checks 272/272/286 pass; original frame/atlas import verification, all232 map visuals/timing and other231 battle rows preserved. Roster204/232 complete,28 remaining. Broad goal remains in_progress; solo, no full suite.",
+  "model_release": {
+    "free_vram_bytes": 31634076564,
+    "required_free_vram_bytes": 17179869184
+  },
+  "cleanup": {
+    "removed_verified_duplicate_and_unused_files": 1824,
+    "removed_duplicate_bytes": 564297157,
+    "temporary_files_to_remove": 113,
+    "temporary_bytes_to_remove": 96744679,
+    "recovered_bytes": 661041836,
+    "rebuildable": true,
+    "retained_original_rgb_frames": 992,
+    "original_videos_latents_guides_prompts_and_provenance_preserved": true,
+    "temporary_directories": [
+      ".artifacts/beaconline_solo",
+      ".artifacts/beaconline_writguard_h3"
+    ],
+    "temporary_directories_removed": true
+  }
+}
