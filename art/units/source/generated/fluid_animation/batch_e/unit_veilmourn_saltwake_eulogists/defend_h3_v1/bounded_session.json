@@ -1,0 +1,15 @@
+{
+  "sampling_release": {
+    "free_vram_bytes": 32189186048,
+    "required_free_vram_bytes": 17179869184
+  },
+  "decode_release": {
+    "free_vram_bytes": 17622187840,
+    "required_free_vram_bytes": 17179869184
+  },
+  "actions": [
+    "defend_h3_v1",
+    "cast_h3_v1"
+  ],
+  "rule": "Complete bounded sampling, terminal waits, model releases, separate preserved-latent decode and semantic matting held within one shared GPU lease; maximum two actions."
+}

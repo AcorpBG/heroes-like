@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_veilmourn_saltwake_eulogists",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/idle-and-equipped-cold-collapse-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            500,
+            599
+          ]
+        ],
+        "anchor": [
+          304,
+          543
+        ],
+        "scale": 0.8,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3c9e7344ae594760efbb2aa3d8fedcee93d6f4436c0dabd0323e693e18971ad5",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d748533d7b64e01bfd69b61baeed30cfb1c110a20a26c1bab4a45f8ff11cc5b5",
+      "runtime_source_scale": 0.4
+    },
+    {
+      "source_frame": {
+        "name": "walk_contact",
+        "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/guided-walk-and-guards-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            500,
+            501
+          ]
+        ],
+        "anchor": [
+          306,
+          484
+        ],
+        "scale": 0.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95a663e67c2362a4613ad57eb32b2ab24dca58452887d4a499512b4a7e882fd9",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f6273ddd3ccf46d331850f2a55e2d66c02e71f67315f149d0009c1e4e9c91671",
+      "runtime_source_scale": 0.43
+    },
+    {
+      "source_frame": {
+        "name": "walk_far_passing",
+        "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/guided-walk-and-guards-green.png",
+        "rects": [
+          [
+            508,
+            0,
+            1004,
+            501
+          ]
+        ],
+        "anchor": [
+          808,
+          489
+        ],
+        "scale": 0.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95a663e67c2362a4613ad57eb32b2ab24dca58452887d4a499512b4a7e882fd9",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "0864553bd3dbe86b095acd989002167c367e9de5f41e055a1dc9834804d2ecc7",
+      "runtime_source_scale": 0.43
+    },
+    {
+      "source_frame": {
+        "name": "walk_near_passing",
+        "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/guided-walk-and-guards-green.png",
+        "rects": [
+          [
+            0,
+            503,
+            504,
+            1024
+          ]
+        ],
+        "anchor": [
+          293,
+          979
+        ],
+        "scale": 0.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95a663e67c2362a4613ad57eb32b2ab24dca58452887d4a499512b4a7e882fd9",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "39a18c4dcf3da4930cdc4655c7b2f9d640bf5cfbce4687a2d91207bd44f57d2c",
+      "runtime_source_scale": 0.43
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

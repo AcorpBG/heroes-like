@@ -1,0 +1,3394 @@
+{
+  "frames": 124,
+  "fps": 24,
+  "rgba_sha256": [
+    "c5d56610285bf809d855f920102ce7a8450ca2b634f2747b6362c9cbf3232096",
+    "0456bd6dfbbf825259e0d032b10cac94182d698a1e11c702c46add20066d31b9",
+    "81a5791974c66e412c139e70ef51d885f51b1e9c49da4d2331b2283effcea142",
+    "bcd1be97422138ad7a01d9960f64497d0999417666cb81a48e924e571b2d1e35",
+    "e940cc5e24e79e8cbd3f47778f5c044d79c1cfa62f269aef103e3c19b6ef8ed7",
+    "bf8a24a6bf3cfe1ac3fd1e7214bcb87b2eb052287118aec8dfa761b5e6143cb3",
+    "d975b8ce52a105b61379a5f958b610481268d9fbd3f3cb9485c0935028a2bfd1",
+    "9dd822a57439c2b2c9c02cbfbcf3b006356bddf2951326acd906995963bc28b7",
+    "cd6ae789b78ee0709d01521915a7bc77a80dbb6d304875b704582aed23084cff",
+    "87816822695ef2767016bad9c470988d482f96473cdcee242d79016d5ca42053",
+    "17df0d5dde213f0d5f244351d594d8ba3f83c38bf4ad73470bf8b11100f32a0d",
+    "6065898d2927f62ed65b989b696db4b18d81e28369bf54347b012f5edb95a467",
+    "b3c3dd11dc66d476907ffe6dddef391975cbf761b20acaa4c5fc64ff043b1176",
+    "497f5f71821179aebaeccc667de09ffd07a53c0846da0e97516386ee41e3c245",
+    "327d511d11734e00d99a0e997e4fc6ccf54eee2315cff17961914c6e048085a2",
+    "25de90694c2854ec9ad46e01232ac76a015063c0a52b1230f8a1105910ee627c",
+    "280a33182c15d21d6fcedcb069522db7fb4fdbc476419fbf167d5ef40fb77f62",
+    "6803ff2ef84ddae5ec5c441612bfc3f74f44764d11e84cd28f70e9bda7d4e2c9",
+    "a8b85a46829daa7b07bc0d25e07bb91ff1442b44e1ebd053a9dba56971900dd8",
+    "615330468e817d89b553c4afc43599946c5fd2f1b78b2076f0c641ad76cb90ec",
+    "7fd74939b6f81837e38222cf9c5dac3b4b7c264ae51a092f8bea8905837871de",
+    "43da4552701981feb231d690910aaca94c3080d8cad5cba0ab3072d171f6dc0d",
+    "23e78003dd6341540e6d5aef15bb8f648fb4094c95db3003d319d26b3b6111e5",
+    "51bd88326d50449cb71d9b1019dcf0b164651d7b70b5c116079967a794cc501b",
+    "710f47d982a48fb9aaeda97bf711abaed8fa13ed3e958f912ee8cdcc5a50070f",
+    "1c87208de49bbdd8ecc9b09c0a4b5e865dcc85d05814aab9a4bfb124f6d0dcb0",
+    "22a8661d71d8e049cdc76e48f2507aa950b4b7cbe0fb6fe21656c4f61cdd6c45",
+    "ef8820d6f0edd36a2c4b2ff6f96364679d15eebced50e3e0547fdc6afd9a9956",
+    "278dd63df49a09bd48f3a0dcfe0787912fb9e74758783d00893f742075344d78",
+    "d70fe4aeedbbaddd41500916b9fdd27de11f6b63906095abcf883e6cd3d3dc5b",
+    "1e5db8609e21a96ff3bbeb79128812911d4fd309382c9b5eab4c1ece6db904f3",
+    "b3b3d9f39fde7aaba975ce1108b0c84b34ac8e7d09427c68dba25c984d313420",
+    "9fe639de173639fbc6479005453484e7478aa365fbfccd3c493507ae93be5d7a",
+    "1a292986dadc9abe079c0596d56a35836923572c32788ad0b3e3d80f65600c4d",
+    "cfa4a82e5a367181268f8caa9d201e7a92e2263a9115e1c272dbf83035c2cfbc",
+    "cb303433e684e2074cb8482223275ade54ba40f60cdbddb4d00f4c2a89be28b0",
+    "731042c6dcbbadb668899e1b8605ab2ddd7aff869c9be021268d0f2b51c9e30d",
+    "08586605f58f951dca7cfa6a936065535c14ac5b08adc9186b1951590cf13be9",
+    "c64c18225175cdee7064350810062298e18ab0f36cefb74faf8aad4068c092f2",
+    "914dccfc490a12576e4f55f0bbde631bfc81055451ecdafbada22ebc3372ec28",
+    "ea30d52b1432058363a8d36e042179ec4d4fd5494d7dc4642582ad0ba7b0dcc4",
+    "64d39eb77f7291307541ed056d933e880556b38314a6408badc90f4af7a3fd18",
+    "6f7f7200994384c93e1584d1c75559cacf975583b1c576ee26cc55136e187997",
+    "319b042252d3d50849589f7c8b31ab7fb345c24a58f8d4830731c0984ea8dd84",
+    "b7cd18e34f54abcf2fd4fa83674256182f3fd6ea6f9f83e11c34d4a0d2addedd",
+    "57035a395d69ec32bf59bc13c0bc2422a309b9eb094876df5e9d07ee1be39b95",
+    "422fae338b1795fa22172bf8d56a4e5678595609e078e23c41330d2310dc1739",
+    "02f22d8d072ff828fb614ad62921a0c6203c090f2a860ba3e17d3ad90ac9303f",
+    "ef772b37e2796e80b591a2a0cf9f2c9b958cade46a21e1e744a18b55a66256b6",
+    "15fdb54c0a80fad66ac4ab0bc6377ea122d82464bfac421d521b0a61f2874efe",
+    "1779c5ed7b1e12fa608079e4d532f351fddf16b23cd1a849e3c76c44d0f1c420",
+    "159a898de4e59d00933e507c8c964e334e6eafaef964d221624b195b06ffb19b",
+    "1d884914f930c6a8b0dd7dc93cbee25b7c755fce8a5aa8a40380117846371baf",
+    "66dd702c084eb48874bc3a12468be54d99e5c3c8954a05f00746c2bf4b2f1036",
+    "3cca27aa077880e740723daabceebee090870c4237277e5287dedfd322de9ba7",
+    "783a31a5ec755235f5d96e5256b02abe85f975befb2b5429551dd289b7e4d36d",
+    "5fa14ba9d5939510eb254f5ec239acff97581382eef710b18465e3efec735541",
+    "59ea11b75aee27002a6f316e3b1947ff7e1d151aeda76927df19d2bc3fb617ed",
+    "af69d149ad9750b505f33645209afb09e175c9db1ce9c858a0983e81f12a852f",
+    "df7e573c4e0e546aa946242ccef29a6fb4e80f64d89b62068cc40d10af4bdc76",
+    "0d15f358b777fbd6096e06fb0565cc8592a74ec48e4adc923f6339b480fbbd1e",
+    "a798b029a74b9722735a500ec6f5ac5801ba6dc888780a0d170b0c87b02bea97",
+    "a5b4b190572e8067b0486891c4765a4f8728b8777ae3296c851e378a586f82a5",
+    "29fe190524d60c346efbfe9d6c4ed93b30ea598ba98bf53638fe99469a844ade",
+    "4480202d0ab8eaec596b9768497a26b17d8b422469931cba67b9346cecb9f4b2",
+    "e720a3b5054d7139afe84c31fd7b87966ac2eadbcfa734ee0dc358267d1ae38e",
+    "f418854d24768cbde8dd3ad9b59912430a739323acd183f46f0ac665092a5312",
+    "14a7ef229ec6fa0489266c2dda411372033ebfe5cb33d833452bac6ecd4b5621",
+    "daa68a445ad7fe03a93cc7713ccd07d732b488dc3b9512f4419059a3301a40da",
+    "7339a2f7447919ba09f292235b66330f382fb9bfe5209e8773747fa0659dcc43",
+    "61db4db0636256f519967685e4a512fc2bcb46310265c564360c62f97a4da79c",
+    "308300eb2dd17dbcf99ad6ab4ad21991003389175e162759c12f9cd0eb87af18",
+    "910280d81a89d5f7d93c69c2b27e931a596a600d5951154e236bd97ed7233e15",
+    "0ab828507ddaf0ecfef7b548a44e28214f0403d08b536727b191543786e201b8",
+    "80801de33e0f54d6c366af2a75500afa7a2fd122aaf16ceb48eade2ea669b1ae",
+    "7292371c97675fcdb8a5e3106ee87720e553fbfdb27618e4304ab2253bbceb11",
+    "47da252ccd81f582ed9c0f0c2b7786403a3e68aaea94c27a1e16280756e64c5a",
+    "97e9e1ef7396dbc97c01e0479edea9d26b4f406dd08a35dc14a2b69d7c72e8b2",
+    "dd3548f45a29fcc6498f6e2501d58940dff20a8be2a7403fe466f57d315200b7",
+    "b97908b24b3fbb26c3c0e30eb30c174c3c84bfbf8d7136301ecbfe4f34943e07",
+    "ca84bd6f201a9d22259bb0bf56b98f6eee72c25ce7d50eb6de626770cd6d732e",
+    "8ed9a90b33966354990b9b9dcfef079695889b25c63f3e30ab7641d3ca973106",
+    "518ef77e8a1ad0f84c603e6f7439a7d3f0b1f661814d682816720eda05cb261f",
+    "fab2722d3fbe045136724c73bdb4fe52647fa888308d92ea7cc62da1d59d85de",
+    "481101e6b87c2261583a746694d9c5c92bafee4c4487119bfa2cd8a30065b198",
+    "557b365995996404de71706ea3cac07939c4ea6502af2a25568e13074e6754f1",
+    "1a061025d09ad269f03cb11026cade3f187c5535b2f9d1fced5e63b40e6b2a08",
+    "0599be413bdcfec9fde557a50fa4c1142b2692ee6647e9f9e9b8880a882713fc",
+    "4453e8363a82d70b9a8a521ba41c0745c34287423a0629bca3a3c0fa937acde0",
+    "76bbed107b38564eeb91bca0fda8f4c3d405bac3eda9db36e856746abb54d135",
+    "63d5a1b87b84940d9b7ced7c366649c4e066ce9a3e4f45e94af97d682e462ce3",
+    "c75b6e6dc7de04c200126f6a981319b5599700ed8153695a15bc7f5aaf6c6aeb",
+    "36fddafd6dbf21497dbca676db9cdbb39425a1218f7a66f80b9d92f3b45b6e45",
+    "96413081cf701739d350db00053033c63cdfe8270934307229508f39d62297ab",
+    "b92b3b6a864ac1f625c6810361457f185b125e54e509058b6a4f18e75d98082e",
+    "69a860fdb7f0b0fd24d897435d498e403b1bd7d53bf30e081e47e2df07c7bbd9",
+    "9781c70a5022ba26f2032620b2eed0d206dab29d510fe786e89cded582545be8",
+    "a3e374cba5fdc970bf0b5fc4c54abad12c6da0984bab3a3fdc73275a3dedd798",
+    "4475b302d83f78cc7e24cbb7199b7c060b2ae9d9ba3851c27ac16b261f7f6f88",
+    "eb6871266595e7e2b9b5b70939295e60df78e48e8f69b30eba12ec974aa14b8e",
+    "1647be03e6811f97f533e0266e0852267f14e246d46853b852f964771c05c871",
+    "9f4f57ec259b7f3cd6c1bf5823304918ac7d53153360b558fc3337208a06004f",
+    "9ad415eae08bb8802c58cd9365bb2f03a20c2e773214c9d6d33dbddd50b5312d",
+    "7975f23728a5d1a689e68644b93310429bd99aa5c309bc73a7fd7220bb87c6e0",
+    "81f6b638634f62a06b53c88cbd7be40e444cc132d920e819b51623cf2fbbdc8a",
+    "30211e868e7f2118ea7245c99708c95454fe9eb32761e45ada20bf0dceea4b7f",
+    "f0fa498e8dba0f888eb66a134bf6a230e3250d98d9e6dc885bf900c8cda85e10",
+    "4c3d77cf3db819bd138c1c4be2533f32d7017bc9529c326b27880176ac96297b",
+    "c7434ed0549ea80940b64206b81c0608af496d808fb8d1de9f59dfa8c5041681",
+    "8c9602ed26af0c0cc0f2db9087d6c5f570a32afe0b8de52f9288b7d7f672dc6e",
+    "05cc40b4d076eef53c7f721dd92e7a0903634a2d3cf7ac6bb806c2ae24a71ab4",
+    "d5a90112eeab51e599663266c320af43dde26c5d178239601024865b647272f5",
+    "b4d3acf1744275e271dbb2c5511f4169aa028f0a29832657924238e3757b8021",
+    "3925d92ff712278f27027481b297260f19e78b672023cd84c9b51699f76d933e",
+    "3b816383ee887a7f50de7adf191a3a9b7cbd1a21742d50f69f8c5bf365582dcf",
+    "827c7b31fa862a476eabdb42e39638e568ba7ebae79c133e84e5a4eafbc93435",
+    "41ddfac64dc269cf8bb55f1d25b3f82dc3a7477a62d45518e569822d2d6293d0",
+    "1a3f8b5d15e51390508be7e5484ad0f2b531267abab53c5fd8f6f589cf32474b",
+    "46ee0f3266c9eef588feb5436aa2eac8d5d3ded932da2c67b06d4f41fbf9e7d7",
+    "855a56c5675a9693ac5ecad1f378b96333746f5e5b1ae7581394af0965830d11",
+    "16dc52ab1f7315fe70d1f1a0ddfd05492068e59c0f431344773cd08e580f1b2b",
+    "34fbe11937995d44d08930755061ea0040b5ea4238cab02f68b2da1e7a9f970f",
+    "e00cc0589cba45032e449b309feda553473ce66f575205c70d968b57e76ae6e2",
+    "18f49c819be747f0c9f1af5921ec6170a9d388cd4e09364d941ee13b51dabd62"
+  ],
+  "background_frames": [
+    {
+      "background_rgb": [
+        255.0,
+        11.0,
+        245.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 8217,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "f16b46446a12dcfc986e09f2a237e19a7488c6d42e80238d7873f838c426ba64",
+        "combined_alpha_sha256": "ff5c618b13ceae81213f705d55aaf3e4d186f935b1c2458523e8266996e9f7f0",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 8181,
+        "alpha_sha256": "ff5c618b13ceae81213f705d55aaf3e4d186f935b1c2458523e8266996e9f7f0"
+      }
+    },
+    {
+      "background_rgb": [
+        245.5,
+        27.5,
+        233.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.345207929611206,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9404,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "f1b737e0f9da5194b9c3539e86581393d3734d8977c9f5092970ac8ad41885c6",
+        "combined_alpha_sha256": "8b61ea3ac853a019ccf2a2cbaef5496ff764dc6ebf42105131eaadf155c02660",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 7877,
+        "alpha_sha256": "8b61ea3ac853a019ccf2a2cbaef5496ff764dc6ebf42105131eaadf155c02660"
+      }
+    },
+    {
+      "background_rgb": [
+        246.5,
+        30.5,
+        233.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.598076105117798,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9404,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "72a313032e4d2187c269c293c3e3f8c52793cbac1371deeb9a8e92395f6ed3b9",
+        "combined_alpha_sha256": "11aa9ef04cfc8f713e5d893b427aad5f8cf8f87b984018c0050804d36992e90c",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 7089,
+        "alpha_sha256": "11aa9ef04cfc8f713e5d893b427aad5f8cf8f87b984018c0050804d36992e90c"
+      }
+    },
+    {
+      "background_rgb": [
+        247.5,
+        28.0,
+        237.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9612,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "9cdda9bef9c40e605b57dcbf6265a7ba1fa6ac5241b08e578d8f7487e0addb31",
+        "combined_alpha_sha256": "dcd90abceb111eb7a7f79a532bac2a9ce248ac9bcdcfdf7d264e9929d71c2699",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 5633,
+        "alpha_sha256": "dcd90abceb111eb7a7f79a532bac2a9ce248ac9bcdcfdf7d264e9929d71c2699"
+      }
+    },
+    {
+      "background_rgb": [
+        21.0,
+        226.5,
+        136.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 16778,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "2da3fe4b59d7f29bb22f742f7d09ffba5ef52746f0aaff857e69537a4d76d269",
+        "combined_alpha_sha256": "58d863eeec8140133f205caa0390a1e3b976eaa562c85464a083c526dd336f44",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 2765,
+        "alpha_sha256": "58d863eeec8140133f205caa0390a1e3b976eaa562c85464a083c526dd336f44"
+      }
+    },
+    {
+      "background_rgb": [
+        0.0,
+        252.0,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 15180,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "ee934d9608c5c8038445410cfdcb20141fb036631599efd0e59caa1fa834aed9",
+        "combined_alpha_sha256": "be9722ae37fd1f70d00ae5eab8880b6580595348ecea1e189241306606063887",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1544,
+        "alpha_sha256": "be9722ae37fd1f70d00ae5eab8880b6580595348ecea1e189241306606063887"
+      }
+    },
+    {
+      "background_rgb": [
+        0.0,
+        252.0,
+        125.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 14726,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "7f6b0a8e3c1627f436983ebd3f0413f86cb4e3d9bfa6eb8a12c9b1f20110bfc0",
+        "combined_alpha_sha256": "571c05228473ec90880ed239ac0d5b1cfc70af9eae9c58d9a20d7be328e24d4c",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1528,
+        "alpha_sha256": "571c05228473ec90880ed239ac0d5b1cfc70af9eae9c58d9a20d7be328e24d4c"
+      }
+    },
+    {
+      "background_rgb": [
+        0.0,
+        251.5,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 14623,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "8637c877c9e45f8bd7699b0fc007960a35e739ea17f96865b3e1e211907a1c70",
+        "combined_alpha_sha256": "658d68eb26b3be8102f21d36b048cb669c09040433b14e00059bc6aff29d359f",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1452,
+        "alpha_sha256": "658d68eb26b3be8102f21d36b048cb669c09040433b14e00059bc6aff29d359f"
+      }
+    },
+    {
+      "background_rgb": [
+        1.0,
+        250.5,
+        125.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.915475845336914,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 14269,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "695e715ea17fb772329581723756d3faad6dd1ca08b11ce4962329873a36279c",
+        "combined_alpha_sha256": "990540623a492f734540a7710ae6445ea7c94f2572877a40464cadbe6388a9a4",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1460,
+        "alpha_sha256": "990540623a492f734540a7710ae6445ea7c94f2572877a40464cadbe6388a9a4"
+      }
+    },
+    {
+      "background_rgb": [
+        25.0,
+        237.0,
+        130.25
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.4003677368164062,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 17275,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "2b6ea8fb4adfd4866db3d1821cc9e48db738e0a0af516d60a0e3188c0aef1e92",
+        "combined_alpha_sha256": "044501cc9340b25b324357762f7fd67eab84987bd854f7e5bdb47c703512ffc0",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 2392,
+        "alpha_sha256": "044501cc9340b25b324357762f7fd67eab84987bd854f7e5bdb47c703512ffc0"
+      }
+    },
+    {
+      "background_rgb": [
+        244.5,
+        26.5,
+        233.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.1794495582580566,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 12892,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "835de05a08cfd7f8edc8cbb35d3a806dc57af12bbbae859797be01ad5a6f00b3",
+        "combined_alpha_sha256": "50d439f472f37d8af437858062b0369847e5ee8bc690ad110d1cb6f32d1fbbef",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 3445,
+        "alpha_sha256": "50d439f472f37d8af437858062b0369847e5ee8bc690ad110d1cb6f32d1fbbef"
+      }
+    },
+    {
+      "background_rgb": [
+        246.0,
+        27.0,
+        231.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.640054941177368,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 11107,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "d4bf21f6c3a86a5989f48eb170fa7a52e79492d4eb64bb4a4be24ab69a1e4487",
+        "combined_alpha_sha256": "ba56ae27649761146d751044ca0521062312e37dd9f6f176598f211573354675",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 6178,
+        "alpha_sha256": "ba56ae27649761146d751044ca0521062312e37dd9f6f176598f211573354675"
+      }
+    },
+    {
+      "background_rgb": [
+        248.5,
+        25.5,
+        233.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.9580399990081787,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 11177,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "84b1f604f2697ed7a8ea01865ae4fd1c313e476b53f774d97b2d03f793a4659a",
+        "combined_alpha_sha256": "b252dfd39e861631c43c2f2ec373fab53b6b94e1e1f506071cca09c95c1e43d3",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 6414,
+        "alpha_sha256": "b252dfd39e861631c43c2f2ec373fab53b6b94e1e1f506071cca09c95c1e43d3"
+      }
+    },
+    {
+      "background_rgb": [
+        241.5,
+        30.0,
+        232.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.041381359100342,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9881,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "39202a2eef6d9a7e9bc813ec74d577b392f1889442bd8ad8fa89b5cbf203b681",
+        "combined_alpha_sha256": "16099d482f52b7186abb858666dae46883cf239185005bda836203cfdb610723",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 6793,
+        "alpha_sha256": "16099d482f52b7186abb858666dae46883cf239185005bda836203cfdb610723"
+      }
+    },
+    {
+      "background_rgb": [
+        9.0,
+        245.0,
+        120.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 16864,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "0585343579d0713964551b3f60779d3d5ec02db47c3b2d052981c54a236be2f4",
+        "combined_alpha_sha256": "a28c17a27ae5033af17e9fc6dcda02dd082a6268c96a738a8ad493b85a758b4c",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1261,
+        "alpha_sha256": "a28c17a27ae5033af17e9fc6dcda02dd082a6268c96a738a8ad493b85a758b4c"
+      }
+    },
+    {
+      "background_rgb": [
+        15.0,
+        238.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 16168,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "e0b232d6b0fbfe11cd9599ba48121b2d4b47745f96b32fecdcbe3b5ca147dd26",
+        "combined_alpha_sha256": "1dfb7240266b41e975d31f4fc607a14a9bec8dd2e721a271cae286ac7af6c754",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1387,
+        "alpha_sha256": "1dfb7240266b41e975d31f4fc607a14a9bec8dd2e721a271cae286ac7af6c754"
+      }
+    },
+    {
+      "background_rgb": [
+        18.0,
+        237.5,
+        128.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 16694,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "c84381f8aed8898acce2becc1a7afa40693710eac1d70dddd7eefb0a65ae53aa",
+        "combined_alpha_sha256": "710a07007efa936f37027071c1c49b9f730648f54134e94ab4038131a2b95a68",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1332,
+        "alpha_sha256": "710a07007efa936f37027071c1c49b9f730648f54134e94ab4038131a2b95a68"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        11.0,
+        244.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9041,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "bff4a4f6deed79c5faa9929073ddc54023959a302fc9f54ebceee521f38b731b",
+        "combined_alpha_sha256": "2e2b613448a56cc7e7c631f8abc5eb5de40b4b050c769af8c7c20becf8ff038f",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 6811,
+        "alpha_sha256": "2e2b613448a56cc7e7c631f8abc5eb5de40b4b050c769af8c7c20becf8ff038f"
+      }
+    },
+    {
+      "background_rgb": [
+        240.5,
+        30.0,
+        229.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.345207929611206,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9905,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "68900cd5cbf5da29a0a6f3e095f4a1a00dbc0747fad6b0d9ede49922b00d4464",
+        "combined_alpha_sha256": "9af118182a795f313536d5ac5bb8009f29578c95a30002c9c3b61fd3a3c93862",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 7913,
+        "alpha_sha256": "9af118182a795f313536d5ac5bb8009f29578c95a30002c9c3b61fd3a3c93862"
+      }
+    },
+    {
+      "background_rgb": [
+        238.5,
+        35.0,
+        231.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.291287899017334,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 11270,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "3a070c5bacde40144669cc6755d40697158c7adcee79349a4171b46de40debae",
+        "combined_alpha_sha256": "0d37c2c2b922b6ab3e39cd606d078292afe817e38f1fe856da51bfeccb1e2142",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 5140,
+        "alpha_sha256": "0d37c2c2b922b6ab3e39cd606d078292afe817e38f1fe856da51bfeccb1e2142"
+      }
+    },
+    {
+      "background_rgb": [
+        19.0,
+        232.0,
+        124.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 16812,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "cf9c17081fd408fa2b5b34ef39390dbee7546d2c64ec12efdd823dc5405e2539",
+        "combined_alpha_sha256": "00b514d4f07af64d638c4bb87495a1f278ca314f882b1e43de5e842825cf9bb5",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 831,
+        "alpha_sha256": "00b514d4f07af64d638c4bb87495a1f278ca314f882b1e43de5e842825cf9bb5"
+      }
+    },
+    {
+      "background_rgb": [
+        18.0,
+        228.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 15809,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "f944cd3a3581e586d8ef5d03a66e653de7f5428c2e212c8474544a213ae97f91",
+        "combined_alpha_sha256": "f09d5c88351abc5584ad69068939bee3d157bdf274662ed822a61a17750d6383",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1301,
+        "alpha_sha256": "f09d5c88351abc5584ad69068939bee3d157bdf274662ed822a61a17750d6383"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        244.0,
+        122.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 13268,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "3cc70c1944c8385470f86c00d8321b889cbee758eec51ef89af398c47812f883",
+        "combined_alpha_sha256": "dd1d005de983cfe1dc7ecaaef4957e18167977e7dbb950b79320fe0c00fb94e6",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1306,
+        "alpha_sha256": "dd1d005de983cfe1dc7ecaaef4957e18167977e7dbb950b79320fe0c00fb94e6"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        243.0,
+        123.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 13625,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "58f95e0b8f4f476f124c51ef2a68621d2029fe39132c709d2163df4bc5e9e641",
+        "combined_alpha_sha256": "e238e178ce2b7f51735cbc4919b9ad92ed058291c9e1fcceb97eeb4ad333fa4c",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1552,
+        "alpha_sha256": "e238e178ce2b7f51735cbc4919b9ad92ed058291c9e1fcceb97eeb4ad333fa4c"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        243.0,
+        123.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 12793,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "a635c994b0b6ab4d43f337089632448086b439a4ac016049ddf9c62b0ab89477",
+        "combined_alpha_sha256": "954713d98148ba05b7f8ed625a1d9b300d8e316e963090bd1c2a0533232a2a71",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1270,
+        "alpha_sha256": "954713d98148ba05b7f8ed625a1d9b300d8e316e963090bd1c2a0533232a2a71"
+      }
+    },
+    {
+      "background_rgb": [
+        4.0,
+        242.0,
+        123.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 13627,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "a2e05f53f710b4624f8dde4034776ddaaa89952781bb1930013021b97b240e59",
+        "combined_alpha_sha256": "aae1b0598e1ec70efb434d716077dcaad4ec3b0314f9c2cf70c8a31b5790a76f",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1240,
+        "alpha_sha256": "aae1b0598e1ec70efb434d716077dcaad4ec3b0314f9c2cf70c8a31b5790a76f"
+      }
+    },
+    {
+      "background_rgb": [
+        21.0,
+        233.0,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.4494898319244385,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 17156,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "8d05fd2ea2c719e43b1ca819efe013831f927c2ce9733b9be5df7645202863e4",
+        "combined_alpha_sha256": "6d0daa54e97881b3967e365cde036e1e678c3bbc3905352f99faf17bde088037",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 2101,
+        "alpha_sha256": "6d0daa54e97881b3967e365cde036e1e678c3bbc3905352f99faf17bde088037"
+      }
+    },
+    {
+      "background_rgb": [
+        243.0,
+        27.5,
+        234.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9361,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "b37e82f6af600211db61731e07c48128bf0b5cbea4cff1e8e29a25ac2846f1f2",
+        "combined_alpha_sha256": "0719e266080bc8a2eb30552a1067a476d4e85a492561cf274d424d115dafe7c8",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 4344,
+        "alpha_sha256": "0719e266080bc8a2eb30552a1067a476d4e85a492561cf274d424d115dafe7c8"
+      }
+    },
+    {
+      "background_rgb": [
+        245.5,
+        27.0,
+        234.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9303,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "98a06f5251bbfe8d8cef4d64e7d1bb7affd639eb0a4ca312e78f4d9cb720e324",
+        "combined_alpha_sha256": "62d1ae48706a852189d4fc419569e404f04500c65da410a86b2826091796d97f",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 5253,
+        "alpha_sha256": "62d1ae48706a852189d4fc419569e404f04500c65da410a86b2826091796d97f"
+      }
+    },
+    {
+      "background_rgb": [
+        248.0,
+        24.0,
+        236.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9679,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "f078e577c2d4f3d6ccba16f7499e053a733dce33cc964f37f478cb4477e80831",
+        "combined_alpha_sha256": "e251a56137b561ecf7795805eb2e7e62819e473a6fa1946778ffb8c7d5ddc1c4",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 5082,
+        "alpha_sha256": "e251a56137b561ecf7795805eb2e7e62819e473a6fa1946778ffb8c7d5ddc1c4"
+      }
+    },
+    {
+      "background_rgb": [
+        248.0,
+        27.0,
+        234.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.4494898319244385,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 8777,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "9e03d7327b9ec0952d6b59c070e8d3c90b27fa7841e82948656b72a2eaee262a",
+        "combined_alpha_sha256": "2380f3e7f41b8f4002e388a36033a3ada02602f46118e7bfcf4e391e60760a55",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 6486,
+        "alpha_sha256": "2380f3e7f41b8f4002e388a36033a3ada02602f46118e7bfcf4e391e60760a55"
+      }
+    },
+    {
+      "background_rgb": [
+        9.5,
+        236.0,
+        118.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.692582368850708,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 13432,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "e8cdc1c9cfec845387c32aeab0da6453acbcc54b2552d968b37ed11ad7241a39",
+        "combined_alpha_sha256": "c59d00e2e9dc9f3a634a35092098e03e54941d4068ac6d9e0620237fe4fb3552",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1072,
+        "alpha_sha256": "c59d00e2e9dc9f3a634a35092098e03e54941d4068ac6d9e0620237fe4fb3552"
+      }
+    },
+    {
+      "background_rgb": [
+        12.5,
+        233.0,
+        121.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8708287477493286,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 12893,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "78b22f71e7b70177e95e1b83b33f4ff4ea4ea02422731901ea347c9478d8003c",
+        "combined_alpha_sha256": "6f97fad9c542f2c88c27d5f45c4bfe595dbf63b9685070d9926aab33bc9db8a4",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1124,
+        "alpha_sha256": "6f97fad9c542f2c88c27d5f45c4bfe595dbf63b9685070d9926aab33bc9db8a4"
+      }
+    },
+    {
+      "background_rgb": [
+        13.5,
+        233.0,
+        124.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 13248,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "105983db0288f542ecb3dcf8114110b77908a5c0f75c9fb542557670e49823cb",
+        "combined_alpha_sha256": "25aad83d6e8bb93106bd7c14109eafd6e2fc10d8aa1eb0a683c3d143200e0ba5",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1242,
+        "alpha_sha256": "25aad83d6e8bb93106bd7c14109eafd6e2fc10d8aa1eb0a683c3d143200e0ba5"
+      }
+    },
+    {
+      "background_rgb": [
+        6.0,
+        241.5,
+        124.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 11016,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "83b1687b587ab72df38a403d020f9616ce158e64f2f7ab3f51029b821a0ff8f5",
+        "combined_alpha_sha256": "300e5117245dc09f3a23ec28e560f707bcae1d996c6f5b364a9ab0a248c14e21",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1161,
+        "alpha_sha256": "300e5117245dc09f3a23ec28e560f707bcae1d996c6f5b364a9ab0a248c14e21"
+      }
+    },
+    {
+      "background_rgb": [
+        23.0,
+        229.0,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 13317,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "f75d89a859b9c5c0453936f7eb7482a801c4817cf648fd91b04fdc9182c5bee0",
+        "combined_alpha_sha256": "8588b83e4f59059ddcf0d067ab88933dc99e45b67c74b3040dfb67306ae39492",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1190,
+        "alpha_sha256": "8588b83e4f59059ddcf0d067ab88933dc99e45b67c74b3040dfb67306ae39492"
+      }
+    },
+    {
+      "background_rgb": [
+        25.5,
+        228.5,
+        123.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8708287477493286,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 14727,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "6db03975a2ab3d65e746c8bb9afedc2c5e1bdb16462023a121b00003aa428e64",
+        "combined_alpha_sha256": "f499ee728c8dbccb32f67e1fc2a9f0fd55309063a7b1b242d907ad45fc180c84",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 525,
+        "alpha_sha256": "f499ee728c8dbccb32f67e1fc2a9f0fd55309063a7b1b242d907ad45fc180c84"
+      }
+    },
+    {
+      "background_rgb": [
+        237.5,
+        26.0,
+        230.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8708287477493286,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9212,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "80046e9893d2603acd3b053b6af9488fd49b6f5614ee1c9a21488176db24c25b",
+        "combined_alpha_sha256": "d65e103dac55fa26d2a12a6b4e0843937d7b467e66948d1dc1ff1468fd531d51",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 5879,
+        "alpha_sha256": "d65e103dac55fa26d2a12a6b4e0843937d7b467e66948d1dc1ff1468fd531d51"
+      }
+    },
+    {
+      "background_rgb": [
+        240.0,
+        25.0,
+        232.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.7320507764816284,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 8435,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "c11fb7c1e468b1e10085e5679ec2e335567a88d4155268e1d575314075c04a8d",
+        "combined_alpha_sha256": "ed9ed94a84e27d65c48f991786a3ec7b4351f7b3f646d86311ee37755ace7d7a",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 6890,
+        "alpha_sha256": "ed9ed94a84e27d65c48f991786a3ec7b4351f7b3f646d86311ee37755ace7d7a"
+      }
+    },
+    {
+      "background_rgb": [
+        211.5,
+        53.0,
+        209.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.2015621662139893,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 6634,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "48afa8a718a269f90c36a6c9d72344e439e3b416d81c113f50e2a6c2885fc505",
+        "combined_alpha_sha256": "f999b67e7ec7fb3952cc453de7247ac75424e0f0e517912757d8a06e89adba4d",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 10742,
+        "alpha_sha256": "f999b67e7ec7fb3952cc453de7247ac75424e0f0e517912757d8a06e89adba4d"
+      }
+    },
+    {
+      "background_rgb": [
+        37.0,
+        212.0,
+        122.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.2015621662139893,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 11729,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "de3143456973c7081d08f4d61b060248c0e65f4cc17a34911bcde59169498f17",
+        "combined_alpha_sha256": "75e713384e06df12b2438abeaae86b0d454906c95003d8a23d9094256695d73f",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1101,
+        "alpha_sha256": "75e713384e06df12b2438abeaae86b0d454906c95003d8a23d9094256695d73f"
+      }
+    },
+    {
+      "background_rgb": [
+        36.5,
+        217.0,
+        121.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.7749171257019043,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 10956,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "5b5fad190bf6c873857c7a15bb6245af4a58433dbbd0a04527d8b111fe3ca841",
+        "combined_alpha_sha256": "40f91c7f429ae2daed7bf6a90cf17ae652754e9ae52a04cead8302b571e8541d",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1307,
+        "alpha_sha256": "40f91c7f429ae2daed7bf6a90cf17ae652754e9ae52a04cead8302b571e8541d"
+      }
+    },
+    {
+      "background_rgb": [
+        228.5,
+        31.0,
+        214.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.345207929611206,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 7567,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "c2b7a742a3892d887dc8b67fa46e405c921a2b2036761b126eb5f4fadd8c7887",
+        "combined_alpha_sha256": "07b378cf753093f03fb85048d5f7bddf97be36b2313eb8bf4e69ad651450dc05",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 6162,
+        "alpha_sha256": "07b378cf753093f03fb85048d5f7bddf97be36b2313eb8bf4e69ad651450dc05"
+      }
+    },
+    {
+      "background_rgb": [
+        238.5,
+        24.0,
+        232.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.915475845336914,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 6818,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "7ac999e47b0e1d410672c02cdcee1289468ee04b67f45946ef4ceddd7ce24102",
+        "combined_alpha_sha256": "c8fc72c9a3a5ce93978dbcf7ab62874916d550a885b9368d079cb6ca4606d003",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 8381,
+        "alpha_sha256": "c8fc72c9a3a5ce93978dbcf7ab62874916d550a885b9368d079cb6ca4606d003"
+      }
+    },
+    {
+      "background_rgb": [
+        242.0,
+        22.5,
+        234.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.240370273590088,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 7219,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "7771e758a425e0fe1a656ebcec03f6255306fbc16372e70df0b9ef0f1046ebae",
+        "combined_alpha_sha256": "6b9374f4a00139b0ba38b37077a3708a4a4946be1e6759ab54dde1d30718244b",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 8074,
+        "alpha_sha256": "6b9374f4a00139b0ba38b37077a3708a4a4946be1e6759ab54dde1d30718244b"
+      }
+    },
+    {
+      "background_rgb": [
+        246.0,
+        18.0,
+        241.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 8678,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "f7625b2b24bbaf51e08162ee0bd203515999c47876b09aff47dd5c163d0f6fad",
+        "combined_alpha_sha256": "d76c2c44c912899427d76b686721b3a63e8fd7fdd4f89d2f60ee625e365deff9",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 7145,
+        "alpha_sha256": "d76c2c44c912899427d76b686721b3a63e8fd7fdd4f89d2f60ee625e365deff9"
+      }
+    },
+    {
+      "background_rgb": [
+        23.0,
+        217.25,
+        130.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.1721444129943848,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 14387,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "9edc7b72fd5435401ae528dd954ab9dd4760fa5b285cb144a56aea91dda6e58d",
+        "combined_alpha_sha256": "0fdebfefa3e48f807b60031ed26aa25a7e7074996d82e7df0487f9539865aff1",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 798,
+        "alpha_sha256": "0fdebfefa3e48f807b60031ed26aa25a7e7074996d82e7df0487f9539865aff1"
+      }
+    },
+    {
+      "background_rgb": [
+        10.0,
+        235.5,
+        124.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.291287899017334,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 13603,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "fce54d396a5d6b5072dff970f02b76bab31f2042907a8c9f73a8dba3182e7793",
+        "combined_alpha_sha256": "9b2283ed789a67e32cd8fafa8d60e6d907e5278ec0c08eaa99caac8e04244e0a",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1013,
+        "alpha_sha256": "9b2283ed789a67e32cd8fafa8d60e6d907e5278ec0c08eaa99caac8e04244e0a"
+      }
+    },
+    {
+      "background_rgb": [
+        10.5,
+        235.0,
+        124.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.692582368850708,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 11064,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "5b13fe083d6499c828a07d6c0f6c164352e06274d985762c9ec129a6a609c1a0",
+        "combined_alpha_sha256": "bc40acc87be89589273b2d5079de4d4c500383ff5a632cf989664aa38ba3fc9c",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 821,
+        "alpha_sha256": "bc40acc87be89589273b2d5079de4d4c500383ff5a632cf989664aa38ba3fc9c"
+      }
+    },
+    {
+      "background_rgb": [
+        10.5,
+        235.0,
+        124.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.692582368850708,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 10957,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "6997a9bc8b245f34633239793b0b6343535a7130cfaf2780455d5efb7b7db8b1",
+        "combined_alpha_sha256": "09fab77253ee484a1c086aa05fb4599ad528fb97fb5baf9f2d458a0fe86fada2",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 664,
+        "alpha_sha256": "09fab77253ee484a1c086aa05fb4599ad528fb97fb5baf9f2d458a0fe86fada2"
+      }
+    },
+    {
+      "background_rgb": [
+        10.5,
+        235.0,
+        124.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.692582368850708,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 10985,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "f187cb48f73e56b5aadf9931aec01475a882fe6731750e5c44171c663af52540",
+        "combined_alpha_sha256": "d356851804bc9f9261f9af5438847ef61fc4e6d8132cf3b6a6889a44825a576f",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 679,
+        "alpha_sha256": "d356851804bc9f9261f9af5438847ef61fc4e6d8132cf3b6a6889a44825a576f"
+      }
+    },
+    {
+      "background_rgb": [
+        11.5,
+        234.5,
+        123.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8708287477493286,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 10172,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "4c3b1504150a353b43132ade7f963c64ef021ac4f76877577235565c4cb33807",
+        "combined_alpha_sha256": "eebb8c24212301c1378057e3ff4e8a20a96dbd202e4b144d8a72f86ec6d8fdf1",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 823,
+        "alpha_sha256": "eebb8c24212301c1378057e3ff4e8a20a96dbd202e4b144d8a72f86ec6d8fdf1"
+      }
+    },
+    {
+      "background_rgb": [
+        26.0,
+        227.75,
+        122.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4361406564712524,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 14592,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "d346c4f1a983047044b9c49488815eb4102e260ccb3c19f1fbd75017d2b345e0",
+        "combined_alpha_sha256": "14cfd1743125c2a78b84c0b397cbaa2c6e07eae505a24628293c47bd08546248",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1258,
+        "alpha_sha256": "14cfd1743125c2a78b84c0b397cbaa2c6e07eae505a24628293c47bd08546248"
+      }
+    },
+    {
+      "background_rgb": [
+        243.0,
+        18.0,
+        237.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 8669,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "874e8ebe6ccd6964ee10d656b48536ef1bb91cada3730ed6d3ef193d7e1e9b8d",
+        "combined_alpha_sha256": "67d920e94ff22291abf59d7efac8847aad76575680527a3842712909c335d7be",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 4977,
+        "alpha_sha256": "67d920e94ff22291abf59d7efac8847aad76575680527a3842712909c335d7be"
+      }
+    },
+    {
+      "background_rgb": [
+        243.0,
+        25.5,
+        234.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5495097637176514,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 8946,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "ab12093d01aa225e982a09a0add0030ed957cc680d159c9d8c1caeb8379c10c1",
+        "combined_alpha_sha256": "1ba51713d06415aa774350c971e52fc0d2802daac23a00127b94af46aead887d",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 6507,
+        "alpha_sha256": "1ba51713d06415aa774350c971e52fc0d2802daac23a00127b94af46aead887d"
+      }
+    },
+    {
+      "background_rgb": [
+        246.5,
+        23.0,
+        236.75
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.5794553756713867,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 8921,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "5e104af7ea2cd11d2883dc98c764c306a488188523a7566ee8cfaf9e4b3561ba",
+        "combined_alpha_sha256": "91d7bba379b9f6eacffa52a7231562f58b0f6c37089ccc1018bff4114ef076ae",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 5940,
+        "alpha_sha256": "91d7bba379b9f6eacffa52a7231562f58b0f6c37089ccc1018bff4114ef076ae"
+      }
+    },
+    {
+      "background_rgb": [
+        9.0,
+        237.0,
+        121.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 13266,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "a7f5afe1079cce7bb710f1303b7069b19d5c61b9529daa97b89c8d201117657c",
+        "combined_alpha_sha256": "b43e98cb6dad285797b5ebfa1a0a396296ce91cb7d86ab9b177d7f9980dd437d",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1085,
+        "alpha_sha256": "b43e98cb6dad285797b5ebfa1a0a396296ce91cb7d86ab9b177d7f9980dd437d"
+      }
+    },
+    {
+      "background_rgb": [
+        9.0,
+        236.5,
+        121.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.291287899017334,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 11971,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "318d2d60d478658e91dd8199468262a6a38b2c7ec0461b27abffe6bbe5f3a927",
+        "combined_alpha_sha256": "6d99a8288e2afc93504cfb2ab41216ffd29dcb3c5a159a92051d62e6c7a33b14",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1126,
+        "alpha_sha256": "6d99a8288e2afc93504cfb2ab41216ffd29dcb3c5a159a92051d62e6c7a33b14"
+      }
+    },
+    {
+      "background_rgb": [
+        9.0,
+        236.5,
+        121.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.291287899017334,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 12633,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "673359aada5fd8893b90b1f1b37c7cbc12c6bd622b6bf96ce258fdabf58372ef",
+        "combined_alpha_sha256": "05ae2314820d4876be56d81cb05936fba57a2f6f1252440c983a42c671781e0d",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 922,
+        "alpha_sha256": "05ae2314820d4876be56d81cb05936fba57a2f6f1252440c983a42c671781e0d"
+      }
+    },
+    {
+      "background_rgb": [
+        9.0,
+        236.0,
+        121.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 13151,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "934f6024b0b28e93884582861b182223bf40db610767e996ff31c7a501670939",
+        "combined_alpha_sha256": "06a79ff5f47a75cadd98f72fa4e24125025702f4327aa829fa6f9a13bc5c597e",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 977,
+        "alpha_sha256": "06a79ff5f47a75cadd98f72fa4e24125025702f4327aa829fa6f9a13bc5c597e"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 7367,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "4af44edb1a726042280370ec8284b8a0445dd5e6349e91fa3c2cf71fb413a021",
+        "combined_alpha_sha256": "7cbad55d5fbc3d37721d4cb054acfa85c044cac7f9588b4f2ea8ad3c3208ba83",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 6586,
+        "alpha_sha256": "7cbad55d5fbc3d37721d4cb054acfa85c044cac7f9588b4f2ea8ad3c3208ba83"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 7987,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "ef2398c76902bc588957a1b564c2a08398b0ebd23e060c17bf559f6774098b7f",
+        "combined_alpha_sha256": "286a6c3ca10af5b7ebb1ea2d262c8a1cad6df7697cbeccb0f7cd040b5264090a",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 6259,
+        "alpha_sha256": "286a6c3ca10af5b7ebb1ea2d262c8a1cad6df7697cbeccb0f7cd040b5264090a"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        253.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 8734,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "52082ab0e7709f0f301861ad284957a421647199f3137f2bd531bcd45a84e3c8",
+        "combined_alpha_sha256": "27a1d28d1258ef165789bdbd1bc906829f7877ad19066c154af02c8d0186f61b",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 6298,
+        "alpha_sha256": "27a1d28d1258ef165789bdbd1bc906829f7877ad19066c154af02c8d0186f61b"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        254.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 8593,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "8fe6968fca162850375887375e8cce12db2d4955a853e83fa9a2722929eb9140",
+        "combined_alpha_sha256": "0619d48a3361113055c4f43500fde7d512ff449ef19bdf0deaa5a61088c4ccb9",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 5614,
+        "alpha_sha256": "0619d48a3361113055c4f43500fde7d512ff449ef19bdf0deaa5a61088c4ccb9"
+      }
+    },
+    {
+      "background_rgb": [
+        9.0,
+        236.0,
+        121.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 13911,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "ed92b061b19bd1261039e5eb7c205de9fe8ad04b8b6f767d1c5a4895349b4a26",
+        "combined_alpha_sha256": "df72fe1aaedfa88d42e6c02115e461d64b0f28587ace4c8cf08edc153342e225",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1209,
+        "alpha_sha256": "df72fe1aaedfa88d42e6c02115e461d64b0f28587ace4c8cf08edc153342e225"
+      }
+    },
+    {
+      "background_rgb": [
+        9.0,
+        236.0,
+        121.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 12957,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "8b2124c02b98242ff03dd4972959d0d56dfc3002c4d52be018d21a3f62ed17ff",
+        "combined_alpha_sha256": "8c0e3b5113ddb2d68ccb8af0fbadbec539527fea587c7d235056336163a371d9",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 868,
+        "alpha_sha256": "8c0e3b5113ddb2d68ccb8af0fbadbec539527fea587c7d235056336163a371d9"
+      }
+    },
+    {
+      "background_rgb": [
+        9.0,
+        236.0,
+        121.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 11992,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "42ec125f925a67cb971082222d1cfbdf6987fcfa5b707868992597b060b20ae3",
+        "combined_alpha_sha256": "5f47ef7edebb76ae9c45ea8b356818f0eab6067239df0d31295073b4c037869d",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 834,
+        "alpha_sha256": "5f47ef7edebb76ae9c45ea8b356818f0eab6067239df0d31295073b4c037869d"
+      }
+    },
+    {
+      "background_rgb": [
+        9.0,
+        235.5,
+        121.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5495097637176514,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 12091,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "e92f135e648a3a430afa791e4608f7c0f97ae718f0524beac4f68853d2a162c1",
+        "combined_alpha_sha256": "08d3a8dc46b6f317ca19402f511dd1745daa40bf74bec520d6fcab65c580f54c",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 960,
+        "alpha_sha256": "08d3a8dc46b6f317ca19402f511dd1745daa40bf74bec520d6fcab65c580f54c"
+      }
+    },
+    {
+      "background_rgb": [
+        9.0,
+        234.5,
+        121.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9796,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "56975bc5fec435d9b0da666ef4ac2ce294e6dcffe45a582e372431e7156c0fa4",
+        "combined_alpha_sha256": "6b052d28503bd7804c1999c43e5e9b5c2d76b737b7b091e59cd17462600e1d56",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 889,
+        "alpha_sha256": "6b052d28503bd7804c1999c43e5e9b5c2d76b737b7b091e59cd17462600e1d56"
+      }
+    },
+    {
+      "background_rgb": [
+        41.0,
+        215.0,
+        125.25
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.3584952354431152,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 13330,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "1c1d96a5af8a2cea866fb9eb7efac0b56be5e5dbfd188e588147967645c2ef5a",
+        "combined_alpha_sha256": "bc91443ade8712312957a9a94a68ac0d9ce92057a3d8c257570a789735d81fe5",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1044,
+        "alpha_sha256": "bc91443ade8712312957a9a94a68ac0d9ce92057a3d8c257570a789735d81fe5"
+      }
+    },
+    {
+      "background_rgb": [
+        224.0,
+        38.0,
+        220.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 7148,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "278d90063a9093314ec958c4f0bfd3f3854056d80a7a3edad92d08b7acf82a55",
+        "combined_alpha_sha256": "db8c03ad15bf962f3485d121b300bea066dc7f4832287704dd4e2fabb011c79d",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 7446,
+        "alpha_sha256": "db8c03ad15bf962f3485d121b300bea066dc7f4832287704dd4e2fabb011c79d"
+      }
+    },
+    {
+      "background_rgb": [
+        226.0,
+        37.5,
+        220.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 7002,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "a8ef84d482add5b09a7413bac61a18a5ef72b5dba2037695525303fcc731f0d4",
+        "combined_alpha_sha256": "c7f6de367f00a9344a0da6133c6cf8fd57dd583586d9117192904f68e0eaa3e7",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 8482,
+        "alpha_sha256": "c7f6de367f00a9344a0da6133c6cf8fd57dd583586d9117192904f68e0eaa3e7"
+      }
+    },
+    {
+      "background_rgb": [
+        45.5,
+        214.0,
+        140.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5495097637176514,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 0,
+        "unsafe_key_reason": "unsafe insufficiently separated chroma backdrop [ 45.5 214.  140.5]",
+        "semantic_alpha_sha256": "4ef9ac0427a5c77217fdea035a9e54e6e0506b84dd661fe229a1b97d7e761a74",
+        "combined_alpha_sha256": "4ef9ac0427a5c77217fdea035a9e54e6e0506b84dd661fe229a1b97d7e761a74",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "none",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 0,
+        "alpha_sha256": "4ef9ac0427a5c77217fdea035a9e54e6e0506b84dd661fe229a1b97d7e761a74"
+      }
+    },
+    {
+      "background_rgb": [
+        22.0,
+        234.0,
+        123.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.041381359100342,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 16386,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "db2ea71477c2065adfb2c200578ea3cd3e31c1319dfc7911a788180cbddd9336",
+        "combined_alpha_sha256": "299f7318a930766714e8795f0e97599e5cb238ff1937f1b9f5dcb6a2a1160248",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1758,
+        "alpha_sha256": "299f7318a930766714e8795f0e97599e5cb238ff1937f1b9f5dcb6a2a1160248"
+      }
+    },
+    {
+      "background_rgb": [
+        238.0,
+        23.5,
+        234.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8708287477493286,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9124,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "30dfaa10691dfe2d34ec43c6b08c77a8d4a44a5b9c0eb37f65412121174dd7b5",
+        "combined_alpha_sha256": "8dd019adc7710e95dd72ffa58604e4450683d5b527520ea43c800be86f2b0d61",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 4112,
+        "alpha_sha256": "8dd019adc7710e95dd72ffa58604e4450683d5b527520ea43c800be86f2b0d61"
+      }
+    },
+    {
+      "background_rgb": [
+        241.0,
+        25.5,
+        231.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.692582368850708,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 7592,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "e58badcb1640f04cb7c9ea3b04052347f004163a8089a483ffdace9b7315dba7",
+        "combined_alpha_sha256": "9dbc32a91050ac14d3e32f4cc3e0574d27f3836d5038c6cb3c2863e486e443f8",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 6500,
+        "alpha_sha256": "9dbc32a91050ac14d3e32f4cc3e0574d27f3836d5038c6cb3c2863e486e443f8"
+      }
+    },
+    {
+      "background_rgb": [
+        244.5,
+        22.5,
+        232.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.598076105117798,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 7689,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "99a743757f2ec012b0545795d5b753247b22b7bc27f71326a946460d2cefa6c2",
+        "combined_alpha_sha256": "0ba575726dc9ddc30e9b17c6da93d9d0e4fe8dc107b7ec8d605a1d58c88e39e3",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 6322,
+        "alpha_sha256": "0ba575726dc9ddc30e9b17c6da93d9d0e4fe8dc107b7ec8d605a1d58c88e39e3"
+      }
+    },
+    {
+      "background_rgb": [
+        23.0,
+        224.5,
+        120.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.2015621662139893,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 13184,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "2b04ff3afbc943d860b5b6d8acdea2917dc57cd6acfcaaa0bac9a5a1ac68d6dd",
+        "combined_alpha_sha256": "b8d9d419e5cdfd291c36c3628c6814c67f7db58e2efd35a0bd3ce95a53b351da",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1115,
+        "alpha_sha256": "b8d9d419e5cdfd291c36c3628c6814c67f7db58e2efd35a0bd3ce95a53b351da"
+      }
+    },
+    {
+      "background_rgb": [
+        22.5,
+        226.0,
+        120.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 12188,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "cc350fdb753f62c63ed92225f220965d4e49cdc653002b433d34fe64cb6f0b0e",
+        "combined_alpha_sha256": "e4e5040f35619086b17cc89f3b8f6b0fd59730cbd8f6f5eb7ebaf14b14f80146",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1464,
+        "alpha_sha256": "e4e5040f35619086b17cc89f3b8f6b0fd59730cbd8f6f5eb7ebaf14b14f80146"
+      }
+    },
+    {
+      "background_rgb": [
+        19.0,
+        228.0,
+        116.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.872281312942505,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 14974,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "0a4df277245f0e7bc89c1757830ee60d5ac54ef6cdb16e9cbaedc52b135d28d8",
+        "combined_alpha_sha256": "c81a8f8d56fde12b1b7f2599cf5bfc5ea86aedd0ba206996875d4868534dccd8",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1113,
+        "alpha_sha256": "c81a8f8d56fde12b1b7f2599cf5bfc5ea86aedd0ba206996875d4868534dccd8"
+      }
+    },
+    {
+      "background_rgb": [
+        244.0,
+        19.5,
+        228.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.692582368850708,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 8478,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "3c7f5a38345969ac64d5a864cc854da0f4209c9cf14d4e5bd602b7a9e441b264",
+        "combined_alpha_sha256": "a5e6fa7b46d5022849b9cbf06ac09bd3f95f78b1e4512d0b3b61b88e1286fc89",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 5575,
+        "alpha_sha256": "a5e6fa7b46d5022849b9cbf06ac09bd3f95f78b1e4512d0b3b61b88e1286fc89"
+      }
+    },
+    {
+      "background_rgb": [
+        238.5,
+        25.0,
+        229.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 8170,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "784be43dc874a08762fe2180b7f0d252423667a5cf495319024c1ddab501affa",
+        "combined_alpha_sha256": "24e4e72102a1ee00e7f78bbba4331a7b2752f2e87aa6e08d6af56d6ae78a6d3c",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 8008,
+        "alpha_sha256": "24e4e72102a1ee00e7f78bbba4331a7b2752f2e87aa6e08d6af56d6ae78a6d3c"
+      }
+    },
+    {
+      "background_rgb": [
+        239.0,
+        21.0,
+        236.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.291287899017334,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9717,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "ecf8698bc0df26ec74317299aeca217f61590bc9c58a347e3e3b90665eb5f6f2",
+        "combined_alpha_sha256": "63060c33513197e680010921b369010740250f1bf53aa8181170106915b8aac8",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 5341,
+        "alpha_sha256": "63060c33513197e680010921b369010740250f1bf53aa8181170106915b8aac8"
+      }
+    },
+    {
+      "background_rgb": [
+        26.5,
+        226.5,
+        131.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.1794495582580566,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 15480,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "accbf569f3bf6421823e92efe75c91559265839b65c48b9c7bd7ffbaa8ed3568",
+        "combined_alpha_sha256": "58daa8bf3256cb0f71b84a637db9ddd2c5a42a539a036b8e7ca454fe3bb923d0",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 825,
+        "alpha_sha256": "58daa8bf3256cb0f71b84a637db9ddd2c5a42a539a036b8e7ca454fe3bb923d0"
+      }
+    },
+    {
+      "background_rgb": [
+        25.0,
+        224.5,
+        131.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 15508,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "c99353717be2710d21e94d6b53db0f94e36aaca501fa86f96f9b902917a76228",
+        "combined_alpha_sha256": "e68446b659e62703497f97b3ae7f30423c6196d07c50a61051c1a1c87c6a52e3",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1021,
+        "alpha_sha256": "e68446b659e62703497f97b3ae7f30423c6196d07c50a61051c1a1c87c6a52e3"
+      }
+    },
+    {
+      "background_rgb": [
+        10.0,
+        235.0,
+        126.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 11549,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "3cf8565428c7cf9869e17abcfa2beddcea2acb8c45791d14979aa289165850b2",
+        "combined_alpha_sha256": "90ee2246957579efdbe68cb3aa206c886cd09cdf12c189fd58567c398510f94f",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 989,
+        "alpha_sha256": "90ee2246957579efdbe68cb3aa206c886cd09cdf12c189fd58567c398510f94f"
+      }
+    },
+    {
+      "background_rgb": [
+        229.0,
+        13.0,
+        234.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 4.582575798034668,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 8887,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "c4deb1fee3636aff9c87b112939667d5c628f30de2ce0a30170507b3d1c6f716",
+        "combined_alpha_sha256": "748cc64528e3d3db534461ad5d94891c08a0c31706bcc258b585e280fcb3f179",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 8631,
+        "alpha_sha256": "748cc64528e3d3db534461ad5d94891c08a0c31706bcc258b585e280fcb3f179"
+      }
+    },
+    {
+      "background_rgb": [
+        9.0,
+        233.5,
+        121.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 14731,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "67dd605fa577c02c2f9e65e28ac6cf619d03e7cdef376f807aed5cde012ed1f5",
+        "combined_alpha_sha256": "f009a44d891ecfa2db815f52d5e736a5ed4390c72c055ac3599dd63fc9107d4d",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 400,
+        "alpha_sha256": "f009a44d891ecfa2db815f52d5e736a5ed4390c72c055ac3599dd63fc9107d4d"
+      }
+    },
+    {
+      "background_rgb": [
+        8.5,
+        233.0,
+        122.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 14763,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "ff19400cdbf9d9569d89c0e04eee93bec1e9ee5d57b8277ba9f73b0ece18560c",
+        "combined_alpha_sha256": "c2f443f14176d17ff02bff7d6fa005a8e77c7133c761bb62a6ee28697c150cc1",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 765,
+        "alpha_sha256": "c2f443f14176d17ff02bff7d6fa005a8e77c7133c761bb62a6ee28697c150cc1"
+      }
+    },
+    {
+      "background_rgb": [
+        9.0,
+        236.0,
+        123.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.872281312942505,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 16353,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "a405a3fda49e6262619a629bdceefa9182b4a408028ade896797dab2c417579e",
+        "combined_alpha_sha256": "9c97faa40c0470dbe91d271550b7ae8f0b1e7c3532c192a0722c797b6f3d38f0",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 752,
+        "alpha_sha256": "9c97faa40c0470dbe91d271550b7ae8f0b1e7c3532c192a0722c797b6f3d38f0"
+      }
+    },
+    {
+      "background_rgb": [
+        240.5,
+        5.5,
+        247.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 5.722761631011963,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 10699,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "8673e3590ba2e4d03bdd78beec68d5576c3a9a2b0fc4e50f4ad3cc0868a46caf",
+        "combined_alpha_sha256": "544d126f4fc0a508cd008f6fcba44e5ec25a07a5dbb7d15005dc6dad43a6182a",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 5203,
+        "alpha_sha256": "544d126f4fc0a508cd008f6fcba44e5ec25a07a5dbb7d15005dc6dad43a6182a"
+      }
+    },
+    {
+      "background_rgb": [
+        248.5,
+        1.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9712,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "ac7c936eeec51e24b1522f49eaf7c3278306838fa233740be0349bf776318004",
+        "combined_alpha_sha256": "ae189cdd32ed96c213b83c5657d8d679518cb640f351d3bc58b7382c887697cd",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 4842,
+        "alpha_sha256": "ae189cdd32ed96c213b83c5657d8d679518cb640f351d3bc58b7382c887697cd"
+      }
+    },
+    {
+      "background_rgb": [
+        250.5,
+        0.5,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.658312439918518,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9588,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "04366c68921783656c24c3fbbd0808b584336b16d2554b47eedca2678d5baa6f",
+        "combined_alpha_sha256": "ebbb5a9ac13746697d98722e2e6f2287b7ce100d9bd78e01487d58026adf8d87",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 5339,
+        "alpha_sha256": "ebbb5a9ac13746697d98722e2e6f2287b7ce100d9bd78e01487d58026adf8d87"
+      }
+    },
+    {
+      "background_rgb": [
+        254.0,
+        0.0,
+        254.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9876,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "6082c5039bf9b21ecced31005c851bcef7d0f72ab2ab11c831136d0a79cc7140",
+        "combined_alpha_sha256": "e5327dcb38a821ae72c1905d2b0436890e2a796dd6cce32fa2eabb599832d487",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 5134,
+        "alpha_sha256": "e5327dcb38a821ae72c1905d2b0436890e2a796dd6cce32fa2eabb599832d487"
+      }
+    },
+    {
+      "background_rgb": [
+        227.5,
+        22.0,
+        237.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 10668,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "d7a64b61736ec1ed115fb5a767446945e0abb2e77f5eb1e2a7c4d69d59f493e3",
+        "combined_alpha_sha256": "08b49444daaa06df171341c0ce4c9ad25d30532f5f0f017419be82a446b98696",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 4637,
+        "alpha_sha256": "08b49444daaa06df171341c0ce4c9ad25d30532f5f0f017419be82a446b98696"
+      }
+    },
+    {
+      "background_rgb": [
+        6.0,
+        237.0,
+        119.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 15275,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "4f050a29ba4509d5f4ac01e2429a7bf777ca7cb76e19ba98855a4421533c4283",
+        "combined_alpha_sha256": "9ef44f7e21a4b46e7b44700ec81cfb457401b09c4a18bfbf7e9bcd679504c403",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 744,
+        "alpha_sha256": "9ef44f7e21a4b46e7b44700ec81cfb457401b09c4a18bfbf7e9bcd679504c403"
+      }
+    },
+    {
+      "background_rgb": [
+        10.5,
+        234.0,
+        122.25
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.520690679550171,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 14715,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "8a212cfa0d04689b772098a8b72296e3dae380dbb2831c2de61c0b00609dd945",
+        "combined_alpha_sha256": "9e0af44ccd511be5ae090abc1240a738086aaf402fff5d6b1bc98fe53c469ad2",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 986,
+        "alpha_sha256": "9e0af44ccd511be5ae090abc1240a738086aaf402fff5d6b1bc98fe53c469ad2"
+      }
+    },
+    {
+      "background_rgb": [
+        11.5,
+        234.0,
+        126.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 15636,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "d0213881c126e2805563bde03fd9773107905eefb6321ffc6c859876863dabda",
+        "combined_alpha_sha256": "f36744fb76e156eea4427ee01d2a8ae599439d32d66474620ceddc2948af8d7e",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 989,
+        "alpha_sha256": "f36744fb76e156eea4427ee01d2a8ae599439d32d66474620ceddc2948af8d7e"
+      }
+    },
+    {
+      "background_rgb": [
+        249.0,
+        2.5,
+        254.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9933,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "c7894b1ad4cb5736fd59048260dcb25b932db378fbb503687cf050d4f43e934a",
+        "combined_alpha_sha256": "1550b3c0e593c1a60f3a299bd31e7bb083c9a5eeb2e1fc2cafd1ddf94ea307d0",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 4818,
+        "alpha_sha256": "1550b3c0e593c1a60f3a299bd31e7bb083c9a5eeb2e1fc2cafd1ddf94ea307d0"
+      }
+    },
+    {
+      "background_rgb": [
+        251.0,
+        1.5,
+        254.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9517,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "91d8394c3d3e48c9ce26f35aff51a56aef6e8afa86408b51ded09a8691e34f7c",
+        "combined_alpha_sha256": "4b684307d93a080b82758e0139878778fb59c5271b2fd9551d286a594c391329",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 5183,
+        "alpha_sha256": "4b684307d93a080b82758e0139878778fb59c5271b2fd9551d286a594c391329"
+      }
+    },
+    {
+      "background_rgb": [
+        251.75,
+        0.5,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.9525624513626099,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 8593,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "110a87203af27ba409148cf9ad8c3279aea8fab6ca5eadc8a25183aae4581801",
+        "combined_alpha_sha256": "5029f9ff4843753ed8d41998bb9b962c6f9345e8163a7d7a0712a0466d4a9121",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 5478,
+        "alpha_sha256": "5029f9ff4843753ed8d41998bb9b962c6f9345e8163a7d7a0712a0466d4a9121"
+      }
+    },
+    {
+      "background_rgb": [
+        253.0,
+        1.0,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 8973,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "95a805a8e3c903b4bb5b4f6a4695c4c7740ca7935a5656d8646185203fdcc983",
+        "combined_alpha_sha256": "b3b146ff13bf4a8fc9c0926f12522a603f9e6905c650aa9dc093b53113e3b338",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 5243,
+        "alpha_sha256": "b3b146ff13bf4a8fc9c0926f12522a603f9e6905c650aa9dc093b53113e3b338"
+      }
+    },
+    {
+      "background_rgb": [
+        10.0,
+        236.0,
+        126.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 11616,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "aaee726195b2d8053d35c7ebb2e4346648ecb3391643ec6ccbd0adff98974b5b",
+        "combined_alpha_sha256": "c4d17916396bf5140f5ffb7163e59bfa933efef9c2d9435830af721d6cee7c71",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1442,
+        "alpha_sha256": "c4d17916396bf5140f5ffb7163e59bfa933efef9c2d9435830af721d6cee7c71"
+      }
+    },
+    {
+      "background_rgb": [
+        9.0,
+        235.0,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 14364,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "dfed0ca8640702fcc05d2e1e8782f089655de3c8b4996938958214630900750b",
+        "combined_alpha_sha256": "a9bc9b18e2b0ed6deb2f7ab3f293d6bcc8b15c54c898516c34151df0c2c04aba",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1019,
+        "alpha_sha256": "a9bc9b18e2b0ed6deb2f7ab3f293d6bcc8b15c54c898516c34151df0c2c04aba"
+      }
+    },
+    {
+      "background_rgb": [
+        10.0,
+        234.0,
+        126.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 14799,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "38f6dc91981d75e506c90d592f8aca23f6b70bfeafc18decfb3c877c8fe4a221",
+        "combined_alpha_sha256": "37d3733e070d88e758773a992a84e25f7c8b2c1067bf795e0c3c723ec0c37460",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1154,
+        "alpha_sha256": "37d3733e070d88e758773a992a84e25f7c8b2c1067bf795e0c3c723ec0c37460"
+      }
+    },
+    {
+      "background_rgb": [
+        10.0,
+        234.0,
+        126.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 14189,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "06e441eb5071008a262e7dca81593be260935ae713e149a221c0f0606d82fe97",
+        "combined_alpha_sha256": "4113d0a4fdef4f9b9f33f7a4363a2773c6fb569204ce77295b08e03a3a2f42be",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1008,
+        "alpha_sha256": "4113d0a4fdef4f9b9f33f7a4363a2773c6fb569204ce77295b08e03a3a2f42be"
+      }
+    },
+    {
+      "background_rgb": [
+        11.0,
+        234.0,
+        126.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 13827,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "d618ba00a4402ce0779c730141393dc2051a5b9ada38202f52a3965645972183",
+        "combined_alpha_sha256": "247512e315d47abd1afa0153ba3b3fdf7f2a27984a52d7b8cdb20a58a86879d3",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 977,
+        "alpha_sha256": "247512e315d47abd1afa0153ba3b3fdf7f2a27984a52d7b8cdb20a58a86879d3"
+      }
+    },
+    {
+      "background_rgb": [
+        41.5,
+        214.5,
+        126.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.9370038509368896,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 15632,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "c2c648efcee2c2dba7d772b836ea2752e1548e53e88f3c0179c831b36281a06b",
+        "combined_alpha_sha256": "b1d690985456d0e0a74c6f758359ae91d0473c831a75691ab77b2654f3e9d0ec",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 930,
+        "alpha_sha256": "b1d690985456d0e0a74c6f758359ae91d0473c831a75691ab77b2654f3e9d0ec"
+      }
+    },
+    {
+      "background_rgb": [
+        223.0,
+        32.5,
+        222.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.1213202476501465,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9567,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "0d7bb12533b12c26f15213b4bf9ff278d971bc293aa787f5c3488645fa780a6a",
+        "combined_alpha_sha256": "dea1f489d863131d8945e5bd56f6dd0fc8b9dcaca94b3a93f664a35dbabf63b3",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 7121,
+        "alpha_sha256": "dea1f489d863131d8945e5bd56f6dd0fc8b9dcaca94b3a93f664a35dbabf63b3"
+      }
+    },
+    {
+      "background_rgb": [
+        224.5,
+        33.0,
+        223.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8708287477493286,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 8843,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "67d7ac117e29f477486916f96a8e2dd233e1eab11985408cd4b0c17283b9e2e6",
+        "combined_alpha_sha256": "42b1c05b045f208fd6273fc125a9a60c225cc01883f8c0731f0e2556a4c2efe8",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 7572,
+        "alpha_sha256": "42b1c05b045f208fd6273fc125a9a60c225cc01883f8c0731f0e2556a4c2efe8"
+      }
+    },
+    {
+      "background_rgb": [
+        50.5,
+        207.0,
+        141.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.915475845336914,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 0,
+        "unsafe_key_reason": "unsafe insufficiently separated chroma backdrop [ 50.5 207.  141.5]",
+        "semantic_alpha_sha256": "9c0f5c0525a260193bd618458d09fe2d98184aadd72192fab51ea8a47bb0ba45",
+        "combined_alpha_sha256": "9c0f5c0525a260193bd618458d09fe2d98184aadd72192fab51ea8a47bb0ba45",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "none",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 0,
+        "alpha_sha256": "9c0f5c0525a260193bd618458d09fe2d98184aadd72192fab51ea8a47bb0ba45"
+      }
+    },
+    {
+      "background_rgb": [
+        42.5,
+        216.0,
+        127.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 4.3011627197265625,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 16908,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "136fb7d49fcec4a9c6e36f8dbc370183a23499c4b82c82b574c8f51e94e7330d",
+        "combined_alpha_sha256": "c33e0c3514a4c12317ebc466af17da974e70f727a816b39ec34a735a53d23409",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1372,
+        "alpha_sha256": "c33e0c3514a4c12317ebc466af17da974e70f727a816b39ec34a735a53d23409"
+      }
+    },
+    {
+      "background_rgb": [
+        223.0,
+        35.0,
+        224.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.872281312942505,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9440,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "fbe93e25fb949437b07b58655d33d0e03516de0e78f08fb6acbfb673a809c990",
+        "combined_alpha_sha256": "c358bc841bb3d0505f2bf8de9adb06347f6108f562c97ac8d8e03029a38df920",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 4990,
+        "alpha_sha256": "c358bc841bb3d0505f2bf8de9adb06347f6108f562c97ac8d8e03029a38df920"
+      }
+    },
+    {
+      "background_rgb": [
+        225.5,
+        34.0,
+        224.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9542,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "2acd85ec966473c7aaa198804a3ea5b85a1cf3a607df05db3175a594aa65cb61",
+        "combined_alpha_sha256": "2800d53b4874da06da439b7c6538a092ea33eb116685386b6141a051f2cc3043",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 5421,
+        "alpha_sha256": "2800d53b4874da06da439b7c6538a092ea33eb116685386b6141a051f2cc3043"
+      }
+    },
+    {
+      "background_rgb": [
+        47.5,
+        206.0,
+        138.75
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 4.100305080413818,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 0,
+        "unsafe_key_reason": "unsafe insufficiently separated chroma backdrop [ 47.5  206.   138.75]",
+        "semantic_alpha_sha256": "b4010cf6e1c2a54f8423a446c39f36fbd2fa6f20a4735416d7227247af719aeb",
+        "combined_alpha_sha256": "b4010cf6e1c2a54f8423a446c39f36fbd2fa6f20a4735416d7227247af719aeb",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "none",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 0,
+        "alpha_sha256": "b4010cf6e1c2a54f8423a446c39f36fbd2fa6f20a4735416d7227247af719aeb"
+      }
+    },
+    {
+      "background_rgb": [
+        29.0,
+        227.5,
+        123.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.082206964492798,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 14846,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "2bab995a3e3444273b5375ec047250f5bae42c377e6236a7895045ee4cc8be32",
+        "combined_alpha_sha256": "0ac9894fcca2e524078e0f35d90986149e9b159e6cc098bb4b5231ac9d20542f",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 2819,
+        "alpha_sha256": "0ac9894fcca2e524078e0f35d90986149e9b159e6cc098bb4b5231ac9d20542f"
+      }
+    },
+    {
+      "background_rgb": [
+        238.5,
+        14.0,
+        237.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 11315,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "5cb1dbcced19a1b2ce6aad94372a54ab164b024f05a6c81a9a8c9d0f2fcf5272",
+        "combined_alpha_sha256": "2ec14298faf7107345db398329b0236fb9acc3899171bcac3f5bb88abbf9e74d",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 3644,
+        "alpha_sha256": "2ec14298faf7107345db398329b0236fb9acc3899171bcac3f5bb88abbf9e74d"
+      }
+    },
+    {
+      "background_rgb": [
+        239.0,
+        21.5,
+        231.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9692,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "07c4f3576ab1a9a8298e0050e3c27a87af5de1bd64ec123f25048ee212942e6b",
+        "combined_alpha_sha256": "45c3d96131e65c010951a0104150af2b565bebc8340875cf93de34499aa1f74b",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 7311,
+        "alpha_sha256": "45c3d96131e65c010951a0104150af2b565bebc8340875cf93de34499aa1f74b"
+      }
+    },
+    {
+      "background_rgb": [
+        243.0,
+        19.0,
+        231.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9552,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "8af24367ea448482d8fa45d6998d4656d518ec75661573093e96aa7f573f4250",
+        "combined_alpha_sha256": "39d2419223359c5ea654c7faaf1d6addc6ff0944bddafe5d17f76148295ae29d",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 7530,
+        "alpha_sha256": "39d2419223359c5ea654c7faaf1d6addc6ff0944bddafe5d17f76148295ae29d"
+      }
+    },
+    {
+      "background_rgb": [
+        12.0,
+        235.0,
+        126.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 13692,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "bd2d59176cf82a74ca77945cf4846d7947c836ba4d6dd0296afa0a9ad16ac90c",
+        "combined_alpha_sha256": "30b1f159b338d946512572da7c9126c9c6f369280f8c37bda841b99b7a213c71",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1708,
+        "alpha_sha256": "30b1f159b338d946512572da7c9126c9c6f369280f8c37bda841b99b7a213c71"
+      }
+    },
+    {
+      "background_rgb": [
+        28.5,
+        221.0,
+        124.25
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.6770509481430054,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 14972,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "f360f0d9d8126b9cf688e8924aff832bda2ad2bd2b1238774ae815ef6de90b6b",
+        "combined_alpha_sha256": "183b69924a53f17da807068048d6b92b752ad36dfce58a3a34c356281c834f69",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1476,
+        "alpha_sha256": "183b69924a53f17da807068048d6b92b752ad36dfce58a3a34c356281c834f69"
+      }
+    },
+    {
+      "background_rgb": [
+        26.0,
+        223.5,
+        122.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 15232,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "92c4781fb2f51000dad06feeaaef1f1f5088b2cf15eae455d15d446c0f9cb64f",
+        "combined_alpha_sha256": "bcffbe5f81957cecf6415993859b51777d1da26c33d4a572eb9bda5cd0cae6f2",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 1283,
+        "alpha_sha256": "bcffbe5f81957cecf6415993859b51777d1da26c33d4a572eb9bda5cd0cae6f2"
+      }
+    },
+    {
+      "background_rgb": [
+        21.5,
+        227.0,
+        118.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.872281312942505,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 16632,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "4ef69aac4a8be60766d21c1bc2ac6e6abf8441980520bed9ab3e206c3cae29a6",
+        "combined_alpha_sha256": "db6e717a8bf5d63510cd16968b0613756bbef2c58300e1885d0e3727fbfcf993",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "green",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 819,
+        "alpha_sha256": "db6e717a8bf5d63510cd16968b0613756bbef2c58300e1885d0e3727fbfcf993"
+      }
+    },
+    {
+      "background_rgb": [
+        242.0,
+        16.0,
+        236.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.7320507764816284,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "fusion_matting": {
+        "recovered_pixels": 9601,
+        "unsafe_key_reason": null,
+        "semantic_alpha_sha256": "2002a9267958fbe575e5091941fbe34e7288722ba1b5427aebc46526b391897e",
+        "combined_alpha_sha256": "d81775b13fe548d96c7b93f7f8b0e1e2df8fe75a8741320a5efaae7548b9f2ec",
+        "outside_enclosed_support_alpha_exact": true
+      },
+      "edge_despill": {
+        "plate_mode": "magenta",
+        "protected_chroma_band": 30,
+        "boundary_source_pixels": null,
+        "scope": "measured_original_palette_plate_axis_only",
+        "changed_rgb_pixels": 7739,
+        "alpha_sha256": "d81775b13fe548d96c7b93f7f8b0e1e2df8fe75a8741320a5efaae7548b9f2ec"
+      }
+    }
+  ],
+  "recipe": "Pinned semantic soft alpha with uniform original-RGB chroma opacity recovery only inside regions enclosed by semantic alpha>=128. Outside enclosed support alpha stays exact; original key preserves internal negative spaces. Protected band30; plate separation>=80 and corner spread<=10, else source phase excluded from selection. Palette-bound RGB despill, fixed canvas/anchor/scale. No painted anatomy, invented contours or interpolation.",
+  "model_manifest": {
+    "repository": "ZhengPeng7/BiRefNet-matting",
+    "revision": "eccde0a8cbdce7ac5fecfeb06340fe7b949e85d9",
+    "model_directory": "H:\\ai\\minimax-h3\\matting\\BiRefNet-matting",
+    "dependency_directory": "H:\\ai\\minimax-h3\\matting\\dependencies",
+    "files": {
+      "config.json": {
+        "bytes": 413,
+        "sha256": "b2b235983b80fbff325976ca517bb7eda25e915b84a97b150eca41266cf8a13b"
+      },
+      "BiRefNet_config.py": {
+        "bytes": 298,
+        "sha256": "e7b8c2a74f6cea6a59553d517f71d47f2c1d90e670a13416af17c25fe2f3dc52"
+      },
+      "birefnet.py": {
+        "bytes": 92134,
+        "sha256": "2a45b4e0ece72d7c4212bca1a988e7d7e52bfe9f98ec59c58b8809c8a8b7a831"
+      },
+      "model.safetensors": {
+        "bytes": 884878856,
+        "sha256": "a9875de5b1e6c8eb5fdaa8c727a82927ce442cdc87ba3abee6a77e6fa46c25bb"
+      },
+      "README.md": {
+        "bytes": 4724,
+        "sha256": "e43576e298fcfd143239f7c1dc080e1d03f4eef5e78156da4f0466d93f2c45a1"
+      },
+      "timm-1.0.30-py3-none-any.whl": {
+        "bytes": 2668917,
+        "sha256": "c8e27adf6801a2fdfb570dbbdd171f2f084756eefc673df8cfaab06bd14864f3"
+      }
+    }
+  },
+  "inference_precision": "float16",
+  "torch_version": "2.14.0+cu130",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "elapsed_seconds": 52.807,
+  "tool_sha256": "b8e484951220efe2e18be5d588b392e2cffe947707f1cc3d9a0fc407931d363d"
+}

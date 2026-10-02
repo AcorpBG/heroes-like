@@ -1,0 +1,634 @@
+{
+  "rule": "For uniformly separated plate only: Within closed regions enclosed by semantic alpha>=128, opacity is maximum(original RGB uniform-plate chroma alpha, semantic alpha). The original color key preserves transparent negative spaces. Outside the enclosed semantic support, every alpha byte remains exact. No dilation, hand-painted regions, invented color, contours or anatomy.",
+  "details": [
+    {
+      "source_frame": 0,
+      "recovered_pixels": 8217,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 1,
+      "recovered_pixels": 9404,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 2,
+      "recovered_pixels": 9404,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 3,
+      "recovered_pixels": 9612,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 4,
+      "recovered_pixels": 16778,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 5,
+      "recovered_pixels": 15180,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 6,
+      "recovered_pixels": 14726,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 7,
+      "recovered_pixels": 14623,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 8,
+      "recovered_pixels": 14269,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 9,
+      "recovered_pixels": 17275,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 10,
+      "recovered_pixels": 12892,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 11,
+      "recovered_pixels": 11107,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 12,
+      "recovered_pixels": 11177,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 13,
+      "recovered_pixels": 9881,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 14,
+      "recovered_pixels": 16864,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 15,
+      "recovered_pixels": 16168,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 16,
+      "recovered_pixels": 16694,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 17,
+      "recovered_pixels": 9041,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 18,
+      "recovered_pixels": 9905,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 19,
+      "recovered_pixels": 11270,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 20,
+      "recovered_pixels": 16812,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 21,
+      "recovered_pixels": 15809,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 22,
+      "recovered_pixels": 13268,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 23,
+      "recovered_pixels": 13625,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 24,
+      "recovered_pixels": 12793,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 25,
+      "recovered_pixels": 13627,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 26,
+      "recovered_pixels": 17156,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 27,
+      "recovered_pixels": 9361,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 28,
+      "recovered_pixels": 9303,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 29,
+      "recovered_pixels": 9679,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 30,
+      "recovered_pixels": 8777,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 31,
+      "recovered_pixels": 13432,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 32,
+      "recovered_pixels": 12893,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 33,
+      "recovered_pixels": 13248,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 34,
+      "recovered_pixels": 11016,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 35,
+      "recovered_pixels": 13317,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 36,
+      "recovered_pixels": 14727,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 37,
+      "recovered_pixels": 9212,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 38,
+      "recovered_pixels": 8435,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 39,
+      "recovered_pixels": 6634,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 40,
+      "recovered_pixels": 11729,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 41,
+      "recovered_pixels": 10956,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 42,
+      "recovered_pixels": 7567,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 43,
+      "recovered_pixels": 6818,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 44,
+      "recovered_pixels": 7219,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 45,
+      "recovered_pixels": 8678,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 46,
+      "recovered_pixels": 14387,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 47,
+      "recovered_pixels": 13603,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 48,
+      "recovered_pixels": 11064,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 49,
+      "recovered_pixels": 10957,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 50,
+      "recovered_pixels": 10985,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 51,
+      "recovered_pixels": 10172,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 52,
+      "recovered_pixels": 14592,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 53,
+      "recovered_pixels": 8669,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 54,
+      "recovered_pixels": 8946,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 55,
+      "recovered_pixels": 8921,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 56,
+      "recovered_pixels": 13266,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 57,
+      "recovered_pixels": 11971,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 58,
+      "recovered_pixels": 12633,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 59,
+      "recovered_pixels": 13151,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 60,
+      "recovered_pixels": 7367,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 61,
+      "recovered_pixels": 7987,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 62,
+      "recovered_pixels": 8734,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 63,
+      "recovered_pixels": 8593,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 64,
+      "recovered_pixels": 13911,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 65,
+      "recovered_pixels": 12957,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 66,
+      "recovered_pixels": 11992,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 67,
+      "recovered_pixels": 12091,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 68,
+      "recovered_pixels": 9796,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 69,
+      "recovered_pixels": 13330,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 70,
+      "recovered_pixels": 7148,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 71,
+      "recovered_pixels": 7002,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 72,
+      "recovered_pixels": 0,
+      "unsafe_key_reason": "unsafe insufficiently separated chroma backdrop [ 45.5 214.  140.5]"
+    },
+    {
+      "source_frame": 73,
+      "recovered_pixels": 16386,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 74,
+      "recovered_pixels": 9124,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 75,
+      "recovered_pixels": 7592,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 76,
+      "recovered_pixels": 7689,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 77,
+      "recovered_pixels": 13184,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 78,
+      "recovered_pixels": 12188,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 79,
+      "recovered_pixels": 14974,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 80,
+      "recovered_pixels": 8478,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 81,
+      "recovered_pixels": 8170,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 82,
+      "recovered_pixels": 9717,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 83,
+      "recovered_pixels": 15480,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 84,
+      "recovered_pixels": 15508,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 85,
+      "recovered_pixels": 11549,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 86,
+      "recovered_pixels": 8887,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 87,
+      "recovered_pixels": 14731,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 88,
+      "recovered_pixels": 14763,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 89,
+      "recovered_pixels": 16353,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 90,
+      "recovered_pixels": 10699,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 91,
+      "recovered_pixels": 9712,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 92,
+      "recovered_pixels": 9588,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 93,
+      "recovered_pixels": 9876,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 94,
+      "recovered_pixels": 10668,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 95,
+      "recovered_pixels": 15275,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 96,
+      "recovered_pixels": 14715,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 97,
+      "recovered_pixels": 15636,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 98,
+      "recovered_pixels": 9933,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 99,
+      "recovered_pixels": 9517,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 100,
+      "recovered_pixels": 8593,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 101,
+      "recovered_pixels": 8973,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 102,
+      "recovered_pixels": 11616,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 103,
+      "recovered_pixels": 14364,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 104,
+      "recovered_pixels": 14799,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 105,
+      "recovered_pixels": 14189,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 106,
+      "recovered_pixels": 13827,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 107,
+      "recovered_pixels": 15632,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 108,
+      "recovered_pixels": 9567,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 109,
+      "recovered_pixels": 8843,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 110,
+      "recovered_pixels": 0,
+      "unsafe_key_reason": "unsafe insufficiently separated chroma backdrop [ 50.5 207.  141.5]"
+    },
+    {
+      "source_frame": 111,
+      "recovered_pixels": 16908,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 112,
+      "recovered_pixels": 9440,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 113,
+      "recovered_pixels": 9542,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 114,
+      "recovered_pixels": 0,
+      "unsafe_key_reason": "unsafe insufficiently separated chroma backdrop [ 47.5  206.   138.75]"
+    },
+    {
+      "source_frame": 115,
+      "recovered_pixels": 14846,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 116,
+      "recovered_pixels": 11315,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 117,
+      "recovered_pixels": 9692,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 118,
+      "recovered_pixels": 9552,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 119,
+      "recovered_pixels": 13692,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 120,
+      "recovered_pixels": 14972,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 121,
+      "recovered_pixels": 15232,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 122,
+      "recovered_pixels": 16632,
+      "unsafe_key_reason": null
+    },
+    {
+      "source_frame": 123,
+      "recovered_pixels": 9601,
+      "unsafe_key_reason": null
+    }
+  ],
+  "tool_sha256": "7fcf569ebd7b9c15c5d3d2a9fec03f09efb7fcc10a960c69b58227e05cf586d5",
+  "original_semantic_recipe_sha256": "60baada2a31857baf66bd352777eb576ddecbc43d0abd5cc95d5ad70c1241852",
+  "excluded_source_frames": [
+    72,
+    110,
+    114
+  ],
+  "rejected_alternatives": "Unconstrained original chroma retains low-alpha plate checker noise; simple zero-alpha holes miss glass that already has faint semantic opacity. Use closed opaque semantic support intersected with original chroma only.",
+  "initial_tool_sha256": "ebe93a67b3e228dea7c02d5d8f5ae9b720c2038ae25b521cbaee42ab938e5fc2"
+}

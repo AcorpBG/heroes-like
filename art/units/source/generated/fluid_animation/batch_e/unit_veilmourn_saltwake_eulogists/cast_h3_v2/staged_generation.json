@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "f943860e9def3941c50f8177a416622ba898b5c30dde50c877c7ac9f58001afc",
+  "latent_sha256": "abc2f149088df43027032b0a35d2e95f27906bca501e7fa488e19f65b57c1d99",
+  "decode_workflow_sha256": "7f7415e4dd4a605cbf53916590fee37027d4552a833a3cd49d434eab10b06a21",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "saltwake_eulogist_h3\\cast_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

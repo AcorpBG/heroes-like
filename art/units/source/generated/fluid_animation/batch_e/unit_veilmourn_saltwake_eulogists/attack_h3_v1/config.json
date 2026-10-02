@@ -1,0 +1,93 @@
+{
+  "unit_id": "unit_veilmourn_saltwake_eulogists",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026108202,
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/idle-and-equipped-cold-collapse-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          500,
+          599
+        ]
+      ],
+      "anchor": [
+        304,
+        543
+      ],
+      "scale": 0.4,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/equipped-attacks-and-casting-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          506,
+          503
+        ]
+      ],
+      "anchor": [
+        286,
+        494
+      ],
+      "scale": 0.43,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_thrust",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/equipped-attacks-and-casting-green.png",
+      "rects": [
+        [
+          511,
+          0,
+          1108,
+          502
+        ]
+      ],
+      "anchor": [
+        785,
+        483
+      ],
+      "scale": 0.43,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      65,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original SALTWAKE EULOGIST from the supplied painting. One slender humanoid mourner facing SCREEN RIGHT in original blue-and-ivory layered mourning robes, ragged translucent blue sails, pale masked face and bony crown. Exactly TWO arms and TWO legs. The original near hand grips ONE long dark bronze staff with exactly THREE tall pale blue saltglass cylinders at its top, ornate bronze crown, and one lower hanging pale-blue lantern. Preserve the staff shaft length, three-cylinder arrangement and correct single grip. The original far hand is the open casting hand; no extra arms, fingers, staffs, shields or weapons. Original belt scrolls and ornaments remain attached. Painted fantasy game artwork, unchanged body scale, proportions and camera. One physical staff strike SCREEN RIGHT: take the free far hand onto the shaft as the original near hand retains its grip; wind up the single staff diagonally back, thrust the same bronze staff crown forward once to contact, draw it back and recover to exact ready. Exactly two hands, no split staff, bending shaft, projectile, magic flare or repeated strikes.  Entire backdrop flat magenta RGB255,0,255 throughout; no scenery, floor, cast shadow, text, camera movement, zoom or cuts. Keep all legitimate staff tips, robe ribbons and limbs within ample canvas margins. Fixed boot contact plane y576; actual steps lift boots but planted boots do not slide. Preserve the original pale blue robes and saltglass without recoloring or enlarging effects.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

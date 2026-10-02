@@ -1,0 +1,34 @@
+{
+  "takes": [
+    {
+      "take": "attack_h3_v1",
+      "status": "rejected",
+      "defect": "Original H3 frames33-56 introduce a bright circular magic flare around the staff during the physical melee thrust. Subject overlaps the flare; do not erase it or skip the whole strike as acceptance.",
+      "correction": "attack_h3_v2 pins original clean contact42/55 and original recovery82, explicitly steady inert glass. Preserve failed original video/latent/guides."
+    },
+    {
+      "take": "attack_h3_v2",
+      "status": "rejected",
+      "defect": "Original RGB32-41 introduces a bright cyan staff-overlapping ring and beam. Semantic extraction cannot make that a faithful physical strike. Clean contact42 onward is retained as original source only.",
+      "correction": "attack_h3_v3 replaces combat phrasing with continuous studio object positioning and four original contact guides22/48/64/92. One final correction before reassessment."
+    },
+    {
+      "take": "defend_h3_v1",
+      "status": "rejected",
+      "defect": "Dark blue source plate weakens semantic opacity of robe and legs during the actual crouch. Source motion is genuine but extraction is not acceptable.",
+      "correction": "Quiet original-pose studio sequence with four magenta guard guides."
+    },
+    {
+      "take": "cast_h3_v1",
+      "status": "original_motion_retained_corrected_extraction_candidate",
+      "defect": "Green-cyan plate is insufficiently separated from pale-blue saltglass. Enclosed semantic recovery restores some pixels but glass contour gaps remain. Original RGB, semantic masks and recovery preserved.",
+      "correction": "Two-take reassessment proves first original motion continuous. Cyan matte recovery derives original RGB opacity on G-R axis protected original palette120, only inside enclosed semantic alpha>=8; preserve initial failed extraction recipes and all semantic masks. Native review pending."
+    },
+    {
+      "take": "cast_h3_v2",
+      "status": "rejected",
+      "defect": "Original RGB hand jumps from down to face in21\u219222 and abruptly back in75\u219276; two held body states do not qualify as fluid gesture.",
+      "correction": "Reassess genuine first source motion and measured cyan plate extraction; no blind third sampler."
+    }
+  ]
+}

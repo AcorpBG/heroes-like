@@ -1,0 +1,69 @@
+{
+  "unit_id": "unit_veilmourn_saltwake_eulogists",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/idle-and-equipped-cold-collapse-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            500,
+            599
+          ]
+        ],
+        "anchor": [
+          304,
+          543
+        ],
+        "scale": 0.8,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3c9e7344ae594760efbb2aa3d8fedcee93d6f4436c0dabd0323e693e18971ad5",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d748533d7b64e01bfd69b61baeed30cfb1c110a20a26c1bab4a45f8ff11cc5b5",
+      "runtime_source_scale": 0.4
+    },
+    {
+      "source_frame": {
+        "name": "cast_anticipate",
+        "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/equipped-attacks-and-casting-green.png",
+        "rects": [
+          [
+            90,
+            503,
+            240,
+            515
+          ],
+          [
+            0,
+            515,
+            501,
+            1024
+          ]
+        ],
+        "anchor": [
+          249,
+          997
+        ],
+        "scale": 0.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e081a3aefd9181d4a2fb526a90d08fcb0c44b582f86d74d8d2c50986dbe3dfcf",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "61ce41c71703d69876efa874304629447866e36561812d7c666db2a6e7714ed9",
+      "runtime_source_scale": 0.43
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

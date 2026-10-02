@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "15fc6fbefe559013e2a008f5ae20fc99edc599bf31d7f930c3025c222844c8c2",
+  "latent_sha256": "0cec5ac448d2e577a41b661f28db5da3e4a6210f248a81f3f4498d4e7c475e45",
+  "decode_workflow_sha256": "a86ea22478615932e95316df12e58cae5fc449eafc35c27d7bb6f097e89a57a4",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "saltwake_eulogist_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 32180770708,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

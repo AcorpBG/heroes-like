@@ -1,0 +1,279 @@
+{
+  "prompt": [
+    407,
+    "73f4262a-561f-4afe-8c98-ced22722d7a2",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Original SALTWAKE EULOGIST from the supplied painting. One slender humanoid mourner facing SCREEN RIGHT in original blue-and-ivory layered mourning robes, ragged translucent blue sails, pale masked face and bony crown. Exactly TWO arms and TWO legs. The original near hand grips ONE long dark bronze staff with exactly THREE tall pale blue saltglass cylinders at its top, ornate bronze crown, and one lower hanging pale-blue lantern. Preserve the staff shaft length, three-cylinder arrangement and correct single grip. The original far hand is the open casting hand; no extra arms, fingers, staffs, shields or weapons. Original belt scrolls and ornaments remain attached. Painted fantasy game artwork, unchanged body scale, proportions and camera. One complete reciprocal walking cycle IN PLACE. The near boot steps forward and plants while the far boot trails, then far boot passes and steps forward as near boot trails. Knees and hips articulate below the robe. Staff stays upright in the same near-hand grip; free far arm balances the gait. Robe and sails follow weight shifts without stretching. No sideways root travel or added legs. Return smoothly to exact initial ready.  Entire backdrop flat magenta RGB255,0,255 throughout; no scenery, floor, cast shadow, text, camera movement, zoom or cuts. Keep all legitimate staff tips, robe ribbons and limbs within ample canvas margins. Fixed boot contact plane y576; actual steps lift boots but planted boots do not slide. Preserve the original pale blue robes and saltglass without recoloring or enlarging effects.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026108201
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "saltwake_eulogist_move_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "saltwake_eulogist_move_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "saltwake_eulogist_move_h3_v1_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "saltwake_eulogist_move_h3_v1_guide_3.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 30,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 60,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 90,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "42",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "saltwake_eulogist_h3/move_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "saltwake_eulogist_h3",
+      "create_time": 1790956019959
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "saltwake_eulogist_h3\\move_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "73f4262a-561f-4afe-8c98-ced22722d7a2",
+          "timestamp": 1790956019960
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "73f4262a-561f-4afe-8c98-ced22722d7a2",
+          "timestamp": 1790956019998
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "73f4262a-561f-4afe-8c98-ced22722d7a2",
+          "timestamp": 1790956480787
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

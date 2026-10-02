@@ -1,0 +1,18 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v3",
+    "ranged_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v2",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Personally inspected all original RGB and matte sequences chronologically, enlarged anatomy/equipment and extraction trouble areas, every selected native and reflected128 phase, and eight actual melee and ranged captures each. Normal, reflected retry and ranged fixtures passed1013 assertions each; ranged observed all49 authored poses. Original two arms/two legs, rigid three-saltglass staff and hanging lantern remain coherent. Source-backed cyan enclosed-mask recovery restores support glass while preserving original semantic alpha outside closed silhouettes; exact124-frame CPU rebuild verified. Death frames81-83 excluded because original staff ornament touches canvas, preserving originals. No source warping, interpolation or duplicate padding. Original accepted idle18-25 battle/map pixels and240ms timing preserved. These are chronological visual inspections and focused offscreen Windows fixtures, not a continuous manual playback or manual game playtest; imported/live checks follow publication."
+  }
+}

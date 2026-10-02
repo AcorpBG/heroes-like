@@ -1,0 +1,1669 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_saltwake_eulogists",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_000",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "move_h3_002",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.08333333333333333
+        },
+        {
+          "name": "move_h3_004",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "move_h3_006",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "move_h3_008",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "move_h3_010",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_014",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "move_h3_016",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_020",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "move_h3_022",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_026",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_058",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_062",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "move_h3_064",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "move_h3_066",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "move_h3_068",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "move_h3_070",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "move_h3_074",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "move_h3_076",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "move_h3_078",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "move_h3_080",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "move_h3_082",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "move_h3_084",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "move_h3_086",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "move_h3_088",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "move_h3_090",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "move_h3_092",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "move_h3_094",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "move_h3_096",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "move_h3_098",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "move_h3_100",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "move_h3_102",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "move_h3_104",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "move_h3_106",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        },
+        {
+          "name": "move_h3_108",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "move_h3_112",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "move_h3_116",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.833333333333333
+        },
+        {
+          "name": "move_h3_118",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_118.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 118,
+          "video_time_seconds": 4.916666666666667
+        },
+        {
+          "name": "move_h3_120",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "move_h3_122",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_122.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 122,
+          "video_time_seconds": 5.083333333333333
+        },
+        {
+          "name": "move_h3_123",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59
+          ],
+          "frame_msec": 42,
+          "loop": true,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/config.json",
+          "sha256": "fbef0a5a7b07e8671405d6a4a85c33c1915f0ce2624fab699d43907865a3b80a"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/selection.json",
+          "sha256": "5ace3ad81c62d509c2eed5c559f0523daa46fc2ae41268245830ddfe18467095"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/original_lossless.mkv",
+          "sha256": "89b6c98ed0a87f143e6791e01eb5b6e9167cbed3a078d22b3d866f2b25ab236a"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/original.json",
+          "sha256": "65207ff075504af758a35cc6768188364a40f1b5a80bb84dbf30fd9f8dc09f48"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/workflow_api.json",
+          "sha256": "a86ea22478615932e95316df12e58cae5fc449eafc35c27d7bb6f097e89a57a4"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/prompt.txt",
+          "sha256": "9cffc16c20b4c3b725d9d6f5b6ff4346ac1feafcef31bfe2fe86b1a528dea53e"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/reference.json",
+          "sha256": "1bb5d5cf59eeadcb0bed9523f7296d052c1aad5a51ad11ec904dccb030688966"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte.json",
+          "sha256": "2ffa26f26454a6b6d5aa0e97a70c418aea5b4b950c4b180b10870b0ecdef9982"
+        },
+        "semantic_alpha.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha.json",
+          "sha256": "bb00cab3ddeeb6af29979bdd2bae01c82628035a4086144069f839866413836c"
+        },
+        "fusion_matting.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/fusion_matting.json",
+          "sha256": "bd1d8398f7051bae7d150cf79faddae65a37d8d1db8676dcf0a2e0f87756c99f"
+        },
+        "matte_semantic.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte_semantic.json",
+          "sha256": "60baada2a31857baf66bd352777eb576ddecbc43d0abd5cc95d5ad70c1241852"
+        },
+        "edge_despill.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/edge_despill.json",
+          "sha256": "1bfca856d71564b10afe3fe68929c213fab23c48d60c8bd0021e2bececb9d641"
+        },
+        "matte_initial.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/matte_initial.json",
+          "sha256": "92ad2d67831936be7795de25d99f7e8ae266dc952b0b6e9ef663ca77dc0127b3"
+        },
+        "bounded_session.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/bounded_session.json",
+          "sha256": "c9477d0bdec03000489a3fb0355633e81bcb063f1497e117dfa145546eccf8b2"
+        },
+        "segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/segmentation_recipe.json",
+          "sha256": "49b030d2155d7cadcc251f49d0e25edc26d8cabc6af427e2e917f52f9a34563d"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/staged_generation.json",
+          "sha256": "b1bbca7a883a322fba48a4456803f8744395ee38fff0929b467212946fa02094"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/sampling_workflow_api.json",
+          "sha256": "15fc6fbefe559013e2a008f5ae20fc99edc599bf31d7f930c3025c222844c8c2"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/sampling_submission.json",
+          "sha256": "1a611e39567805e3331d3f884aaf1c3203cd0d461211c475815e621cb79b5bf2"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/sampling_history.json",
+          "sha256": "b954fdb1ef89426121432498d7ebe920864e683805227b34b4317082c1fe4adb"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/original.latent",
+          "sha256": "0cec5ac448d2e577a41b661f28db5da3e4a6210f248a81f3f4498d4e7c475e45"
+        },
+        "original_semantic_alpha_000": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_000.png",
+          "sha256": "2c89db87123edb94a45cd2006dc8c918142148f72d599b2d889b4210a4541010"
+        },
+        "original_semantic_alpha_002": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_002.png",
+          "sha256": "68035b7560719b7e631fc0b3e88dd223fcf3ea50955424851262c6f7c3038f39"
+        },
+        "original_semantic_alpha_004": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_004.png",
+          "sha256": "68dbb396e75fbbf88699d1ff76731359b31c0802bc50572f7afd742b6e3261b1"
+        },
+        "original_semantic_alpha_006": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_006.png",
+          "sha256": "369c1e64686dd6adc89dfc4d93ca8e704911fd3378f39b0da297b19fe38c9638"
+        },
+        "original_semantic_alpha_008": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_008.png",
+          "sha256": "bc859449294342d3e5a0dc686a7e0ceb8e56810a798bc2fbdc5ebeb8a4cfc5c6"
+        },
+        "original_semantic_alpha_010": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_010.png",
+          "sha256": "3e16e2b1ccad9981cc20f3d218a88e7405aa49ef33edde634d6b8044478ad4b6"
+        },
+        "original_semantic_alpha_012": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_012.png",
+          "sha256": "f9a29a61ad9c03ebf91641376baeefac46a5961ea63bd19b91351cfa3e868f6e"
+        },
+        "original_semantic_alpha_014": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_014.png",
+          "sha256": "de7534dfea93da081e6f3db72e825f1e21064d4e447c07951b62b042f04bb855"
+        },
+        "original_semantic_alpha_016": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_016.png",
+          "sha256": "9060d10949ee72eca45599f5ebf6873ac5e7206b7ccb7d2abbceb11a47a0927b"
+        },
+        "original_semantic_alpha_018": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_018.png",
+          "sha256": "8aad1902a9f6d7a088e71a20370f80bf931a83565905af0e6761bd885ddb588b"
+        },
+        "original_semantic_alpha_020": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_020.png",
+          "sha256": "ee4c6efde5d5c5e596658fb03225301d9b91eab72b291696348f0cdadba17024"
+        },
+        "original_semantic_alpha_022": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_022.png",
+          "sha256": "5c2647ba696b97baf057387a6aafcb7adc3fb857fabb2a5fedd4c83fef968ca6"
+        },
+        "original_semantic_alpha_024": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_024.png",
+          "sha256": "4f409b0ea0882c0ba866e366a3e3c7eccf4028ff3ca5953a52da4d19e2dceec0"
+        },
+        "original_semantic_alpha_026": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_026.png",
+          "sha256": "c8cb07867282c5729914f407826811686cdeb22ab1d17a25fe30297cc129391c"
+        },
+        "original_semantic_alpha_028": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_028.png",
+          "sha256": "efea8e64671d4b5ad3296b53a1ca88a4a41caaf2efbe4caca364dd8dd565c539"
+        },
+        "original_semantic_alpha_030": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_030.png",
+          "sha256": "3dddd1ebd532b805d5a459935d8e279dcfb2ee1300805b350455a86e5ccedcd5"
+        },
+        "original_semantic_alpha_032": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_032.png",
+          "sha256": "d9ce8536769278936bfd9d72411be4aab2b617635482f5ea728ad4f877c3911d"
+        },
+        "original_semantic_alpha_034": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_034.png",
+          "sha256": "c70ff4e2c08ce512c1a54ca4ead331f0404836b350c6ecf525349ce29c670d92"
+        },
+        "original_semantic_alpha_036": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_036.png",
+          "sha256": "31f919277e70d1d1e17246ee806cd3124f62ad44288e5fa651ab641cd1eef50f"
+        },
+        "original_semantic_alpha_038": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_038.png",
+          "sha256": "ffbc0132b691b53be9f794c7d22afd81454e0fe128d8800cee27b2f92ce0f822"
+        },
+        "original_semantic_alpha_040": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_040.png",
+          "sha256": "d12235e8c7746f545c42610b19caec6c62f5671d7d3f4358096ddb9e8c0dff26"
+        },
+        "original_semantic_alpha_042": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_042.png",
+          "sha256": "c46b2867db771b49c09ffd75ca88eced4bb16a5156d7b272e740f1e758bfdea1"
+        },
+        "original_semantic_alpha_044": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_044.png",
+          "sha256": "9f41f51ca1c08f5ee177396074c84486ef6df3bf68e4c206ae50c706fb95ad84"
+        },
+        "original_semantic_alpha_046": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_046.png",
+          "sha256": "b424a6e3ea122ca5e6ff9239e2a8cf884569f3be92972af968d118be6eed1bc2"
+        },
+        "original_semantic_alpha_048": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_048.png",
+          "sha256": "3aff7e652398433b41944cd96473dd0329a2df0bf26f83ee54fa59aa42e38758"
+        },
+        "original_semantic_alpha_050": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_050.png",
+          "sha256": "5c40c106dcbd7baf52831ef005b07e77b2af7be237e147961a4d812177a7c4ab"
+        },
+        "original_semantic_alpha_052": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_052.png",
+          "sha256": "b97fd63232acc9bbd2251f7dbfd0c9b5abb221e2392af31f99bae843541a537b"
+        },
+        "original_semantic_alpha_054": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_054.png",
+          "sha256": "c25da0e611156007491f9b41fe9e2c337c5cab8d31220e777390d72869731158"
+        },
+        "original_semantic_alpha_056": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_056.png",
+          "sha256": "6d1dc171944ee52ad48662be16d1b7c2582c13061a1a6f222357df3afc1e4cfc"
+        },
+        "original_semantic_alpha_058": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_058.png",
+          "sha256": "fec12f1523f5017907a26e76874130bee3534e308b59b4158a997e9302919744"
+        },
+        "original_semantic_alpha_060": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_060.png",
+          "sha256": "8738f3589f31ee89ae83c15ac5608ca0e528fe6fae31057d5970c47278aae5da"
+        },
+        "original_semantic_alpha_062": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_062.png",
+          "sha256": "bf5118b52f1e3edb430cbca6fe14be5f025629f628c758bd4717df18f2f51d25"
+        },
+        "original_semantic_alpha_064": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_064.png",
+          "sha256": "ed9c8c2b8e63a9e7f2a33b2e95de08afcda51c617cbe0050c691081ac159bc42"
+        },
+        "original_semantic_alpha_066": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_066.png",
+          "sha256": "551dedcdc67d5582906b1c6616e81c2f1bf731c0b5c6a81d4840703e4417f6c9"
+        },
+        "original_semantic_alpha_068": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_068.png",
+          "sha256": "d6df768694c62ee6f7357b730acc4178f8642188fc82f9fcde8914351f2f6bed"
+        },
+        "original_semantic_alpha_070": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_070.png",
+          "sha256": "34e3c7dd2629a63b3e1121263c52f1bdf88468b7935fc71fd4bea762d627c52a"
+        },
+        "original_semantic_alpha_074": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_074.png",
+          "sha256": "71ca7da35411850409c44afa60b0e98f7eef195eb45a313276e34d5f04e79402"
+        },
+        "original_semantic_alpha_076": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_076.png",
+          "sha256": "9f9a65319af987928ad282d91b344735a1d16a71fe61dbdfef436643fef209d6"
+        },
+        "original_semantic_alpha_078": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_078.png",
+          "sha256": "29ab8078331722559f6d043429de2b00a48d0d596d6086334ef7ea9d0f68fac0"
+        },
+        "original_semantic_alpha_080": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_080.png",
+          "sha256": "c2eab8bce25edf17033dd86f2c76ee80f7eacf36c65e82a8466df637594d34be"
+        },
+        "original_semantic_alpha_082": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_082.png",
+          "sha256": "4e581b820a57ccdcdad465b9c4a437b74ea8f03b5fb0b1876701d51aecedf8d5"
+        },
+        "original_semantic_alpha_084": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_084.png",
+          "sha256": "101bdd1b982a953148043e3acf6097b4ed7054d3eca956986f0c9afb19fcdd09"
+        },
+        "original_semantic_alpha_086": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_086.png",
+          "sha256": "b7fe78a6ac5cc6caa0a07e68880e8ae2636bd5492f1ce0f873a24d27394ab382"
+        },
+        "original_semantic_alpha_088": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_088.png",
+          "sha256": "03606797a6a65e91932e969ed398c4e64e6b4f3ed429ff7ac8612aeed5966161"
+        },
+        "original_semantic_alpha_090": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_090.png",
+          "sha256": "0ea8c573e593a537ddedc96cedd796369fd4d371dc16d39be815a2058b2e0803"
+        },
+        "original_semantic_alpha_092": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_092.png",
+          "sha256": "1ba96cdb44952b3596b56b23b3fb9293fcde49b4cffc77d3fe798b4d4a01a8b5"
+        },
+        "original_semantic_alpha_094": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_094.png",
+          "sha256": "cddf064b7f613196a0bdc71e3d1d77337e79fce490c71fd144cd384b35936881"
+        },
+        "original_semantic_alpha_096": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_096.png",
+          "sha256": "d58c00a0f6f3529f472e396f7c09bcb16b7608550b04db2f846b8b86730b8008"
+        },
+        "original_semantic_alpha_098": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_098.png",
+          "sha256": "dcde313b3b6d905b3bb688ee2d7d8d100c8648106e9bcdaae9f126fd5b6ee8ae"
+        },
+        "original_semantic_alpha_100": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_100.png",
+          "sha256": "ec11218207b1ec9f15a554105481b5559b1eadac9cccf6d2be374b6e48e4cbe8"
+        },
+        "original_semantic_alpha_102": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_102.png",
+          "sha256": "b854e287f218fcf9ea47e3aa8f8c28ecdebe5bcb3fc7e6b8e9a6db8d0f6c3e4e"
+        },
+        "original_semantic_alpha_104": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_104.png",
+          "sha256": "e4a23675f01cdb8527fbed171dac2f441f0afc3a66991ecc9e9ac0781929a3f1"
+        },
+        "original_semantic_alpha_106": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_106.png",
+          "sha256": "c161a6addda4d96cae0e00fffe778800d202ea9a12a41e8a596ec9100cf2d879"
+        },
+        "original_semantic_alpha_108": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_108.png",
+          "sha256": "79b258a69a4986c4da5bc6773af40d1536fa8a6a0d212054b493853fe171ab9f"
+        },
+        "original_semantic_alpha_112": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_112.png",
+          "sha256": "f4f7e4af29783b24c302f65d1c2591c9323ad54366a9512692eecaa8f57fc048"
+        },
+        "original_semantic_alpha_116": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_116.png",
+          "sha256": "04141392ddd5a1dcb9d80544536608aec92f541ca686eac6d34f330116085a74"
+        },
+        "original_semantic_alpha_118": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_118.png",
+          "sha256": "16331b2ddd4fe85bee3506a7f68b8c74f17e331322225f203f6943b87541051a"
+        },
+        "original_semantic_alpha_120": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_120.png",
+          "sha256": "7291042a57cd88f953fd53d7e3e90ecf5daff6d56979da614d57fbc20d88369c"
+        },
+        "original_semantic_alpha_122": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_122.png",
+          "sha256": "39aeb2b9ec4e9259c406f9b7d9d7166ac4b9ef044178e403f67d32dc338a3cce"
+        },
+        "original_semantic_alpha_123": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/semantic_alpha/alpha_123.png",
+          "sha256": "8d8b8b3898add2daf57a57d2a5effa9e1cb147737a7ed9452f913b183d494a78"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 original RGB and semantic RGBA phases inspected chronologically; enlarged boots24/44/60/70/90/104 show near contact, far passing, far contact, near passing and return. Original staff-glass missing opacity on green plate restored by source-backed uniform chroma inside closed opaque semantic support. Full recovered RGBA chronological review and enlarged3-cylinder details4/6/14/20/26/73 checked; source72/110/114 with unsafe crossfade plate excluded. Sixty distinct forward-time source poses preserve reciprocal gait with fixed anchor/scale; native/mirror/live acceptance pending."
+      }
+    }
+  ]
+}

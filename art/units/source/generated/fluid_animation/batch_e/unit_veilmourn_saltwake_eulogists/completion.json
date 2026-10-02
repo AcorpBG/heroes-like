@@ -1,0 +1,198 @@
+{
+  "status": "complete_selected_unit",
+  "unit_id": "unit_veilmourn_saltwake_eulogists",
+  "completed_at_utc": "2026-10-02T21:16:26.988330+00:00",
+  "clips": {
+    "move": {
+      "frames": 60,
+      "frame_msec": 42,
+      "static_frame": 0,
+      "loop": true
+    },
+    "attack": {
+      "frames": 49,
+      "frame_msec": 42,
+      "contact_frame": 19,
+      "static_frame": 0,
+      "loop": false
+    },
+    "ranged": {
+      "frames": 49,
+      "frame_msec": 42,
+      "frame_durations_msec": [
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        126,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42
+      ],
+      "contact_frame": 37,
+      "static_frame": 0,
+      "loop": false
+    },
+    "hit": {
+      "frames": 25,
+      "frame_msec": 35,
+      "static_frame": 0,
+      "loop": false
+    },
+    "defend": {
+      "frames": 32,
+      "frame_msec": 35,
+      "static_frame": 31,
+      "loop": false
+    },
+    "cast": {
+      "frames": 47,
+      "frame_msec": 42,
+      "static_frame": 0,
+      "loop": false
+    },
+    "death": {
+      "frames": 43,
+      "frame_msec": 42,
+      "static_frame": 42,
+      "loop": false
+    }
+  },
+  "preserved_idle": {
+    "frames": 8,
+    "frame_msec": 240,
+    "battle_map_pixels_exact": true
+  },
+  "new_action_poses": 305,
+  "original_rgb_frames_preserved": 1364,
+  "original_take_count": 11,
+  "accepted_source_rgb_frames": 868,
+  "focused_results": {
+    "candidate/native": {
+      "checks": 1013,
+      "failures": []
+    },
+    "candidate/mirror_retry": {
+      "checks": 1013,
+      "failures": []
+    },
+    "candidate/ranged": {
+      "checks": 1013,
+      "failures": []
+    },
+    "live/native": {
+      "checks": 1027,
+      "failures": []
+    },
+    "live/ranged": {
+      "checks": 1027,
+      "failures": []
+    }
+  },
+  "passed_focused_assertions": 5093,
+  "initial_reflected_observation_failure": [
+    "shell did not show every authored attack pose including recovery; observed=[0, 1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48]"
+  ],
+  "observation_fix": "Warm only viewport GPU readback before actual action; source pixels, timing, renderer and continuous action clock unchanged.",
+  "atlas": {
+    "path": "art/animation/runtime/fluid/unit_veilmourn_saltwake_eulogists.png",
+    "sha256": "92b358e800eb75c4dd33cd192658f6fda1a5be03ecc0a925c8bc46ef77fdc952",
+    "width": 3648,
+    "height": 3740,
+    "rgba_bytes": 54574080
+  },
+  "verification": {
+    "original_rgb_sha256": true,
+    "source_packed_pixel_anchor_exact": true,
+    "source_opaque_canvas_bounds": true,
+    "source_distinct_poses": true,
+    "semantic_cyan_original124_frame_cpu_rebuild": true,
+    "movement_original124_frame_alpha_rgba_exact_rebuild": true,
+    "imported_rgba_exact_after_default_alpha_border_fix": true,
+    "other_rows_preserved_at_mutex_publication": true
+  },
+  "visual_review": {
+    "full_original_chronological_rgb_rgba": true,
+    "enlarged_source_details": true,
+    "all_native_and_reflected128_phases": true,
+    "actual_melee_ranged8_captures_each": true,
+    "live_imported128_gallery_and_map_idle_shader": true,
+    "manual_game_playtest": false,
+    "continuous_manual_clip_playback": false
+  },
+  "scope": {
+    "windows_godot": "4.6.2",
+    "linux_validation": false,
+    "fullsuite": false
+  },
+  "preserved": "All originals, failed takes, latent/workflow/prompt/guide/model recipes, original semantic masks, curated art, caches, saves and RMG material.",
+  "cleanup": {
+    "records": {
+      "cleanup_cyan_probe": {
+        "files": 126,
+        "bytes": 28088153
+      },
+      "cleanup_duplicates": {
+        "files": 1419,
+        "bytes": 852059272
+      },
+      "cleanup_probes": {
+        "files": 497,
+        "bytes": 115743372,
+        "reason": "Inactive disposable extraction comparisons; final recovered selected matte copied and hash-proved, original FFV1/latent/guides and extraction recipes preserved."
+      },
+      "cleanup_reviews": {
+        "files": 268,
+        "bytes": 363078008
+      },
+      "cleanup_unselected": {
+        "files": 1059,
+        "bytes": 244498584
+      }
+    },
+    "removed_files": 3369,
+    "recovered_bytes": 1603467389,
+    "rebuildable": true
+  }
+}

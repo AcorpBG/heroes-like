@@ -4585,29 +4585,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        105.0,
+        105,
         225
       ],
       "painted_extent": 220,
-      "source_sheet": "res://art/animation/runtime/poses/unit_veilmourn_saltwake_eulogists.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_veilmourn_saltwake_eulogists.png",
       "source_indices": [
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        151,
-        11,
-        333,
-        247
+        31,
+        15,
+        213,
+        251
       ],
-      "source_sha256": "645da96bf45bf5ab57e3504c7d72bd3b673527046f807b2c75a6530e89d4ddfe",
-      "source_provenance": "res://art/animation/source/poses/unit_veilmourn_saltwake_eulogists/provenance.json",
+      "source_sha256": "92b358e800eb75c4dd33cd192658f6fda1a5be03ecc0a925c8bc46ef77fdc952",
+      "source_provenance": "res://art/animation/source/fluid/unit_veilmourn_saltwake_eulogists/provenance.json",
       "sha256": "ce1c84068d52594a3bcf204ad0e50a27e4cc564a7d517d9d74c59926a1764cab"
     },
     "unit_thornwake_seedshield_wardens": {

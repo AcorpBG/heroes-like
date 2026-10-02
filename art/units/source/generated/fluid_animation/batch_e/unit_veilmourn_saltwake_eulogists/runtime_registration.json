@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_veilmourn_saltwake_eulogists",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "ready_guide": {
+    "name": "idle_a",
+    "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/idle-and-equipped-cold-collapse-green.png",
+    "rects": [
+      [
+        0,
+        0,
+        500,
+        599
+      ]
+    ],
+    "anchor": [
+      304,
+      543
+    ],
+    "scale": 0.4,
+    "alpha_noise_cutoff": 8
+  },
+  "corpse_guide": {
+    "name": "dead_equipped",
+    "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/idle-and-equipped-cold-collapse-green.png",
+    "rects": [
+      [
+        1010,
+        680,
+        1536,
+        1024
+      ]
+    ],
+    "anchor": [
+      1280,
+      920
+    ],
+    "scale": 0.4,
+    "alpha_noise_cutoff": 8
+  },
+  "reason": "Original per-source anatomical scales retained; fixed extraction scale and boot contact plane, no per-frame normalization.",
+  "ground_contact_note": "Original kneel/fallen guides15 and17 body contacts corrected to905/920, independent of forward staff ornament reaching lower in the isometric foreground; preserve all pixels and one fixed scale."
+}

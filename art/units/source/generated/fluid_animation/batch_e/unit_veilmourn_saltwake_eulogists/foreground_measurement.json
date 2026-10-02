@@ -1,0 +1,39 @@
+{
+  "sources": [
+    {
+      "source": "art/units/source/curated/unit_veilmourn_saltwake_eulogists.png",
+      "sha256": "0b9b571182de7753f09fd97c1ca0853fa32fd36eca3b3776b65143ceed2b20c6",
+      "opaque_pixels": 63371,
+      "magenta_axis_quantiles": [
+        2.0,
+        3.0,
+        10.0
+      ],
+      "green_axis_quantiles": [
+        2.0,
+        8.0,
+        14.0
+      ]
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltwake_eulogists/move_h3_v1/guide_0_rgba.png",
+      "sha256": "d1f3dc6e69203b2ad38c3fb7e290f9bdf409ba69a035e488c79653914b54d226",
+      "opaque_pixels": 64328,
+      "magenta_axis_quantiles": [
+        7.0,
+        13.0,
+        24.0
+      ],
+      "green_axis_quantiles": [
+        39.0,
+        95.0,
+        149.0
+      ]
+    }
+  ],
+  "protected_chroma_band": 30,
+  "boundary_source_pixels": null,
+  "method": "Complete original opaque foreground RGB at alpha>=128. Magenta=min(R,B)-G, green=G-max(R,B). Original curated maximum14; protect band20. No inferred anatomy or motion.",
+  "reason": "Original curated identity max magenta10/green14. Protect30, including original ready magenta max24. Ready guide green excess up to149 is legacy green-plate contamination, absent from the original curated identity; retain all alpha/geometry, correct only new-video plate spill within4 source pixels of transparency.",
+  "scope": "Original palette-bounded foreground plate channel excess above30 only; all alpha/geometry and all colors below band unchanged. Original curated max14, original ready magenta max24; ready green excess149 is legacy key contamination."
+}

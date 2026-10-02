@@ -1,0 +1,22 @@
+"""Record actual focused results before deleting disposable review copies."""
+import argparse,json,datetime
+from PIL import Image
+import produce as p
+a=argparse.ArgumentParser();a.add_argument('mode',choices=['record','finish']);args=a.parse_args()
+uid='unit_veilmourn_saltwake_eulogists';root=p.ROOT/'.artifacts/parallel_animation_20261002'/uid
+if args.mode=='record':
+ results={}
+ for case in ['candidate/native','candidate/mirror_retry','candidate/ranged','live/native','live/ranged']:
+  lines=(root/case/'console.log').read_text(encoding='utf-8').splitlines();reports=[json.loads(line.split('FLUID_ANIMATION_REPORT ',1)[1]) for line in lines if line.startswith('FLUID_ANIMATION_REPORT ')]
+  assert len(reports)==1 and not reports[0]['failures'],(case,reports);results[case]=reports[0]
+ initial=[json.loads(line.split('FLUID_ANIMATION_REPORT ',1)[1]) for line in (root/'candidate/mirror/console.log').read_text(encoding='utf-8').splitlines() if line.startswith('FLUID_ANIMATION_REPORT ')][0]
+ assert len(initial['failures'])==1 and 'observed=' in initial['failures'][0]
+ assert 'SALTWAKE_EULOGIST_IMPORTED_ATLAS_OK' in (root/'import/pixels.log').read_text(encoding='utf-8')
+ handoff=json.loads((p.SOURCE_DIR/'handoff.json').read_bytes())['units'][0];delivery=json.loads((p.SOURCE_DIR/'delivery.json').read_bytes());row=next(r for r in json.loads((p.ROOT/'content/unit_animation_manifest.json').read_bytes())['items'] if r['unit_id']==uid)
+ all_takes=[t for t in p.SOURCE_DIR.glob('*_h3_v*') if (t/'original.json').exists()];rgb=sum(len(json.loads((t/'original.json').read_bytes())['decoded_rgb_sha256']) for t in all_takes)
+ atlas=p.ROOT/row['pose_sheet'].removeprefix('res://');size=Image.open(atlas).size
+ completion=dict(status='validated_cleanup_pending',unit_id=uid,completed_at_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),clips={k:dict(frames=len(v['indices']),**{x:v[x] for x in ['frame_msec','frame_durations_msec','contact_frame','static_frame','loop'] if x in v}) for k,v in handoff['clips'].items()},preserved_idle=dict(frames=8,frame_msec=240,battle_map_pixels_exact=True),new_action_poses=len(handoff['frames']),original_rgb_frames_preserved=rgb,original_take_count=len(all_takes),accepted_source_rgb_frames=sum(len(json.loads((p.SOURCE_DIR/t/'original.json').read_bytes())['decoded_rgb_sha256']) for t in delivery['takes']),focused_results=results,passed_focused_assertions=sum(r['checks'] for r in results.values()),initial_reflected_observation_failure=initial['failures'],observation_fix='Warm only viewport GPU readback before actual action; source pixels, timing, renderer and continuous action clock unchanged.',atlas=dict(path=atlas.relative_to(p.ROOT).as_posix(),sha256=p.sha(atlas),width=size[0],height=size[1],rgba_bytes=size[0]*size[1]*4),verification=dict(original_rgb_sha256=True,source_packed_pixel_anchor_exact=True,source_opaque_canvas_bounds=True,source_distinct_poses=True,semantic_cyan_original124_frame_cpu_rebuild=True,movement_original124_frame_alpha_rgba_exact_rebuild=True,imported_rgba_exact_after_default_alpha_border_fix=True,other_rows_preserved_at_mutex_publication=True),visual_review=dict(full_original_chronological_rgb_rgba=True,enlarged_source_details=True,all_native_and_reflected128_phases=True,actual_melee_ranged8_captures_each=True,live_imported128_gallery_and_map_idle_shader=True,manual_game_playtest=False,continuous_manual_clip_playback=False),scope=dict(windows_godot='4.6.2',linux_validation=False,fullsuite=False),preserved='All originals, failed takes, latent/workflow/prompt/guide/model recipes, original semantic masks, curated art, caches, saves and RMG material.')
+ p.write(p.SOURCE_DIR/'completion.json',completion);print('RECORDED_FOCUSED_RESULTS',completion['passed_focused_assertions'],rgb)
+else:
+ completion=json.loads((p.SOURCE_DIR/'completion.json').read_bytes());assert completion['status']=='validated_cleanup_pending';records={f.stem:json.loads(f.read_bytes()) for f in p.SOURCE_DIR.glob('cleanup_*.json')};assert {'cleanup_probes','cleanup_cyan_probe','cleanup_duplicates','cleanup_unselected','cleanup_reviews'}<=set(records)
+ assert not root.exists();completion['cleanup']=dict(records=records,removed_files=sum(r['files'] for r in records.values()),recovered_bytes=sum(r['bytes'] for r in records.values()),rebuildable=True);completion['status']='complete_selected_unit';p.write(p.SOURCE_DIR/'completion.json',completion);print('COMPLETE_SELECTED_UNIT',completion['cleanup'])

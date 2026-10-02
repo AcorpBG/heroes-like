@@ -1,0 +1,2445 @@
+{
+  "frames": [
+    {
+      "frame": 0,
+      "sha256": "99e407d7f0a2c6efeb51b9c9b406f6845e565be777474c86384aad2068e9d601",
+      "bounds": [
+        270,
+        152,
+        576,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          255.0,
+          11.0,
+          245.5
+        ],
+        "corner_median_spread": 1.5,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 1,
+      "sha256": "3d989da358d8ed9f0ebbd47cc7ee37734af9122a55c76ab77cc92029bf5d0466",
+      "bounds": [
+        268,
+        150,
+        576,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          245.5,
+          27.5,
+          233.0
+        ],
+        "corner_median_spread": 2.345,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 2,
+      "sha256": "56683d9f53ee570aef046f74c729fc6f7210ff345fefef38397f8e438acc18eb",
+      "bounds": [
+        268,
+        148,
+        576,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          246.5,
+          30.5,
+          233.5
+        ],
+        "corner_median_spread": 2.598,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 3,
+      "sha256": "952ec6cb6d9cb4bdc80a3de629e70864905c81bd2667f104f7cdd897085d9468",
+      "bounds": [
+        268,
+        144,
+        576,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          247.5,
+          28.0,
+          237.0
+        ],
+        "corner_median_spread": 2.062,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 4,
+      "sha256": "0f2adc2affb913af74bdaac13fc28d0fbb560ae276986ccb0664bed5d6639851",
+      "bounds": [
+        268,
+        144,
+        576,
+        594
+      ],
+      "detail": {
+        "background_rgb": [
+          21.0,
+          226.5,
+          136.0
+        ],
+        "corner_median_spread": 2.5,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 5,
+      "sha256": "595b4eb92fd71bc43de8f19c58dd0b643ed07a21250428080adc22b44d9fa680",
+      "bounds": [
+        256,
+        144,
+        573,
+        640
+      ],
+      "detail": {
+        "background_rgb": [
+          0.0,
+          252.0,
+          125.0
+        ],
+        "corner_median_spread": 2.236,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 6,
+      "sha256": "025d8fcaf32bf94f414f6de67663bf7834ed0e5a9ac4cb147c6f48293e0a835f",
+      "bounds": [
+        247,
+        144,
+        573,
+        640
+      ],
+      "detail": {
+        "background_rgb": [
+          0.0,
+          252.0,
+          125.5
+        ],
+        "corner_median_spread": 2.062,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 7,
+      "sha256": "9743baa775f7f31547e5a7ea8a22912dd2804f83ff5f61c25837945ccc31fa27",
+      "bounds": [
+        250,
+        144,
+        576,
+        640
+      ],
+      "detail": {
+        "background_rgb": [
+          0.0,
+          251.5,
+          125.0
+        ],
+        "corner_median_spread": 2.5,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 8,
+      "sha256": "b61f9894a7a7bd803e6f3f0d40b297741073ed9d6a35c15bbaaa7367c7d6d94c",
+      "bounds": [
+        265,
+        144,
+        576,
+        640
+      ],
+      "detail": {
+        "background_rgb": [
+          1.0,
+          250.5,
+          125.5
+        ],
+        "corner_median_spread": 2.915,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 9,
+      "sha256": "f4aa06b7b29528be1892534669d6545c915610faff9a42b39339523891b3c298",
+      "bounds": [
+        256,
+        144,
+        574,
+        599
+      ],
+      "detail": {
+        "background_rgb": [
+          25.0,
+          237.0,
+          130.25
+        ],
+        "corner_median_spread": 3.4,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 10,
+      "sha256": "6af060744b1d74d533bfba0bedfe529b889d60aa0630e510536c874d60b997dd",
+      "bounds": [
+        256,
+        144,
+        576,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          244.5,
+          26.5,
+          233.5
+        ],
+        "corner_median_spread": 2.179,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 11,
+      "sha256": "9d2b313bfae54dfb0d66f1c4ea1851ec413e1f8334b4d83af0bbaa9b211256e6",
+      "bounds": [
+        264,
+        153,
+        572,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          246.0,
+          27.0,
+          231.5
+        ],
+        "corner_median_spread": 3.64,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 12,
+      "sha256": "81d95c09a302911711e2d58d287de4472c21116e85ce717c25dd7990561e99cf",
+      "bounds": [
+        263,
+        156,
+        572,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          248.5,
+          25.5,
+          233.5
+        ],
+        "corner_median_spread": 2.958,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 13,
+      "sha256": "15e83961369537a10c8d307197dbeeb2c276de06cd707e2c0bbb3e6af5be0b88",
+      "bounds": [
+        263,
+        160,
+        576,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          241.5,
+          30.0,
+          232.0
+        ],
+        "corner_median_spread": 3.041,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 14,
+      "sha256": "5c937d4f78c10ed11298a219b240b7b2d7f8f9347bb47c087919334d9c9f3b13",
+      "bounds": [
+        227,
+        160,
+        576,
+        640
+      ],
+      "detail": {
+        "background_rgb": [
+          9.0,
+          245.0,
+          120.0
+        ],
+        "corner_median_spread": 1.414,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 15,
+      "sha256": "b944d10409853c8bae80c48d60d59a0cc00ee50e3da0746478b4155bb339dd01",
+      "bounds": [
+        264,
+        160,
+        576,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          15.0,
+          238.5,
+          124.5
+        ],
+        "corner_median_spread": 0.707,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 16,
+      "sha256": "48046b305aa330a4bdfbd47a38c8800ad16957168e8818f9b717216cfa239fc8",
+      "bounds": [
+        262,
+        160,
+        576,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          18.0,
+          237.5,
+          128.5
+        ],
+        "corner_median_spread": 1.225,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 17,
+      "sha256": "ce17883fa10b6c668769b5882819bb4af2789120c16d73beb720162a6f3e3a6b",
+      "bounds": [
+        264,
+        160,
+        576,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          255.0,
+          11.0,
+          244.5
+        ],
+        "corner_median_spread": 1.803,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 18,
+      "sha256": "271d9753a9f503e24fffc158632ede9d660b6a72c276cb4950f14bd4561ac16e",
+      "bounds": [
+        264,
+        164,
+        574,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          240.5,
+          30.0,
+          229.5
+        ],
+        "corner_median_spread": 2.345,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 19,
+      "sha256": "2cae01327b0ca998dec4e147ded85b6911628fd5b8dcf1bfc2806d93bfdffd19",
+      "bounds": [
+        256,
+        160,
+        576,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          238.5,
+          35.0,
+          231.0
+        ],
+        "corner_median_spread": 2.291,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 20,
+      "sha256": "7d6c832672759b423228ce927cfddc1ed09a045ac8527bdadf85a4b3cc0aa254",
+      "bounds": [
+        235,
+        160,
+        580,
+        640
+      ],
+      "detail": {
+        "background_rgb": [
+          19.0,
+          232.0,
+          124.0
+        ],
+        "corner_median_spread": 2.236,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 21,
+      "sha256": "da8cba0b3ef9307268545f9c172abea3abe7341de0ab2586e1ccd21818a6f6c3",
+      "bounds": [
+        256,
+        162,
+        582,
+        612
+      ],
+      "detail": {
+        "background_rgb": [
+          18.0,
+          228.5,
+          124.5
+        ],
+        "corner_median_spread": 1.581,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 22,
+      "sha256": "e790563cf65a698b0e3ffecda617b8fd4fe2233623d4364f86029964ba3e70aa",
+      "bounds": [
+        256,
+        162,
+        588,
+        594
+      ],
+      "detail": {
+        "background_rgb": [
+          3.0,
+          244.0,
+          122.5
+        ],
+        "corner_median_spread": 1.118,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 23,
+      "sha256": "1f9bb2ca2751e2d56b135692594bf2bcfcc463baf0dcfa26e79179f5a2b8d1ab",
+      "bounds": [
+        262,
+        162,
+        592,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          3.5,
+          243.0,
+          123.0
+        ],
+        "corner_median_spread": 1.118,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 24,
+      "sha256": "0c038fb8afa6734f19288c164f20240d3026251f487d7dcfd562c665fb55a7bb",
+      "bounds": [
+        262,
+        162,
+        594,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          3.5,
+          243.0,
+          123.0
+        ],
+        "corner_median_spread": 1.118,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 25,
+      "sha256": "38af16a4092819852622be284b0b8a9a149ed01b3cfa6b788962d94d975104b8",
+      "bounds": [
+        261,
+        160,
+        596,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          4.0,
+          242.0,
+          123.5
+        ],
+        "corner_median_spread": 1.5,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 26,
+      "sha256": "9764df6b0bd8c7f929374ddb903500a2966fc5df5b1ef9875d99ff9171a26b4d",
+      "bounds": [
+        256,
+        160,
+        608,
+        635
+      ],
+      "detail": {
+        "background_rgb": [
+          21.0,
+          233.0,
+          125.0
+        ],
+        "corner_median_spread": 2.449,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 27,
+      "sha256": "08314f58cf6558d962235b6231e5ba9c39d42047df9af911be61393bf141f514",
+      "bounds": [
+        256,
+        160,
+        608,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          243.0,
+          27.5,
+          234.0
+        ],
+        "corner_median_spread": 2.062,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 28,
+      "sha256": "d5d78c71dbbe61d109fa2ceaee12ceea319ed64839fe88a7a333598193c6b8c7",
+      "bounds": [
+        256,
+        160,
+        600,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          245.5,
+          27.0,
+          234.0
+        ],
+        "corner_median_spread": 1.5,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 29,
+      "sha256": "a3424d3b3913ab594d22dd8c138be47910bf22c0d713c2e210db9fb8438ae9f9",
+      "bounds": [
+        256,
+        160,
+        600,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          248.0,
+          24.0,
+          236.0
+        ],
+        "corner_median_spread": 1.414,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 30,
+      "sha256": "fdf3d2e5b9db1581f1dce92ec1b0b65d9c11bf88354009499ace9e3356afce7e",
+      "bounds": [
+        256,
+        154,
+        608,
+        603
+      ],
+      "detail": {
+        "background_rgb": [
+          248.0,
+          27.0,
+          234.0
+        ],
+        "corner_median_spread": 2.449,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 31,
+      "sha256": "f0da1eb87391626f90fefbde477c8d7443a450878d376b8034f990b6bd8b2f08",
+      "bounds": [
+        242,
+        156,
+        602,
+        640
+      ],
+      "detail": {
+        "background_rgb": [
+          9.5,
+          236.0,
+          118.0
+        ],
+        "corner_median_spread": 2.693,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 32,
+      "sha256": "ee42ae45f4ec37a79ea00f409758e2b310f2fc0d040d64330583bde34fcc5146",
+      "bounds": [
+        256,
+        154,
+        596,
+        598
+      ],
+      "detail": {
+        "background_rgb": [
+          12.5,
+          233.0,
+          121.5
+        ],
+        "corner_median_spread": 1.871,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 33,
+      "sha256": "1f3208db961027b99772bcb052f8c221dd7d0a5cc1383aa55408e6212a3769c0",
+      "bounds": [
+        256,
+        154,
+        598,
+        598
+      ],
+      "detail": {
+        "background_rgb": [
+          13.5,
+          233.0,
+          124.0
+        ],
+        "corner_median_spread": 2.062,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 34,
+      "sha256": "e4061093eca01b7961446d4dfbe185a4cfb6b5ae3c00b663c9f300e09eac0f92",
+      "bounds": [
+        252,
+        154,
+        600,
+        602
+      ],
+      "detail": {
+        "background_rgb": [
+          6.0,
+          241.5,
+          124.0
+        ],
+        "corner_median_spread": 1.118,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 35,
+      "sha256": "2eb9818131dbd52adcc23b613f034428ee52e3bab511e890737b5975c15a339d",
+      "bounds": [
+        246,
+        152,
+        602,
+        608
+      ],
+      "detail": {
+        "background_rgb": [
+          23.0,
+          229.0,
+          125.0
+        ],
+        "corner_median_spread": 1.414,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 36,
+      "sha256": "d6a9b8c70190e1cde643cfa93bead5983f085e091f5794995f8c47ba4ab6ef27",
+      "bounds": [
+        240,
+        150,
+        608,
+        610
+      ],
+      "detail": {
+        "background_rgb": [
+          25.5,
+          228.5,
+          123.0
+        ],
+        "corner_median_spread": 1.871,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 37,
+      "sha256": "b95461a323d47d25bbe64a7b73e2f75381d04672ac44a91716f18f7163ec9683",
+      "bounds": [
+        240,
+        152,
+        606,
+        598
+      ],
+      "detail": {
+        "background_rgb": [
+          237.5,
+          26.0,
+          230.5
+        ],
+        "corner_median_spread": 1.871,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 38,
+      "sha256": "6d0d2f8d0561d21beeaaa176c4e12605a3dde67afa021b944feb81ed6b125375",
+      "bounds": [
+        240,
+        150,
+        606,
+        598
+      ],
+      "detail": {
+        "background_rgb": [
+          240.0,
+          25.0,
+          232.0
+        ],
+        "corner_median_spread": 1.732,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 39,
+      "sha256": "3950efa73c0dbcc1e8f7c4d16e138f0050f3692db928ec563a78be52c6812b93",
+      "bounds": [
+        240,
+        156,
+        601,
+        596
+      ],
+      "detail": {
+        "background_rgb": [
+          211.5,
+          53.0,
+          209.0
+        ],
+        "corner_median_spread": 3.202,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 40,
+      "sha256": "69d13144289b905c8b5c516cc205e5a32054871e59b652947b3b33a60f3c9e39",
+      "bounds": [
+        234,
+        152,
+        602,
+        609
+      ],
+      "detail": {
+        "background_rgb": [
+          37.0,
+          212.0,
+          122.5
+        ],
+        "corner_median_spread": 3.202,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 41,
+      "sha256": "4b5ecadcad895948eaaade7e0a78bc37d835250c888748059567d27046c2e386",
+      "bounds": [
+        224,
+        148,
+        602,
+        609
+      ],
+      "detail": {
+        "background_rgb": [
+          36.5,
+          217.0,
+          121.0
+        ],
+        "corner_median_spread": 3.775,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 42,
+      "sha256": "e63af88e24c08067df22304a8265ec019bdecb04fb9794f2a40e61c6f1017a1b",
+      "bounds": [
+        236,
+        153,
+        600,
+        607
+      ],
+      "detail": {
+        "background_rgb": [
+          228.5,
+          31.0,
+          214.5
+        ],
+        "corner_median_spread": 2.345,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 43,
+      "sha256": "da6ab74a3344b12861e7a0ee41bf38c558c3a32092be7cdd5aaf6571d2eae663",
+      "bounds": [
+        238,
+        152,
+        592,
+        598
+      ],
+      "detail": {
+        "background_rgb": [
+          238.5,
+          24.0,
+          232.5
+        ],
+        "corner_median_spread": 2.915,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 44,
+      "sha256": "949490d963933a936bc4535939cfce600e5b2f985481a4a98029505688e533f0",
+      "bounds": [
+        240,
+        152,
+        592,
+        598
+      ],
+      "detail": {
+        "background_rgb": [
+          242.0,
+          22.5,
+          234.5
+        ],
+        "corner_median_spread": 3.24,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 45,
+      "sha256": "3a7446efa38491df4a960bf7be79c3488f5efb67083b2f2292ccf644a1148459",
+      "bounds": [
+        239,
+        152,
+        592,
+        608
+      ],
+      "detail": {
+        "background_rgb": [
+          246.0,
+          18.0,
+          241.0
+        ],
+        "corner_median_spread": 2.236,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 46,
+      "sha256": "b0a765665833f39f9cb37e1865a95c50d4974218c7292e72fc3e6634664872c6",
+      "bounds": [
+        240,
+        150,
+        597,
+        608
+      ],
+      "detail": {
+        "background_rgb": [
+          23.0,
+          217.25,
+          130.0
+        ],
+        "corner_median_spread": 3.172,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 47,
+      "sha256": "ba5f3ae6713db8032673feb6d1badff7fed1038f4762e1d217eb89aa197d2812",
+      "bounds": [
+        246,
+        152,
+        598,
+        602
+      ],
+      "detail": {
+        "background_rgb": [
+          10.0,
+          235.5,
+          124.0
+        ],
+        "corner_median_spread": 2.291,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 48,
+      "sha256": "c7aa10d2740ab48985aac6b78762a697f6e0f82f1c8c6486809b872f8932caa3",
+      "bounds": [
+        248,
+        152,
+        600,
+        594
+      ],
+      "detail": {
+        "background_rgb": [
+          10.5,
+          235.0,
+          124.0
+        ],
+        "corner_median_spread": 2.693,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 49,
+      "sha256": "e103a76f0c8017b155fd55dfc551b0cf5ebf7cc70876123319168aef97fda3db",
+      "bounds": [
+        252,
+        152,
+        598,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          10.5,
+          235.0,
+          124.0
+        ],
+        "corner_median_spread": 2.693,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 50,
+      "sha256": "e63ffc05d120ca052549821cc0c00c59024e3a83b191109436b42dddb25e71f7",
+      "bounds": [
+        256,
+        150,
+        598,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          10.5,
+          235.0,
+          124.0
+        ],
+        "corner_median_spread": 2.693,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 51,
+      "sha256": "74ee5294be1c5b32db3effe5c107ea3cebc5bca5f3b5b2dc4458034402aac76c",
+      "bounds": [
+        258,
+        150,
+        594,
+        589
+      ],
+      "detail": {
+        "background_rgb": [
+          11.5,
+          234.5,
+          123.0
+        ],
+        "corner_median_spread": 1.871,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 52,
+      "sha256": "65f31839c08b619a8185cc486ae3484e2a42b15c3942bf2dff2a4077e8acfd7e",
+      "bounds": [
+        258,
+        150,
+        592,
+        604
+      ],
+      "detail": {
+        "background_rgb": [
+          26.0,
+          227.75,
+          122.0
+        ],
+        "corner_median_spread": 1.436,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 53,
+      "sha256": "ced2faca4656b43af611d1e10b87ad03cc10d229ae10b34d872b6b6f8aca2dc4",
+      "bounds": [
+        252,
+        150,
+        592,
+        595
+      ],
+      "detail": {
+        "background_rgb": [
+          243.0,
+          18.0,
+          237.5
+        ],
+        "corner_median_spread": 3.5,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 54,
+      "sha256": "71ca5ffa5417cc5545e546db5083209f4baf479bc0f29b2b8a416a8ef525b832",
+      "bounds": [
+        250,
+        150,
+        592,
+        586
+      ],
+      "detail": {
+        "background_rgb": [
+          243.0,
+          25.5,
+          234.5
+        ],
+        "corner_median_spread": 2.55,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 55,
+      "sha256": "2503624370cc46fbf140e95c5001a532f2885650de67e886346b06ba7660720d",
+      "bounds": [
+        246,
+        150,
+        592,
+        586
+      ],
+      "detail": {
+        "background_rgb": [
+          246.5,
+          23.0,
+          236.75
+        ],
+        "corner_median_spread": 3.579,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 56,
+      "sha256": "5d05c5f2bf4a4a358f8d0b5f3390f44b2aa3128f02d4d96fae45e172f4b47e03",
+      "bounds": [
+        252,
+        152,
+        586,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          9.0,
+          237.0,
+          121.0
+        ],
+        "corner_median_spread": 1.414,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 57,
+      "sha256": "e685723a97d6d17f5fc8419d0566c79a4500790acd01c8b2dd90ef0fff309a6f",
+      "bounds": [
+        256,
+        150,
+        584,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          9.0,
+          236.5,
+          121.0
+        ],
+        "corner_median_spread": 2.291,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 58,
+      "sha256": "c30d6817ef48d6c2a0807ef9943f92938b99d9cf470d1b2a47a28f261a2217cf",
+      "bounds": [
+        256,
+        150,
+        584,
+        591
+      ],
+      "detail": {
+        "background_rgb": [
+          9.0,
+          236.5,
+          121.0
+        ],
+        "corner_median_spread": 2.291,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 59,
+      "sha256": "e27f0b767532223e0aee2290d49dece175793d8b17c2d82770cc708134b57f63",
+      "bounds": [
+        258,
+        150,
+        582,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          9.0,
+          236.0,
+          121.0
+        ],
+        "corner_median_spread": 2.0,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 60,
+      "sha256": "c237fa8780a5462da0fae08108fc6a43009e0fc9ef3609225faab3a2bb79e6d8",
+      "bounds": [
+        256,
+        152,
+        582,
+        591
+      ],
+      "detail": {
+        "background_rgb": [
+          255.0,
+          5.0,
+          252.0
+        ],
+        "corner_median_spread": 1.414,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 61,
+      "sha256": "0881fc79cddfe4e99576271dcd12d70d923f8affd62a00ea9f818c02353e9d0d",
+      "bounds": [
+        260,
+        152,
+        584,
+        589
+      ],
+      "detail": {
+        "background_rgb": [
+          255.0,
+          5.5,
+          252.0
+        ],
+        "corner_median_spread": 1.5,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 62,
+      "sha256": "9b6bfae2675f3a37643c97b498b8373130e8d5e861eb5123b7fef926e2f4d71d",
+      "bounds": [
+        256,
+        154,
+        586,
+        586
+      ],
+      "detail": {
+        "background_rgb": [
+          255.0,
+          4.5,
+          253.0
+        ],
+        "corner_median_spread": 1.118,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 63,
+      "sha256": "d0df6775e6d75f712d5ace5da736f2e0e6723919600f4508ccfc91f720084aa8",
+      "bounds": [
+        250,
+        154,
+        592,
+        591
+      ],
+      "detail": {
+        "background_rgb": [
+          255.0,
+          5.5,
+          254.0
+        ],
+        "corner_median_spread": 1.5,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 64,
+      "sha256": "18eac08d207dafe9b6b00e97a6f0f58573873ede4d85759202d7cc9e4f3c15a8",
+      "bounds": [
+        240,
+        158,
+        609,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          9.0,
+          236.0,
+          121.5
+        ],
+        "corner_median_spread": 2.5,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 65,
+      "sha256": "e167c0ed38a39e9ec1ebe67acb12aa77b75caab1378f04f3a4a8a3ca200b9f4a",
+      "bounds": [
+        240,
+        160,
+        614,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          9.0,
+          236.0,
+          121.5
+        ],
+        "corner_median_spread": 2.5,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 66,
+      "sha256": "d090dfdefcab49a45af836d3b52ed352fd28eeebcb6faafc1083a75ff268d60e",
+      "bounds": [
+        236,
+        160,
+        618,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          9.0,
+          236.0,
+          121.5
+        ],
+        "corner_median_spread": 2.5,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 67,
+      "sha256": "7d5191f8ac2a559129a0a8a71a03021dacb9161dd88459d23d56fd05993dcaec",
+      "bounds": [
+        232,
+        160,
+        620,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          9.0,
+          235.5,
+          121.5
+        ],
+        "corner_median_spread": 2.55,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 68,
+      "sha256": "3140a662b4ad3354626774a49e8fbf7f54c819ef91023a460e81353d39dc6ba7",
+      "bounds": [
+        230,
+        160,
+        624,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          9.0,
+          234.5,
+          121.0
+        ],
+        "corner_median_spread": 1.5,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 69,
+      "sha256": "01fe2f65be1665e74f21bbbf5e24e2d68bd7d07e555956e6f997043646a02ad4",
+      "bounds": [
+        224,
+        160,
+        624,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          41.0,
+          215.0,
+          125.25
+        ],
+        "corner_median_spread": 2.358,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 70,
+      "sha256": "ef1efc87b579f97be62a463afda15042d20896fc7fe132cad65dc8252ff17299",
+      "bounds": [
+        234,
+        160,
+        620,
+        593
+      ],
+      "detail": {
+        "background_rgb": [
+          224.0,
+          38.0,
+          220.0
+        ],
+        "corner_median_spread": 1.414,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 71,
+      "sha256": "aee2c8caf200648459a8aae74de129f7185f289ed09790e246f06b70a54aea16",
+      "bounds": [
+        237,
+        160,
+        616,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          226.0,
+          37.5,
+          220.5
+        ],
+        "corner_median_spread": 1.225,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 72,
+      "sha256": null,
+      "bounds": null,
+      "excluded_reason": "unsafe insufficiently separated chroma backdrop [ 45.5 214.  140.5]"
+    },
+    {
+      "frame": 73,
+      "sha256": "b4f760c66b1ca16fc9f3d95ededc05914a1365397dfa67066f380f7a2bca001b",
+      "bounds": [
+        231,
+        160,
+        617,
+        598
+      ],
+      "detail": {
+        "background_rgb": [
+          22.0,
+          234.0,
+          123.5
+        ],
+        "corner_median_spread": 3.041,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 74,
+      "sha256": "0e022d5dae48467c155f9e4fbb12b513d007bb9c40ad8f0ecfb021968b6c5931",
+      "bounds": [
+        246,
+        160,
+        610,
+        596
+      ],
+      "detail": {
+        "background_rgb": [
+          238.0,
+          23.5,
+          234.5
+        ],
+        "corner_median_spread": 1.871,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 75,
+      "sha256": "89381d11011bb3474d62f0c5742f352cf1fee386d697be9987dbbfa2168522fd",
+      "bounds": [
+        250,
+        161,
+        614,
+        596
+      ],
+      "detail": {
+        "background_rgb": [
+          241.0,
+          25.5,
+          231.0
+        ],
+        "corner_median_spread": 2.693,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 76,
+      "sha256": "f539724edb0ac4827633e68eef4acc52b8363392c39a9eb04c809786f9060fc5",
+      "bounds": [
+        252,
+        160,
+        618,
+        596
+      ],
+      "detail": {
+        "background_rgb": [
+          244.5,
+          22.5,
+          232.5
+        ],
+        "corner_median_spread": 2.598,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 77,
+      "sha256": "8e16c815a8f11234ec8bb3d4d3aba23091441e1a0aff46c16f6f286348908e33",
+      "bounds": [
+        256,
+        160,
+        624,
+        597
+      ],
+      "detail": {
+        "background_rgb": [
+          23.0,
+          224.5,
+          120.0
+        ],
+        "corner_median_spread": 3.202,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 78,
+      "sha256": "051d4e642bee5fef450dad8c9585cb4fbac6fa59e928dccc1f5fdebfc57fc036",
+      "bounds": [
+        256,
+        160,
+        623,
+        596
+      ],
+      "detail": {
+        "background_rgb": [
+          22.5,
+          226.0,
+          120.0
+        ],
+        "corner_median_spread": 2.062,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 79,
+      "sha256": "ddf3ca061631c2a61fbb9f744fb486b73d4552cdbf5803b9e6d33a91f14c205e",
+      "bounds": [
+        256,
+        160,
+        624,
+        596
+      ],
+      "detail": {
+        "background_rgb": [
+          19.0,
+          228.0,
+          116.5
+        ],
+        "corner_median_spread": 2.872,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 80,
+      "sha256": "2c3d6cc13493c9533f1da3b4472d53095d6d2db2aabc31f3dd34372b1bce9812",
+      "bounds": [
+        258,
+        160,
+        624,
+        596
+      ],
+      "detail": {
+        "background_rgb": [
+          244.0,
+          19.5,
+          228.0
+        ],
+        "corner_median_spread": 2.693,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 81,
+      "sha256": "998c7c068ae50317fc15b79d9467db3c51b2f117db9e33c8e0919e6d342f2b44",
+      "bounds": [
+        269,
+        160,
+        624,
+        595
+      ],
+      "detail": {
+        "background_rgb": [
+          238.5,
+          25.0,
+          229.0
+        ],
+        "corner_median_spread": 2.5,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 82,
+      "sha256": "adc0a5a71003c480191af79a0a23b99cad150c6e996a597c8be9beb1d0a9a15f",
+      "bounds": [
+        269,
+        156,
+        630,
+        598
+      ],
+      "detail": {
+        "background_rgb": [
+          239.0,
+          21.0,
+          236.5
+        ],
+        "corner_median_spread": 2.291,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 83,
+      "sha256": "703da5fbbcf96f34b3ef8b875c16d3b3751419f5b9754515adb98c54c026a4aa",
+      "bounds": [
+        275,
+        157,
+        632,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          26.5,
+          226.5,
+          131.5
+        ],
+        "corner_median_spread": 2.179,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 84,
+      "sha256": "c65149b43f9e482dd2d16358a3fb67880ec02d6139eb8f623531e1a1494949d0",
+      "bounds": [
+        278,
+        157,
+        630,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          25.0,
+          224.5,
+          131.0
+        ],
+        "corner_median_spread": 2.062,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 85,
+      "sha256": "00c886da789fb444821cac43fb4e039928e9efad54bb47e2ec3d6415c4aa79ed",
+      "bounds": [
+        284,
+        159,
+        628,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          10.0,
+          235.0,
+          126.5
+        ],
+        "corner_median_spread": 1.5,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 86,
+      "sha256": "ed4a50e88a596476e844aa8a6c5ae303f135741333e43908e1051706f3844a95",
+      "bounds": [
+        288,
+        160,
+        626,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          229.0,
+          13.0,
+          234.0
+        ],
+        "corner_median_spread": 4.583,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 87,
+      "sha256": "8e61ce1b5dba5bbb43689e5ebc539ba83569b80bf7f2d0daacb315a763d17f9a",
+      "bounds": [
+        288,
+        160,
+        624,
+        640
+      ],
+      "detail": {
+        "background_rgb": [
+          9.0,
+          233.5,
+          121.0
+        ],
+        "corner_median_spread": 2.5,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 88,
+      "sha256": "e35b01d1a317eb3263cde6d4c3b9dfde3c85e4117e3cc0b4b2ea8c24086bda74",
+      "bounds": [
+        288,
+        160,
+        624,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          8.5,
+          233.0,
+          122.0
+        ],
+        "corner_median_spread": 2.5,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 89,
+      "sha256": "11194c4e5c0c7be07b3b4c794a7cdca5a6ab7909cc5881acd29c72d4c1a3d5f4",
+      "bounds": [
+        286,
+        160,
+        624,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          9.0,
+          236.0,
+          123.5
+        ],
+        "corner_median_spread": 2.872,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 90,
+      "sha256": "a8b3b6cdd8aeaa6a4cdf86c4867f04f1f438e58488bcba2059c8a5ac4e42ad69",
+      "bounds": [
+        272,
+        166,
+        618,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          240.5,
+          5.5,
+          247.5
+        ],
+        "corner_median_spread": 5.723,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 91,
+      "sha256": "d04570eb8d909707da0ab1626a2e565bf9fac00f7f7c05157d0c435efb9b5ff8",
+      "bounds": [
+        272,
+        168,
+        624,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          248.5,
+          1.0,
+          251.0
+        ],
+        "corner_median_spread": 2.062,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 92,
+      "sha256": "9518e58d566dc258b2fd6014dd53b0f5edb6f7cf850143a0f7601e2e8b394144",
+      "bounds": [
+        272,
+        168,
+        620,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          250.5,
+          0.5,
+          251.5
+        ],
+        "corner_median_spread": 1.658,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 93,
+      "sha256": "efdebe9bc52e0494772a39a41a14a011e06c58c8c631daad9ee5bb76d2473c2a",
+      "bounds": [
+        269,
+        168,
+        613,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          254.0,
+          0.0,
+          254.0
+        ],
+        "corner_median_spread": 1.0,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 94,
+      "sha256": "c18f929028bdd4544d9a9b5d8b507967829fb4a1607b2fcc9b191dee2c2ff2d7",
+      "bounds": [
+        256,
+        160,
+        608,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          227.5,
+          22.0,
+          237.0
+        ],
+        "corner_median_spread": 2.5,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 95,
+      "sha256": "f028411438b27f6bebf5c02523e45326e1ef132b2afc0ae82094f1e6eaa82218",
+      "bounds": [
+        256,
+        160,
+        608,
+        600
+      ],
+      "detail": {
+        "background_rgb": [
+          6.0,
+          237.0,
+          119.5
+        ],
+        "corner_median_spread": 1.803,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 96,
+      "sha256": "fc6a3b7d4380f553183ee9de07bb3b776de7d34f44eeb788c89bfe260dd87740",
+      "bounds": [
+        252,
+        160,
+        608,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          10.5,
+          234.0,
+          122.25
+        ],
+        "corner_median_spread": 1.521,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 97,
+      "sha256": "1bcfead3e754f9f7c9f00538aca92fce7016a8f5bfb117c29b77b43f751d8e34",
+      "bounds": [
+        250,
+        160,
+        608,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          11.5,
+          234.0,
+          126.0
+        ],
+        "corner_median_spread": 1.5,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 98,
+      "sha256": "32d26add46f15b7fe9a9f87452f236bec624af67fe3269bffe1b62ce5fe6c7c8",
+      "bounds": [
+        251,
+        168,
+        608,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          249.0,
+          2.5,
+          254.0
+        ],
+        "corner_median_spread": 2.062,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 99,
+      "sha256": "af852c62c84149d8c44e8ff0c9f4d8bef246bdd624d81f0aad53404a2d05303f",
+      "bounds": [
+        251,
+        168,
+        608,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          251.0,
+          1.5,
+          254.0
+        ],
+        "corner_median_spread": 1.803,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 100,
+      "sha256": "fe6a911a0a9668ad3bcc109135828377bca74acaa07a2a6aa586705293da537c",
+      "bounds": [
+        250,
+        168,
+        606,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          251.75,
+          0.5,
+          255.0
+        ],
+        "corner_median_spread": 1.953,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 101,
+      "sha256": "b3b3e9ce0e5be5b6777e41ff0995b3ad25f44c36f328ff419eeae50c26fd2855",
+      "bounds": [
+        250,
+        166,
+        608,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          253.0,
+          1.0,
+          255.0
+        ],
+        "corner_median_spread": 1.414,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 102,
+      "sha256": "c08ed7611faae2c41863da8a8ad9aaaf9bb643d331a24ae59ddf7e47a8a6f2a4",
+      "bounds": [
+        256,
+        166,
+        598,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          10.0,
+          236.0,
+          126.0
+        ],
+        "corner_median_spread": 1.0,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 103,
+      "sha256": "a2948c3142420f29f03ecb17555cf1bf9ad153d953fc48ac4bb3ecd26cb7956a",
+      "bounds": [
+        256,
+        164,
+        596,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          9.0,
+          235.0,
+          125.0
+        ],
+        "corner_median_spread": 0.0,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 104,
+      "sha256": "dd753662bf612f0f58bf3e117de1cb054c67334b1e073650716be3d1fbb08e6f",
+      "bounds": [
+        252,
+        162,
+        594,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          10.0,
+          234.0,
+          126.0
+        ],
+        "corner_median_spread": 1.0,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 105,
+      "sha256": "48a3e3fd36cd14e3bb23a69050f69b874acf7ee26984d7620752844809f6e47c",
+      "bounds": [
+        250,
+        160,
+        592,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          10.0,
+          234.0,
+          126.0
+        ],
+        "corner_median_spread": 1.414,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 106,
+      "sha256": "8d0bca4bcb67e67d0b69c03f50af9976a666cc27ffa0e20288d231290864aaac",
+      "bounds": [
+        248,
+        160,
+        592,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          11.0,
+          234.0,
+          126.0
+        ],
+        "corner_median_spread": 0.0,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 107,
+      "sha256": "feb2493427012e91a007b16500ab121c79cd7a34ca892e9e13fbf768aeddcd50",
+      "bounds": [
+        240,
+        154,
+        592,
+        593
+      ],
+      "detail": {
+        "background_rgb": [
+          41.5,
+          214.5,
+          126.0
+        ],
+        "corner_median_spread": 3.937,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 108,
+      "sha256": "20824c0844fe5798b5b28184c59128bafe742f8bda39097ee20e9fb030d44841",
+      "bounds": [
+        246,
+        152,
+        590,
+        585
+      ],
+      "detail": {
+        "background_rgb": [
+          223.0,
+          32.5,
+          222.5
+        ],
+        "corner_median_spread": 2.121,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 109,
+      "sha256": "6b98eb4bf7397298cb2dd8dd212b379f65f5092813612cedc76bd8db865898ba",
+      "bounds": [
+        248,
+        142,
+        582,
+        582
+      ],
+      "detail": {
+        "background_rgb": [
+          224.5,
+          33.0,
+          223.5
+        ],
+        "corner_median_spread": 1.871,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 110,
+      "sha256": null,
+      "bounds": null,
+      "excluded_reason": "unsafe insufficiently separated chroma backdrop [ 50.5 207.  141.5]"
+    },
+    {
+      "frame": 111,
+      "sha256": "51bca72a40834223e99c71d32f2134de90e721c2454815cc010d467da87bcb7b",
+      "bounds": [
+        251,
+        146,
+        578,
+        593
+      ],
+      "detail": {
+        "background_rgb": [
+          42.5,
+          216.0,
+          127.5
+        ],
+        "corner_median_spread": 4.301,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 112,
+      "sha256": "4f0aa9e6f0df0c1c87032dc2211175c554bf1f0e2f7a68e20f7012d9a52b0e73",
+      "bounds": [
+        256,
+        144,
+        577,
+        587
+      ],
+      "detail": {
+        "background_rgb": [
+          223.0,
+          35.0,
+          224.5
+        ],
+        "corner_median_spread": 2.872,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 113,
+      "sha256": "0508e436bfc2103b34b35461aba216234513f3d2ed4e09f27ab1c0e5c46edc49",
+      "bounds": [
+        256,
+        139,
+        576,
+        584
+      ],
+      "detail": {
+        "background_rgb": [
+          225.5,
+          34.0,
+          224.5
+        ],
+        "corner_median_spread": 1.581,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 114,
+      "sha256": null,
+      "bounds": null,
+      "excluded_reason": "unsafe insufficiently separated chroma backdrop [ 47.5  206.   138.75]"
+    },
+    {
+      "frame": 115,
+      "sha256": "9ade370237db023b46746d417ae26dc60fffe3e6ded06999bdfb2b4b237160b0",
+      "bounds": [
+        266,
+        144,
+        576,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          29.0,
+          227.5,
+          123.5
+        ],
+        "corner_median_spread": 3.082,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 116,
+      "sha256": "5ca1d6b78626edabcf1d9768925c96b0955734a6b79d6c099ded82e4c790f73d",
+      "bounds": [
+        256,
+        144,
+        576,
+        594
+      ],
+      "detail": {
+        "background_rgb": [
+          238.5,
+          14.0,
+          237.0
+        ],
+        "corner_median_spread": 2.062,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 117,
+      "sha256": "e5539b2ac455ec713e308961e7016cd283326a997d403e0b111f0377a53cd360",
+      "bounds": [
+        270,
+        144,
+        576,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          239.0,
+          21.5,
+          231.0
+        ],
+        "corner_median_spread": 2.5,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 118,
+      "sha256": "9d3c009045ab4a6139cbe62035cbbd795421f37a95adf519eb55a0192e441c36",
+      "bounds": [
+        268,
+        144,
+        576,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          243.0,
+          19.0,
+          231.5
+        ],
+        "corner_median_spread": 2.062,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 119,
+      "sha256": "41761e351e799894a72f0c7b95d89b0650d9b3155689774e6ed2d82823d4981f",
+      "bounds": [
+        266,
+        146,
+        576,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          12.0,
+          235.0,
+          126.0
+        ],
+        "corner_median_spread": 1.0,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 120,
+      "sha256": "142f287710e23e7092cf5135c0ece9bb2bfc9a4e43aa64b5705de1fe2349e519",
+      "bounds": [
+        266,
+        147,
+        576,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          28.5,
+          221.0,
+          124.25
+        ],
+        "corner_median_spread": 1.677,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 121,
+      "sha256": "1ae20facdd87cb4265077fae4b142701eea75412ad6cb52d1ae317961c29ba63",
+      "bounds": [
+        266,
+        148,
+        576,
+        592
+      ],
+      "detail": {
+        "background_rgb": [
+          26.0,
+          223.5,
+          122.5
+        ],
+        "corner_median_spread": 1.225,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 122,
+      "sha256": "7f4137f190c816b20eb186751992e831c674d0c8b23ddf087c3369d20c996345",
+      "bounds": [
+        268,
+        144,
+        576,
+        594
+      ],
+      "detail": {
+        "background_rgb": [
+          21.5,
+          227.0,
+          118.0
+        ],
+        "corner_median_spread": 2.872,
+        "mode": "flat_green_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    },
+    {
+      "frame": 123,
+      "sha256": "5d49d54e9e18d749368bc36d4aaf440fe3b812843954af8701976ffb68c6a621",
+      "bounds": [
+        266,
+        150,
+        578,
+        593
+      ],
+      "detail": {
+        "background_rgb": [
+          242.0,
+          16.0,
+          236.0
+        ],
+        "corner_median_spread": 1.732,
+        "mode": "flat_magenta_chroma_unmix",
+        "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+      }
+    }
+  ],
+  "protected_foreground_chroma": 30,
+  "tool_sha256": "32381f33bdbf991086d39cda00b4be57df37699d7f65785bfc8b8c2ed467c474",
+  "reason": "Semantic mask dropped original blue saltglass on green plate. Compare uniform-plate chroma extraction preserving existing RGB source and all source coordinates; no painted alpha or contours."
+}

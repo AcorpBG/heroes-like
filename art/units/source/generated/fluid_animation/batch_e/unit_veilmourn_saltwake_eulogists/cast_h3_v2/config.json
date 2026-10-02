@@ -1,0 +1,89 @@
+{
+  "unit_id": "unit_veilmourn_saltwake_eulogists",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026108211,
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/idle-and-equipped-cold-collapse-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          500,
+          599
+        ]
+      ],
+      "anchor": [
+        304,
+        543
+      ],
+      "scale": 0.4,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "cast_anticipate",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/equipped-attacks-and-casting-green.png",
+      "rects": [
+        [
+          90,
+          503,
+          240,
+          515
+        ],
+        [
+          0,
+          515,
+          501,
+          1024
+        ]
+      ],
+      "anchor": [
+        249,
+        997
+      ],
+      "scale": 0.43,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      25,
+      1
+    ],
+    [
+      50,
+      1
+    ],
+    [
+      72,
+      1
+    ],
+    [
+      100,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "Continuous painted studio pose study of the supplied original slender blue-and-ivory masked mourner. Exactly two arms, two legs, one rigid bronze instrument with three pale blue glass cylinders, one lower hanging lantern, original belt scrolls and ragged blue cloth. The original near hand retains its grip on the shaft. All original equipment retains its shape, painted brightness and color. The free far hand slowly rises inward from the waist to beside the face, elbow bending close to the torso. The masked head bows toward that palm. The near hand holds the same upright rigid instrument throughout. Then the head lifts and free hand slowly lowers to its initial position. All movement comes from shoulders, elbow, wrist and neck; cloth follows gently.  Only the supplied painted body, cloth and held instrument visible against continuous featureless flat magenta RGB255,0,255. Fixed camera and body scale. No scenery, stage, rings, particles, glow, lighting transitions or changes in backdrop color. Every staff tip and robe ribbon stays inside generous canvas margins. Planted boots remain on y576.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}
