@@ -1,0 +1,79 @@
+{
+  "unit_id": "unit_brasshollow_gaugefire_arbalists",
+  "clip": "hit",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    440,
+    496
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026108244,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          514
+        ]
+      ],
+      "anchor": [
+        164,
+        505
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          0,
+          675,
+          320,
+          979
+        ]
+      ],
+      "anchor": [
+        164,
+        964
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      28,
+      1
+    ],
+    [
+      42,
+      1
+    ],
+    [
+      80,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One silent, mechanically inactive original pressure crossbow stays DIM with no discharge, bolt, flash, sparks or flame at any point. The original GAUGEFIRE ARBALIST absorbs one unseen physical hit from the front: torso and helmet lean backwards, both elbows bend inward while the two black-gloved hands keep their original two crossbow grips. Knees bend and grounded boots catch balance. Follow the supplied authentic backward recoil guide, then straighten and return fully to the supplied ready pose. One impact and one recovery only. This is a receiving-hit action, never a shooting action. Preserve exactly the supplied armored human, closed brass-crested charcoal helmet and narrow orange visor, charcoal split coat and rust central cloth, brass knee armor, compact boiler backpack and hip canister. Exactly two arms, two hands, two legs and two boots. Preserve the original pressure crossbow dimensions, paired curved limbs, red circular gauge and dim orange chamber. No new weapon, shield, magic, attack effects or explosions. Fixed three-quarter orthographic camera facing SCREEN RIGHT, same anatomical scale and grounded pelvis. Entire backdrop flat magenta RGB255,0,255 with no scenery, floor, cast shadow, text, zoom, cuts or camera motion. Entire boots, crossbow, hands and boiler stay in canvas.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

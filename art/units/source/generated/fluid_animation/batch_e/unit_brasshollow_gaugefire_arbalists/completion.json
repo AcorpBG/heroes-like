@@ -1,0 +1,103 @@
+{
+  "unit_id": "unit_brasshollow_gaugefire_arbalists",
+  "status": "complete_selected_unit",
+  "date": "2026-10-02",
+  "clips": {
+    "idle": 8,
+    "move": 26,
+    "attack": 30,
+    "ranged": 52,
+    "hit": 23,
+    "defend": 36,
+    "cast": 38,
+    "death": 54
+  },
+  "held_corpse": "Final original death pose 123, runtime dead uses final packed death index.",
+  "sources": {
+    "takes": 9,
+    "rgb_frames_per_take": 124,
+    "retained_original_rgb_frames": 1116,
+    "selected_take_rgb_frames": 868,
+    "selected_action_pose_pngs": 259,
+    "preserved_idle_poses": 8,
+    "rejected_takes": {
+      "attack_h3_v1": "Unwanted discharge and weapon morph. Entire original footage/latent/prompt/guides/history retained.",
+      "hit_h3_v1": "Repeated unwanted self-discharge obscured receiving-impact recoil. Entire original footage/latent/prompt/guides/history retained."
+    },
+    "all_original_ffv1_and_decoded_rgb_hashes_verified": true,
+    "new_guide": "Original imagegen low two-hand crossbow-body shove; prompt/reference SHA retained."
+  },
+  "visual_review": {
+    "accepted": true,
+    "chronological_original_frames_inspected": 1116,
+    "enlarged_anatomy_equipment_and_trouble_phases": true,
+    "candidate_native_poses": 267,
+    "mirrored_native_poses": 267,
+    "live_native_poses": 267,
+    "candidate_and_mirrored_actual_melee_captures": 16,
+    "actual_ranged_captures": 8,
+    "live_actual_melee_captures": 8,
+    "live_map_idle_captures": 2,
+    "ranged_actual_drawn_poses_observed": 52,
+    "continuous_video_playback": false,
+    "manual_game_playtest": false,
+    "actual_capture_facing": "Normal fixture facing; mirrored gallery personally reviewed in full.",
+    "actions": "Reciprocal gait; two-hand crossbow-body melee shove; raised aim, single discharge/recoil, cocking pull and visible bolt placement/return; receiving-impact recoil; wide grounded brace; free support-hand rally signal beside helmet; buckled knees and ground-settled corpse.",
+    "corrections": "Pinned semantic alpha on untouched original RGB; measured palette-protected despill for changing backgrounds. Detached ranged source41 bolt removed only across empty alpha gap x650. Fixed scale/ground anchor; original matching held poses trimmed without synthetic frames, warps or painted anatomy.",
+    "remaining_defects": []
+  },
+  "validation": {
+    "platform": "Windows Godot4.6.2 compatibility renderer on RTX5090",
+    "checks": {
+      "candidate": 348,
+      "mirrored": 348,
+      "ranged": 348,
+      "live": 362
+    },
+    "total_focused_assertions": 1406,
+    "failures": [],
+    "all_source_pixel_and_ground_anchor_matches": 259,
+    "other_battle_and_map_rows_preserved": 231,
+    "idle_battle_and_map_pixels_timing_exact": true,
+    "idle_frame_msec": 240,
+    "atlas_size": [
+      4032,
+      4080
+    ],
+    "atlas_rgba_bytes": 65802240,
+    "atlas_import_rgba_exact": "Godot lossless texture equals original PNG after documented fix_alpha_edges transparent-border processing.",
+    "original_curated_identity_sha256": "cd0581b664a61a385cecb956af6d1284f12c46bfe142ffe82e8e5cacd4c2a6c6",
+    "policies_checked": [
+      "Normal/Fast timing",
+      "reduced motion",
+      "static/dead presentation",
+      "authored contact/recovery",
+      "interruption/input lock",
+      "presentation leaves simulation/session save unchanged"
+    ],
+    "full_suite_run": false,
+    "linux_run": false,
+    "initial_preview_failures": [
+      "Capture observer first assumed explicit pose rectangles for a regular grid.",
+      "Follow-up observer used incorrect grid dimension keys. Corrected to actual pose_frame_size width/height and pose_columns; successful complete candidate/mirrored/ranged/live checks afterward."
+    ],
+    "host_warnings": [
+      "Windows root certificate store unreadable in restricted offscreen fixture.",
+      "GLES3 2D MSAA unsupported."
+    ],
+    "git_stale_index_lock_repair": "Initial staging stopped before indexing at an existing zero-byte index.lock. Under the shared Git mutex, verified no active git*.exe processes with Win32_Process and exclusive ReadWrite/ShareNone access, then removed only that exact zero-byte file before retry.",
+    "git_nonempty_lock_recovery": "Coordinator proved zero active Git processes and exclusive native access. Preserved the incomplete 2752512-byte DIRC v2 lock (invalid SHA1 trailer, 81766 declared entries) byte-exact by atomic rename to .git/index-lock-recovery-20261002-93ec4839806c4886abb594d1167e878d.bin; current index SHA7036d3dcec56832d91dd6a1c1e2bb57169475a8452972ba35e5235663a7d476e unchanged. No promotion/reset or unknown staging removal. All544 owned staged bytes reverified before completion metadata update; recovery backup retained."
+  },
+  "cleanup": {
+    "external_comfy_duplicates": {
+      "files": 1159,
+      "bytes_removed": 616177997,
+      "rebuildable": true
+    },
+    "temporary_reviews_profiles_and_unselected_mattes": {
+      "files": 2301,
+      "bytes_removed": 597810949,
+      "rebuildable": true
+    }
+  }
+}

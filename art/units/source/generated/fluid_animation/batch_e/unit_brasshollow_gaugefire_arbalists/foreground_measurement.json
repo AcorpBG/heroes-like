@@ -1,0 +1,464 @@
+{
+  "unit_id": "unit_brasshollow_gaugefire_arbalists",
+  "opaque_alpha_minimum": 250,
+  "guide_measurements": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/attack_h3_v1/guide_0_rgba.png",
+      "sha256": "03760a5b0abfdf24cb8b5b6bc13548507c807e272efc85215dea2888600fb003",
+      "opaque_chroma_999_percentile": {
+        "magenta": 2.0,
+        "yellow": 229.0,
+        "green": 1.0,
+        "blue": 2.0,
+        "cyan": 1.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 6.0,
+        "yellow": 249.0,
+        "green": 5.0,
+        "blue": 7.0,
+        "cyan": 5.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/attack_h3_v1/guide_1_rgba.png",
+      "sha256": "929411e706b65a73103dc3b608c7a8657936f9c2dcb1d9fcd3b6bad40be24709",
+      "opaque_chroma_999_percentile": {
+        "magenta": 5.0,
+        "yellow": 206.0,
+        "green": 3.0,
+        "blue": 5.0,
+        "cyan": 4.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 10.0,
+        "yellow": 240.0,
+        "green": 10.0,
+        "blue": 15.0,
+        "cyan": 14.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/attack_h3_v1/guide_2_rgba.png",
+      "sha256": "cc1fec2e2e58cf126c6c76632d9a5a0cfe6f5eba3675465b6ab0b8351325d93c",
+      "opaque_chroma_999_percentile": {
+        "magenta": 6.0,
+        "yellow": 222.0,
+        "green": 2.0,
+        "blue": 7.0,
+        "cyan": 8.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 14.0,
+        "yellow": 241.0,
+        "green": 9.0,
+        "blue": 14.0,
+        "cyan": 17.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/attack_h3_v2/guide_0_rgba.png",
+      "sha256": "03760a5b0abfdf24cb8b5b6bc13548507c807e272efc85215dea2888600fb003",
+      "opaque_chroma_999_percentile": {
+        "magenta": 2.0,
+        "yellow": 229.0,
+        "green": 1.0,
+        "blue": 2.0,
+        "cyan": 1.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 6.0,
+        "yellow": 249.0,
+        "green": 5.0,
+        "blue": 7.0,
+        "cyan": 5.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/attack_h3_v2/guide_1_rgba.png",
+      "sha256": "b1de8612068a16f9bb690f44ff6accab82d81aa3914f2f8b1cb500b6563c5a54",
+      "opaque_chroma_999_percentile": {
+        "magenta": 1.0,
+        "yellow": 218.11200000000827,
+        "green": 0.0,
+        "blue": 1.0,
+        "cyan": 0.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 5.0,
+        "yellow": 249.0,
+        "green": 6.0,
+        "blue": 11.0,
+        "cyan": 16.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/cast_h3_v1/guide_0_rgba.png",
+      "sha256": "03760a5b0abfdf24cb8b5b6bc13548507c807e272efc85215dea2888600fb003",
+      "opaque_chroma_999_percentile": {
+        "magenta": 2.0,
+        "yellow": 229.0,
+        "green": 1.0,
+        "blue": 2.0,
+        "cyan": 1.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 6.0,
+        "yellow": 249.0,
+        "green": 5.0,
+        "blue": 7.0,
+        "cyan": 5.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/death_h3_v1/guide_0_rgba.png",
+      "sha256": "03760a5b0abfdf24cb8b5b6bc13548507c807e272efc85215dea2888600fb003",
+      "opaque_chroma_999_percentile": {
+        "magenta": 2.0,
+        "yellow": 229.0,
+        "green": 1.0,
+        "blue": 2.0,
+        "cyan": 1.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 6.0,
+        "yellow": 249.0,
+        "green": 5.0,
+        "blue": 7.0,
+        "cyan": 5.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/death_h3_v1/guide_1_rgba.png",
+      "sha256": "07df458f70b596da84338bb58eb38b15ac5635bb90f111ece8716e82f256620d",
+      "opaque_chroma_999_percentile": {
+        "magenta": 5.0,
+        "yellow": 238.0,
+        "green": 2.0,
+        "blue": 4.0,
+        "cyan": 2.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 13.0,
+        "yellow": 251.0,
+        "green": 9.0,
+        "blue": 16.0,
+        "cyan": 12.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/death_h3_v1/guide_2_rgba.png",
+      "sha256": "5a1eb2d408bc0c2fe7593e8d1337545fbf9a24cd3f603a344b689ff9f93695a1",
+      "opaque_chroma_999_percentile": {
+        "magenta": 5.0,
+        "yellow": 219.68100000000413,
+        "green": 1.0,
+        "blue": 3.6810000000041327,
+        "cyan": 1.6810000000041327
+      },
+      "opaque_chroma_max": {
+        "magenta": 16.0,
+        "yellow": 251.0,
+        "green": 9.0,
+        "blue": 14.0,
+        "cyan": 11.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/death_h3_v1/guide_3_rgba.png",
+      "sha256": "517ee8ed75ff65ddd048766b0487ac0aec1859f957a58ef5a225e0054274a958",
+      "opaque_chroma_999_percentile": {
+        "magenta": 5.0,
+        "yellow": 92.0,
+        "green": 1.0,
+        "blue": 5.0,
+        "cyan": 2.9730000000054133
+      },
+      "opaque_chroma_max": {
+        "magenta": 7.0,
+        "yellow": 109.0,
+        "green": 4.0,
+        "blue": 12.0,
+        "cyan": 10.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/defend_h3_v1/guide_0_rgba.png",
+      "sha256": "03760a5b0abfdf24cb8b5b6bc13548507c807e272efc85215dea2888600fb003",
+      "opaque_chroma_999_percentile": {
+        "magenta": 2.0,
+        "yellow": 229.0,
+        "green": 1.0,
+        "blue": 2.0,
+        "cyan": 1.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 6.0,
+        "yellow": 249.0,
+        "green": 5.0,
+        "blue": 7.0,
+        "cyan": 5.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/defend_h3_v1/guide_1_rgba.png",
+      "sha256": "a78fb6d8bd9f5b5de4f51ff82b68f08ad1528586142e0f3dccb672c15cec7a2b",
+      "opaque_chroma_999_percentile": {
+        "magenta": 5.0,
+        "yellow": 243.0,
+        "green": 2.0,
+        "blue": 5.0,
+        "cyan": 4.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 21.0,
+        "yellow": 252.0,
+        "green": 6.0,
+        "blue": 19.0,
+        "cyan": 10.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/defend_h3_v1/guide_2_rgba.png",
+      "sha256": "3cdcafd5e37bd66b33d35547e686f5d4926e5c3fb3969efcfd59821e8cc9d018",
+      "opaque_chroma_999_percentile": {
+        "magenta": 5.0,
+        "yellow": 242.0,
+        "green": 2.0,
+        "blue": 5.0,
+        "cyan": 3.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 26.0,
+        "yellow": 252.0,
+        "green": 7.0,
+        "blue": 21.0,
+        "cyan": 8.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/hit_h3_v1/guide_0_rgba.png",
+      "sha256": "03760a5b0abfdf24cb8b5b6bc13548507c807e272efc85215dea2888600fb003",
+      "opaque_chroma_999_percentile": {
+        "magenta": 2.0,
+        "yellow": 229.0,
+        "green": 1.0,
+        "blue": 2.0,
+        "cyan": 1.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 6.0,
+        "yellow": 249.0,
+        "green": 5.0,
+        "blue": 7.0,
+        "cyan": 5.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/hit_h3_v1/guide_1_rgba.png",
+      "sha256": "2d6eed45fe3db5c04b08c12336936d531f59e7f35e19b2dfb673eb021421a2de",
+      "opaque_chroma_999_percentile": {
+        "magenta": 6.0,
+        "yellow": 222.0,
+        "green": 2.0,
+        "blue": 5.0,
+        "cyan": 2.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 16.0,
+        "yellow": 249.0,
+        "green": 5.0,
+        "blue": 13.0,
+        "cyan": 16.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/move_h3_v1/guide_0_rgba.png",
+      "sha256": "03760a5b0abfdf24cb8b5b6bc13548507c807e272efc85215dea2888600fb003",
+      "opaque_chroma_999_percentile": {
+        "magenta": 2.0,
+        "yellow": 229.0,
+        "green": 1.0,
+        "blue": 2.0,
+        "cyan": 1.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 6.0,
+        "yellow": 249.0,
+        "green": 5.0,
+        "blue": 7.0,
+        "cyan": 5.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/move_h3_v1/guide_1_rgba.png",
+      "sha256": "0fbcfc7816016c4e0189c2e836aa21ae92134171b13b5f352fa790209168f927",
+      "opaque_chroma_999_percentile": {
+        "magenta": 7.0,
+        "yellow": 240.0,
+        "green": 2.0,
+        "blue": 5.171000000009371,
+        "cyan": 4.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 21.0,
+        "yellow": 250.0,
+        "green": 8.0,
+        "blue": 19.0,
+        "cyan": 8.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/move_h3_v1/guide_2_rgba.png",
+      "sha256": "b40f221d0bfd50a1472c19b0a1a711b21a3a26cb75deaf4360045370aa18a2b2",
+      "opaque_chroma_999_percentile": {
+        "magenta": 2.0,
+        "yellow": 247.0,
+        "green": 2.658000000003085,
+        "blue": 2.0,
+        "cyan": 2.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 5.0,
+        "yellow": 254.0,
+        "green": 10.0,
+        "blue": 7.0,
+        "cyan": 8.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/ranged_h3_v1/guide_0_rgba.png",
+      "sha256": "03760a5b0abfdf24cb8b5b6bc13548507c807e272efc85215dea2888600fb003",
+      "opaque_chroma_999_percentile": {
+        "magenta": 2.0,
+        "yellow": 229.0,
+        "green": 1.0,
+        "blue": 2.0,
+        "cyan": 1.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 6.0,
+        "yellow": 249.0,
+        "green": 5.0,
+        "blue": 7.0,
+        "cyan": 5.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/ranged_h3_v1/guide_1_rgba.png",
+      "sha256": "51dc5054ec5f105efb5cce4cfd56e4d6faeeb654219274c5c75cc4d86f63a43b",
+      "opaque_chroma_999_percentile": {
+        "magenta": 2.0,
+        "yellow": 229.88700000000972,
+        "green": 0.0,
+        "blue": 1.0,
+        "cyan": 1.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 6.0,
+        "yellow": 247.0,
+        "green": 7.0,
+        "blue": 6.0,
+        "cyan": 4.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/ranged_h3_v1/guide_2_rgba.png",
+      "sha256": "1080b7c147ca601daec39391d95a9ab1634ea86d6fbb2fa198d7b454bccfaa3c",
+      "opaque_chroma_999_percentile": {
+        "magenta": 2.0,
+        "yellow": 236.0,
+        "green": 1.0,
+        "blue": 2.0,
+        "cyan": 2.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 3.0,
+        "yellow": 252.0,
+        "green": 6.0,
+        "blue": 5.0,
+        "cyan": 9.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/ranged_h3_v1/guide_3_rgba.png",
+      "sha256": "2dd374fe8089884b24146acc75df00ea21f24f4b9ec46ed0403d7c2a4508a008",
+      "opaque_chroma_999_percentile": {
+        "magenta": 3.0,
+        "yellow": 239.9560000000056,
+        "green": 1.0,
+        "blue": 2.0,
+        "cyan": 2.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 6.0,
+        "yellow": 254.0,
+        "green": 7.0,
+        "blue": 5.0,
+        "cyan": 5.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/ranged_h3_v1/guide_4_rgba.png",
+      "sha256": "e6357d8b201d2457573615b63463b7f379076ec63ae744a7bbc6ac62d79f2570",
+      "opaque_chroma_999_percentile": {
+        "magenta": 3.0,
+        "yellow": 237.0,
+        "green": 1.0,
+        "blue": 4.0,
+        "cyan": 2.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 8.0,
+        "yellow": 252.0,
+        "green": 4.0,
+        "blue": 8.0,
+        "cyan": 9.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/hit_h3_v2/guide_0_rgba.png",
+      "sha256": "03760a5b0abfdf24cb8b5b6bc13548507c807e272efc85215dea2888600fb003",
+      "opaque_chroma_999_percentile": {
+        "magenta": 2.0,
+        "yellow": 229.0,
+        "green": 1.0,
+        "blue": 2.0,
+        "cyan": 1.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 6.0,
+        "yellow": 249.0,
+        "green": 5.0,
+        "blue": 7.0,
+        "cyan": 5.0
+      }
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/hit_h3_v2/guide_1_rgba.png",
+      "sha256": "2d6eed45fe3db5c04b08c12336936d531f59e7f35e19b2dfb673eb021421a2de",
+      "opaque_chroma_999_percentile": {
+        "magenta": 6.0,
+        "yellow": 222.0,
+        "green": 2.0,
+        "blue": 5.0,
+        "cyan": 2.0
+      },
+      "opaque_chroma_max": {
+        "magenta": 16.0,
+        "yellow": 249.0,
+        "green": 5.0,
+        "blue": 13.0,
+        "cyan": 16.0
+      }
+    }
+  ],
+  "protected_foreground_chroma_band": 8,
+  "protected_axes": [
+    "magenta",
+    "green",
+    "blue"
+  ],
+  "yellow_material": "Brass/emissive chambers have legitimate strong yellow; only near-neutral R/G edge contamination is despilled, inside two-source-pixel boundary band.",
+  "source_geometry": "Semantic alpha and all source coordinates unchanged; saturation correction is background despill, not anatomy/weapon repair."
+}

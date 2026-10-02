@@ -1,0 +1,18 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v2",
+    "ranged_h3_v1",
+    "hit_h3_v2",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_unit",
+    "notes": "Personally inspected all 1116 original RGB frames chronologically, enlarged anatomy/equipment/contact/reload/ground trouble phases, and the selected mattes. Accepted seven distinct original-video actions and preserved the prior eight-pose idle. All267 native poses and all267 mirrored gallery poses inspected;16 actual committed melee captures and8 actual ranged captures inspected at game size. Ranged fixture observed every one of52 poses through real shot/reload completion. Two failed original takes remain retained: first melee has unwanted discharge/weapon morph and first hit has unwanted self-discharge; clean original retries accepted. Move reciprocal gait, two-hand low crossbow-body shove, full aim/discharge/cock/bolt placement/return, receiving-impact recoil, sustained grounded brace, free-hand physical rally beside helmet, and grounded settled corpse read clearly. BiRefNet original-RGB soft alpha with measured palette-protected despill preserves anatomy and fixes changing-plate contamination. Detached bolt at source41 separated only across verified empty alpha gap; touching muzzle glow retained. Fixed source scale/ground anchor; no warps, interpolation or duplicate padding. Actual BattleShell captures follow fixture normal-facing; mirrored review is the full mirrored gallery. Chronological inspection and offscreen Windows fixtures, not continuous video playback or manual playtest. Final live import/native/map verification follows publication."
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "unit_id": "unit_brasshollow_gaugefire_arbalists",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            514
+          ]
+        ],
+        "anchor": [
+          164,
+          505
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "942db0b03a8a06b615a017aeace646f8ddd59469c2c16340089c637c7957a5d1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b1d307227b0d00490c0e9417d2b1e67ee9ba60387e77f4e325c89dcc13db8344",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "idle_hands_3",
+        "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            1167,
+            0,
+            1536,
+            514
+          ]
+        ],
+        "anchor": [
+          1314,
+          505
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "942db0b03a8a06b615a017aeace646f8ddd59469c2c16340089c637c7957a5d1",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "70cabd2b2c64fb3c5a4a12834f071a761bef9a10b5d5e3048f1df3cce992a496",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "ranged_discharged",
+        "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/discharge-and-visible-reload-empty-rail.png",
+        "rects": [
+          [
+            0,
+            0,
+            705,
+            820
+          ]
+        ],
+        "anchor": [
+          342,
+          791
+        ],
+        "scale": 0.54,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f2beb5def04aed3deb64bbada50f28ffd1fde8fcb96887d938ff356f83161fb8",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "f362d21c965cffb911988dd69f730e446db2cd6698f8b743ac2cc9c3f06fff47",
+      "runtime_source_scale": 0.27
+    },
+    {
+      "source_frame": {
+        "name": "reload_cocking_empty",
+        "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/discharge-and-visible-reload-empty-rail.png",
+        "rects": [
+          [
+            715,
+            0,
+            1337,
+            820
+          ]
+        ],
+        "anchor": [
+          988,
+          791
+        ],
+        "scale": 0.54,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f2beb5def04aed3deb64bbada50f28ffd1fde8fcb96887d938ff356f83161fb8",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "f0330b0a4832dbcb2151e73935c2fc25fcd94b84c1299743bec0d8e7b69a795a",
+      "runtime_source_scale": 0.27
+    },
+    {
+      "source_frame": {
+        "name": "reload_insert_single_bolt",
+        "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/discharge-and-visible-reload-empty-rail.png",
+        "rects": [
+          [
+            1340,
+            0,
+            1918,
+            820
+          ]
+        ],
+        "anchor": [
+          1606,
+          792
+        ],
+        "scale": 0.54,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f2beb5def04aed3deb64bbada50f28ffd1fde8fcb96887d938ff356f83161fb8",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "cf5702e2e3a591f1c9bd8a255031f16a9913afa7c8887b543abac7bb5ec8e7c4",
+      "runtime_source_scale": 0.27
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    440,
+    496
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

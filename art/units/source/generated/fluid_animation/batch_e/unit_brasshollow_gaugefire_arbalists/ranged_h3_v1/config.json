@@ -1,0 +1,137 @@
+{
+  "unit_id": "unit_brasshollow_gaugefire_arbalists",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    440,
+    496
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026108202,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          514
+        ]
+      ],
+      "anchor": [
+        164,
+        505
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1167,
+          0,
+          1536,
+          514
+        ]
+      ],
+      "anchor": [
+        1314,
+        505
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "ranged_discharged",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/discharge-and-visible-reload-empty-rail.png",
+      "rects": [
+        [
+          0,
+          0,
+          705,
+          820
+        ]
+      ],
+      "anchor": [
+        342,
+        791
+      ],
+      "scale": 0.27,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "reload_cocking_empty",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/discharge-and-visible-reload-empty-rail.png",
+      "rects": [
+        [
+          715,
+          0,
+          1337,
+          820
+        ]
+      ],
+      "anchor": [
+        988,
+        791
+      ],
+      "scale": 0.27,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "reload_insert_single_bolt",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/discharge-and-visible-reload-empty-rail.png",
+      "rects": [
+        [
+          1340,
+          0,
+          1918,
+          820
+        ]
+      ],
+      "anchor": [
+        1606,
+        792
+      ],
+      "scale": 0.27,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      45,
+      2
+    ],
+    [
+      72,
+      3
+    ],
+    [
+      95,
+      4
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original GAUGEFIRE ARBALIST, exactly the supplied painterly armored human. Exactly two arms with two black-gloved hands, two legs and two boots. Original closed charcoal steel helmet with brass crest and one narrow orange visor. Charcoal long split coat, rust red central cloth, brass-edged pauldrons and knee armor, original compact orange boiler backpack and hip canister. One original brass and steel pressure crossbow with curved limbs, one central rail, one red circular gauge, one orange pressure chamber. Rear right hand holds trigger grip, front left hand supports the underside of the rail; preserve both legitimate grips and crossbow dimensions. No sword, shield, wand or magic. Fixed three-quarter side orthographic camera facing SCREEN RIGHT. Same anatomical body scale, grounded boots and centered pelvis. One aimed pressure-crossbow shot then physically visible reload. Raise the crossbow to shoulder aim, squeeze trigger and recoil slightly, leaving the central rail empty after discharge. No airborne projectile or flash is painted. Keep the left hand supporting the rail, briefly release the right trigger hand to cock the pressure mechanism, use that same right hand to place one bolt on the central rail, restore the right trigger grip and lower to original ready. No additional crossbows or hands. Entire backdrop flat magenta RGB255,0,255; no scenery, horizon, floor, cast shadow, text, zoom, cuts or camera movement. All boots, hands, crossbow limbs and boiler stay in canvas. No detached projectiles, sparks or fire effects; the game renders projectile flight separately. Visible articulated motion, never global sprite wobble.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

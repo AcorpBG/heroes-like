@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "d1f408a65ecc54154b9df6161dd8cba7e259916580bcd755570059898091f2de",
+  "latent_sha256": "94795ced5c25d99e1ec63a5b94a86db7376057186f8101cc21607784d2c4ffb4",
+  "decode_workflow_sha256": "b5db9be5f017c4b05ab3c5e53b38ab3e23cfb7486fcc83ade2f48d62cdc2db2a",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "gaugefire_arbalist_h3\\death_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

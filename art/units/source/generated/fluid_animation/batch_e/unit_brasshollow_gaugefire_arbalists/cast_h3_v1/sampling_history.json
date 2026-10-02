@@ -1,0 +1,195 @@
+{
+  "prompt": [
+    479,
+    "6d943982-23fd-48e2-9b62-d3777ae316ae",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original GAUGEFIRE ARBALIST, exactly the supplied painterly armored human. Exactly two arms with two black-gloved hands, two legs and two boots. Original closed charcoal steel helmet with brass crest and one narrow orange visor. Charcoal long split coat, rust red central cloth, brass-edged pauldrons and knee armor, original compact orange boiler backpack and hip canister. One original brass and steel pressure crossbow with curved limbs, one central rail, one red circular gauge, one orange pressure chamber. Rear right hand holds trigger grip, front left hand supports the underside of the rail; preserve both legitimate grips and crossbow dimensions. No sword, shield, wand or magic. Fixed three-quarter side orthographic camera facing SCREEN RIGHT. Same anatomical body scale, grounded boots and centered pelvis. One nonmagical physical support signal. Keep right hand holding trigger grip, lift left hand off the rail, raise the empty gloved left hand near chest in a clear short rally gesture, open and close it once, then return the same left hand to underside support grip and restore ready. Exactly two hands at every moment. No magical glow, spell, summoned object or beam. Entire backdrop flat magenta RGB255,0,255; no scenery, horizon, floor, cast shadow, text, zoom, cuts or camera movement. All boots, hands, crossbow limbs and boiler stay in canvas. No detached projectiles, sparks or fire effects; the game renders projectile flight separately. Visible articulated motion, never global sprite wobble.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026108205
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "gaugefire_arbalist_cast_h3_v1_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "gaugefire_arbalist_h3/cast_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "gaugefire_arbalist_h3",
+      "create_time": 1790965893869
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "gaugefire_arbalist_h3\\cast_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "6d943982-23fd-48e2-9b62-d3777ae316ae",
+          "timestamp": 1790965893870
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "6d943982-23fd-48e2-9b62-d3777ae316ae",
+          "timestamp": 1790965893879
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "6d943982-23fd-48e2-9b62-d3777ae316ae",
+          "timestamp": 1790966059041
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

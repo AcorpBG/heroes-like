@@ -1,0 +1,89 @@
+{
+  "unit_id": "unit_brasshollow_gaugefire_arbalists",
+  "clip": "defend",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    440,
+    496
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026108204,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          514
+        ]
+      ],
+      "anchor": [
+        164,
+        505
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "guard_a",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-gait-and-guard.png",
+      "rects": [
+        [
+          300,
+          505,
+          750,
+          1024
+        ]
+      ],
+      "anchor": [
+        482,
+        997
+      ],
+      "scale": 0.43,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "guard_b",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-gait-and-guard.png",
+      "rects": [
+        [
+          920,
+          505,
+          1360,
+          1024
+        ]
+      ],
+      "anchor": [
+        1085,
+        997
+      ],
+      "scale": 0.43,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      48,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "One original GAUGEFIRE ARBALIST, exactly the supplied painterly armored human. Exactly two arms with two black-gloved hands, two legs and two boots. Original closed charcoal steel helmet with brass crest and one narrow orange visor. Charcoal long split coat, rust red central cloth, brass-edged pauldrons and knee armor, original compact orange boiler backpack and hip canister. One original brass and steel pressure crossbow with curved limbs, one central rail, one red circular gauge, one orange pressure chamber. Rear right hand holds trigger grip, front left hand supports the underside of the rail; preserve both legitimate grips and crossbow dimensions. No sword, shield, wand or magic. Fixed three-quarter side orthographic camera facing SCREEN RIGHT. Same anatomical body scale, grounded boots and centered pelvis. Transition into a dedicated held defensive brace. Bend knees, lower body, pull elbows inward and raise the crossbow firmly across the chest; lean behind armored shoulder. Both boots remain planted. End in the low guarded stance and hold it steadily; do not return to ready. Entire backdrop flat magenta RGB255,0,255; no scenery, horizon, floor, cast shadow, text, zoom, cuts or camera movement. All boots, hands, crossbow limbs and boiler stay in canvas. No detached projectiles, sparks or fire effects; the game renders projectile flight separately. Visible articulated motion, never global sprite wobble.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_brasshollow_gaugefire_arbalists",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            514
+          ]
+        ],
+        "anchor": [
+          164,
+          505
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "942db0b03a8a06b615a017aeace646f8ddd59469c2c16340089c637c7957a5d1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b1d307227b0d00490c0e9417d2b1e67ee9ba60387e77f4e325c89dcc13db8344",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+        "rects": [
+          [
+            0,
+            986,
+            319,
+            1254
+          ]
+        ],
+        "anchor": [
+          166,
+          1223
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "92b1019b6ac11894ba2d4ea6616a20d51e408dcffa02a9b6f50750583551eb89",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e05faa6fd4d967003d65b55d27def7db552706cd8f1a9f2a1aa2f67b2866cb45",
+      "runtime_source_scale": 0.66
+    },
+    {
+      "source_frame": {
+        "name": "death_fall",
+        "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+        "rects": [
+          [
+            321,
+            987,
+            629,
+            1254
+          ]
+        ],
+        "anchor": [
+          474,
+          1238
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "92b1019b6ac11894ba2d4ea6616a20d51e408dcffa02a9b6f50750583551eb89",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "208efce5e125e35b2eca0970e74520f761f7da4c67cd07075bdf114d95fb2f34",
+      "runtime_source_scale": 0.66
+    },
+    {
+      "source_frame": {
+        "name": "dead_cold",
+        "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+        "rects": [
+          [
+            944,
+            1040,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          1093,
+          1220
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "92b1019b6ac11894ba2d4ea6616a20d51e408dcffa02a9b6f50750583551eb89",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "ce225ce9788b1c3bdeb235caeaf797acaf7dcca7701911ac4087ad10c190c8ef",
+      "runtime_source_scale": 0.66
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    440,
+    496
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

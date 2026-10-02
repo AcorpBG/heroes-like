@@ -1,0 +1,19 @@
+{
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/melee_impact_guide_v1.png",
+    "sha256": "3b31a2537897339143482b26b175027ffba0146849516112df0496ee8476ecee"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/melee_impact_guide_v1.prompt.txt",
+    "sha256": "ade4b2764dba09a19d26b8f3725ea20d43b96c611b23c89bb2d520205e166fbf"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_gaugefire_arbalists/attack_h3_v1/guide_0_rgba.png",
+      "sha256": "03760a5b0abfdf24cb8b5b6bc13548507c807e272efc85215dea2888600fb003"
+    }
+  ],
+  "tool": "built_in_image_gen",
+  "original_output": "C:/Users/acorp/.codex/generated_images/01a0fd4a-b27e-7940-b631-3e2e6a3966f3/exec-60aa5c92-87e1-4704-b276-d4f301e8ba3a.png",
+  "source_resolution_registration": "One fixed .20 runtime scale for original new painting matched by helmet/forearm armor, never normalize crouch height."
+}

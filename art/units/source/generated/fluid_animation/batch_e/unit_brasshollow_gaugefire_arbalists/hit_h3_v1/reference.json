@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_brasshollow_gaugefire_arbalists",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            514
+          ]
+        ],
+        "anchor": [
+          164,
+          505
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "942db0b03a8a06b615a017aeace646f8ddd59469c2c16340089c637c7957a5d1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b1d307227b0d00490c0e9417d2b1e67ee9ba60387e77f4e325c89dcc13db8344",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "hit",
+        "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+        "rects": [
+          [
+            0,
+            675,
+            320,
+            979
+          ]
+        ],
+        "anchor": [
+          164,
+          964
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "92b1019b6ac11894ba2d4ea6616a20d51e408dcffa02a9b6f50750583551eb89",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e61dc803fb258fbb40e31f2e51bb51511c1a2d155996a7ed3e9a506f0c08aee5",
+      "runtime_source_scale": 0.66
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    440,
+    496
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

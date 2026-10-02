@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_brasshollow_gaugefire_arbalists",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            514
+          ]
+        ],
+        "anchor": [
+          164,
+          505
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "942db0b03a8a06b615a017aeace646f8ddd59469c2c16340089c637c7957a5d1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b1d307227b0d00490c0e9417d2b1e67ee9ba60387e77f4e325c89dcc13db8344",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "guard_a",
+        "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-gait-and-guard.png",
+        "rects": [
+          [
+            300,
+            505,
+            750,
+            1024
+          ]
+        ],
+        "anchor": [
+          482,
+          997
+        ],
+        "scale": 0.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "58fc4bc3086c87dbe06bd009c9b1c05735bdbcb4608587daa5ea10ba16386a3b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6c801409f4ecea9d3addf349f404f6b484fc4c503e9055338cd5401a5894f9c4",
+      "runtime_source_scale": 0.43
+    },
+    {
+      "source_frame": {
+        "name": "guard_b",
+        "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-gait-and-guard.png",
+        "rects": [
+          [
+            920,
+            505,
+            1360,
+            1024
+          ]
+        ],
+        "anchor": [
+          1085,
+          997
+        ],
+        "scale": 0.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "58fc4bc3086c87dbe06bd009c9b1c05735bdbcb4608587daa5ea10ba16386a3b",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "75994ff5e07b0988d379216db3a16c262e63d0f49ac5bea3c39cf295917ac8fd",
+      "runtime_source_scale": 0.43
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    440,
+    496
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

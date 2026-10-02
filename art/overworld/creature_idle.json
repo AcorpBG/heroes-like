@@ -4655,29 +4655,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        66.0,
+        66,
         222
       ],
       "painted_extent": 217,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_gaugefire_arbalists.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_gaugefire_arbalists.png",
       "source_indices": [
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25,
-        26
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        190,
-        14,
-        370,
-        247
+        42,
+        6,
+        222,
+        239
       ],
-      "source_sha256": "41a34d59f04fc59ce197da2c9f57a7851aa831ebdb1035bb5e293d80eb2e1130",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/provenance.json",
+      "source_sha256": "ca1cb6d142fb012225a2a31938a3fc4efa114453e914068d21a05b184cc50d58",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_gaugefire_arbalists/provenance.json",
       "sha256": "d8e03fa00ac3e68e0fa216d396c9c2ab85e2a5d9a29b725c67d3b6a6fef90ce7"
     },
     "unit_veilmourn_wakechain_boarders": {

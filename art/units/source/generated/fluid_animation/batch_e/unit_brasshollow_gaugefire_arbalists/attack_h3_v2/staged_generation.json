@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "f6d861e61c6036ca28c52d53a2efc2a991f4f17ed68201cd907b709bfe07fd57",
+  "latent_sha256": "08bb7eeaa8abdee70e34f9129e26d5ccf15d6e143de50ae4c9deb3baa3dc820b",
+  "decode_workflow_sha256": "c8067019a01640979429d603471e1798174a74bc2db802c44e5fb030d588d8d5",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "gaugefire_arbalist_h3\\attack_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18007449920,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
