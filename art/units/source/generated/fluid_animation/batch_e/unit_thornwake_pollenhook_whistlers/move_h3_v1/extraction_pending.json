@@ -1,0 +1,5 @@
+{
+  "status": "awaiting_semantic_soft_matte",
+  "tool": "segment.py",
+  "reason": "Video plates change colour; do not use unsafe colour-key thresholds. Run the pinned local segmenter after all VAE decoding releases GPU memory."
+}

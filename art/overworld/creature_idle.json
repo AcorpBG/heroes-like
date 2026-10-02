@@ -4869,25 +4869,25 @@
         200
       ],
       "painted_extent": 195,
-      "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_pollenhook_whistlers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_thornwake_pollenhook_whistlers.png",
       "source_indices": [
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        199,
-        36,
-        351,
-        247
+        87,
+        24,
+        239,
+        235
       ],
-      "source_sha256": "acf27be4cfe6e2726c47242b247f154c552ec5ffcdbe687c201658fed4d4e115",
-      "source_provenance": "res://art/animation/source/poses/unit_thornwake_pollenhook_whistlers/provenance.json",
+      "source_sha256": "d1e516b54f493578efd2492d80f5731243a054e689850a72889e8f1314461df6",
+      "source_provenance": "res://art/animation/source/fluid/unit_thornwake_pollenhook_whistlers/provenance.json",
       "sha256": "872012389d9055e17dee5665d2b4e18ce0fca6fffef00da64eda82890e6d6d4d"
     },
     "unit_brasshollow_tallyspring_throwers": {

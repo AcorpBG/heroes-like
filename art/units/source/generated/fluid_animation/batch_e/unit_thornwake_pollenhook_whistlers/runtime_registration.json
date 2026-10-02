@@ -1,0 +1,50 @@
+{
+  "unit_id": "unit_thornwake_pollenhook_whistlers",
+  "reference_height": 256,
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "ready_guide": {
+    "name": "idle_hands_0",
+    "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        384,
+        512
+      ]
+    ],
+    "anchor": [
+      194,
+      463
+    ],
+    "scale": 0.44,
+    "alpha_noise_cutoff": 8
+  },
+  "corpse_guide": {
+    "name": "corpse",
+    "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+    "rects": [
+      [
+        944,
+        978,
+        1254,
+        1226
+      ]
+    ],
+    "anchor": [
+      1089,
+      1208
+    ],
+    "scale": 0.66,
+    "alpha_noise_cutoff": 8
+  },
+  "reason": "One original scale per painting divided by fixed extraction scale; fixed anatomical ground plane, no per-frame normalization."
+}

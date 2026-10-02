@@ -1,0 +1,115 @@
+{
+  "unit_id": "unit_thornwake_pollenhook_whistlers",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026109802,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        194,
+        463
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "horn_shove_windup",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          314,
+          330,
+          622,
+          643
+        ]
+      ],
+      "anchor": [
+        467,
+        632
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "horn_shove_contact",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          625,
+          330,
+          976,
+          643
+        ]
+      ],
+      "anchor": [
+        781,
+        633
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "horn_lower",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          992,
+          645,
+          1254,
+          969
+        ]
+      ],
+      "anchor": [
+        1104,
+        959
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      26,
+      1
+    ],
+    [
+      58,
+      2
+    ],
+    [
+      91,
+      3
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original POLLENHOOK WHISTLER from the supplied painting, fixed three-quarter camera facing SCREEN RIGHT. One slim pale bark-skinned humanoid with amber eyes, pointed ears, green and ochre leafy crown with small twig antlers, green leaf mantle and skirt, rope belt with pollen seed pouches, brown vine-wrapped leggings and bare rootlike toes. Exactly TWO arms, TWO hands, TWO legs. ONE original long crooked branch blow-horn with one broad flared bell, one smaller hooked upper branch brace and leaf ties, never a second horn. Anatomical RIGHT hand holds the mouthpiece end, anatomical LEFT hand supports near the bell; both grips remain attached and stable. Preserve horn length and topology, original hands, clothing and face throughout. Original painterly tactical game artwork, same anatomical size and camera, no plastic or live-action material. A SINGLE short physical horn shove, followed by ONE smooth recovery. At first both hands pull the horn across the chest with knees bending into windup. At middle extend both arms SCREEN RIGHT once and lunge into the original contact guide, mouth away from mouthpiece. Immediately retract both elbows and straighten the stance, LOWER the horn toward the original ready guide at frame91, then keep it lowered through final ready. Do not raise or thrust the horn again during recovery. Keep horn intact, both hands attached, two feet, leaf crown and face unchanged.  Entire backdrop stays uniform magenta RGB255,0,255. No floor, cast shadow, scenery, text, camera motion, cuts or zoom. Fixed foot ground contact plane y576; lifted feet may move during stepping but planted contacts cannot slide. Keep horn and all leaves inside generous canvas margins. No projectiles, particles, rings, beams, glow or new equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

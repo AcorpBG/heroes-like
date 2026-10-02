@@ -1,0 +1,39 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v2",
+    "ranged_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_unit",
+    "notes": "Personally reviewed every124 original RGB and soft-matte frames of all seven accepted takes chronologically (868), plus all124 original/rejected melee-v1 frames and its failed/corrected mattes; retained992 original RGB frames. Enlarged original-size hands, open horn brace, limbs, fast thrust/fall and recovery/endpoints reviewed. All195 selected original forward poses and eight preserved idle poses personally reviewed in actual Godot128px native and reflected galleries; ranged-run native gallery pages are byte-identical to the already personally reviewed normal pages. Actual BattleShell observed all35 melee and26 ranged poses without changing clock/renderer; personally inspected all8 melee,8 duplicate normal-facing captures from mirrored-gallery run, and8 ranged captures at actual game size. One horn and two attached grips, two legs, no selected generated discharge or double ghost. Source36-37 thrust and70-71 fall natural short motion blur remain readable at native size.33-pose reciprocal gait has matching24/98 original endpoints; compact21-pose terminal guard, distinct nonmagical29-pose salute,36-pose grounded kneel/fall and held final corpse. Preserve exact original eight-pose idle and map pixels/240ms timing. No reverse/padded/interpolated/painted poses or per-frame normalization; game owns projectile flight. No remaining selected anatomy/ground/contact defect observed. Live import/map checks remain required after publication.",
+    "accepted_original_rgb_frames_reviewed": 868,
+    "preserved_original_rgb_frames": 992,
+    "new_selected_original_poses": 195,
+    "preserved_idle_poses": 8,
+    "native_reference_height": 128,
+    "all_selected_native_and_reflected_phases_reviewed": true,
+    "actual_candidate_melee_captures_reviewed": 8,
+    "actual_candidate_ranged_captures_reviewed": 8,
+    "mirrored_gallery_actual_shell_facing": "normal",
+    "candidate_checks": {
+      "normal": 278,
+      "reflected": 278,
+      "ranged": 278
+    },
+    "manual_game_session": false,
+    "continuous_video_playback": false,
+    "linux_run": false,
+    "full_suite_run": false
+  },
+  "failed_takes": [
+    "attack_h3_v1"
+  ]
+}

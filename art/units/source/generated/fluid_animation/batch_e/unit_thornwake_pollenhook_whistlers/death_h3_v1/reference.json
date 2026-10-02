@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_thornwake_pollenhook_whistlers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          194,
+          463
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1ff11f4cf7c028230a87ef4af2fd805a097e4df0eead82399cf4fbf753f6ee6a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0a92443e522c7d8a3f11efb40e5ee5a10ac334ea5193c918ea071db3560deb78",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+        "rects": [
+          [
+            0,
+            977,
+            313,
+            1226
+          ]
+        ],
+        "anchor": [
+          151,
+          1208
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6652e925b46488127c0ee5b2e26cdbc73298ed5240df4747b6a9f88269b2055c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "86ebeb402f3f4767eee1d9b54ada72a8cf03946d505e0d6374a48e3c60c2e8c1",
+      "runtime_source_scale": 0.66
+    },
+    {
+      "source_frame": {
+        "name": "death_fall",
+        "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+        "rects": [
+          [
+            315,
+            977,
+            626,
+            1226
+          ]
+        ],
+        "anchor": [
+          466,
+          1208
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6652e925b46488127c0ee5b2e26cdbc73298ed5240df4747b6a9f88269b2055c",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "329405a56e927d321c7ca3976097fc9b35e3d84b6b35af45d3d33699cab47a97",
+      "runtime_source_scale": 0.66
+    },
+    {
+      "source_frame": {
+        "name": "corpse",
+        "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+        "rects": [
+          [
+            944,
+            978,
+            1254,
+            1226
+          ]
+        ],
+        "anchor": [
+          1089,
+          1208
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6652e925b46488127c0ee5b2e26cdbc73298ed5240df4747b6a9f88269b2055c",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "5ae8fa27b802165245842567abf86fae8a1d85f748c5421cd95df69c5f0141a8",
+      "runtime_source_scale": 0.66
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

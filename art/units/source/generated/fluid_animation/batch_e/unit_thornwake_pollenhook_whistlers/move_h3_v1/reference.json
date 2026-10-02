@@ -1,0 +1,135 @@
+{
+  "unit_id": "unit_thornwake_pollenhook_whistlers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          194,
+          463
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1ff11f4cf7c028230a87ef4af2fd805a097e4df0eead82399cf4fbf753f6ee6a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0a92443e522c7d8a3f11efb40e5ee5a10ac334ea5193c918ea071db3560deb78",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "near_contact",
+        "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/near-contact-unfolded.png",
+        "rects": [
+          [
+            0,
+            0,
+            1158,
+            1358
+          ]
+        ],
+        "anchor": [
+          557,
+          1252
+        ],
+        "scale": 0.336,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "8933d5ccd0737281836cc62886487341a82aa034bf87bda2b6632c946b808f15",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "082b88a929a198d39d4fbf1af943d34d3e2e99e8fb742ad6c5f7c6cc9921f9c0",
+      "runtime_source_scale": 0.168
+    },
+    {
+      "source_frame": {
+        "name": "far_passing",
+        "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/walk-1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1158,
+            1358
+          ]
+        ],
+        "anchor": [
+          544,
+          1305
+        ],
+        "scale": 0.336,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3ebb654f2f3915eb90bc5b2f9dd4a3384bf83d623e5ec99ab17b01f5c2bc3b0e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "554dd2f62f328d74951c589b59bb6f069cdb2beefd037793482fc8fa6287532d",
+      "runtime_source_scale": 0.168
+    },
+    {
+      "source_frame": {
+        "name": "far_contact",
+        "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/walk-2.png",
+        "rects": [
+          [
+            0,
+            0,
+            1158,
+            1358
+          ]
+        ],
+        "anchor": [
+          544,
+          1276
+        ],
+        "scale": 0.336,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "92e1fdd7a5a5b0da89adc747581742439ca44fe4402160738341a475b503b21f",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "af438c50aedf3c87dca58b2ea1d625aeba7960ed535d7a1a0fa623672856254b",
+      "runtime_source_scale": 0.168
+    },
+    {
+      "source_frame": {
+        "name": "near_passing",
+        "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/walk-3.png",
+        "rects": [
+          [
+            0,
+            0,
+            1158,
+            1358
+          ]
+        ],
+        "anchor": [
+          551,
+          1270
+        ],
+        "scale": 0.336,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "541607920fdba251612a4d5cb5b58cdd72415971bc39ce291cd7c47a97967edf",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "8942a30cc913a0a407c3190c362bfdcd6dc6fa1cfac4396d00eafbbb2cf0e3d6",
+      "runtime_source_scale": 0.168
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

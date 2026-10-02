@@ -1,0 +1,5 @@
+{
+  "status": "original_h3_motion_retained",
+  "defect": "Semantic matte retains magenta background inside open horn brace around42-51",
+  "correction": "Confirm soft semantic alpha against measured magenta plate with protected foreground band16. Retain initial failed matte recipe/tool and all original video pixels."
+}

@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_thornwake_pollenhook_whistlers",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026109707,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        194,
+        463
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          0,
+          977,
+          313,
+          1226
+        ]
+      ],
+      "anchor": [
+        151,
+        1208
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          315,
+          977,
+          626,
+          1226
+        ]
+      ],
+      "anchor": [
+        466,
+        1208
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "corpse",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          944,
+          978,
+          1254,
+          1226
+        ]
+      ],
+      "anchor": [
+        1089,
+        1208
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      39,
+      1
+    ],
+    [
+      70,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "Original POLLENHOOK WHISTLER from the supplied painting, fixed three-quarter camera facing SCREEN RIGHT. One slim pale bark-skinned humanoid with amber eyes, pointed ears, green and ochre leafy crown with small twig antlers, green leaf mantle and skirt, rope belt with pollen seed pouches, brown vine-wrapped leggings and bare rootlike toes. Exactly TWO arms, TWO hands, TWO legs. ONE original long crooked branch blow-horn with one broad flared bell, one smaller hooked upper branch brace and leaf ties, never a second horn. Anatomical RIGHT hand holds the mouthpiece end, anatomical LEFT hand supports near the bell; both grips remain attached and stable. Preserve horn length and topology, original hands, clothing and face throughout. Original painterly tactical game artwork, same anatomical size and camera, no plastic or live-action material. One continuous grounded collapse. Knees buckle, torso lowers onto knees, then falls coherently onto the original side. Both hands release the same horn as body loses support; original horn settles flat beside body. Preserve exactly two arms and two legs throughout, no third hand, shrinking or disintegration. Leaf crown, mantle, rope pods and horn remain recognizable. Finish in original prone corpse guide with eyes closed, all body and equipment grounded y576, final second still.  Entire backdrop stays uniform magenta RGB255,0,255. No floor, cast shadow, scenery, text, camera motion, cuts or zoom. Fixed foot ground contact plane y576; lifted feet may move during stepping but planted contacts cannot slide. Keep horn and all leaves inside generous canvas margins. No projectiles, particles, rings, beams, glow or new equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

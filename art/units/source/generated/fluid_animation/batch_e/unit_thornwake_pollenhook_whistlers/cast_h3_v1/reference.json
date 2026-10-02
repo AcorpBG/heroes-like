@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_thornwake_pollenhook_whistlers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          194,
+          463
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1ff11f4cf7c028230a87ef4af2fd805a097e4df0eead82399cf4fbf753f6ee6a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0a92443e522c7d8a3f11efb40e5ee5a10ac334ea5193c918ea071db3560deb78",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

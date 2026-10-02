@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "87112987402a15f47930d4cb42f9d4924b3f0399c03dca671520dd29187cf431",
+  "latent_sha256": "a2b4223600dac916ff215c42c7dc9cbec05c3c3f8c75e74e1bfa7803e037983f",
+  "decode_workflow_sha256": "f01529c46ffc79ca0bb4909c3c80a6f3677c0c08a0a3e53044ecc8f1436ed733",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "pollenhook_whistler_h3\\ranged_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

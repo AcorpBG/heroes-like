@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "60797e0b162770a1cc01682407a92bfe32d8661a55d647e8ec682c65442b51aa",
+  "latent_sha256": "839361f6ea62388c4a60649a691ad31aa15bf213c86aaa4f2e61c701e1fd1ff0",
+  "decode_workflow_sha256": "c909bd4facc5b385cb8f6bce3aec2ad994dfce07bd41b127b4d758ac3f88f538",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "pollenhook_whistler_h3\\hit_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18163802432,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

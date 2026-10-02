@@ -1,0 +1,119 @@
+{
+  "unit_id": "unit_thornwake_pollenhook_whistlers",
+  "status": "complete_selected_unit",
+  "date": "2026-10-02",
+  "solo_unit_worker": true,
+  "source_method": "Original MiniMax H3 video, retained sampler latent and124-frame FFV1 RGB proof per take; pinned local BiRefNet soft matte",
+  "clips": {
+    "idle": 8,
+    "move": 33,
+    "attack": 35,
+    "ranged": 26,
+    "hit": 15,
+    "defend": 21,
+    "cast": 29,
+    "death": 36
+  },
+  "new_selected_poses": 195,
+  "preserved_idle_poses": 8,
+  "held_corpse_from_final_death": true,
+  "battle_atlas_size": [
+    3456,
+    4080
+  ],
+  "battle_texture_rgba_bytes": 56401920,
+  "original_selected_rgb_frames_reviewed": 868,
+  "preserved_original_rgb_frames": 992,
+  "rejected_takes": [
+    "attack_h3_v1"
+  ],
+  "validation": {
+    "checks": {
+      "candidate": 278,
+      "candidate_mirrored": 278,
+      "candidate_ranged": 278,
+      "live": 292,
+      "live_ranged": 292
+    },
+    "total": 1418,
+    "failures": [],
+    "source_pixel_and_ground_anchor_equality": true,
+    "other231_battle_and_map_rows_preserved": true,
+    "imported_atlas_exact_rgba": true,
+    "preserved_battle_and_overworld_idle_exact": true,
+    "visual_review": {
+      "status": "accepted_selected_unit",
+      "notes": "Personally reviewed every124 original RGB and soft-matte frames of all seven accepted takes chronologically (868), plus all124 original/rejected melee-v1 frames and its failed/corrected mattes; retained992 original RGB frames. Enlarged original-size hands, open horn brace, limbs, fast thrust/fall and recovery/endpoints reviewed. All195 selected original forward poses and eight preserved idle poses personally reviewed in actual Godot128px native and reflected galleries; ranged-run native gallery pages are byte-identical to the already personally reviewed normal pages. Actual BattleShell observed all35 melee and26 ranged poses without changing clock/renderer; personally inspected all8 melee,8 duplicate normal-facing captures from mirrored-gallery run, and8 ranged captures at actual game size. One horn and two attached grips, two legs, no selected generated discharge or double ghost. Source36-37 thrust and70-71 fall natural short motion blur remain readable at native size.33-pose reciprocal gait has matching24/98 original endpoints; compact21-pose terminal guard, distinct nonmagical29-pose salute,36-pose grounded kneel/fall and held final corpse. Preserve exact original eight-pose idle and map pixels/240ms timing. No reverse/padded/interpolated/painted poses or per-frame normalization; game owns projectile flight. No remaining selected anatomy/ground/contact defect observed. Live import/map checks remain required after publication.",
+      "accepted_original_rgb_frames_reviewed": 868,
+      "preserved_original_rgb_frames": 992,
+      "new_selected_original_poses": 195,
+      "preserved_idle_poses": 8,
+      "native_reference_height": 128,
+      "all_selected_native_and_reflected_phases_reviewed": true,
+      "actual_candidate_melee_captures_reviewed": 8,
+      "actual_candidate_ranged_captures_reviewed": 8,
+      "mirrored_gallery_actual_shell_facing": "normal",
+      "candidate_checks": {
+        "normal": 278,
+        "reflected": 278,
+        "ranged": 278
+      },
+      "manual_game_session": false,
+      "continuous_video_playback": false,
+      "linux_run": false,
+      "full_suite_run": false,
+      "live_native_all_poses_reviewed": true,
+      "actual_live_melee_captures_reviewed": 8,
+      "actual_live_ranged_captures_reviewed": 8,
+      "live_overworld_idle_frames_reviewed": [
+        0,
+        3
+      ],
+      "imported_atlas_exact_rgba": true,
+      "all_selected_source_pixels_and_anchors_verified": true,
+      "other231_battle_and_map_rows_preserved": true,
+      "existing_idle_map_pixels_and_timing_exact": true
+    },
+    "normal_fast_reduced_static_dead_contact_interrupt_rng_save": true,
+    "manual_game_session": false,
+    "continuous_video_playback": false,
+    "linux_run": false,
+    "full_suite_run": false,
+    "import_pixel_comparison": "Exact imported RGBA after documented lossless Godot fix_alpha_border processing; all selected source pixels separately compare exactly to packed atlas."
+  },
+  "broad_goal_status": "in_progress",
+  "cleanup": {
+    "applied": true,
+    "removed_files": 2150,
+    "recovered_bytes": 925387647,
+    "categories": {
+      "unused_rebuildable_matte": {
+        "files": 934,
+        "bytes": 155751635
+      },
+      "duplicate_decoded_rgb": {
+        "files": 992,
+        "bytes": 490696167
+      },
+      "duplicate_mp4": {
+        "files": 8,
+        "bytes": 5399480
+      },
+      "duplicate_latent": {
+        "files": 8,
+        "bytes": 68232672
+      },
+      "duplicate_uploaded_guide": {
+        "files": 24,
+        "bytes": 3347162
+      },
+      "temporary_review": {
+        "files": 184,
+        "bytes": 201960531
+      }
+    },
+    "original_videos_latents_guides_prompts_provenance_and_caches_preserved": true,
+    "rebuildable": true,
+    "retained_original_rgb_frames": 992
+  }
+}

@@ -1,0 +1,5122 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_thornwake_pollenhook_whistlers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_058",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_064",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "move_h3_068",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_074",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "move_h3_076",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "move_h3_078",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "move_h3_080",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "move_h3_082",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "move_h3_084",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "move_h3_086",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "move_h3_088",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "move_h3_090",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "move_h3_092",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "move_h3_094",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "move_h3_096",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "move_h3_098",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "attack_h3_008",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "attack_h3_010",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_h3_014",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_022",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "attack_h3_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "attack_h3_035",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_037",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "attack_h3_038",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_h3_046",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "attack_h3_054",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "attack_h3_062",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "attack_h3_068",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "attack_h3_070",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_074",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "attack_h3_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "attack_h3_078",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "attack_h3_080",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "attack_h3_081",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "attack_h3_082",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "attack_h3_083",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583333333333335
+        },
+        {
+          "name": "attack_h3_084",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "attack_h3_086",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "attack_h3_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "attack_h3_100",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "attack_h3_106",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        },
+        {
+          "name": "attack_h3_110",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.583333333333333
+        },
+        {
+          "name": "ranged_h3_020",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "ranged_h3_022",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "ranged_h3_024",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "ranged_h3_026",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "ranged_h3_028",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "ranged_h3_030",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "ranged_h3_032",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "ranged_h3_034",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "ranged_h3_036",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "ranged_h3_038",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "ranged_h3_040",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "ranged_h3_042",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "ranged_h3_044",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "ranged_h3_046",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "ranged_h3_048",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "ranged_h3_052",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "ranged_h3_058",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "ranged_h3_064",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "ranged_h3_070",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "ranged_h3_072",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "ranged_h3_074",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "ranged_h3_076",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "ranged_h3_078",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "ranged_h3_080",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "ranged_h3_082",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "ranged_h3_084",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "hit_h3_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_002",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.08333333333333333
+        },
+        {
+          "name": "hit_h3_004",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "hit_h3_006",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "hit_h3_008",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "hit_h3_018",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "hit_h3_064",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "hit_h3_068",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "hit_h3_069",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "hit_h3_070",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "hit_h3_071",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_h3_074",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_004",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "defend_h3_008",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_038",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_042",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "defend_h3_046",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "defend_h3_054",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "defend_h3_070",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "defend_h3_094",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "defend_h3_123",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "cast_h3_008",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "cast_h3_010",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "cast_h3_012",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "cast_h3_014",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "cast_h3_016",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "cast_h3_018",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "cast_h3_020",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "cast_h3_022",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "cast_h3_024",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "cast_h3_026",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_030",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_034",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "cast_h3_042",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "cast_h3_054",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "cast_h3_066",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "cast_h3_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_090",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "cast_h3_092",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "cast_h3_094",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "cast_h3_096",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "cast_h3_098",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "cast_h3_100",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "cast_h3_102",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "cast_h3_104",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "cast_h3_106",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        },
+        {
+          "name": "cast_h3_108",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "cast_h3_110",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.583333333333333
+        },
+        {
+          "name": "cast_h3_112",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_031",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_033",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_035",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_067",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_h3_069",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_h3_071",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_073",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "death_h3_074",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "death_h3_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "death_h3_078",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "death_h3_080",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "death_h3_081",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "death_h3_082",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "death_h3_083",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583333333333335
+        },
+        {
+          "name": "death_h3_086",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "death_h3_096",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "death_h3_110",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.583333333333333
+        },
+        {
+          "name": "death_h3_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "frame_msec": 45,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 14
+        },
+        "ranged": {
+          "indices": [
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 14
+        },
+        "hit": {
+          "indices": [
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 20
+        },
+        "cast": {
+          "indices": [
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 12
+        },
+        "death": {
+          "indices": [
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193,
+            194
+          ],
+          "frame_msec": 55,
+          "loop": false,
+          "static_frame": 35
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/config.json",
+          "sha256": "94ed101e5d2efc44ba08f3805066dfc834d57f4b75025f417c38c7ef9ead4ea5"
+        },
+        "move_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/selection.json",
+          "sha256": "e3aadb8ee75870c19bf533c7c0b6ae95476af87c9121bd1537a19f81c28f10be"
+        },
+        "move_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/original_lossless.mkv",
+          "sha256": "183093a483db90d9e53ee23dbbf7803968af573f09f836be444069bcf62ca032"
+        },
+        "move_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/original.json",
+          "sha256": "a9f436b95b995cbcc1956e32af88090ca50f6514c0099f8b1f9f3a23da313ad2"
+        },
+        "move_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/workflow_api.json",
+          "sha256": "4bde2e214c62a5151306bdb2754aa6069ebf8f604b132f40e84d2ad46ac50a61"
+        },
+        "move_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/prompt.txt",
+          "sha256": "708b66ea6df69ac0539292a7b331fddf678b56a257e386d12999b6f3bd2aaf32"
+        },
+        "move_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/reference.json",
+          "sha256": "4fe14410577aae557bb090a31089383ff3d507c801ff0c73f804e0f6a0260213"
+        },
+        "move_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte.json",
+          "sha256": "6dc8c0a18cf60a69109a07af6c36bd005442a1d22b55a34dd8b1c5c9bdbe1218"
+        },
+        "move_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/segmentation_recipe.json",
+          "sha256": "d8a167aca02739a50c2f1379e60dd397dfb16368bf549ffaf4f916dd8489ba46"
+        },
+        "move_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/staged_generation.json",
+          "sha256": "c3ddb04271433888b3d66b7b4b78c7382bb488e42ee51b92a6cb0eb9bb2de33d"
+        },
+        "move_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/sampling_workflow_api.json",
+          "sha256": "a9ff37698b1fcfc67a0351c1df56e9726093973deac7423437f94e6341953267"
+        },
+        "move_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/sampling_submission.json",
+          "sha256": "2515c67c9032f227ae7ac9243c959ebab40d420ebbb76d1d0ad325d1e8a7ec2d"
+        },
+        "move_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/sampling_history.json",
+          "sha256": "de4d478df740b84dc74faf08f8a7f7ad3d9acab93fa7c67eb8d70ed7ce6f6e1b"
+        },
+        "move_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/original.latent",
+          "sha256": "f00d5f55c2e6e7eda74e138b3c3af88b0bcbf53c16dcf118822b128282c54d2b"
+        },
+        "move_h3_v1_matte_initial.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_initial.json",
+          "sha256": "5be3a837f57dabc43ba4862f9427272fe6477b49073c0b25d0f439c6a748496b"
+        },
+        "move_h3_v1_segmentation_recipe_initial.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/segmentation_recipe_initial.json",
+          "sha256": "663d2bc256665e098d8970f9ea405b5772511a17500df5cba18cd34553dee0cd"
+        },
+        "move_h3_v1_extraction_correction.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/extraction_correction.json",
+          "sha256": "9833a78302e2b895ccf7e21e580d6f6545927314018d813acf8b2834281999f6"
+        },
+        "attack_h3_v2_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/config.json",
+          "sha256": "402341ba724b2c0463e65479e018a9d7efa417b15c80fa62bdf9b59b533ce621"
+        },
+        "attack_h3_v2_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/selection.json",
+          "sha256": "3973fbdd57f6f24b25efd4e655ad84ae8c95087efb6a2666f86caf1b80a1c6f0"
+        },
+        "attack_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/original_lossless.mkv",
+          "sha256": "f65b8404079a5d1d2c3e4bcaa51dc82ce1882bebb3502c91f5f9573295e94935"
+        },
+        "attack_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/original.json",
+          "sha256": "79cfa9aac133aa9e8c274378386e9b8ac3e026ae7a0f390d23891e7a2239694a"
+        },
+        "attack_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/workflow_api.json",
+          "sha256": "831eb69d097c716d59e0240cd95d4e0e257fb397e5bdea49148e4b6ce4b76c20"
+        },
+        "attack_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/prompt.txt",
+          "sha256": "56a2f66f268ec336ea36e1ae76d29fdfa26a39557316a265f872bfb028a11c3f"
+        },
+        "attack_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/reference.json",
+          "sha256": "26b8eccdc7d9e41aeaf2bc27a21b0d2c9aae2219e6d07299428c12c1e050d782"
+        },
+        "attack_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte.json",
+          "sha256": "8408915aaf345b3de8b0d5ff1f0bcc5364f753b031f2f36fdf7941ed98b812e8"
+        },
+        "attack_h3_v2_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/segmentation_recipe.json",
+          "sha256": "60408d19dbfe4049567492dc55296c1b7d8dd17873777c02dbfcbaa4fbcb3827"
+        },
+        "attack_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/staged_generation.json",
+          "sha256": "dc94fe1d16dae0086293d4dc7a6d5a7ebae45608cb8c511cef1e7bfe9a80ec7a"
+        },
+        "attack_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/sampling_workflow_api.json",
+          "sha256": "102a9393116f42d86ba6cdbc6f1c82a55a642579ccf05c8d6795cbbee657872e"
+        },
+        "attack_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/sampling_submission.json",
+          "sha256": "bf523d1a6dd718c95cc5eba962fe1b22d1af4e85641e3f1496944a1aa55e78c3"
+        },
+        "attack_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/sampling_history.json",
+          "sha256": "c9161753bb7c1776dd77f91fcc9c9c456da1e1399d2f14747d201275141a7f1e"
+        },
+        "attack_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/original.latent",
+          "sha256": "c8c188b057f35f85bed3dd631cfb4a87215c04b767e712e7f1210b6393887cce"
+        },
+        "ranged_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/config.json",
+          "sha256": "0ae2b15321046709f73b25c3c346697ebc9ad01a83c10f001c387283085b6e34"
+        },
+        "ranged_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/selection.json",
+          "sha256": "778bc101496251f223564a7c2957b7c464d4f8d9008a869423507674432ffe6f"
+        },
+        "ranged_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/original_lossless.mkv",
+          "sha256": "6443571b6fb0d4653b050b49025bec40d3d97211a17348e18b5634e8166e9942"
+        },
+        "ranged_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/original.json",
+          "sha256": "2b05ebadd2fd9a01d21dfb89d73c73170e304bc010039943cfb19585f779c713"
+        },
+        "ranged_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/workflow_api.json",
+          "sha256": "f01529c46ffc79ca0bb4909c3c80a6f3677c0c08a0a3e53044ecc8f1436ed733"
+        },
+        "ranged_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/prompt.txt",
+          "sha256": "ad9212ecb6aaf3263d587d4118e4ea311a5ae0a1bea5308f5ed15cc63902f5fe"
+        },
+        "ranged_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/reference.json",
+          "sha256": "be77a3fdf137a11eba7fb6ea26588eb80e26d8990a75a22eb28d1ff7482718f7"
+        },
+        "ranged_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte.json",
+          "sha256": "c0f8f899be8fa33dccee9c6535807e6739b1ae985cae8ab9db10949d71b77f30"
+        },
+        "ranged_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/segmentation_recipe.json",
+          "sha256": "60408d19dbfe4049567492dc55296c1b7d8dd17873777c02dbfcbaa4fbcb3827"
+        },
+        "ranged_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/staged_generation.json",
+          "sha256": "d7f6a79704ff2b643c419e29b59f43efcc0512bf2939a7cd5ad668bf00b1d677"
+        },
+        "ranged_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/sampling_workflow_api.json",
+          "sha256": "87112987402a15f47930d4cb42f9d4924b3f0399c03dca671520dd29187cf431"
+        },
+        "ranged_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/sampling_submission.json",
+          "sha256": "452015460311c45461f4fce722a019ef3f2cf387e2471087df049424061d7932"
+        },
+        "ranged_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/sampling_history.json",
+          "sha256": "277041f22c1f9afbd7b648b1268123c92a9306de5bb7850bcec64e3d3ea70b54"
+        },
+        "ranged_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/original.latent",
+          "sha256": "a2b4223600dac916ff215c42c7dc9cbec05c3c3f8c75e74e1bfa7803e037983f"
+        },
+        "hit_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/config.json",
+          "sha256": "23e9cbff57238e87bc45248615602046e38c07d9675a77cd1fa13dd80a7641e8"
+        },
+        "hit_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/selection.json",
+          "sha256": "4dec45ae1ab37f62626e682fdc8687e24d838d52ea460a006ae1e2c08abe3880"
+        },
+        "hit_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/original_lossless.mkv",
+          "sha256": "b92d7632ef1c7a38b591a06a249d5c617564ef02a9094bd83baee41aa01d317b"
+        },
+        "hit_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/original.json",
+          "sha256": "3e9ad3b4a76afd2cd0426af9a6a0017be6cb25e59c09a09e60a93825514dedc1"
+        },
+        "hit_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/workflow_api.json",
+          "sha256": "c909bd4facc5b385cb8f6bce3aec2ad994dfce07bd41b127b4d758ac3f88f538"
+        },
+        "hit_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/prompt.txt",
+          "sha256": "cf588c378f1905d375de02a1fcd5a6d9a21a5bb94bc0dfd2dc006c74a7709d87"
+        },
+        "hit_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/reference.json",
+          "sha256": "a736680b3dd26ad6a8ef669b8695a28da5f241fe0a264ab958c4d8f6bdd744bd"
+        },
+        "hit_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte.json",
+          "sha256": "af4c702ae776da4d7d0953f2021f69b88b4231bd17d37e8b86aead7848aef2d1"
+        },
+        "hit_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/segmentation_recipe.json",
+          "sha256": "60408d19dbfe4049567492dc55296c1b7d8dd17873777c02dbfcbaa4fbcb3827"
+        },
+        "hit_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/staged_generation.json",
+          "sha256": "c72de939c90f489f09af6f032281d234fd3078efcd3d9a874f18c9113d3d920c"
+        },
+        "hit_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/sampling_workflow_api.json",
+          "sha256": "60797e0b162770a1cc01682407a92bfe32d8661a55d647e8ec682c65442b51aa"
+        },
+        "hit_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/sampling_submission.json",
+          "sha256": "debfacb1acfac16c8c857fa21535abbf50569888a67e3635a243c94251a613ab"
+        },
+        "hit_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/sampling_history.json",
+          "sha256": "5e5ecd4f0a4ec87a95ca74e3bc60222295b616fef297366713193c25d63351bf"
+        },
+        "hit_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/original.latent",
+          "sha256": "839361f6ea62388c4a60649a691ad31aa15bf213c86aaa4f2e61c701e1fd1ff0"
+        },
+        "defend_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/config.json",
+          "sha256": "e68e78ed04a1e16146ef4994815d2fefaf235f28d5c0aa290faf6c6d297bc93b"
+        },
+        "defend_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/selection.json",
+          "sha256": "4e98be0a1cbffdebc45ebf0dc1813a503e13c31661d488072eb836497932fa03"
+        },
+        "defend_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/original_lossless.mkv",
+          "sha256": "1ec901f4863881a2e19fe48dadf0efc973a3056482c07f5800133e2f8092771a"
+        },
+        "defend_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/original.json",
+          "sha256": "4428227048dafaf12b5f7078d4e5a9ab1dd88f3e045cf55eb419a95b95f2bd61"
+        },
+        "defend_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/workflow_api.json",
+          "sha256": "f4dc5005fd8104152c9f559089e293338da9baa20981b57f968a0d829684e528"
+        },
+        "defend_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/prompt.txt",
+          "sha256": "3af6ccfa2462fb0d7467f3bb54dffd8129f63f91fe6f5ec10386cdf0e5304a07"
+        },
+        "defend_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/reference.json",
+          "sha256": "aca475abed4339a4f35b0c4135043ed8fc14bbdb9f166dc8037902abadf24c7c"
+        },
+        "defend_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte.json",
+          "sha256": "4644379a6340af299d906a956d431284a20ef7f5cfc5753f2bc2c9a07cbe61f9"
+        },
+        "defend_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/segmentation_recipe.json",
+          "sha256": "60408d19dbfe4049567492dc55296c1b7d8dd17873777c02dbfcbaa4fbcb3827"
+        },
+        "defend_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/staged_generation.json",
+          "sha256": "fc7e6dd0c9a157bf96dd580cf5372e4aaa73f56586cb76c0dcb99dffd9c4c736"
+        },
+        "defend_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/sampling_workflow_api.json",
+          "sha256": "ac7410f50fc02a6f6602ad1a8b7a8a6f8250ffcd55c73655015bd557562f9df8"
+        },
+        "defend_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/sampling_submission.json",
+          "sha256": "a9eb322102911a1da96cc1b4953fb69907d7b0e1b308d1c4dfc639a7dd278e13"
+        },
+        "defend_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/sampling_history.json",
+          "sha256": "ff9e1cfbddbb2e0461a393d71356fa32b5a26cd8b430b47a1c4682d10eacc121"
+        },
+        "defend_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/original.latent",
+          "sha256": "4089f6b7a4a9a3fd848eb122d92bfcb6e3a28db253a72aeafc310a1afae28af2"
+        },
+        "cast_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/config.json",
+          "sha256": "8b9a14339cf93b80a0f430f7b03bf12e44da8d4918b66400b4c8e007aa7ac0b2"
+        },
+        "cast_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/selection.json",
+          "sha256": "1e7ee460efcf92c959b0b8f628f78adb2c0380d46390973d1c057bd9ce948c51"
+        },
+        "cast_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/original_lossless.mkv",
+          "sha256": "48cd68475fa55babb3439dc92e9a70dc88c26102ba9d278454d0894e1e3a8183"
+        },
+        "cast_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/original.json",
+          "sha256": "7c7a60229d8ce887b79a9af9ca386c1cf7567408dc82ebbee363047ff65be2b8"
+        },
+        "cast_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/workflow_api.json",
+          "sha256": "ee7beed5658ac862479c133beef3de1a85d63cb674babfa245abc8fdf68b4a7b"
+        },
+        "cast_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/prompt.txt",
+          "sha256": "c3ab517096496094ca89e2e02e50a3a344ec5adf61c24aaa017d30ded3a88df7"
+        },
+        "cast_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/reference.json",
+          "sha256": "7f61ff0fea3795ed922d3dc4b8a73fdbf06019f8a8b6969785fdf9c009af7c92"
+        },
+        "cast_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte.json",
+          "sha256": "8708ab403597a598ce6172c814089646706aa0b85824c398712e70f23d3a2d6e"
+        },
+        "cast_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/segmentation_recipe.json",
+          "sha256": "60408d19dbfe4049567492dc55296c1b7d8dd17873777c02dbfcbaa4fbcb3827"
+        },
+        "cast_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/staged_generation.json",
+          "sha256": "55334116feb23c332ee621a9061684173920dd26c40ca7aa1179d99a3787a62b"
+        },
+        "cast_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/sampling_workflow_api.json",
+          "sha256": "6a08c51204b1b478f2ad4cfb4ebd70cfbeeab78b0f16135fb45ccdce6aac9e50"
+        },
+        "cast_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/sampling_submission.json",
+          "sha256": "423c7a75e8ee8f0558974130039d184d0fb8f78bc3877bd110387ad5d3624fd2"
+        },
+        "cast_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/sampling_history.json",
+          "sha256": "9dbaf42e0246b5845aa6c24ecbcc940af7c59e38d9da079b6b8153afc2e18255"
+        },
+        "cast_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/original.latent",
+          "sha256": "b0dd362dfe8a9ce709a4e6cd0f62aac3fe02f0a60709743483e3604def3c18ea"
+        },
+        "death_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/config.json",
+          "sha256": "8d27e6d9f2bc80d87a67811f24316ce61d34cf3f3d82440a64848bb916e2323b"
+        },
+        "death_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/selection.json",
+          "sha256": "df81bce9570c35e2e9292ab1536e45bf17e12ef82403c0b52a2b3d3e9b8682d6"
+        },
+        "death_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/original_lossless.mkv",
+          "sha256": "b5a898b851acf89f2ff903535954a735348bb3c8e2fc7dc2ff7d7fcaca4e0d7f"
+        },
+        "death_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/original.json",
+          "sha256": "fce42fee78b71e60060b1ffaee818801404069e300f3878aed1a433640f258a1"
+        },
+        "death_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/workflow_api.json",
+          "sha256": "07c4a7d9e9d8958133517c0d09f2d623a31eee741f52628aa2a7cae56a5f7a75"
+        },
+        "death_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/prompt.txt",
+          "sha256": "aededf46f238f933504cf5f3a1008b0f97728f83166de10df12fdae221daea48"
+        },
+        "death_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/reference.json",
+          "sha256": "917229369f80fa96cc0ac9a1874949a46e82d8d0bebf6e1fb8a3196d5b828747"
+        },
+        "death_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte.json",
+          "sha256": "51929eca6d15eb20910f638f69f010b8dee5095eb3620cff2e3da982f2d20341"
+        },
+        "death_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/segmentation_recipe.json",
+          "sha256": "60408d19dbfe4049567492dc55296c1b7d8dd17873777c02dbfcbaa4fbcb3827"
+        },
+        "death_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/staged_generation.json",
+          "sha256": "ceb06b94c46123ecb271799d042731e631d7062568e1f53d4d97ccd6717bbb68"
+        },
+        "death_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "93437fb5f619f89247bdeed4b8038141e34203523def51e17406dae44e37e711"
+        },
+        "death_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/sampling_submission.json",
+          "sha256": "156151cf99a52ca2cf46a93c749f432de7985d045783e3427ef1ec07ca1925d3"
+        },
+        "death_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/sampling_history.json",
+          "sha256": "11c5c7a6d257f47a65402c56737e3c9f1d9839f0a5a198adf0340eb3c22f42eb"
+        },
+        "death_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/original.latent",
+          "sha256": "ae97040397ab869a4c47ffa9e5ad36edb92f7e6e33db419e617b7f45d6e2d81d"
+        },
+        "runtime_registration": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/runtime_registration.json",
+          "sha256": "bc05e1cf03b32648b59d495924c1fc0865cc987f4f7e8bfef8dcde53ed35e627"
+        },
+        "runtime_profile": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/runtime_profile.json",
+          "sha256": "10275f74a8a780b8ff05def00ebec5d61a3d3431cf627b070ed925f2b1518175"
+        },
+        "foreground_measurement.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/foreground_measurement.json",
+          "sha256": "0bfe3757c00d7286d46b641d38265ec11be42a8e5ae40eac1603cc6757b3b790"
+        },
+        "delivery.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/delivery.json",
+          "sha256": "af11ec01bf3d1dc3c9bd2f12444f13c907547592e3a58b88b19b43c7e11a5465"
+        },
+        "segment.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/segment.py",
+          "sha256": "fc02b6ccdff46a36a67bfe77d0e7626e7836bd5c50579fa890f77ebb533b1b7c"
+        },
+        "segment_initial.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/segment_initial.py",
+          "sha256": "76869055be108370b7bb2bfa6bdc68b774356d3e3387f0c86ae80bef3d1baf3e"
+        },
+        "segment_v2.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/segment_v2.py",
+          "sha256": "2b3594c01371223a762fd9f06de2c52c69cc1b98308f9e21e4c91fa5bead3a61"
+        },
+        "matting_model.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/matting_model.json",
+          "sha256": "03f0257fbccbfec2fd9ffa4bb3d27398665ea9db710ce65920387148ab179922"
+        },
+        "failed_attack_h3_v1_accepted_baseline.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/accepted_baseline.json",
+          "sha256": "bfd5e854997014e8e6237623e5494682c4dd4a41cbca02dedce7ca5a9c5a64b6"
+        },
+        "failed_attack_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/config.json",
+          "sha256": "517e2d35e5179ee3d2fc998d0ad09a6fe4e9aa20f0b710f5c40b2f36b4fc8a54"
+        },
+        "failed_attack_h3_v1_decode_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/decode_submission.json",
+          "sha256": "90e13502a71589231bb267ec8d83894fee709e47f0f858d015970c2040b0dc5f"
+        },
+        "failed_attack_h3_v1_extraction_failure.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/extraction_failure.json",
+          "sha256": "94766cce5a39970ed118440e77df28e429204a804c948c9a875771d058364281"
+        },
+        "failed_attack_h3_v1_extraction_pending.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/extraction_pending.json",
+          "sha256": "38a855b4f36368af56720283f1e35ff23a15837b7320f218dcc953cb9bba6576"
+        },
+        "failed_attack_h3_v1_generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/generation_history.json",
+          "sha256": "636977e3d74e5b16c4d307e4431e60696a0816bc5ff90812a82faf217b047e1e"
+        },
+        "failed_attack_h3_v1_guide_0_chroma.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/guide_0_chroma.png",
+          "sha256": "0a92443e522c7d8a3f11efb40e5ee5a10ac334ea5193c918ea071db3560deb78"
+        },
+        "failed_attack_h3_v1_guide_0_rgba.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/guide_0_rgba.png",
+          "sha256": "4e1e0e016dfe41f785505976f3cb685e325e6a9a49d1d4fd46ed7c856e1cf21c"
+        },
+        "failed_attack_h3_v1_guide_1_chroma.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/guide_1_chroma.png",
+          "sha256": "14886bb878aae63de6ebb28ed0aab3d20424a1d97a0fc5348da7a1658770a4f7"
+        },
+        "failed_attack_h3_v1_guide_1_rgba.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/guide_1_rgba.png",
+          "sha256": "092f377c9f15b35932e96d5f04355ce41ba2b6d83a19f12b701fa2f2434a8ddd"
+        },
+        "failed_attack_h3_v1_guide_2_chroma.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/guide_2_chroma.png",
+          "sha256": "319b3c1aa23d25d196e7175efa66b1cbcb335bb9dab9a0940b3fa71061bc6b83"
+        },
+        "failed_attack_h3_v1_guide_2_rgba.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/guide_2_rgba.png",
+          "sha256": "7d5e091c466f80f3143bab1e1aab5189f30833bc522f9adfd63e38da0397b5c7"
+        },
+        "failed_attack_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/matte.json",
+          "sha256": "a23532a99a8fa64955b889f73a20c3aab55e06d7462e90dcbc1f74b6c3d0036d"
+        },
+        "failed_attack_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/original.json",
+          "sha256": "a7bdbc4ccdc5995b231b24d6eda15c0409f5056e09f01922f1adcef8cdb09232"
+        },
+        "failed_attack_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/original.latent",
+          "sha256": "d1eff1b764b133d19b73bd49ecebde5acafb5029cd19808a1d07486bcfa22369"
+        },
+        "failed_attack_h3_v1_original.mp4": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/original.mp4",
+          "sha256": "dd690066ccbf1c3fac4b790f19f1c11964fe5be716a8a5c35d00ee1251f15d10"
+        },
+        "failed_attack_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/original_lossless.mkv",
+          "sha256": "5e02b3385ba3064d14753deb921d0caa10610ae2f2cf434ac4c9efe179b0f5ae"
+        },
+        "failed_attack_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/prompt.txt",
+          "sha256": "9e6a9b8d692e6303b63c8a36b8fafb481210799d7b462e08440e0d38a0e1428a"
+        },
+        "failed_attack_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/reference.json",
+          "sha256": "f95bce621f38ad76e9d3e1b16d2b4844c038dcfab2a9c2359fc21c5cb9e1d8ec"
+        },
+        "failed_attack_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/sampling_history.json",
+          "sha256": "bf8e766382f7bea47615a2cae087819fc8538172aab126d98c27359862c06e1e"
+        },
+        "failed_attack_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/sampling_submission.json",
+          "sha256": "50d02ede9b479b6a2e1bef54e982762e6041001c0b1f0526f79ae6fecfc03ebc"
+        },
+        "failed_attack_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/sampling_workflow_api.json",
+          "sha256": "9d8dc5d5a4f32bef1b2a25e383520b2fc2c18dfbcb5ceb63879e67a8968cf2de"
+        },
+        "failed_attack_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/segmentation_recipe.json",
+          "sha256": "60408d19dbfe4049567492dc55296c1b7d8dd17873777c02dbfcbaa4fbcb3827"
+        },
+        "failed_attack_h3_v1_source_failure.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/source_failure.json",
+          "sha256": "b74d21187130e38722c2958460beed03897b3f33d9605a44d490dbbebfc8d63f"
+        },
+        "failed_attack_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/staged_generation.json",
+          "sha256": "be61b350fb040980818af91606028552901b8b6c40090d944fb932d7f807d8ce"
+        },
+        "failed_attack_h3_v1_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/submission.json",
+          "sha256": "90e13502a71589231bb267ec8d83894fee709e47f0f858d015970c2040b0dc5f"
+        },
+        "failed_attack_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v1/workflow_api.json",
+          "sha256": "835149e26f656ff14e3bbbd5dce8791363cb8302c19d015bb9ca1d67b31257c7"
+        },
+        "original_curated_identity": {
+          "path": "art/units/source/curated/unit_thornwake_pollenhook_whistlers.png",
+          "sha256": "aee551c6e0435b80c3bd877f29503ce868d69196a7c881fc0bd23121d036faf4"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Personally reviewed every124 original RGB and soft-matte frames of all seven accepted takes chronologically (868), plus all124 original/rejected melee-v1 frames and its failed/corrected mattes; retained992 original RGB frames. Enlarged original-size hands, open horn brace, limbs, fast thrust/fall and recovery/endpoints reviewed. All195 selected original forward poses and eight preserved idle poses personally reviewed in actual Godot128px native and reflected galleries; ranged-run native gallery pages are byte-identical to the already personally reviewed normal pages. Actual BattleShell observed all35 melee and26 ranged poses without changing clock/renderer; personally inspected all8 melee,8 duplicate normal-facing captures from mirrored-gallery run, and8 ranged captures at actual game size. One horn and two attached grips, two legs, no selected generated discharge or double ghost. Source36-37 thrust and70-71 fall natural short motion blur remain readable at native size.33-pose reciprocal gait has matching24/98 original endpoints; compact21-pose terminal guard, distinct nonmagical29-pose salute,36-pose grounded kneel/fall and held final corpse. Preserve exact original eight-pose idle and map pixels/240ms timing. No reverse/padded/interpolated/painted poses or per-frame normalization; game owns projectile flight. No remaining selected anatomy/ground/contact defect observed. Live import/map checks remain required after publication."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/move_h3_v1/matte_plate_v2/rgba_098.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_035.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_037.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_081.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_083.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_106.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/attack_h3_v2/matte_plate_v3/rgba_110.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/ranged_h3_v1/matte_plate_v3/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_002.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_004.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_006.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_069.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_071.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/hit_h3_v1/matte_plate_v3/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_004.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/defend_h3_v1/matte_plate_v3/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_098.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_102.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_104.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_106.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_110.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/cast_h3_v1/matte_plate_v3/rgba_112.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_031.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_033.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_035.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_067.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_069.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_071.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_073.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_081.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_083.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_110.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_pollenhook_whistlers/death_h3_v1/matte_plate_v3/rgba_123.png": 0.5
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ],
+      "accepted_clips": [
+        "move",
+        "attack",
+        "ranged",
+        "hit",
+        "defend",
+        "cast",
+        "death",
+        "idle"
+      ]
+    }
+  ]
+}

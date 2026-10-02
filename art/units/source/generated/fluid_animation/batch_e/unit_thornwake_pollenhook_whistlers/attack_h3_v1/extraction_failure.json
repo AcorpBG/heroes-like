@@ -1,0 +1,28 @@
+{
+  "status": "retained_original_motion_requires_conditional_plate_matte",
+  "frame": 13,
+  "assertion": "Plate not safely magenta",
+  "observed_corner_rgb": [
+    254.5,
+    2,
+    2
+  ],
+  "later_green_backdrop": true,
+  "failed_partial_matte_sha256": {
+    "rgba_000.png": "b77af068fe131cc20eb18b3f8bc84361aed7dc7a0009086835a55df49b76396c",
+    "rgba_001.png": "15b62a04b9a6a3d9910a77919866a10635bb3dec6818b12cee8a65c429297b67",
+    "rgba_002.png": "5c99e71227a85c8ba2fac8f0219e4cdd9c2bb5e905b06173e8781f3a2da2a563",
+    "rgba_003.png": "8500375d7eb257c286a0761de513738d054bbdd5819b91b8f206c1e33789c77b",
+    "rgba_004.png": "8473f29e4ecd1467f319e4679a2df860730ef01a6e102f897bd5ba71810fe016",
+    "rgba_005.png": "c60566a647f22e95fc00810e179db56b05dd5f78cbca7b6da93f7d688aaddbb8",
+    "rgba_006.png": "ea3f95e9ba1e83b9dd409ab631c3c2a036229cf554c0bdd0200e2eb51014700a",
+    "rgba_007.png": "e8a6a60d8913e097f24156d773ab3f8859daa39e1589e1384344449187e71e4a",
+    "rgba_008.png": "517dc2638da5640c1e9946e37d63dc03e93ebfbcf56d0aa3711162ae6da05324",
+    "rgba_009.png": "6896d83fc516ae192e70b568d0c3219271d19c2371fe38809adc5c88e0b4dfbf",
+    "rgba_010.png": "5d19020dda86776821204ce0d4a94734a1e2c8602941515c6b9da596eaa45cdd",
+    "rgba_011.png": "0ce804da40531948470eca401ea642f7c40eb46a144104d7dd7c6a43a7ea962f",
+    "rgba_012.png": "a28fd2f4d0283b2f707a8ac0ed901fcc3e4f21e489cd12b1bec50ee70564c922"
+  },
+  "failed_matte_tool": "segment_v2.py",
+  "correction": "Apply measured-magenta confirmation only to absent magenta foreground palette; use semantic alpha for red/green plates, preserving green leaves."
+}
