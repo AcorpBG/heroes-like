@@ -1,0 +1,117 @@
+{
+  "unit_id": "unit_neutral_frostwharf_cutters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          190,
+          491
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "eb14d493e47c19aebbdba27a350fbcd77d108384e71c9c7592391ab17ee164d9",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "25b0d412dabfc9cfbda017482c6e7511d4231bb7ead9f40d14a81bf35b19f3ce",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/alpha/poses.png",
+        "rects": [
+          [
+            386,
+            755,
+            674,
+            939
+          ],
+          [
+            348,
+            939,
+            674,
+            1044
+          ]
+        ],
+        "anchor": [
+          519,
+          1034
+        ],
+        "scale": 0.9975999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b738300f2ce86b7cc8e60cbab932040cf21ac3b4edfb4a26d08039be65699746",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "2e2667ba25c60f6c28a19f561296e840c483d9d0fd92ddfdc40886e6f3867a64",
+      "runtime_source_scale": 0.49879999999999997
+    },
+    {
+      "source_frame": {
+        "name": "death_side_fall",
+        "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/alpha/poses.png",
+        "rects": [
+          [
+            672,
+            793,
+            1050,
+            1040
+          ]
+        ],
+        "anchor": [
+          855,
+          1028
+        ],
+        "scale": 0.9975999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b738300f2ce86b7cc8e60cbab932040cf21ac3b4edfb4a26d08039be65699746",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "544b9806a24287116108af57c52fcf6fc55bcd7e89170bdb2634fe6f3c571b76",
+      "runtime_source_scale": 0.49879999999999997
+    },
+    {
+      "source_frame": {
+        "name": "dead_head_left_two_blades",
+        "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/alpha/poses.png",
+        "rects": [
+          [
+            1050,
+            835,
+            1448,
+            1036
+          ]
+        ],
+        "anchor": [
+          1241,
+          1026
+        ],
+        "scale": 0.9975999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b738300f2ce86b7cc8e60cbab932040cf21ac3b4edfb4a26d08039be65699746",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "7912ae4f4f6f12bfbb2e81b3bc3bd080bae18830e92cdb919acaf1673ce5fd65",
+      "runtime_source_scale": 0.49879999999999997
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

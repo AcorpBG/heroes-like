@@ -1,0 +1,16 @@
+{
+  "unit_id": "unit_neutral_frostwharf_cutters",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "fixed_source_family_multipliers": {
+    "alpha/poses.png": 0.86,
+    "continuity-alpha": 0.85,
+    "idle-v2/hands-alpha.png": 1,
+    "walk_guides.png": 0.238
+  },
+  "reason": "Original218px standing and224px continuity versus accepted187px articulated idle. Fixed factor per original painting family, crouches/corpse never independently normalized; accepted idle unchanged. New opposed walking references fixed187px anatomical standing height."
+}

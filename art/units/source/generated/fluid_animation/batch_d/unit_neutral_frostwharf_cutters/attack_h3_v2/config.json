@@ -1,0 +1,132 @@
+{
+  "unit_id": "unit_neutral_frostwharf_cutters",
+  "clip": "attack",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102102,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        190,
+        491
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "right_hook_windup",
+      "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/alpha/poses.png",
+      "rects": [
+        [
+          467,
+          344,
+          579,
+          377
+        ],
+        [
+          400,
+          377,
+          585,
+          398
+        ],
+        [
+          374,
+          398,
+          732,
+          738
+        ]
+      ],
+      "anchor": [
+        531,
+        731
+      ],
+      "scale": 0.49879999999999997,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "right_hook_slash_left_guard",
+      "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/alpha/poses.png",
+      "rects": [
+        [
+          730,
+          391,
+          1088,
+          725
+        ]
+      ],
+      "anchor": [
+        908,
+        719
+      ],
+      "scale": 0.49879999999999997,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "two_hook_recovery",
+      "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/continuity-alpha/two-hook-recovery-ready-and-passing-gray.png",
+      "rects": [
+        [
+          0,
+          0,
+          714,
+          760
+        ]
+      ],
+      "anchor": [
+        344,
+        711
+      ],
+      "scale": 0.2635,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      26,
+      1
+    ],
+    [
+      34,
+      2
+    ],
+    [
+      48,
+      2
+    ],
+    [
+      76,
+      3
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original dark-haired man, dark-haired adult human man, exactly TWO arms and TWO legs, TWO short silver hooked blades with brown grips, one in each gloved hand. Navy blue winter coat with brass trim/buttons, cream fur collar, blue scarf, rope waist belt with red/white/blue charms and chains, dark trousers and brown rope-wrapped boots with original metal ice-claw toes. Face and gaze toward screen right. Screen-left arm and screen-right arm each hold their OWN original hook continuously; hooks remain short original steel shapes, never long scythes or new swords. Original human anatomy, face, costume, grips and equipment remain coherent. One continuous physical arm-and-knee exercise with two original SHORT hooked steel tools. Starting ready, smoothly raise screen-left gloved arm overhead26 while other hand holds its own hook low as guard. From26 to34 lower screen-left arm down and forward, bending elbow and rotating shoulder into supplied forward stance34. Both short steel tools retain SAME finite length, thickness and curve, each hand wraps its original brown grip. Hold the forward stance34-48. Then both arms recover through supplied upright guarded pose76 and return to original ready. Sharp crisp steel silhouette in each pose, clear separated hands, deliberate joint movement and planted boot weight transfer. The two physical tools are the only shapes moving around the hands. Fixed elevated three-quarter orthographic camera,960x544, original body scale and centered ground root. The entire body, two boots and both short tools stay inside frame. Flat uniform saturated GREEN RGB0,255,0 fills all empty space every frame. Exactly one man and his original two metal tools on this empty chroma plate. Crisp individual painted sprite poses, sharply outlined finite opaque silver steel tools with brown grips and small curved tips throughout.",
+  "protected_foreground_chroma": 8,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

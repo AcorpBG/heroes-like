@@ -1,0 +1,118 @@
+{
+  "unit_id": "unit_neutral_frostwharf_cutters",
+  "clip": "death",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102006,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        190,
+        491
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/alpha/poses.png",
+      "rects": [
+        [
+          386,
+          755,
+          674,
+          939
+        ],
+        [
+          348,
+          939,
+          674,
+          1044
+        ]
+      ],
+      "anchor": [
+        519,
+        1034
+      ],
+      "scale": 0.49879999999999997,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/alpha/poses.png",
+      "rects": [
+        [
+          672,
+          793,
+          1050,
+          1040
+        ]
+      ],
+      "anchor": [
+        855,
+        1028
+      ],
+      "scale": 0.49879999999999997,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_left_two_blades",
+      "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/alpha/poses.png",
+      "rects": [
+        [
+          1050,
+          835,
+          1448,
+          1036
+        ]
+      ],
+      "anchor": [
+        1241,
+        1026
+      ],
+      "scale": 0.49879999999999997,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      26,
+      1
+    ],
+    [
+      66,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "One original Frostwharf Cutter, dark-haired adult human man, exactly TWO arms and TWO legs, TWO short silver hooked blades with brown grips, one in each gloved hand. Navy blue winter coat with brass trim/buttons, cream fur collar, blue scarf, rope waist belt with red/white/blue charms and chains, dark trousers and brown rope-wrapped boots with original metal ice-claw toes. Face and gaze toward screen right. Screen-left arm and screen-right arm each hold their OWN original hook continuously; hooks remain short original steel shapes, never long scythes or new swords. Original human anatomy, face, costume, grips and equipment remain coherent. One continuous human DEATH collapse. Both knees buckle and sink to kneel26, shoulders sag and both hooks lower. Lose support and fall on side toward SCREEN LEFT66, arms and legs fold naturally, hooks settle in loosely held hands onto ground. End supplied prone corpse: head screen left, boots screen right, BOTH original arms, TWO folded legs and TWO original short hooked blades resting on ground. Same face, coat, scarf and equipment intact; corpse grounded and motion stops. No stand-up recovery, floating, shrinking, lost or extra limbs/weapons. Locked original elevated three-quarter orthographic camera, full body and BOTH hook tips inside960x544 with generous margins, fixed anatomical body scale and centered root. Uniform saturated GREEN RGB0,255,0 backdrop EVERY frame, no floor, gradient, ground shadow, text, other characters, smoke, glow, flashes, lines or magic. Actual joints, not whole-sprite warping; never add equipment or duplicate limbs.",
+  "protected_foreground_chroma": 6,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

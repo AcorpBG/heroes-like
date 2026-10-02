@@ -1,0 +1,138 @@
+{
+  "unit_id": "unit_neutral_frostwharf_cutters",
+  "clip": "move",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102001,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        190,
+        491
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "run_contact",
+      "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/alpha/poses.png",
+      "rects": [
+        [
+          695,
+          24,
+          1082,
+          358
+        ]
+      ],
+      "anchor": [
+        916,
+        349
+      ],
+      "scale": 0.49879999999999997,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "opposed_passing",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_frostwharf_cutters/walk_guides.png",
+      "rects": [
+        [
+          0,
+          0,
+          887,
+          887
+        ]
+      ],
+      "anchor": [
+        485,
+        829
+      ],
+      "scale": 0.238,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "opposed_contact",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_frostwharf_cutters/walk_guides.png",
+      "rects": [
+        [
+          887,
+          0,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        1360,
+        829
+      ],
+      "scale": 0.238,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "run_passing",
+      "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/continuity-alpha/two-hook-recovery-ready-and-passing-gray.png",
+      "rects": [
+        [
+          1310,
+          0,
+          2069,
+          760
+        ]
+      ],
+      "anchor": [
+        1712,
+        724
+      ],
+      "scale": 0.2635,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      22,
+      1
+    ],
+    [
+      48,
+      2
+    ],
+    [
+      72,
+      3
+    ],
+    [
+      96,
+      4
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Frostwharf Cutter, dark-haired adult human man, exactly TWO arms and TWO legs, TWO short silver hooked blades with brown grips, one in each gloved hand. Navy blue winter coat with brass trim/buttons, cream fur collar, blue scarf, rope waist belt with red/white/blue charms and chains, dark trousers and brown rope-wrapped boots with original metal ice-claw toes. Face and gaze toward screen right. Screen-left arm and screen-right arm each hold their OWN original hook continuously; hooks remain short original steel shapes, never long scythes or new swords. Original human anatomy, face, costume, grips and equipment remain coherent. One complete reciprocal human WALK IN PLACE. First screen-left leg lifts behind while screen-right leg supports22. Then alternate: SCREEN-RIGHT knee swings forward48, screen-right boot plants in front72 while screen-left heel lifts behind. Both knees and ankles articulate in opposite support phases; both planted-foot and passing phases visible. Arms swing naturally opposite legs without releasing either short hook, blades stay clear of knees. Coat hem and rope charms sway, no root travel or hopping. Return to original ready by last frame. ONE complete cycle with BOTH legs, no one-legged marching. Locked original elevated three-quarter orthographic camera, full body and BOTH hook tips inside960x544 with generous margins, fixed anatomical body scale and centered root. Uniform saturated GREEN RGB0,255,0 backdrop EVERY frame, no floor, gradient, ground shadow, text, other characters, smoke, glow, flashes, lines or magic. Actual joints, not whole-sprite warping; never add equipment or duplicate limbs.",
+  "protected_foreground_chroma": 10,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

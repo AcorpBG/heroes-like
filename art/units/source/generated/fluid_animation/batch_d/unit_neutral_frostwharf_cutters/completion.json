@@ -1,0 +1,72 @@
+{
+  "unit_id": "unit_neutral_frostwharf_cutters",
+  "workflow": "Solo local MiniMax H3 original video and extracted transparent frames; one unit fully completed.",
+  "new_takes": [
+    "attack_h3_v1",
+    "attack_h3_v2",
+    "cast_h3_v1",
+    "death_h3_v1",
+    "defend_h3_v1",
+    "hit_h3_v1",
+    "hit_h3_v2",
+    "move_h3_v1"
+  ],
+  "new_clip_frames": {
+    "move": 47,
+    "attack": 49,
+    "hit": 38,
+    "defend": 25,
+    "cast": 29,
+    "death": 54
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo reviewed all124 chronological original phases in each of eight takes, enlarged hands/hooks/legs, every selected native128px pose and actual mirrored rendering, plus battle phase-clock captures. Accepted reciprocal two-leg walk, shortened physical two-hook strike with two-arm recovery, clean recoil, crossed-blades guard, physical blade salute and continuous grounded collapse with persistent corpse. Rejected initial attack cyan arc and incoming projectile in initial hit; corrected complete attack/hit videos supply delivered actions. Guarded crop removes independently reviewed alpha<64 rectangular background residue beside the head, preserving opaque character pixels and all original footage. Attack timing42ms matches source24fps and every pose appears under the actual shell clock;317 candidate and317 reflected focused checks pass. Preserve eight accepted articulated idle poses and all overworld pixels/timing. Review used chronological stills and native clock-driven captures; no claim of continuous manual movie playback. No broad suite."
+  },
+  "validation": {
+    "candidate_checks": 317,
+    "mirrored_checks": 317,
+    "live_checks": 331,
+    "failures": 0,
+    "imported_atlas": "Exact RGBA after Godot alpha-border processing",
+    "atlas_dimensions": [
+      3968,
+      3968
+    ],
+    "rgba_bytes": 62980096,
+    "new_original_action_frames": 242,
+    "preserved_idle_frames": 8,
+    "verified_accepted_take_rgb_frames": 744,
+    "retained_original_rgb_frames_including_rejected": 992,
+    "overworld_visuals_preserved": 232,
+    "other_battle_rows_preserved": 231,
+    "platform": "Windows Godot4.6.2 offscreen",
+    "full_suite_run": false,
+    "manual_playtest": false,
+    "continuous_browser_playback_review": false,
+    "linux_run": false
+  },
+  "roster_after": {
+    "complete": 201,
+    "remaining": 31,
+    "total": 232
+  },
+  "progress_note": "2026-10-02 SOLO COMPLETE: Frostwharf Cutters six H3 actions242 original poses plus retained8-frame idle; reciprocal two-leg walk, two-hook slash/recovery, clean recoil, crossed-blades guard, physical blade salute and grounded corpse reviewed. 317/317/331 candidate/mirrored/live focused checks pass; exact imported atlas, all232 map pixels/timing and other231 battle rows preserved. Roster201/232 complete,31 remaining. Broad goal stays in_progress; solo, no full suite.",
+  "cleanup": {
+    "deleted_verified_duplicate_or_unselected_files": 1784,
+    "deleted_verified_duplicate_or_unselected_bytes": 532578744,
+    "ephemeral_review_test_files": 111,
+    "ephemeral_review_test_bytes": 95274899,
+    "recovered_bytes_total": 627853643,
+    "rebuildable": true,
+    "original_rgb_frames_retained": 992,
+    "preserved": "All original generated art/video/latents, prompts, workflows, guides, extraction and selection recipes, source/provenance and production assets; unrelated files, caches, saves, backups and RMG material untouched.",
+    "temporary_directories_to_remove": [
+      "D:\\Games\\godot\\heroes-like\\.artifacts\\frostwharf_solo",
+      "D:\\Games\\godot\\heroes-like\\.artifacts\\frostwharf_cutter_h3"
+    ]
+  }
+}

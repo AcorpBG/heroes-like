@@ -1,0 +1,23 @@
+{
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_frostwharf_cutters/walk_guides.png",
+    "sha256": "85f96a79608a7a77dacd22e293ff4da336557aec721a4fa6fbf01d729f8b657e"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_frostwharf_cutters/walk_guides_prompt.txt",
+    "sha256": "4f7503c9983b0dbd9caf9aa135cb3d330c94b244c4643e2b3f51937f98fe6633"
+  },
+  "references": [
+    {
+      "path": "art/units/source/curated/unit_neutral_frostwharf_cutters.png",
+      "sha256": "a42b58ece8a066c2bbaa7589458f61c3969f063a0220f2091e6011dfec7ba0d8"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_frostwharf_cutters/accepted_idle_reference.png",
+      "sha256": "aec747a7261b7761d0f6a9b61d56db550898465832cb5a1ad4298353d06acc1a"
+    }
+  ],
+  "tool": "builtin imagegen",
+  "transparent_background": true,
+  "review": "Two opposed screen-right forward-leg passing/contact poses; two arms, two legs and two original short hooked blades, original costume/camera. Fixed family scale .238; no posed pixel edits."
+}

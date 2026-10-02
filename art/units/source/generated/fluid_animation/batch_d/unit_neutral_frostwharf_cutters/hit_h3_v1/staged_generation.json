@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "fc02506ff5496e5aa3746a8c44acf2a2e3a5dfde85f9ca4af5a91b5a5a6d7b9c",
+  "latent_sha256": "8b30c7e766219fc20ca6f8543dfa3291177676d83d82839d6cabf3d324ba432e",
+  "decode_workflow_sha256": "849f917126c0daa0252cda75d836b592e75eb6a20d8daaeffd2f8a4aeac0c34f",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "frostwharf_cutter_h3\\hit_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

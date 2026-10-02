@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_neutral_frostwharf_cutters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          190,
+          491
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "eb14d493e47c19aebbdba27a350fbcd77d108384e71c9c7592391ab17ee164d9",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "25b0d412dabfc9cfbda017482c6e7511d4231bb7ead9f40d14a81bf35b19f3ce",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "hit_recoil",
+        "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            709,
+            196,
+            749
+          ],
+          [
+            0,
+            749,
+            372,
+            900
+          ],
+          [
+            0,
+            900,
+            338,
+            1066
+          ]
+        ],
+        "anchor": [
+          173,
+          1058
+        ],
+        "scale": 0.9975999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b738300f2ce86b7cc8e60cbab932040cf21ac3b4edfb4a26d08039be65699746",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c4d65cb81627c17305cfad81cb0d5021f793d4261497eb810135e94ea84e4be4",
+      "runtime_source_scale": 0.49879999999999997
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

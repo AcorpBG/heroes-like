@@ -1,0 +1,94 @@
+{
+  "unit_id": "unit_neutral_frostwharf_cutters",
+  "clip": "defend",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102004,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        190,
+        491
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "crossed_blades_ready",
+      "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/continuity-alpha/two-hook-recovery-ready-and-passing-gray.png",
+      "rects": [
+        [
+          714,
+          0,
+          1310,
+          760
+        ]
+      ],
+      "anchor": [
+        1044,
+        725
+      ],
+      "scale": 0.2635,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "crossed_blades_crouch",
+      "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/alpha/poses.png",
+      "rects": [
+        [
+          1112,
+          403,
+          1420,
+          727
+        ]
+      ],
+      "anchor": [
+        1257,
+        717
+      ],
+      "scale": 0.49879999999999997,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      44,
+      2
+    ]
+  ],
+  "last": 2,
+  "prompt": "One original Frostwharf Cutter, dark-haired adult human man, exactly TWO arms and TWO legs, TWO short silver hooked blades with brown grips, one in each gloved hand. Navy blue winter coat with brass trim/buttons, cream fur collar, blue scarf, rope waist belt with red/white/blue charms and chains, dark trousers and brown rope-wrapped boots with original metal ice-claw toes. Face and gaze toward screen right. Screen-left arm and screen-right arm each hold their OWN original hook continuously; hooks remain short original steel shapes, never long scythes or new swords. Original human anatomy, face, costume, grips and equipment remain coherent. One dedicated held defensive brace. Raise and CROSS the two original short hooked blades in front of chest24, each gloved hand keeps its own grip. Bend both knees into supplied low crossed-blades guard44, elbows tucked and torso lowered. HOLD this final guarded crouch through end, no return to idle. Keep BOTH hands, arms, legs and hook tips readable, no shield or extra blades. Locked original elevated three-quarter orthographic camera, full body and BOTH hook tips inside960x544 with generous margins, fixed anatomical body scale and centered root. Uniform saturated GREEN RGB0,255,0 backdrop EVERY frame, no floor, gradient, ground shadow, text, other characters, smoke, glow, flashes, lines or magic. Actual joints, not whole-sprite warping; never add equipment or duplicate limbs.",
+  "protected_foreground_chroma": 7,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

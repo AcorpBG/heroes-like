@@ -1,0 +1,135 @@
+{
+  "unit_id": "unit_neutral_frostwharf_cutters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          190,
+          491
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "eb14d493e47c19aebbdba27a350fbcd77d108384e71c9c7592391ab17ee164d9",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "25b0d412dabfc9cfbda017482c6e7511d4231bb7ead9f40d14a81bf35b19f3ce",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "run_contact",
+        "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/alpha/poses.png",
+        "rects": [
+          [
+            695,
+            24,
+            1082,
+            358
+          ]
+        ],
+        "anchor": [
+          916,
+          349
+        ],
+        "scale": 0.9975999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b738300f2ce86b7cc8e60cbab932040cf21ac3b4edfb4a26d08039be65699746",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "7fe76084eca3537980a06d7e160d6b7efc13b43897d5fd5585c9cd7410f234d8",
+      "runtime_source_scale": 0.49879999999999997
+    },
+    {
+      "source_frame": {
+        "name": "opposed_passing",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_frostwharf_cutters/walk_guides.png",
+        "rects": [
+          [
+            0,
+            0,
+            887,
+            887
+          ]
+        ],
+        "anchor": [
+          485,
+          829
+        ],
+        "scale": 0.476,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "85f96a79608a7a77dacd22e293ff4da336557aec721a4fa6fbf01d729f8b657e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "3ef7a2433dca9c4795ecdf022209df7fb9f3064f5aac1e3f847018ecc1de0915",
+      "runtime_source_scale": 0.238
+    },
+    {
+      "source_frame": {
+        "name": "opposed_contact",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_frostwharf_cutters/walk_guides.png",
+        "rects": [
+          [
+            887,
+            0,
+            1774,
+            887
+          ]
+        ],
+        "anchor": [
+          1360,
+          829
+        ],
+        "scale": 0.476,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "85f96a79608a7a77dacd22e293ff4da336557aec721a4fa6fbf01d729f8b657e",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "33dabedc05b447d3b47854862ad3027ffda9611134d4ceb9df351a75abff3969",
+      "runtime_source_scale": 0.238
+    },
+    {
+      "source_frame": {
+        "name": "run_passing",
+        "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/continuity-alpha/two-hook-recovery-ready-and-passing-gray.png",
+        "rects": [
+          [
+            1310,
+            0,
+            2069,
+            760
+          ]
+        ],
+        "anchor": [
+          1712,
+          724
+        ],
+        "scale": 0.527,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "983f7a5a2d4edfaae076b2dd5f1f2cd897075eb29634a6cbdbd1761860d11278",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "3f3bc3f61a21b3b2c235c7184fa63eb445c50262e66d5f67741da5b24e9ac8f7",
+      "runtime_source_scale": 0.2635
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

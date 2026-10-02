@@ -3773,40 +3773,40 @@
   "sha256": "8104345013b860a1d8f6e19f7344b4580515db5563325f642c2290a13b4722f7"
 },
     "unit_neutral_frostwharf_cutters": {
-      "path": "res://art/overworld/runtime/creature_idle/unit_neutral_frostwharf_cutters.png",
-      "frame_size": [
-        179,
-        206
-      ],
-      "frames": 8,
-      "frame_msec": 240,
-      "static_frame": 0,
-      "ground_anchor": [
-        90.0,
-        195
-      ],
-      "painted_extent": 190,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_frostwharf_cutters.png",
-      "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
-      ],
-      "source_crop": [
-        166,
-        41,
-        345,
-        247
-      ],
-      "source_sha256": "f961f254156471081c01fb545025e7a7071432d32ac7bdfb1858370dc722d72f",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_frostwharf_cutters/provenance.json",
-      "sha256": "200f3ecb80c585321e15d3536ddc6190c83232f4e8ba5052d72943b5410420ae"
-    },
+  "path": "res://art/overworld/runtime/creature_idle/unit_neutral_frostwharf_cutters.png",
+  "frame_size": [
+    179,
+    206
+  ],
+  "frames": 8,
+  "frame_msec": 240,
+  "static_frame": 0,
+  "ground_anchor": [
+    90.0,
+    195
+  ],
+  "painted_extent": 190,
+  "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_frostwharf_cutters.png",
+  "source_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "source_crop": [
+    34,
+    33,
+    213,
+    239
+  ],
+  "source_sha256": "77f55f9cf3f978821a63a7b0c4177a83b9bdfdb4c0bb20a62d09468099b5edb8",
+  "source_provenance": "res://art/animation/source/fluid/unit_neutral_frostwharf_cutters/provenance.json",
+  "sha256": "200f3ecb80c585321e15d3536ddc6190c83232f4e8ba5052d72943b5410420ae"
+},
     "unit_neutral_lanternskate_throwers": {
       "path": "res://art/overworld/runtime/creature_idle/unit_neutral_lanternskate_throwers.png",
       "frame_size": [
