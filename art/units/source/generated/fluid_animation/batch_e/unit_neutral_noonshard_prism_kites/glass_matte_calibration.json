@@ -1,0 +1,100 @@
+{
+  "original_guides": [
+    {
+      "take": "move_h3_v1",
+      "guide": 0,
+      "original_rgba_sha256": "1d64557aa33756c9c8d470f5afebae34fe823376f1bb88d90aa8d2c4a99d8f98",
+      "original_rgb_sha256": "4709e41efc03c97d23c43fd7cc5cd1d578341872602de83de66aeaffb3ef9290",
+      "opaque_retained_at128": 0.999007873007745,
+      "bright_glass_retained_at128": 1.0,
+      "background": {
+        "background_rgb": [
+          16.0,
+          32.0,
+          64.0
+        ],
+        "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+        "corner_median_spread": 0.0,
+        "excluded_background_corner_indices": [],
+        "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+      }
+    },
+    {
+      "take": "move_h3_v1",
+      "guide": 1,
+      "original_rgba_sha256": "1e9e6dc36b1be2367e2703290180c30d2ab619e6fdadf324868c0f2609606734",
+      "original_rgb_sha256": "5b07079fbc05ad4ba4ecda7995069d19d7bb77f0b7b80c4f90d475690f501dfe",
+      "opaque_retained_at128": 0.9960132890365448,
+      "bright_glass_retained_at128": 0.9997564020584027,
+      "background": {
+        "background_rgb": [
+          16.0,
+          32.0,
+          64.0
+        ],
+        "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+        "corner_median_spread": 0.0,
+        "excluded_background_corner_indices": [],
+        "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+      }
+    },
+    {
+      "take": "move_h3_v1",
+      "guide": 3,
+      "original_rgba_sha256": "1adedd59b4db2a2598433b8fe497a5a68262dcc997699a3e5a03b1c7c76b4351",
+      "original_rgb_sha256": "45fe3a48b84aa359facaf5239ae8b7f52aff167596e1fa283ce5a932bbb6d631",
+      "opaque_retained_at128": 0.9971508583952271,
+      "bright_glass_retained_at128": 0.999789792314807,
+      "background": {
+        "background_rgb": [
+          16.0,
+          32.0,
+          64.0
+        ],
+        "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+        "corner_median_spread": 0.0,
+        "excluded_background_corner_indices": [],
+        "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+      }
+    },
+    {
+      "take": "attack_h3_v1",
+      "guide": 2,
+      "original_rgba_sha256": "6611196c6ffdd0f76a879d16e48b97975db5f71cc5c9c70798fa3e393166c0eb",
+      "original_rgb_sha256": "f2b59b41f1857fa155392bcfa50daf8c9551577c7e613d365253e2b16dbb9660",
+      "opaque_retained_at128": 0.9966742077073303,
+      "bright_glass_retained_at128": 0.9998043818466353,
+      "background": {
+        "background_rgb": [
+          16.0,
+          32.0,
+          64.0
+        ],
+        "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+        "corner_median_spread": 0.0,
+        "excluded_background_corner_indices": [],
+        "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+      }
+    },
+    {
+      "take": "death_h3_v1",
+      "guide": 3,
+      "original_rgba_sha256": "59576427a6b310f8788b92d5731fbf8f39e78ef2abd50b89ed89dc3c7925ea4f",
+      "original_rgb_sha256": "5934d32cce0ebf2984a0aed673288c2d6eee4c75f88cd3fcecc57ac6acb02019",
+      "opaque_retained_at128": 0.998956382124699,
+      "bright_glass_retained_at128": 1.0,
+      "background": {
+        "background_rgb": [
+          16.0,
+          32.0,
+          64.0
+        ],
+        "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+        "corner_median_spread": 0.0,
+        "excluded_background_corner_indices": [],
+        "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+      }
+    }
+  ],
+  "rule": "Known original opaque painting and bright glass should survive semantic extraction. This calibration does not confer acceptance on generated video; all124 RGB/RGBA frames require visual inspection."
+}

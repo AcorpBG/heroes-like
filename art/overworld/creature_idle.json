@@ -5044,25 +5044,25 @@
         238
       ],
       "painted_extent": 233,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_noonshard_prism_kites.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_noonshard_prism_kites.png",
       "source_indices": [
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        140,
-        10,
-        382,
-        259
+        80,
+        46,
+        322,
+        295
       ],
-      "source_sha256": "2f085feadb874aa80f2183e718a5da99c9dadf6640632a282ff240c4c81f609b",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_noonshard_prism_kites/provenance.json",
+      "source_sha256": "d81a787348b3ebd93b5c4f9d3fc36f09c112a858d016d2899ebabae6741b9814",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_noonshard_prism_kites/provenance.json",
       "sha256": "7a1c8dd66bd4ce67e5943fe999c36b33c07f0def27fb8d45c672eb3d465f3966"
     },
     "unit_neutral_rootvault_barkhulks": {

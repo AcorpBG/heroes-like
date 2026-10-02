@@ -1,0 +1,95 @@
+{
+  "unit_id": "unit_neutral_noonshard_prism_kites",
+  "clip": "attack",
+  "canvas": [
+    960,
+    704
+  ],
+  "anchor": [
+    480,
+    640
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    16,
+    32,
+    64
+  ],
+  "seed": 2026108322,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        192,
+        462
+      ],
+      "scale": 0.61357,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "closed_mouth_near_claw_contact",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/claw_contact_original.png",
+      "rects": [
+        [
+          0,
+          0,
+          1465,
+          1073
+        ]
+      ],
+      "anchor": [
+        700,
+        1022
+      ],
+      "scale": 0.245,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      8,
+      0
+    ],
+    [
+      18,
+      1
+    ],
+    [
+      32,
+      1
+    ],
+    [
+      48,
+      1
+    ],
+    [
+      64,
+      1
+    ],
+    [
+      84,
+      0
+    ],
+    [
+      104,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "The exact original four-winged white-opal jewel creature in the supplied reference images, facing screen right in its original three-quarter side view. Exactly four attached glass wings with their original gold frame and curved veins, two small gold taloned legs, and two white trailing tail ribbons ending in prism-leaf fins. Its original swept golden crest, long white-and-gold beak, glass colours and proportions remain consistent. One short physical balancing adjustment: the near leg gently unfolds forward, extends its small gold claws in the supplied second pose, closes the claws once, then curls back underneath the chest. The far leg stays tucked. The beak stays fully shut and relaxed throughout, with its mouth outline fixed. The glass wings brace with small hinge adjustments, and both tail ribbons sway slightly then settle. The wing roots and body retain the same position and anatomical scale in a fixed camera. After this single leg extension and recovery, continue quiet hovering in the initial ready posture. The entire space outside the complete creature silhouette stays uniform dark navy RGB16,32,64 throughout. All four wing tips, both tails and both legs remain comfortably inside the image. The original airborne body keeps its original clearance above logical ground plane y640.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

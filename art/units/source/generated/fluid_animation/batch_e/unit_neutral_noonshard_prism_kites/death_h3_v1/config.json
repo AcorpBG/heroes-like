@@ -1,0 +1,127 @@
+{
+  "unit_id": "unit_neutral_noonshard_prism_kites",
+  "clip": "death",
+  "canvas": [
+    960,
+    704
+  ],
+  "anchor": [
+    480,
+    640
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    16,
+    32,
+    64
+  ],
+  "seed": 2026108307,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        192,
+        462
+      ],
+      "scale": 0.61357,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_drop",
+      "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/alpha/poses.png",
+      "rects": [
+        [
+          360,
+          585,
+          710,
+          825
+        ]
+      ],
+      "anchor": [
+        600,
+        835
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        120,
+        0
+      ]
+    },
+    {
+      "name": "death_land",
+      "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/alpha/poses.png",
+      "rects": [
+        [
+          710,
+          590,
+          1025,
+          825
+        ]
+      ],
+      "anchor": [
+        950,
+        835
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        120,
+        0
+      ]
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/alpha/poses.png",
+      "rects": [
+        [
+          1025,
+          650,
+          1402,
+          835
+        ]
+      ],
+      "anchor": [
+        1300,
+        835
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        120,
+        0
+      ]
+    }
+  ],
+  "guides": [
+    [
+      38,
+      1
+    ],
+    [
+      72,
+      2
+    ],
+    [
+      98,
+      3
+    ]
+  ],
+  "last": 3,
+  "prompt": "The exact original four-winged white-opal jewel creature in the supplied reference images, facing screen right in its original three-quarter side view. Exactly four attached glass wings with original gold framing and curved veins, two small gold taloned legs, and two white tail ribbons ending in prism-leaf fins. Keep the original swept golden crest, long white-and-gold beak, glass colours and anatomical proportions. One continuous loss of lift and grounded collapse: the four original glass wings fold and droop as the torso descends; the two gold talons reach toward plane y640. The original body settles onto its side with all four wings and both tails folded into the supplied final resting pose. Keep original body size throughout the descent. The final body rests at plane y640 and remains still in that supplied resting pose for the final second. The space outside the complete creature silhouette stays uniform dark navy RGB16,32,64. Fixed camera and original anatomical scale. All four wing tips, both tails and both legs remain comfortably inside the image.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

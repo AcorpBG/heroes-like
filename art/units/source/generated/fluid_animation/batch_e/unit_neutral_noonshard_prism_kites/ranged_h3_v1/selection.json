@@ -1,0 +1,76 @@
+{
+  "source_frames": [
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    38,
+    40,
+    42,
+    44,
+    46,
+    48,
+    50,
+    52,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    78,
+    80,
+    82,
+    84,
+    86,
+    88,
+    90,
+    92,
+    94,
+    96,
+    98
+  ],
+  "frame_msec": 32,
+  "contact_frame": 16,
+  "review_note": "All124 original RGB and enlarged RGBA personally reviewed. Retain aim20-52 and recoil/recovery58-98. Connected generated beam53-57 excluded completely, never erased from a selected body frame. Detach projectile only in58,59,60,62 through original empty vertical gaps. No synthetic poses or per-frame geometry changes. Native CPU/Godot acceptance pending.",
+  "runtime_projectile_separation": {
+    "58": {
+      "axis": "x",
+      "split_x": 779,
+      "reason": "Detached video projectile separated across a verified empty gap; runtime owns projectile flight."
+    },
+    "59": {
+      "axis": "x",
+      "split_x": 775,
+      "reason": "Detached video projectile separated across a verified empty gap; runtime owns projectile flight."
+    },
+    "60": {
+      "axis": "x",
+      "split_x": 770,
+      "reason": "Detached video projectile separated across a verified empty gap; runtime owns projectile flight."
+    },
+    "62": {
+      "axis": "x",
+      "split_x": 800,
+      "reason": "Detached video projectile separated across a verified empty gap; runtime owns projectile flight."
+    }
+  }
+}

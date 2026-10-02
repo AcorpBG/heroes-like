@@ -1,0 +1,35 @@
+{
+  "tool": "builtin image_gen.imagegen",
+  "transparent_background": true,
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/claw_contact_original.png",
+    "sha256": "bd60af9f056f0ee93f26fb09b23dae7e5092e24339b5e2ffbc79ef8cef54df95"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/claw_contact_original.prompt.txt",
+    "sha256": "2def8c21f054a9ada21b08a482a0ddf4ae4638155dd479f04fd79b8c03db08a8"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/guide_0_rgba.png",
+      "sha256": "1d64557aa33756c9c8d470f5afebae34fe823376f1bb88d90aa8d2c4a99d8f98"
+    }
+  ],
+  "anatomical_registration": {
+    "painted_wing_root": [
+      916,
+      576
+    ],
+    "ready_wing_root": [
+      586,
+      421
+    ],
+    "guide_whole_source_scale": 0.49,
+    "output_scale": 0.5,
+    "guide_translation": [
+      137,
+      139
+    ],
+    "reason": "One rigid original-painting scale and translation measured from the attached near wing root and long wing. No per-video-frame deformation or normalization."
+  }
+}

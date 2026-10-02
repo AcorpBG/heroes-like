@@ -1,0 +1,113 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v3",
+    "ranged_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "All nine original H3 takes personally reviewed chronologically; two unsuitable melee takes rejected and retained. All selected 212 new poses and eight original idle phases personally reviewed in normal and reflected native Godot draws. Four attached glass wings, two talons and two prism-fin tails retain original identity and fixed ground registration. Physical claw strike and physical support gesture remain distinct from runtime-owned ranged projectile effects. Actual BattleShell melee and ranged anticipation, contact and recovery captures personally inspected; no connected source effect hidden or subject pixels repainted. Existing accepted battle and overworld idle preserved exactly.",
+    "hit_cpu_review": {
+      "original_rgb_frames": 124,
+      "enlarged_original_rgba_frames": 124,
+      "selected_native_cpu_frames_per_facing": 30,
+      "frame_msec": 30,
+      "duration_msec": 900,
+      "native_godot_pending": false,
+      "anatomy": "Personally reviewed all30 native-sized original poses in both facings beside eight original idle phases. Upward neck recoil and wing bracing recover coherently to original hovering stance; four attached glass wings, two talons and two prism-fin tails retained. No synthetic transforms beyond fixed native scale and runtime reflection."
+    },
+    "flight_cpu_review": {
+      "original_rgb_frames": 124,
+      "enlarged_original_rgba_frames": 124,
+      "selected_native_cpu_frames": 25,
+      "source_range": [
+        54,
+        78
+      ],
+      "frame_msec": 42,
+      "loop_msec": 1050,
+      "native_godot_pending": false,
+      "anatomy": "Four attached glass wings, two talons, two trailing prism-fin tails. Original wing root and body scale compared with all eight accepted idle phases."
+    },
+    "attack_cpu_review": {
+      "original_rgb_frames": 124,
+      "enlarged_original_rgba_frames": 124,
+      "selected_native_cpu_frames_per_facing": 22,
+      "frame_msec": 40,
+      "duration_msec": 880,
+      "native_godot_pending": false,
+      "anatomy": "All22 selected physical claw poses personally inspected at native size, both facings, with original8 idle. Source19 to73 retains the same extended-claw stance; near leg extends and retracts, far talon remains attached, four wings and two prism-fin tails remain intact. No generated breath effects or invented limbs."
+    },
+    "ranged_cpu_review": {
+      "original_rgb_frames": 124,
+      "enlarged_original_rgba_frames": 124,
+      "selected_native_cpu_frames_per_facing": 47,
+      "frame_msec": 32,
+      "duration_msec": 1504,
+      "native_godot_pending": false,
+      "anatomy": "All47 selected poses personally inspected at native size, both facings, beside original8 idle. Anticipation20-52, small release recoil52 to58, neck/wing recovery58-98 retain all four wings, two talons and two tail fronds. Connected video effect53-57 excluded completely. Detached particles58,59,60,62 separated only through five-column empty gaps, preserving complete connected body and original master pixels."
+    },
+    "defend_cpu_review": {
+      "original_rgb_frames": 124,
+      "enlarged_original_rgba_frames": 124,
+      "selected_native_cpu_frames_per_facing": 18,
+      "frame_msec": 42,
+      "duration_msec": 756,
+      "native_godot_pending": false,
+      "anatomy": "Personally inspected all124 source RGB and enlarged RGBA, all18 selected native-sized frames in both facings and original8 idle. Original four wings flare, fold around the chest and hold compact guard, with two attached talons and two curled tail fronds. Source11-to12 fast flare remains readable at actual scale; source27 is the authored held guard. No effects, invented anatomy or crop."
+    },
+    "cast_cpu_review": {
+      "original_rgb_frames": 124,
+      "enlarged_original_rgba_frames": 124,
+      "selected_native_cpu_frames_per_facing": 19,
+      "frame_msec": 45,
+      "duration_msec": 855,
+      "native_godot_pending": false,
+      "anatomy": "Personally inspected all124 source RGB and enlarged RGBA, all19 native-sized frames in both facings beside original8 idle. Closed-beak bow, lowered four-wing fan and original talon flex return to ready. Source35-to71 retains the same lowered stance without a native-scale jump. Support is a physical gesture for this noncaster; no generated magical effects or anatomy defects."
+    },
+    "death_cpu_review": {
+      "original_rgb_frames": 124,
+      "enlarged_original_rgba_frames": 124,
+      "selected_native_cpu_frames_per_facing": 51,
+      "frame_msec": 38,
+      "duration_msec": 1938,
+      "native_godot_pending": false,
+      "anatomy": "All124 lossless RGB and enlarged RGBA frames plus all51 selected native poses in both facings personally reviewed. Original four wings lose lift, fold and turn with intact head and two talons; both curled prism-fin tails settle beside the side-resting corpse. Fixed authored scale and ground anchor preserved; source89-to123 final hold is visually compatible at game scale. No effects, clipping or invented anatomy."
+    },
+    "all_original_takes_personally_reviewed": true,
+    "reviewed_original_rgb_frames": 1116,
+    "continuous_video_playback": false,
+    "native_review": {
+      "normal_checks": 734,
+      "reflected_checks": 734,
+      "ranged_checks": 734,
+      "failures": [],
+      "all_selected_poses_both_facings_personally_reviewed": true,
+      "actual_melee_captures_reviewed": 8,
+      "actual_ranged_captures_reviewed": 8
+    }
+  },
+  "rejected_takes": [
+    "attack_h3_v1",
+    "attack_h3_v2"
+  ],
+  "rejection_notes": [
+    {
+      "take": "attack_h3_v1",
+      "reason": "All124 original RGB frames personally reviewed chronologically. Repeated magical breath/projectile fans at24-30 and56-61 contradict the physical-melee action. Reject entire take; preserve unmodified original RGB, latent, guides, prompts and provenance. No masking away connected effects.",
+      "reviewed_original_frames": 124
+    },
+    {
+      "take": "attack_h3_v2",
+      "reviewed_original_frames": 124,
+      "reason": "All124 RGB frames reviewed. Reach14-22 is followed by unwanted connected breath23-26 and detached shards27-51. Clean held64 and pre-emission22 have different wing elevation and tail curvature; native join would jump. Reject whole source rather than remove connected pixels or splice incompatible endpoints. Reassessment: remove effect/combat terminology from positive conditioning and constrain ready/contact/recovery with seven closer original-painting guides."
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "unit_id": "unit_neutral_noonshard_prism_kites",
+  "clip": "death",
+  "canvas": [
+    960,
+    704
+  ],
+  "anchor": [
+    480,
+    640
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    16,
+    32,
+    64
+  ],
+  "seed": 2026108307,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        192,
+        462
+      ],
+      "scale": 0.61357,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_drop",
+      "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/alpha/poses.png",
+      "rects": [
+        [
+          360,
+          585,
+          710,
+          825
+        ]
+      ],
+      "anchor": [
+        600,
+        835
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        120,
+        0
+      ]
+    },
+    {
+      "name": "death_land",
+      "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/alpha/poses.png",
+      "rects": [
+        [
+          710,
+          590,
+          1025,
+          825
+        ]
+      ],
+      "anchor": [
+        950,
+        835
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        120,
+        0
+      ]
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/alpha/poses.png",
+      "rects": [
+        [
+          1025,
+          650,
+          1402,
+          835
+        ]
+      ],
+      "anchor": [
+        1300,
+        835
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        120,
+        0
+      ]
+    }
+  ],
+  "guides": [
+    [
+      38,
+      1
+    ],
+    [
+      72,
+      2
+    ],
+    [
+      98,
+      3
+    ]
+  ],
+  "last": 3,
+  "prompt": "The original NOONSHARD PRISM KITE from the supplied references, facing SCREEN RIGHT throughout. One small airborne white-opal draconic creature, exactly FOUR attached glass wings, TWO on each side, with original gold/brass curved frames and veinwork and multicoloured iridescent glass panes. Preserve its original long narrow white-and-gold head, gold swept head crest, exactly TWO small gold taloned legs beneath the chest, and TWO original trailing curled white tail fronds ending in faceted leaf-shaped prism fins. Wings hinge at the same shoulder roots; tails flex naturally without multiplying. No human arms, rider, weapons, extra legs, extra wings, feathers or detached body parts. Preserve the supplied painted fantasy artwork, side-facing three-quarter orthographic camera, original proportions and anatomical scale. One continuous loss of lift and grounded collapse: four original glass wings fold and droop as torso descends, two talons reach toward the ground, original body settles onto its side with wings and both tails folded into the supplied corpse. The final body rests on ground plane y640. No disappearance, upward flip, regenerated wings, shrinkage or standing back up. Last second remain motionless in that original grounded corpse. Entire background uniform dark navy RGB16,32,64, no scenery, shadows, dust, light rays, magical rings, particles, detached glass shards or projectiles. Fixed camera, no cuts, zoom, pan, rotation or root travel. Keep all four wing tips, both tails and head crest comfortably inside the image. Logical ground plane y640; living poses hover with original clearance and freely tucked talons, rather than planting flying feet on the ground.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

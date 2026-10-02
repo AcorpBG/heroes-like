@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_neutral_noonshard_prism_kites",
+  "canvas": [
+    960,
+    704
+  ],
+  "output_scale": 0.5,
+  "ground_anchor": [
+    480,
+    640
+  ],
+  "ready_reference": {
+    "name": "idle_hands_0",
+    "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        384,
+        512
+      ]
+    ],
+    "anchor": [
+      192,
+      462
+    ],
+    "scale": 0.61357,
+    "alpha_noise_cutoff": 8
+  },
+  "legacy_living_guide_offset": [
+    120,
+    -52
+  ],
+  "legacy_grounded_death_guide_offset": [
+    120,
+    0
+  ],
+  "measurement": {
+    "ready_gold_wing_root": [
+      586,
+      421
+    ],
+    "legacy_idle_gold_wing_root": [
+      466,
+      473
+    ]
+  },
+  "reason": "One rigid translation aligns the original legacy living sheet wing root with accepted ready16. Preserve source scales. Original corpse retains its authored ground contact instead of receiving the living hover shift. No per-video-frame alignment, normalization, synthetic motion or interpolation."
+}

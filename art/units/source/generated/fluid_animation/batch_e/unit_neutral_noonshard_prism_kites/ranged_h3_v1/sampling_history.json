@@ -1,0 +1,285 @@
+{
+  "prompt": [
+    544,
+    "6dd7257c-39f1-4961-82a5-380865b6ee0e",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "The original NOONSHARD PRISM KITE from the supplied references, facing SCREEN RIGHT throughout. One small airborne white-opal draconic creature, exactly FOUR attached glass wings, TWO on each side, with original gold/brass curved frames and veinwork and multicoloured iridescent glass panes. Preserve its original long narrow white-and-gold head, gold swept head crest, exactly TWO small gold taloned legs beneath the chest, and TWO original trailing curled white tail fronds ending in faceted leaf-shaped prism fins. Wings hinge at the same shoulder roots; tails flex naturally without multiplying. No human arms, rider, weapons, extra legs, extra wings, feathers or detached body parts. Preserve the supplied painted fantasy artwork, side-facing three-quarter orthographic camera, original proportions and anatomical scale. One clear ranged release without a baked projectile: steady hover, lift the original head and open the mouth slightly, aim SCREEN RIGHT, extend the head once in the supplied release posture, physically recoil and recover the original wings/head/talons to ready. The runtime supplies the projectile; show only the creature, no beam, shard, spark or orb. Entire background uniform dark navy RGB16,32,64, no scenery, shadows, dust, light rays, magical rings, particles, detached glass shards or projectiles. Fixed camera, no cuts, zoom, pan, rotation or root travel. Keep all four wing tips, both tails and head crest comfortably inside the image. Logical ground plane y640; living poses hover with original clearance and freely tucked talons, rather than planting flying feet on the ground.",
+          "width": 960,
+          "height": 704,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026108303
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "noonshard_prism_kite_ranged_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "noonshard_prism_kite_ranged_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "noonshard_prism_kite_ranged_h3_v1_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "noonshard_prism_kite_ranged_h3_v1_guide_3.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 52,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 68,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 92,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "42",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "noonshard_prism_kite_h3/ranged_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "noonshard_prism_kite_h3",
+      "create_time": 1790976003259
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "noonshard_prism_kite_h3\\ranged_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "6dd7257c-39f1-4961-82a5-380865b6ee0e",
+          "timestamp": 1790976003260
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "6dd7257c-39f1-4961-82a5-380865b6ee0e",
+          "timestamp": 1790976003297
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "6dd7257c-39f1-4961-82a5-380865b6ee0e",
+          "timestamp": 1790976204237
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

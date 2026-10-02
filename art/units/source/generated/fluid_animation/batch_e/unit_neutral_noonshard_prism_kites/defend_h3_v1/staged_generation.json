@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "3f5458bfa4238725d97c2eff74d59643940896319e8f1b7cb79b97d02c375caa",
+  "latent_sha256": "8256d954ad94da1355d046e96e2b733050aec472208a7789a211424c882b15e0",
+  "decode_workflow_sha256": "deaa3143bd550c651cb6e22b26a7da277080fb1fcef9a1f2777cfb92c2f276fd",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "noonshard_prism_kite_h3\\defend_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19001508160,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

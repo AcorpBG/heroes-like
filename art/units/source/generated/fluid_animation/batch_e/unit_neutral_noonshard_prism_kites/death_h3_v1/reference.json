@@ -1,0 +1,123 @@
+{
+  "unit_id": "unit_neutral_noonshard_prism_kites",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          192,
+          462
+        ],
+        "scale": 1.22714,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "efaa568fda33eddc9b60f9783371cc9bbb1539143e2620d5cb6812c18bb8694e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "4709e41efc03c97d23c43fd7cc5cd1d578341872602de83de66aeaffb3ef9290",
+      "runtime_source_scale": 0.61357
+    },
+    {
+      "source_frame": {
+        "name": "death_drop",
+        "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/alpha/poses.png",
+        "rects": [
+          [
+            360,
+            585,
+            710,
+            825
+          ]
+        ],
+        "anchor": [
+          600,
+          835
+        ],
+        "scale": 1.4,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          120,
+          0
+        ]
+      },
+      "source_sha256": "9b76d117366be0f53573908ee53a6ec7183789e8c3e78f15a94d0b5f01d14264",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "006edba940ec7005a103f7788e1b35344e374f1122facb092889513428e9251c",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "death_land",
+        "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/alpha/poses.png",
+        "rects": [
+          [
+            710,
+            590,
+            1025,
+            825
+          ]
+        ],
+        "anchor": [
+          950,
+          835
+        ],
+        "scale": 1.4,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          120,
+          0
+        ]
+      },
+      "source_sha256": "9b76d117366be0f53573908ee53a6ec7183789e8c3e78f15a94d0b5f01d14264",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "95cf9f0b63137a252acdbe1a319bb1082e9d58e5e24fb5c6c1bd98724f80c6a4",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "dead",
+        "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/alpha/poses.png",
+        "rects": [
+          [
+            1025,
+            650,
+            1402,
+            835
+          ]
+        ],
+        "anchor": [
+          1300,
+          835
+        ],
+        "scale": 1.4,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          120,
+          0
+        ]
+      },
+      "source_sha256": "9b76d117366be0f53573908ee53a6ec7183789e8c3e78f15a94d0b5f01d14264",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "5934d32cce0ebf2984a0aed673288c2d6eee4c75f88cd3fcecc57ac6acb02019",
+      "runtime_source_scale": 0.7
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    480,
+    640
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

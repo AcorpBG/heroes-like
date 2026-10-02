@@ -1,0 +1,19 @@
+{
+  "unit_id": "unit_neutral_noonshard_prism_kites",
+  "original_indices": [
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ],
+  "original_frame_msec": 200,
+  "original_pose_source_sha256": {
+    "idle-v2/hands-alpha.png": "efaa568fda33eddc9b60f9783371cc9bbb1539143e2620d5cb6812c18bb8694e"
+  },
+  "status": "pending_actual_godot_native_review",
+  "rule": "Preserve exact original battle/map artwork, anchors and timing only after native review; no duplicate frame padding."
+}

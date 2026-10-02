@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "f5544dad6a82ede5e0b1dc1df0896277fdd1fab68a4f59870473d9cd2a846463",
+  "latent_sha256": "a3bce42849a6d6ac768f50698b9ba5221823551811afb227152dcc4d7e98fcaa",
+  "decode_workflow_sha256": "a3b702348e21ac4780d53434849b381200a80b79a819255bf423d6b7117753e6",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "noonshard_prism_kite_h3\\hit_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

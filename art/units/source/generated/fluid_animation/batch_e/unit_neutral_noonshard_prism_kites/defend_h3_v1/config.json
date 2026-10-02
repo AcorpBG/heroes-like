@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_neutral_noonshard_prism_kites",
+  "clip": "defend",
+  "canvas": [
+    960,
+    704
+  ],
+  "anchor": [
+    480,
+    640
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    16,
+    32,
+    64
+  ],
+  "seed": 2026108305,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        192,
+        462
+      ],
+      "scale": 0.61357,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/alpha/poses.png",
+      "rects": [
+        [
+          1100,
+          310,
+          1402,
+          585
+        ]
+      ],
+      "anchor": [
+        1300,
+        585
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        120,
+        -52
+      ]
+    }
+  ],
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      52,
+      1
+    ],
+    [
+      80,
+      1
+    ],
+    [
+      104,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "The exact original four-winged white-opal jewel creature in the supplied reference images, facing screen right in its original three-quarter side view. Exactly four attached glass wings with original gold framing and curved veins, two small gold taloned legs, and two white tail ribbons ending in prism-leaf fins. Keep the original swept golden crest, long white-and-gold beak, glass colours and anatomical proportions. One continuous protective fold: the four glass wings hinge inward into the compact supplied posture around the chest. The head bows slightly with beak shut, and the two gold talons curl beneath the body. Both original tail ribbons settle into their natural curls. Finish holding the supplied folded posture while keeping the original airborne clearance above plane y640. The space outside the complete creature silhouette stays uniform dark navy RGB16,32,64. Fixed camera and original anatomical scale. All four wing tips, both tails and both legs remain comfortably inside the image.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

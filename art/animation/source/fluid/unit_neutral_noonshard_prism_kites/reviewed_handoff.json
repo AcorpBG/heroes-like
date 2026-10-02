@@ -1,0 +1,5456 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_noonshard_prism_kites",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_055",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_057",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "move_h3_058",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "move_h3_059",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583333333333335
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_061",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        },
+        {
+          "name": "move_h3_062",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "move_h3_063",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "move_h3_064",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "move_h3_065",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335
+        },
+        {
+          "name": "move_h3_066",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "move_h3_067",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "move_h3_068",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "move_h3_069",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "move_h3_070",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "move_h3_071",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_073",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "move_h3_074",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "move_h3_075",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "move_h3_076",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "move_h3_077",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083333333333335
+        },
+        {
+          "name": "move_h3_078",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "attack_h3_010",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "attack_h3_011",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583333333333333
+        },
+        {
+          "name": "attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_h3_013",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5416666666666666
+        },
+        {
+          "name": "attack_h3_014",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "attack_h3_015",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_017",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_019",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "attack_h3_073",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "attack_h3_074",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "attack_h3_075",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "attack_h3_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "attack_h3_077",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083333333333335
+        },
+        {
+          "name": "attack_h3_078",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "attack_h3_079",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2916666666666665
+        },
+        {
+          "name": "attack_h3_080",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "attack_h3_081",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "attack_h3_082",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "attack_h3_083",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583333333333335
+        },
+        {
+          "name": "attack_h3_084",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "ranged_h3_020",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "ranged_h3_022",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "ranged_h3_024",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "ranged_h3_026",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "ranged_h3_028",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "ranged_h3_030",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "ranged_h3_032",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "ranged_h3_034",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "ranged_h3_036",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "ranged_h3_038",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "ranged_h3_040",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "ranged_h3_042",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "ranged_h3_044",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "ranged_h3_046",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "ranged_h3_048",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "ranged_h3_050",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "ranged_h3_052",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "ranged_h3_058",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              779,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "axis": "x",
+            "split_x": 779,
+            "reason": "Detached video projectile separated across a verified empty gap; runtime owns projectile flight."
+          }
+        },
+        {
+          "name": "ranged_h3_059",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              775,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583333333333335,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "axis": "x",
+            "split_x": 775,
+            "reason": "Detached video projectile separated across a verified empty gap; runtime owns projectile flight."
+          }
+        },
+        {
+          "name": "ranged_h3_060",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              770,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "axis": "x",
+            "split_x": 770,
+            "reason": "Detached video projectile separated across a verified empty gap; runtime owns projectile flight."
+          }
+        },
+        {
+          "name": "ranged_h3_061",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        },
+        {
+          "name": "ranged_h3_062",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              800,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "axis": "x",
+            "split_x": 800,
+            "reason": "Detached video projectile separated across a verified empty gap; runtime owns projectile flight."
+          }
+        },
+        {
+          "name": "ranged_h3_063",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "ranged_h3_064",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "ranged_h3_065",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335
+        },
+        {
+          "name": "ranged_h3_066",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "ranged_h3_067",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "ranged_h3_068",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "ranged_h3_069",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "ranged_h3_070",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "ranged_h3_071",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "ranged_h3_072",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "ranged_h3_073",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "ranged_h3_074",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "ranged_h3_075",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "ranged_h3_076",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "ranged_h3_078",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "ranged_h3_080",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "ranged_h3_082",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "ranged_h3_084",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "ranged_h3_086",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "ranged_h3_088",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "ranged_h3_090",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "ranged_h3_092",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "ranged_h3_094",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "ranged_h3_096",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "ranged_h3_098",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_h3_022",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_026",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_030",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_034",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "hit_h3_037",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_043",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "hit_h3_046",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "hit_h3_049",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0416666666666665
+        },
+        {
+          "name": "hit_h3_052",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "hit_h3_055",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "hit_h3_058",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "hit_h3_061",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        },
+        {
+          "name": "hit_h3_064",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "hit_h3_067",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "hit_h3_070",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "hit_h3_073",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "hit_h3_076",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "hit_h3_079",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2916666666666665
+        },
+        {
+          "name": "hit_h3_082",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "hit_h3_085",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5416666666666665
+        },
+        {
+          "name": "hit_h3_088",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "hit_h3_091",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7916666666666665
+        },
+        {
+          "name": "hit_h3_094",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "hit_h3_097",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.041666666666667
+        },
+        {
+          "name": "hit_h3_100",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "defend_h3_010",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "defend_h3_011",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583333333333333
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_013",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5416666666666666
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_015",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_017",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_019",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_021",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_023",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_025",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_027",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "cast_h3_027",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_029",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "cast_h3_030",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_031",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_033",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "cast_h3_034",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "cast_h3_035",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "cast_h3_071",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "cast_h3_072",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "cast_h3_073",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "cast_h3_074",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "cast_h3_075",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "cast_h3_076",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "cast_h3_077",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083333333333335
+        },
+        {
+          "name": "cast_h3_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_079",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2916666666666665
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "death_h3_019",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "death_h3_021",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "death_h3_023",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "death_h3_025",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "death_h3_027",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "death_h3_029",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "death_h3_031",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "death_h3_033",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "death_h3_035",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "death_h3_037",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "death_h3_039",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "death_h3_041",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "death_h3_043",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "death_h3_045",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "death_h3_047",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583333333333333
+        },
+        {
+          "name": "death_h3_049",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0416666666666665
+        },
+        {
+          "name": "death_h3_051",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "death_h3_053",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083333333333335
+        },
+        {
+          "name": "death_h3_055",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "death_h3_057",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "death_h3_059",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583333333333335
+        },
+        {
+          "name": "death_h3_061",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_063",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_h3_065",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335
+        },
+        {
+          "name": "death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_067",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_h3_069",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_h3_071",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_073",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "death_h3_074",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "death_h3_075",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "death_h3_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "death_h3_077",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083333333333335
+        },
+        {
+          "name": "death_h3_078",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "death_h3_079",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2916666666666665
+        },
+        {
+          "name": "death_h3_080",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "death_h3_081",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "death_h3_082",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "death_h3_083",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583333333333335
+        },
+        {
+          "name": "death_h3_084",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "death_h3_085",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5416666666666665
+        },
+        {
+          "name": "death_h3_086",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "death_h3_087",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "death_h3_088",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "death_h3_089",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083333333333335
+        },
+        {
+          "name": "death_h3_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24
+          ],
+          "frame_msec": 42,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 8
+        },
+        "ranged": {
+          "indices": [
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93
+          ],
+          "frame_msec": 32,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 16
+        },
+        "hit": {
+          "indices": [
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123
+          ],
+          "frame_msec": 30,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 17
+        },
+        "cast": {
+          "indices": [
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0
+        },
+        "death": {
+          "indices": [
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193,
+            194,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            202,
+            203,
+            204,
+            205,
+            206,
+            207,
+            208,
+            209,
+            210,
+            211
+          ],
+          "frame_msec": 38,
+          "loop": false,
+          "static_frame": 50
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/config.json",
+          "sha256": "060f618d3ff87554b72a1db6a83764e7bb5b520a09ab2d40407fba38889ada0b"
+        },
+        "move_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/selection.json",
+          "sha256": "8fee4a103884045aca76e433d7407d93c0240bc802ef0f0bf06b228d73f177dc"
+        },
+        "move_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/original_lossless.mkv",
+          "sha256": "fda5f394d473610fb14dafeb83151ff32ee31df3ef133fc87b54bd96b4b0f9bf"
+        },
+        "move_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/original.json",
+          "sha256": "ca7a3b5ea56173a30f86258cf1bb86329b10e1cd3fb5e29381abd89b5bb70d8f"
+        },
+        "move_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/workflow_api.json",
+          "sha256": "b72c805bbfabfba6a0a3e15daddbaf029f32ba7f9d361c4b7b5a1ea61e8f2177"
+        },
+        "move_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/prompt.txt",
+          "sha256": "c8c267f61c4d1f2923edd7d600cc0d203553cd08771840c7702fb316cdc57aef"
+        },
+        "move_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/reference.json",
+          "sha256": "b2b72af07f4e4d7e3336911b9c1a33d3522316820602555e0a0d5e9667c404c6"
+        },
+        "move_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/matte.json",
+          "sha256": "a0594fffa9cc259a59989eda4360c7093b9665246562afc0498bc42a09fa4ee7"
+        },
+        "move_h3_v1_edge_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte.json",
+          "sha256": "1a0a3d410c67eccf8bee64cdd7b0f0bd83b7f8606b73ef2f4230e0dc8966bbd5"
+        },
+        "move_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/segmentation_recipe.json",
+          "sha256": "1ae81cfbfbc0140ff2f906b939f9b16b6ee5873870e259b6d90530ff3e910294"
+        },
+        "move_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/staged_generation.json",
+          "sha256": "c4d99fc2ab1709b827ce309d0b7a52f235e81a3094a823f66ee0ee81634ad05d"
+        },
+        "move_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/sampling_workflow_api.json",
+          "sha256": "11e7240b2eb10953c9164c8063376faff5d11f320499ef6b31079ddd355bda90"
+        },
+        "move_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/sampling_submission.json",
+          "sha256": "4070aa65499c44bb69f24cdcc0a9db5150101ca56ddd74a0a8f4aa5156cc6fbb"
+        },
+        "move_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/sampling_history.json",
+          "sha256": "aff0e9b0d43edd114bdf0a9f9cb32e3f087c69d72795aea7a89f9b7e4018e310"
+        },
+        "move_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/original.latent",
+          "sha256": "216ad96b601b0c5d0966db8a663dc5a03707cd72b5a2038d6c47d2251f36fcc5"
+        },
+        "attack_h3_v3_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/config.json",
+          "sha256": "7cdce14a55b8766611e7bf3a095c6b5b711ad0ae7ba2841daad080e4818398e0"
+        },
+        "attack_h3_v3_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/selection.json",
+          "sha256": "460fbb8e02b2926d8821587f328b9fd51960d72e774172ecb156d1557270ebeb"
+        },
+        "attack_h3_v3_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/original_lossless.mkv",
+          "sha256": "7eb98eb66479ae75df91c04f47aebdd49b14c7dfab404b42ec3fc4dcd3b2d5fd"
+        },
+        "attack_h3_v3_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/original.json",
+          "sha256": "62278516e7543481584c85af003a31f94869476a789fa7bcf150d842762bec91"
+        },
+        "attack_h3_v3_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/workflow_api.json",
+          "sha256": "5c2bedb91dfc3238dbbe3732f2bd528c8a89246b16f8e4675490bdaef37aa53a"
+        },
+        "attack_h3_v3_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/prompt.txt",
+          "sha256": "56fdd994d3b434347e69507e2157e66ea1616510cf9b3ac138f290ba6de68180"
+        },
+        "attack_h3_v3_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/reference.json",
+          "sha256": "76dd89d355876db6aed00a3d22d49597b310fc59093da6af27a9325647f21bb3"
+        },
+        "attack_h3_v3_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/matte.json",
+          "sha256": "42b376f906919c5fbe311765de4f8dfb85f4162397930e08d48be6e75867cd5e"
+        },
+        "attack_h3_v3_edge_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte.json",
+          "sha256": "9216658b9801743fcca20fb9eb869b2236e7c6416e1345b56a3641901b3b8bea"
+        },
+        "attack_h3_v3_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/segmentation_recipe.json",
+          "sha256": "1ae81cfbfbc0140ff2f906b939f9b16b6ee5873870e259b6d90530ff3e910294"
+        },
+        "attack_h3_v3_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/staged_generation.json",
+          "sha256": "bb53cc3b9b677953520b919b85e436b0be31195f905842ee681bad259a091f6c"
+        },
+        "attack_h3_v3_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/sampling_workflow_api.json",
+          "sha256": "e779450893199da0be9257ad922bb88e33c2aca58658472e481f421ea8211c24"
+        },
+        "attack_h3_v3_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/sampling_submission.json",
+          "sha256": "4033f10a42132a659486ccecd94a7c92fdc7ab2c9c998460915515c862c7330a"
+        },
+        "attack_h3_v3_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/sampling_history.json",
+          "sha256": "28b67c77526e49aa295c4ea5eaadb20561fb0c95eb2588e1796a4c0552f64840"
+        },
+        "attack_h3_v3_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/original.latent",
+          "sha256": "e65b3115f6cbb779395a54fafb2464b5378b810c4d78f2d4ea4e8c5363db47ac"
+        },
+        "attack_h3_v3_guide_image_claw_contact_original.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/claw_contact_original.png",
+          "sha256": "bd60af9f056f0ee93f26fb09b23dae7e5092e24339b5e2ffbc79ef8cef54df95"
+        },
+        "attack_h3_v3_guide_prompt_claw_contact_original.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/claw_contact_original.prompt.txt",
+          "sha256": "2def8c21f054a9ada21b08a482a0ddf4ae4638155dd479f04fd79b8c03db08a8"
+        },
+        "attack_h3_v3_guide_generation_claw_contact_original.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/claw_contact_original.generation.json",
+          "sha256": "b28a64aa4ad3e9bdd30aa5cb7c3880a21a4a2edf3d17f8f28c585f07860301f6"
+        },
+        "attack_h3_v3_guide_reference_guide_0_rgba.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/guide_0_rgba.png",
+          "sha256": "1d64557aa33756c9c8d470f5afebae34fe823376f1bb88d90aa8d2c4a99d8f98"
+        },
+        "ranged_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/config.json",
+          "sha256": "f0858aaffcb5834f247771fe56eccc2d25658b12c547dd75e4c2e02d05b5e801"
+        },
+        "ranged_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/selection.json",
+          "sha256": "d82cb8e1e23938d8ca1465ed9d3e6356fd840584875c10ac747fb8ebfe019570"
+        },
+        "ranged_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/original_lossless.mkv",
+          "sha256": "9953c10deac10cca39fc655b7d533dd1862846671a404e7c78d845423dd78d98"
+        },
+        "ranged_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/original.json",
+          "sha256": "b7327abb669042681f39f266d728faa299e98841468fb81b5d09c984381dce29"
+        },
+        "ranged_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/workflow_api.json",
+          "sha256": "4f5bb3d342b087c23eb4353c8cf691e963574bb0c6c26fb829bceb85345d2fee"
+        },
+        "ranged_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/prompt.txt",
+          "sha256": "a01fbf75964bf57295e343028c32826d5149e897ccff697a3fa9bd1d4a7ced47"
+        },
+        "ranged_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/reference.json",
+          "sha256": "b8b9e26bdb645b005aab210de0efcce1e48411b2473fb9bc148d772234ddb022"
+        },
+        "ranged_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/matte.json",
+          "sha256": "383fe0823975e4298ea90fa3e85f0ca523361e14ecbcf0dfc7075d0414f69971"
+        },
+        "ranged_h3_v1_edge_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte.json",
+          "sha256": "9dc607f9b3032dbfde3414e0a797c3f03c27fdb0d756ebfd42af9d24c751a617"
+        },
+        "ranged_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/segmentation_recipe.json",
+          "sha256": "1ae81cfbfbc0140ff2f906b939f9b16b6ee5873870e259b6d90530ff3e910294"
+        },
+        "ranged_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/staged_generation.json",
+          "sha256": "eeb068c6baa46c0636a0190a3524e4c6f217befda447ca3115dca79b44c380f7"
+        },
+        "ranged_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/sampling_workflow_api.json",
+          "sha256": "236e8f92e5baff4bb149069f60500f221b53209894f0551c7c56e23fcad96974"
+        },
+        "ranged_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/sampling_submission.json",
+          "sha256": "74d80ccc84339d62226a71adcef27e6d55f5e76783b154b317c23b9141461880"
+        },
+        "ranged_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/sampling_history.json",
+          "sha256": "95b3e4052f437f8cf1e1ae6dea89a30051f89e502f626b6148f73ab11e3b12cf"
+        },
+        "ranged_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/original.latent",
+          "sha256": "6e12d0bfc8a047c58d6f34af8ee54406d23a1311ed5dd3889bbd14a77c7223fb"
+        },
+        "hit_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/config.json",
+          "sha256": "3145ceb058d0691c04178edd1760cf8817ae05b6adc992c0cb5e6808097842cf"
+        },
+        "hit_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/selection.json",
+          "sha256": "5f933b2df921bb0150be73b00852bec067b23e82259114dd997c7f0f54735068"
+        },
+        "hit_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/original_lossless.mkv",
+          "sha256": "e001c9e00814d800beefde1ec640dd6b47d7d7e68f9786b7cfbf929914d220d2"
+        },
+        "hit_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/original.json",
+          "sha256": "7efda1fe7f3b350efbe6f6f5ff1dd7dae2be2b102459f00f4a72088a45e436ae"
+        },
+        "hit_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/workflow_api.json",
+          "sha256": "a3b702348e21ac4780d53434849b381200a80b79a819255bf423d6b7117753e6"
+        },
+        "hit_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/prompt.txt",
+          "sha256": "739dcfe2b11e2e6f588c531272a8b6ff22ced45f2a3fe00b8a396d1db6d06781"
+        },
+        "hit_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/reference.json",
+          "sha256": "52baae54c1080c9893da314177796d1bc97f54d4dc9a7668edeb5fb112ee11b9"
+        },
+        "hit_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/matte.json",
+          "sha256": "d892951baa3d2ad9628cd2fec69e6dd37daf65ca8f737b16a7a34c77fab6c91c"
+        },
+        "hit_h3_v1_edge_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte.json",
+          "sha256": "992594708550dbb6620f582e4b65c2b5e4ca9aad2da091cc5dbcd606f8431677"
+        },
+        "hit_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/segmentation_recipe.json",
+          "sha256": "1ae81cfbfbc0140ff2f906b939f9b16b6ee5873870e259b6d90530ff3e910294"
+        },
+        "hit_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/staged_generation.json",
+          "sha256": "aaa780c020ce3ba2b214576f95d885f51bc5a33aa65f4b18f30064ace80fef21"
+        },
+        "hit_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/sampling_workflow_api.json",
+          "sha256": "f5544dad6a82ede5e0b1dc1df0896277fdd1fab68a4f59870473d9cd2a846463"
+        },
+        "hit_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/sampling_submission.json",
+          "sha256": "eecf8750daaf72dee62920eb4d5f7166dee1e9fc31597fbfedfd2f15cc4043f9"
+        },
+        "hit_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/sampling_history.json",
+          "sha256": "4af33b1c3b0eaddfec6023caaa776d743bbe57e35b2589f48cf0c95921f239e9"
+        },
+        "hit_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/original.latent",
+          "sha256": "a3bce42849a6d6ac768f50698b9ba5221823551811afb227152dcc4d7e98fcaa"
+        },
+        "defend_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/config.json",
+          "sha256": "a9e8c5222cc53a074597352041dc783ff2165a9b347f0f5619898494fb604040"
+        },
+        "defend_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/selection.json",
+          "sha256": "a2f9df0434a9ad5c19b3bcbccf84e7731845fb87afdc7e6439fbb698dae678ea"
+        },
+        "defend_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/original_lossless.mkv",
+          "sha256": "869af5d1d5b1e3e11bcba49631d63b13f4953403118e6e30279ef1a427880ddf"
+        },
+        "defend_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/original.json",
+          "sha256": "95b31f61f227d3e3f0cdf429e69742c2fa1b17f7a740c4e3a6f3e3bce84e146e"
+        },
+        "defend_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/workflow_api.json",
+          "sha256": "deaa3143bd550c651cb6e22b26a7da277080fb1fcef9a1f2777cfb92c2f276fd"
+        },
+        "defend_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/prompt.txt",
+          "sha256": "1f91359f62d792da6a5031f335e62fb4a5dda9bf96bb4b75151d9e39ad1954da"
+        },
+        "defend_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/reference.json",
+          "sha256": "db6ed4d9a7828804f0917c66a969ee551c8b2c5fd69d5752cbb4defa93e4ee72"
+        },
+        "defend_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/matte.json",
+          "sha256": "574f020a3c25c25e9b5aae5373834f36c1758ee9f5d1abbc8b7e55608037b266"
+        },
+        "defend_h3_v1_edge_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte.json",
+          "sha256": "cc18a4e0f0d035f4fab83410d81832081e9eb14b83186e22a9de4eb56fc286bc"
+        },
+        "defend_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/segmentation_recipe.json",
+          "sha256": "1ae81cfbfbc0140ff2f906b939f9b16b6ee5873870e259b6d90530ff3e910294"
+        },
+        "defend_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/staged_generation.json",
+          "sha256": "3c60ee2892e0c8835a03551414ce3da8a1a2965b2b594ace22affcf5dee0449a"
+        },
+        "defend_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/sampling_workflow_api.json",
+          "sha256": "3f5458bfa4238725d97c2eff74d59643940896319e8f1b7cb79b97d02c375caa"
+        },
+        "defend_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/sampling_submission.json",
+          "sha256": "3f9b102a8ec4672fccf89ecfa778f75326d1544ac87721502298d6a1f4ddb249"
+        },
+        "defend_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/sampling_history.json",
+          "sha256": "b0f32a747e69bef56ac6a431ef05f5a9cda1bfae900496598a3f3a41a4c90942"
+        },
+        "defend_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/original.latent",
+          "sha256": "8256d954ad94da1355d046e96e2b733050aec472208a7789a211424c882b15e0"
+        },
+        "cast_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/config.json",
+          "sha256": "a488a6f5679e0fd9649241403ab43c803511362bce4ca4088ab5c332219d41aa"
+        },
+        "cast_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/selection.json",
+          "sha256": "1db236896317d364c9e49f7ffc1be8b96de06684d6a8be5678a12d6ab9c9c538"
+        },
+        "cast_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/original_lossless.mkv",
+          "sha256": "2be543f2a6870be2b6bd46d5a87b5d32814fac8e5550363049b643fd44f62d42"
+        },
+        "cast_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/original.json",
+          "sha256": "5590286dddb6eebde47d7b624110c860e511de525508d4433f1fb8a83c7e2bc2"
+        },
+        "cast_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/workflow_api.json",
+          "sha256": "e2e4527542476cf2f1a6a067dc83eae6d6dceb63ab3433cb7f477fe72d428ba5"
+        },
+        "cast_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/prompt.txt",
+          "sha256": "97274f3c962eab71bdbab936c48710a710871e01ffa87b597c40cba75c555240"
+        },
+        "cast_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/reference.json",
+          "sha256": "ebe2f5f5ac702aa727003e597e810c17b79a5c54f3281800c4cecbba7878f04f"
+        },
+        "cast_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/matte.json",
+          "sha256": "51d5fa29bff4ff27dece15af3627de83b0f7ec08f501cb2a863e7dc7314af6bb"
+        },
+        "cast_h3_v1_edge_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte.json",
+          "sha256": "7511b3ed772669615165ee90f558bc9d6d1a15a50067a84a13121ee3aece848e"
+        },
+        "cast_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/segmentation_recipe.json",
+          "sha256": "1ae81cfbfbc0140ff2f906b939f9b16b6ee5873870e259b6d90530ff3e910294"
+        },
+        "cast_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/staged_generation.json",
+          "sha256": "124373e0e368b258568af22e634b68d10bd5c1c857e421ff8580de39bbadaa72"
+        },
+        "cast_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/sampling_workflow_api.json",
+          "sha256": "2014c8bc78e689a375d90f95307cea9a8c89c00c8e5a9b3026ad1f4cbbc34027"
+        },
+        "cast_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/sampling_submission.json",
+          "sha256": "25acbe8820541eea26eeedb68d8648a07294dd8e7ab832a2aa1d3ed5832998b8"
+        },
+        "cast_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/sampling_history.json",
+          "sha256": "3d2cd91ac5135bc3ff4e034329ed7b122ac62b046524cd582caeac16705c18aa"
+        },
+        "cast_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/original.latent",
+          "sha256": "dc7ae631b4bc4baad31adadc54d8e2be5361f489ce28c805af7c4ec118e11bf1"
+        },
+        "death_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/config.json",
+          "sha256": "fb613388be3505dbc78ffbc067c7232c60873772d1f12e6173f6ecfcd0dce244"
+        },
+        "death_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/selection.json",
+          "sha256": "2057a8e8b186b0431d6e1a7474769c75c16ec983008ddd15dd089420fbdf80b5"
+        },
+        "death_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/original_lossless.mkv",
+          "sha256": "7a9f274b93cf36fd131f5c75e62bf84e64d55bf643facd01f481b32256c92260"
+        },
+        "death_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/original.json",
+          "sha256": "948af6fc580d4e70bd06d0ca221c40b23a9a6d7b79e0bce5b5ea72c324313084"
+        },
+        "death_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/workflow_api.json",
+          "sha256": "f6f5c4816b7a2b99909fe7424ee9f7390761e05644b0e6dfb5dcfe25959d55b2"
+        },
+        "death_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/prompt.txt",
+          "sha256": "a049fdf0e023f956277825853dc896ee8194052ab431a82af442d9fd3209a75d"
+        },
+        "death_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/reference.json",
+          "sha256": "593111cf7dc395cea00fe74aab60ef94c7dd2a24b8778d7e83ef0bcd8b2fc246"
+        },
+        "death_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/matte.json",
+          "sha256": "b0967cbcb933bab2d1b0bfb9533b96734d95d94bbff9bf440080101fc25bb28c"
+        },
+        "death_h3_v1_edge_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte.json",
+          "sha256": "8937b5dc0e10de1fe718ad42f225fb866837f5d6f779631e1fdf48731e946f84"
+        },
+        "death_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/segmentation_recipe.json",
+          "sha256": "1ae81cfbfbc0140ff2f906b939f9b16b6ee5873870e259b6d90530ff3e910294"
+        },
+        "death_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/staged_generation.json",
+          "sha256": "6d3cc6a2c740bfc4399b3c915920c84785d9274fd6db2fcf88e9ff6337b17e94"
+        },
+        "death_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "0e2237b601951cc64bca3bd1965d0273a4344c5a90a8e369c7d43c3689edff87"
+        },
+        "death_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/sampling_submission.json",
+          "sha256": "61670f3d65a7ad4b3f7ec759e49db0452a647bec1ba461e49e7ef6d538978a67"
+        },
+        "death_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/sampling_history.json",
+          "sha256": "75ab1422f5e3371f8561d2f9e4e5fefd467fed592977e1d20081eb8dede8d7f7"
+        },
+        "death_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/original.latent",
+          "sha256": "5e6a778bc69af53348a9d0fbef0f6bb53881b7a3a35bc9edc32b289c90cf9032"
+        },
+        "runtime_registration": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/runtime_registration.json",
+          "sha256": "8149b883438b30d25b4c799b3e0fbe01b497ca89c3c5dd1f80008ef144f0e3b8"
+        },
+        "runtime_profile": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/runtime_profile.json",
+          "sha256": "ffd15c7a69f27c4961c6657ca1b81a828298ab6c4cd899e2f74e6da2f4b6609f"
+        },
+        "delivery.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/delivery.json",
+          "sha256": "baac312445d12079972be3333d6238c1a72f0cf9edc177b580684ba191b9a530"
+        },
+        "segment.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/segment.py",
+          "sha256": "4cfeca7bca6dda3ceb89bc0f79e33cfddceaf285ab38466160ab714719e55161"
+        },
+        "edge_despill.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/edge_despill.py",
+          "sha256": "b584ad993ec254ea88d6a93eb6a2fa5f9ffcf5be6929bcae145152e6780e7380"
+        },
+        "matting_model.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/matting_model.json",
+          "sha256": "03f0257fbccbfec2fd9ffa4bb3d27398665ea9db710ce65920387148ab179922"
+        },
+        "original_curated_identity": {
+          "path": "art/units/source/curated/unit_neutral_noonshard_prism_kites.png",
+          "sha256": "d81eef59889e0b304c0413e15a2bb678ac50fd922c6c0529d1cb6c20d6feec39"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "All nine original H3 takes personally reviewed chronologically; two unsuitable melee takes rejected and retained. All selected 212 new poses and eight original idle phases personally reviewed in normal and reflected native Godot draws. Four attached glass wings, two talons and two prism-fin tails retain original identity and fixed ground registration. Physical claw strike and physical support gesture remain distinct from runtime-owned ranged projectile effects. Actual BattleShell melee and ranged anticipation, contact and recovery captures personally inspected; no connected source effect hidden or subject pixels repainted. Existing accepted battle and overworld idle preserved exactly."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_055.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_057.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_059.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_061.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_063.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_065.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_067.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_069.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_071.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_073.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_075.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_077.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/move_h3_v1/edge_matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_011.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_013.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_015.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_017.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_019.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_073.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_075.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_077.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_079.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_081.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_083.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/attack_h3_v3/edge_matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_059.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_061.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_063.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_065.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_067.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_069.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_071.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_073.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_075.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/ranged_h3_v1/edge_matte/rgba_098.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_037.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_043.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_049.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_055.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_061.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_067.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_073.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_079.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_085.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_091.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_097.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/hit_h3_v1/edge_matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_011.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_013.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_015.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_017.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_019.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_021.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_023.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_025.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/defend_h3_v1/edge_matte/rgba_027.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_027.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_029.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_031.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_033.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_035.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_071.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_073.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_075.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_077.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_079.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/cast_h3_v1/edge_matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_019.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_021.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_023.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_025.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_027.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_029.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_031.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_033.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_035.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_037.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_039.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_041.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_043.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_045.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_047.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_049.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_051.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_053.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_055.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_057.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_059.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_061.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_063.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_065.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_067.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_069.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_071.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_073.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_075.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_077.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_079.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_081.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_083.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_085.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_087.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_089.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_noonshard_prism_kites/death_h3_v1/edge_matte/rgba_123.png": 0.5
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ],
+      "accepted_clips": [
+        "move",
+        "attack",
+        "ranged",
+        "hit",
+        "defend",
+        "cast",
+        "death",
+        "idle"
+      ]
+    }
+  ]
+}

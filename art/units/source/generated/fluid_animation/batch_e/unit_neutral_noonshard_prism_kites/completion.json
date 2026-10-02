@@ -1,0 +1,157 @@
+{
+  "unit_id": "unit_neutral_noonshard_prism_kites",
+  "status": "complete_selected_unit",
+  "solo": true,
+  "date": "2026-10-03",
+  "source_method": "Original MiniMax H3 video and pinned BiRefNet soft matte; no synthetic sprite motion or interpolation",
+  "clips": {
+    "move": 25,
+    "attack": 22,
+    "ranged": 47,
+    "hit": 30,
+    "defend": 18,
+    "cast": 19,
+    "death": 51,
+    "idle": 8
+  },
+  "new_selected_poses": 212,
+  "preserved_idle_poses": 8,
+  "battle_atlas_size": [
+    2944,
+    3596
+  ],
+  "battle_texture_rgba_bytes": 42346496,
+  "preserved_original_rgb_frames": 1116,
+  "provenance_digests": 116,
+  "validation": {
+    "checks": {
+      "candidate": 734,
+      "mirrored": 734,
+      "ranged": 734,
+      "live": 748,
+      "live_ranged": 748
+    },
+    "total": 3698,
+    "failures": [],
+    "source_pixel_and_ground_anchor_equality": true,
+    "other231_battle_and_map_rows_preserved": true,
+    "imported_atlas_exact_rgba": true,
+    "preserved_battle_and_overworld_idle_exact": true,
+    "visual_review": {
+      "status": "accepted_selected_clips",
+      "notes": "All nine original H3 takes personally reviewed chronologically; two unsuitable melee takes rejected and retained. All selected 212 new poses and eight original idle phases personally reviewed in normal and reflected native Godot draws. Four attached glass wings, two talons and two prism-fin tails retain original identity and fixed ground registration. Physical claw strike and physical support gesture remain distinct from runtime-owned ranged projectile effects. Actual BattleShell melee and ranged anticipation, contact and recovery captures personally inspected; no connected source effect hidden or subject pixels repainted. Existing accepted battle and overworld idle preserved exactly.",
+      "hit_cpu_review": {
+        "original_rgb_frames": 124,
+        "enlarged_original_rgba_frames": 124,
+        "selected_native_cpu_frames_per_facing": 30,
+        "frame_msec": 30,
+        "duration_msec": 900,
+        "native_godot_pending": false,
+        "anatomy": "Personally reviewed all30 native-sized original poses in both facings beside eight original idle phases. Upward neck recoil and wing bracing recover coherently to original hovering stance; four attached glass wings, two talons and two prism-fin tails retained. No synthetic transforms beyond fixed native scale and runtime reflection."
+      },
+      "flight_cpu_review": {
+        "original_rgb_frames": 124,
+        "enlarged_original_rgba_frames": 124,
+        "selected_native_cpu_frames": 25,
+        "source_range": [
+          54,
+          78
+        ],
+        "frame_msec": 42,
+        "loop_msec": 1050,
+        "native_godot_pending": false,
+        "anatomy": "Four attached glass wings, two talons, two trailing prism-fin tails. Original wing root and body scale compared with all eight accepted idle phases."
+      },
+      "attack_cpu_review": {
+        "original_rgb_frames": 124,
+        "enlarged_original_rgba_frames": 124,
+        "selected_native_cpu_frames_per_facing": 22,
+        "frame_msec": 40,
+        "duration_msec": 880,
+        "native_godot_pending": false,
+        "anatomy": "All22 selected physical claw poses personally inspected at native size, both facings, with original8 idle. Source19 to73 retains the same extended-claw stance; near leg extends and retracts, far talon remains attached, four wings and two prism-fin tails remain intact. No generated breath effects or invented limbs."
+      },
+      "ranged_cpu_review": {
+        "original_rgb_frames": 124,
+        "enlarged_original_rgba_frames": 124,
+        "selected_native_cpu_frames_per_facing": 47,
+        "frame_msec": 32,
+        "duration_msec": 1504,
+        "native_godot_pending": false,
+        "anatomy": "All47 selected poses personally inspected at native size, both facings, beside original8 idle. Anticipation20-52, small release recoil52 to58, neck/wing recovery58-98 retain all four wings, two talons and two tail fronds. Connected video effect53-57 excluded completely. Detached particles58,59,60,62 separated only through five-column empty gaps, preserving complete connected body and original master pixels."
+      },
+      "defend_cpu_review": {
+        "original_rgb_frames": 124,
+        "enlarged_original_rgba_frames": 124,
+        "selected_native_cpu_frames_per_facing": 18,
+        "frame_msec": 42,
+        "duration_msec": 756,
+        "native_godot_pending": false,
+        "anatomy": "Personally inspected all124 source RGB and enlarged RGBA, all18 selected native-sized frames in both facings and original8 idle. Original four wings flare, fold around the chest and hold compact guard, with two attached talons and two curled tail fronds. Source11-to12 fast flare remains readable at actual scale; source27 is the authored held guard. No effects, invented anatomy or crop."
+      },
+      "cast_cpu_review": {
+        "original_rgb_frames": 124,
+        "enlarged_original_rgba_frames": 124,
+        "selected_native_cpu_frames_per_facing": 19,
+        "frame_msec": 45,
+        "duration_msec": 855,
+        "native_godot_pending": false,
+        "anatomy": "Personally inspected all124 source RGB and enlarged RGBA, all19 native-sized frames in both facings beside original8 idle. Closed-beak bow, lowered four-wing fan and original talon flex return to ready. Source35-to71 retains the same lowered stance without a native-scale jump. Support is a physical gesture for this noncaster; no generated magical effects or anatomy defects."
+      },
+      "death_cpu_review": {
+        "original_rgb_frames": 124,
+        "enlarged_original_rgba_frames": 124,
+        "selected_native_cpu_frames_per_facing": 51,
+        "frame_msec": 38,
+        "duration_msec": 1938,
+        "native_godot_pending": false,
+        "anatomy": "All124 lossless RGB and enlarged RGBA frames plus all51 selected native poses in both facings personally reviewed. Original four wings lose lift, fold and turn with intact head and two talons; both curled prism-fin tails settle beside the side-resting corpse. Fixed authored scale and ground anchor preserved; source89-to123 final hold is visually compatible at game scale. No effects, clipping or invented anatomy."
+      },
+      "all_original_takes_personally_reviewed": true,
+      "reviewed_original_rgb_frames": 1116,
+      "continuous_video_playback": false,
+      "native_review": {
+        "normal_checks": 734,
+        "reflected_checks": 734,
+        "ranged_checks": 734,
+        "failures": [],
+        "all_selected_poses_both_facings_personally_reviewed": true,
+        "actual_melee_captures_reviewed": 8,
+        "actual_ranged_captures_reviewed": 8
+      }
+    },
+    "all_selected_normal_reflected_and_live_poses_personally_reviewed": true,
+    "actual_melee_and_ranged_captures_personally_reviewed": true,
+    "full_suite_run": false,
+    "linux_run": false,
+    "manual_game_session": false,
+    "continuous_video_playback": false
+  },
+  "roster": {
+    "complete": 218,
+    "total": 232,
+    "remaining": 14
+  },
+  "broad_goal_status": "in_progress",
+  "cleanup": {
+    "files_removed_by_kind": {
+      "unselected_rebuildable_matte": 2020,
+      "verified_comfy_duplicate": 1134,
+      "verified_uploaded_duplicate": 25,
+      "disposable_review": 361,
+      "disposable_registration_view": 4
+    },
+    "bytes_removed_by_kind": {
+      "unselected_rebuildable_matte": 433462994,
+      "verified_comfy_duplicate": 527476463,
+      "verified_uploaded_duplicate": 4276172,
+      "disposable_review": 303388283,
+      "disposable_registration_view": 882648
+    },
+    "recovered_bytes": 1269486560,
+    "retained_original_rgb_frames": 1116,
+    "original_videos_latents_guides_prompts_and_provenance_preserved": true,
+    "caches_preserved": true,
+    "rebuildable": true
+  }
+}

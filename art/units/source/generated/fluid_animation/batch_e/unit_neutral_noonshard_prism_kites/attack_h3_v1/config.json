@@ -1,0 +1,105 @@
+{
+  "unit_id": "unit_neutral_noonshard_prism_kites",
+  "clip": "attack",
+  "canvas": [
+    960,
+    704
+  ],
+  "anchor": [
+    480,
+    640
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    16,
+    32,
+    64
+  ],
+  "seed": 2026108302,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        192,
+        462
+      ],
+      "scale": 0.61357,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/alpha/poses.png",
+      "rects": [
+        [
+          360,
+          305,
+          715,
+          580
+        ]
+      ],
+      "anchor": [
+        600,
+        585
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        120,
+        -52
+      ]
+    },
+    {
+      "name": "melee_jab",
+      "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/alpha/poses.png",
+      "rects": [
+        [
+          715,
+          315,
+          1100,
+          585
+        ]
+      ],
+      "anchor": [
+        950,
+        585
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        120,
+        -52
+      ]
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      62,
+      2
+    ],
+    [
+      72,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "The original NOONSHARD PRISM KITE from the supplied references, facing SCREEN RIGHT throughout. One small airborne white-opal draconic creature, exactly FOUR attached glass wings, TWO on each side, with original gold/brass curved frames and veinwork and multicoloured iridescent glass panes. Preserve its original long narrow white-and-gold head, gold swept head crest, exactly TWO small gold taloned legs beneath the chest, and TWO original trailing curled white tail fronds ending in faceted leaf-shaped prism fins. Wings hinge at the same shoulder roots; tails flex naturally without multiplying. No human arms, rider, weapons, extra legs, extra wings, feathers or detached body parts. Preserve the supplied painted fantasy artwork, side-facing three-quarter orthographic camera, original proportions and anatomical scale. One physical beak-and-head jab: brace with original wing windup, extend neck and the SAME original snout toward SCREEN RIGHT once, with two talons curling beneath the chest. Small local head/shoulder thrust, then draw neck back and return all wings/tails to the initial ready pose. No breath beam, magic, detached feathers or flying away. Entire background uniform dark navy RGB16,32,64, no scenery, shadows, dust, light rays, magical rings, particles, detached glass shards or projectiles. Fixed camera, no cuts, zoom, pan, rotation or root travel. Keep all four wing tips, both tails and head crest comfortably inside the image. Logical ground plane y640; living poses hover with original clearance and freely tucked talons, rather than planting flying feet on the ground.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

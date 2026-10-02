@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_neutral_noonshard_prism_kites",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          192,
+          462
+        ],
+        "scale": 1.22714,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "efaa568fda33eddc9b60f9783371cc9bbb1539143e2620d5cb6812c18bb8694e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "4709e41efc03c97d23c43fd7cc5cd1d578341872602de83de66aeaffb3ef9290",
+      "runtime_source_scale": 0.61357
+    },
+    {
+      "source_frame": {
+        "name": "flight_down",
+        "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/alpha/poses.png",
+        "rects": [
+          [
+            1045,
+            0,
+            1402,
+            310
+          ]
+        ],
+        "anchor": [
+          1300,
+          315
+        ],
+        "scale": 1.4,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          120,
+          -52
+        ]
+      },
+      "source_sha256": "9b76d117366be0f53573908ee53a6ec7183789e8c3e78f15a94d0b5f01d14264",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "45fe3a48b84aa359facaf5239ae8b7f52aff167596e1fa283ce5a932bbb6d631",
+      "runtime_source_scale": 0.7
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    480,
+    640
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

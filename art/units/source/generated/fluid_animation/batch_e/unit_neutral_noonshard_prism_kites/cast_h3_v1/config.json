@@ -1,0 +1,95 @@
+{
+  "unit_id": "unit_neutral_noonshard_prism_kites",
+  "clip": "cast",
+  "canvas": [
+    960,
+    704
+  ],
+  "anchor": [
+    480,
+    640
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    16,
+    32,
+    64
+  ],
+  "seed": 2026108306,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        192,
+        462
+      ],
+      "scale": 0.61357,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "flight_down",
+      "source": "art/animation/source/poses/unit_neutral_noonshard_prism_kites/alpha/poses.png",
+      "rects": [
+        [
+          1045,
+          0,
+          1402,
+          310
+        ]
+      ],
+      "anchor": [
+        1300,
+        315
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        120,
+        -52
+      ]
+    }
+  ],
+  "guides": [
+    [
+      18,
+      0
+    ],
+    [
+      34,
+      1
+    ],
+    [
+      50,
+      1
+    ],
+    [
+      66,
+      1
+    ],
+    [
+      86,
+      0
+    ],
+    [
+      106,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "The exact original four-winged white-opal jewel creature in the supplied reference images, facing screen right in its original three-quarter side view. Exactly four attached glass wings with original gold framing and curved veins, two small gold taloned legs, and two white tail ribbons ending in prism-leaf fins. Keep the original swept golden crest, long white-and-gold beak, glass colours and anatomical proportions. One calm physical gesture: dip the original head with beak shut, fan all four attached glass wings into the supplied lowered-wing pose, and gently flex both small gold talons. Then raise the head, curl the talons under the chest, and restore the initial quiet hovering posture. Both tail ribbons sway slightly then settle. Retain original airborne clearance above plane y640. The space outside the complete creature silhouette stays uniform dark navy RGB16,32,64. Fixed camera and original anatomical scale. All four wing tips, both tails and both legs remain comfortably inside the image.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}
