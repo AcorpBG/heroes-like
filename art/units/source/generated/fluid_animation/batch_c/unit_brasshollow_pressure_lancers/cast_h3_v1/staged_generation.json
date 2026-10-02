@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "dfe521471ca3b8826fc8d165e9e7c67b654dcbce66720dd500b79a6f2c1e62c9",
+  "latent_sha256": "71417c55f05fb8b8b62d30ce9b759b4ad7f0a488a2a38dc3528d397a96a591c2",
+  "decode_workflow_sha256": "fa7c2d9d99e30aea7910700570105faeb82aa249f695d50a21465b9220f7a344",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "pressure_lancer_h3\\cast_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

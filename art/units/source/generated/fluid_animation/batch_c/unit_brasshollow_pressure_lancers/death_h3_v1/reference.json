@@ -1,0 +1,117 @@
+{
+  "unit_id": "unit_brasshollow_pressure_lancers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            397,
+            512
+          ]
+        ],
+        "anchor": [
+          184,
+          447
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0951c799560796dbb0b6f876c0a67ed514a5866dee769e5c68dc8826b3f57750",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e129dd4d8aa36fb5dc44ec85ee852e224d69da64dcf65401f41e7ec6b656cbc0",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_buckle",
+        "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+        "rects": [
+          [
+            400,
+            727,
+            769,
+            860
+          ],
+          [
+            373,
+            860,
+            769,
+            1024
+          ]
+        ],
+        "anchor": [
+          565,
+          989
+        ],
+        "scale": 1.098,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "06e5b243f7cf18da634c531512c91384f04721d671a15d2f3bcbc68f69f7f8cd",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0f3dd52f1721de180298cbf04f613a67b0f3e4295e08ec04331a6761eadd80e5",
+      "runtime_source_scale": 0.549
+    },
+    {
+      "source_frame": {
+        "name": "death_side_fall",
+        "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+        "rects": [
+          [
+            770,
+            773,
+            1137,
+            1024
+          ]
+        ],
+        "anchor": [
+          947,
+          978
+        ],
+        "scale": 1.098,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "06e5b243f7cf18da634c531512c91384f04721d671a15d2f3bcbc68f69f7f8cd",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "419ec18b80afbad474bae76147620c102aad448d31a7990b6caccbf842deea7f",
+      "runtime_source_scale": 0.549
+    },
+    {
+      "source_frame": {
+        "name": "dead_cold",
+        "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+        "rects": [
+          [
+            1138,
+            822,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1324,
+          985
+        ],
+        "scale": 1.098,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "06e5b243f7cf18da634c531512c91384f04721d671a15d2f3bcbc68f69f7f8cd",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "d07c058469b8f3dad6737950f59ac35202fef155e4a291df520b3aa7a052befe",
+      "runtime_source_scale": 0.549
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

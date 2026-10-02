@@ -1,0 +1,123 @@
+{
+  "unit_id": "unit_brasshollow_pressure_lancers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            397,
+            512
+          ]
+        ],
+        "anchor": [
+          184,
+          447
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0951c799560796dbb0b6f876c0a67ed514a5866dee769e5c68dc8826b3f57750",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e129dd4d8aa36fb5dc44ec85ee852e224d69da64dcf65401f41e7ec6b656cbc0",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "creep_near_foot_lift",
+        "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/tripod-creep-and-guard.png",
+        "rects": [
+          [
+            535,
+            0,
+            1044,
+            320
+          ],
+          [
+            515,
+            320,
+            1030,
+            513
+          ]
+        ],
+        "anchor": [
+          738,
+          504
+        ],
+        "scale": 0.64,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "011ee1a674cb0173d7765fff56ea4aa7748c80533274c6433d63ec3b4e240371",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5ca3d57ebcdaefe6ad41f10929b6e157c9d56e03212b17fe9e892a2e2c17eeef",
+      "runtime_source_scale": 0.32
+    },
+    {
+      "source_frame": {
+        "name": "creep_rear_foot_lift",
+        "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/tripod-creep-and-guard.png",
+        "rects": [
+          [
+            1045,
+            0,
+            1536,
+            514
+          ]
+        ],
+        "anchor": [
+          1255,
+          505
+        ],
+        "scale": 0.64,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "011ee1a674cb0173d7765fff56ea4aa7748c80533274c6433d63ec3b4e240371",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "078112a4a24b354a84a958f755823383d35cc8264e6bb0b34926182e59a84c44",
+      "runtime_source_scale": 0.32
+    },
+    {
+      "source_frame": {
+        "name": "creep_far_foot_lift",
+        "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/tripod-creep-and-guard.png",
+        "rects": [
+          [
+            0,
+            520,
+            532,
+            860
+          ],
+          [
+            0,
+            860,
+            478,
+            1024
+          ]
+        ],
+        "anchor": [
+          225,
+          994
+        ],
+        "scale": 0.64,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "011ee1a674cb0173d7765fff56ea4aa7748c80533274c6433d63ec3b4e240371",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "93b1db6a646b21cc08bda7a69a709434106ce8a652c3f78be90e6f7fd4709336",
+      "runtime_source_scale": 0.32
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,112 @@
+{
+  "unit_id": "unit_brasshollow_pressure_lancers",
+  "clip": "attack",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100902,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          397,
+          512
+        ]
+      ],
+      "anchor": [
+        184,
+        447
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "lance_retract_windup",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          389,
+          369,
+          766,
+          620
+        ],
+        [
+          389,
+          620,
+          747,
+          701
+        ]
+      ],
+      "anchor": [
+        559,
+        688
+      ],
+      "scale": 0.549,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "lance_extended_strike",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          765,
+          366,
+          1150,
+          620
+        ],
+        [
+          765,
+          620,
+          1125,
+          701
+        ],
+        [
+          1150,
+          485,
+          1201,
+          522
+        ]
+      ],
+      "anchor": [
+        926,
+        683
+      ],
+      "scale": 0.549,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      28,
+      1
+    ],
+    [
+      56,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Pressure Lancer: a brass and dark iron STEAM TRIPOD MACHINE, not a person. Exactly THREE mechanical legs: near leg screen right, far leg screen left, rear middle leg visible beneath the chassis. Each has jointed piston thigh, knee and shin with a broad metal spade foot. No arms or hands or human head. One round brass boiler torso, upright central pressure tower with white round gauge and orange slotted vents; one tall rear black chimney, one left cylindrical side boiler, brown-red hoses, fixed orange furnace lights and red fabric strip behind chimney. Exactly ONE rigid straight telescopic piston lance mounted to a circular front housing, pointing screen right, with one original broad triangular dark iron spear point and brass collar. Lance is integral to machine, never a held sword. All original joints, three feet, gauge, hoses, armor and lance retained. One physical piston-lance thrust. Flex the THREE legs into supplied low loaded stance and retract lance into its front housing; drive ONE straight lance forward toward screen right with its original triangular tip, extend front leg and transfer weight into contact56. Retract lance to original length, straighten legs and return to exact original ready. No firing, detached spear, magic, extra point or repeated thrust. Locked original elevated three-quarter orthographic camera facing screen right. Full tripod, all three legs, entire lance point and chimney within960x544 with generous margins, unchanged boiler size and centered root. Uniform saturated GREEN RGB0,255,0 background in EVERY frame; no ground, gradient, background shadows, text, other creatures or props. Only small original chimney steam, no sparks, incoming weapons, projectiles, magic or explosions. Genuine mechanical joint articulation, no whole sprite wobble.",
+  "protected_foreground_chroma": 12,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_brasshollow_pressure_lancers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            397,
+            512
+          ]
+        ],
+        "anchor": [
+          184,
+          447
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0951c799560796dbb0b6f876c0a67ed514a5866dee769e5c68dc8826b3f57750",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e129dd4d8aa36fb5dc44ec85ee852e224d69da64dcf65401f41e7ec6b656cbc0",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "guard_a",
+        "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/tripod-creep-and-guard.png",
+        "rects": [
+          [
+            534,
+            520,
+            1044,
+            860
+          ],
+          [
+            480,
+            860,
+            1000,
+            1024
+          ]
+        ],
+        "anchor": [
+          741,
+          984
+        ],
+        "scale": 0.64,
+        "alpha_noise_cutoff": 8,
+        "crop_recipe": {
+          "kind": "original_pixel_guard_foot_recovery",
+          "reason": "Legacy row crops cut the far screen-left spade foot. Expand only lower rows into the clear inter-figure gap; preserve complete original painted feet, source anchors and fixed family scale. No new/repainted pixels."
+        }
+      },
+      "source_sha256": "011ee1a674cb0173d7765fff56ea4aa7748c80533274c6433d63ec3b4e240371",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b10dd5e256c346a748e0d2f9c636cf1b4d2920c046d62fc654f0fb44c8f6b252",
+      "runtime_source_scale": 0.32
+    },
+    {
+      "source_frame": {
+        "name": "guard_b",
+        "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/tripod-creep-and-guard.png",
+        "rects": [
+          [
+            1047,
+            520,
+            1536,
+            860
+          ],
+          [
+            1000,
+            860,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1256,
+          985
+        ],
+        "scale": 0.64,
+        "alpha_noise_cutoff": 8,
+        "crop_recipe": {
+          "kind": "original_pixel_guard_foot_recovery",
+          "reason": "Legacy row crops cut the far screen-left spade foot. Expand only lower rows into the clear inter-figure gap; preserve complete original painted feet, source anchors and fixed family scale. No new/repainted pixels."
+        }
+      },
+      "source_sha256": "011ee1a674cb0173d7765fff56ea4aa7748c80533274c6433d63ec3b4e240371",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "935451ed3fb497cea0b19f5dd979ac61e29578bf8567f81d3c26641a0e73e8c4",
+      "runtime_source_scale": 0.32
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

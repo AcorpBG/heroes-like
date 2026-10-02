@@ -4018,40 +4018,40 @@
       "sha256": "73207f5b445834f9e43236a59f5a27d5099902723168b5808ee652b72f50f72a"
     },
     "unit_brasshollow_pressure_lancers": {
-      "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_pressure_lancers.png",
-      "frame_size": [
-        185,
-        201
-      ],
-      "frames": 8,
-      "frame_msec": 260,
-      "static_frame": 0,
-      "ground_anchor": [
-        83.0,
-        191
-      ],
-      "painted_extent": 185,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_pressure_lancers.png",
-      "source_indices": [
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21
-      ],
-      "source_crop": [
-        173,
-        45,
-        358,
-        246
-      ],
-      "source_sha256": "4e714b9a994d669a2ed10cb4b6319a09b3ec2d87bd75e683c69b5fd70031b244",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_pressure_lancers/provenance.json",
-      "sha256": "463961a805898b64455b8ec2133cce40d48c4917dd68ebce0c42ebfb895c1a7c"
-    },
+  "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_pressure_lancers.png",
+  "frame_size": [
+    185,
+    201
+  ],
+  "frames": 8,
+  "frame_msec": 260,
+  "static_frame": 0,
+  "ground_anchor": [
+    83,
+    191
+  ],
+  "painted_extent": 185,
+  "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_pressure_lancers.png",
+  "source_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "source_crop": [
+    37,
+    1,
+    222,
+    202
+  ],
+  "source_sha256": "dfd837f3f90eb667aeeab8a3f1b29c7d2f70d4578b5c0a10ab29f28a8f206aa6",
+  "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_pressure_lancers/provenance.json",
+  "sha256": "463961a805898b64455b8ec2133cce40d48c4917dd68ebce0c42ebfb895c1a7c"
+},
     "unit_veilmourn_wakeglass_navigators": {
       "path": "res://art/overworld/runtime/creature_idle/unit_veilmourn_wakeglass_navigators.png",
       "frame_size": [

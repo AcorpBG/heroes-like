@@ -1,0 +1,69 @@
+{
+  "unit_id": "unit_brasshollow_pressure_lancers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            397,
+            512
+          ]
+        ],
+        "anchor": [
+          184,
+          447
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0951c799560796dbb0b6f876c0a67ed514a5866dee769e5c68dc8826b3f57750",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e129dd4d8aa36fb5dc44ec85ee852e224d69da64dcf65401f41e7ec6b656cbc0",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "hit",
+        "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+        "rects": [
+          [
+            0,
+            702,
+            385,
+            925
+          ],
+          [
+            0,
+            925,
+            363,
+            1024
+          ]
+        ],
+        "anchor": [
+          190,
+          986
+        ],
+        "scale": 1.098,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "06e5b243f7cf18da634c531512c91384f04721d671a15d2f3bcbc68f69f7f8cd",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "7ed108563972b4982a28dc27316a9a7e05dfa08d45adab81bed35953cb0f242d",
+      "runtime_source_scale": 0.549
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

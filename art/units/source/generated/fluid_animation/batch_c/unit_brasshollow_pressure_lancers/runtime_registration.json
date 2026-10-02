@@ -1,0 +1,15 @@
+{
+  "unit_id": "unit_brasshollow_pressure_lancers",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "fixed_source_family_multipliers": {
+    "continuity-alpha/original-poses.png": 0.9,
+    "continuity-alpha/tripod-creep-and-guard.png": 0.8,
+    "idle-v2/hands-alpha.png": 1
+  },
+  "reason": "Fixed original-family boiler registration: tripod guide white gauge19x21 source-video pixels versus accepted idle15x18; .80 original family factor replaces .95. Original-poses family .90 and accepted idle1 unchanged. Maintain relative crouch/corpse anatomy; no per-frame normalization."
+}

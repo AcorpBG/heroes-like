@@ -1,0 +1,105 @@
+{
+  "unit_id": "unit_brasshollow_pressure_lancers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            397,
+            512
+          ]
+        ],
+        "anchor": [
+          184,
+          447
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0951c799560796dbb0b6f876c0a67ed514a5866dee769e5c68dc8826b3f57750",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e129dd4d8aa36fb5dc44ec85ee852e224d69da64dcf65401f41e7ec6b656cbc0",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "lance_retract_windup",
+        "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+        "rects": [
+          [
+            389,
+            369,
+            766,
+            620
+          ],
+          [
+            389,
+            620,
+            747,
+            701
+          ]
+        ],
+        "anchor": [
+          559,
+          688
+        ],
+        "scale": 1.098,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "06e5b243f7cf18da634c531512c91384f04721d671a15d2f3bcbc68f69f7f8cd",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "1e2d18b0af3373989c46a7d335c2f7e7def24c72a8d1dc2fa0ca4f1c640710e9",
+      "runtime_source_scale": 0.549
+    },
+    {
+      "source_frame": {
+        "name": "lance_extended_strike",
+        "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+        "rects": [
+          [
+            765,
+            366,
+            1150,
+            620
+          ],
+          [
+            765,
+            620,
+            1125,
+            701
+          ],
+          [
+            1150,
+            485,
+            1201,
+            522
+          ]
+        ],
+        "anchor": [
+          926,
+          683
+        ],
+        "scale": 1.098,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "06e5b243f7cf18da634c531512c91384f04721d671a15d2f3bcbc68f69f7f8cd",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "2deaabdbfb02af983a8155ee03e50e4eed810295205c903a97eafd73f490af7e",
+      "runtime_source_scale": 0.549
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

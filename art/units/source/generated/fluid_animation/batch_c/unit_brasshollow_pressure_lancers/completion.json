@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_brasshollow_pressure_lancers",
+  "workflow": "Solo local MiniMax H3 original video and extracted transparent frames; one unit fully completed.",
+  "new_takes": [
+    "attack_h3_v1",
+    "attack_h3_v2",
+    "cast_h3_v1",
+    "death_h3_v1",
+    "defend_h3_v1",
+    "defend_h3_v2",
+    "defend_h3_v3",
+    "hit_h3_v1",
+    "hit_h3_v2",
+    "move_h3_v1",
+    "move_h3_v2"
+  ],
+  "new_clip_frames": {
+    "move": 39,
+    "attack": 47,
+    "hit": 30,
+    "defend": 43,
+    "cast": 44,
+    "death": 44
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo reviewed all124 chronological original phases per take, enlarged limb/weapon/support transitions, full native128px and actual reflected rendering of every selected pose, plus battle phase-clock captures. Exactly three mechanical legs, one cold integral telescopic lance, original pressure gauge and boiler retained. Complete tripod cycle, readable single spear stroke and recovery, recoil, intact-foot guard, physical readiness signal and grounded terminal corpse accepted. Recovered original clipped guard feet in source guides; rejected invented attack flash, incoming hit drum/explosion and mismatched first tripod size. 328 focused candidate checks and328 reflected checks pass. Preserve eight accepted idle poses and map pixels/timing. Review used chronological stills and native clock-driven captures; no claim of continuous manual video playback. No broad repository suite."
+  },
+  "validation": {
+    "candidate_checks": 328,
+    "mirrored_checks": 328,
+    "live_checks": 342,
+    "failures": 0,
+    "imported_atlas": "exact RGBA after Godot alpha-border processing",
+    "atlas_dimensions": [
+      3640,
+      4080
+    ],
+    "rgba_bytes": 59404800,
+    "new_original_action_frames": 247,
+    "preserved_idle_frames": 8,
+    "verified_accepted_take_rgb_frames": 744,
+    "retained_original_rgb_frames_including_rejected": 1364,
+    "overworld_visuals_preserved": 232,
+    "other_battle_rows_preserved": 231,
+    "platform": "Windows Godot4.6.2 offscreen",
+    "full_suite_run": false,
+    "manual_playtest": false,
+    "continuous_browser_playback_review": false,
+    "linux_run": false
+  },
+  "roster_after": {
+    "complete": 199,
+    "remaining": 33,
+    "total": 232
+  },
+  "progress_note": "2026-10-02 SOLO COMPLETE: Pressure Lancers six H3 mechanical actions247 original poses plus retained8-frame idle; complete three-leg cycle and recovered original defense feet, cold integral spear, recoil/support/corpse reviewed.328/328/342 candidate/mirrored/live focused checks pass, exact imported atlas and all232 map visuals retained. Roster199/232 complete,33 remaining. Broad goal remains in_progress; no subagents or full suite.",
+  "cleanup": {
+    "files_removed": 2641,
+    "bytes_recovered": 836659176,
+    "rebuildable": "Disposable matte frames, native/chronological previews, isolated test/import profiles and pixel/hash-verified Comfy duplicates. Rebuild from retained originals and recipes.",
+    "preserved": "Original RGB videos, latents, all failed takes, guides, prompts, provenance, required runtime PNGs and every pre-existing cache/save/unrelated file."
+  }
+}

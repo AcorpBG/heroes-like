@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "3bbb3c2ad5a74d55c09f93e71dd76fe3b6703df6c58e6bcee737cea65e8bf931",
+  "latent_sha256": "f3af550ef48c4668dce6cab289138da1229e60edcae21a5cd6de6a8e86f2568d",
+  "decode_workflow_sha256": "9cb1ada98c7219269ee5eb0a06f9513062bc1055a79f5dec702711e7b48fd12e",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "pressure_lancer_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17484716352,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
