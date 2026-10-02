@@ -1,0 +1,93 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110302,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        190,
+        474
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_physical_bash_contact",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/melee_contact_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1537,
+          1023
+        ]
+      ],
+      "anchor": [
+        790,
+        894
+      ],
+      "scale": 0.28,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        190,
+        474
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      42,
+      1
+    ],
+    [
+      88,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original Tallyspring woman and same ONE compact brass spring-disc launcher, same two hands, hair bun and red headband, apron and tags, plate/bracers, red trousers and brass-toed boots. Locked original three-quarter painterly camera facing right and original anatomical body size. ONE close hand-driven PHYSICAL BASH. Both hands lift the same launcher from low carry, turn its square open muzzle downward forty-five degrees and PUSH THE BLUNT BRASS UPPER SIDE of that held machine forward-right once, as in contact guide atframe42. Her right index finger remains outside the trigger and does NOT press it. Her left hand supports the underside; both original grips stay attached. Bend knees and lean torso into blunt contact, then immediately pull the same tilted launcher back and lower it to the original carry stance byframe88. Final35frames hold low ready. No aim, no sighting, no recoil and no second shove. ALL EQUIPMENT REMAINS INERT: no firing, discharging, flashes, pellets, light beams, sparks, smoke, particles, magical effects, extra limbs or props. The only motion is her original physical arms, torso and boots pushing the held object. Keep same canvas960x640, body originx480, planted groundy576, uniform flat magentaRGB255,0,255 for every frame, no floor, shadow, gradient, scene, camera movement or cuts.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

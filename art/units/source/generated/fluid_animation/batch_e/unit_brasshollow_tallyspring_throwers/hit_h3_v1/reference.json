@@ -1,0 +1,69 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          190,
+          474
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "049b2ecda9d37f96b3d067a6cf18f722893bd783aab203b6893481f297b6cf25",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "bc815c60e9b62426c2d2239366f8e282e75816f5727f74ed90cceadc4751648d",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "hit",
+        "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/poses-projectile-separated.png",
+        "rects": [
+          [
+            0,
+            622,
+            324,
+            905
+          ],
+          [
+            245,
+            905,
+            324,
+            910
+          ]
+        ],
+        "anchor": [
+          171,
+          903
+        ],
+        "scale": 1.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d80d361446ad7657a8a4e39de6c7ae3b340f052c802bba9f9b49ff1b87f19e19",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "70536af6458720900fd38a393b042693ab106289c29d12696633373c88863851",
+      "runtime_source_scale": 0.68
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

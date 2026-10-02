@@ -1,0 +1,10 @@
+{
+  "status": "rejected_entire_take",
+  "reviewed_original_rgb_frames": 124,
+  "generated_rgba_frames_reviewed": 42,
+  "defects": [
+    "Invalid firing42-106",
+    "Inherited opaque white/cyan wedge below far elbow persists in otherwise coherent guard0-41"
+  ],
+  "correction": "Built-in original clean negative-space kneeling guide, inert muzzle tilted down and elbows tucked; original/failed source pixels and interval extraction recipe preserved."
+}

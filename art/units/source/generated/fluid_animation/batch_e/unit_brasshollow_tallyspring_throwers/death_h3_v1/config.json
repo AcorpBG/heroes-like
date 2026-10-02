@@ -1,0 +1,117 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110207,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        190,
+        474
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/poses-projectile-separated.png",
+      "rects": [
+        [
+          0,
+          909,
+          314,
+          1167
+        ]
+      ],
+      "anchor": [
+        160,
+        1140
+      ],
+      "scale": 0.68,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_forward_collapse",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/shove-recoil-forward-collapse.png",
+      "rects": [
+        [
+          570,
+          906,
+          1150,
+          1368
+        ],
+        [
+          510,
+          1135,
+          570,
+          1255
+        ]
+      ],
+      "anchor": [
+        824,
+        1337
+      ],
+      "scale": 0.315,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/poses-projectile-separated.png",
+      "rects": [
+        [
+          1016,
+          1007,
+          1348,
+          1152
+        ]
+      ],
+      "anchor": [
+        1180,
+        1138
+      ],
+      "scale": 0.68,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ],
+    [
+      68,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "Original TALLYSPRING THROWER woman from supplied painting, fixed three-quarter camera facing SCREEN RIGHT. One sturdy young adult human woman with reddish brown hair tied into a messy bun, red cloth headband, focused face, rusty red sleeves and trousers, dark weathered leather apron, brown belt with three small brass tally tags and a cylindrical pouch, one riveted steel shoulder plate, steel forearm bracers and brown leather boots with brass toe caps and straps. Exactly TWO arms, TWO hands, TWO legs. ONE original short rectangular brass-framed spring-disc launcher: a dark black horizontal exposed coil between brass rails, square open muzzle on SCREEN RIGHT, top open box holding round brass tally discs. No long gun barrel, crossbow, staff or additional weapon. Anatomical RIGHT near hand holds the rear trigger grip, anatomical LEFT far hand supports the forward underside of the same launcher. Both grips remain attached except the explicitly described reload or death. Preserve launcher shape, spring coil, loaded disc box, apron, tags, shoulder plate and original face throughout. Original painterly tactical game artwork, no live action or plastic material. One continuous forward-to-side grounded collapse. Knees buckle, torso lowers onto knees, then tips forward onto hands and falls coherently onto original side. Both hands release the same launcher as body loses support; launcher settles in front of the fallen body. Preserve exactly two arms and two legs and original boot sizes throughout. Hair bun, headband, shoulder plate, apron and launcher remain recognizable. Finish in original prone corpse guide with eyes closed and all body/equipment grounded y576, final second completely still.  Entire backdrop stays uniform magenta RGB255,0,255. No floor, cast shadow, scenery, text, camera motion, cuts or zoom. Fixed ground plane y576, body anchored at x480. Lifted feet may move but planted contacts cannot slide. Keep launcher, hands and all boots inside generous canvas margins. No projectiles, sparks, particles, muzzle flash, smoke, rings, beams, glow or new equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

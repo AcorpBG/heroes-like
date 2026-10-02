@@ -1,0 +1,49 @@
+{
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/support_salute_v1.png",
+    "sha256": "be9975be41a61f9b9cd673195841fc68ca197a653fb2ee579bc496cc969f4ec0"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/support_salute_v1.prompt.txt",
+    "sha256": "6aba1991d5811cc05c6118ea6cca9c63826961c3e86134cb61088cb8262aa25c"
+  },
+  "original_image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/support_salute_before_repair.png",
+    "sha256": "9dd91b6e2f3caa80ce9ee5eb24d9bd785eac83d44a466218c48134e83aaed19d"
+  },
+  "matte_recipe": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/cast_h3_v1/matte.json",
+    "sha256": "98103efa369c670f321c6e0a35c37bb0c1e95b94c69438c0fa7d871498289b94"
+  },
+  "original_reference_rgb": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/cast_h3_v1/original_lossless.mkv",
+    "sha256": "2c002f3831bbc86842ddd8d7297c2363c660f26d94c069b16cceae7a1be745a9",
+    "video_frame": 38,
+    "decoded_rgb_sha256": "decc895096eb425549ce7ea3f134d97e73cccfd41e6df5547bbb6e668c2aea52"
+  },
+  "tool": "built-in image_gen",
+  "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0fd50-f23a-7d32-8303-80fafa7a2272/exec-a29b53c6-fbe0-42c1-8834-49490957b37d.png",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/support_salute_before_repair.png",
+      "sha256": "9dd91b6e2f3caa80ce9ee5eb24d9bd785eac83d44a466218c48134e83aaed19d"
+    },
+    {
+      "path": "art/units/source/curated/unit_brasshollow_tallyspring_throwers.png",
+      "sha256": "4f7df2297cf1f5f0e38ecf50f77c5abf148789af2b035706d7b6288d6257adcd"
+    }
+  ],
+  "anatomical_registration": {
+    "canvas": [
+      1537,
+      1023
+    ],
+    "anchor": [
+      792,
+      941
+    ],
+    "scale": 0.235,
+    "reason": "One whole-master anatomical scale matching original ready torso/head/boots; retain elevated original arm/machine gesture, no per-frame normalization",
+    "ground_reason": "Original planted opaque boot-sole line941 defines canonical ground; machine elevation does not change rooting."
+  }
+}

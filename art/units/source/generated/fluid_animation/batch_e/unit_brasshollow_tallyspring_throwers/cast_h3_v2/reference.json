@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          190,
+          474
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "049b2ecda9d37f96b3d067a6cf18f722893bd783aab203b6893481f297b6cf25",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "bc815c60e9b62426c2d2239366f8e282e75816f5727f74ed90cceadc4751648d",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "original_high_salute_thin_belt_pouch",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/support_salute_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1537,
+            1023
+          ]
+        ],
+        "anchor": [
+          792,
+          941
+        ],
+        "scale": 0.47,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "be9975be41a61f9b9cd673195841fc68ca197a653fb2ee579bc496cc969f4ec0",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a1280b6374f27eeed6f9a8d6531916faafd56ce5619c6f3bc1b0b2264d52284e",
+      "runtime_source_scale": 0.235
+    },
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          190,
+          474
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "049b2ecda9d37f96b3d067a6cf18f722893bd783aab203b6893481f297b6cf25",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "bc815c60e9b62426c2d2239366f8e282e75816f5727f74ed90cceadc4751648d",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

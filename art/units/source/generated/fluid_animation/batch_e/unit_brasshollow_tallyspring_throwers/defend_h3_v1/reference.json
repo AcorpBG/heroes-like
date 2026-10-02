@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          190,
+          474
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "049b2ecda9d37f96b3d067a6cf18f722893bd783aab203b6893481f297b6cf25",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "bc815c60e9b62426c2d2239366f8e282e75816f5727f74ed90cceadc4751648d",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "guard_a",
+        "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/guided-walk-and-guard.png",
+        "rects": [
+          [
+            568,
+            518,
+            1020,
+            1024
+          ]
+        ],
+        "anchor": [
+          789,
+          982
+        ],
+        "scale": 0.84,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "132b1f89a7bca34eeb0f3ae20b27abc7c5be286c0c1dbbb3991f37405addc354",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "009ab2351994c50d4fef894fcb9eb88366d881a9c039a9de57ca429a146f54cf",
+      "runtime_source_scale": 0.42
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

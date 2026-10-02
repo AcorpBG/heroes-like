@@ -1,0 +1,10 @@
+{
+  "status": "rejected_entire_take",
+  "reviewed_original_rgb_frames": 124,
+  "partial_rgba_frames_reviewed": 34,
+  "defects": [
+    "Fires and ejects disc33-35 and94-96 instead of one impact recoil",
+    "Firing illumination changes both bottom background corners at34, correctly stopping strict uniform-plate matting"
+  ],
+  "correction": "New downward-muzzle inert recoil key pose with both original grips, index outside trigger; preserve complete original videos, latent, guides and partial-matte hashes."
+}

@@ -1,0 +1,93 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110304,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        190,
+        474
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "original_downward_machine_hit_recoil",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_recoil_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        792,
+        915
+      ],
+      "scale": 0.245,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        190,
+        474
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      36,
+      1
+    ],
+    [
+      76,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original Tallyspring woman from original ready and new inert recoil guide. Same adult face, red headband, brown-red bun, original two hands and legs, apron, three tags, bracers/shoulder plate, red trousers, brass-toed boots and ONE compact brass spring machine. ONE struck impact reaction. An unseen physical blow from SCREEN RIGHT makes her chest and head rock BACK once, chin lifts and eyes close briefly, knees flex but both boot soles remain planted. Both hands pull the inert held machine LOW against her belly and rotate its open square front DOWN forty-five degrees as in guide36; right index finger is OUTSIDE trigger, left supports front underside. No aiming or sighting. Single strongest recoil around36; reverse the BODY weight naturally, recover torso and original low-ready carry by76, final47frames hold original ready. Do not perform a second recoil. Machine stays absolutely inert and arms do not operate it. No firing, discharge, muzzle flare, ejected discs, beam, sparks, smoke, magic, glow, impact star, extra limbs, extra props, camera motion, zoom, floor, shadows, scene or cut. Fixed original painterly three-quarter camera facing right; constant body originx480, planted groundy576, uniform flat magentaRGB255,0,255 for every frame, generous960x640 canvas with all original equipment inside.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

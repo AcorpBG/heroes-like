@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    561,
+    "8554ef2d-b62f-4a38-8c8e-fb3c8a1ec225",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Original Tallyspring woman, exact original ready painting and corrected kneeling brace endpoint. Same adult face, red headband and brown-red bun, red clothing, dark leather apron, three brass tags, single shoulder plate/bracers, both original legs/boots and ONE short brass spring machine with black coil and disc box. ONE dedicated defensive brace transition. Keep both hands on the original rear grip and front underside, right index finger outside trigger. Lower her torso and bend both knees, near RIGHT knee screen-left descends to low guard, far LEFT boot screen-right stays planted. Tuck chin and shoulders, tuck both elbows inward and draw the inert machine LOW snug across lower chest and belly, with square front pointing DOWN forty-five degrees as in clean guard guide. Finish in compact original kneeling guard by60 and hold steadily through final64frames. No aiming, sighting or operating the machine; hands never touch a firing trigger or crank. Both arm-to-waist gaps are empty transparent backdrop, no white or cyan fabric, paper, armor fragment or extra object. Machine remains absolutely inert: no firing, discharge, flash, beam, sparks, discs flying, smoke, glow, magic, extra limbs, extra props, repeated action, recovery, camera motion, cut, floor or shadow. Fixed original painterly three-quarter camera facing right, source originx480, front planted boot groundy576, generous960x640 canvas and uniform flat magentaRGB255,0,255 background.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026110305
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tallyspring_thrower_defend_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tallyspring_thrower_defend_h3_v2_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "tallyspring_thrower_h3/defend_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "tallyspring_thrower_h3",
+      "create_time": 1790978325899
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "tallyspring_thrower_h3\\defend_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "8554ef2d-b62f-4a38-8c8e-fb3c8a1ec225",
+          "timestamp": 1790978325900
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "8554ef2d-b62f-4a38-8c8e-fb3c8a1ec225",
+          "timestamp": 1790978325919
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "8554ef2d-b62f-4a38-8c8e-fb3c8a1ec225",
+          "timestamp": 1790978525847
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

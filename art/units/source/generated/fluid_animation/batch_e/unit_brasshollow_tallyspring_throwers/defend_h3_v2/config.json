@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110305,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        190,
+        474
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "original_clean_inert_kneeling_guard",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_guard_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1537,
+          1023
+        ]
+      ],
+      "anchor": [
+        792,
+        915
+      ],
+      "scale": 0.22,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 1,
+  "prompt": "Original Tallyspring woman, exact original ready painting and corrected kneeling brace endpoint. Same adult face, red headband and brown-red bun, red clothing, dark leather apron, three brass tags, single shoulder plate/bracers, both original legs/boots and ONE short brass spring machine with black coil and disc box. ONE dedicated defensive brace transition. Keep both hands on the original rear grip and front underside, right index finger outside trigger. Lower her torso and bend both knees, near RIGHT knee screen-left descends to low guard, far LEFT boot screen-right stays planted. Tuck chin and shoulders, tuck both elbows inward and draw the inert machine LOW snug across lower chest and belly, with square front pointing DOWN forty-five degrees as in clean guard guide. Finish in compact original kneeling guard by60 and hold steadily through final64frames. No aiming, sighting or operating the machine; hands never touch a firing trigger or crank. Both arm-to-waist gaps are empty transparent backdrop, no white or cyan fabric, paper, armor fragment or extra object. Machine remains absolutely inert: no firing, discharge, flash, beam, sparks, discs flying, smoke, glow, magic, extra limbs, extra props, repeated action, recovery, camera motion, cut, floor or shadow. Fixed original painterly three-quarter camera facing right, source originx480, front planted boot groundy576, generous960x640 canvas and uniform flat magentaRGB255,0,255 background.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

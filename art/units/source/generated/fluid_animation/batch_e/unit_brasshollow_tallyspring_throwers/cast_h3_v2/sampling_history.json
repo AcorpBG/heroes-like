@@ -1,0 +1,251 @@
+{
+  "prompt": [
+    575,
+    "2f6042d9-9b10-46a5-aad0-cb7a288a5833",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Original Tallyspring woman, original low-ready painting and corrected physical high-salute guide. Same adult face, red headband and brown-red hair bun, TWO hands/arms/legs, red clothes, dark leather apron, three brass tags, ONE riveted shoulder plate and bracers, brass-toed boots and ONE short original brass spring machine with black horizontal coil, square front and top disc box. Both original grips stay attached, right rear grip index outside trigger and left front underside support. One NONMAGICAL physical rally salute: both boots planted, lift same held machine diagonally above right shoulder with elbows visibly raised and square front up30degrees as guide42, head looks independently forward with one small nod, hold briefly, lower continuously to original ready by85, final39frames hold ready. Absolutely inert machine, no aiming/sighting/firing/recoil/cranking, no flashes/projectiles/beam/smoke/sparks/glow/magic. ORIGINAL FAR BELT POUCH stays thin and vertically slung, its small angled opening no wider than ONE tally tag, exactly as corrected guide; no oversized open black tube/hoop or additional muzzle/weapon anywhere. Preserve true original hardware shape and hand grips while moving, fixed painterly three-quarter camera facing SCREEN RIGHT, source originx480 and planted boot plane y576. Generous960x640 canvas, uniform flat magentaRGB255,0,255 throughout. No camera movement, cuts, floor, shadow, scenery, colored blue/purple/green edge fringe, extra limbs or equipment.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026110306
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tallyspring_thrower_cast_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tallyspring_thrower_cast_h3_v2_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tallyspring_thrower_cast_h3_v2_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 42,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 85,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "tallyspring_thrower_h3/cast_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "tallyspring_thrower_h3",
+      "create_time": 1790980230501
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "tallyspring_thrower_h3\\cast_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "2f6042d9-9b10-46a5-aad0-cb7a288a5833",
+          "timestamp": 1790980230502
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "2f6042d9-9b10-46a5-aad0-cb7a288a5833",
+          "timestamp": 1790980230531
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "2f6042d9-9b10-46a5-aad0-cb7a288a5833",
+          "timestamp": 1790980439171
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

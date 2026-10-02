@@ -1,0 +1,123 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          190,
+          474
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "049b2ecda9d37f96b3d067a6cf18f722893bd783aab203b6893481f297b6cf25",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "bc815c60e9b62426c2d2239366f8e282e75816f5727f74ed90cceadc4751648d",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "ranged_aim",
+        "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/poses-projectile-separated.png",
+        "rects": [
+          [
+            365,
+            622,
+            664,
+            910
+          ]
+        ],
+        "anchor": [
+          516,
+          904
+        ],
+        "scale": 1.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d80d361446ad7657a8a4e39de6c7ae3b340f052c802bba9f9b49ff1b87f19e19",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b7d8545f993ffcd15a9690335181e257a9c7f3f892e640c051a925bc6cd9493e",
+      "runtime_source_scale": 0.68
+    },
+    {
+      "source_frame": {
+        "name": "ranged_recoil",
+        "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/shove-recoil-forward-collapse.png",
+        "rects": [
+          [
+            0,
+            692,
+            508,
+            1368
+          ],
+          [
+            508,
+            1284,
+            570,
+            1368
+          ]
+        ],
+        "anchor": [
+          309,
+          1338
+        ],
+        "scale": 0.63,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "effeb2cb735336c83859d580ac3fa32c7c8dd4601b56cc9aba25728a86772fee",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "aacdf2b4c422e09edb5159444381b4952035c3884c844bf5c05b4d91996dde71",
+      "runtime_source_scale": 0.315
+    },
+    {
+      "source_frame": {
+        "name": "reload_cocking",
+        "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/poses-projectile-separated.png",
+        "rects": [
+          [
+            1045,
+            620,
+            1348,
+            920
+          ],
+          [
+            1140,
+            612,
+            1270,
+            620
+          ]
+        ],
+        "anchor": [
+          1200,
+          908
+        ],
+        "scale": 1.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d80d361446ad7657a8a4e39de6c7ae3b340f052c802bba9f9b49ff1b87f19e19",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "fd58766e96236855431acabe1faaed8d1e6adcfa56372805e10bae307af67f16",
+      "runtime_source_scale": 0.68
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

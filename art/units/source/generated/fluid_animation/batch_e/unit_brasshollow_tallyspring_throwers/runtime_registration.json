@@ -1,0 +1,50 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers",
+  "reference_height": 256,
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "ready_guide": {
+    "name": "idle_hands_0",
+    "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        384,
+        512
+      ]
+    ],
+    "anchor": [
+      190,
+      474
+    ],
+    "scale": 0.44,
+    "alpha_noise_cutoff": 8
+  },
+  "corpse_guide": {
+    "name": "dead",
+    "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/poses-projectile-separated.png",
+    "rects": [
+      [
+        1016,
+        1007,
+        1348,
+        1152
+      ]
+    ],
+    "anchor": [
+      1180,
+      1138
+    ],
+    "scale": 0.68,
+    "alpha_noise_cutoff": 8
+  },
+  "reason": "One original scale per painting divided by fixed extraction scale; fixed anatomical contact plane, no per-frame normalization."
+}

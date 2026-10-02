@@ -1,0 +1,124 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers",
+  "status": "complete_selected_unit",
+  "date": "2026-10-03",
+  "solo_unit_worker": true,
+  "source_method": "Original MiniMax H3 video, retained sampler latent and124-frame FFV1 RGB proof per take; pinned local BiRefNet soft matte",
+  "clips": {
+    "idle": 8,
+    "move": 29,
+    "attack": 28,
+    "ranged": 53,
+    "hit": 12,
+    "defend": 15,
+    "cast": 25,
+    "death": 47
+  },
+  "new_selected_poses": 209,
+  "preserved_idle_poses": 8,
+  "held_corpse_from_final_death": true,
+  "battle_atlas_size": [
+    3432,
+    4012
+  ],
+  "battle_texture_rgba_bytes": 55076736,
+  "original_selected_rgb_frames_reviewed": 868,
+  "preserved_original_rgb_frames": 1364,
+  "rejected_takes": [
+    "attack_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1"
+  ],
+  "validation": {
+    "checks": {
+      "candidate": 290,
+      "candidate_mirrored": 290,
+      "candidate_ranged": 290,
+      "live": 304,
+      "live_ranged": 304
+    },
+    "total": 1478,
+    "failures": [],
+    "source_pixel_and_ground_anchor_equality": true,
+    "selected_opaque_original_rgb_equality": true,
+    "other231_battle_and_map_rows_preserved": true,
+    "imported_atlas_exact_rgba": true,
+    "preserved_battle_and_overworld_idle_exact": true,
+    "visual_review": {
+      "status": "accepted_selected_unit",
+      "notes": "Native128-reference chronological normal and actual reflected galleries personally inspected for every209 new and8 preserved idle poses, plus8 actual melee and8 actual ranged battle captures at native and2x trouble review. Original adult woman, two grips/limbs, one spring machine, narrow belt pouch, planted/reciprocal boots and final settled corpse retain identity. Physical bash, single shot/crank reload, genuine recoil/recovery, clean kneeling guard and physical high salute read correctly. All unwanted touching flashes/firing/impact-fragment intervals are wholly unused as recorded, never erased from overlapping body pixels. Matching support high hold bridges clean raise and lowering with original pixels and chronological ordering. Four rejected entire takes preserved, including original white/cyan elbow wedge and oversized black pouch/blue fringe failures. Candidate three focused fixtures passed870 checks0 failures; final live/import/map review follows publication. No manual playtest, continuous playback, Linux or full-suite claim.",
+      "existing_idle_and_map_reviewed": true,
+      "existing_idle_map_frame_msec": 240,
+      "manual_game_session": false,
+      "continuous_video_playback": false,
+      "all_original_rgb_and_available_rgba_reviewed": true,
+      "selected_original_rgb_frames_reviewed": 868,
+      "preserved_original_rgb_frames_reviewed": 1364,
+      "enlarged_anatomy_equipment_and_soft_edges_reviewed": true,
+      "native_all_selected_and_preserved_idle_poses_reviewed": true,
+      "actual_reflected_all_selected_and_preserved_idle_poses_reviewed": true,
+      "actual_native_melee_captures_reviewed": 8,
+      "actual_native_ranged_captures_reviewed": 8,
+      "reflected_battle_action_captures": false,
+      "reflected_gallery_actual_gpu_transform": true,
+      "linux_run": false,
+      "full_suite_run": false,
+      "live_native_all_poses_reviewed": true,
+      "actual_live_melee_captures_reviewed": 8,
+      "actual_live_ranged_captures_reviewed": 8,
+      "live_action_native_and_enlarged_review": "All 16 actual live melee/ranged captures personally inspected at native size and 2x nearest enlargement; coherent grips, physical bash, one ranged release and retained grounded anatomy.",
+      "live_overworld_idle_frames_reviewed": [
+        0,
+        3
+      ],
+      "imported_atlas_exact_rgba": true,
+      "imported_map_exact_rgba": true,
+      "actual_imported_textures": 2,
+      "all_selected_source_pixels_and_anchors_verified": true,
+      "other231_battle_and_map_rows_preserved": true,
+      "existing_idle_map_pixels_and_timing_exact": true,
+      "final_publication_review": "Published atlas byte-identical to accepted candidate; all 209 new poses and 8 preserved idle poses personally inspected through actual live native gallery, with live map idle frames 0 and 3 and actual action captures accepted."
+    },
+    "normal_fast_reduced_static_dead_contact_interrupt_rng_save": true,
+    "manual_game_session": false,
+    "continuous_video_playback": false,
+    "linux_run": false,
+    "full_suite_run": false
+  },
+  "broad_goal_status": "in_progress",
+  "cleanup": {
+    "applied": true,
+    "removed_files": 2477,
+    "recovered_bytes": 1202697953,
+    "categories": {
+      "unused_rebuildable_matte": {
+        "files": 866,
+        "bytes": 157092042
+      },
+      "duplicate_decoded_rgb": {
+        "files": 1364,
+        "bytes": 730580123
+      },
+      "duplicate_mp4": {
+        "files": 11,
+        "bytes": 7965568
+      },
+      "duplicate_latent": {
+        "files": 11,
+        "bytes": 93821200
+      },
+      "duplicate_uploaded_guide": {
+        "files": 32,
+        "bytes": 4900063
+      },
+      "temporary_review": {
+        "files": 193,
+        "bytes": 208338957
+      }
+    },
+    "original_videos_latents_guides_prompts_provenance_and_caches_preserved": true,
+    "rebuildable": true,
+    "retained_original_rgb_frames": 1364
+  }
+}

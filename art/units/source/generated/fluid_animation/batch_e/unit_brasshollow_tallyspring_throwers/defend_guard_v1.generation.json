@@ -1,0 +1,35 @@
+{
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_guard_v1.png",
+    "sha256": "e826861b6fb4be8ffd742d92ea32c4c054b36eebcadaf98ea07e72fb348a007d"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_guard_v1.prompt.txt",
+    "sha256": "37b93a481b204b2250dce3ec4f0a795ec4dba2e938d240c5801af9a7cdd4e83a"
+  },
+  "tool": "built-in image_gen",
+  "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0fd50-f23a-7d32-8303-80fafa7a2272/exec-ff93e693-acf0-4bc4-a007-ba65595c74dd.png",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v1/guide_0_rgba.png",
+      "sha256": "b5ae97775ab43c0cfb3a4237a5ffc5d39d2afc0c122e09846bdc9b035e65c4a8"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v1/guide_1_rgba.png",
+      "sha256": "63f5aacbe410662838343c3870a013d5d8e9c77ebb1f66faedc56ed3a223bc57"
+    }
+  ],
+  "anatomical_registration": {
+    "canvas": [
+      1537,
+      1023
+    ],
+    "anchor": [
+      792,
+      915
+    ],
+    "scale": 0.22,
+    "reason": "One whole-master scale matching original guard torso/boots/head; retain natural compact kneel and all authored source perspective, never normalize video frames",
+    "ground_reason": "Fixed front planted boot sole y915 anchors the original three-quarter ground perspective; no per-limb translation or synthetic repair."
+  }
+}

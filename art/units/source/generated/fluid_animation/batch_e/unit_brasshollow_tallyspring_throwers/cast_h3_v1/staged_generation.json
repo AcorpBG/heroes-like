@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "347e2b104a6f31ed04f2aa63e0d72a02a13228555f4ba50e2a1793213a861217",
+  "latent_sha256": "3afff5d2a9813c554ee2bb1f33bed394583746aaa407a7513500731c5e1ce2bd",
+  "decode_workflow_sha256": "6ecafbcf549e38cdb1f4ccdfcbae3d46008d7ee60fc07934981ccdafbdb0ec87",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "tallyspring_thrower_h3\\cast_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

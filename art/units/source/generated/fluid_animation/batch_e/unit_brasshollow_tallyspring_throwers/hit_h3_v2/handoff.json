@@ -1,0 +1,387 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_brasshollow_tallyspring_throwers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "hit_h3_026",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/matte_plate_v3/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/matte_plate_v3/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_035",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/matte_plate_v3/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/matte_plate_v3/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_h3_037",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/matte_plate_v3/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "hit_h3_038",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/matte_plate_v3/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "hit_h3_039",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/matte_plate_v3/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/matte_plate_v3/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_041",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/matte_plate_v3/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "hit_h3_042",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/matte_plate_v3/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "hit_h3_043",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/matte_plate_v3/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/matte_plate_v3/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        }
+      ],
+      "clips": {
+        "hit": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0,
+          "frame_durations_msec": [
+            85,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            55
+          ]
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/config.json",
+          "sha256": "774fbaf26e38c3a8899523471177e22a83c8d3bc066040c3ab74616d9b1474b3"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/selection.json",
+          "sha256": "f1b3dcb4f7f6e2b286e28e15d46484ec9f8ba1b643a519d5b6fb36c70300624b"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/original_lossless.mkv",
+          "sha256": "c458bd1dcc45c238fe7acabfd679d86424e0b311dfcd87f0f5bb736ab3f93281"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/original.json",
+          "sha256": "a0123f69cadccaa8d5cef7c4c890606c820acda242fe71fba2e19b953d188a7f"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/workflow_api.json",
+          "sha256": "9ae16729e12feb7e1de0d10a7c853ac5f087067d10de09beccc5e4aded99993b"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/prompt.txt",
+          "sha256": "05ed4aa05d15dd333cbb18ef955928a46c3bce5d49c9bc29d57c847d0aa01041"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/reference.json",
+          "sha256": "166451d3e6e7bd0d65a0072226e786b0e8c530f1f382eb14c11e0b9b8f896248"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/matte.json",
+          "sha256": "50730d801a65b8f4eb3b7ef4b78c38d8c450a0777ef10907f35515846f83270c"
+        },
+        "segmentation_tool": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/segment.py",
+          "sha256": "b6e4964766926410a07353a21a25e72a739ede4f4665fa9c78f3609979deb1c9"
+        },
+        "segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/segmentation_recipe.json",
+          "sha256": "035943e535a03b47b82665ad8280e6f138bb1f5c1fbfcd3786df06dc797cc124"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/staged_generation.json",
+          "sha256": "3d636a70bca7ac7899f4d647a10d6be43c05b3c335da000cc7b9ad7a28ec3615"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/sampling_workflow_api.json",
+          "sha256": "eca5a0eb5fcab39fd7cef4fd183bd4fa9950c2bb0061c78f1cad511999f65c95"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/sampling_submission.json",
+          "sha256": "6ac9903f4b4a29a9ab0689a7f41cb41eacdc406868a88e8352d800d897be3929"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/sampling_history.json",
+          "sha256": "e3b82171bf2442ffd68aab3682b3d9c6df5a9d756c145d530f51275f27decdb1"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/original.latent",
+          "sha256": "cde0f7bc3045bc49201ad58a2d9b62651fa9f445a9900e5c4921575e25581dc8"
+        },
+        "source_interval_review.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v2/source_interval_review.json",
+          "sha256": "8a96b6d93ac7ef4abfcd84fcba851ca3dffef914f18872cca05e089f1e224232"
+        },
+        "guide_image_hit_recoil_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_recoil_v1.png",
+          "sha256": "74b0540e933e5425c3c1ca7656158ababdeb11c5961862b354b693a17d743179"
+        },
+        "guide_prompt_hit_recoil_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_recoil_v1.prompt.txt",
+          "sha256": "ad224b155b7aad8c8b02fb62ba918dc6fbfaf4031b4bbf78d689761d75eef6ca"
+        },
+        "guide_generation_hit_recoil_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_recoil_v1.generation.json",
+          "sha256": "46a0c28a625411f56a1ba4555605a4d31674eb743356000fbc8cf5cd0112dd54"
+        },
+        "guide_reference_guide_0_rgba.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v1/guide_0_rgba.png",
+          "sha256": "b5ae97775ab43c0cfb3a4237a5ffc5d39d2afc0c122e09846bdc9b035e65c4a8"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 original RGB/RGBA personally reviewed, enlarged14/22/26/35-40/42-44. Source0-25 incoming beam/impact star and lingering red fragments are wholly unused; later firing45+ wholly unused. Retain original inert strongest backward torso/chin recoil26, shorten original peak hold to85ms, then observed progressive recovery32 and35-44 to original ready. Hit enters instantly in authentic recoil on damage; no artificial ready interpolation, overlapping-effect erasure, duplicated/padded phases or reverse playback. Original two grips, down-tilted single machine and planted boots remain coherent. Earlier14/22 residual red body fragments rejected. These12 unique source phases contain clear backward recoil and nine dense original recovery phases; pending native/reflected acceptance. Personal native/reflected full-unit acceptance2026-10-03 completed; actual melee/ranged captures clean."
+      }
+    }
+  ]
+}

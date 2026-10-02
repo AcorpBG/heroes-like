@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "72e5866f2a9590b53d2a42098efe2a515cbda4c9c5da62ae585258e30150a8c3",
+  "latent_sha256": "1be18fab615d0b1a4aeefb57831cd6d433d591b70b3874ed042f6ee8eb356d8a",
+  "decode_workflow_sha256": "630d8c38b0399a474ee457e5a1c0c78e82e8c78ed7aafdd242cdadd6d822215f",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "tallyspring_thrower_h3\\death_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

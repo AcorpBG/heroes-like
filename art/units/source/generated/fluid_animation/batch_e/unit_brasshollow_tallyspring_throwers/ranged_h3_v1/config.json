@@ -1,0 +1,127 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110203,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        190,
+        474
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "ranged_aim",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/poses-projectile-separated.png",
+      "rects": [
+        [
+          365,
+          622,
+          664,
+          910
+        ]
+      ],
+      "anchor": [
+        516,
+        904
+      ],
+      "scale": 0.68,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "ranged_recoil",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/shove-recoil-forward-collapse.png",
+      "rects": [
+        [
+          0,
+          692,
+          508,
+          1368
+        ],
+        [
+          508,
+          1284,
+          570,
+          1368
+        ]
+      ],
+      "anchor": [
+        309,
+        1338
+      ],
+      "scale": 0.315,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "reload_cocking",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/poses-projectile-separated.png",
+      "rects": [
+        [
+          1045,
+          620,
+          1348,
+          920
+        ],
+        [
+          1140,
+          612,
+          1270,
+          620
+        ]
+      ],
+      "anchor": [
+        1200,
+        908
+      ],
+      "scale": 0.68,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      29,
+      1
+    ],
+    [
+      58,
+      2
+    ],
+    [
+      88,
+      3
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original TALLYSPRING THROWER woman from supplied painting, fixed three-quarter camera facing SCREEN RIGHT. One sturdy young adult human woman with reddish brown hair tied into a messy bun, red cloth headband, focused face, rusty red sleeves and trousers, dark weathered leather apron, brown belt with three small brass tally tags and a cylindrical pouch, one riveted steel shoulder plate, steel forearm bracers and brown leather boots with brass toe caps and straps. Exactly TWO arms, TWO hands, TWO legs. ONE original short rectangular brass-framed spring-disc launcher: a dark black horizontal exposed coil between brass rails, square open muzzle on SCREEN RIGHT, top open box holding round brass tally discs. No long gun barrel, crossbow, staff or additional weapon. Anatomical RIGHT near hand holds the rear trigger grip, anatomical LEFT far hand supports the forward underside of the same launcher. Both grips remain attached except the explicitly described reload or death. Preserve launcher shape, spring coil, loaded disc box, apron, tags, shoulder plate and original face throughout. Original painterly tactical game artwork, no live action or plastic material. One ranged spring-disc release and reload. Raise launcher and sight SCREEN RIGHT, keep RIGHT hand on trigger and LEFT beneath the front. Squeeze the trigger once around frame45, visible small shoulder and arm recoil as spring relaxes. There is NO visible disc projectile or muzzle flash because the game owns those effects. After recoil, RIGHT hand briefly moves to the rear winding crank and pulls it once while LEFT hand holds the launcher, then RIGHT hand restores its trigger grip and both arms lower to original ready. Preserve both hands and launcher dimensions through reload.  Entire backdrop stays uniform magenta RGB255,0,255. No floor, cast shadow, scenery, text, camera motion, cuts or zoom. Fixed ground plane y576, body anchored at x480. Lifted feet may move but planted contacts cannot slide. Keep launcher, hands and all boots inside generous canvas margins. No projectiles, sparks, particles, muzzle flash, smoke, rings, beams, glow or new equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

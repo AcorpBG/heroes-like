@@ -1,0 +1,31 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers",
+  "status": "complete_selected_unit",
+  "identity": "Human woman; red headband and tied hair, red sleeves/trousers, leather apron, brass tally tags, steel plate/bracers, brass-toed boots; two arms and legs; one rectangular spring-disc launcher",
+  "grips": "Right near hand rear trigger; left far hand forward underside, right briefly cranks on ranged reload; both release on death",
+  "preserved": [
+    "idle"
+  ],
+  "replace": [
+    "move",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "support": "Physical launcher salute, nonmagical",
+  "guides": 32,
+  "body_scale": 0.5,
+  "anchor": [
+    480,
+    576
+  ],
+  "runtime_reference_height": 256,
+  "personal_initial_review": "Curated identity, 26 original atlas poses, all 8 enlarged original idle hand poses, all prepared source guides and map strip",
+  "gpu_generation_admission": "First source pair admitted only after coordinator confirmed older Gaugefire17104 terminal and Saltwake33704 safely cancelled before submission; subsequent bounded stages use fresh continuous shared mutex waits.",
+  "broad_goal_status": "in_progress",
+  "corrections": "Melee v1, hit v1, defense v1 and support v1 rejected entirely. Original built-in contact/recoil/clean guard/thin-pouch salute guide repairs preserve anatomy and equipment. Defense v1 contains attached opaque white/cyan elbow wedge; support v1 enlarges the original narrow belt pouch and has blue edge fringe. No software painting or body erasure.",
+  "source_review": "All seven dedicated actions personally reviewed as124 RGB/124 RGBA each, plus four entire rejected takes (full RGB and available RGBA).209 selected original poses: move29/melee28/ranged53/hit12/guard15/support25/death47. Support uses clean8-24 high raise and matching54-66 held lowering; all middle shots25-53 unused. Original pouch geometry and edge fringe repaired. All source, native/reflected and published live/action/map reviews are personally accepted; 1,478 focused checks have zero failures and two actual imported textures pass exact normalized RGBA proof."
+}

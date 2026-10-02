@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "d360e2d4ee8008554b252ac115bd1d9b2e9bb1c899f579a84f64d6948b6fb837",
+  "latent_sha256": "752caac3c4d9b7ff054edd0757b2a01d4ecdefe2d77067c91d17450eb91c2f7a",
+  "decode_workflow_sha256": "e74db50017ecc81efae81b4c3cc3bb2c1a935ed90d84dde80137020d93676405",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "tallyspring_thrower_h3\\hit_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 20317841216,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

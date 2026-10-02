@@ -1,0 +1,40 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v2",
+    "ranged_h3_v1",
+    "hit_h3_v2",
+    "defend_h3_v2",
+    "cast_h3_v2",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_unit",
+    "notes": "Native128-reference chronological normal and actual reflected galleries personally inspected for every209 new and8 preserved idle poses, plus8 actual melee and8 actual ranged battle captures at native and2x trouble review. Original adult woman, two grips/limbs, one spring machine, narrow belt pouch, planted/reciprocal boots and final settled corpse retain identity. Physical bash, single shot/crank reload, genuine recoil/recovery, clean kneeling guard and physical high salute read correctly. All unwanted touching flashes/firing/impact-fragment intervals are wholly unused as recorded, never erased from overlapping body pixels. Matching support high hold bridges clean raise and lowering with original pixels and chronological ordering. Four rejected entire takes preserved, including original white/cyan elbow wedge and oversized black pouch/blue fringe failures. Candidate three focused fixtures passed870 checks0 failures; final live/import/map review follows publication. No manual playtest, continuous playback, Linux or full-suite claim.",
+    "existing_idle_and_map_reviewed": true,
+    "existing_idle_map_frame_msec": 240,
+    "manual_game_session": false,
+    "continuous_video_playback": false,
+    "all_original_rgb_and_available_rgba_reviewed": true,
+    "selected_original_rgb_frames_reviewed": 868,
+    "preserved_original_rgb_frames_reviewed": 1364,
+    "enlarged_anatomy_equipment_and_soft_edges_reviewed": true,
+    "native_all_selected_and_preserved_idle_poses_reviewed": true,
+    "actual_reflected_all_selected_and_preserved_idle_poses_reviewed": true,
+    "actual_native_melee_captures_reviewed": 8,
+    "actual_native_ranged_captures_reviewed": 8,
+    "reflected_battle_action_captures": false,
+    "reflected_gallery_actual_gpu_transform": true,
+    "linux_run": false,
+    "full_suite_run": false
+  },
+  "failed_takes": [
+    "attack_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1"
+  ]
+}

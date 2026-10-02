@@ -1,0 +1,11 @@
+{
+  "status": "rejected_entire_take",
+  "reviewed_original_rgb_frames": 124,
+  "partial_rgba_frames_reviewed": 7,
+  "defects": [
+    "Melee incorrectly fires bright muzzle flare and long beam at38-52 and96-108 rather than physical contact",
+    "Repeated firing motion replaces one continuous recovery",
+    "Changing nonuniform colour plates stop safe flat-edge unmix atframe7"
+  ],
+  "correction": "New explicit downward-muzzle physical-bash key pose, one contact schedule and lowered recovery guide; preserve all original sampler/video/prompt/guide pixels"
+}

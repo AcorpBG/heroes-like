@@ -1,0 +1,31 @@
+{
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/melee_contact_v1.png",
+    "sha256": "4ade5bd60eb6d41c2632bcc2cd6d4b095b499b6cbaad797c940f71f5320ae65c"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/melee_contact_v1.prompt.txt",
+    "sha256": "c2cc69e3e0a5abb358466cb7216036b6884b09415dd6955a82523107c2440dfd"
+  },
+  "tool": "built-in image_gen",
+  "tool_output_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0fd50-f23a-7d32-8303-80fafa7a2272\\exec-7e305d1c-5739-4be1-8386-169ccbc920ac.png",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/attack_h3_v1/guide_0_rgba.png",
+      "sha256": "b5ae97775ab43c0cfb3a4237a5ffc5d39d2afc0c122e09846bdc9b035e65c4a8"
+    }
+  ],
+  "anatomical_registration": {
+    "canvas": [
+      1537,
+      1023
+    ],
+    "anchor": [
+      790,
+      894
+    ],
+    "scale": 0.28,
+    "reason": "One whole-master scale matching original torso/boots; retain natural forward lean and crouched body, never normalize each video frame",
+    "ground_reason": "Shared plane follows actual planted opaque boot soles; launcher does not determine grounding."
+  }
+}

@@ -4904,25 +4904,25 @@
         206
       ],
       "painted_extent": 201,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_tallyspring_throwers.png",
       "source_indices": [
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        176,
-        30,
-        336,
-        247
+        52,
+        14,
+        212,
+        231
       ],
-      "source_sha256": "128dec89738402c596b3230be9fb5d827c776091a7b250fb3ef721b8a93349f1",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_tallyspring_throwers/provenance.json",
+      "source_sha256": "e2124d7a6bd5e334f67bebf559322ea5d07d4376328159bed8077046fa344c27",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_tallyspring_throwers/provenance.json",
       "sha256": "d34c0b03a825852ffbf485d1ea3b2c2ac5220a1fae38e159dab1940ce27743f1"
     },
     "unit_veilmourn_gloamkeel_bulwarks": {

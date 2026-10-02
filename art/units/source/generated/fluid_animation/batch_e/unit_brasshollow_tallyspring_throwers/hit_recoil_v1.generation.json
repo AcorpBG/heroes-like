@@ -1,0 +1,31 @@
+{
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_recoil_v1.png",
+    "sha256": "74b0540e933e5425c3c1ca7656158ababdeb11c5961862b354b693a17d743179"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_recoil_v1.prompt.txt",
+    "sha256": "ad224b155b7aad8c8b02fb62ba918dc6fbfaf4031b4bbf78d689761d75eef6ca"
+  },
+  "tool": "built-in image_gen",
+  "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0fd50-f23a-7d32-8303-80fafa7a2272/exec-328f3a10-ee0a-4e2f-95a6-f17c32ba0387.png",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/hit_h3_v1/guide_0_rgba.png",
+      "sha256": "b5ae97775ab43c0cfb3a4237a5ffc5d39d2afc0c122e09846bdc9b035e65c4a8"
+    }
+  ],
+  "anatomical_registration": {
+    "canvas": [
+      1536,
+      1024
+    ],
+    "anchor": [
+      792,
+      915
+    ],
+    "scale": 0.245,
+    "reason": "One whole-master anatomical scale, matching original bun/torso/boots and ready height; recoil body extends naturally, never normalize each video frame",
+    "ground_reason": "Both visible planted opaque boot soles share y915; launcher does not determine ground."
+  }
+}

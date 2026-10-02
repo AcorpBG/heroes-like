@@ -1,0 +1,17 @@
+{
+  "status": "rejected_entire_take_after_enlarged_rgba_review",
+  "reviewed_original_rgb_frames": 124,
+  "retained_continuous_source_interval": [
+    0,
+    41
+  ],
+  "excluded_invalid_source_interval": [
+    42,
+    123
+  ],
+  "defects": "Unwanted sustained muzzle flashes/beam firing42-106; lingering detached smoke107-111; all42-123 unused.",
+  "retained_behavior": "Ready0-12, knees flex and near knee descends13-24, settles into original dedicated kneeling guard24-41 with both original hands on single launcher. Full continuous physical defense transition before first firing, no synthetic seam.",
+  "matting": "Pinned unchanged strict original BiRefNet extraction only0-41, all124 raw decoded hashes verified, no invalid FX overlapping character erased.",
+  "generated_rgba_frames_reviewed": 42,
+  "additional_defect": "Original guard guide carries opaque white/cyan checker-paper wedge beneath far elbow; inherited in generated transition10-41. Not valid anatomy/equipment or clean negative space. No source interval accepted."
+}

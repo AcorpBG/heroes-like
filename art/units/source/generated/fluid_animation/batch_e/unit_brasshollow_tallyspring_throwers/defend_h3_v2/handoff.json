@@ -1,0 +1,460 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_brasshollow_tallyspring_throwers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/matte_plate_v3/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_003",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/matte_plate_v3/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "defend_h3_004",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/matte_plate_v3/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "defend_h3_005",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/matte_plate_v3/rgba_005.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 5,
+          "video_time_seconds": 0.20833333333333334
+        },
+        {
+          "name": "defend_h3_006",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/matte_plate_v3/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "defend_h3_007",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/matte_plate_v3/rgba_007.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 7,
+          "video_time_seconds": 0.2916666666666667
+        },
+        {
+          "name": "defend_h3_008",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/matte_plate_v3/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "defend_h3_009",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/matte_plate_v3/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "defend_h3_010",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/matte_plate_v3/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "defend_h3_011",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/matte_plate_v3/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583333333333333
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/matte_plate_v3/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/matte_plate_v3/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/matte_plate_v3/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/matte_plate_v3/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/matte_plate_v3/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        }
+      ],
+      "clips": {
+        "defend": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 14,
+          "frame_durations_msec": [
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            130
+          ]
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/config.json",
+          "sha256": "77446ce3edb7d15b6389f19f4409a6a6bf05923f2ab987c5658cb2ee721365dd"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/selection.json",
+          "sha256": "6c87fafb6c9aed6c1b3a9787c6be8c5aec1e8fd2157698ebc4800d8fecabe67b"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/original_lossless.mkv",
+          "sha256": "aba0fe797e7e9478720ba53c4d0cd53c16dc6c476f4599ccbd3bb1299a4d7596"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/original.json",
+          "sha256": "698b2ad7bc9dc2ae75b467d83819e8a4d5389b86f0afc7a2cf2323c97b7820b0"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/workflow_api.json",
+          "sha256": "a9b3292938174358fb230e1a1936147b4f3ad51269fc730ba2798e538b70a20b"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/prompt.txt",
+          "sha256": "bd8d2fca982561b310d1710c2d55a2e813601f6d35177e7c0fafa2ee3274930a"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/reference.json",
+          "sha256": "aa22910dfc60192b24360869ffcc172dc92e0d1ac213b8c4bd7818f206773b48"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/matte.json",
+          "sha256": "9ec33e181010d4bcfd3e1ded9d2c4fa678f4a95789ec35f744998abb7198d03a"
+        },
+        "segmentation_tool": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/segment.py",
+          "sha256": "b6e4964766926410a07353a21a25e72a739ede4f4665fa9c78f3609979deb1c9"
+        },
+        "segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/segmentation_recipe.json",
+          "sha256": "035943e535a03b47b82665ad8280e6f138bb1f5c1fbfcd3786df06dc797cc124"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/staged_generation.json",
+          "sha256": "cb6dcf11833fe53a6c7e6e4a829ded6b69f60cc65331834e0cd1b34e2dc554cf"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/sampling_workflow_api.json",
+          "sha256": "1b3dbe44910eedcb6283311079fe68a93227df932e70ed7de2f2f1ccdef22225"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/sampling_submission.json",
+          "sha256": "9845bed031282f665eeadb7935009ce379aa28f108c25a6f852d7c2c186c23f3"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/sampling_history.json",
+          "sha256": "e91d93f4ff4c81e4aa2f2a7a313ce2ed9c8e680e091a9fea81d43c9eb6a5508e"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/original.latent",
+          "sha256": "42d7f267b050f1f0a43581c4cf8c295f75f11279dfc208f8906704cf4cc38178"
+        },
+        "source_interval_review.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v2/source_interval_review.json",
+          "sha256": "eb9a9f3ebe46be11c2616198a77c943265e16e049bf1524bd20a346875b1291f"
+        },
+        "guide_image_defend_guard_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_guard_v1.png",
+          "sha256": "e826861b6fb4be8ffd742d92ea32c4c054b36eebcadaf98ea07e72fb348a007d"
+        },
+        "guide_prompt_defend_guard_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_guard_v1.prompt.txt",
+          "sha256": "37b93a481b204b2250dce3ec4f0a795ec4dba2e938d240c5801af9a7cdd4e83a"
+        },
+        "guide_generation_defend_guard_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_guard_v1.generation.json",
+          "sha256": "42df5c7ef008e617f201e8f8fa10d1a268ac38ecb74d56273f68be35cc8d1a84"
+        },
+        "guide_reference_guide_0_rgba.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v1/guide_0_rgba.png",
+          "sha256": "b5ae97775ab43c0cfb3a4237a5ffc5d39d2afc0c122e09846bdc9b035e65c4a8"
+        },
+        "guide_reference_guide_1_rgba.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_tallyspring_throwers/defend_h3_v1/guide_1_rgba.png",
+          "sha256": "63f5aacbe410662838343c3870a013d5d8e9c77ebb1f66faedc56ed3a223bc57"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 original RGB and124 RGBA phases reviewed on both backgrounds, enlarged0/4/6/8/10/12/16/20. Retain the complete clean initial ready-to-one-knee guard0-20, two anatomical grips, planted front boot, original single spring machine. Corrected guide removes original opaque elbow wedge. End in genuine held guard20. Entire later firing interval21-43 and unrelated post-shot recovery44-123 unused; do not splice across shot or erase attached glow. Pending native/reflected acceptance. Personal native/reflected full-unit acceptance2026-10-03 completed; actual melee/ranged captures clean."
+      }
+    }
+  ]
+}
