@@ -1,0 +1,98 @@
+{
+  "unit_id": "unit_thornwake_seedglass_cantors",
+  "clip": "attack",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102702,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        188,
+        487
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/original.png",
+      "rects": [
+        [
+          299,
+          338,
+          609,
+          640
+        ]
+      ],
+      "anchor": [
+        450,
+        632
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_contact",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/punch-contact.png",
+      "rects": [
+        [
+          0,
+          0,
+          1155,
+          1362
+        ]
+      ],
+      "anchor": [
+        582,
+        1317
+      ],
+      "scale": 0.165,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      46,
+      2
+    ],
+    [
+      82,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Seedglass Cantor, a tall slim humanoid woodland archer with exactly TWO arms and TWO legs. Pale ivory bark mask/face with elongated dark eye openings, brown branching antler crown and original bright green leaves, ivory bark breast and thigh armor, layered green/golden leaf mantle and skirt, brown vine-wrapped limbs and two root-toed wooden feet. SCREEN RIGHT anatomical LEFT hand holds ONE original tall curved wooden recurve bow with both curled branch tips, green leaf accents, amber hanging seed pods and one thin bowstring. SCREEN LEFT anatomical RIGHT hand is the free drawing/punching hand. LEFT hand always holds the same bow grip; RIGHT hand moves freely or draws its string. Keep pale face, antlers, root toes, two limbs each, leaf layers and full bow shape/length unchanged. Never add a staff, sword, shield, second bow or arm. One close-range RIGHT FIST strike. RIGHT empty hand closes to a fist and draws back beside right shoulder24; LEFT hand holds bow away from strike. Extend RIGHT elbow and fist forward SCREEN RIGHT46 with supported knees and shoulder transfer, then withdraw right fist82 to original ready. Do not strike with bow or fire an arrow. No extra hand or extended arm.  Locked original elevated three-quarter orthographic camera facing SCREEN RIGHT. Fixed original body size and root centered; every root toe, antler and both bow tips remain inside960x544 with generous margins. Empty uniform saturated BLUE RGB0,0,255 backdrop in EVERY frame. No floor, shadow, scenery, other figure, text, floating leaves, sparkle, trail, ribbon, glowing aura, camera travel, zoom, foot sliding or changing illumination. Only original body and held equipment move; amber pods keep their original painted color.",
+  "protected_foreground_chroma": 14,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

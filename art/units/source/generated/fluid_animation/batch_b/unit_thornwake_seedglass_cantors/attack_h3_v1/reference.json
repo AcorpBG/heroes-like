@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_thornwake_seedglass_cantors",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          188,
+          487
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ec8d39d7c55949acadb862b92e4257e82ccc753ec888dc06fb1147b7c7896cf7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0be2d125bdd18275a054bc58258bbad97ef4315c2bb21e9ba1c1c92ef9539133",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "melee_windup",
+        "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/original.png",
+        "rects": [
+          [
+            299,
+            338,
+            609,
+            640
+          ]
+        ],
+        "anchor": [
+          450,
+          632
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2bd74173e510123cff48f4612d5717c674de5a446627257e842c0b9354426be7",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e06b601218e43e37471fd6eb814e3e327fa3084fa081c87e55028ae0ccd2d705",
+      "runtime_source_scale": 0.66
+    },
+    {
+      "source_frame": {
+        "name": "melee_contact",
+        "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/punch-contact.png",
+        "rects": [
+          [
+            0,
+            0,
+            1155,
+            1362
+          ]
+        ],
+        "anchor": [
+          582,
+          1317
+        ],
+        "scale": 0.33,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f09168541356b8f8a10d919a6153ac3debdbb213db98d8bc2a658884907f17b8",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "a96fc32a8c0fe14a70654b3eaf42c2aa49711b9ce30c716a8a32ec44e64eb7a9",
+      "runtime_source_scale": 0.165
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

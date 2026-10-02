@@ -1,0 +1,135 @@
+{
+  "unit_id": "unit_thornwake_seedglass_cantors",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          188,
+          487
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ec8d39d7c55949acadb862b92e4257e82ccc753ec888dc06fb1147b7c7896cf7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0be2d125bdd18275a054bc58258bbad97ef4315c2bb21e9ba1c1c92ef9539133",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "near_contact",
+        "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/near-contact-unfolded.png",
+        "rects": [
+          [
+            0,
+            0,
+            1155,
+            1362
+          ]
+        ],
+        "anchor": [
+          594,
+          1317
+        ],
+        "scale": 0.33,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f7dd5a4b67b03bd88becf55183a5af51e23b279b2f515e7295787ac3a81ae013",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b4fd30b861d0964ecef4408adbe02a619c965e7cf120f4b503b97b063a187aaf",
+      "runtime_source_scale": 0.165
+    },
+    {
+      "source_frame": {
+        "name": "far_passing",
+        "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/walk-1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1155,
+            1362
+          ]
+        ],
+        "anchor": [
+          594,
+          1320
+        ],
+        "scale": 0.33,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "4652351deca5dfcbfd4327c8644a4c6a2badab7d8765f7fd8fa212dabf8ded2c",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "5b66da0365895aca0019b586d1536da05edf98071fc0ca6e4f65a44c2cc67cf2",
+      "runtime_source_scale": 0.165
+    },
+    {
+      "source_frame": {
+        "name": "far_contact",
+        "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/walk-2.png",
+        "rects": [
+          [
+            0,
+            0,
+            1156,
+            1360
+          ]
+        ],
+        "anchor": [
+          594,
+          1307
+        ],
+        "scale": 0.33,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "bdc5f93f09182c8dca5b4125071d661452092e6d7b0fa2854bc61e08bee2281a",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "ff111993bd98599c51e455f980e08d93579c2060de6a564ee9a76b9177f296f4",
+      "runtime_source_scale": 0.165
+    },
+    {
+      "source_frame": {
+        "name": "near_passing",
+        "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/walk-3.png",
+        "rects": [
+          [
+            0,
+            0,
+            1155,
+            1362
+          ]
+        ],
+        "anchor": [
+          594,
+          1315
+        ],
+        "scale": 0.33,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5efcb82a8180b327d02c976a058d40c6f1c8ac79a96e5ad9317988d25efafddf",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "a3710eccdba14bd8e8961c1b6919506f9ad8ff12c1deba6ed7d6e431f6e8c5ed",
+      "runtime_source_scale": 0.165
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

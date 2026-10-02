@@ -1,0 +1,120 @@
+{
+  "unit_id": "unit_thornwake_seedglass_cantors",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102703,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        188,
+        487
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "ranged_aim",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/original.png",
+      "rects": [
+        [
+          297,
+          635,
+          607,
+          965
+        ]
+      ],
+      "anchor": [
+        461,
+        952
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "ranged_release",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/ranged-release-clear.png",
+      "rects": [
+        [
+          0,
+          0,
+          1324,
+          1188
+        ]
+      ],
+      "anchor": [
+        504,
+        1152
+      ],
+      "scale": 0.177,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "ranged_recover",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/original.png",
+      "rects": [
+        [
+          972,
+          640,
+          1223,
+          965
+        ]
+      ],
+      "anchor": [
+        1100,
+        955
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      48,
+      2
+    ],
+    [
+      82,
+      3
+    ],
+    [
+      104,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Seedglass Cantor, a tall slim humanoid woodland archer with exactly TWO arms and TWO legs. Pale ivory bark mask/face with elongated dark eye openings, brown branching antler crown and original bright green leaves, ivory bark breast and thigh armor, layered green/golden leaf mantle and skirt, brown vine-wrapped limbs and two root-toed wooden feet. SCREEN RIGHT anatomical LEFT hand holds ONE original tall curved wooden recurve bow with both curled branch tips, green leaf accents, amber hanging seed pods and one thin bowstring. SCREEN LEFT anatomical RIGHT hand is the free drawing/punching hand. LEFT hand always holds the same bow grip; RIGHT hand moves freely or draws its string. Keep pale face, antlers, root toes, two limbs each, leaf layers and full bow shape/length unchanged. Never add a staff, sword, shield, second bow or arm. One original bow shot. LEFT hand raises and aims the same full bow toward SCREEN RIGHT. RIGHT hand draws the thin original string back near cheek30 with exactly ONE short amber seed-arrow nocked along it. RIGHT fingers release48 and follow through beside right shoulder while LEFT arm keeps bow aimed. The single released seed-arrow leaves SCREEN RIGHT quickly; no lingering arrow, beam, repeated shot or trail. Recover82 and lower bow104 to ready. Both branch tips, grip, string and anatomy stay intact.  Locked original elevated three-quarter orthographic camera facing SCREEN RIGHT. Fixed original body size and root centered; every root toe, antler and both bow tips remain inside960x544 with generous margins. Empty uniform saturated BLUE RGB0,0,255 backdrop in EVERY frame. No floor, shadow, scenery, other figure, text, floating leaves, sparkle, trail, ribbon, glowing aura, camera travel, zoom, foot sliding or changing illumination. Only original body and held equipment move; amber pods keep their original painted color.",
+  "protected_foreground_chroma": 19,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

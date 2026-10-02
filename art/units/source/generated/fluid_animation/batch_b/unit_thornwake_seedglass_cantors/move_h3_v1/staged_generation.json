@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "f7981f3ff168ecd6ec0323f98e51b4bde580ad074e74cf5caaa3e75174688502",
+  "latent_sha256": "51ab2797e00e5f59d2f77df6dd47abf6212aaddfa03bc843ea9fc03c60a887d6",
+  "decode_workflow_sha256": "02e27fe9aeca3d49149d03c561e70248991b320854706aee2aef29772a495b79",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "seedglass_cantor_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17476327744,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

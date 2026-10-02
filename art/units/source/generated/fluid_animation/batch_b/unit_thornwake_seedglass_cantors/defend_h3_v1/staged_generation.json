@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "4e454a00b87a75153c02b3c1689dd8e000b8a4c0e249c65b0113cd4b4d38d162",
+  "latent_sha256": "26c66c06d10d7050d65e76454f8b45b64e70bda7b263d7c7b6fdbd9e1a32baac",
+  "decode_workflow_sha256": "e684bf64dc13801cc0bf5a560a46eebdff8853c41f45419417df8aca3e0e2d15",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "seedglass_cantor_h3\\defend_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

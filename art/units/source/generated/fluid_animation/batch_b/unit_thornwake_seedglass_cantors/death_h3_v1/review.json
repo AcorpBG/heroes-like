@@ -1,0 +1,5 @@
+{
+  "status": "rejected",
+  "reason": "Original frames22->23 jump directly from upright to kneeling;45->46 jump from supported forward tilt to prone. Final corpse/equipment are correct, but intermediate descent is not continuous.",
+  "correction": "Use original ready/corpse references and continuous-action prompt without intermediate temporal guides; preserve rejected original footage."
+}

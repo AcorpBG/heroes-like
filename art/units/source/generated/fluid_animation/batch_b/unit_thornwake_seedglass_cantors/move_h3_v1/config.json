@@ -1,0 +1,138 @@
+{
+  "unit_id": "unit_thornwake_seedglass_cantors",
+  "clip": "move",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102701,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        188,
+        487
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "near_contact",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/near-contact-unfolded.png",
+      "rects": [
+        [
+          0,
+          0,
+          1155,
+          1362
+        ]
+      ],
+      "anchor": [
+        594,
+        1317
+      ],
+      "scale": 0.165,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "far_passing",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/walk-1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1155,
+          1362
+        ]
+      ],
+      "anchor": [
+        594,
+        1320
+      ],
+      "scale": 0.165,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "far_contact",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/walk-2.png",
+      "rects": [
+        [
+          0,
+          0,
+          1156,
+          1360
+        ]
+      ],
+      "anchor": [
+        594,
+        1307
+      ],
+      "scale": 0.165,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "near_passing",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/walk-3.png",
+      "rects": [
+        [
+          0,
+          0,
+          1155,
+          1362
+        ]
+      ],
+      "anchor": [
+        594,
+        1315
+      ],
+      "scale": 0.165,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      20,
+      1
+    ],
+    [
+      38,
+      2
+    ],
+    [
+      64,
+      3
+    ],
+    [
+      84,
+      4
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Seedglass Cantor, a tall slim humanoid woodland archer with exactly TWO arms and TWO legs. Pale ivory bark mask/face with elongated dark eye openings, brown branching antler crown and original bright green leaves, ivory bark breast and thigh armor, layered green/golden leaf mantle and skirt, brown vine-wrapped limbs and two root-toed wooden feet. SCREEN RIGHT anatomical LEFT hand holds ONE original tall curved wooden recurve bow with both curled branch tips, green leaf accents, amber hanging seed pods and one thin bowstring. SCREEN LEFT anatomical RIGHT hand is the free drawing/punching hand. LEFT hand always holds the same bow grip; RIGHT hand moves freely or draws its string. Keep pale face, antlers, root toes, two limbs each, leaf layers and full bow shape/length unchanged. Never add a staff, sword, shield, second bow or arm. One reciprocal WALK IN PLACE. Alternate BOTH root feet through opposed planted contact, weight loading, passing knee lift and extension. LEFT hand carries original bow upright, RIGHT free arm swings naturally near waist. Both hips, knees, elbows and leaf skirt respond to gait. Complete both legs and settle to ready. No repeated same-leg march or bow drawing.  Locked original elevated three-quarter orthographic camera facing SCREEN RIGHT. Fixed original body size and root centered; every root toe, antler and both bow tips remain inside960x544 with generous margins. Empty uniform saturated BLUE RGB0,0,255 backdrop in EVERY frame. No floor, shadow, scenery, other figure, text, floating leaves, sparkle, trail, ribbon, glowing aura, camera travel, zoom, foot sliding or changing illumination. Only original body and held equipment move; amber pods keep their original painted color.",
+  "protected_foreground_chroma": 8,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

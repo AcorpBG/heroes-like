@@ -1,0 +1,18 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "ranged_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v2"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo autonomous review of all992 extracted chronological frames from eight original H3 takes on light/dark backgrounds plus enlarged bow grips, reciprocal roots, guard/support and collapse transitions. Original ivory bark mask, branching leaf crown, green/gold mantle, two arms/two root legs and one full LEFT-hand wooden recurve bow retained. Selected move45, melee48, ranged60, recoil27, brace31, physical support55 and corrected death50:316 new original poses. Movement20-64 includes both lifted/passing legs and a matching contact seam. Right empty fist winds up, strikes at28/index22 and recovers; original brief arm-motion blur26-27 retained. Ranged draws one amber seed-arrow and releases38/index27, with fully detached flight38-45 separated only across proved empty vertical gaps;37 excluded because arrow still touches bow. Runtime owns flight. Knees/right forearm brace and terminal original held; support raises right hand to throat, opens palm and lowers without magic. First death rejected for upright/kneeling and tilt/prone jumps22->23/45->46. Corrected start/end-only video continuously lowers hips/knees, loses support and rolls49-64, lowers left bow to ground, settles leaf layers and ends in original head-right grounded corpse. Shortened stationary holds with original frames and fixed whole-source scale/anchor; no interpolation, reversed footage, pose normalization or invented pixels. Native and mirrored phase review at128px reference height plus actual melee/ranged clock captures cover windup, release/contact and recovery. Candidate/mirrored/ranged1048 checks each pass. First ranged observation missed opening pose0; unchanged repeat observed every60 ranged frame, with no test exemptions or content timing changes. Eight existing articulated idle phases retained. No continuous browser movie review, manual playtest, Linux run or full suite claimed."
+  }
+}

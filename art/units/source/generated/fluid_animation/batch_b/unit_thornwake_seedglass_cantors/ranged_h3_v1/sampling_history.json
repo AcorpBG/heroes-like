@@ -1,0 +1,307 @@
+{
+  "prompt": [
+    313,
+    "501c2faa-35de-4576-b68a-59f1b26dfad7",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Seedglass Cantor, a tall slim humanoid woodland archer with exactly TWO arms and TWO legs. Pale ivory bark mask/face with elongated dark eye openings, brown branching antler crown and original bright green leaves, ivory bark breast and thigh armor, layered green/golden leaf mantle and skirt, brown vine-wrapped limbs and two root-toed wooden feet. SCREEN RIGHT anatomical LEFT hand holds ONE original tall curved wooden recurve bow with both curled branch tips, green leaf accents, amber hanging seed pods and one thin bowstring. SCREEN LEFT anatomical RIGHT hand is the free drawing/punching hand. LEFT hand always holds the same bow grip; RIGHT hand moves freely or draws its string. Keep pale face, antlers, root toes, two limbs each, leaf layers and full bow shape/length unchanged. Never add a staff, sword, shield, second bow or arm. One original bow shot. LEFT hand raises and aims the same full bow toward SCREEN RIGHT. RIGHT hand draws the thin original string back near cheek30 with exactly ONE short amber seed-arrow nocked along it. RIGHT fingers release48 and follow through beside right shoulder while LEFT arm keeps bow aimed. The single released seed-arrow leaves SCREEN RIGHT quickly; no lingering arrow, beam, repeated shot or trail. Recover82 and lower bow104 to ready. Both branch tips, grip, string and anatomy stay intact.  Locked original elevated three-quarter orthographic camera facing SCREEN RIGHT. Fixed original body size and root centered; every root toe, antler and both bow tips remain inside960x544 with generous margins. Empty uniform saturated BLUE RGB0,0,255 backdrop in EVERY frame. No floor, shadow, scenery, other figure, text, floating leaves, sparkle, trail, ribbon, glowing aura, camera travel, zoom, foot sliding or changing illumination. Only original body and held equipment move; amber pods keep their original painted color.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026102703
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "seedglass_cantor_ranged_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "seedglass_cantor_ranged_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "seedglass_cantor_ranged_h3_v1_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "seedglass_cantor_ranged_h3_v1_guide_3.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 30,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 48,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 82,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "43": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "42",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 104,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "30",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "43",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "seedglass_cantor_h3/ranged_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "seedglass_cantor_h3",
+      "create_time": 1790934276023
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "seedglass_cantor_h3\\ranged_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "501c2faa-35de-4576-b68a-59f1b26dfad7",
+          "timestamp": 1790934276024
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "501c2faa-35de-4576-b68a-59f1b26dfad7",
+          "timestamp": 1790934276063
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "501c2faa-35de-4576-b68a-59f1b26dfad7",
+          "timestamp": 1790934453166
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

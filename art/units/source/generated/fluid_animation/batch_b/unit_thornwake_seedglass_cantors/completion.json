@@ -1,0 +1,68 @@
+{
+  "unit_id": "unit_thornwake_seedglass_cantors",
+  "workflow": "Solo original MiniMax H3 video, extracted transparent original frames and autonomous review",
+  "new_clip_frames": {
+    "move": 45,
+    "attack": 48,
+    "ranged": 60,
+    "hit": 27,
+    "defend": 31,
+    "cast": 55,
+    "death": 50
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo autonomous review of all992 extracted chronological frames from eight original H3 takes on light/dark backgrounds plus enlarged bow grips, reciprocal roots, guard/support and collapse transitions. Original ivory bark mask, branching leaf crown, green/gold mantle, two arms/two root legs and one full LEFT-hand wooden recurve bow retained. Selected move45, melee48, ranged60, recoil27, brace31, physical support55 and corrected death50:316 new original poses. Movement20-64 includes both lifted/passing legs and a matching contact seam. Right empty fist winds up, strikes at28/index22 and recovers; original brief arm-motion blur26-27 retained. Ranged draws one amber seed-arrow and releases38/index27, with fully detached flight38-45 separated only across proved empty vertical gaps;37 excluded because arrow still touches bow. Runtime owns flight. Knees/right forearm brace and terminal original held; support raises right hand to throat, opens palm and lowers without magic. First death rejected for upright/kneeling and tilt/prone jumps22->23/45->46. Corrected start/end-only video continuously lowers hips/knees, loses support and rolls49-64, lowers left bow to ground, settles leaf layers and ends in original head-right grounded corpse. Shortened stationary holds with original frames and fixed whole-source scale/anchor; no interpolation, reversed footage, pose normalization or invented pixels. Native and mirrored phase review at128px reference height plus actual melee/ranged clock captures cover windup, release/contact and recovery. Candidate/mirrored/ranged1048 checks each pass. First ranged observation missed opening pose0; unchanged repeat observed every60 ranged frame, with no test exemptions or content timing changes. Eight existing articulated idle phases retained. No continuous browser movie review, manual playtest, Linux run or full suite claimed."
+  },
+  "validation": {
+    "candidate_checks": 1048,
+    "mirrored_checks": 1048,
+    "ranged_checks": 1048,
+    "live_checks": 1062,
+    "failures": 0,
+    "new_original_action_frames": 316,
+    "preserved_idle_frames": 8,
+    "retained_original_rgb_frames_including_rejected": 992,
+    "atlas_dimensions": [
+      3776,
+      3120
+    ],
+    "rgba_bytes": 47124480,
+    "overworld_visuals_preserved": 232,
+    "other_battle_rows_preserved": 231,
+    "platform": "Windows Godot4.6.2 offscreen",
+    "full_suite_run": false,
+    "manual_playtest": false,
+    "continuous_browser_playback_review": false,
+    "linux_run": false
+  },
+  "roster_after": {
+    "complete": 207,
+    "remaining": 25,
+    "total": 232
+  },
+  "progress_note": "2026-10-02 SOLO COMPLETE: Seedglass Cantors seven original H3 actions,316 new poses plus eight preserved articulated idle phases. Full left bow/right drawing-hand identity, reciprocal gait, distinct melee/shot/recoil/brace/rally and grounded corpse reviewed. Focused candidate/mirrored/ranged-shell/live checks 1048/1048/1048/1062 pass; original frame/import verification,all232 map visuals/timing and other231 battle rows preserved. Roster207/232 complete,25 remaining. Broad goal remains in_progress; solo,no full suite.",
+  "model_release": {
+    "free_vram_bytes": 32197574656,
+    "required_free_vram_bytes": 17179869184
+  },
+  "cleanup": {
+    "removed_verified_duplicate_and_unused_files": 1710,
+    "removed_duplicate_bytes": 636227463,
+    "temporary_files_to_remove": 156,
+    "temporary_bytes_to_remove": 174242387,
+    "recovered_bytes": 810537121,
+    "rebuildable": true,
+    "retained_original_rgb_frames": 992,
+    "original_videos_latents_guides_prompts_and_provenance_preserved": true,
+    "temporary_directories": [
+      ".artifacts/seedglass_solo",
+      ".artifacts/seedglass_cantor_h3"
+    ],
+    "temporary_files_removed": 158,
+    "temporary_bytes_removed": 174309658
+  }
+}

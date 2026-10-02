@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_thornwake_seedglass_cantors",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          188,
+          487
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ec8d39d7c55949acadb862b92e4257e82ccc753ec888dc06fb1147b7c7896cf7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0be2d125bdd18275a054bc58258bbad97ef4315c2bb21e9ba1c1c92ef9539133",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "guard_braced",
+        "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/guard-braced.png",
+        "rects": [
+          [
+            0,
+            0,
+            1171,
+            1343
+          ]
+        ],
+        "anchor": [
+          585,
+          1258
+        ],
+        "scale": 0.292,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "be363cb5b4fbf9d41a18f79a4cd1eacb45335a656e15413fae37aaa78d868df4",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "8b55811be51860e7ff19991611cc46e7fcb502f0749b2c8e8c2b30188768e9b8",
+      "runtime_source_scale": 0.146
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_thornwake_seedglass_cantors",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          188,
+          487
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ec8d39d7c55949acadb862b92e4257e82ccc753ec888dc06fb1147b7c7896cf7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0be2d125bdd18275a054bc58258bbad97ef4315c2bb21e9ba1c1c92ef9539133",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "ranged_aim",
+        "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/original.png",
+        "rects": [
+          [
+            297,
+            635,
+            607,
+            965
+          ]
+        ],
+        "anchor": [
+          461,
+          952
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2bd74173e510123cff48f4612d5717c674de5a446627257e842c0b9354426be7",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "aa2fa93c0f283b0a14e56727d3e324085af9be31f20c8ad84cf3209ce9afcdd4",
+      "runtime_source_scale": 0.66
+    },
+    {
+      "source_frame": {
+        "name": "ranged_release",
+        "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/ranged-release-clear.png",
+        "rects": [
+          [
+            0,
+            0,
+            1324,
+            1188
+          ]
+        ],
+        "anchor": [
+          504,
+          1152
+        ],
+        "scale": 0.354,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b955d5f3615ea1efbd65f0ca0beeeedba362bdf95eefdfc912c16dc266488dac",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "540d18028242e31593a27c4acd144a1a8c86d22ceed78983b5ff3d401c19a52c",
+      "runtime_source_scale": 0.177
+    },
+    {
+      "source_frame": {
+        "name": "ranged_recover",
+        "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/original.png",
+        "rects": [
+          [
+            972,
+            640,
+            1223,
+            965
+          ]
+        ],
+        "anchor": [
+          1100,
+          955
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2bd74173e510123cff48f4612d5717c674de5a446627257e842c0b9354426be7",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "747593e643e782d33f0a886ffbb2c9f8655e6caa38893bc3f48c041c4750c6b8",
+      "runtime_source_scale": 0.66
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
