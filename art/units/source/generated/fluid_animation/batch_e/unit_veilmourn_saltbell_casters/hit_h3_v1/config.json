@@ -1,0 +1,48 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026108303,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          516
+        ]
+      ],
+      "anchor": [
+        179,
+        513
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "Original SALTBELL CASTER from supplied painting. One slender human in ragged ivory hooded coat over dark blue clothes, leather boots with bandaged shins and bronze knee plates, face visible beneath ivory hood, facing SCREEN RIGHT. Exactly TWO arms and TWO legs. His anatomical RIGHT hand, on SCREEN LEFT in the ready guide, grips one tan rope coil connected continuously to ONE small bronze handbell with blue tassel. His anatomical LEFT hand is the free open hand on SCREEN RIGHT. Preserve this exact grip and ONE continuously attached bell, no staff, duplicate bell, sword or new weapon. Original rope, bell, sleeves, hood, proportions and painted fantasy game surface remain recognizable. One clear short impact recoil: chest and hood lean backward away from SCREEN RIGHT, free forearm raises briefly, both knees flex and boots brace, bell-hand retains rope/attached bell. Recover to exact ready. No collapse, turning, equipment loss or repeated impacts.  Entire backdrop flat magenta RGB255,0,255 throughout, no scenery, floor, cast shadow, text, cuts, camera movement or zoom. Fixed boot contact plane y576. Preserve one constant anatomical scale and keep bell/rope/coat/boots within ample margins. No particles or beams obscuring anatomy.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

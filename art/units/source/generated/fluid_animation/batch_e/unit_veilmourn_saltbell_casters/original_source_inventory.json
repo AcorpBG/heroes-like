@@ -1,0 +1,1599 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters",
+  "takes": {
+    "attack_h3_v1": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/accepted_baseline.json",
+        "bytes": 2854,
+        "sha256": "a92845a9ff49b04b92326806fe5dbbffb46794c73c952237dff6a24e7e35bc04"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/config.json",
+        "bytes": 2990,
+        "sha256": "18811f0fa17d6a0ffef3f5eaad9c4ec5ba7c1e2c0912b42ed84715b6185a49c7"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/decode_submission.json",
+        "bytes": 642,
+        "sha256": "aad8bbc102a2b1151381fb1e745678ea834dd701a351529e668dd7ca58b99c08"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/generation_history.json",
+        "bytes": 23287,
+        "sha256": "ece2b2553ba52fa97f090457ee95afc1611fa3490e5933280ce7214ed6933a20"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/guide_0_chroma.png",
+        "bytes": 180551,
+        "sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/guide_0_rgba.png",
+        "bytes": 220884,
+        "sha256": "13c24293f0e1b1db4838d6f44bdf984cccf0544bbcffa391797dbff76e08b873"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/guide_1_chroma.png",
+        "bytes": 204004,
+        "sha256": "11e94613e9e047a2dc9c8fd39680e161cf86c9941df3740dd40106ff8834497b"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/guide_1_rgba.png",
+        "bytes": 244330,
+        "sha256": "88849d3511a237d1b336f50855c106bc7f4aa7cfed21ee66677ca14f01912dad"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/guide_2_chroma.png",
+        "bytes": 204540,
+        "sha256": "f0bbedd6fbfc239fc81004cf1c3505ff94823d320c34124c1291939a82656249"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/guide_2_rgba.png",
+        "bytes": 245530,
+        "sha256": "2aab0cc6be2e6a8dbbd34f5652624b58a7c5c2f7e8db74519dbcf5e9d2761b90"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/matte.json",
+        "bytes": 51430,
+        "sha256": "46a39e9fbf26f177add9b3fcb9724d3b98598ba42f37b92ae57cd9ca70ed367e"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/original.json",
+        "bytes": 9460,
+        "sha256": "7330d799d0453abbefa2096684cfd76fdbfd7871c061e204af82441d2d8326d8"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/original.latent",
+        "bytes": 8528800,
+        "sha256": "6c51a482d781813a975477deb0ad97d61f2d7a369221ff7237c463639c835bac"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/original.mp4",
+        "bytes": 1127330,
+        "sha256": "f77c9b25955d77eca57e2ea96132345fbc69d2168e278e5fedfd76f242c29715"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/original_lossless.mkv",
+        "bytes": 62629477,
+        "sha256": "6fd1d850415813fc82c382913d8cfca3f46e1ec35cf7da6c00821fd3db37bae3"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/prompt.txt",
+        "bytes": 1306,
+        "sha256": "72cb33964242a430225e7cb612a6bfdaa106272172a45e2631b6646bf0eb8990"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/reference.json",
+        "bytes": 2465,
+        "sha256": "4f7d0dfe0e47e044c878a5dec6d4ece61231413fed8f3515b757b75703295b18"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/sampling_history.json",
+        "bytes": 6639,
+        "sha256": "981a2036900366774f5d46d7a788601c8d6b557e6abc03fbb90b3f432e82b35d"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/sampling_submission.json",
+        "bytes": 577,
+        "sha256": "8058249f789d64f4679447ff53e806311f63663298d48a4253b8cbe606932932"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/sampling_workflow_api.json",
+        "bytes": 4556,
+        "sha256": "990c30f961c60c418862a9262c7f8f737cd404eb34317e08deb591ef8f6057c0"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "8d83bc75129d75a317dd25097984928006efa2033a518dc8aa7b01ca6546cb4b"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/semantic_matte_initial.json",
+        "bytes": 50862,
+        "sha256": "7afa6e07a88dfedc752bb9a8361cd0434de68f480e1e8d8a7c6c82edeb4ae3d5"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/staged_generation.json",
+        "bytes": 782,
+        "sha256": "b3f4b4ef968055053529d0958f3957ab81b46d5570d720b090cec9bbd6c62375"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/submission.json",
+        "bytes": 642,
+        "sha256": "aad8bbc102a2b1151381fb1e745678ea834dd701a351529e668dd7ca58b99c08"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v1/workflow_api.json",
+        "bytes": 1213,
+        "sha256": "d9484a2ae4d679e302f3d2f0d60a80b0be66f6ce17c62398b8eed6a3efd981e6"
+      }
+    },
+    "attack_h3_v2": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/accepted_baseline.json",
+        "bytes": 2854,
+        "sha256": "a92845a9ff49b04b92326806fe5dbbffb46794c73c952237dff6a24e7e35bc04"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/config.json",
+        "bytes": 3532,
+        "sha256": "852bc3f1b69c2550d7b5e9f167985758bbd4e85cc5d4e03f981bc73216b47db3"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/decode_submission.json",
+        "bytes": 643,
+        "sha256": "fbe9ae81a7ed641f4daebb2c5ce496bf6823413c9566bacb58e7765c01672662"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/generation_history.json",
+        "bytes": 23287,
+        "sha256": "924365062b74f90e7f59afdfe60966b7badedb4cb77038c7584e8623ff40d65a"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/guide_0_chroma.png",
+        "bytes": 180551,
+        "sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/guide_0_rgba.png",
+        "bytes": 220884,
+        "sha256": "13c24293f0e1b1db4838d6f44bdf984cccf0544bbcffa391797dbff76e08b873"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/guide_1_chroma.png",
+        "bytes": 204004,
+        "sha256": "11e94613e9e047a2dc9c8fd39680e161cf86c9941df3740dd40106ff8834497b"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/guide_1_rgba.png",
+        "bytes": 244330,
+        "sha256": "88849d3511a237d1b336f50855c106bc7f4aa7cfed21ee66677ca14f01912dad"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/guide_2_chroma.png",
+        "bytes": 204540,
+        "sha256": "f0bbedd6fbfc239fc81004cf1c3505ff94823d320c34124c1291939a82656249"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/guide_2_rgba.png",
+        "bytes": 245530,
+        "sha256": "2aab0cc6be2e6a8dbbd34f5652624b58a7c5c2f7e8db74519dbcf5e9d2761b90"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/original.json",
+        "bytes": 9460,
+        "sha256": "6af6e0c0c0f40413cccfe243666a505b45494136c4526629ea2db6bcc3cd20b6"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/original.latent",
+        "bytes": 8529488,
+        "sha256": "a5b8523b80674e9f2f31c02dfef1caec983e1fae72f1dba6e2a17e205e05d4e6"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/original.mp4",
+        "bytes": 766745,
+        "sha256": "de1ea06042a61f2043d93f42c207a4f84b236314ecf9fd88541162576bc869c8"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/original_lossless.mkv",
+        "bytes": 60824991,
+        "sha256": "af871c85c82714b90f33f4a52ab0400f866c205f91a0eebe62384fb025e164c4"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/prompt.txt",
+        "bytes": 1813,
+        "sha256": "d5a5e77f7ad5b7609076abacc44913b385584461c33d2923310daf932313ea5b"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/reference.json",
+        "bytes": 2465,
+        "sha256": "4f7d0dfe0e47e044c878a5dec6d4ece61231413fed8f3515b757b75703295b18"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/sampling_history.json",
+        "bytes": 7554,
+        "sha256": "4dafb7944716db7119cfc2d326477142803cc2a2b05e142e93819f8ae87e9809"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/sampling_submission.json",
+        "bytes": 577,
+        "sha256": "7dffb46dbf64b35a01d7c31988f2d3813558f6a192badbfee5fa08ca4af4e07e"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/sampling_workflow_api.json",
+        "bytes": 5383,
+        "sha256": "193860166e84897847cf55752149ac5ad682f422082d158b7fb6c48e8bfaeedf"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/staged_generation.json",
+        "bytes": 782,
+        "sha256": "08dee0d7bdf9389d5309e93a5f017d883973bcd594100af265ce1c465ff3d14f"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/submission.json",
+        "bytes": 643,
+        "sha256": "fbe9ae81a7ed641f4daebb2c5ce496bf6823413c9566bacb58e7765c01672662"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/workflow_api.json",
+        "bytes": 1213,
+        "sha256": "ea2b5efbc52c86483863c3d26d060dc6180b01b9ab86f3328918d01c22bc5abb"
+      }
+    },
+    "attack_h3_v3": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/accepted_baseline.json",
+        "bytes": 2854,
+        "sha256": "a92845a9ff49b04b92326806fe5dbbffb46794c73c952237dff6a24e7e35bc04"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/config.json",
+        "bytes": 3552,
+        "sha256": "52c5bab8b887220478f372a009860c1c626f01302a09d14efed994e7f987cd1b"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/decode_submission.json",
+        "bytes": 642,
+        "sha256": "e55a4de4b26e0cc7f49a9eb4ef55e7d389751bc62d78220e09a4b88db0b4a049"
+      },
+      "failed_matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/failed_matte.json",
+        "bytes": 4519,
+        "sha256": "90c33e41dab42e0ca176a4e6a2f5e236840270aa3b46100c262edb3184c651a2"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/generation_history.json",
+        "bytes": 23258,
+        "sha256": "26ef5b4e6289585db9f4b8ce90d71ba74a1c38345898e5424c68f986f067cb98"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/guide_0_chroma.png",
+        "bytes": 180551,
+        "sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/guide_0_rgba.png",
+        "bytes": 220884,
+        "sha256": "13c24293f0e1b1db4838d6f44bdf984cccf0544bbcffa391797dbff76e08b873"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/guide_1_chroma.png",
+        "bytes": 204004,
+        "sha256": "11e94613e9e047a2dc9c8fd39680e161cf86c9941df3740dd40106ff8834497b"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/guide_1_rgba.png",
+        "bytes": 244330,
+        "sha256": "88849d3511a237d1b336f50855c106bc7f4aa7cfed21ee66677ca14f01912dad"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/guide_2_chroma.png",
+        "bytes": 206809,
+        "sha256": "dc5d81f20c815e82dbb6a539c263c6d6996cc1caa86a5b615503f6debacf8fe2"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/guide_2_rgba.png",
+        "bytes": 246485,
+        "sha256": "fb6547ea387ac521a161ea5c9b4a9a7c1652e6ffe66f322998d77b673b2297e9"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/original.json",
+        "bytes": 9460,
+        "sha256": "5f078882f7e11e1a3b262855dd615b6a41c89d7fccd081137ba86bab1158089f"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/original.latent",
+        "bytes": 8529656,
+        "sha256": "1f20c4a7f8b2d21bbf36c11b04982741dd489de6051854bb8abac459df53231e"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/original.mp4",
+        "bytes": 1122703,
+        "sha256": "fba55fbf83d0a047b644519ebb619e74e4fb1371e903e7020e508a05a36edb8c"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/original_lossless.mkv",
+        "bytes": 70855377,
+        "sha256": "36436796af2f8948cda0cb9356fe365e12df0c4fa499aa7055cc46e3ed2596b2"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/prompt.txt",
+        "bytes": 1805,
+        "sha256": "9a82c00a585f9cd6620895c2568f7abfe9860300e4218073a4745f0c9c19f3c3"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/reference.json",
+        "bytes": 2459,
+        "sha256": "32527350ecadad8c25268d4bb31e3f2edf1cc698cc430450c6b8925ea8b3f0e4"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/sampling_history.json",
+        "bytes": 7853,
+        "sha256": "a4ff5074a987de9fde79fb76dc9694fd05384e857d7111cb8c9121393cda45d8"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/sampling_submission.json",
+        "bytes": 577,
+        "sha256": "89515110ec3e452f090fdc271fb7645eb168fa51273958cc8737db7a7716aeca"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/sampling_workflow_api.json",
+        "bytes": 5695,
+        "sha256": "197d02e7f39f0d13012538fc5883b5d8eddd96655d6fa2715ee70310a06534df"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/staged_generation.json",
+        "bytes": 729,
+        "sha256": "18c79a4efe3773cc4f84f0d00469226fe95b29fdb35be7a2c74969bd75f83d9b"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/submission.json",
+        "bytes": 642,
+        "sha256": "e55a4de4b26e0cc7f49a9eb4ef55e7d389751bc62d78220e09a4b88db0b4a049"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v3/workflow_api.json",
+        "bytes": 1213,
+        "sha256": "f841f8ece906ee8c0f6c8ee6aa0dbef6cc0ed3e75a1620ae3c5e70edb2355729"
+      }
+    },
+    "attack_h3_v4": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/accepted_baseline.json",
+        "bytes": 2854,
+        "sha256": "a92845a9ff49b04b92326806fe5dbbffb46794c73c952237dff6a24e7e35bc04"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/config.json",
+        "bytes": 3207,
+        "sha256": "dafa2b4d5aaecc0adf6400d9675bfead9e73629402f1d65976ee286a22bd1d0a"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/decode_submission.json",
+        "bytes": 516,
+        "sha256": "af47ed5b3929c16ccbd1d1f5fd109a1b8c19c320e300c0390cdb27832a4bb659"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/generation_history.json",
+        "bytes": 23258,
+        "sha256": "081f7edd0ba0ada79464b8e1b4c25c0bf48e40fcb2224d68dcfc331667463530"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/guide_0_chroma.png",
+        "bytes": 180551,
+        "sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/guide_0_rgba.png",
+        "bytes": 220884,
+        "sha256": "13c24293f0e1b1db4838d6f44bdf984cccf0544bbcffa391797dbff76e08b873"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/guide_1_chroma.png",
+        "bytes": 191400,
+        "sha256": "23579a88e7a6673fbe7ee3c2e0545c472ab1bff94a20b54144efdab94a26d560"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/guide_1_rgba.png",
+        "bytes": 228619,
+        "sha256": "196ddccede2a7525670c735dc04a19b9c8ac39d51eeed9571a757b200f029c00"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/matte.json",
+        "bytes": 51473,
+        "sha256": "7135f0e3cd3088119e7ec2fbcbac2f14fb7e949f7528809024034725434ee26a"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/original.json",
+        "bytes": 9460,
+        "sha256": "3aa15c0b9855b6ed286e9af93c9d3529f290fcb81f3630d75b2d264d0ae8bfb9"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/original.latent",
+        "bytes": 8529096,
+        "sha256": "b7c96406d239b538a7a4063a9b322f01a1757f670ff78a763dfea7ebde7c12ad"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/original.mp4",
+        "bytes": 958984,
+        "sha256": "28772dc41175fbfacc02f38cf04d3e1cb8ce3e6eab0c71fe3ef3f8f18ce74fd4"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/original_lossless.mkv",
+        "bytes": 57768000,
+        "sha256": "effda49a6eee0b636445dd42f9631be2a5dad4af2e22b48ca15ff4bd6dc48eb9"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/prompt.txt",
+        "bytes": 1973,
+        "sha256": "d4018a6735b76fa1342d13e14bda4bcd458d5a42370b780bd7bc344621368183"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/reference.json",
+        "bytes": 1723,
+        "sha256": "60c5e1db3dfbdd6851dbcd52901bd92c1982b18168f9b831a185ccf771b4152f"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/sampling_history.json",
+        "bytes": 6641,
+        "sha256": "7a6070eb16333e166412d98baf0bcf78592af7869184d6a6f0a3c33893564289"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/sampling_submission.json",
+        "bytes": 450,
+        "sha256": "c013d789499b0e9b9a955cafb05ec45debfb2b2ca9fb634ec21ed6eafa8fed15"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/sampling_workflow_api.json",
+        "bytes": 4771,
+        "sha256": "d3860b77bf5ac2677a442dbdd648f5c4c35332aa17a949350b0349a848ec5779"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "bbf31dc33db79c85f7c3a010a0f9105ce57173bb75c298eaccc954e090232370"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/semantic_matte_initial.json",
+        "bytes": 50905,
+        "sha256": "68c9afab568fc47b296f33b6ad2cf2e4ebc7291e21d236b4ba66f11689ec44e5"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/staged_generation.json",
+        "bytes": 729,
+        "sha256": "30f59f1f1604cf753bb9799db1e8f430a60c7c06593b2a79cc1ea2c76b3ba326"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/submission.json",
+        "bytes": 516,
+        "sha256": "af47ed5b3929c16ccbd1d1f5fd109a1b8c19c320e300c0390cdb27832a4bb659"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v4/workflow_api.json",
+        "bytes": 1213,
+        "sha256": "3562bb91adf8f595175b1d38caf2a723cd4043c0175f3cc8115751b6eda77e9e"
+      }
+    },
+    "cast_h3_v1": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/accepted_baseline.json",
+        "bytes": 2854,
+        "sha256": "a92845a9ff49b04b92326806fe5dbbffb46794c73c952237dff6a24e7e35bc04"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/config.json",
+        "bytes": 3297,
+        "sha256": "04e30c2e2bca2633d66bd4c4fdc381165b4b48b72d526104663963ad6798d133"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/decode_submission.json",
+        "bytes": 637,
+        "sha256": "43cd10403d9979b7562e869d83894adec822b9cf31458a8c76fabe08ec3e3c76"
+      },
+      "failed_matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/failed_matte.json",
+        "bytes": 9372,
+        "sha256": "1c28191c74040f2e1b431b2cdd9d11b5601dc5c5b005d12351dff6195471bf49"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/generation_history.json",
+        "bytes": 23002,
+        "sha256": "4050a7cf820bc08d5459d39b2ac0887601e82ae1f32a9379a22d3547fb7bba9d"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/guide_0_chroma.png",
+        "bytes": 180551,
+        "sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/guide_0_rgba.png",
+        "bytes": 220884,
+        "sha256": "13c24293f0e1b1db4838d6f44bdf984cccf0544bbcffa391797dbff76e08b873"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/guide_1_chroma.png",
+        "bytes": 237673,
+        "sha256": "7e3e6848f96bdc40cea2a02a9699eb5f61113a7c48cc298d7f43a6de3e7ed8f9"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/guide_1_rgba.png",
+        "bytes": 286325,
+        "sha256": "66bea2fa71e4073cc46c2e9f3d00f6dd5b7cfc542309b6013f379ead3efed030"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/guide_2_chroma.png",
+        "bytes": 205276,
+        "sha256": "b59573e8c87c0c83ffad537bfce3aacf49a25e97672cffa62a5ff165ded011c4"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/guide_2_rgba.png",
+        "bytes": 246450,
+        "sha256": "d8f6f1d85f09d63edc2078c5af4b86e224c94265b84201c342dd0d27fdfee57e"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/original.json",
+        "bytes": 9460,
+        "sha256": "72454385838ed8e5ebe25b992919285349675daf8e08b89ae61c670266219403"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/original.latent",
+        "bytes": 8529112,
+        "sha256": "33747f5254ede0ac3acc6434aa9bf5fd81f5c8c78fc45f6cd84598b479f6f137"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/original.mp4",
+        "bytes": 1310810,
+        "sha256": "2a0cd8099a6d8a29486fc1ca969a87a7e718f64248b4d0f18f9b1e0ea4c1cb76"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/original_lossless.mkv",
+        "bytes": 61979750,
+        "sha256": "2ad6fc625dbd3a6b2822941f6d90195b7e7c4f575b6280df6a96729885478952"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/prompt.txt",
+        "bytes": 1621,
+        "sha256": "3939bc66a90250d93f732aa5591b26544928b670dca9d1e9f49daf297451f563"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/reference.json",
+        "bytes": 2459,
+        "sha256": "0afdd505082426600e2431de894eb8a3690f76813df8faf9907a01b78ec80d20"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/sampling_history.json",
+        "bytes": 6843,
+        "sha256": "db2811764a1ebfc70b4e8c23d6dc1506bc97f905ad72b20de89119b96603ba81"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/sampling_submission.json",
+        "bytes": 572,
+        "sha256": "5530f21f4cc3f9e3244169e66b3fdaccd04900113b0d33db1618dbdc8c1095d0"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/sampling_workflow_api.json",
+        "bytes": 4863,
+        "sha256": "3646d79ca330846c8a91c1b8cb214768d364a28ee0f00d39dead3b5ef4f9d152"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/segmentation_recipe.json",
+        "bytes": 1577,
+        "sha256": "962d3024f7e1ee92974695abff2a9782ee747aad69a5d8f0aaae1a574d3e7271"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/staged_generation.json",
+        "bytes": 727,
+        "sha256": "5b04faf3d30f0fa389fc674084087bb4b116c217cef0c17a8ef9cb96dc740b30"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/submission.json",
+        "bytes": 637,
+        "sha256": "43cd10403d9979b7562e869d83894adec822b9cf31458a8c76fabe08ec3e3c76"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v1/workflow_api.json",
+        "bytes": 1207,
+        "sha256": "b7ec309261625fcf5e83c3b505a9ce6438690e2ffbfa508f69c0fc353e86786b"
+      }
+    },
+    "cast_h3_v2": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/accepted_baseline.json",
+        "bytes": 2854,
+        "sha256": "a92845a9ff49b04b92326806fe5dbbffb46794c73c952237dff6a24e7e35bc04"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/config.json",
+        "bytes": 3237,
+        "sha256": "0f06811ea30d4d8f36972cf6731f91beb425fe9c665d4bbb3051082a3381699e"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/decode_submission.json",
+        "bytes": 512,
+        "sha256": "1d22ccf96eea4086679611e8e97c91420ce1607f484188dcbceefd85a6452bcc"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/generation_history.json",
+        "bytes": 23002,
+        "sha256": "44334e23365a735d36a191c04b3ba973528298aef8d7c2f9a4a4e08d35c619d8"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/guide_0_chroma.png",
+        "bytes": 180551,
+        "sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/guide_0_rgba.png",
+        "bytes": 220884,
+        "sha256": "13c24293f0e1b1db4838d6f44bdf984cccf0544bbcffa391797dbff76e08b873"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/guide_1_chroma.png",
+        "bytes": 165505,
+        "sha256": "7da06166fc52c7256735ae41e2690532bb904af008c60f95bd4c3cd0a6375039"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/guide_1_rgba.png",
+        "bytes": 199547,
+        "sha256": "999fa50d9e20d506fe1d8ddcfe03077c7965d4c31c9cded76d051800ef75e460"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/matte.json",
+        "bytes": 50950,
+        "sha256": "961d2e781b0348647c7aef91ed548143f82b3a709135502452a6ebf1b71b235c"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/original.json",
+        "bytes": 9460,
+        "sha256": "1f6fa1fde6fc91a586ff5e67dec853c9fc893bfd50673902ed979e05fd390cc4"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/original.latent",
+        "bytes": 8529392,
+        "sha256": "501ee68b549cb212dfcd71e80b25f1c19e57c562cf9b060badf4bdeff31b13c5"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/original.mp4",
+        "bytes": 634597,
+        "sha256": "b4de7c132e7a4d5793754a62a16219fb5d73b6f34d50cf92257a945d966b892c"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/original_lossless.mkv",
+        "bytes": 55802929,
+        "sha256": "aaf1652fc2fa7906001736246390d98915118c41545102a34229a389d04b1df7"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/prompt.txt",
+        "bytes": 1919,
+        "sha256": "dfd2f0599d80e169fa486f1f7427f8ad56518effb50c386b76296604049c7cef"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/reference.json",
+        "bytes": 1739,
+        "sha256": "c9e890142f66c17844855ef056182522def79c263b9573fd20a8606193250e90"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/sampling_history.json",
+        "bytes": 7395,
+        "sha256": "f1709851b206c8dcdc6c56e135b40be8148100f0a865e40a5fa9cf0fecbda526"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/sampling_submission.json",
+        "bytes": 446,
+        "sha256": "47193a19f5d8fb66ed93f8d3ec9eeb06dbf9b4d6389ce8fcd37560e69393660c"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/sampling_workflow_api.json",
+        "bytes": 5351,
+        "sha256": "fd8cbd360c828d2865efa346ca92263df0b160914dea0556ed000416171e1873"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "bbf31dc33db79c85f7c3a010a0f9105ce57173bb75c298eaccc954e090232370"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/semantic_matte_initial.json",
+        "bytes": 50382,
+        "sha256": "0133976c5e284b635c577a3c76baa2c734b9829a44d46baffb5919b00ff0e3bc"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/staged_generation.json",
+        "bytes": 727,
+        "sha256": "28ddc3dd989ecb386d198ccab05f4378d96dda9f02a3a685ad2070cc5acdf54f"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/submission.json",
+        "bytes": 512,
+        "sha256": "1d22ccf96eea4086679611e8e97c91420ce1607f484188dcbceefd85a6452bcc"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/cast_h3_v2/workflow_api.json",
+        "bytes": 1207,
+        "sha256": "b3039d2083a6590a4594591088c0f179a1705ebd8cd0cf15d42b5b012ee94737"
+      }
+    },
+    "death_h3_v1": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/accepted_baseline.json",
+        "bytes": 2854,
+        "sha256": "a92845a9ff49b04b92326806fe5dbbffb46794c73c952237dff6a24e7e35bc04"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/config.json",
+        "bytes": 3471,
+        "sha256": "a17c2e8dfc908bf60596ed5749cffa9dddffccfecff228cfcca1d0c81e765a1d"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/decode_submission.json",
+        "bytes": 766,
+        "sha256": "15938aba2f87b68881b311101ca2c731351e41f32b06586884509cf72d04b131"
+      },
+      "failed_matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/failed_matte.json",
+        "bytes": 8123,
+        "sha256": "4b9a2f0f963c06293fa3f830a44bcfeaed8a96937207b914d7c5bd88301fa5e2"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/generation_history.json",
+        "bytes": 23130,
+        "sha256": "689d609126bc6dc4657c71ddb53d5e3db8e32cfc5b90944f38150b0ce7922cc1"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/guide_0_chroma.png",
+        "bytes": 180551,
+        "sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/guide_0_rgba.png",
+        "bytes": 220884,
+        "sha256": "13c24293f0e1b1db4838d6f44bdf984cccf0544bbcffa391797dbff76e08b873"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/guide_1_chroma.png",
+        "bytes": 147746,
+        "sha256": "8cadb2a9079f80abd8649c704cca39b71fb6d1c1d9ced10d87ad3f768deffb02"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/guide_1_rgba.png",
+        "bytes": 176239,
+        "sha256": "0c9c4f79b0a703f4301fbd72257336eab4254153b8b9ce3485f23cb1e129b949"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/guide_2_chroma.png",
+        "bytes": 148289,
+        "sha256": "9afb561cc79208c91605defec4fb6cb83f5d7fc5b1089f7c18b1e6b076a2f140"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/guide_2_rgba.png",
+        "bytes": 175888,
+        "sha256": "8e30ba96414c7be36e5874d424419b3115684b0aa880f8be646be361ecff59bd"
+      },
+      "guide_3_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/guide_3_chroma.png",
+        "bytes": 128851,
+        "sha256": "3914eb42a0090347b763fe204c9b24ae2fba20a30ef5c9e60ca3ee5a68e5a1a2"
+      },
+      "guide_3_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/guide_3_rgba.png",
+        "bytes": 152009,
+        "sha256": "af907246affc7d3e8f1ae2d622bfefebf6d3f4ec480bafe28ddb03b6e39c7dfc"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/original.json",
+        "bytes": 9460,
+        "sha256": "24bf06606ecaf5eeabbd276a8d588bc2bf7a669eb2625a2b9150abf8047d5539"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/original.latent",
+        "bytes": 8529080,
+        "sha256": "2c064e29facfaea2c6beeed6aa9f20600521c21289f6531a8c890d6004023847"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/original.mp4",
+        "bytes": 768395,
+        "sha256": "8b57542df0e49e4c07e658f77bb8323b5a1761f5b83dba9caf2959ea90aac883"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/original_lossless.mkv",
+        "bytes": 55092675,
+        "sha256": "3175961ade15cc72341128cf8982d6ab27b538ffb5f9e699ddbcc621f082765b"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/prompt.txt",
+        "bytes": 1388,
+        "sha256": "d38f8257ded896e81e4c92d2d33b656b587563cd2e7554308fad82f47ddf3f47"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/reference.json",
+        "bytes": 3195,
+        "sha256": "4abe6def2e82d204d0ff329924c6fca6932136742b60caa3a101bcb5aa6e15cc"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/sampling_history.json",
+        "bytes": 6770,
+        "sha256": "d62b443fe5f5292a87c4b2403ecf2b39beb8519c07edea533b167f20268de67d"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/sampling_submission.json",
+        "bytes": 701,
+        "sha256": "e573afeb2ddfe23de3a5743989cd715e82e09c71a0d455b2bfec65196a6dce7e"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/sampling_workflow_api.json",
+        "bytes": 4765,
+        "sha256": "6d1d2240bb1f573c57e178911eb8e3a0b981a54fe809d3a10ef4f83edf3b8cc5"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/segmentation_recipe.json",
+        "bytes": 1491,
+        "sha256": "b6b1f83f65da9bb0f0f61180e433e68d5d378c5b4a5931140b09af3850898271"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/staged_generation.json",
+        "bytes": 728,
+        "sha256": "ce1766e2994df11139c574c9201e2be3a62ca5e08ac30eff8cd99652c8550bb1"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/submission.json",
+        "bytes": 766,
+        "sha256": "15938aba2f87b68881b311101ca2c731351e41f32b06586884509cf72d04b131"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/workflow_api.json",
+        "bytes": 1210,
+        "sha256": "0ab277129270d37b3b8ca5a958a2bbb5141012c861f4218bef395596c1ee4840"
+      }
+    },
+    "death_h3_v2": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/accepted_baseline.json",
+        "bytes": 2854,
+        "sha256": "a92845a9ff49b04b92326806fe5dbbffb46794c73c952237dff6a24e7e35bc04"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/config.json",
+        "bytes": 4965,
+        "sha256": "bdf55bf3ebfde5c1dd2c4ad97efde5545308e13ce3412508acf7fe4ecc9cf0aa"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/decode_submission.json",
+        "bytes": 1018,
+        "sha256": "5f710d3965011f28326d3c15eca7b81c7079b8d15c3736b941d13a20906be8b3"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/generation_history.json",
+        "bytes": 23159,
+        "sha256": "0ff46c663a31555df41c06f305c9736a848bd15a9ff5da3ac0930e8d47f78877"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/guide_0_chroma.png",
+        "bytes": 180551,
+        "sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/guide_0_rgba.png",
+        "bytes": 220884,
+        "sha256": "13c24293f0e1b1db4838d6f44bdf984cccf0544bbcffa391797dbff76e08b873"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/guide_1_chroma.png",
+        "bytes": 230578,
+        "sha256": "96a25cde46cd4ff07112427147fff0c17e8b923c007a66198d7e0a05808dfab3"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/guide_1_rgba.png",
+        "bytes": 272831,
+        "sha256": "c65eb2a389b74549de27f3e4ff6a2f6cd68ab9e5a22ef936b7dbf5dbb15ba15d"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/guide_2_chroma.png",
+        "bytes": 147746,
+        "sha256": "8cadb2a9079f80abd8649c704cca39b71fb6d1c1d9ced10d87ad3f768deffb02"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/guide_2_rgba.png",
+        "bytes": 176239,
+        "sha256": "0c9c4f79b0a703f4301fbd72257336eab4254153b8b9ce3485f23cb1e129b949"
+      },
+      "guide_3_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/guide_3_chroma.png",
+        "bytes": 145707,
+        "sha256": "3875ad4b6335c53337712c28c5f20f9a414a7024463e6c8149ba79731611bcb8"
+      },
+      "guide_3_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/guide_3_rgba.png",
+        "bytes": 170515,
+        "sha256": "c3b302b814fc39fdded3f11fd00dd268de777a67b796d14271bf86a5c5d70abb"
+      },
+      "guide_4_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/guide_4_chroma.png",
+        "bytes": 148289,
+        "sha256": "9afb561cc79208c91605defec4fb6cb83f5d7fc5b1089f7c18b1e6b076a2f140"
+      },
+      "guide_4_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/guide_4_rgba.png",
+        "bytes": 175888,
+        "sha256": "8e30ba96414c7be36e5874d424419b3115684b0aa880f8be646be361ecff59bd"
+      },
+      "guide_5_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/guide_5_chroma.png",
+        "bytes": 128851,
+        "sha256": "3914eb42a0090347b763fe204c9b24ae2fba20a30ef5c9e60ca3ee5a68e5a1a2"
+      },
+      "guide_5_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/guide_5_rgba.png",
+        "bytes": 152009,
+        "sha256": "af907246affc7d3e8f1ae2d622bfefebf6d3f4ec480bafe28ddb03b6e39c7dfc"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/matte.json",
+        "bytes": 51523,
+        "sha256": "1a70be3a34578bc8f9bc7d63b6d666018c41af3f17e75a3ad9e0c514f748bf37"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/original.json",
+        "bytes": 9460,
+        "sha256": "fbc2f3776e832de51bb11cc95323b1deb602890ff2b6003b156eb1f83ed13dd8"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/original.latent",
+        "bytes": 8530592,
+        "sha256": "03a035072217104e0d2391dba3275c5597f7404cb4f9308d5549c5a50cfcc58e"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/original.mp4",
+        "bytes": 941111,
+        "sha256": "807483a8e7fbcd1e2a6fb0911904f114c36336df62ce0afc6d90bc6a39140cca"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/original_lossless.mkv",
+        "bytes": 55861859,
+        "sha256": "a56fa683cfce07ef8a4addb4f9a6486e5feb08a797478c9f1bad9b12eb3dc138"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/prompt.txt",
+        "bytes": 1969,
+        "sha256": "486eda4a7ee091328b500495b58fe7f73ab349ee4b08b74d80e7919a54424507"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/reference.json",
+        "bytes": 4660,
+        "sha256": "da72f6e3dc60e6f763634a8983998076f39585c31a8642b295ced61d3642e5c2"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/sampling_history.json",
+        "bytes": 8987,
+        "sha256": "d000c458964ff34b6fff90ea6b34767639bff01c55441a6dea7ec0ab76b18566"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/sampling_submission.json",
+        "bytes": 953,
+        "sha256": "9a4d44f8be263962f5e2613255636b8a7ad580b94a378cfbd50c0f73714aa4de"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/sampling_workflow_api.json",
+        "bytes": 6569,
+        "sha256": "b70b42cff13169bb7b12453bee1046dd6bde14c16484f13d86e7bcee8b2e191e"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "bbf31dc33db79c85f7c3a010a0f9105ce57173bb75c298eaccc954e090232370"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/semantic_matte_initial.json",
+        "bytes": 50955,
+        "sha256": "f03ee8166da4231ae905d65f0a5d415b38c429fd2044d02400444fc1515cca11"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/staged_generation.json",
+        "bytes": 781,
+        "sha256": "46fd2113605aa1fffc52ccc9cc7b80575b720e1b8b183a816f338bd797a8e288"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/submission.json",
+        "bytes": 1018,
+        "sha256": "5f710d3965011f28326d3c15eca7b81c7079b8d15c3736b941d13a20906be8b3"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v2/workflow_api.json",
+        "bytes": 1210,
+        "sha256": "db8806b11557c90e186065beb2b76abe61078357efa90a83b5489bd9d63604b9"
+      }
+    },
+    "defend_h3_v1": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/accepted_baseline.json",
+        "bytes": 2854,
+        "sha256": "a92845a9ff49b04b92326806fe5dbbffb46794c73c952237dff6a24e7e35bc04"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/config.json",
+        "bytes": 2475,
+        "sha256": "2e79beade0e5a7d155666634d48a8d61363d477c3aef5db66fba5cb60c5e0203"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/decode_submission.json",
+        "bytes": 516,
+        "sha256": "de0c52c3e545ff6310d0ed1306e69dceef706e182363fa1ca4062fec25cff8e3"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/generation_history.json",
+        "bytes": 23287,
+        "sha256": "14012de5e7fab619101afa8f50b280a24ee89cf16c9b41b3fddd22ee66bfa58f"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/guide_0_chroma.png",
+        "bytes": 180551,
+        "sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/guide_0_rgba.png",
+        "bytes": 220884,
+        "sha256": "13c24293f0e1b1db4838d6f44bdf984cccf0544bbcffa391797dbff76e08b873"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/guide_1_chroma.png",
+        "bytes": 197484,
+        "sha256": "606be8b41f1f79056ccd268a35ade14e88e496d775d97a38cfd2e84ca8783a54"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/guide_1_rgba.png",
+        "bytes": 236198,
+        "sha256": "00f5e4d3f22e9217638d66c976571c74d4c6835c5f5a6109d20da8442476f69f"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/matte.json",
+        "bytes": 51057,
+        "sha256": "8690f919a74df13057ed3cb7f4c2d25778d619b59cd6e0a8756767e6b4633ca3"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/original.json",
+        "bytes": 9460,
+        "sha256": "56c607f3824d70f95fa63705a41b6e92b63f115d09ba8d052bf1120d1822e415"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/original.latent",
+        "bytes": 8528224,
+        "sha256": "fc3b25f1bc42b6faa24fbea6682617a8588f7712fc30c9f5bdabcbbad2b95911"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/original.mp4",
+        "bytes": 786422,
+        "sha256": "54c3d950587a4573e1147261de9f9a2f3e516983be395b910453f1c72e4d1bbc"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/original_lossless.mkv",
+        "bytes": 57957905,
+        "sha256": "e06f94e8df51af3c7f34af1eee98de667272d4ff448b1cf67357c45e148c3384"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/prompt.txt",
+        "bytes": 1283,
+        "sha256": "2f3dcfcc320ddafdf5351656ce065d9135fd150ca335dd2b4710394d3755bdbc"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/reference.json",
+        "bytes": 1718,
+        "sha256": "8b324bab02381c7785d3baa1e67832a7fb5465d1571d04078334e28cf158f529"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/sampling_history.json",
+        "bytes": 5644,
+        "sha256": "ea512f05fb374187ebe69b4d1243852cbada46405c100d97a42805e5601f3795"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/sampling_submission.json",
+        "bytes": 451,
+        "sha256": "6e7c7cd4713eaeb6fcc80841affab4de91a31f16461d74fbb22ad457b8bddd72"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/sampling_workflow_api.json",
+        "bytes": 3761,
+        "sha256": "80bbe7408ead83f8b3b8d9597a16867d02a7f0a1856d88746aff0e4d490844f2"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "a18a43f39bb69e25c7785b75ed993332c690c47365c8eda3b551cbe683e896b0"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/semantic_matte_initial.json",
+        "bytes": 50489,
+        "sha256": "4ab13ca97c5d3b3825518d9fb99854fd5db83e76482d66c035722284856ea91e"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/staged_generation.json",
+        "bytes": 782,
+        "sha256": "12ecb7c1b3cd9ce36b4b206a9cc55d1c7c4b6f5772f97e271949f6024cf0c391"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/submission.json",
+        "bytes": 516,
+        "sha256": "de0c52c3e545ff6310d0ed1306e69dceef706e182363fa1ca4062fec25cff8e3"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/defend_h3_v1/workflow_api.json",
+        "bytes": 1213,
+        "sha256": "36d5f8a385d27586d8ab5ad92a2b79dc223b5a72d5206ae9243d51e32336f8dc"
+      }
+    },
+    "hit_h3_v1": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/accepted_baseline.json",
+        "bytes": 2854,
+        "sha256": "a92845a9ff49b04b92326806fe5dbbffb46794c73c952237dff6a24e7e35bc04"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/config.json",
+        "bytes": 2047,
+        "sha256": "a8ab44e6957f51177fd84acb17d1421d8e08b5eebd39f2cd655affdfa515ae9a"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/decode_submission.json",
+        "bytes": 386,
+        "sha256": "7821ccec36cf32059958d841aff7a55332745bcf61fd4e474ad69b397553e74b"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/generation_history.json",
+        "bytes": 22874,
+        "sha256": "24e32d62248abe431f8283a9c7dd574166277a45592b01fa4778a0dc7a55a014"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/guide_0_chroma.png",
+        "bytes": 180551,
+        "sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/guide_0_rgba.png",
+        "bytes": 220884,
+        "sha256": "13c24293f0e1b1db4838d6f44bdf984cccf0544bbcffa391797dbff76e08b873"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/matte.json",
+        "bytes": 49854,
+        "sha256": "8e7b2f1384385e8c4bd798a007a5fafa9988d33732bac8f4a4fe306ad481ec13"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/original.json",
+        "bytes": 9460,
+        "sha256": "e0ff30df6996fcbc71249efdcba48ebd4418b1c864ffce605fca92ebb977a364"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/original.latent",
+        "bytes": 8527984,
+        "sha256": "8572983fe594c56feda589546efb6a40133de486b2cc055f56d498860fb76c15"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/original.mp4",
+        "bytes": 592958,
+        "sha256": "d63ca2e21bfa2d0807e0dbb08cf92be831ca3d19e1402a43030f29b81ea14cf8"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/original_lossless.mkv",
+        "bytes": 20318945,
+        "sha256": "3697197861c40566f421808b7692ce40490216493c8fb7f018477327ae308c92"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/prompt.txt",
+        "bytes": 1246,
+        "sha256": "132524682723f09a118c2aa0bb145fb283770ff48700032f0ef8a2c09cd4dacf"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/reference.json",
+        "bytes": 1001,
+        "sha256": "b59350eda5c448333fd2c7a003688a895a9884cd8233502715b6d221995aaff1"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/sampling_history.json",
+        "bytes": 5341,
+        "sha256": "332bd393b0e01b51240ff94d2b750d78e362e6f87d2144392937a7c5654cc56e"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/sampling_submission.json",
+        "bytes": 321,
+        "sha256": "210ece3c7d303a47a880f288110428f2ca3e090e78e7eabee35499abb5523388"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/sampling_workflow_api.json",
+        "bytes": 3586,
+        "sha256": "0181884a5983eb7307831d4f870738dd62e4a2a0d658a6dbdad07ac14754ae08"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "a18a43f39bb69e25c7785b75ed993332c690c47365c8eda3b551cbe683e896b0"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/semantic_matte_initial.json",
+        "bytes": 49286,
+        "sha256": "05496e0544eae50bed1ceeae6cf261dcfcef76bbd2f779b6aa73da85da25ea26"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/staged_generation.json",
+        "bytes": 726,
+        "sha256": "1ab89c3dbcec5fbae89ca350b2fcd506511f428616323a4780c2fbdae6aa214b"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/submission.json",
+        "bytes": 386,
+        "sha256": "7821ccec36cf32059958d841aff7a55332745bcf61fd4e474ad69b397553e74b"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/hit_h3_v1/workflow_api.json",
+        "bytes": 1204,
+        "sha256": "a88e04aec15f2d4876c103cabef70e2cc40684b7c5837a2fab4ade6c07d2ca61"
+      }
+    },
+    "move_h3_v1": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/accepted_baseline.json",
+        "bytes": 2854,
+        "sha256": "a92845a9ff49b04b92326806fe5dbbffb46794c73c952237dff6a24e7e35bc04"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/config.json",
+        "bytes": 3072,
+        "sha256": "97c8843cf583bfb0970b38033898e9a30b8aef3aec8969e68f494965a2b09f97"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/decode_submission.json",
+        "bytes": 637,
+        "sha256": "f55232af0e8a0dcb955b2e133d09134401c5fb979f0c72073b3ef526ffe9abeb"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/generation_history.json",
+        "bytes": 23002,
+        "sha256": "6233c35db1fe2ce5314270f05193081898a0d202ae63f0a2d307738e51ce16b0"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/guide_0_chroma.png",
+        "bytes": 180551,
+        "sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/guide_0_rgba.png",
+        "bytes": 220884,
+        "sha256": "13c24293f0e1b1db4838d6f44bdf984cccf0544bbcffa391797dbff76e08b873"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/guide_1_chroma.png",
+        "bytes": 231069,
+        "sha256": "c4a0decbf7608cf0382fa0beffb090d87f214e72f9f5c0f0e86319bc7e17d811"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/guide_1_rgba.png",
+        "bytes": 278204,
+        "sha256": "90424bb3d34f02410d267f8c2e9593926c34f149400cded1541e994341552c24"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/guide_2_chroma.png",
+        "bytes": 174590,
+        "sha256": "0c728c4aad8679b82488556ca2b569933cb63e9e92c313898c6ef2230a570567"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/guide_2_rgba.png",
+        "bytes": 210321,
+        "sha256": "e452caa45c6672e95b7628c75667b11aa8ca4c81ef45c93b39d92393f7ea5a3b"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/matte.json",
+        "bytes": 50987,
+        "sha256": "e4c0a786dd7fff6de02d3405a2099c051dcf52f854e99f98f2acb9e6a172480b"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/original.json",
+        "bytes": 9460,
+        "sha256": "2f88936f5596d77b8c40a388e6319cebcae8e527daec2958427a9bc5cd15ac6b"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/original.latent",
+        "bytes": 8528904,
+        "sha256": "401b39ac2dae6810df3e2315159cbe2b658d4cfc210af1a3f7035cb5996659c2"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/original.mp4",
+        "bytes": 1182206,
+        "sha256": "fc99fcd551bc32809a4ad4ea0628894ba8cfc5b084d6be058612f1869e4d6dbc"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/original_lossless.mkv",
+        "bytes": 59070861,
+        "sha256": "53055f51e2888cce4c8c5d2dbdb4b0e909221b7d875ad2de1ad0e92c39e83f11"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/prompt.txt",
+        "bytes": 1412,
+        "sha256": "129cc23248cad13eb985cf5aa0c3c560efd737afd59454f6ebab53c9146ca3bc"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/reference.json",
+        "bytes": 2444,
+        "sha256": "c9ea18046227380cb2795fc030f14f65dc10e5192009c60804fdff4ca8171974"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/sampling_history.json",
+        "bytes": 6634,
+        "sha256": "ad40f7dcb89a838ad09573ce98c12d116f08661a160d56a6fab84f7af5550fae"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/sampling_submission.json",
+        "bytes": 571,
+        "sha256": "418dc527146fe4ff91d8dc283edb029f66da38df8d3060f06abad015e5114041"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/sampling_workflow_api.json",
+        "bytes": 4654,
+        "sha256": "aaf2de7681c66c50548cc3317d7d9c66c79528b397be32561497609771396d90"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "8d83bc75129d75a317dd25097984928006efa2033a518dc8aa7b01ca6546cb4b"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/semantic_matte_initial.json",
+        "bytes": 50419,
+        "sha256": "c367a6b93efecb5fa69a688774d50acbc3c1ecf74e58e953614f61309cf5d492"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/staged_generation.json",
+        "bytes": 727,
+        "sha256": "6428d47a8b2030400c066dfd22fe2330c3ecb3a4ea9ba576bc8b43a493751b3c"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/submission.json",
+        "bytes": 637,
+        "sha256": "f55232af0e8a0dcb955b2e133d09134401c5fb979f0c72073b3ef526ffe9abeb"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/move_h3_v1/workflow_api.json",
+        "bytes": 1207,
+        "sha256": "6dc9d8e83f44b60fe1c721c1dca5ad2b46c2098f094b357b929af407c8de5def"
+      }
+    },
+    "ranged_h3_v1": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/accepted_baseline.json",
+        "bytes": 2854,
+        "sha256": "a92845a9ff49b04b92326806fe5dbbffb46794c73c952237dff6a24e7e35bc04"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/config.json",
+        "bytes": 3697,
+        "sha256": "e18aee6742bc6669fad98a31fb453912a5739456176b1ba34fd63d079e3031d8"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/decode_submission.json",
+        "bytes": 769,
+        "sha256": "c46218433d567e778dd2771fc29a9d18848c878909723aa5aa2061191d28589d"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/generation_history.json",
+        "bytes": 23287,
+        "sha256": "4121faf7e03c57f5765944da34b0886e355a4aabfd9cfe0bfd5a1dbfe16e89b4"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/guide_0_chroma.png",
+        "bytes": 180551,
+        "sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/guide_0_rgba.png",
+        "bytes": 220884,
+        "sha256": "13c24293f0e1b1db4838d6f44bdf984cccf0544bbcffa391797dbff76e08b873"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/guide_1_chroma.png",
+        "bytes": 237673,
+        "sha256": "7e3e6848f96bdc40cea2a02a9699eb5f61113a7c48cc298d7f43a6de3e7ed8f9"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/guide_1_rgba.png",
+        "bytes": 286325,
+        "sha256": "66bea2fa71e4073cc46c2e9f3d00f6dd5b7cfc542309b6013f379ead3efed030"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/guide_2_chroma.png",
+        "bytes": 222814,
+        "sha256": "14ab56f33a1bac88f884ad5d1e3e4ce6ee887b6f20543ebbef9713c3a71e77c2"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/guide_2_rgba.png",
+        "bytes": 267756,
+        "sha256": "5547fca819931169ae1b6fa5df10490a5af4065c39f86d1328d6eda4ebb65a64"
+      },
+      "guide_3_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/guide_3_chroma.png",
+        "bytes": 205276,
+        "sha256": "b59573e8c87c0c83ffad537bfce3aacf49a25e97672cffa62a5ff165ded011c4"
+      },
+      "guide_3_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/guide_3_rgba.png",
+        "bytes": 246450,
+        "sha256": "d8f6f1d85f09d63edc2078c5af4b86e224c94265b84201c342dd0d27fdfee57e"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/original.json",
+        "bytes": 9460,
+        "sha256": "cf684abfdebcb52b4418faa355ba8fdede5c5b2771ae4498c5175f1863fd8217"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/original.latent",
+        "bytes": 8529360,
+        "sha256": "1f79bcdce70fea4e5d3bfbe815e81dff1ebaa860b47e0ecd0ff1417f58eefcb9"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/original.mp4",
+        "bytes": 1221979,
+        "sha256": "d7b1cd5c1ef5df5e78caffe6c54981ca1d14a1c13003e425ea2f2fc3395ea9da"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/original_lossless.mkv",
+        "bytes": 59491741,
+        "sha256": "d65bd5dd435ce0afddf20a576e7adeec1a01aa788cc69d8eccdbc3b4f5a2e299"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/prompt.txt",
+        "bytes": 1484,
+        "sha256": "7a98e151ea6a5d1352d01444cb4bf068eb61949d737992a8a03c194caf532fe8"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/reference.json",
+        "bytes": 3299,
+        "sha256": "f8154b868f759be6f53661c3bb76d08383319fe57dd78ccb695072e51085b073"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/sampling_history.json",
+        "bytes": 7381,
+        "sha256": "186184617dbf55a461ade338af02c59db8e303b9bfc32ba9eb3d83743ed08159"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/sampling_submission.json",
+        "bytes": 705,
+        "sha256": "8f3df31a59ba75d2e3600679a8bd2f258c9d54f111f5f64c932d18418b005549"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/sampling_workflow_api.json",
+        "bytes": 5186,
+        "sha256": "05876c4d47dceee3626fe4555d7c46cf4347f2b12dffaececc487d3c56493325"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/staged_generation.json",
+        "bytes": 782,
+        "sha256": "0dee0b7f338ffed03d235d36ad12adc1d0ba14aa708dd296ec6894048903f3dd"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/submission.json",
+        "bytes": 769,
+        "sha256": "c46218433d567e778dd2771fc29a9d18848c878909723aa5aa2061191d28589d"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v1/workflow_api.json",
+        "bytes": 1213,
+        "sha256": "a3ecc738ebeab89656de8018eb4db53be96c0ac7d166c6be325e96828deeff4b"
+      }
+    },
+    "ranged_h3_v2": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/accepted_baseline.json",
+        "bytes": 2854,
+        "sha256": "a92845a9ff49b04b92326806fe5dbbffb46794c73c952237dff6a24e7e35bc04"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/config.json",
+        "bytes": 3213,
+        "sha256": "a38e3bb3d327842939b138462b96cdb6e8c2fd81702da47585c45298287a63b8"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/decode_submission.json",
+        "bytes": 516,
+        "sha256": "fa66239b2dbe537c91a51e52684e796655ae2e6acd4ca104a1d1ef7efdf2b03c"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/generation_history.json",
+        "bytes": 23287,
+        "sha256": "b848031680968d19c3a9ca75fc12a7e926903bd9369de0d2e47cf6dd7c0f3900"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/guide_0_chroma.png",
+        "bytes": 180551,
+        "sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/guide_0_rgba.png",
+        "bytes": 220884,
+        "sha256": "13c24293f0e1b1db4838d6f44bdf984cccf0544bbcffa391797dbff76e08b873"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/guide_1_chroma.png",
+        "bytes": 222814,
+        "sha256": "14ab56f33a1bac88f884ad5d1e3e4ce6ee887b6f20543ebbef9713c3a71e77c2"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/guide_1_rgba.png",
+        "bytes": 267756,
+        "sha256": "5547fca819931169ae1b6fa5df10490a5af4065c39f86d1328d6eda4ebb65a64"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/matte.json",
+        "bytes": 51482,
+        "sha256": "51ee6cf2f2b41c57860a4fc89315f9d4bc17faf1982ded71d71804f61ed161bc"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/original.json",
+        "bytes": 9460,
+        "sha256": "28378216945b0ec0e874fdfc674f409e0296ae4425cd824fa3107f3d9e5ab0ec"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/original.latent",
+        "bytes": 8529136,
+        "sha256": "833b837c1cfcbdbf1ab82bf75f41d24191a7465ba3d846103f4e2c98768d2d4a"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/original.mp4",
+        "bytes": 1090212,
+        "sha256": "03892a35ef15fd9a4106dbe48fee26df901016d9df3a5637f95f7f2c11128a9f"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/original_lossless.mkv",
+        "bytes": 57538336,
+        "sha256": "444b450d2c54084f50ccabb261be40b0777e309c1aba80d547579b2242e1210c"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/prompt.txt",
+        "bytes": 1836,
+        "sha256": "493a98596fbc04fae6d5a6d936c816c5aaac0f913f89d3a1a94660b2d98ff24d"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/reference.json",
+        "bytes": 1841,
+        "sha256": "b410f4291a795d988cf53870d21baf53fd5686320711425cc338123db75c078c"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/sampling_history.json",
+        "bytes": 7013,
+        "sha256": "3faf0faf2a5af3d23ec2ac6da70438d28c89bc057f9c07c690ea3db9ac2fd69c"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/sampling_submission.json",
+        "bytes": 450,
+        "sha256": "641caa084f87a9b9a51769280d631bc83790406de18c5cd4cb744a38267cc312"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/sampling_workflow_api.json",
+        "bytes": 4954,
+        "sha256": "53689bea429803c5fa2296874c389a3594d80df1cde18bc6c3e70d8263dfa3eb"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "bbf31dc33db79c85f7c3a010a0f9105ce57173bb75c298eaccc954e090232370"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/semantic_matte_initial.json",
+        "bytes": 50914,
+        "sha256": "c732f99d5ef7c118b591fd0bc78c95de3fb4b519bf05fae4eddcfe5c0f6d1399"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/staged_generation.json",
+        "bytes": 782,
+        "sha256": "4662125e528a326bd56ac30fc933578e2207393da3740b37ccccb5b4ae32e79d"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/submission.json",
+        "bytes": 516,
+        "sha256": "fa66239b2dbe537c91a51e52684e796655ae2e6acd4ca104a1d1ef7efdf2b03c"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/ranged_h3_v2/workflow_api.json",
+        "bytes": 1213,
+        "sha256": "c9db6461073bb92b396ba5d3206dc94ddeef905e11b8b4de4bc6c1c48db4a781"
+      }
+    }
+  },
+  "original_rgb_frames": 1612,
+  "status": "complete",
+  "rule": "Retain all immutable original takes including rejected art. Rebuildable extraction files are governed by their exact matte hashes."
+}

@@ -1,0 +1,163 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Original painted human rope-bell skirmisher from supplied painting. One slender human in ragged ivory hooded coat over dark blue clothes, leather boots with bandaged shins and bronze knee plates, face visible beneath ivory hood, facing SCREEN RIGHT. Exactly TWO arms and TWO legs. His anatomical RIGHT hand, on SCREEN LEFT in the ready guide, grips one tan rope coil connected continuously to ONE small bronze handbell with blue tassel. His anatomical LEFT hand is the free leather-gloved hand on SCREEN RIGHT. Preserve this exact grip and ONE continuously attached bell, no staff, duplicate bell, sword or new weapon. Original rope, bell, sleeves, hood, proportions and painted fantasy game surface remain recognizable. ONE COMPACT ORDINARY LEFT ELBOW SHOVE AND RECOVERY. The free anatomical LEFT forearm folds close against the chest; its gloved fist remains tucked beside the sternum. Turn the chest slightly and lean forward while the bent cloth-covered LEFT ELBOW smoothly pushes a short distance SCREEN RIGHT. Follow the supplied elbow-forward pose around frame44, then smoothly withdraw torso and bent arm to ready. The left hand never extends, points, opens or projects anything. Both boots stay planted while knees flex and coat follows the torso. The anatomical RIGHT hand keeps its original tan rope coil and continuously tethered bronze bell low beside the hip throughout. One short forward body movement and recovery, quiet unchanged painted materials, no repeat.  Static orthographic studio camera, constant figure scale and ground anchor, entire hood, both boots, coil, rope, bell and tassel inside a generous960x640 canvas. Exactly the same solid flat magenta background throughout, RGB255,0,255. No camera motion, color changes, scene, floor, gradient, reflections, lighting pulses, symbols, extra props or detached layers. No magic, particles, spark, orb, aura, ring, flash or contact effects. Only the original physical human figure moves continuously.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026108349
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "saltbell_caster_attack_h3_v4_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "saltbell_caster_attack_h3_v4_guide_1.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 44,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "40",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "saltbell_caster_h3/attack_h3_v4/sampled"
+    }
+  }
+}

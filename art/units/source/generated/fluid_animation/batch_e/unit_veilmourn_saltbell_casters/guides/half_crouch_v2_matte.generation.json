@@ -1,0 +1,24 @@
+{
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/half_crouch_v2_matte.png",
+    "sha256": "842ce70b36b059c186f964b858292dd6930015bf859b70747972fa973a3abe74"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/half_crouch_v2_adjusted_prompt.txt",
+    "sha256": "600893856117bb6fd091f73f3c2a6279df339a879efc5e72ccfbdceb42383719"
+  },
+  "original_image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/half_crouch_v2_adjusted.png",
+    "sha256": "def6530a62de3d86d73d7b24f6179065b51f903285f98524633ad2157c2bfc4d"
+  },
+  "matte_recipe": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/half_crouch_v2_matte_recipe.json",
+    "sha256": "8a07dce0ab96fd71c9aaa0d050720044e507467e4a5cd90f6665d60614e038ec"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/half_crouch_v2_adjusted.png",
+      "sha256": "def6530a62de3d86d73d7b24f6179065b51f903285f98524633ad2157c2bfc4d"
+    }
+  ]
+}

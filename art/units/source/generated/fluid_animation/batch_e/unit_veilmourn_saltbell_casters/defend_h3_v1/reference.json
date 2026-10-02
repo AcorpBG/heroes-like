@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            516
+          ]
+        ],
+        "anchor": [
+          179,
+          513
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95881425497c906ea5d4c2cb88e5764714585ae2f3332b13fd99760541c13455",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "guard_a",
+        "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/guided-walk-and-guards.png",
+        "rects": [
+          [
+            555,
+            525,
+            1018,
+            1024
+          ]
+        ],
+        "anchor": [
+          782,
+          996
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b621b9dde6b3ee1e6ac75f0c7cb45563097d599c77f9fe23c13c37811304ff1a",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "606be8b41f1f79056ccd268a35ade14e88e496d775d97a38cfd2e84ca8783a54",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

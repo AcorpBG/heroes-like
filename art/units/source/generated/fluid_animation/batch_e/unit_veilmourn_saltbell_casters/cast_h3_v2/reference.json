@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            516
+          ]
+        ],
+        "anchor": [
+          179,
+          513
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95881425497c906ea5d4c2cb88e5764714585ae2f3332b13fd99760541c13455",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "chest_bell_support",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/chest_bell_v2_matte.png",
+        "rects": [
+          [
+            0,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          768,
+          917
+        ],
+        "scale": 0.605,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e7e48e473b291d1fd10a30a992315ac0e53e29e4212d103f37c1a3de7d05a1bd",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "7da06166fc52c7256735ae41e2690532bb904af008c60f95bd4c3cd0a6375039",
+      "runtime_source_scale": 0.3025
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

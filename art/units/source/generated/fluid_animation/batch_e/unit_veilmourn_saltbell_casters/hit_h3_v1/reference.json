@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            516
+          ]
+        ],
+        "anchor": [
+          179,
+          513
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95881425497c906ea5d4c2cb88e5764714585ae2f3332b13fd99760541c13455",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

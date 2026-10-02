@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            516
+          ]
+        ],
+        "anchor": [
+          179,
+          513
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95881425497c906ea5d4c2cb88e5764714585ae2f3332b13fd99760541c13455",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "walk_contact",
+        "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/guided-walk-and-guards.png",
+        "rects": [
+          [
+            20,
+            0,
+            507,
+            515
+          ]
+        ],
+        "anchor": [
+          284,
+          499
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b621b9dde6b3ee1e6ac75f0c7cb45563097d599c77f9fe23c13c37811304ff1a",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c4a0decbf7608cf0382fa0beffb090d87f214e72f9f5c0f0e86319bc7e17d811",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "walk_near_passing_a",
+        "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/guided-walk-and-guards.png",
+        "rects": [
+          [
+            543,
+            0,
+            1002,
+            515
+          ]
+        ],
+        "anchor": [
+          747,
+          495
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b621b9dde6b3ee1e6ac75f0c7cb45563097d599c77f9fe23c13c37811304ff1a",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "0c728c4aad8679b82488556ca2b569933cb63e9e92c313898c6ef2230a570567",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

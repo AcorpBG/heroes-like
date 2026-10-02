@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "ready_guide": {
+    "name": "idle_hands_0",
+    "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        384,
+        516
+      ]
+    ],
+    "anchor": [
+      179,
+      513
+    ],
+    "scale": 0.44,
+    "alpha_noise_cutoff": 8
+  },
+  "reason": "Original artwork scales retained; one fixed video extraction scale and anatomical foot contact plane. No per-frame scale or registration."
+}

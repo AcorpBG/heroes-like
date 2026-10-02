@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "53689bea429803c5fa2296874c389a3594d80df1cde18bc6c3e70d8263dfa3eb",
+  "latent_sha256": "833b837c1cfcbdbf1ab82bf75f41d24191a7465ba3d846103f4e2c98768d2d4a",
+  "decode_workflow_sha256": "c9db6461073bb92b396ba5d3206dc94ddeef905e11b8b4de4bc6c1c48db4a781",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "saltbell_caster_h3\\ranged_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

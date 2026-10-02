@@ -1,0 +1,71 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters",
+  "status": "completed",
+  "original_takes": 13,
+  "original_rgb_frames": 1612,
+  "accepted_takes": 7,
+  "accepted_take_original_rgb_frames": 868,
+  "rejected_takes_preserved": 6,
+  "new_distinct_playable_poses": 342,
+  "action_frame_counts": {
+    "move": 57,
+    "attack": 42,
+    "hit": 28,
+    "defend": 31,
+    "cast": 53,
+    "ranged": 51,
+    "death": 80
+  },
+  "preserved_original_idle_poses": 8,
+  "preserved_idle_frame_msec": 240,
+  "distinct_playable_poses_total": 350,
+  "atlas_size": [
+    3904,
+    3928
+  ],
+  "atlas_uncompressed_rgba_bytes": 61339648,
+  "focused_runtime_checks": {
+    "candidate": 1126,
+    "mirror": 1126,
+    "ranged": 1126,
+    "live": 1140,
+    "live_ranged": 1140
+  },
+  "focused_runtime_check_total": 5658,
+  "runtime_failures": [],
+  "source_rgb_hashes_verified": 1612,
+  "selected_source_pixels_and_anchors_verified": 342,
+  "preserved_idle_pixels_and_map_strip_exact": true,
+  "current_packet_provenance_hashes_verified": true,
+  "python_ast_files_passed": 31,
+  "ordinary_import": {
+    "texture_count": 2,
+    "existing_lossless_compression_factor": 100.0,
+    "existing_importer_options_and_uid_preserved": true,
+    "real_cached_atlas_rgba_verified": true,
+    "success_marker": "SALTBELL_CASTER_IMPORTED_ATLAS_OK (3904, 3928) exact RGBA pixels"
+  },
+  "personal_visual_review": {
+    "all_original_rgb_frames": 1612,
+    "complete_accepted_matte_sequences": true,
+    "rejected_complete_and_partial_matte_sequences": true,
+    "enlarged_anatomy_equipment_canvas_and_transition_details": true,
+    "all_new_native_normal_and_reflected_gallery_poses": 342,
+    "preserved_native_idle_poses": 8,
+    "candidate_actual_melee_phase_captures": 16,
+    "candidate_actual_shoot_phase_captures": 8,
+    "live_actual_melee_phase_captures": 8,
+    "live_actual_shoot_phase_captures": 8,
+    "live_map_idle_phases": 8,
+    "extra_live_ranged_map_phases": 2
+  },
+  "platform_validation": {
+    "engine": "Godot 4.6.2 stable official",
+    "execution_platform": "Windows",
+    "linux_execution": false,
+    "manual_continuous_gameplay": false,
+    "reflected_battle_gameplay": false
+  },
+  "cleanup_record": "cleanup_result.json",
+  "original_art_videos_latents_prompts_guides_and_provenance_retained": true
+}

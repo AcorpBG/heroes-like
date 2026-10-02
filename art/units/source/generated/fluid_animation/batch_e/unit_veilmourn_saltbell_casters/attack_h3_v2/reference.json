@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            516
+          ]
+        ],
+        "anchor": [
+          179,
+          513
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95881425497c906ea5d4c2cb88e5764714585ae2f3332b13fd99760541c13455",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "melee_anticipation",
+        "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/continuous-rope-melee-and-cast.png",
+        "rects": [
+          [
+            87,
+            88,
+            615,
+            664
+          ]
+        ],
+        "anchor": [
+          336,
+          633
+        ],
+        "scale": 0.8,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1f4164d131ef1873b2697daaed4fbbe5f961d98f0b86777fdb7d575b4e702aee",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "11e94613e9e047a2dc9c8fd39680e161cf86c9941df3740dd40106ff8834497b",
+      "runtime_source_scale": 0.4
+    },
+    {
+      "source_frame": {
+        "name": "melee_left_palm_shove",
+        "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/idle-and-equipped-collapse.png",
+        "rects": [
+          [
+            561,
+            536,
+            981,
+            1024
+          ]
+        ],
+        "anchor": [
+          776,
+          986
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "88f972b36afae35b8a0d5429a2d88578538052ad4fe9cf0e8ae7748564ac8eae",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "f0bbedd6fbfc239fc81004cf1c3505ff94823d320c34124c1291939a82656249",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

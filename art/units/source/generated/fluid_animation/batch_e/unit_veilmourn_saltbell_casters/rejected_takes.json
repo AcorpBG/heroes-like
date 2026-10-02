@@ -1,0 +1,39 @@
+{
+  "attack_h3_v1": {
+    "status": "rejected",
+    "defect": "Invented bright palm impact star/lines in original44-50; abrupt impulse44. Preserve original124 RGB frames/latent and recipes. Regenerate plain physical palm transition with earlier contact guide.",
+    "reviewed_original_frames": 124,
+    "reviewed_matte_frames": 124
+  },
+  "cast_h3_v1": {
+    "status": "rejected",
+    "reviewed_original_frames": 124,
+    "defect": "Wrong horizontal bell throw; costume flash61-67; radial animated background102-117, strict corner validation failed102. No unsafe matte fallback; repair support keypose.",
+    "matting_attempted": true,
+    "partial_matte_frames": 102,
+    "reviewed_matte_frames": 102
+  },
+  "ranged_h3_v1": {
+    "status": "rejected",
+    "reviewed_original_frames": 124,
+    "defect": "Original bronze bell clipped by source canvas top36-38 during critical windup; cannot reconstruct equipment by crop or painting. Regenerate controlled below-shoulder stroke without overhead guide.",
+    "matting_attempted": false,
+    "reviewed_matte_frames": 0
+  },
+  "death_h3_v1": {
+    "status": "rejected",
+    "defect": "Abrupt standing-to-kneeling21-to22; kneeling-to-prone59-to60. Missing halfway articulated crouch guide. Strict matte also stopped82 on plate mismatch. Preserve all124 originals and82 partial masks.",
+    "reviewed_original_frames": 124,
+    "reviewed_matte_frames": 82
+  },
+  "attack_h3_v2": {
+    "status": "rejected",
+    "defect": "White star/ring29-47 at critical free-palm contact. Open raised palm and caster identity are being interpreted as spell projection despite explicit negative effects prompt; use new low compact closed-fist physical contact guide and neutral human identity wording, same model/settings.",
+    "reviewed_original_frames": 124,
+    "reviewed_matte_frames": 0
+  },
+  "attack_h3_v3": {
+    "status": "rejected",
+    "reason": "Full 124 original canvases inspected. Glowing fist-side orb during forward transitions19-28 and82-87 makes both physical contacts invalid. Neutral human identity and closed-fist guide failed to prevent projected magic; preserve original source. Background colour also cycles and corner validation halted after partial matte."
+  }
+}

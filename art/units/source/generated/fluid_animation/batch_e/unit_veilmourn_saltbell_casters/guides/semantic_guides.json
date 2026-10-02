@@ -1,0 +1,32 @@
+[
+  {
+    "original": "guides/chest_bell_v2_original.png",
+    "target": "guides/chest_bell_v2_matte.png",
+    "recipe": "guides/chest_bell_v2_matte_recipe.json",
+    "prompt": "guides/chest_bell_v2_prompt.txt"
+  },
+  {
+    "original": "guides/low_fist_v3_original.png",
+    "target": "guides/low_fist_v3_matte.png",
+    "recipe": "guides/low_fist_v3_matte_recipe.json",
+    "prompt": "guides/low_fist_v3_prompt.txt"
+  },
+  {
+    "original": "guides/half_crouch_v2_adjusted.png",
+    "target": "guides/half_crouch_v2_matte.png",
+    "recipe": "guides/half_crouch_v2_matte_recipe.json",
+    "prompt": "guides/half_crouch_v2_adjusted_prompt.txt"
+  },
+  {
+    "original": "guides/side_settle_v2_original.png",
+    "target": "guides/side_settle_v2_matte.png",
+    "recipe": "guides/side_settle_v2_matte_recipe.json",
+    "prompt": "guides/side_settle_v2_prompt.txt"
+  },
+  {
+    "original": "guides/elbow_v4_original.png",
+    "target": "guides/elbow_v4_matte.png",
+    "recipe": "guides/elbow_v4_matte_recipe.json",
+    "prompt": "guides/elbow_v4_prompt.txt"
+  }
+]

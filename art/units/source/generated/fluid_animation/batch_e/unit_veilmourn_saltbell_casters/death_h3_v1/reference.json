@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            516
+          ]
+        ],
+        "anchor": [
+          179,
+          513
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95881425497c906ea5d4c2cb88e5764714585ae2f3332b13fd99760541c13455",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel_right_coil",
+        "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/idle-collapse-correct-hand.png",
+        "rects": [
+          [
+            1004,
+            116,
+            1536,
+            537
+          ]
+        ],
+        "anchor": [
+          1273,
+          506
+        ],
+        "scale": 0.84,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7840bfe7642b666375e19b50b28ff29b6e4b774271865ba0d14cb1743720367e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "8cadb2a9079f80abd8649c704cca39b71fb6d1c1d9ced10d87ad3f768deffb02",
+      "runtime_source_scale": 0.42
+    },
+    {
+      "source_frame": {
+        "name": "death_forearm_fall",
+        "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/idle-and-equipped-collapse.png",
+        "rects": [
+          [
+            0,
+            717,
+            554,
+            1024
+          ]
+        ],
+        "anchor": [
+          296,
+          960
+        ],
+        "scale": 0.84,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "88f972b36afae35b8a0d5429a2d88578538052ad4fe9cf0e8ae7748564ac8eae",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "9afb561cc79208c91605defec4fb6cb83f5d7fc5b1089f7c18b1e6b076a2f140",
+      "runtime_source_scale": 0.42
+    },
+    {
+      "source_frame": {
+        "name": "dead_equipped",
+        "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/idle-and-equipped-collapse.png",
+        "rects": [
+          [
+            979,
+            786,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1250,
+          975
+        ],
+        "scale": 0.84,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "88f972b36afae35b8a0d5429a2d88578538052ad4fe9cf0e8ae7748564ac8eae",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "3914eb42a0090347b763fe204c9b24ae2fba20a30ef5c9e60ca3ee5a68e5a1a2",
+      "runtime_source_scale": 0.42
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

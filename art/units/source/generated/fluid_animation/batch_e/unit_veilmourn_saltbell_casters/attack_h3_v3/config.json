@@ -1,0 +1,101 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026108343,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          516
+        ]
+      ],
+      "anchor": [
+        179,
+        513
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_anticipation",
+      "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/continuous-rope-melee-and-cast.png",
+      "rects": [
+        [
+          87,
+          88,
+          615,
+          664
+        ]
+      ],
+      "anchor": [
+        336,
+        633
+      ],
+      "scale": 0.4,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "low_fist_v3",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/low_fist_v3_matte.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        917
+      ],
+      "scale": 0.268,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      16,
+      1
+    ],
+    [
+      34,
+      2
+    ],
+    [
+      52,
+      2
+    ],
+    [
+      78,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original painted human rope-bell skirmisher from supplied painting. One slender human in ragged ivory hooded coat over dark blue clothes, leather boots with bandaged shins and bronze knee plates, face visible beneath ivory hood, facing SCREEN RIGHT. Exactly TWO arms and TWO legs. His anatomical RIGHT hand, on SCREEN LEFT in the ready guide, grips one tan rope coil connected continuously to ONE small bronze handbell with blue tassel. His anatomical LEFT hand is the free open hand on SCREEN RIGHT. Preserve this exact grip and ONE continuously attached bell, no staff, duplicate bell, sword or new weapon. Original rope, bell, sleeves, hood, proportions and painted fantasy game surface remain recognizable. ONE SHORT ORDINARY LEFT-HAND FIST JAB. The free anatomical LEFT leather-gloved hand closes into a small fist, draws back beside the chest, then moves smoothly straight SCREEN RIGHT below the shoulder in a compact physical punch. Extend the elbow gradually during frames16-34 to the supplied closed-fist contact pose, pause briefly34-52, then bend the elbow and withdraw along the same short path to ready. Slight torso/knee weight shift while both boots stay grounded. The anatomical RIGHT hand keeps gripping its original tan rope coil at the hip, retaining the same attached bronze handbell. Entire hand and equipment remain plain painted physical materials, with no effects or extra objects. One forward fist movement and one recovery, no turning, repeated strike, ring, flash or marks around the hand.  Entire backdrop flat magenta RGB255,0,255 throughout, no scenery, floor, cast shadow, text, cuts, camera movement or zoom. Fixed boot contact plane y576. Preserve one constant anatomical scale and keep bell/rope/coat/boots within ample margins. No particles or beams obscuring anatomy.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

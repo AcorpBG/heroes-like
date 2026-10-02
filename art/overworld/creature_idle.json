@@ -4795,29 +4795,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        72.0,
+        72,
         227
       ],
       "painted_extent": 222,
-      "source_sheet": "res://art/animation/runtime/poses/unit_veilmourn_saltbell_casters.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_veilmourn_saltbell_casters.png",
       "source_indices": [
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        184,
-        9,
-        353,
-        247
+        76,
+        49,
+        245,
+        287
       ],
-      "source_sha256": "40cd7b31995f656ddffeab6e11bcea375be5c577a32b69538ad789b83182c0b1",
-      "source_provenance": "res://art/animation/source/poses/unit_veilmourn_saltbell_casters/provenance.json",
+      "source_sha256": "93f4a2c0d7663425cad5af9a7ae2d4d4c895c6cae84e694424b63379b290a12a",
+      "source_provenance": "res://art/animation/source/fluid/unit_veilmourn_saltbell_casters/provenance.json",
       "sha256": "f3c0c4ae56f6ac09bae9cfd1befa75e8de3ba4ef4881dc5dc1e5f3787be13caf"
     },
     "unit_embercourt_lockglass_writcasters": {

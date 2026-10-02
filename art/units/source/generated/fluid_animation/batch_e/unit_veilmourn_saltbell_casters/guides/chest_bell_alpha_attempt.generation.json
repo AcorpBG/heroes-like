@@ -1,0 +1,34 @@
+{
+  "method": "builtin_imagegen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/chest_bell_alpha_attempt.png",
+    "sha256": "02a4a6e02b6bf6ab0e2f487334e5da6ece057a6e0573fb97a58f49cfe3fd1c97"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/chest_bell_alpha_attempt_prompt.txt",
+    "sha256": "985771e7b05cc25fe3b178b1bd432c0cca82c2a50dfda0d101775e4e1ca624c2"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/chest_bell_v2_original.png",
+      "sha256": "5fd0424c5d0602aef2c182172ad80acdd7ed65e1832ff43cc02c1c21f34e2d56"
+    }
+  ],
+  "requested_transparent_background": true,
+  "status": "rejected_halo_and_geometry_drift",
+  "actual_mode": "RGBA",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "alpha_extrema": [
+    0,
+    254
+  ],
+  "alpha_bbox": [
+    65,
+    81,
+    1284,
+    961
+  ]
+}

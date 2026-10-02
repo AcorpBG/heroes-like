@@ -1,0 +1,18 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v4",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v2",
+    "ranged_h3_v2",
+    "death_h3_v2"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_unit",
+    "notes": "Personally inspected all 1612 original RGB frames from 13 takes, complete accepted matte sequences, enlarged anatomy and equipment details, and all 342 selected action poses at exact native 128px reference height in normal and reflected Godot galleries. Reviewed 16 actual melee captures and eight actual ranged captures at authored action-clock phases in Windows Godot 4.6.2. Three focused candidate fixtures each passed 1126 checks without failures. Six defective originals are rejected and retained. Preserve the eight original idle poses 16-23 and 240ms battle/map timing. Selected seven actions have distinct motion, intact human anatomy, bell/rope equipment, stable grounding and complete canvas framing. Imported live battle/map verification follows publication as a separate focused stage; no manual continuous-playback or Linux execution claim."
+  }
+}

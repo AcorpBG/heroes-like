@@ -1,0 +1,33 @@
+{
+  "method": "builtin_imagegen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/half_crouch_v2_adjusted.png",
+    "sha256": "def6530a62de3d86d73d7b24f6179065b51f903285f98524633ad2157c2bfc4d"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/half_crouch_v2_adjusted_prompt.txt",
+    "sha256": "600893856117bb6fd091f73f3c2a6279df339a879efc5e72ccfbdceb42383719"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/half_crouch_v2_original.png",
+      "sha256": "fd8d03c5207fa943df754706ca205484cd82950566c658df25cb22b7d02ba8dc"
+    }
+  ],
+  "original_image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/half_crouch_v2_original.png",
+    "sha256": "fd8d03c5207fa943df754706ca205484cd82950566c658df25cb22b7d02ba8dc"
+  },
+  "requested_transparent_background": true,
+  "status": "pose_accepted_alpha_requires_semantic_extraction",
+  "actual_mode": "RGBA",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "alpha_extrema": [
+    0,
+    254
+  ],
+  "registration_note": "Image edit enlarged the entire painting; use one authored-reference scale .205 and sole-plane anchor770,914 to match original boot positions/bell size. No per-video-frame scaling."
+}

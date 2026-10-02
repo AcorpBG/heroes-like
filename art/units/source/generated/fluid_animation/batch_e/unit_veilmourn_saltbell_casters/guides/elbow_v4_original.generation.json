@@ -1,0 +1,28 @@
+{
+  "method": "builtin_imagegen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/elbow_v4_original.png",
+    "sha256": "73639aa09880d9774515394d980b90d237c462ac8b5729a6925c8e16ae7c9fbb"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/elbow_v4_prompt.txt",
+    "sha256": "9b5cd17cdb075422982b9f0aaecde392af5be6bf35064b4de2853a528f61e51b"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/guide_0_rgba.png",
+      "sha256": "13c24293f0e1b1db4838d6f44bdf984cccf0544bbcffa391797dbff76e08b873"
+    }
+  ],
+  "requested_transparent_background": true,
+  "status": "pose_accepted_alpha_requires_semantic_extraction",
+  "actual_mode": "RGBA",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "alpha_extrema": [
+    0,
+    254
+  ]
+}

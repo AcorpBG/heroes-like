@@ -1,0 +1,28 @@
+{
+  "method": "builtin_imagegen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/side_settle_v2_original.png",
+    "sha256": "d2f4601e5dc0139490cef0f74d47e6d95550ecc3f35582d934c1c740494d6be1"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/side_settle_v2_prompt.txt",
+    "sha256": "b0725b211c1ccb27fe7024d250a75f1dbfad18f89424a5e0ccaa87c531272042"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/death_h3_v1/guide_1_rgba.png",
+      "sha256": "0c9c4f79b0a703f4301fbd72257336eab4254153b8b9ce3485f23cb1e129b949"
+    }
+  ],
+  "requested_transparent_background": true,
+  "status": "pose_accepted_alpha_requires_semantic_extraction",
+  "actual_mode": "RGBA",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "alpha_extrema": [
+    0,
+    254
+  ]
+}

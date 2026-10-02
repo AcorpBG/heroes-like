@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            516
+          ]
+        ],
+        "anchor": [
+          179,
+          513
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95881425497c906ea5d4c2cb88e5764714585ae2f3332b13fd99760541c13455",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ce9251a36eedc3ab36fe4c70516a5e465daf9054c77a379858fa20324f8ffa15",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "elbow_v4",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/elbow_v4_matte.png",
+        "rects": [
+          [
+            0,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          792,
+          900
+        ],
+        "scale": 0.546,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "cac23ace3fc4ce44bc6b5162b0c6a1e9638ee3f0a2bbfd518631986f264a0c39",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "23579a88e7a6673fbe7ee3c2e0545c472ab1bff94a20b54144efdab94a26d560",
+      "runtime_source_scale": 0.273
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

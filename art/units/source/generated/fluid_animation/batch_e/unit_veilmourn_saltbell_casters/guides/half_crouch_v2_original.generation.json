@@ -1,0 +1,28 @@
+{
+  "method": "builtin_imagegen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/half_crouch_v2_original.png",
+    "sha256": "fd8d03c5207fa943df754706ca205484cd82950566c658df25cb22b7d02ba8dc"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/guides/half_crouch_v2_prompt.txt",
+    "sha256": "9b2cddb576912ba82eca326ffdc071b1f42702cdbbf5ada2653a5cd08c6bbdd3"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_veilmourn_saltbell_casters/attack_h3_v2/guide_0_rgba.png",
+      "sha256": "13c24293f0e1b1db4838d6f44bdf984cccf0544bbcffa391797dbff76e08b873"
+    }
+  ],
+  "requested_transparent_background": true,
+  "status": "pose_requires_bell_height_repair_tassel_below_boot_contact_plane",
+  "actual_mode": "RGBA",
+  "actual_size": [
+    1536,
+    1024
+  ],
+  "alpha_extrema": [
+    0,
+    254
+  ]
+}

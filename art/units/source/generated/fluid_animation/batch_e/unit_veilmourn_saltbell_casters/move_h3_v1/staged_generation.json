@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "aaf2de7681c66c50548cc3317d7d9c66c79528b397be32561497609771396d90",
+  "latent_sha256": "401b39ac2dae6810df3e2315159cbe2b658d4cfc210af1a3f7035cb5996659c2",
+  "decode_workflow_sha256": "6dc9d8e83f44b60fe1c721c1dca5ad2b46c2098f094b357b929af407c8de5def",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "saltbell_caster_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17626382144,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
