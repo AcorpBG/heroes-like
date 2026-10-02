@@ -5075,29 +5075,29 @@
       "frame_msec": 260,
       "static_frame": 0,
       "ground_anchor": [
-        124.0,
+        124,
         235
       ],
       "painted_extent": 236,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_rootvault_barkhulks.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_rootvault_barkhulks.png",
       "source_indices": [
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        132,
-        13,
-        384,
-        258
+        28,
+        33,
+        280,
+        278
       ],
-      "source_sha256": "a85623b73ec66484aa4d9d132ab23b21df811e5c7a4796aa129024feefd9456d",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_rootvault_barkhulks/provenance.json",
+      "source_sha256": "e9e8b0e4360b9df1f114bb14798d5fef69b65e9d4b2c133f3a798e4268285d1e",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_rootvault_barkhulks/provenance.json",
       "sha256": "3c2edfa0aceec68c6b3397780fb956dd3592d1c5b9ff1c30a8c8ecc45a7ac29c"
     },
     "unit_neutral_quenchbell_ironbacks": {

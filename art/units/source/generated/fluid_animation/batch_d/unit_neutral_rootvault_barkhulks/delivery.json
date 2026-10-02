@@ -1,0 +1,17 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v2",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v2"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Solo chronological review of all124 original frames of each of eight takes, enlarged root/limb transitions, and every native128px candidate and reflected pose. Preserve original four limbs, chest tree-ring identity, moss/crown and fixed scale. Reciprocal root-arm/rear-leg movement; downward root-fist melee strike; physical chest-brace support; recoil; crossed-root guard; supported side-rest death. Reject attack_v1 white impact arc and death_v1 misregistered ground/roll. Attack_v2 excludes source46/47 brief white ground streak; no source pixel painting/interpolation. Death_v2 foreground fist extends toward viewer66; other contacts remain grounded. Enlarged soft edge/motion blur on roots reads naturally at native scale without visible background boxes or missing limbs. Eight candidate and eight reflected-run actual shell-clock melee captures inspected; the gallery is reflected, actual shell captures remain normal-facing. Preserve eight reviewed idle poses and original260ms battle/map timing. Continuous video playback, manual game and Linux not performed."
+  }
+}

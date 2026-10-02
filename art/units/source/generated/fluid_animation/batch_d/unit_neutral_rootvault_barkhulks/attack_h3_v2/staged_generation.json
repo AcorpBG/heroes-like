@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "4c475620b900eb9f1cef0ff7d96536857582f4ec62f3d12826664c0fc293a552",
+  "latent_sha256": "bbff0862ff6b91aa00e8aa987e30cc0cedef4a43d3a2f83e3b64115ba75e605f",
+  "decode_workflow_sha256": "0aba24c9e6798b1bd7766d6ab518f1cb460e4f5355732504a82b79c4cd72cfbf",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "rootvault_barkhulk_h3\\attack_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19796288832,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

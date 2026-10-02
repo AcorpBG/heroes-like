@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_rootvault_barkhulks",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_rootvault_barkhulks/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            504
+          ]
+        ],
+        "anchor": [
+          192,
+          430
+        ],
+        "scale": 1.24294,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2af4f9553d2db6488cc22b66a12239d6739042426424c8c925c6868e0eef5e0f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b4225f6d154740b9bdf8ee883bcce1403b9774956e02d5fd4cb4e7c77071fa74",
+      "runtime_source_scale": 0.62147
+    },
+    {
+      "source_frame": {
+        "name": "recoil",
+        "source": "art/animation/source/poses/unit_neutral_rootvault_barkhulks/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            715,
+            370,
+            1065
+          ]
+        ],
+        "anchor": [
+          200,
+          1075
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c5ee32b1313a1b8566894a11cac778d36464a8bcd6e76074d6d462078a0eff59",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "1849322541b1d84529bec61c710fb1310acdc64b4593fdcc60df2ee8a79f6b17",
+      "runtime_source_scale": 0.64
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

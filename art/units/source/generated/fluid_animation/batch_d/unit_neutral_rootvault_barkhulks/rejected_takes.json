@@ -1,0 +1,49 @@
+{
+  "attack_h3_v1": {
+    "status": "rejected",
+    "reason": "White impact arc overlaps creature and invented detached debris during contact/recovery. All124 original frames reviewed; no attempt to erase subject-overlapping effects.",
+    "affected_frames": [
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57
+    ],
+    "correction": "attack_h3_v2: held original contact guides, controlled downward fist and explicit absence of baked graphics. Preserve entire original take and provenance."
+  },
+  "death_h3_v1": {
+    "status": "rejected",
+    "reason": "Original kneeling guide contact sat above the common ground; generated collapse flung root fists and overshot the contact plane before settling. Full124-frame and enlarged collapse review.",
+    "affected_frames": [
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76
+    ],
+    "correction": "Register physical kneeling/side-rest contacts once in the original guide metadata; add original side-rest guide. Generate slow continuously supported collapse. No per-frame stabilization."
+  }
+}

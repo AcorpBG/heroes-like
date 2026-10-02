@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "e636d962d0b72d7456b5269087987fd238c33f3b0581db0eb2a060ec54ed1f64",
+  "latent_sha256": "627dcbf569d0b0394e0b9811259b96092f21a2f10c2182ac41508a30e03d2d58",
+  "decode_workflow_sha256": "d56d2f102d6783c2d08f2f2231bcdfb15d5f0204dbc812f41b3110559ae5936e",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "rootvault_barkhulk_h3\\death_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19796267328,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

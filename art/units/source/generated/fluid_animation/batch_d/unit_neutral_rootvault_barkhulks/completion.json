@@ -1,0 +1,94 @@
+{
+  "unit_id": "unit_neutral_rootvault_barkhulks",
+  "status": "complete_selected_unit",
+  "date": "2026-10-02",
+  "solo": true,
+  "source_method": "MiniMax H3 original video with pinned local BiRefNet soft matting",
+  "clips": {
+    "idle": 8,
+    "move": 44,
+    "attack": 43,
+    "cast": 39,
+    "death": 48,
+    "hit": 35,
+    "defend": 25
+  },
+  "new_selected_poses": 234,
+  "preserved_idle_poses": 8,
+  "battle_atlas_size": [
+    3964,
+    3288
+  ],
+  "battle_texture_rgba_bytes": 52134528,
+  "original_selected_rgb_frames_reviewed": 744,
+  "preserved_original_rgb_frames": 992,
+  "validation": {
+    "checks": {
+      "candidate": 794,
+      "mirrored": 794,
+      "live": 808
+    },
+    "total": 2396,
+    "failures": [],
+    "source_pixel_and_ground_anchor_equality": true,
+    "other231_battle_and_map_rows_preserved": true,
+    "imported_atlas_exact_rgba": true,
+    "preserved_battle_and_overworld_idle_exact": true,
+    "visual_review": {
+      "status": "accepted_selected_unit",
+      "unit_id": "unit_neutral_rootvault_barkhulks",
+      "solo": true,
+      "all124_original_frames_each_selected_take_inspected": true,
+      "all_original_takes_reviewed": 8,
+      "original_frames_reviewed": 992,
+      "selected_original_frames_reviewed": 744,
+      "new_selected_poses": 234,
+      "preserved_idle_poses": 8,
+      "native_candidate_all242_poses_reviewed": true,
+      "mirrored_candidate_all242_poses_reviewed": true,
+      "actual_candidate_melee_captures_reviewed": 8,
+      "actual_mirrored_run_melee_captures_reviewed": 8,
+      "actual_melee_capture_facing": "normal",
+      "review_note": "Solo chronological review of all124 original frames of each of eight takes, enlarged root/limb transitions, and every native128px candidate and reflected pose. Preserve original four limbs, chest tree-ring identity, moss/crown and fixed scale. Reciprocal root-arm/rear-leg movement; downward root-fist melee strike; physical chest-brace support; recoil; crossed-root guard; supported side-rest death. Reject attack_v1 white impact arc and death_v1 misregistered ground/roll. Attack_v2 excludes source46/47 brief white ground streak; no source pixel painting/interpolation. Death_v2 foreground fist extends toward viewer66; other contacts remain grounded. Enlarged soft edge/motion blur on roots reads naturally at native scale without visible background boxes or missing limbs. Eight candidate and eight reflected-run actual shell-clock melee captures inspected; the gallery is reflected, actual shell captures remain normal-facing. Preserve eight reviewed idle poses and original260ms battle/map timing. Continuous video playback, manual game and Linux not performed. Imported/live all242 native poses and eight actual melee captures personally inspected, plus live map idle phases0/3. Candidate/live gallery clip order differs (idle first versus last); all source and imported RGBA equality checks pass.",
+      "manual_game_session": false,
+      "continuous_video_playback": false,
+      "linux_run": false,
+      "full_suite_run": false,
+      "live_native_all242_poses_reviewed": true,
+      "actual_live_melee_captures_reviewed": 8,
+      "live_overworld_idle_frames_reviewed": [
+        0,
+        3
+      ],
+      "imported_atlas_exact_rgba": true,
+      "all_selected_source_pixels_and_anchors_verified": true,
+      "other231_battle_and_map_rows_preserved": true,
+      "existing_idle_map_pixels_and_timing_exact": true
+    },
+    "full_suite_run": false,
+    "linux_run": false,
+    "manual_game_session": false,
+    "continuous_video_playback": false
+  },
+  "roster": {
+    "complete": 211,
+    "total": 232,
+    "remaining": 21
+  },
+  "broad_goal_status": "in_progress",
+  "model_release": {
+    "free_vram_bytes": 32193380352,
+    "required_free_vram_bytes": 17179869184
+  },
+  "cleanup": {
+    "verified_duplicate_and_unused_files_removed": 1787,
+    "duplicate_bytes_removed": 938272336,
+    "recovered_bytes": 1121947084,
+    "retained_original_rgb_frames": 992,
+    "original_videos_latents_guides_prompts_and_provenance_preserved": true,
+    "caches_preserved": true,
+    "rebuildable": true,
+    "temporary_review_files_removed": 107,
+    "temporary_review_bytes_removed": 183674748
+  }
+}

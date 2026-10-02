@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "4dd78193509868e6c47e55d0fc466a4bf614686c77018487efee8cd0c8a6f085",
+  "latent_sha256": "e684734f2779fb45886ebb16a9f5dcb5a9438fb4b1a44079ac33b6ee6f0083b6",
+  "decode_workflow_sha256": "d90379a8d310d71c89d1e72c48977e8350498e360660362de9626194fa403682",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "rootvault_barkhulk_h3\\attack_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
