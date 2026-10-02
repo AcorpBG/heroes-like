@@ -4611,40 +4611,40 @@
       "sha256": "ce1c84068d52594a3bcf204ad0e50a27e4cc564a7d517d9d74c59926a1764cab"
     },
     "unit_thornwake_seedshield_wardens": {
-      "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_seedshield_wardens.png",
-      "frame_size": [
-        163,
-        225
-      ],
-      "frames": 8,
-      "frame_msec": 240,
-      "static_frame": 0,
-      "ground_anchor": [
-        77.0,
-        214
-      ],
-      "painted_extent": 209,
-      "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_seedshield_wardens.png",
-      "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
-      ],
-      "source_crop": [
-        179,
-        22,
-        342,
-        247
-      ],
-      "source_sha256": "631bad97fb5c2466accfc6f65bc9af204cc87d9428fd86b61571959c8a90d9f9",
-      "source_provenance": "res://art/animation/source/poses/unit_thornwake_seedshield_wardens/provenance.json",
-      "sha256": "a90c7bbe131f73a5543d318d826cd7b25720929516da993d3eca36afb96eb59b"
-    },
+  "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_seedshield_wardens.png",
+  "frame_size": [
+    163,
+    225
+  ],
+  "frames": 8,
+  "frame_msec": 240,
+  "static_frame": 0,
+  "ground_anchor": [
+    77,
+    214
+  ],
+  "painted_extent": 209,
+  "source_sheet": "res://art/animation/runtime/fluid/unit_thornwake_seedshield_wardens.png",
+  "source_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "source_crop": [
+    99,
+    30,
+    262,
+    255
+  ],
+  "source_sha256": "eafcb34efaa69c674b780d16149853cef9f1efabe0821025ff10fa8da45552b8",
+  "source_provenance": "res://art/animation/source/fluid/unit_thornwake_seedshield_wardens/provenance.json",
+  "sha256": "a90c7bbe131f73a5543d318d826cd7b25720929516da993d3eca36afb96eb59b"
+},
     "unit_brasshollow_gaugefire_arbalists": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_gaugefire_arbalists.png",
       "frame_size": [

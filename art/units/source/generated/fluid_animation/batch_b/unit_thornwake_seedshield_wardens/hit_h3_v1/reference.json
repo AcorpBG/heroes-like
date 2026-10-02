@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_thornwake_seedshield_wardens",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          217,
+          476
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "225577884896436f758d6eeb8ba316c88de53dcdaa6ed69ce33af192e2a72690",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "bc6966e73d76060c1eaff9a48f37d1c921f1f5e8fdf6c73c785241603442298c",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "hit",
+        "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/original.png",
+        "rects": [
+          [
+            65,
+            719,
+            348,
+            1060
+          ]
+        ],
+        "anchor": [
+          208,
+          1053
+        ],
+        "scale": 1.2,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a1e3c5c2b540c1a7861e70f9e64bf0355ea8f4aa97241f40bd1f5dfbae801dd8",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a0a095a09d6dd5d6c9deb37285db30e36003eca94f70591035ab12d10374fa39",
+      "runtime_source_scale": 0.6
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

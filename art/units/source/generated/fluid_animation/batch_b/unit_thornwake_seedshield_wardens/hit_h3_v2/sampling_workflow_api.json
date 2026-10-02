@@ -1,0 +1,207 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "One original Seedshield Warden, a humanoid woodland guardian with exactly TWO arms and TWO legs. Branching brown antler helm surrounds the original dark green face, layered green oak-leaf mantle and torn leaf skirt, brown vine-wrapped bark armor, leather gloves and armored root-like boots, bronze belt and knee fittings. SCREEN LEFT anatomical RIGHT hand grips ONE long brown vine-wrapped seed-spear polearm: full-length single wooden shaft, original curved bright amber leaf-shaped blade at its upper end, dark oval opening below the blade, green leaf accents and one small amber bottom pommel. SCREEN RIGHT anatomical LEFT forearm carries ONE tall oval pointed amber seedglass shield with branching brown wooden rim and the original green sapling/seed motif. RIGHT hand never releases its same shaft; LEFT arm retains same shield. Preserve original face, antlers, leaf layers, spear length, amber blade and shield pattern; never add weapons, swap grips or add limbs. One silent physical balance check and recovery. The guardian suddenly leans chest and head backward while knees bend34, keeping BOTH hands on their original equipment. Then regain balance through hips, knees and elbows62 and hold original ready. Only the intact body and held equipment move. Nothing flies off or passes across the body. No incoming attack is depicted.  Locked original elevated three-quarter orthographic camera facing SCREEN RIGHT. Full original body and both ends of the single spear stay inside960x544. Fixed body size, fixed camera, root centered. The entire empty background remains uniform saturated BLUE RGB0,0,255 in EVERY frame. No ground, shadow, other figure, detached leaves, glitter, ribbon, streak, slash, flare, particle, spell, changing illumination or camera motion. Amber painted equipment stays the same brightness throughout; it does not emit light.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026102603
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "seedshield_warden_hit_h3_v2_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "seedshield_warden_hit_h3_v2_guide_1.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 18,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "30",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 34,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "42": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "41",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 62,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "30",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "42",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "seedshield_warden_h3/hit_h3_v2/sampled"
+    }
+  }
+}

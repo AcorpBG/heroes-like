@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "93732323a35af26bf438a166bb81266f85bb3c1335756b2e34771118d9a91d96",
+  "latent_sha256": "dc053045cf0d9333d1b517e40f16799d4a38f6c66884cf351428d9f4b471e626",
+  "decode_workflow_sha256": "a9f63596e0ced05dfea39bd92260569a172debd77b0a5aa849f82f008e11786f",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "seedshield_warden_h3\\cast_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

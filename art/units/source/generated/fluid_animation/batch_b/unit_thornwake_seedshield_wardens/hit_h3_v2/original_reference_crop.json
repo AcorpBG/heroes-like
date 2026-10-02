@@ -1,0 +1,14 @@
+{
+  "source": "hit_h3_v1/guide_1_rgba.png",
+  "source_sha256": "37e0b03d3db245865a6fd80c4583c5d3a6917eb95a77deac8c90eeb6a3091d51",
+  "excluded_rect": [
+    512,
+    75,
+    525,
+    85
+  ],
+  "excluded_alpha_above_8_pixels": 6,
+  "remaining_creature_pixels_above_cutoff_exact": true,
+  "alpha_noise_cutoff": 8,
+  "anatomy_equipment_scale_anchor_unchanged": true
+}

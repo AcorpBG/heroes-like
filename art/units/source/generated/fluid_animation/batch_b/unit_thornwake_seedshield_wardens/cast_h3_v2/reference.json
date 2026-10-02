@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_thornwake_seedshield_wardens",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          217,
+          476
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "225577884896436f758d6eeb8ba316c88de53dcdaa6ed69ce33af192e2a72690",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d6b16640a66400e0e3c7387c6de68c2a50760110d8f02f188fb13f6ca2763061",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "melee_windup",
+        "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/windup-full-shaft-magenta.png",
+        "rects": [
+          [
+            0,
+            0,
+            1211,
+            1299
+          ]
+        ],
+        "anchor": [
+          759,
+          1230
+        ],
+        "scale": 0.38,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9f66a5c4b13ede05b03e13f7a136f2f6876c772cf745c9b5c06eec8b0490773f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "2bdfe19f07fb141be57efdfba89433b326b3a64f60e5429de5719e9bdc23ca0e",
+      "runtime_source_scale": 0.19
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,97 @@
+{
+  "unit_id": "unit_thornwake_seedshield_wardens",
+  "clip": "hit",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102603,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        217,
+        476
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens/hit_h3_v1/guide_1_rgba.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          75
+        ],
+        [
+          0,
+          75,
+          512,
+          85
+        ],
+        [
+          525,
+          75,
+          960,
+          85
+        ],
+        [
+          0,
+          85,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      18,
+      0
+    ],
+    [
+      34,
+      1
+    ],
+    [
+      62,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Seedshield Warden, a humanoid woodland guardian with exactly TWO arms and TWO legs. Branching brown antler helm surrounds the original dark green face, layered green oak-leaf mantle and torn leaf skirt, brown vine-wrapped bark armor, leather gloves and armored root-like boots, bronze belt and knee fittings. SCREEN LEFT anatomical RIGHT hand grips ONE long brown vine-wrapped seed-spear polearm: full-length single wooden shaft, original curved bright amber leaf-shaped blade at its upper end, dark oval opening below the blade, green leaf accents and one small amber bottom pommel. SCREEN RIGHT anatomical LEFT forearm carries ONE tall oval pointed amber seedglass shield with branching brown wooden rim and the original green sapling/seed motif. RIGHT hand never releases its same shaft; LEFT arm retains same shield. Preserve original face, antlers, leaf layers, spear length, amber blade and shield pattern; never add weapons, swap grips or add limbs. One silent physical balance check and recovery. The guardian suddenly leans chest and head backward while knees bend34, keeping BOTH hands on their original equipment. Then regain balance through hips, knees and elbows62 and hold original ready. Only the intact body and held equipment move. Nothing flies off or passes across the body. No incoming attack is depicted.  Locked original elevated three-quarter orthographic camera facing SCREEN RIGHT. Full original body and both ends of the single spear stay inside960x544. Fixed body size, fixed camera, root centered. The entire empty background remains uniform saturated BLUE RGB0,0,255 in EVERY frame. No ground, shadow, other figure, detached leaves, glitter, ribbon, streak, slash, flare, particle, spell, changing illumination or camera motion. Amber painted equipment stays the same brightness throughout; it does not emit light.",
+  "protected_foreground_chroma": 6,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_thornwake_seedshield_wardens",
+  "workflow": "Solo original MiniMax H3 action videos, observed transparent frames and self-review.",
+  "new_clip_frames": {
+    "move": 50,
+    "attack": 48,
+    "hit": 34,
+    "defend": 29,
+    "cast": 37,
+    "death": 48
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo review of all1116 chronological original frames from nine H3 takes, including raw rejected support/collapse backdrop transitions. Selected move50, attack48, hit34, defend29, physical support37 and death48:246 new poses. Original two arms/two legs, brown antler helm, green leaf armor, full right-hand seed-spear with amber curved blade/aperture and left-forearm seedglass shield retained. Reciprocal walking cycle has matching extended contact endpoints. Attack blade turns edge-on during rapid original wrist rotation38-41 and presents its original profile/aperture at contact44/index29, followed by recovery. Dedicated knee/shield brace holds its terminal pose. Corrected recoil recovers without v1 detached flakes/slash ribbons. Corrected physical salute raises the held spear at38/index12 and lowers it without v1 gold star flares. Blue correction plates avoid v1 green/magenta backdrop switching. The recoil guide omits only a verified disconnected six-pixel backdrop dash with original rectangles; all creature pixels above cutoff8 remain exact. Walking extraction uses clean original ready colors to remove legacy magenta contamination. Death retains the entire descent, kneeling loss of support, side roll and settling into a grounded head-left corpse with horizontal original spear and shield resting on body/ground. Matching stationary attack and salute holds shortened; no interpolation, reversed footage or per-frame normalization. Move/attack/hit/death33ms, defend/support42ms. Every selected native and mirrored phase reviewed at actual128px reference height; actual battle-clock captures cover windup, contact and recovery. Candidate830 and mirrored830 focused checks pass, including every48 attack pose observed, Normal/Fast and reduced motion. Eight existing articulated idle phases retained. No continuous browser movie review, manual playtest, Linux run or full suite claimed."
+  },
+  "validation": {
+    "candidate_checks": 830,
+    "mirrored_checks": 830,
+    "live_checks": 844,
+    "failures": 0,
+    "new_original_action_frames": 246,
+    "preserved_idle_frames": 8,
+    "retained_original_rgb_frames_including_rejected": 1116,
+    "atlas_dimensions": [
+      2944,
+      3380
+    ],
+    "rgba_bytes": 39802880,
+    "overworld_visuals_preserved": 232,
+    "other_battle_rows_preserved": 231,
+    "platform": "Windows Godot4.6.2 offscreen",
+    "full_suite_run": false,
+    "manual_playtest": false,
+    "continuous_browser_playback_review": false,
+    "linux_run": false
+  },
+  "roster_after": {
+    "complete": 206,
+    "remaining": 26,
+    "total": 232
+  },
+  "progress_note": "2026-10-02 SOLO COMPLETE: Seedshield Wardens six original H3 actions,246 new poses plus eight preserved articulated idle phases. Original right-hand full seed-spear and left-arm amber seedglass shield, reciprocal gait, dedicated melee/recoil/brace/rally and grounded corpse reviewed. Focused candidate/mirrored/live checks 830/830/844 pass; original frame/atlas import verification,all232 map visuals/timing and other231 battle rows preserved. Roster206/232 complete,26 remaining. Broad goal remains in_progress; solo,no full suite.",
+  "model_release": {
+    "free_vram_bytes": 32197574656,
+    "required_free_vram_bytes": 17179869184
+  },
+  "cleanup": {
+    "removed_verified_duplicate_and_unused_files": 1798,
+    "removed_duplicate_bytes": 728392505,
+    "temporary_files_to_remove": 131,
+    "temporary_bytes_to_remove": 110029485,
+    "recovered_bytes": 838421990,
+    "rebuildable": true,
+    "retained_original_rgb_frames": 1116,
+    "original_videos_latents_guides_prompts_and_provenance_preserved": true,
+    "temporary_directories": [
+      ".artifacts/seedshield_solo",
+      ".artifacts/seedshield_warden_h3"
+    ],
+    "temporary_files_removed": 131,
+    "temporary_bytes_removed": 110029485
+  }
+}

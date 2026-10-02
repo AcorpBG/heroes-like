@@ -1,0 +1,295 @@
+{
+  "prompt": [
+    306,
+    "85335d52-a6f7-4fe7-813c-6efb0d7865f4",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Seedshield Warden, a humanoid woodland guardian with exactly TWO arms and TWO legs. Branching brown antler helm surrounds the original dark green face, layered green oak-leaf mantle and torn leaf skirt, brown vine-wrapped bark armor, leather gloves and armored root-like boots, bronze belt and knee fittings. SCREEN LEFT anatomical RIGHT hand grips ONE long brown vine-wrapped seed-spear polearm: full-length single wooden shaft, original curved bright amber leaf-shaped blade at its upper end, dark oval opening below the blade, green leaf accents and one small amber bottom pommel. SCREEN RIGHT anatomical LEFT forearm carries ONE tall oval pointed amber seedglass shield with branching brown wooden rim and the original green sapling/seed motif. RIGHT hand never releases its same shaft; LEFT arm retains same shield. Preserve original face, antlers, leaf layers, spear length, amber blade and shield pattern; never add weapons, swap grips or add limbs. One quiet physical arm exercise. Both boots stay planted. RIGHT elbow bends and raises the same full-length wooden spear diagonally above RIGHT shoulder38, holds that ordinary mechanical position58, and lowers it progressively84 to the original upright ready. LEFT forearm keeps its original shield. No thrust, magical action, brightening or visual effect.  Locked original elevated three-quarter orthographic camera facing SCREEN RIGHT. Full original body and both ends of the single spear stay inside960x544. Fixed body size, fixed camera, root centered. The entire empty background remains uniform saturated BLUE RGB0,0,255 in EVERY frame. No ground, shadow, other figure, detached leaves, glitter, ribbon, streak, slash, flare, particle, spell, changing illumination or camera motion. Amber painted equipment stays the same brightness throughout; it does not emit light.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026102605
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "seedshield_warden_cast_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "seedshield_warden_cast_h3_v2_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 18,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "30",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 38,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 58,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "43": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "42",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 84,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "30",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "43",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "seedshield_warden_h3/cast_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "seedshield_warden_h3",
+      "create_time": 1790932186116
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "seedshield_warden_h3\\cast_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "85335d52-a6f7-4fe7-813c-6efb0d7865f4",
+          "timestamp": 1790932186117
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "85335d52-a6f7-4fe7-813c-6efb0d7865f4",
+          "timestamp": 1790932186134
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "85335d52-a6f7-4fe7-813c-6efb0d7865f4",
+          "timestamp": 1790932332357
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

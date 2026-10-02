@@ -1,0 +1,128 @@
+{
+  "unit_id": "unit_thornwake_seedshield_wardens",
+  "clip": "death",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026102506,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        217,
+        476
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "kneel",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/original.png",
+      "rects": [
+        [
+          413,
+          730,
+          670,
+          907
+        ],
+        [
+          413,
+          907,
+          708,
+          1061
+        ]
+      ],
+      "anchor": [
+        547,
+        1048
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "side_fall",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/original.png",
+      "rects": [
+        [
+          672,
+          777,
+          1050,
+          955
+        ],
+        [
+          710,
+          955,
+          1047,
+          1033
+        ]
+      ],
+      "anchor": [
+        874,
+        1017
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/original.png",
+      "rects": [
+        [
+          1051,
+          887,
+          1434,
+          1032
+        ]
+      ],
+      "anchor": [
+        1249,
+        1020
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      36,
+      1
+    ],
+    [
+      60,
+      2
+    ],
+    [
+      92,
+      3
+    ]
+  ],
+  "last": 3,
+  "prompt": "One original Seedshield Warden, a humanoid woodland guardian with exactly TWO arms and TWO legs. Branching brown antler helm surrounds the original dark green face, layered green oak-leaf mantle and torn leaf skirt, brown vine-wrapped bark armor, leather gloves and armored root-like boots, bronze belt and knee fittings. SCREEN LEFT anatomical RIGHT hand grips ONE long brown vine-wrapped seed-spear polearm: full-length single wooden shaft, original curved bright amber leaf-shaped blade at its upper end, dark oval opening below the blade, green leaf accents and one small amber bottom pommel. SCREEN RIGHT anatomical LEFT forearm carries ONE tall oval pointed amber seedglass shield with branching brown wooden rim and the original green sapling/seed motif. RIGHT hand never releases its same shaft; LEFT arm retains same shield. Preserve original face, antlers, leaf layers, spear length, amber blade and shield pattern; never add weapons, swap grips or add limbs. One continuous physical collapse. Knees bend and hips descend36, support gives way and body rolls to its side60 with antlered head SCREEN LEFT and boots SCREEN RIGHT. RIGHT hand lowers the full seed-spear so its amber blade, shaft and bottom pommel lie horizontally on the ground in front of the body92. LEFT arm lowers same shield onto fallen torso and ground. Leaves and legs settle naturally. No hovering weapon or shield, sudden body shrinking, extra limbs, severed antlers, long kneeling pause or standing up. Final half-second remains motionless grounded. Locked original elevated three-quarter orthographic camera facing SCREEN RIGHT. Full body, every antler and BOTH spear ends stay inside960x544 with generous margins. Fixed original anatomical size and centered root. Uniform saturated MAGENTA RGB255,0,255 background. No floor, shadow, other figures, scenery, lettering, particles, spell effects, sparks, trail or baked swing arc. No camera travel, body resizing, limb swaps or root translation.",
+  "protected_foreground_chroma": 18,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "b0e710ea7c3e2bef5397c9e60e8af892ec63cb5494298531beddf7d14639a78e",
+  "latent_sha256": "624bf6857a238db03b5a6af9e01f5f85080037c9a3b8b8235e695f8a880c8104",
+  "decode_workflow_sha256": "351f704f15bbba3e21d187f98688f96ca209168cc713c2a427bc04b229c39831",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "seedshield_warden_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18405294912,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

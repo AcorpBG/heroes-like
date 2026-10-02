@@ -1,0 +1,138 @@
+{
+  "unit_id": "unit_thornwake_seedshield_wardens",
+  "clip": "move",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026102501,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        217,
+        476
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "walk_near_contact",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-near-contact-corrected-magenta.png",
+      "rects": [
+        [
+          0,
+          0,
+          1060,
+          1484
+        ]
+      ],
+      "anchor": [
+        568,
+        1448
+      ],
+      "scale": 0.155,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "walk_far_lift",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-phase-3-magenta.png",
+      "rects": [
+        [
+          0,
+          0,
+          1058,
+          1486
+        ]
+      ],
+      "anchor": [
+        560,
+        1449
+      ],
+      "scale": 0.152,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "walk_far_contact",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-phase-2-magenta.png",
+      "rects": [
+        [
+          0,
+          0,
+          1058,
+          1486
+        ]
+      ],
+      "anchor": [
+        566,
+        1450
+      ],
+      "scale": 0.155,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "walk_near_lift",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-near-lift-corrected-magenta.png",
+      "rects": [
+        [
+          0,
+          0,
+          1059,
+          1486
+        ]
+      ],
+      "anchor": [
+        574,
+        1447
+      ],
+      "scale": 0.152,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      20,
+      1
+    ],
+    [
+      38,
+      2
+    ],
+    [
+      64,
+      3
+    ],
+    [
+      84,
+      4
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Seedshield Warden, a humanoid woodland guardian with exactly TWO arms and TWO legs. Branching brown antler helm surrounds the original dark green face, layered green oak-leaf mantle and torn leaf skirt, brown vine-wrapped bark armor, leather gloves and armored root-like boots, bronze belt and knee fittings. SCREEN LEFT anatomical RIGHT hand grips ONE long brown vine-wrapped seed-spear polearm: full-length single wooden shaft, original curved bright amber leaf-shaped blade at its upper end, dark oval opening below the blade, green leaf accents and one small amber bottom pommel. SCREEN RIGHT anatomical LEFT forearm carries ONE tall oval pointed amber seedglass shield with branching brown wooden rim and the original green sapling/seed motif. RIGHT hand never releases its same shaft; LEFT arm retains same shield. Preserve original face, antlers, leaf layers, spear length, amber blade and shield pattern; never add weapons, swap grips or add limbs. One reciprocal WALK IN PLACE. Alternate BOTH boots through opposite planted contact, weight loading, lifted passing knee and extension phases. RIGHT spear hand stays low holding upright full-length original polearm; LEFT shield arm carries original shield steady. Hips, knees and elbows articulate, leaf skirt and antler foliage answer the gait. Complete both legs and settle to ready. No one-leg repeated march, hopping, sliding feet, shrinking spear or attack. Locked original elevated three-quarter orthographic camera facing SCREEN RIGHT. Full body, every antler and BOTH spear ends stay inside960x544 with generous margins. Fixed original anatomical size and centered root. Uniform saturated MAGENTA RGB255,0,255 background. No floor, shadow, other figures, scenery, lettering, particles, spell effects, sparks, trail or baked swing arc. No camera travel, body resizing, limb swaps or root translation.",
+  "protected_foreground_chroma": 169,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

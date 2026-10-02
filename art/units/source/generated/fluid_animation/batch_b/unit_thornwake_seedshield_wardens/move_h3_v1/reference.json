@@ -1,0 +1,135 @@
+{
+  "unit_id": "unit_thornwake_seedshield_wardens",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          217,
+          476
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "225577884896436f758d6eeb8ba316c88de53dcdaa6ed69ce33af192e2a72690",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "bc6966e73d76060c1eaff9a48f37d1c921f1f5e8fdf6c73c785241603442298c",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "walk_near_contact",
+        "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-near-contact-corrected-magenta.png",
+        "rects": [
+          [
+            0,
+            0,
+            1060,
+            1484
+          ]
+        ],
+        "anchor": [
+          568,
+          1448
+        ],
+        "scale": 0.31,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b66b38145e15c1f7bdfa19599abc4031c0b11c67976f6f9b8b7b18d64811a86c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "32a44d3f776a6c66f53bcae00d3d6e4ec35e7add71fe0c0fb9424eec08c74778",
+      "runtime_source_scale": 0.155
+    },
+    {
+      "source_frame": {
+        "name": "walk_far_lift",
+        "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-phase-3-magenta.png",
+        "rects": [
+          [
+            0,
+            0,
+            1058,
+            1486
+          ]
+        ],
+        "anchor": [
+          560,
+          1449
+        ],
+        "scale": 0.304,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "43cdafe51b2a243d3ade171b78da2ecf1704ae55f9e8408d25939927fa8ab5c8",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "5fe7c8b836551acc070cd5a99f8faca5c37470f25ca2dd60488aafb692f7f1d0",
+      "runtime_source_scale": 0.152
+    },
+    {
+      "source_frame": {
+        "name": "walk_far_contact",
+        "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-phase-2-magenta.png",
+        "rects": [
+          [
+            0,
+            0,
+            1058,
+            1486
+          ]
+        ],
+        "anchor": [
+          566,
+          1450
+        ],
+        "scale": 0.31,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "dd5e4cfd5029c84033e428e476b15ea1eb7876595a0dbedbff614404af009e1c",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "1d97404c70387defc1a1c98163605ff249048eb9f3c3ead1f715ac8f027e1c77",
+      "runtime_source_scale": 0.155
+    },
+    {
+      "source_frame": {
+        "name": "walk_near_lift",
+        "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-near-lift-corrected-magenta.png",
+        "rects": [
+          [
+            0,
+            0,
+            1059,
+            1486
+          ]
+        ],
+        "anchor": [
+          574,
+          1447
+        ],
+        "scale": 0.304,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2177f11220c445b3993057895eff8c09592b433a716fcf83003137466a9e0d72",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "95a6cff3e6d8db87f430662818228995091c345bb5ba627f2e44a43eb3b136b3",
+      "runtime_source_scale": 0.152
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
