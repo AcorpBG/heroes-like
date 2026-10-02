@@ -1,0 +1,26 @@
+{
+  "takes": [
+    "idle_h3_v2",
+    "move_h3_v2",
+    "attack_h3_v2",
+    "hit_h3_v2",
+    "defend_h3_v2",
+    "cast_h3_v2",
+    "death_h3_v2"
+  ],
+  "preserved_accepted_clips": [],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Solo coordinator review: all 868 original corrected v2 frames in chronological order, enlarged action phases, all 291 native battle phases in normal and reflected facing, and eight actual attack shell-clock renders. Six-leg curated anatomy and three attached crown pods retained. Front-root wrist and middle/hind hoof gait, weight-loaded crown sweep/contact/recovery, recoil, held guard, physical rally and grounded two-stage collapse accepted. Shortened long holds only; no interpolation, reversal, pose warps or per-frame scale normalization. Corrected original curated guidance replaces the inherited four-leg v1 references; seven rejected v1 originals remain preserved. Candidate and reflected render checks each 951/0 failures. Continuous playback, manual game session and Linux execution were not performed.",
+    "review_method": "chronological_original_frames_enlarged_phases_and_native_clock_captures",
+    "original_v2_frames_reviewed": 868,
+    "native_selected_poses_reviewed": 291,
+    "rejected_v1_reason": "Inherited standing guide omitted original middle leg pair",
+    "original_v1_full_frame_reviews": [
+      "idle",
+      "move"
+    ],
+    "continuous_video_playback": false,
+    "manual_game_playtest": false
+  }
+}

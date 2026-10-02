@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "8b06938e9dd055f40c3b077b482a07b63a818a9f04fb42549d3c29e06dba3645",
+  "latent_sha256": "c3e909219334705565e7d5dc1f8debb81d6de6843a542707d0f51ecc48dfb0b2",
+  "decode_workflow_sha256": "6347df53869c5245feeeb3fd40c94d5fada91fdd18e8a002f4d7f1ec031cc647",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "rootcrown_knotstag_h3\\move_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18629624128,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

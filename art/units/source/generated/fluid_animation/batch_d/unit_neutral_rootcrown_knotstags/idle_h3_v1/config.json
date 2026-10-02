@@ -1,0 +1,94 @@
+{
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "clip": "idle",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102901,
+  "references": [
+    {
+      "name": "idle_v2_0",
+      "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/idle-v2/alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        210,
+        486
+      ],
+      "scale": 0.48,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle_v2_3",
+      "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/idle-v2/alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1362,
+        486
+      ],
+      "scale": 0.48,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle_v2_5",
+      "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/idle-v2/alpha.png",
+      "rects": [
+        [
+          384,
+          512,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        594,
+        972
+      ],
+      "scale": 0.48,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ],
+    [
+      72,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original Rootcrown Knotstag: a long-bodied SIX-LEGGED wooden stag, three pairs of legs, with two large claw-root front feet and four slimmer bark hind/middle hoof legs. Near and far limbs remain anatomically attached; far legs may be occluded naturally but never disappear or fuse. Brown layered bark body, pale gray bark flank plates, shaggy green/gold foliage mane, leaf tufts on joints and curved vine tail. Deer muzzle faces SCREEN RIGHT, amber eye and narrow pointed ears. ONE wide, branching wooden antler crown carries exactly THREE attached amber seed lanterns, one center and one each side, with original green leaves. Keep every branch, three hanging pods, eye, root claws, leaf mane, tail and six-leg proportions unchanged. No humanoid arms, reins, rider, weapon or additional lantern. One quiet idle cycle. Keep middle and rear hooves planted. Flex the near large FRONT root wrist and lift its toes slightly, then settle it back down. Neck raises slightly34, ears turn, attached seed pods sway from their branches, leafy shoulder mane and tail respond72. Return smoothly to exact initial ready. Visible articulated foreleg and neck motion, no whole-body bobbing or rigid rocking. No walking or spell.  Locked original elevated three-quarter orthographic camera facing SCREEN RIGHT. Fixed body size, centered root. Entire antler crown and all feet remain inside960x544 with generous margins. Flat uniform BLUE RGB0,0,255 backdrop EVERY frame; no ground, scenery, shadow, particles, floating leaves, aura, text, zoom or camera motion. Amber pods keep original painted warm color, never emit effects. Only original creature anatomy moves.",
+  "protected_foreground_chroma": 3,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "original_six_leg_identity",
+        "source": "art/units/source/curated/unit_neutral_rootcrown_knotstags.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            512
+          ]
+        ],
+        "anchor": [
+          256,
+          488
+        ],
+        "scale": 0.9,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "21ff0d25b8ad81da756a7da78f1c2fa2ed7df3873c13a93059d929bcd01ccbd0",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "092c2b0d510445d4a2df48f3404e00ca2e2a1d82a47d1d55cf81e03fb02c375c",
+      "runtime_source_scale": 0.45
+    },
+    {
+      "source_frame": {
+        "name": "dead_head_right_dark_lanterns",
+        "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/poses.png",
+        "rects": [
+          [
+            1114,
+            799,
+            1527,
+            964
+          ]
+        ],
+        "anchor": [
+          1306,
+          954
+        ],
+        "scale": 1.24,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ab7fc17c15ca0d02dbd0c6ed37881dcf943ed7ccf55105dabc2251e3e9d63a21",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a7de63677e7f74ee2635a0230f0eca6d97e881afe06ffd4737518174feef718f",
+      "runtime_source_scale": 0.62
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

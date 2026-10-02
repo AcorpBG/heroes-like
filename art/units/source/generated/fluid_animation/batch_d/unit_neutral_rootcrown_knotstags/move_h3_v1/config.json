@@ -1,0 +1,138 @@
+{
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "clip": "move",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102902,
+  "references": [
+    {
+      "name": "idle_v2_0",
+      "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/idle-v2/alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        210,
+        486
+      ],
+      "scale": 0.48,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "travel_near_hind_lift",
+      "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/near-hind-lift.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        620,
+        1205
+      ],
+      "scale": 0.18,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "travel_near_fore_lift",
+      "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/near-fore-lift.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        620,
+        1205
+      ],
+      "scale": 0.18,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "travel_far_hind_lift",
+      "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/far-hind-lift.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        620,
+        1205
+      ],
+      "scale": 0.18,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "travel_far_fore_lift",
+      "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/far-fore-lift.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        620,
+        1205
+      ],
+      "scale": 0.18,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      20,
+      1
+    ],
+    [
+      42,
+      2
+    ],
+    [
+      66,
+      3
+    ],
+    [
+      88,
+      4
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original Rootcrown Knotstag: a long-bodied SIX-LEGGED wooden stag, three pairs of legs, with two large claw-root front feet and four slimmer bark hind/middle hoof legs. Near and far limbs remain anatomically attached; far legs may be occluded naturally but never disappear or fuse. Brown layered bark body, pale gray bark flank plates, shaggy green/gold foliage mane, leaf tufts on joints and curved vine tail. Deer muzzle faces SCREEN RIGHT, amber eye and narrow pointed ears. ONE wide, branching wooden antler crown carries exactly THREE attached amber seed lanterns, one center and one each side, with original green leaves. Keep every branch, three hanging pods, eye, root claws, leaf mane, tail and six-leg proportions unchanged. No humanoid arms, reins, rider, weapon or additional lantern. One slow six-legged WALK IN PLACE. Alternate the near and far groups through lift, forward passing, root-claw/hoof contact and weight loading. Three original leg pairs remain attached. Flex both large FRONT root wrists in opposed phases while middle and hind hooves cycle. Neck, mane and vine tail respond to weight transfer; antler crown and all three pods remain stable. Complete opposite support phases and return to ready. No foot sliding, galloping, jumping or repeated same-leg lift.  Locked original elevated three-quarter orthographic camera facing SCREEN RIGHT. Fixed body size, centered root. Entire antler crown and all feet remain inside960x544 with generous margins. Flat uniform BLUE RGB0,0,255 backdrop EVERY frame; no ground, scenery, shadow, particles, floating leaves, aura, text, zoom or camera motion. Amber pods keep original painted warm color, never emit effects. Only original creature anatomy moves.",
+  "protected_foreground_chroma": 23,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_v2_0",
+        "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/idle-v2/alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          210,
+          486
+        ],
+        "scale": 0.96,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c9086d272cba5b7e0cc70ac8aa72d6f0c1b2f6e994fa53a4834fe03134365572",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d475d460044a28768586e0a880b5ea32e396012536245827ca524b56d624408a",
+      "runtime_source_scale": 0.48
+    },
+    {
+      "source_frame": {
+        "name": "travel_near_hind_lift",
+        "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/near-hind-lift.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          620,
+          1205
+        ],
+        "scale": 0.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3e603e14f3c074ee31325cea8b52c612e2936b364a505395d178a6048b2fe89e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e7f2422eecc5f9633b6d7ac3a0493884ebd1b07d0f6a31dc781108f9240e7b33",
+      "runtime_source_scale": 0.18
+    },
+    {
+      "source_frame": {
+        "name": "travel_near_fore_lift",
+        "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/near-fore-lift.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          620,
+          1205
+        ],
+        "scale": 0.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5808f2d7cad8c56c96649544232d9b586cad693192bc91e007fc85609741d540",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "75894b83833259d8495264cacef0e7722ff3c60103123aa64f57bdf7e281fc3f",
+      "runtime_source_scale": 0.18
+    },
+    {
+      "source_frame": {
+        "name": "travel_far_hind_lift",
+        "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/far-hind-lift.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          620,
+          1205
+        ],
+        "scale": 0.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b56493403b63dd2a07f44bbfeed50e51b7d6326504413edd37adf00a949d6836",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "6c40c648266b5e9d1db03f88a8acb681fb2eab75a1e70e017238a0d1466a358a",
+      "runtime_source_scale": 0.18
+    },
+    {
+      "source_frame": {
+        "name": "travel_far_fore_lift",
+        "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/far-fore-lift.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          620,
+          1205
+        ],
+        "scale": 0.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a62ba1a8ce2aebe4d7b276584330ef0cda7caed18c2480f973e37382ed524641",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "1defca80bb3387b0ed24bfc551e545cb534fce2483476ce013ffd18e7bfe3198",
+      "runtime_source_scale": 0.18
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

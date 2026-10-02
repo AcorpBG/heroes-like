@@ -1,0 +1,141 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "ONE original Rootcrown Knotstag: a long-bodied SIX-LEGGED wooden stag, three pairs of legs, with two large claw-root front feet and four slimmer bark hind/middle hoof legs. Near and far limbs remain anatomically attached; far legs may be occluded naturally but never disappear or fuse. Brown layered bark body, pale gray bark flank plates, shaggy green/gold foliage mane, leaf tufts on joints and curved vine tail. Deer muzzle faces SCREEN RIGHT, amber eye and narrow pointed ears. ONE wide, branching wooden antler crown carries exactly THREE attached amber seed lanterns, one center and one each side, with original green leaves. Keep every branch, three hanging pods, eye, root claws, leaf mane, tail and six-leg proportions unchanged. No humanoid arms, reins, rider, weapon or additional lantern. One uninterrupted physical collapse. All six knees/root wrists slowly buckle, shoulder descends, support gives way and long bark torso rolls onto its side. Head/crown finish SCREEN RIGHT and hind legs extend SCREEN LEFT, large front roots fold in front. Antlers descend with the neck onto the ground without detaching. Three original pods stay attached and become dark like final reference. Leaves and tail settle into a grounded corpse; final second motionless. Every transition continuous, no hard cuts, shrinking or hovering legs.  Locked original elevated three-quarter orthographic camera facing SCREEN RIGHT. Fixed body size, centered root. Entire antler crown and all feet remain inside960x544 with generous margins. Flat uniform BLUE RGB0,0,255 backdrop EVERY frame; no ground, scenery, shadow, particles, floating leaves, aura, text, zoom or camera motion. Amber pods keep original painted warm color, never emit effects. Only original creature anatomy moves.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "31",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026102907
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "rootcrown_knotstag_death_h3_v1_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "rootcrown_knotstag_death_h3_v1_guide_1.png"
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "rootcrown_knotstag_h3/death_h3_v1/sampled"
+    }
+  }
+}

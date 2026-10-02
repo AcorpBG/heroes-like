@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_v2_0",
+        "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/idle-v2/alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          210,
+          486
+        ],
+        "scale": 0.96,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c9086d272cba5b7e0cc70ac8aa72d6f0c1b2f6e994fa53a4834fe03134365572",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d475d460044a28768586e0a880b5ea32e396012536245827ca524b56d624408a",
+      "runtime_source_scale": 0.48
+    },
+    {
+      "source_frame": {
+        "name": "crown_windup",
+        "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/poses.png",
+        "rects": [
+          [
+            389,
+            370,
+            745,
+            668
+          ]
+        ],
+        "anchor": [
+          556,
+          661
+        ],
+        "scale": 1.24,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ab7fc17c15ca0d02dbd0c6ed37881dcf943ed7ccf55105dabc2251e3e9d63a21",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "987ec01819cca756d4a75080b58687ef08b6e1e873a2c1450c5930893bc41e64",
+      "runtime_source_scale": 0.62
+    },
+    {
+      "source_frame": {
+        "name": "crown_forward_strike",
+        "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/poses.png",
+        "rects": [
+          [
+            747,
+            412,
+            1177,
+            662
+          ]
+        ],
+        "anchor": [
+          967,
+          655
+        ],
+        "scale": 1.24,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ab7fc17c15ca0d02dbd0c6ed37881dcf943ed7ccf55105dabc2251e3e9d63a21",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "f95a99238def560abdaa3426bdbf3d3c0821dd168f6ef76dba6d50e216d9480c",
+      "runtime_source_scale": 0.62
+    },
+    {
+      "source_frame": {
+        "name": "crown_recovery",
+        "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png",
+        "rects": [
+          [
+            0,
+            0,
+            669,
+            763
+          ]
+        ],
+        "anchor": [
+          360,
+          734
+        ],
+        "scale": 0.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c8e1140944a002074fd2dddd07cb38dcb5d192b4586d59f64a667cd72dc3f31b",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "2c283fc02c3da212153de603905faf6e350022ee76bae6326d2c0d29af6c1ba8",
+      "runtime_source_scale": 0.3
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

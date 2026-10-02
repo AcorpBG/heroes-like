@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "clip": "death",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026102907,
+  "references": [
+    {
+      "name": "idle_v2_0",
+      "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/idle-v2/alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        210,
+        486
+      ],
+      "scale": 0.48,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_right_dark_lanterns",
+      "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/poses.png",
+      "rects": [
+        [
+          1114,
+          799,
+          1527,
+          964
+        ]
+      ],
+      "anchor": [
+        1306,
+        954
+      ],
+      "scale": 0.62,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 1,
+  "prompt": "ONE original Rootcrown Knotstag: a long-bodied SIX-LEGGED wooden stag, three pairs of legs, with two large claw-root front feet and four slimmer bark hind/middle hoof legs. Near and far limbs remain anatomically attached; far legs may be occluded naturally but never disappear or fuse. Brown layered bark body, pale gray bark flank plates, shaggy green/gold foliage mane, leaf tufts on joints and curved vine tail. Deer muzzle faces SCREEN RIGHT, amber eye and narrow pointed ears. ONE wide, branching wooden antler crown carries exactly THREE attached amber seed lanterns, one center and one each side, with original green leaves. Keep every branch, three hanging pods, eye, root claws, leaf mane, tail and six-leg proportions unchanged. No humanoid arms, reins, rider, weapon or additional lantern. One uninterrupted physical collapse. All six knees/root wrists slowly buckle, shoulder descends, support gives way and long bark torso rolls onto its side. Head/crown finish SCREEN RIGHT and hind legs extend SCREEN LEFT, large front roots fold in front. Antlers descend with the neck onto the ground without detaching. Three original pods stay attached and become dark like final reference. Leaves and tail settle into a grounded corpse; final second motionless. Every transition continuous, no hard cuts, shrinking or hovering legs.  Locked original elevated three-quarter orthographic camera facing SCREEN RIGHT. Fixed body size, centered root. Entire antler crown and all feet remain inside960x544 with generous margins. Flat uniform BLUE RGB0,0,255 backdrop EVERY frame; no ground, scenery, shadow, particles, floating leaves, aura, text, zoom or camera motion. Amber pods keep original painted warm color, never emit effects. Only original creature anatomy moves.",
+  "protected_foreground_chroma": 8,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

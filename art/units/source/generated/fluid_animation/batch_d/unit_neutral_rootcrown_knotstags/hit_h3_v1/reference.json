@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_v2_0",
+        "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/idle-v2/alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          210,
+          486
+        ],
+        "scale": 0.96,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c9086d272cba5b7e0cc70ac8aa72d6f0c1b2f6e994fa53a4834fe03134365572",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d475d460044a28768586e0a880b5ea32e396012536245827ca524b56d624408a",
+      "runtime_source_scale": 0.48
+    },
+    {
+      "source_frame": {
+        "name": "hit_recoil",
+        "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/poses.png",
+        "rects": [
+          [
+            12,
+            665,
+            342,
+            987
+          ]
+        ],
+        "anchor": [
+          187,
+          980
+        ],
+        "scale": 1.24,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ab7fc17c15ca0d02dbd0c6ed37881dcf943ed7ccf55105dabc2251e3e9d63a21",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "90f4f6a9a19ae6358782b58fe0e78603f452b14664867723cee0ecde10c936bd",
+      "runtime_source_scale": 0.62
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

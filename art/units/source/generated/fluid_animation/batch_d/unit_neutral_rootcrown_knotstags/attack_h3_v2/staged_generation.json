@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "911c068084e5764090f52d1259c76593297167cb66ce8432336d9199d707f2e5",
+  "latent_sha256": "19f57eab4a9bc776ed5ddbfedacd6728e6ed78b432db4e8589a3af708ec6c9bd",
+  "decode_workflow_sha256": "ec35f854cb61845b83a4c6481a9aba2d7b3d66af47cb7ed94ab176e401a633e0",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "rootcrown_knotstag_h3\\attack_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

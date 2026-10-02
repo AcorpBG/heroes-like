@@ -1,0 +1,197 @@
+{
+  "prompt": [
+    346,
+    "825e30ab-503b-4ed6-bf89-0709994f590e",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "ONE original Rootcrown Knotstag: a long-bodied SIX-LEGGED wooden stag, three pairs of legs, with two large claw-root front feet and four slimmer bark hind/middle hoof legs. Near and far limbs remain anatomically attached; far legs may be occluded naturally but never disappear or fuse. Brown layered bark body, pale gray bark flank plates, shaggy green/gold foliage mane, leaf tufts on joints and curved vine tail. Deer muzzle faces SCREEN RIGHT, amber eye and narrow pointed ears. ONE wide, branching wooden antler crown carries exactly THREE attached amber seed lanterns, one center and one each side, with original green leaves. Keep every branch, three hanging pods, eye, root claws, leaf mane, tail and six-leg proportions unchanged. No humanoid arms, reins, rider, weapon or additional lantern. One dedicated held defensive brace. Lower shoulder, head and crown as SIX knees/root wrists bend. Original front roots bear weight, middle pair beneath belly and hind pair remain separately attached. Neck tucks behind complete protective crown. Hold low guard through final second; all three pods attached. No return to ready, attack, extra limb or missing middle pair.  Locked original elevated three-quarter orthographic camera facing SCREEN RIGHT. Fixed body size, centered root. Entire antler crown and all feet remain inside960x544 with generous margins. Flat uniform BLUE RGB0,0,255 backdrop EVERY frame; no ground, scenery, shadow, particles, floating leaves, aura, text, zoom or camera motion. Amber pods keep original painted warm color, never emit effects. Only original creature anatomy moves.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026103005
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "rootcrown_knotstag_defend_h3_v2_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "rootcrown_knotstag_h3/defend_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "rootcrown_knotstag_h3",
+      "create_time": 1790939316207
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "rootcrown_knotstag_h3\\defend_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "825e30ab-503b-4ed6-bf89-0709994f590e",
+          "timestamp": 1790939316208
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "825e30ab-503b-4ed6-bf89-0709994f590e",
+          "timestamp": 1790939316225
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "825e30ab-503b-4ed6-bf89-0709994f590e",
+          "timestamp": 1790939446538
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

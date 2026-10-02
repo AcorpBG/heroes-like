@@ -1,0 +1,15 @@
+{
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "curated_source_scale": 0.45,
+  "curated_source_anchor": [
+    256,
+    488
+  ],
+  "reason": "Actual six-leg original identity replaces deficient four-leg legacy ready/gait guides. Fixed .45 original identity scale gives~213px full silhouette, matching prior~214px ready. All H3 frames use fixed .5 extraction and root480,480; no per-pose normalization. Original folded corpse guide retains .62 scale."
+}

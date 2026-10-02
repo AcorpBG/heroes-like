@@ -1,0 +1,76 @@
+{
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "status": "complete_selected_unit",
+  "date": "2026-10-02",
+  "solo": true,
+  "source_method": "MiniMax H3 original video frames",
+  "clips": {
+    "idle": 18,
+    "move": 63,
+    "attack": 45,
+    "hit": 33,
+    "defend": 22,
+    "cast": 52,
+    "death": 58
+  },
+  "new_selected_poses": 291,
+  "battle_atlas_size": [
+    3644,
+    3392
+  ],
+  "battle_texture_rgba_bytes": 49441792,
+  "map_idle_size": [
+    3726,
+    233
+  ],
+  "original_v2_rgb_frames_reviewed": 868,
+  "rejected_v1_takes": 7,
+  "rejected_v1_full_chronological_reviews": [
+    "idle",
+    "move"
+  ],
+  "preserved_original_rgb_frames": 1736,
+  "validation": {
+    "checks": {
+      "candidate": 951,
+      "mirrored": 951,
+      "live": 955
+    },
+    "total": 2857,
+    "failures": [],
+    "source_pixel_and_ground_anchor_equality": true,
+    "other231_battle_and_map_rows_preserved": true,
+    "imported_atlas_exact_rgba": true,
+    "map_gpu_idle_frame0_and_frame8_reviewed": true,
+    "map_reduced_motion_stable": true,
+    "normal_reflected_and_live_all_selected_phases_reviewed": true,
+    "actual_attack_shell_clock_captures_reviewed": 8,
+    "full_suite_run": false,
+    "linux_run": false,
+    "manual_game_session": false,
+    "continuous_video_playback": false
+  },
+  "roster": {
+    "complete": 208,
+    "total": 232,
+    "remaining": 24
+  },
+  "broad_goal_status": "in_progress",
+  "model_release": {
+    "free_vram_bytes": 31510024852,
+    "required_free_vram_bytes": 17179869184
+  },
+  "cleanup": {
+    "removed_verified_duplicate_and_unused_files": 3237,
+    "removed_duplicate_bytes": 1373736777,
+    "temporary_files_to_remove": 134,
+    "temporary_bytes_to_remove": 195971505,
+    "recovered_bytes": 1569708282,
+    "rebuildable": true,
+    "retained_original_rgb_frames": 1736,
+    "original_videos_latents_guides_prompts_and_provenance_preserved": true,
+    "caches_preserved": true,
+    "temporary_files_removed": 134,
+    "temporary_bytes_removed": 195971505
+  }
+}

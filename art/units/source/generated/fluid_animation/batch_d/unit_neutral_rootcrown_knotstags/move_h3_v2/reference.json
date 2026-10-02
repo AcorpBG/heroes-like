@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "original_six_leg_identity",
+        "source": "art/units/source/curated/unit_neutral_rootcrown_knotstags.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            512
+          ]
+        ],
+        "anchor": [
+          256,
+          488
+        ],
+        "scale": 0.9,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "21ff0d25b8ad81da756a7da78f1c2fa2ed7df3873c13a93059d929bcd01ccbd0",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "092c2b0d510445d4a2df48f3404e00ca2e2a1d82a47d1d55cf81e03fb02c375c",
+      "runtime_source_scale": 0.45
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
