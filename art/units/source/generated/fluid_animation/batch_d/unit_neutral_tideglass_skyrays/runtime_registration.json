@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_neutral_tideglass_skyrays",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "ready_guide": {
+    "name": "idle_hands_0",
+    "source": "art/animation/source/poses/unit_neutral_tideglass_skyrays/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        386,
+        542
+      ]
+    ],
+    "anchor": [
+      192,
+      462
+    ],
+    "scale": 0.65323,
+    "alpha_noise_cutoff": 8
+  },
+  "corpse_guide": {
+    "name": "dead",
+    "source": "art/animation/source/poses/unit_neutral_tideglass_skyrays/alpha/poses.png",
+    "rects": [
+      [
+        1086,
+        800,
+        1448,
+        1020
+      ]
+    ],
+    "anchor": [
+      1281,
+      967
+    ],
+    "scale": 0.62,
+    "alpha_noise_cutoff": 8
+  },
+  "reason": "Existing articulated eight-phase idle retained. Original scales retained per legacy source painting; all videos use one fixed .5 extraction. One corpse end guide registers physical body contact instead of legacy transparent bottom padding. No per-video-frame scale/anchor normalization."
+}

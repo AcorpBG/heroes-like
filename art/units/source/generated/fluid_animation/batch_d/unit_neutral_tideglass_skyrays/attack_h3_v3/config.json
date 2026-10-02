@@ -1,0 +1,77 @@
+{
+  "unit_id": "unit_neutral_tideglass_skyrays",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105102,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_tideglass_skyrays/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          386,
+          542
+        ]
+      ],
+      "anchor": [
+        192,
+        462
+      ],
+      "scale": 0.65323,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/attack_h3_v2/matte/rgba_040.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 0,
+      "original_video": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/attack_h3_v2/original_lossless.mkv",
+      "original_video_sha256": "9c97967f285e6afd0b03256ad01cab6c77dcf991d1e7b8733482662340a7b601",
+      "original_rgb_sha256": "594f44491e5988d922840fb896c41918eb5c93b889b47ca3d3825508edefe288",
+      "original_video_frame": 40,
+      "original_video_time_seconds": 1.6666666666666667,
+      "matte_recipe": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/attack_h3_v2/matte.json"
+    }
+  ],
+  "guides": [
+    [
+      48,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original painted fantasy TIDEGLASS SKYRAY. One elongated blue-teal manta-like body, slender pointed snout facing SCREEN RIGHT, pale pearly eye markings, exactly TWO broad translucent crescent pectoral wings with dark teal veins and pale cream panels. Small pale dorsal fins stay attached above back; one long curling tail and original soft white/aqua trailing fin ribbons flow behind to screen left. Original brass/teal hanging resonator bell harness stays attached beneath belly, with large front bell and smaller rear bell; never add duplicate bells, eyes, legs, arms, horns or wings. No human rider, hands, weapons or text. Locked orthographic side three-quarter camera and unchanged painted style, proportions, facing and body scale. Preserve the existing exact ray silhouette and near/far wing identities.  One coherent close-range ram. First second draw pointed head and chest back to load, fold near and far wings slightly backwards; then drive the snout SCREEN RIGHT to the single frame48 contact painting, belly bells and soft ribbons trail behind. Unfold and recover smoothly for the remainder to exact ready. Do not make a second charge, fly upward or twist the body down. Continuous jointed motion between all poses, no snap/cut.  Flat blue background, locked camera, no floor/shadow/scenery/particles/projectile. Extra upper canvas clearance keeps BOTH wing tips inside the frame. Body stays at the same physical reference size. Do not rotate toward camera, zoom, resize, add bells/appendages or cut between states.",
+  "protected_foreground_chroma": 0,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

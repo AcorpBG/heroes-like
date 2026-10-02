@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "6897871c711d1608328aecf46fb1ac9f292e2f39b4dbd675facbca69e04dc3b5",
+  "latent_sha256": "6b4268cbb2319240789547d05548f1653a4d676e1018f8c1360932f0f857ed6b",
+  "decode_workflow_sha256": "e186d29a6efd55e85374cd833002ef29b0340ac85dbccb36c290174b7d4a75a0",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "tideglass_skyray_h3\\attack_h3_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17628479296,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

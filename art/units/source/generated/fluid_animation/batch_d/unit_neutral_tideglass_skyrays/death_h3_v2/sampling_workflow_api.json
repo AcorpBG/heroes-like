@@ -1,0 +1,141 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Original painted fantasy TIDEGLASS SKYRAY. One elongated blue-teal manta-like body, slender pointed snout facing SCREEN RIGHT, pale pearly eye markings, exactly TWO broad translucent crescent pectoral wings with dark teal veins and pale cream panels. Small pale dorsal fins stay attached above back; one long curling tail and original soft white/aqua trailing fin ribbons flow behind to screen left. Original brass/teal hanging resonator bell harness stays attached beneath belly, with large front bell and smaller rear bell; never add duplicate bells, eyes, legs, arms, horns or wings. No human rider, hands, weapons or text. Locked orthographic side three-quarter camera and unchanged painted style, proportions, facing and body scale. Preserve the existing exact ray silhouette and near/far wing identities. One continuous loss of flight and grounded collapse. The two wings lose lift and fold down, elongated ray body descends and rolls a little onto its belly/side. Tail, dorsal fins, attached soft ribbons and bell harness settle with it. End with original head SCREEN RIGHT, tail SCREEN LEFT, flattened wing membranes and all body/bells/ribbons resting on virtual ground y480. Final second completely still. No shrinking, dissolving, new limbs, detached bells, hard cut or levitating corpse.  SOLID CHROMA BLUE RGB0,0,255 fills the WHOLE background for EVERY FRAME without any colour change. This blue plate remains pure blue, never teal, cyan, gray, a gradient or transparent. No floor, shadow, scenery, particles or camera motion. All body and attached fin ribbons stay inside frame. The virtual ground is y480; normal flight body stays centered, original trailing fins and bells move naturally. Movement is jointed wing flex, not global sprite wobble. Keep complete ray geometry, do not turn toward camera or resize.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "31",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026104107
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "tideglass_skyray_death_h3_v2_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "tideglass_skyray_death_h3_v2_guide_1.png"
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "tideglass_skyray_h3/death_h3_v2/sampled"
+    }
+  }
+}

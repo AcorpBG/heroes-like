@@ -1,0 +1,112 @@
+{
+  "unit_id": "unit_neutral_tideglass_skyrays",
+  "status": "complete_selected_unit",
+  "date": "2026-10-02",
+  "solo": true,
+  "source_method": "MiniMax H3 original video with pinned local BiRefNet soft matting",
+  "clips": {
+    "idle": 8,
+    "move": 63,
+    "attack": 35,
+    "ranged": 50,
+    "cast": 48,
+    "death": 36,
+    "hit": 36,
+    "defend": 30
+  },
+  "new_selected_poses": 298,
+  "preserved_idle_poses": 8,
+  "battle_atlas_size": [
+    4032,
+    4052
+  ],
+  "battle_texture_rgba_bytes": 65350656,
+  "map_idle_size": [
+    2152,
+    263
+  ],
+  "original_selected_rgb_frames_reviewed": 868,
+  "preserved_original_rgb_frames": 1364,
+  "rejected_original_takes": [
+    "move_h3_v1",
+    "attack_h3_v2",
+    "attack_h3_v3",
+    "defend_h3_v2"
+  ],
+  "validation": {
+    "checks": {
+      "candidate": 994,
+      "mirrored": 994,
+      "ranged": 994,
+      "live": 1008
+    },
+    "total": 3990,
+    "failures": [],
+    "source_pixel_and_ground_anchor_equality": true,
+    "other231_battle_and_map_rows_preserved": true,
+    "imported_atlas_exact_rgba": true,
+    "preserved_battle_and_overworld_idle_exact": true,
+    "visual_review": {
+      "status": "accepted_selected_unit",
+      "solo": true,
+      "all124_original_frames_each_selected_take_inspected": true,
+      "chronological_source_review": "All124 extracted original temporal frames for each of seven selected takes; full source sequence and enlarged light/dark phase/edge reviews.",
+      "original_video_playback": false,
+      "source_identity": "Two original crescent wings, pointed right-facing head, dorsal fins, tail, trailing fin ribbons and attached original bell harness remain coherent.",
+      "native_review": "Every selected native and reflected128px pose inspected; every published live pose inspected. Eight actual committed melee captures per candidate/reflected-driver/live run and eight ranged captures inspected.",
+      "reflected_driver_shell_captures": "Shell captures remain normal-facing; only the full phase gallery uses the actual mirrored draw transform.",
+      "overworld_review": "Live shader frame0 and raised-wing idle frame2 inspected; old eight idle paintings, map-strip pixels and200ms timing remain exact.",
+      "selected_attack_edit": {
+        "take": "attack_h3_v4",
+        "join": [
+          22,
+          82
+        ],
+        "excluded_interval": [
+          23,
+          81
+        ],
+        "contact_source_frame": 89,
+        "reason": "Matching loaded-wing/head/harness poses join opening anticipation to final single wing-driven strike and recovery; exclude repeated flaps and particles. No painted-pixel edits or motion interpolation."
+      },
+      "repeated_failure_resolution": "Reject clipped/snapping meleev2 and guide-forced double meleev3. Remove conflicting intermediate guide forv4, then select one coherent action interval. Guardv3 replaces abruptv2 hood transition.",
+      "geometry": "Original image coordinates and fixed.5 scale preserved.96px upper headroom protects wing tips; corpse guide physical ground contact registered once.",
+      "focused_validation": "Normal/Fast/reduced-motion/static/dead/contact timing, full authored shell playback, unchanged RNG/occupancy/saved simulation; imported atlas exact RGBA after Godot alpha-border fix; original source pixel/anchor/map equality.",
+      "manual_game_session": false,
+      "continuous_video_playback": false,
+      "full_suite_run": false,
+      "linux_run": false
+    },
+    "full_suite_run": false,
+    "linux_run": false,
+    "manual_game_session": false,
+    "continuous_video_playback": false
+  },
+  "roster": {
+    "complete": 209,
+    "total": 232,
+    "remaining": 23
+  },
+  "broad_goal_status": "in_progress",
+  "model_release": {
+    "free_vram_bytes": 32195477504,
+    "required_free_vram_bytes": 17179869184
+  },
+  "cleanup": {
+    "verified_duplicate_and_unused_files_removed": 2357,
+    "duplicate_bytes_removed": 1015672461,
+    "draft_cleanup": {
+      "removed_unsubmitted_duplicate_draft_files": 66,
+      "removed_bytes": 6494686,
+      "verified_duplicate_guide_rgba": true,
+      "original_generation_sources_preserved": true
+    },
+    "recovered_bytes": 1225956666,
+    "retained_original_rgb_frames": 1364,
+    "original_videos_latents_guides_prompts_and_provenance_preserved": true,
+    "caches_preserved": true,
+    "rebuildable": true,
+    "temporary_files_removed": 150,
+    "temporary_bytes_removed": 203789519
+  }
+}

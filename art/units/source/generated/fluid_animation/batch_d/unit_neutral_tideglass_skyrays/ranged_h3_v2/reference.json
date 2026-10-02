@@ -1,0 +1,135 @@
+{
+  "unit_id": "unit_neutral_tideglass_skyrays",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_tideglass_skyrays/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            386,
+            542
+          ]
+        ],
+        "anchor": [
+          192,
+          462
+        ],
+        "scale": 1.30646,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e06e6d7c8452810a04c0bd32b73c453235e860afab851816a92aa8da3969c36f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "52ddbfd1a190d5f0b4166c4cfef51f76670308ef8b00ba10249bffb45caecf1a",
+      "runtime_source_scale": 0.65323
+    },
+    {
+      "source_frame": {
+        "name": "ranged_aim",
+        "source": "art/animation/source/poses/unit_neutral_tideglass_skyrays/alpha/ranged.png",
+        "rects": [
+          [
+            0,
+            0,
+            760,
+            515
+          ]
+        ],
+        "anchor": [
+          360,
+          510
+        ],
+        "scale": 0.72,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0c2b046c62a3aedc0d326d1decc2553abcf1893eb8199d58e974f8aa608c14ce",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "9696c4528062ab2208b86438e085530ad00116442bcaacb0932cadcde2ffae75",
+      "runtime_source_scale": 0.36
+    },
+    {
+      "source_frame": {
+        "name": "ranged_charge",
+        "source": "art/animation/source/poses/unit_neutral_tideglass_skyrays/alpha/ranged.png",
+        "rects": [
+          [
+            760,
+            0,
+            1536,
+            515
+          ]
+        ],
+        "anchor": [
+          1150,
+          510
+        ],
+        "scale": 0.72,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0c2b046c62a3aedc0d326d1decc2553abcf1893eb8199d58e974f8aa608c14ce",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "fdca76be0c6f27e369b4d91d13189d942a80b9795be0643e1b4f21010eafb975",
+      "runtime_source_scale": 0.36
+    },
+    {
+      "source_frame": {
+        "name": "ranged_release",
+        "source": "art/animation/source/poses/unit_neutral_tideglass_skyrays/alpha/ranged.png",
+        "rects": [
+          [
+            0,
+            515,
+            795,
+            1024
+          ]
+        ],
+        "anchor": [
+          430,
+          1015
+        ],
+        "scale": 0.72,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0c2b046c62a3aedc0d326d1decc2553abcf1893eb8199d58e974f8aa608c14ce",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "ac3f38dff8e4121e3607e6731afac82fa908b59dca1a14c54813ad369c9e9891",
+      "runtime_source_scale": 0.36
+    },
+    {
+      "source_frame": {
+        "name": "ranged_recover",
+        "source": "art/animation/source/poses/unit_neutral_tideglass_skyrays/alpha/ranged.png",
+        "rects": [
+          [
+            795,
+            515,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1150,
+          1015
+        ],
+        "scale": 0.72,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0c2b046c62a3aedc0d326d1decc2553abcf1893eb8199d58e974f8aa608c14ce",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "2921a0bd09f474c0574e2f36ad81e21128a26f02143ca236ace144733de455c7",
+      "runtime_source_scale": 0.36
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,1284 @@
+{
+  "frames": 124,
+  "fps": 24,
+  "rgba_sha256": [
+    "f204f5931513ddad9fd1cc15ff8e03bdea87461013b1da10d55eb81c0ba2c4bc",
+    "2a3a93f3b055d4ade15bdc4ca2432b80fa562a3ec5bef8736982b4dcdd5a241c",
+    "0a2f93ee7df49adbbad857b1efe127e947aa11e112a1627eca8e2f886bc55368",
+    "0d2986b7803926939a8d7e34c1f9d677d991cb8a6f46adb73a9a5d7b24ff7b93",
+    "978eb99d154e15c815b31c482f48fd50096b1570f8d4380c80c2898f9949f947",
+    "974dcd2d7ad40d47ae07d2e82d69598d7550154e3c799c1490108c537f3f4509",
+    "de71115366550d412263173884a2e0e3c69b642b5a9bd7dc4b8406e08068887f",
+    "2b3cb2d2671a73ccd81a0a39d9f196061204b61f11aab73d1c2d2f492468acef",
+    "2aa93eaef771de527f20c5318d6162ec387b3b34af5246819e9c753d26f46c65",
+    "63d6a17d1f6c0c133ad09104ece4fffdc574fb573ebc4c91284159d90ac48c01",
+    "9165ba07d83b803668b6649d1c4df2284bb2ab4910eb558b0a4bc60c7967467a",
+    "83bbced35cb1112181ba21325268e4f10f648ed1f959e2e251d1a44830275930",
+    "74418f96acee4d252b2203fc0cc8a4999b2a584e619777be4df31ce12b977027",
+    "80f55c194c573dd027abd271bc56335786075cbfcc037a9289ebcedebe46bd58",
+    "8ec76c20c720d0de5c49d8ad2538e522e8667afca3d2b2274e786399daefcd83",
+    "994da3b8b15da72f5e79c4e7b7f1f60e0046420f4f1ffd6dfb3d21385cd48bcf",
+    "013cb2d529bb9312b3d8c24649d35129f81b094b26d009c20124a1ed576b0f75",
+    "4d4342ea5d5fc60b46dd6b22354a1750f50b7dbadeee873e3ba499db6269e288",
+    "1a47702b87347e15bfc2cfcbe5761b2dbf6da990d087b5f396376be147e22439",
+    "cd6c284a89f74598c119204661fa73da7baea50f5be8ef47d34545bdb59a63c0",
+    "bb26f45d0a50020e7572bec93e0eec84a668b7a4c8a61040cd86f7215d877ba3",
+    "8c071aa573cfe037739ea6cdce915ade392f21626a2eb99f36bbbe7f57eb7ea1",
+    "137549348858a48446dc7952c7d8502d4dd06fcdc5ebe5424ae6806b60d2b9c7",
+    "fc1692c92b47cb6a29a40d3858a63b48c704deced33e5db511d7b226b1c85ebc",
+    "7fede037b8501fe77b58a70a780626c7e47b211ac14ea394bc7c7ea17d7c7a53",
+    "aaf9c51a12038b9f047544c276b2b94c88414b2dc1fa37b489d2304c4ec3ec10",
+    "37e7a88806e75c8eb7f90b7ae294ac13c7b60667b1bce49280c9e5d3c4180e08",
+    "726948a2240c2262b782d44345d5a9cfa32e4da1a9bd091ec063570d504de26e",
+    "ec200e0bdbe4295079aee6745b95b4a3c35380ca5716c31204aa220859e9cc95",
+    "bf0cf5952d0bd710b1e4c1b0c73258a65b4e5888d5b682c631797b5b88ecf994",
+    "388af8bdd092d121a41f361f7680b966d75a5d13d061ae2973d6391e52b90b64",
+    "8a897e0ec1b6dfc8e6c4cc7db1348d42efe003bb1ff2befb716d14ca53a338ce",
+    "78560ce9cb62c3c1fca22350eaced8ff13f366e93701163b2bbd2a0eb9423a67",
+    "aaf64fe52275b18ccd2da45f0b41b1b5f3f76a3557e53d5562f4a4cf1a278790",
+    "d642449dd7cd38622df4cf5c4be458b00aa25305539aa4cf39056aabed90af78",
+    "fe0a5c3466cb80133ea2d55fef02a4aed4f837709a2647d7f69eed8784c32bac",
+    "b6df2609d3ddf1ca9fc5655ac1150b1491c9b28afe6a2264e1ded0f20ea5fb05",
+    "af4b8996409edac1d5a0457a2d13f9f5147a2a4b20ccf3b3bc55d09a40ec94c0",
+    "808bfede30722da5b0f8180b1cb24029cb4e3b8b4b3cca9d063554993dfc0a29",
+    "6179a115c75af1d5d217c7024d9ed9a4807cb8b0d6e02b3e20f225005bd5c08b",
+    "4716f98fa7f8ef3d87386c3e70c9631b931e4666f019e5075a1b726fe11d96df",
+    "6f1d4bac14b1b82358fd51d4e190f87f3e8cb99df008d6cffec55f26c789f2ea",
+    "1af1119948ef47167611c33cba501b4f551451dd298e19a38a070b578a897f7a",
+    "ad90d6a8e64e6ad90bb2aa9122cc984da7f46a69a6ce7372e938f85bd72ccf0b",
+    "88af8c3c4a6ef79e8f2e6ea6c7ead5872c2d024c452396989b2926a87d9a7677",
+    "46f664d944194b1ab439c3e42d0a655a74472247f5d5309727a07190d08cca3d",
+    "96f32846a90f9e37d0a3701e773c60266566cc20ec71d48a3024d08f07921025",
+    "fe6f316ef99a238154413673c06196a8eca9f9f5cbb54d713b8eef5a10538887",
+    "2fce7bae3bfcc2266a06727293858599594aabada9b16fae7f1bb823a36bc801",
+    "7677789c5d5cb99c330a14bc617106676c295043becb02019fc7add80a72ef08",
+    "1a6f3925bf18cdc5c77ef86fdf5ff8fb29f75f5992b899d1139af0856df5f698",
+    "8c3074d191953fd0fb2134a6e1e2f391d9bc18821407bcaed05a6a49964c8ab5",
+    "7e1a8f7ffba8f665b7453b8a1b252debf5e34b25f03befe73aa83d7a6fee86b6",
+    "68df932710c6604a15eb5facb6dfc5a7b26d1710ff95b9145611b72d7014893b",
+    "0984d7ec55a19cac3f8d1dc870f83223ff212bde2d09ccaaddb8eabe38f1e137",
+    "c915b76327579403e29d723950133f846340e849649def257d35aea19f13c437",
+    "3204df2bc56037a39232cb0e154e3104012b44948e0b7207ec0962c4442bcd66",
+    "c51fb65404541346ca6284078d6a7e5081f0d566a7994ad78353dda25aa52922",
+    "13f7aaa7fa4e51c18f69f52aa208a63382272c859246d3e8a98acd76700188b3",
+    "86f52c31b6cce0e5adc2f6859c7cd2f0828d543122ac6d89d792cd5736f39491",
+    "4b3b63ce589c9781f357110cfe3d07ff37ea9982fd123f5939af2821b066c46f",
+    "fcf3db498dceed70ca5f6347fd21a22a89696637fad90d90243c786e4339bd69",
+    "0b8404d0d0af933d55caf000bb1a66edd9e83249630b2ea0b02ba290e55f79c5",
+    "4c2ca1c98f37e5b365b27d0501ae05e394ddd25b7598783ce3dd0800862863a8",
+    "12430884581c1e22d9c33da1d2ca16426b927ebafbd5fcbd793363d9d5f81121",
+    "55f80a561337a872cd01bfb6fe4558e922943934afd11f79a9bfc10fe7e484d7",
+    "2858a161dbfab31848b15bed1bc5aaee44237505d8355fb57e969b316b3a83b0",
+    "4f0903ea8fc0f754cf905f7da774551986048d3a59b51ccd279996e960b7b52a",
+    "9a88c4af62ae60e6606e073ea629543f915bea59826c0a054f4513415fb7aa7c",
+    "e1b334884db766b4a828bb1ed71622834ccbf4043cca060ab6b1cce5285b3dbe",
+    "2bbf95baff936e710a3183b6cadba44c48dbbc70265f07ad458bf23e4c6d85d6",
+    "2a84aad819e19f9b91d5763a4202a4d7f052b01ae8adcd0a43f00762ed40d6b6",
+    "bd52c47cd6903465b93be06fb64524770ea7ae8239288104e45fa5c69f5fc816",
+    "ec8ed2e2882785710ba875afcbc7fff75a31362cce1f21d56b86166de948b01d",
+    "2f96789327ff9160714e019d6c416e00982a06d9c54c7ad261722556e779d288",
+    "1a7db313329a62c3bde30e39aedbc6e66b7749aa2dbf0c9ca7db990afb799207",
+    "ac3a0f7b53546272a9799e459416aa039a0eb21efb6f2e29577db5e570275d3e",
+    "5bb05fe043a7dfbd03f446489b64b6913c9c2be7bd509c15348fa3925aa11ee1",
+    "00808daebcd1ae53e88a4fd8200183049ad73a79ad0e75d8454e9833c3712ca2",
+    "4329a896fb9499d0db44ea2d300e126f6a60dc583a770d934e91c83c2ea79649",
+    "e00165ad982061f68404c8db9e5099ed8b5e4353b388c24e5ee8f3cc33ace4a5",
+    "cab8dc90e56c6c23aef0e52fec7a9b76166cf6fb7d7513af67c4110a0801653d",
+    "decfcfd3e42d793ef5a6e96104ae2c4e261c1f779e3f3194e08889d674c63e16",
+    "807a53d5c7adb932821d324cd3034c2ba6b149ed97b7f305d09808f9a8f12f15",
+    "b8972b2c53dcc0cce259b1fd7b6c8f874e20a05be291fb2e314427d1830f4387",
+    "84455f2fd18fd0f14c4f3ef9843587a9a309bbc20d316c8dee35a58438029198",
+    "c60df3e401b2596045357a2ca3e0935bcfb0d2d52661dd1f79b17608ee62e647",
+    "87700d8690c18adb9233f2eb97fd33930d5a8c9ac1966e302de182262476231f",
+    "d5231b683693d8b6cee0ce38d7df9efeed591987643a3149ce4473d85b4954fa",
+    "dae968986b63e3125d6086b7e3906c8a10ade2e2a9ba0685064a8eef935c238e",
+    "7fbb31fb2653744a248c0d44be47a86de197006c86fe2a269f4b8a008370c243",
+    "14ffb9875050291c6b8451342eec12e115710b593eb425de9288d89658bf6dad",
+    "3914d11b86969ab5def2ca1c035cf9c2abf14cc4fd2a651b55cf7a802122bf5d",
+    "5d9d912c8891285551dbf69d5082bc6dcbcde659a23c90a962267ac52c0ab325",
+    "0d249e3a3fe9925de4f8ef738af1f0f59b400130a410559041cb265f6efd8722",
+    "2d24ac19d32c9fb8abcb7c21c229d7ae238a4840e74606459e8a0487c6aa8754",
+    "a464b2c452cdee804ee1592f750b9ddc197a0e5d6ddd691ed6b497f665c737cd",
+    "a65406212fd284c0908fb8630c417bf8138ffe81c1e78696c4adaec5924581a3",
+    "e02452c936865e83fd7f1ee9594cd9cd82f7eceb7360f59ea9ddb8fb3c558f6d",
+    "a522ec6b16d58c36f8e84de471a7b3bae5cffbd4d09e74161107b0a4ae1f27bc",
+    "6514161eb6ba32e086b3c58833fb554ed688728cace7daced52d108f5b86971a",
+    "45c9bc47c214a45358acaf0260ebb02e04029b1bcf85f15efcb0577b73dcda42",
+    "c44a124fb405c502956a67dcb40c2a9f0ab5d53118956fdb283e61cf2f90adfb",
+    "98841d6065bc1896fb37f05940d100426c08d60edc8867f3a7e86381277ee2b8",
+    "86e08d8b50f048c36dc7c0b7e3f6bea91bfee965f922e35859bb4f261712b90d",
+    "8a7e88276ea93b37c36c6bfd7c9813cbbab74b3fd08171738988aead4af1bc90",
+    "6265f16805697c8f3c3e07f22833ee0635f0fa01dbbdf0ae83255123cb27f59f",
+    "f3a6fe05dda3183effe02fb0245648fce9127306d657a2a2c4ba7a2611bb3f43",
+    "dbc4f95e6062a7ca72d8376b798d6c8c2e97e3ff840f9bc0c748d9aacc31095e",
+    "501dd2a37ca7b4e9eab541509ce46d4414f153f99278d958444a8e8e588b25c4",
+    "d6a4f2a12001448f6a990cb7d0cc79ae2148a3387ccbeb130794ae5df868ec5a",
+    "19f2fea16c4b914d076f5a0df440dae59ea8bda0ca59d0f3068a1b7455f388e1",
+    "d6a87fe9542197e3ca8c7b7140931161d2e99509595945246a23250ac37f05ef",
+    "debf5114e9b75ef4f13f7411a9655f5a2681a26d55cbebaf83f8ba929a9ce159",
+    "8abd187f866cac36c38eb42c152c9f34fe4cb2cb20e49bf2e37aeec06eba3c8d",
+    "d072d87046844f28d28cd857c6d049aec8b575bd909142d5e5f651fa04ea29c2",
+    "3b9589a3ab76d0a84cdbfbb34af1f08584a7323e0f04e6ab7e20071ce2ddb5a2",
+    "98ad80a1d133545ca8a783a9a2a320ba09e4eec2cbf5a6565adbd28ab39c7c4f",
+    "4ede13a0d2c67fafe39593efda660df985a35524d71e6d9937ef602b01c30016",
+    "c5d218b77d6edac7d8af9f8da003058f9aab75624292566fcd4f6c60e76ed310",
+    "9885ed3b9e8197372b4d1d5ee29157e28c5b17175eb67a5143a52caa398c78dc",
+    "948e3de13106e6d7751791f68a934a297522968cdc516fc06332bbae236f1728",
+    "180ae96cafa1c60f7190ffd0ec947e3a32a2d1f48328133bf83f2edd5d3ff91c",
+    "1933f01f39b2cfe4af9a8fad751fb5650292997a53271cfae16f36a1470da00a"
+  ],
+  "background_frames": [
+    {
+      "background_rgb": [
+        2.5,
+        2.0,
+        247.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.291287899017334
+    },
+    {
+      "background_rgb": [
+        4.0,
+        1.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.1622776985168457
+    },
+    {
+      "background_rgb": [
+        2.5,
+        239.0,
+        196.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.872281312942505
+    },
+    {
+      "background_rgb": [
+        1.0,
+        238.5,
+        197.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        0.5,
+        239.0,
+        198.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846
+    },
+    {
+      "background_rgb": [
+        0.0,
+        238.5,
+        194.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304
+    },
+    {
+      "background_rgb": [
+        0.0,
+        238.5,
+        194.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304
+    },
+    {
+      "background_rgb": [
+        0.0,
+        238.0,
+        195.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        0.0,
+        238.0,
+        195.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        0.0,
+        239.0,
+        192.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        0.0,
+        239.0,
+        192.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        0.0,
+        239.0,
+        192.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        0.0,
+        239.0,
+        192.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        0.0,
+        239.0,
+        189.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 4.0
+    },
+    {
+      "background_rgb": [
+        194.5,
+        247.5,
+        0.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.1213202476501465
+    },
+    {
+      "background_rgb": [
+        195.5,
+        245.0,
+        1.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.872281312942505
+    },
+    {
+      "background_rgb": [
+        197.0,
+        244.0,
+        3.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.0
+    },
+    {
+      "background_rgb": [
+        196.5,
+        243.0,
+        2.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295
+    },
+    {
+      "background_rgb": [
+        199.0,
+        242.0,
+        2.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.692582368850708
+    },
+    {
+      "background_rgb": [
+        200.5,
+        241.5,
+        4.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.658312439918518
+    },
+    {
+      "background_rgb": [
+        202.0,
+        241.5,
+        6.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        202.0,
+        241.0,
+        7.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        204.0,
+        236.0,
+        21.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.2015621662139893
+    },
+    {
+      "background_rgb": [
+        205.0,
+        234.5,
+        27.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        205.0,
+        233.5,
+        30.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        204.5,
+        232.0,
+        32.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.674234628677368
+    },
+    {
+      "background_rgb": [
+        149.5,
+        190.0,
+        179.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.7386128902435303
+    },
+    {
+      "background_rgb": [
+        150.0,
+        190.5,
+        179.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5495097637176514
+    },
+    {
+      "background_rgb": [
+        152.0,
+        191.0,
+        176.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846
+    },
+    {
+      "background_rgb": [
+        154.5,
+        191.0,
+        169.25
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.820027470588684
+    },
+    {
+      "background_rgb": [
+        159.0,
+        193.5,
+        156.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295
+    },
+    {
+      "background_rgb": [
+        159.5,
+        194.0,
+        154.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        159.5,
+        194.5,
+        153.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192
+    },
+    {
+      "background_rgb": [
+        160.0,
+        195.0,
+        152.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        163.0,
+        196.0,
+        145.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        163.5,
+        197.5,
+        144.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304
+    },
+    {
+      "background_rgb": [
+        163.0,
+        199.0,
+        145.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        159.5,
+        201.0,
+        146.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8708287477493286
+    },
+    {
+      "background_rgb": [
+        91.5,
+        231.0,
+        161.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 4.031128883361816
+    },
+    {
+      "background_rgb": [
+        91.5,
+        232.5,
+        162.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 5.431390285491943
+    },
+    {
+      "background_rgb": [
+        96.0,
+        233.0,
+        158.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.605551242828369
+    },
+    {
+      "background_rgb": [
+        102.0,
+        233.0,
+        154.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        104.5,
+        233.0,
+        153.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        109.0,
+        233.0,
+        149.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        110.5,
+        233.0,
+        149.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192
+    },
+    {
+      "background_rgb": [
+        110.5,
+        233.0,
+        149.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192
+    },
+    {
+      "background_rgb": [
+        111.0,
+        233.0,
+        149.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        110.5,
+        235.5,
+        148.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.598076105117798
+    },
+    {
+      "background_rgb": [
+        111.0,
+        236.0,
+        150.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.1622776985168457
+    },
+    {
+      "background_rgb": [
+        110.5,
+        236.5,
+        149.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.570714235305786
+    },
+    {
+      "background_rgb": [
+        0.0,
+        227.0,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302
+    },
+    {
+      "background_rgb": [
+        0.0,
+        225.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5
+    },
+    {
+      "background_rgb": [
+        0.0,
+        225.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        0.0,
+        225.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        0.0,
+        225.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        0.0,
+        225.0,
+        250.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846
+    },
+    {
+      "background_rgb": [
+        0.0,
+        225.5,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        0.0,
+        225.5,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        0.0,
+        225.5,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        0.0,
+        226.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        0.0,
+        225.5,
+        252.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        0.0,
+        226.5,
+        253.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        0.0,
+        237.0,
+        118.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302
+    },
+    {
+      "background_rgb": [
+        0.0,
+        238.5,
+        120.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846
+    },
+    {
+      "background_rgb": [
+        0.0,
+        240.0,
+        122.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        0.0,
+        240.0,
+        123.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        0.0,
+        240.0,
+        123.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        0.0,
+        239.5,
+        123.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        0.0,
+        238.5,
+        123.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        0.0,
+        239.0,
+        122.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        0.0,
+        239.5,
+        122.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846
+    },
+    {
+      "background_rgb": [
+        0.0,
+        239.5,
+        122.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846
+    },
+    {
+      "background_rgb": [
+        0.0,
+        240.0,
+        122.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295
+    },
+    {
+      "background_rgb": [
+        1.5,
+        239.0,
+        119.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5
+    },
+    {
+      "background_rgb": [
+        118.0,
+        233.0,
+        135.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.041381359100342
+    },
+    {
+      "background_rgb": [
+        118.0,
+        233.0,
+        136.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.041381359100342
+    },
+    {
+      "background_rgb": [
+        118.5,
+        232.0,
+        137.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5495097637176514
+    },
+    {
+      "background_rgb": [
+        117.0,
+        232.5,
+        136.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 4.031128883361816
+    },
+    {
+      "background_rgb": [
+        117.0,
+        233.0,
+        137.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.0
+    },
+    {
+      "background_rgb": [
+        116.0,
+        233.0,
+        138.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0
+    },
+    {
+      "background_rgb": [
+        113.0,
+        233.0,
+        141.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        108.5,
+        234.0,
+        144.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.1213202476501465
+    },
+    {
+      "background_rgb": [
+        102.0,
+        235.0,
+        148.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.872281312942505
+    },
+    {
+      "background_rgb": [
+        97.5,
+        235.5,
+        151.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.658312439918518
+    },
+    {
+      "background_rgb": [
+        96.0,
+        235.5,
+        152.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192
+    },
+    {
+      "background_rgb": [
+        97.0,
+        233.5,
+        153.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846
+    },
+    {
+      "background_rgb": [
+        115.5,
+        187.0,
+        237.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304
+    },
+    {
+      "background_rgb": [
+        115.5,
+        187.0,
+        237.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        116.5,
+        187.5,
+        238.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192
+    },
+    {
+      "background_rgb": [
+        117.0,
+        187.5,
+        238.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        122.5,
+        192.0,
+        228.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5
+    },
+    {
+      "background_rgb": [
+        125.5,
+        195.5,
+        220.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.9580399990081787
+    },
+    {
+      "background_rgb": [
+        128.5,
+        198.0,
+        214.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        131.0,
+        200.0,
+        210.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        135.0,
+        202.0,
+        203.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        138.0,
+        204.0,
+        197.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.7320507764816284
+    },
+    {
+      "background_rgb": [
+        140.5,
+        205.0,
+        192.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        142.5,
+        207.0,
+        189.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5
+    },
+    {
+      "background_rgb": [
+        162.5,
+        222.0,
+        149.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.872281312942505
+    },
+    {
+      "background_rgb": [
+        164.0,
+        222.5,
+        147.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.291287899017334
+    },
+    {
+      "background_rgb": [
+        165.0,
+        222.5,
+        147.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.692582368850708
+    },
+    {
+      "background_rgb": [
+        165.0,
+        221.5,
+        146.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5495097637176514
+    },
+    {
+      "background_rgb": [
+        162.5,
+        218.0,
+        151.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295
+    },
+    {
+      "background_rgb": [
+        157.0,
+        214.0,
+        162.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302
+    },
+    {
+      "background_rgb": [
+        154.0,
+        210.0,
+        170.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        153.5,
+        209.5,
+        171.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        152.5,
+        209.0,
+        173.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846
+    },
+    {
+      "background_rgb": [
+        151.0,
+        210.0,
+        176.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302
+    },
+    {
+      "background_rgb": [
+        151.0,
+        210.0,
+        177.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.291287899017334
+    },
+    {
+      "background_rgb": [
+        150.0,
+        210.0,
+        178.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.872281312942505
+    },
+    {
+      "background_rgb": [
+        0.0,
+        224.5,
+        189.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.041381359100342
+    },
+    {
+      "background_rgb": [
+        0.0,
+        222.0,
+        185.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0
+    },
+    {
+      "background_rgb": [
+        0.0,
+        223.0,
+        183.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        0.0,
+        223.75,
+        182.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.610076665878296
+    },
+    {
+      "background_rgb": [
+        0.0,
+        225.0,
+        176.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846
+    },
+    {
+      "background_rgb": [
+        0.0,
+        229.5,
+        166.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        0.0,
+        230.0,
+        165.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        0.0,
+        230.5,
+        164.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304
+    },
+    {
+      "background_rgb": [
+        0.0,
+        230.5,
+        164.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        0.0,
+        230.5,
+        159.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        0.0,
+        231.0,
+        161.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        0.0,
+        233.5,
+        161.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        7.0,
+        0.0,
+        250.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.692582368850708
+    },
+    {
+      "background_rgb": [
+        7.5,
+        0.0,
+        247.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.041381359100342
+    }
+  ],
+  "recipe": "Pinned BiRefNet-matting: 1024 input only for mask inference, soft mask resized to unchanged original RGB dimensions. Opaque alpha>=.98 retains original RGB; soft edges unmix measured uniform plate. Alpha<8 removed; connected regions retained when containing alpha>=128. Fixed anatomical scale/anchor, no stabilization or interpolation.",
+  "model_manifest": {
+    "repository": "ZhengPeng7/BiRefNet-matting",
+    "revision": "eccde0a8cbdce7ac5fecfeb06340fe7b949e85d9",
+    "model_directory": "H:\\ai\\minimax-h3\\matting\\BiRefNet-matting",
+    "dependency_directory": "H:\\ai\\minimax-h3\\matting\\dependencies",
+    "files": {
+      "config.json": {
+        "bytes": 413,
+        "sha256": "b2b235983b80fbff325976ca517bb7eda25e915b84a97b150eca41266cf8a13b"
+      },
+      "BiRefNet_config.py": {
+        "bytes": 298,
+        "sha256": "e7b8c2a74f6cea6a59553d517f71d47f2c1d90e670a13416af17c25fe2f3dc52"
+      },
+      "birefnet.py": {
+        "bytes": 92134,
+        "sha256": "2a45b4e0ece72d7c4212bca1a988e7d7e52bfe9f98ec59c58b8809c8a8b7a831"
+      },
+      "model.safetensors": {
+        "bytes": 884878856,
+        "sha256": "a9875de5b1e6c8eb5fdaa8c727a82927ce442cdc87ba3abee6a77e6fa46c25bb"
+      },
+      "README.md": {
+        "bytes": 4724,
+        "sha256": "e43576e298fcfd143239f7c1dc080e1d03f4eef5e78156da4f0466d93f2c45a1"
+      },
+      "timm-1.0.30-py3-none-any.whl": {
+        "bytes": 2668917,
+        "sha256": "c8e27adf6801a2fdfb570dbbdd171f2f084756eefc673df8cfaab06bd14864f3"
+      }
+    }
+  },
+  "inference_precision": "float16",
+  "elapsed_seconds": 20.381,
+  "tool_sha256": "be7070aab1ac492cd4f2e04b1fb8a0ad8e83ecccf00c6db827c9286ba655881f"
+}

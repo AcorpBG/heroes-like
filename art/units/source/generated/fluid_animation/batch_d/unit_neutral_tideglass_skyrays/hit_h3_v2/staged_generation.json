@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "407ccc3e8245457b5b6819c7bd0d2ddc6174c407ef91d9f2e346eb8f96992eba",
+  "latent_sha256": "80887c6cf79bb79264b2cadb15b108ec337cc3e63a10ff6eee07ea35ecad9dd2",
+  "decode_workflow_sha256": "803bcd13270f25656352b060354b56e1f33ebbba49df98401aeb3f50557f44e5",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "tideglass_skyray_h3\\hit_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

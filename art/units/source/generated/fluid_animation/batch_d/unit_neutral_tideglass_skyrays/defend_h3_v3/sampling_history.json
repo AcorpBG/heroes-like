@@ -1,0 +1,257 @@
+{
+  "prompt": [
+    372,
+    "3596bffc-dd98-4281-bfd5-5d24934a7bcb",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Original painted fantasy TIDEGLASS SKYRAY. One elongated blue-teal manta-like body, slender pointed snout facing SCREEN RIGHT, pale pearly eye markings, exactly TWO broad translucent crescent pectoral wings with dark teal veins and pale cream panels. Small pale dorsal fins stay attached above back; one long curling tail and original soft white/aqua trailing fin ribbons flow behind to screen left. Original brass/teal hanging resonator bell harness stays attached beneath belly, with large front bell and smaller rear bell; never add duplicate bells, eyes, legs, arms, horns or wings. No human rider, hands, weapons or text. Locked orthographic side three-quarter camera and unchanged painted style, proportions, facing and body scale. Preserve the existing exact ray silhouette and near/far wing identities.  Continuous defensive wing curl beginning immediately. In the first third lift and curve BOTH original membranes upward to the halfway painting at frame32, then keep bending their roots to form a protective canopy over the pointed head and attached bell harness at frame64. Head tucks only slightly, original tail and soft fin ribbons curl close. Hold that complete guard through the last second. Every intermediate wing angle must be visible: do not hold ready and abruptly replace it with the guard. Same ray body/camera/harness throughout.  Flat blue background, locked camera, no floor/shadow/scenery/particles/projectile. Extra upper canvas clearance keeps BOTH wing tips inside the frame. Body stays at the same physical reference size. Do not rotate toward camera, zoom, resize, add bells/appendages or cut between states.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "32",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026105105
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tideglass_skyray_defend_h3_v3_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tideglass_skyray_defend_h3_v3_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tideglass_skyray_defend_h3_v3_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 32,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 64,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "tideglass_skyray_h3/defend_h3_v3/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "tideglass_skyray_h3",
+      "create_time": 1790944412043
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "tideglass_skyray_h3\\defend_h3_v3",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "3596bffc-dd98-4281-bfd5-5d24934a7bcb",
+          "timestamp": 1790944412044
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "3596bffc-dd98-4281-bfd5-5d24934a7bcb",
+          "timestamp": 1790944412067
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "3596bffc-dd98-4281-bfd5-5d24934a7bcb",
+          "timestamp": 1790944577624
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

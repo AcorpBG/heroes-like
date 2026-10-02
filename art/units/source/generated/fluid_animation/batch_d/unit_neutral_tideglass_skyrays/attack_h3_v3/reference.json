@@ -1,0 +1,68 @@
+{
+  "unit_id": "unit_neutral_tideglass_skyrays",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_tideglass_skyrays/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            386,
+            542
+          ]
+        ],
+        "anchor": [
+          192,
+          462
+        ],
+        "scale": 1.30646,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e06e6d7c8452810a04c0bd32b73c453235e860afab851816a92aa8da3969c36f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "6eb6e88508dcf3e6593ff925c17a14e5485d9aaa7a1b4a99387ab49bd3fd5343",
+      "runtime_source_scale": 0.65323
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/attack_h3_v2/matte/rgba_040.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0,
+        "original_video": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/attack_h3_v2/original_lossless.mkv",
+        "original_video_sha256": "9c97967f285e6afd0b03256ad01cab6c77dcf991d1e7b8733482662340a7b601",
+        "original_rgb_sha256": "594f44491e5988d922840fb896c41918eb5c93b889b47ca3d3825508edefe288",
+        "original_video_frame": 40,
+        "original_video_time_seconds": 1.6666666666666667,
+        "matte_recipe": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/attack_h3_v2/matte.json"
+      },
+      "source_sha256": "c55a687a497379e18dd650b7b82004a647912806304006417b987ec1fb161712",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "bf0491a74f3bcc5dc1ef9da18fe8cdb4a751abc440c77fe8736da4520aba51d1",
+      "runtime_source_scale": 0.5
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

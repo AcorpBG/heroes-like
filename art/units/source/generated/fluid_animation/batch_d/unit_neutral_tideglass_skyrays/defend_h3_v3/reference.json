@@ -1,0 +1,97 @@
+{
+  "unit_id": "unit_neutral_tideglass_skyrays",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_tideglass_skyrays/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            386,
+            542
+          ]
+        ],
+        "anchor": [
+          192,
+          462
+        ],
+        "scale": 1.30646,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e06e6d7c8452810a04c0bd32b73c453235e860afab851816a92aa8da3969c36f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "6eb6e88508dcf3e6593ff925c17a14e5485d9aaa7a1b4a99387ab49bd3fd5343",
+      "runtime_source_scale": 0.65323
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/cast_h3_v2/matte/rgba_024.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0,
+        "original_video": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/cast_h3_v2/original_lossless.mkv",
+        "original_video_sha256": "bc2d3ef648549c6c557bb06eb6320cf760fe18997ee8fed71f911fd2095fc490",
+        "original_rgb_sha256": "a2e788abe541c3d9d22b8b815fe7abae8f2f2470a4dd92b0371a69ea039b73c9",
+        "original_video_frame": 24,
+        "original_video_time_seconds": 1.0,
+        "matte_recipe": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/cast_h3_v2/matte.json"
+      },
+      "source_sha256": "a03e1e5a48d886ae4800c14d0b937cff8dc2175c02ac62f25d9f816ccefcca61",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5d5e4a67773af2f7ce651c64d6884bd856f3376b87e974532b8dbda073652b55",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/defend_h3_v2/matte/rgba_057.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0,
+        "original_video": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/defend_h3_v2/original_lossless.mkv",
+        "original_video_sha256": "44cb1d0e13b785b17b8032523908770256a8832a1023a54c26688a9ba1871df9",
+        "original_rgb_sha256": "fc457ecbd1315b2c86dbfb3ea581c5451ac8acc76f4f08a460764ed8187a3cfd",
+        "original_video_frame": 57,
+        "original_video_time_seconds": 2.375,
+        "matte_recipe": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/defend_h3_v2/matte.json"
+      },
+      "source_sha256": "0fb78394d8cebf59fa58ebf670e72298bb903b6afa16cbeb2e02765867c67e92",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "129f9d756286cef6f56226ba403d3b7df8992a0e5c62d05583691c279d36b312",
+      "runtime_source_scale": 0.5
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

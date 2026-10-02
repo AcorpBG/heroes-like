@@ -1,0 +1,10 @@
+"""Remove conflicting intermediate control after inspecting the double lunge."""
+import json
+import produce as p
+from prepare import ref,IDENTITY
+out=p.SOURCE_DIR/'attack_h3_v4';out.mkdir(exist_ok=True)
+c=json.loads((p.SOURCE_DIR/'attack_h3_v3/config.json').read_bytes())
+c.update(references=[ref(16)],guides=[],last=0,seed=2026106102,prompt=IDENTITY+' One swift close-range pointed-head ram, then one smooth recovery. Start the load immediately: draw chest and snout slightly back while original wings load, then push the snout SCREEN RIGHT once using a short coherent stroke of BOTH wings. Recoil and fold the wing joints back into the exact starting hover ready. This is one single headbutt, never two lunges or a repeating flight cycle. Preserve original cream wing panels, two attached membranes, face and bell harness; soft fin ribbons follow naturally. NO glowing flashes, bolts, magic or new ornaments. Smooth continuous articulation, locked original side three-quarter camera/body size. Whole creature and raised wing tips stay inside the enlarged canvas. Flat blue backdrop, no floor, shadow, scenery, camera motion or cuts.')
+p.prepare(out,c);p.write(out/'config.json',c);p.verify(out,c)
+p.write(p.SOURCE_DIR/'attack_h3_v3/review.json',dict(status='rejected_conflicting_intermediate_control',reason='One natural early ram is followed by an unwanted second lunge at the intermediate contact guide, including a bright flare. Removing the intermediate guide rather than repeating the same prompt/control.',reviewed_all124_chronological_frames=True,enlarged_contact_and_recovery_reviewed=True,originals_preserved=True))
+d=json.loads((p.SOURCE_DIR/'delivery.json').read_bytes());d['takes']=[t.replace('attack_h3_v3','attack_h3_v4') for t in d['takes']];d['visual_review']['notes']+=' Guardv3 transition recovered. Attackv3 rejected for conflicting intermediate guide that forces second lunge/flare; reassess control and remove all intermediate attack guides, retain matched original ready endpoints and increased upper clearance.';p.write(p.SOURCE_DIR/'delivery.json',d)

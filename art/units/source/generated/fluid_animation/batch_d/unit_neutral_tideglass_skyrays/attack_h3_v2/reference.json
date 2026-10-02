@@ -1,0 +1,99 @@
+{
+  "unit_id": "unit_neutral_tideglass_skyrays",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_tideglass_skyrays/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            386,
+            542
+          ]
+        ],
+        "anchor": [
+          192,
+          462
+        ],
+        "scale": 1.30646,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e06e6d7c8452810a04c0bd32b73c453235e860afab851816a92aa8da3969c36f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "52ddbfd1a190d5f0b4166c4cfef51f76670308ef8b00ba10249bffb45caecf1a",
+      "runtime_source_scale": 0.65323
+    },
+    {
+      "source_frame": {
+        "name": "ram_windup",
+        "source": "art/animation/source/poses/unit_neutral_tideglass_skyrays/alpha/poses.png",
+        "rects": [
+          [
+            375,
+            380,
+            740,
+            440
+          ],
+          [
+            440,
+            440,
+            740,
+            525
+          ],
+          [
+            375,
+            525,
+            740,
+            710
+          ]
+        ],
+        "anchor": [
+          557,
+          705
+        ],
+        "scale": 1.24,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "8fa6a6e9f67a400f9c5f024ebb4b3b321d206ae27a27300aa5f2c333c9d1c9a1",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "450dc60e11150f5bf9e10659950cbd9c7133995d6b252212ecae3257c4015da4",
+      "runtime_source_scale": 0.62
+    },
+    {
+      "source_frame": {
+        "name": "ram",
+        "source": "art/animation/source/poses/unit_neutral_tideglass_skyrays/alpha/poses.png",
+        "rects": [
+          [
+            740,
+            380,
+            1160,
+            710
+          ]
+        ],
+        "anchor": [
+          919,
+          705
+        ],
+        "scale": 1.24,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "8fa6a6e9f67a400f9c5f024ebb4b3b321d206ae27a27300aa5f2c333c9d1c9a1",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "df51d18c79c93e31a7987ba2db1468ee22ed368e3eb13df0472a2833a946c6dc",
+      "runtime_source_scale": 0.62
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,31 @@
+{
+  "status": "accepted_selected_unit",
+  "solo": true,
+  "all124_original_frames_each_selected_take_inspected": true,
+  "chronological_source_review": "All124 extracted original temporal frames for each of seven selected takes; full source sequence and enlarged light/dark phase/edge reviews.",
+  "original_video_playback": false,
+  "source_identity": "Two original crescent wings, pointed right-facing head, dorsal fins, tail, trailing fin ribbons and attached original bell harness remain coherent.",
+  "native_review": "Every selected native and reflected128px pose inspected; every published live pose inspected. Eight actual committed melee captures per candidate/reflected-driver/live run and eight ranged captures inspected.",
+  "reflected_driver_shell_captures": "Shell captures remain normal-facing; only the full phase gallery uses the actual mirrored draw transform.",
+  "overworld_review": "Live shader frame0 and raised-wing idle frame2 inspected; old eight idle paintings, map-strip pixels and200ms timing remain exact.",
+  "selected_attack_edit": {
+    "take": "attack_h3_v4",
+    "join": [
+      22,
+      82
+    ],
+    "excluded_interval": [
+      23,
+      81
+    ],
+    "contact_source_frame": 89,
+    "reason": "Matching loaded-wing/head/harness poses join opening anticipation to final single wing-driven strike and recovery; exclude repeated flaps and particles. No painted-pixel edits or motion interpolation."
+  },
+  "repeated_failure_resolution": "Reject clipped/snapping meleev2 and guide-forced double meleev3. Remove conflicting intermediate guide forv4, then select one coherent action interval. Guardv3 replaces abruptv2 hood transition.",
+  "geometry": "Original image coordinates and fixed.5 scale preserved.96px upper headroom protects wing tips; corpse guide physical ground contact registered once.",
+  "focused_validation": "Normal/Fast/reduced-motion/static/dead/contact timing, full authored shell playback, unchanged RNG/occupancy/saved simulation; imported atlas exact RGBA after Godot alpha-border fix; original source pixel/anchor/map equality.",
+  "manual_game_session": false,
+  "continuous_video_playback": false,
+  "full_suite_run": false,
+  "linux_run": false
+}

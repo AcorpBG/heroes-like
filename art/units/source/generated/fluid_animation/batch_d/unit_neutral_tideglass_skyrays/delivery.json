@@ -1,0 +1,18 @@
+{
+  "takes": [
+    "move_h3_v2",
+    "attack_h3_v4",
+    "ranged_h3_v2",
+    "hit_h3_v2",
+    "defend_h3_v3",
+    "cast_h3_v2",
+    "death_h3_v2"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Solo review: all124 chronological original frames for each of seven selected H3 takes, enlarged light/dark alpha/anatomy/phase review and every selected native/reflected pose. 298 new poses: two wing strokes for flight, one wing-driven melee ram, broadside release, recoil, continuous held canopy guard, physical resonator support and grounded collapse. Melee source0-22 joins matching raised wings at82; exclude23-81 repeated flaps/particles. First chroma flight, clipped/snapping meleev2, repeated meleev3 and snapping guardv2 rejected. All eight existing idle paintings reviewed and preserved exactly, including map timing/pixels. Actual shell-clock melee/ranged captures inspected; all authored phases observed; Normal/Fast/reduced-motion/contact/occupancy/RNG/save checks pass. Source geometry unchanged; pinned semantic soft matting retains wings/ribbons/bells. Windows offscreen review; no manual playtest, continuous-video playback or Linux run claimed."
+  }
+}

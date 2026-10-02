@@ -1,0 +1,1286 @@
+{
+  "frames": 124,
+  "fps": 24,
+  "rgba_sha256": [
+    "f22420bf1e3f2cdac2779baeaedbc476dcd39a65a57e09ddd36b4800edc239fd",
+    "d899fabd14e5190ceb6b652abcf3fece6e94e97a2fc49273d895c0008f61ef86",
+    "24fb1f6fb4b5836e7c51a619fd131eda00800f3aeadf90cad66fba42c5781be3",
+    "d456811687683afcd73ae3c4098bf227380fb93d085549b578214430cf6e6cb5",
+    "d137662b06f8f074b0a54c4a5f2b26677ca406a10e8f3e0aa42dd805ef7533ba",
+    "01c0b2d2031c62c9d1b3a7c1b19e53a6dbde2dd79588b3daefa7fd7b05b6ef27",
+    "db211f78fbf09109c66eb89f1f7e7c6a12df02e405895194385ec8d1ec0526b5",
+    "01c405d27e74f9b1b513e3597f2c0a867de7765cacd34937d72f748dced31d8a",
+    "6864c67da9a6b7d2d66eecc3f0326185096f4b09dce5111fa9b2e6886b308b0a",
+    "fb546823a3ca4fc9806f315575f7f2f8e00e3756b1d6b40f228dce9f8e309314",
+    "2913fa6f34b33d8b2030fffb5f0be85d06d03f602a8c4164fc167645e84dd173",
+    "f43b3a1670aedb134810a16962c531babc6e6ad12da8216ca7f19e5b5ba00973",
+    "182a76f2c43d80611ea6c730e5452a9de58f9fd2729b82c2ec859e0b33e4d4b6",
+    "bcaa4472530e55dd3acde0dd790e0a4ce9f7ad5c0024a105f84d7768d5333595",
+    "cad1c110f3054ee694923a06bef9eb4f2d080a889328ab91c29916a70d5d36fd",
+    "e972c7f6b0669ca4c19d2fdf0c64f24e6082b08c17ad5476f2b3fa7a85fe9194",
+    "a2f290b5654c0dd08c43e9f18b2043e3eb19ab9c24ef10cc9469e8eb3be4ebb6",
+    "a8f26eb10777c33b77d75f4b5264a53c7a923ebefd186928a513611b784ce015",
+    "a9ec7c77de68d94d54d96e384badeb6f0266372ce1d2d6c2fe50c89d239ecc0b",
+    "075303d39c2418e9db483a787132c0c8c80afb965f93003a2f6d3a7c79a28565",
+    "d3d8c26f59bb94cb998c9083c303e5783d0da41c6899c12a883b60388dccf00a",
+    "77fa7ff67f3619dcf0b3727e71f9ec9dd9486d408284c4db98fc9049bd6e2aa3",
+    "1ad85cb75de4387fd6cab8bef13b8e0461b1f875733cd6f03cf6400515a06c8f",
+    "b084337b5d7b3787cdda93f1188927dc453ecc8028b936c9087c52865fc74f53",
+    "a03e1e5a48d886ae4800c14d0b937cff8dc2175c02ac62f25d9f816ccefcca61",
+    "877458989185f3ac4b0336932f54c2c87d5122d581d70d06ea3ac8ab6671858b",
+    "4beebb952e2ad5a548c36ed7761927d2b534c6b2a2aa7a4767f8920f677bb5dd",
+    "03ce00e91e95a16237302ba8acab2fe5915a26c3d71d8ed61dd416fa12007c81",
+    "eb7c86e27b0138f85458c8b97b5264d419f608cad45e52bb341e27178db6838f",
+    "438c1533f9a93cafb5046019fa91621ac3cce5e75af5b7b9bb7ff4acf1492acd",
+    "cde8f17e159f9c2e21620902c3a7e7f52f77b93481ce907d72473f185f3b08b8",
+    "3fb6d1032628b60adeb49637becab6c0c01e4eb3152432a09ddc2451253253a7",
+    "69b7e0893db48492c1dffa3932297da12412b61f0a528ee7796358ac6f94ddfc",
+    "0f0f133002ce165ff2f68530e6228e0c6c78f8198657ccf8a7f19d363009b9dd",
+    "2b7461ee5362913aead569ed20c9d985c3e78c95b01d7ffa50c8406931b9b0d4",
+    "8e918a3df48d2564635c390a18676bf62ba0b457671ced48f6e208b5daf8b1f6",
+    "a6a71039c8db14db41e95b75d0360281bb5ca7752afe7aae0bd1147741d053a3",
+    "e1808604dc1d6c8be6dd2bef88ee3d21b1ee8e78ebb5214d79669c792afb6e5b",
+    "2eb0925189d2051a8c8378036fbcc169ecafb4c0048551eb457c05ee59e180a8",
+    "563a6d015a579edc74b0ed6aa26525f55e878cf0f8a4dc11495e7a0b9631dd34",
+    "eaa169c26a89df235637911c0ec4a632d27fa2f7a768300a47b10a37e7b3e63a",
+    "a92cd0cdbd2d6afb285552ff67758c41da8393c167910a15286229bd465f4790",
+    "13f9c2b8ded7729e754b790d5525124b1c088300b98e37a524da827b1a8f202d",
+    "f87167c5117c7f73869fe07dee8eb34320e09cdf23e4e1bfd611d65fed0946de",
+    "22ac797d7e1512ef400961b79ad7319777464dd6fefd39c1d878f6e72cf56350",
+    "633052014489d1bd5429250d0642a736f578b2ce19a69f061c7f7ee86104ae46",
+    "5a95c0b808e264792a92ff82e2b676b92a83dc4866360e93e3cad9f76faf13de",
+    "e1fd6d6457111b517f68de88211ebff6ead70e5b20cd221625067afc0e6cd925",
+    "bf92fef6d52200ba10ea72f1b74577a4dcbcc623fd48269413d9b58e20417519",
+    "0969935e298b48b4c6cb854b8724cd7017aad4807d073543684dd6f43b1c5372",
+    "5e93ab9c01c542ce7044a26046dbc3ab126e9a94167d5349768d40de39999c44",
+    "2ef82b5100f167eb989f7484517f9b5bf5fed2ed86a03005a6177bac41a180c3",
+    "45db82a4d5c87154749ab95a8de870c64c615256c3ab3364c79abccff837d935",
+    "4657af5b41abe897c7287326871782b1ece0d265d04c387c578351a91f5f8c8b",
+    "ef799595f01525f04fdce750a4344262d1958eb1f889085cddafe199e6f74c07",
+    "695cea359f87f013914727d83d29d8366a0eb63618410370f3d36e7ae7e7500f",
+    "7e432eab3af5d2eee0aefb093e82d38b15150f298d87a2a3ced16f492ecf13da",
+    "ae399d1a5902ab304565a3fec9dcd510e6877e579a49431bd0ebfd60d2e7a392",
+    "635a117ed8c640117ac7ef1f8026dedc9f2b74cb45f2bec7d7f73e99b9f69d92",
+    "f8a37075ae42825c00a871b69b951a1d5b8d2c61261758c2ead19c50b8e8ce63",
+    "9e9dc0af227a32e2227195ea1378ee82639735ff192023a59e98919d57344812",
+    "3308cbd525d038bf98a3873ccdcfffc975674aaaf21f5ac3bc4bb9a40a785370",
+    "d75a068ccc59f8eb747a225330037de528009f52709bcdee1b898813c66ac199",
+    "6bc655b85db466bf45820b477a51b2df54fa2f0348c3eedfa9da704c92aa7649",
+    "63189e812bff71db4250f9bae34f221eb4af547835072c9b58a5c5119acd4b01",
+    "cdcfbfa22f6fd84f16b4dbf3aa9312bdc45d92a7107bf74d9835713f70161653",
+    "d2e78a0a7c434472ed8781369d3df8bf7bbbeb99e1d540cd540957ac77708d0f",
+    "6ed0961ca9096aefd4c6b48a5a2278f047eec0ad02192fd54e6c0760338c2a9c",
+    "c45c786ad5d0c5bf70ccbc00fdcc0aa6db5ff64294671198ab15f6462e318293",
+    "347d806f252d743927482f94fc2b47a6f58eb8fedef04324d54a0dd98a42b63c",
+    "b2a6bffb0ac89b845b0a918921336c73ab3eb2acb1efa5b08060ba4057fb7eea",
+    "a9d408063154779ec902a26f5e58ad6755656922b3f8844a725c156ea9335172",
+    "8121b213ad682bc6543f62ae8148a43cc1025eb99227a5106618ed6403c97581",
+    "951941a15c662bc51e5c7f2d01b158073e191660c0d414d4936d5d83d4c56d61",
+    "2b1e39226eb47b5b0f3b78bee607509eaba3daf72d439645e7ab55471c45ae04",
+    "7be329c5e1eecb6e8fb0c72c75cf5f5987d17ad0fd9a69c367f503cc3bc02e54",
+    "79e203961b699feb42799d9e3af0510b261cd67721e5e0fa3150cb3d8471cd76",
+    "fcb2b26a7812a596a4bc9c2d81c1310be2bb2d21b8b65c7c9f946cbc757d1027",
+    "5814cead24093e654969b6c562645aa286f5fa4553b9d580bfe7dca25028884b",
+    "19b92d72008c1a62f00d077de751c06486b2b6ce15cbb5d07d4127c1f8ab3f3b",
+    "c564418127db7f3784ade56703955c21c589a0e5bd7dd6e710372ebe39253bd5",
+    "a0e1c204c1302b0093f2405e4ff79f48aa13f58a01d48fa6fe5c551a8fe70611",
+    "58f6ac3a28d2403eb6169b06c471c592870e25419e185292f56c9d30e9473957",
+    "d541fde48e146a8065d60613031fe5170c58b1c654c8239ca98c89f24e05eca4",
+    "399a4111a771f6c12329d59d37c2efa9f4e435ec656caae2f6a30da77589db56",
+    "ce6a9bbb837ecccf4f0790dad619683a9b97afddcd734c560e31f5d7d6407c48",
+    "4b7e6b124196b6d63f488cda5e2671002c766f7133dacf27acd69cbf709fcd2c",
+    "8465688c875c3cfaa6868558626833117f862dafe9bfb048850921e4ad09bb03",
+    "15e97736f8db21d9124e592b88dcabde15502e897834a6bef86124e6c524a80d",
+    "93a652a46395fe422f1f1874550c48eac3f13e92ff6229ad7e4b7eb8200e6d2c",
+    "eecdb071f0141d138dae7a3607eb9ca4dbdad62c01fea2c42a48b3143cfc2863",
+    "bc1abe0a854a78b71460b3e6b0eb1fba2464e95409190d0a6ad57018409c5b7a",
+    "398dd1d2d6df9799c26a3153fd3ba481eb2c3cb3f3ca8fd52fde1925468b775f",
+    "dc560fadb4d4313aab8e8dc4d69adbd411e37256901bb2a41adb5ce365fd40a4",
+    "e713e99d83803fb9045d57698de1252844a1bfc61777d37f93235f25a06b38f9",
+    "2cfa548c88d626fb7e6061a6864034aedb706d04c01f8ea0c79dd9aff05631ed",
+    "347dfd01d2ba26045eb3e06b9b5e5a4dd9a4d91b23690f401a48277c0bdf31a4",
+    "a9d9b7c9c535b6fbc2115face59a3ad1e09a4fcf5a4182b37e9bad6aa7cb89c0",
+    "194c1fb4b7cc9decdc97835f9c4267041148d00e915c76dae8abeb59b68b6e5c",
+    "26e18b23fd03189b9aa226157068aa2ccce64eda8300ff62d708d0d2d40d8d15",
+    "a5ecb13705a8ec76701bba74d2e136999eec70fd64ab26949cd304188edfafff",
+    "2d7d825390b56b97388201de35f674ab5d65e51be2460d74b1bab75ccf879aee",
+    "08b0f9da317b0134fade41782b486944f32f31126448597e5a9cb879e1c76333",
+    "a162326af0bbfce429ba889762e1b29dcaa6520ad920e88c51b72be4c025fbe4",
+    "cecfc3a114e7994d236f1298313e16b7d20162df4f6c3ade2518995cd6da5203",
+    "c8ddf99180c484923831d3defacb2b1a018dd24ac8f3c05d9ebb03dd8d1db025",
+    "3a1ea5d147378281d9be1111bf88e1830f189acf94ecc589ebbe47c3c2be411d",
+    "1119b55cf019d66b8081d63cc3591c06f1ff6e9239d9b0ced4fcc5ae370739cb",
+    "1208156e8ad82251234ed0c0aed2f75d62ce6f484749d24f69f1b49e8abe270e",
+    "ec6c226d73717174caadb688e4b7bceb1c5ba9ba87719d82feb3633f8b21eb99",
+    "855fc2188e5390a8cb71cfb2f38dbd9273f8b10f7963aa788c7ec3e37ca67580",
+    "80bc529be30798e6bfbe76cc4006426afafe198a0c5a1b575706e45645535fee",
+    "1f204c06e5dd93eef94cc57fb38dfecad59e3385af76e00ea5ebca3161b69a12",
+    "3645c9173c1959716f448606fcbc05b9aee85acd483e4bf4e74197214b302831",
+    "37cb19132ffbc85e5bfa8b88550b1bcceb0d393494641f2232a969bbb3157b9a",
+    "d6378f821a05def12ce692cab8d23aa9de064ede9247cc0089dea044198d4047",
+    "ae01d21036dce59db60353863cb7bd39157c9491e9dcc6b3d1a53af69b880f26",
+    "c8f8ca6b7e3a7770a86caaf2a4d82e0463987e6e68809af6a2c3ea2f43982d41",
+    "a447e022c61f8c779fe1a3c3e26e6fd4cc767ccfbfcd3172c50a8d902f263211",
+    "f08f414401036b253923d835cccbaa579929cff3c4c87749aaf446c3a5878892",
+    "a79b8c16366c117d1d0d897529eb336b5954fbdeeccefc7edbd77347da051d73",
+    "92175fd94fdfa2efc5915e07147894586c404d7b35867536c32e778cdf06bd22",
+    "f23447b501f5128a6693636fdaf3b7a2b9258ef3e205648edc2539e383af981e",
+    "2bb45cf1048bf55536a21a6e30c1acea42c7efddf464e9608a70eff5a7b24759"
+  ],
+  "background_frames": [
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.5,
+        2.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8708287477493286
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.5,
+        2.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        1.5,
+        2.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        1.5,
+        2.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        1.5,
+        2.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        1.5,
+        2.5,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192
+    },
+    {
+      "background_rgb": [
+        1.5,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        1.5,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        1.5,
+        2.5,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.1213202476501465
+    },
+    {
+      "background_rgb": [
+        1.5,
+        2.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        1.5,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295
+    },
+    {
+      "background_rgb": [
+        1.5,
+        2.5,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.1213202476501465
+    },
+    {
+      "background_rgb": [
+        1.5,
+        2.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        1.5,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295
+    },
+    {
+      "background_rgb": [
+        1.5,
+        2.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.25,
+        3.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.25
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        247.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.5,
+        3.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        2.5,
+        3.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.5,
+        3.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.75,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.820027470588684
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        2.5,
+        3.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0
+    },
+    {
+      "background_rgb": [
+        2.5,
+        3.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.5,
+        3.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302
+    },
+    {
+      "background_rgb": [
+        2.5,
+        3.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846
+    },
+    {
+      "background_rgb": [
+        2.5,
+        3.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8708287477493286
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5
+    },
+    {
+      "background_rgb": [
+        2.5,
+        3.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        3.0,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608
+    },
+    {
+      "background_rgb": [
+        2.0,
+        2.5,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    },
+    {
+      "background_rgb": [
+        2.5,
+        3.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651
+    }
+  ],
+  "recipe": "Pinned BiRefNet-matting: 1024 input only for mask inference, soft mask resized to unchanged original RGB dimensions. Opaque alpha>=.98 retains original RGB; soft edges unmix measured uniform plate. Alpha<8 removed; connected regions retained when containing alpha>=128. Fixed anatomical scale/anchor, no stabilization or interpolation.",
+  "model_manifest": {
+    "repository": "ZhengPeng7/BiRefNet-matting",
+    "revision": "eccde0a8cbdce7ac5fecfeb06340fe7b949e85d9",
+    "model_directory": "H:\\ai\\minimax-h3\\matting\\BiRefNet-matting",
+    "dependency_directory": "H:\\ai\\minimax-h3\\matting\\dependencies",
+    "files": {
+      "config.json": {
+        "bytes": 413,
+        "sha256": "b2b235983b80fbff325976ca517bb7eda25e915b84a97b150eca41266cf8a13b"
+      },
+      "BiRefNet_config.py": {
+        "bytes": 298,
+        "sha256": "e7b8c2a74f6cea6a59553d517f71d47f2c1d90e670a13416af17c25fe2f3dc52"
+      },
+      "birefnet.py": {
+        "bytes": 92134,
+        "sha256": "2a45b4e0ece72d7c4212bca1a988e7d7e52bfe9f98ec59c58b8809c8a8b7a831"
+      },
+      "model.safetensors": {
+        "bytes": 884878856,
+        "sha256": "a9875de5b1e6c8eb5fdaa8c727a82927ce442cdc87ba3abee6a77e6fa46c25bb"
+      },
+      "README.md": {
+        "bytes": 4724,
+        "sha256": "e43576e298fcfd143239f7c1dc080e1d03f4eef5e78156da4f0466d93f2c45a1"
+      },
+      "timm-1.0.30-py3-none-any.whl": {
+        "bytes": 2668917,
+        "sha256": "c8e27adf6801a2fdfb570dbbdd171f2f084756eefc673df8cfaab06bd14864f3"
+      }
+    }
+  },
+  "inference_precision": "float16",
+  "torch_version": "2.14.0+cu130",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "elapsed_seconds": 19.936,
+  "tool_sha256": "e9816266274948c52f8852a241f389ffba3711f37113e59e27fbf20277ac8afd"
+}

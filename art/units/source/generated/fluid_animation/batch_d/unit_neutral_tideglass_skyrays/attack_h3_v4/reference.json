@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_tideglass_skyrays",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_tideglass_skyrays/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            386,
+            542
+          ]
+        ],
+        "anchor": [
+          192,
+          462
+        ],
+        "scale": 1.30646,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e06e6d7c8452810a04c0bd32b73c453235e860afab851816a92aa8da3969c36f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "6eb6e88508dcf3e6593ff925c17a14e5485d9aaa7a1b4a99387ab49bd3fd5343",
+      "runtime_source_scale": 0.65323
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

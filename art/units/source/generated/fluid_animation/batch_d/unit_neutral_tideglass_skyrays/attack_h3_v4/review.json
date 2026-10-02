@@ -1,0 +1,48 @@
+{
+  "status": "accepted_selected_interval_pending_native",
+  "source_frames": [
+    0,
+    4,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    112,
+    123
+  ],
+  "original_frames_inspected": 124,
+  "excluded_intervals": [
+    [
+      23,
+      81
+    ]
+  ],
+  "notes": "Single wing-driven close attack. Source0-22 raises both wings and loads the torso; 22-to82 joins matching raised-wing body/head/harness poses, then82-89 folds the wings and drives the pointed head forward, with89 contact and90-123 recovery. Exclude23-81: repeated flaps and unwanted detached teal particles. All124 original frames inspected; selected transition enlarged on light/dark; no interpolation, per-frame transforms, particle erasure or anatomy repainting."
+}

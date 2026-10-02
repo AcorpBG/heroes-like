@@ -1,0 +1,104 @@
+{
+  "unit_id": "unit_neutral_tideglass_skyrays",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026105105,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_tideglass_skyrays/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          386,
+          542
+        ]
+      ],
+      "anchor": [
+        192,
+        462
+      ],
+      "scale": 0.65323,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/cast_h3_v2/matte/rgba_024.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 0,
+      "original_video": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/cast_h3_v2/original_lossless.mkv",
+      "original_video_sha256": "bc2d3ef648549c6c557bb06eb6320cf760fe18997ee8fed71f911fd2095fc490",
+      "original_rgb_sha256": "a2e788abe541c3d9d22b8b815fe7abae8f2f2470a4dd92b0371a69ea039b73c9",
+      "original_video_frame": 24,
+      "original_video_time_seconds": 1.0,
+      "matte_recipe": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/cast_h3_v2/matte.json"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/defend_h3_v2/matte/rgba_057.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 0,
+      "original_video": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/defend_h3_v2/original_lossless.mkv",
+      "original_video_sha256": "44cb1d0e13b785b17b8032523908770256a8832a1023a54c26688a9ba1871df9",
+      "original_rgb_sha256": "fc457ecbd1315b2c86dbfb3ea581c5451ac8acc76f4f08a460764ed8187a3cfd",
+      "original_video_frame": 57,
+      "original_video_time_seconds": 2.375,
+      "matte_recipe": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tideglass_skyrays/defend_h3_v2/matte.json"
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      64,
+      2
+    ]
+  ],
+  "last": 2,
+  "prompt": "Original painted fantasy TIDEGLASS SKYRAY. One elongated blue-teal manta-like body, slender pointed snout facing SCREEN RIGHT, pale pearly eye markings, exactly TWO broad translucent crescent pectoral wings with dark teal veins and pale cream panels. Small pale dorsal fins stay attached above back; one long curling tail and original soft white/aqua trailing fin ribbons flow behind to screen left. Original brass/teal hanging resonator bell harness stays attached beneath belly, with large front bell and smaller rear bell; never add duplicate bells, eyes, legs, arms, horns or wings. No human rider, hands, weapons or text. Locked orthographic side three-quarter camera and unchanged painted style, proportions, facing and body scale. Preserve the existing exact ray silhouette and near/far wing identities.  Continuous defensive wing curl beginning immediately. In the first third lift and curve BOTH original membranes upward to the halfway painting at frame32, then keep bending their roots to form a protective canopy over the pointed head and attached bell harness at frame64. Head tucks only slightly, original tail and soft fin ribbons curl close. Hold that complete guard through the last second. Every intermediate wing angle must be visible: do not hold ready and abruptly replace it with the guard. Same ray body/camera/harness throughout.  Flat blue background, locked camera, no floor/shadow/scenery/particles/projectile. Extra upper canvas clearance keeps BOTH wing tips inside the frame. Body stays at the same physical reference size. Do not rotate toward camera, zoom, resize, add bells/appendages or cut between states.",
+  "protected_foreground_chroma": 0,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}
