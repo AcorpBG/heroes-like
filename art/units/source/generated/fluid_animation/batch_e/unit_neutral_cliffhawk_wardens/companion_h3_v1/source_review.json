@@ -1,0 +1,17 @@
+{
+  "status": "source_intervals_provisionally_qualified_pending_combined_native",
+  "personal_review": "Personally viewed all124 original RGB and alpha frames in nine exact enlarged chronological pages, alternating light/dark alpha backgrounds. One brown/cream hawk retains one head, hooked beak, two wings, tail and two feet through eight wingbeat cycles, downward safe interior flight, extending talons, contact and folded-wing recovery. No border is crossed. Head/torso size remains stable; folded endpoint is complete and feet settle steadily around source459. Combined original body and native review still required.",
+  "rejected_original_frames": {
+    "1": "magenta guide spill inside wing gap",
+    "48": "connected magenta edge contamination at the guide",
+    "98": "transient plate-colored connected bird materials after landing",
+    "123": "plate-colored connected bird materials in final settled hold",
+    "24": "transitional green plate tint in connected wing feathers",
+    "25": "transitional pink plate tint in connected wing feathers",
+    "73": "transitional green plate tint in connected wing feathers",
+    "74": "transitional pink plate tint in connected wing feathers"
+  },
+  "selection_rule": "Retain full anticipation/flapping/landing/folding/recovery sequence with valid adjacent original frames. These defects are not hidden contact/recovery loss:48 has matching complete downstroke47/49;98 and123 are already-settled holds with identical qualified adjacent94-97/99-122 posture. Do not reuse123 as the terminal bird;122 contains the complete grounded folded endpoint. Preserve all rejected originals unchanged.",
+  "body_rule": "Exact unchanged original woman/pike sources remain the primary actor. Only the detached bird is replaced. No source interpolation, reverse frames, actor warp or normalization. Record explicit paired original source indices and reviewed timing.",
+  "native_selection_correction": "Personally viewed all81 preliminary candidate native phases both facings. Replace24/25 with observed23/26 and omit redundant73/74 in favor of75; every original43 body phase stays present, all wingbeat phases remain, feet contact80-82 and fold91-94 unchanged. No anatomy repaint, clipping crop, contact/recovery omission, duplicate whole-pose padding or additional sampling."
+}

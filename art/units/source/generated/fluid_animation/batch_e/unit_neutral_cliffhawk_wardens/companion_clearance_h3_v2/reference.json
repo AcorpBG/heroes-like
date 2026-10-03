@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_neutral_cliffhawk_wardens",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/original_airborne_hawk_canvas.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "146d1470cb74a4eb5f13441aba0efba1f5567f61b74ab58c12f3d9013ff395a4",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "fe6ab6a7b34c8cef69ada381114feb169bcf645cd63b7c5c978eefb1d47022ae",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/original_safe_flight_040.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "8b6f2084330f8d0cba0ef0e3a7079755ca139aae27af6891161478913321ba38",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e1f06c265959af22b01e66f18b76b480398145fd5497f1b02701c2f6219003b3",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/original_safe_flight_048.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "8ca2b94c1ec1613843761c5dbbcafb76ca7311214633d2f18d5f25f9eb0b3f91",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "4d55aa2f75b528e4318bf43e9882657d69be17991547a16b2165aa66a38f18e1",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/companion_h3_v1/matte_plate_v3/rgba_040.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "53d4e02c07d6f77328e03ce61ce542ff5b0b543ba3b7576c6d4a289ac8836cdc",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "a254c86cdb140ad0a8764107c1c548fce083b0b64e348176ead6491a959e9de8",
+      "runtime_source_scale": 0.5
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

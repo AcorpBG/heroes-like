@@ -1,0 +1,11 @@
+# Cliffhawk Wardens companion correction
+
+The former selected death clipped the departing hawk at the right canvas border. Death now preserves every original43 woman/pike collapse phase while the observed H3 companion flies safely inside the canvas, lands beside her, folds its wings and remains with the corpse. Every visible woman/pike RGBA pixel is copied exactly as foreground; small passing wing portions sit naturally behind the original hair/cloak. No anatomy repaint, sprite warp, synthetic interpolation, clipped departure truncation or companion removal is used.
+
+The published death has79 observed composite phases,35ms each (2765ms); old death43/1505ms. All171 other poses,31-frame idle/map strip, timing and231 other unit rows are unchanged. Persistent dead uses the final grounded death painting. `composite_recipe.json` records both original source indices and hashes; `body_extraction_recipe.json` proves only the detached old bird is removed. All original body/companion RGB videos, latents, prompts, guide artwork, sampler/decode histories and failed/unused originals are retained.
+
+Personally reviewed all124 first-take RGB/alpha frames, full changed chronology, enlarged occlusion/landing/corpse, preliminary81 native phases both facings, and final79 imported native death/corpse both facings. Brief source-painted color flashes use neighboring observed phases without losing any body phase or landing/contact/recovery. Unused second source completed sampler/decode with124 original RGB; its flat-corner extraction stopped after23 mattes. Reassessment selected correct body-foreground compositing of the qualified first take; no further sampling.
+
+Final focused proof:586+586 native checks,1122 source/pixel/anchor checks (2294), plus1184 preliminary candidate checks; one changed actual imported texture matches normalized RGBA3712x2988 exactly. Source hashes cover372 original RGB frames. This is offscreen changed-death verification and chronological inspection, not a manual game playtest, Linux run or whole-roster acceptance. Broad middle53 audit was cancelled at owner direction; no further audit runs.
+
+Retained scripts rebuild generation, extraction, exact composites, publication and focused changed-death/import checks. Completion records exact measured cleanup and scoped Git publication.

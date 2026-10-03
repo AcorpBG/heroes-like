@@ -1,0 +1,10 @@
+{
+  "unit_id": "unit_neutral_cliffhawk_wardens",
+  "checks": 1122,
+  "failures": [],
+  "original_lossless_rgb_frames": 372,
+  "original_body_phases": 43,
+  "derived_composite_phases": 63,
+  "published_selected_source_poses": 250,
+  "rule": "Exact byte hashes, original RGB frames, body foreground RGBA, unoccluded observed companion RGBA, publication source/ground anchors. No art acceptance inferred from counts."
+}

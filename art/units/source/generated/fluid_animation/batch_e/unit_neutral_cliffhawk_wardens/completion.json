@@ -1,0 +1,193 @@
+{
+  "unit_id": "unit_neutral_cliffhawk_wardens",
+  "status": "complete_selected_unit",
+  "personal_review": "Personally inspected all124 original companion RGB/alpha; all65 preliminary composites and all81 preliminary native128 poses both facings. Original woman/pike remains exact foreground, bird wings pass naturally behind hair/cape only, complete airborne departure stays wholly inside canvas then two feet contact and wings fold beside the grounded corpse. Revised observed23/26/75 eliminate four transient color-flash frames without omitting any original43 body phase or landing/contact/recovery. Revised79 phase imported native proof follows publication; no manual playtest/Linux/whole-roster claim. Personally viewed every final79 imported native128 death pose in both facings and the separately rendered actual persistent corpse. Bird stays inside canvas, clears actor naturally behind hair/cloak, retains full wingbeats/feet contact/wing fold/recovery; corpse and standing companion complete. The three revised observed phases were personally reviewed enlarged and native in both facings. No unchanged-action/unchanged-unit engine reruns after scope stop.",
+  "failures": [],
+  "candidate_checks": {
+    "preliminary_death_native_normal": 592,
+    "preliminary_death_native_reflected": 592,
+    "scope": "Only death/corpse rendered; first81-phase selection revised to79 after native color review"
+  },
+  "validation": {
+    "failures": [],
+    "final_native_normal": 586,
+    "final_native_reflected": 586,
+    "source_checks": 1122,
+    "final_checks": 2294,
+    "preliminary_candidate_checks": 1184,
+    "total_checks": 3478,
+    "exact_imported_changed_textures": 1,
+    "scope": "Focused death/corpse only, source/pixel/anchor proofs, exact changed texture import. Preliminary81-phase capture prompted selection refinement; final79-phase capture accepted."
+  },
+  "retiming": {
+    "previous_death_poses": 43,
+    "previous_msec": 1505,
+    "death_poses": 79,
+    "frame_msec": 35,
+    "duration_msec": 2765,
+    "reason": "Retain complete observed flight/contact/fold/recovery while preserving all original collapse poses."
+  },
+  "original_body_phases_preserved": 43,
+  "unchanged_non_death_poses": 171,
+  "preserved_map_idle": 31,
+  "publication": {
+    "unchanged_non_death_poses": 171,
+    "selected_original_or_derived_poses": 250,
+    "preserved_other_rows": 231,
+    "preserved_idle_map_exact": true,
+    "atlas_sha256": "e3d9cf5f54676acf78cdafd945bceeb1838a781e7b0e8c7f60b93865e819e3cf"
+  },
+  "unused_second_source": {
+    "original_frames": 124,
+    "matte_frames": 23,
+    "reason": "Sampler/decode successful. Uniform-corner estimator rejected frame23; original RGB confirms coherent flight, not an anatomy failure. Unused after body-as-foreground reassessment resolved first take; no regeneration."
+  },
+  "audit_disposition": "Broad middle53 audit stopped at owner direction. No complete-roster claim: first6 native reviewed, remaining47 native not run. No further audit work authorized.",
+  "cleanup": {
+    "records": [
+      {
+        "path": ".artifacts/parallel_animation_20261002/middle53_completion_audit/batch00",
+        "files": 435,
+        "bytes": 335464552,
+        "reason": "Own cancelled audit or completed changed-death review; source/tooling retained outside evidence"
+      },
+      {
+        "path": ".artifacts/parallel_animation_20261002/middle53_completion_audit/batch01",
+        "files": 13,
+        "bytes": 10681110,
+        "reason": "Own cancelled audit or completed changed-death review; source/tooling retained outside evidence"
+      },
+      {
+        "path": ".artifacts/parallel_animation_20261002/middle53_completion_audit/batch02",
+        "files": 13,
+        "bytes": 12260708,
+        "reason": "Own cancelled audit or completed changed-death review; source/tooling retained outside evidence"
+      },
+      {
+        "path": ".artifacts/parallel_animation_20261002/middle53_completion_audit/batch03",
+        "files": 13,
+        "bytes": 10277256,
+        "reason": "Own cancelled audit or completed changed-death review; source/tooling retained outside evidence"
+      },
+      {
+        "path": ".artifacts/parallel_animation_20261002/middle53_completion_audit/batch04",
+        "files": 13,
+        "bytes": 11331373,
+        "reason": "Own cancelled audit or completed changed-death review; source/tooling retained outside evidence"
+      },
+      {
+        "path": ".artifacts/parallel_animation_20261002/middle53_completion_audit/batch05",
+        "files": 13,
+        "bytes": 12106273,
+        "reason": "Own cancelled audit or completed changed-death review; source/tooling retained outside evidence"
+      },
+      {
+        "path": ".artifacts/parallel_animation_20261002/middle53_completion_audit/batch06",
+        "files": 13,
+        "bytes": 11460948,
+        "reason": "Own cancelled audit or completed changed-death review; source/tooling retained outside evidence"
+      },
+      {
+        "path": ".artifacts/parallel_animation_20261002/middle53_completion_audit/batch07",
+        "files": 13,
+        "bytes": 13666314,
+        "reason": "Own cancelled audit or completed changed-death review; source/tooling retained outside evidence"
+      },
+      {
+        "path": ".artifacts/parallel_animation_20261002/middle53_completion_audit/batch08",
+        "files": 11,
+        "bytes": 11391669,
+        "reason": "Own cancelled audit or completed changed-death review; source/tooling retained outside evidence"
+      },
+      {
+        "path": ".artifacts/parallel_animation_20261002/middle53_completion_audit/cliffhawk-correction",
+        "files": 104,
+        "bytes": 58899703,
+        "reason": "Own cancelled audit or completed changed-death review; source/tooling retained outside evidence"
+      },
+      {
+        "path": ".artifacts/parallel_animation_20261002/middle53_completion_audit/compact_native.py",
+        "files": 1,
+        "bytes": 2312,
+        "reason": "Own cancelled audit or completed changed-death review; source/tooling retained outside evidence"
+      },
+      {
+        "path": ".artifacts/parallel_animation_20261002/middle53_completion_audit/prepare_cliffhawk_diagnosis.py",
+        "files": 1,
+        "bytes": 2368,
+        "reason": "Own cancelled audit or completed changed-death review; source/tooling retained outside evidence"
+      },
+      {
+        "path": ".artifacts/parallel_animation_20261002/middle53_completion_audit/review_middle53.py",
+        "files": 1,
+        "bytes": 15936,
+        "reason": "Own cancelled audit or completed changed-death review; source/tooling retained outside evidence"
+      },
+      {
+        "path": ".artifacts/parallel_animation_20261002/middle53_completion_audit/source_landmark_review.json",
+        "files": 1,
+        "bytes": 2855,
+        "reason": "Own cancelled audit or completed changed-death review; source/tooling retained outside evidence"
+      },
+      {
+        "path": "H:\\ai\\minimax-h3\\ComfyUI\\output\\cliffhawk_companion_fix_h3\\companion_h3_v1",
+        "files": 126,
+        "bytes": 49522304,
+        "proof": "Exact MP4/latent SHA and all124 decoded RGB hashes match retained original sources"
+      },
+      {
+        "path": "H:\\ai\\minimax-h3\\ComfyUI\\output\\cliffhawk_companion_fix_h3\\companion_clearance_h3_v2",
+        "files": 126,
+        "bytes": 57344278,
+        "proof": "Exact MP4/latent SHA and all124 decoded RGB hashes match retained original sources"
+      },
+      {
+        "path": "H:\\ai\\minimax-h3\\ComfyUI\\input\\cliffhawk_companion_fix_companion_h3_v1_guide_0.png",
+        "files": 1,
+        "bytes": 28213,
+        "proof": "Exact PNG guide bytes retained in own source"
+      },
+      {
+        "path": "H:\\ai\\minimax-h3\\ComfyUI\\input\\cliffhawk_companion_fix_companion_h3_v1_guide_1.png",
+        "files": 1,
+        "bytes": 29386,
+        "proof": "Exact PNG guide bytes retained in own source"
+      },
+      {
+        "path": "H:\\ai\\minimax-h3\\ComfyUI\\input\\cliffhawk_companion_fix_companion_h3_v1_guide_2.png",
+        "files": 1,
+        "bytes": 13728,
+        "proof": "Exact PNG guide bytes retained in own source"
+      },
+      {
+        "path": "H:\\ai\\minimax-h3\\ComfyUI\\input\\cliffhawk_companion_fix_companion_clearance_h3_v2_guide_0.png",
+        "files": 1,
+        "bytes": 28213,
+        "proof": "Exact PNG guide bytes retained in own source"
+      },
+      {
+        "path": "H:\\ai\\minimax-h3\\ComfyUI\\input\\cliffhawk_companion_fix_companion_clearance_h3_v2_guide_1.png",
+        "files": 1,
+        "bytes": 28790,
+        "proof": "Exact PNG guide bytes retained in own source"
+      },
+      {
+        "path": "H:\\ai\\minimax-h3\\ComfyUI\\input\\cliffhawk_companion_fix_companion_clearance_h3_v2_guide_2.png",
+        "files": 1,
+        "bytes": 26828,
+        "proof": "Exact PNG guide bytes retained in own source"
+      },
+      {
+        "path": "H:\\ai\\minimax-h3\\ComfyUI\\input\\cliffhawk_companion_fix_companion_clearance_h3_v2_guide_3.png",
+        "files": 1,
+        "bytes": 25102,
+        "proof": "Exact PNG guide bytes retained in own source"
+      }
+    ],
+    "files": 904,
+    "bytes": 594610219,
+    "rebuildable": true,
+    "preserved": "All original/generated guide/art/RGB video/MP4/latent/failed sources, original and derived mattes/composites, provenance and rebuild tooling retained; all caches/saves/backups/RMG and unrelated work preserved.",
+    "audit": "Exact own middle53 cancelled audit evidence removed after no active path users; no broader workspace cleanup."
+  }
+}

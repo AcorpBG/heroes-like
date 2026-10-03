@@ -1,0 +1,22 @@
+{
+  "tool": "built-in image_gen",
+  "original_tool_output": "C:/Users/acorp/.codex/generated_images/01a0fd50-f23a-7d32-8303-80fafa7a2272/exec-836031ba-b295-4269-a40e-47778fe26df2.png",
+  "master_sha256": "27a4c6fb17a08db05564bb6359392a62817aac42fbb098b004b9ee620bd6f7b5",
+  "reference": "original_airborne_hawk.png",
+  "reference_sha256": "2da035f86096e243b25fff49bf6ca7a5bb967249b311c48ef255ea5bd321e541",
+  "generated_pose": "Same hawk standing with folded wings and both feet visible",
+  "guide_crop": [
+    111,
+    53,
+    1103,
+    1150
+  ],
+  "guide_source_scale": 0.12,
+  "scale_reason": "Match original hawk head width about27 original video pixels, not wingspan or standing height",
+  "guide_ground": [
+    825,
+    480
+  ],
+  "prompt": "landing_hawk_v1.prompt.txt",
+  "prompt_sha256": "dac4f656e4710e4be00e9dc5d22261266bca3c099590eafbc3e97a3d0be04147"
+}

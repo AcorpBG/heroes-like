@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_neutral_cliffhawk_wardens",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/original_airborne_hawk_canvas.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "146d1470cb74a4eb5f13441aba0efba1f5567f61b74ab58c12f3d9013ff395a4",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "fe6ab6a7b34c8cef69ada381114feb169bcf645cd63b7c5c978eefb1d47022ae",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/airborne_mid_canvas.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "61c8adb8c3a3437500db051bd939ede8f711514f61be0375f9c032283d762372",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "bfb32c6a9b57b331cdbe10daeb0cc7fe3bd8cf2c9b7695145ea178e712978852",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/landing_hawk_canvas.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "3bb52343bc443242b3b123bf050c33fbb22c8f195c12a12b7274b8ea988f2dfa",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "633a288a22aa559cedfe18783b4a4919a1c8976c94cdd9701353b43605286b6b",
+      "runtime_source_scale": 0.5
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

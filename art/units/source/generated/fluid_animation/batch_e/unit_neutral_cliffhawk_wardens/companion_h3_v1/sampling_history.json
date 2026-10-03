@@ -1,0 +1,229 @@
+{
+  "prompt": [
+    845,
+    "074e1900-1061-4747-8f47-af83d0586376",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One small natural brown-and-cream hawk from the supplied reference, alone in the elevated three-quarter orthographic fantasy strategy sprite camera, facing screen-right. One head with a dark hooked beak and natural dark eyes, cream breast, brown feathered back and exactly TWO feathered wings, one intact tail and exactly TWO natural taloned feet. Keep original painted feather markings, proportions and fixed anatomical scale. The camera is locked. Starting already airborne at the supplied first position, the hawk makes several coherent wingbeats along a gentle down-right arc within the safe interior of the canvas. It decelerates beside the supplied right-side landing position, extends both feet downward, touches down gently, folds both wings naturally and settles into the supplied standing landing pose. Every full wing, foot, beak and tail remains visible throughout, with generous margins. Never cross the top, bottom or side borders. Keep the body and head the same small size during flight and landing. Keep the landing position held quietly at the end. Uniform unchanged flat MAGENTA RGB255,0,255 background throughout; no floor, scenery, shadow, human, spear, second bird, extra limbs, armor, text, smoke, glow, sparks or magic.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "32",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 202610030936
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "cliffhawk_companion_fix_companion_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "cliffhawk_companion_fix_companion_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "cliffhawk_companion_fix_companion_h3_v1_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 48,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "cliffhawk_companion_fix_h3/companion_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "cliffhawk_companion_fix_h3",
+      "create_time": 1791025525639
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "cliffhawk_companion_fix_h3\\companion_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "074e1900-1061-4747-8f47-af83d0586376",
+          "timestamp": 1791025525640
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "074e1900-1061-4747-8f47-af83d0586376",
+          "timestamp": 1791025525665
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "074e1900-1061-4747-8f47-af83d0586376",
+          "timestamp": 1791025695546
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

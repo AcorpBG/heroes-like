@@ -1,0 +1,2446 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_cliffhawk_wardens",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "death_h3_000",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "death_h3_004",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "death_h3_008",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "death_h3_010",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "death_h3_012",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "death_h3_014",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "death_h3_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "death_h3_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_companion_000",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_000_body036_bird000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5,
+          "original_body_frame": 36,
+          "companion_video_frame": 0,
+          "companion_video_time_seconds": 0.0,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_001",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_001_body038_bird002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333,
+          "original_body_frame": 38,
+          "companion_video_frame": 2,
+          "companion_video_time_seconds": 0.08333333333333333,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_002",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_002_body038_bird003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333,
+          "original_body_frame": 38,
+          "companion_video_frame": 3,
+          "companion_video_time_seconds": 0.125,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_003",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_003_body038_bird004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333,
+          "original_body_frame": 38,
+          "companion_video_frame": 4,
+          "companion_video_time_seconds": 0.16666666666666666,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_004",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_004_body040_bird006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667,
+          "original_body_frame": 40,
+          "companion_video_frame": 6,
+          "companion_video_time_seconds": 0.25,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_005",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_005_body042_bird008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75,
+          "original_body_frame": 42,
+          "companion_video_frame": 8,
+          "companion_video_time_seconds": 0.3333333333333333,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_006",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_006_body044_bird010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333,
+          "original_body_frame": 44,
+          "companion_video_frame": 10,
+          "companion_video_time_seconds": 0.4166666666666667,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_007",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_007_body044_bird011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333,
+          "original_body_frame": 44,
+          "companion_video_frame": 11,
+          "companion_video_time_seconds": 0.4583333333333333,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_008",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_008_body044_bird012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333,
+          "original_body_frame": 44,
+          "companion_video_frame": 12,
+          "companion_video_time_seconds": 0.5,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_009",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_009_body046_bird014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667,
+          "original_body_frame": 46,
+          "companion_video_frame": 14,
+          "companion_video_time_seconds": 0.5833333333333334,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_010",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_010_body048_bird016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0,
+          "original_body_frame": 48,
+          "companion_video_frame": 16,
+          "companion_video_time_seconds": 0.6666666666666666,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_011",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_011_body048_bird017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0,
+          "original_body_frame": 48,
+          "companion_video_frame": 17,
+          "companion_video_time_seconds": 0.7083333333333334,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_012",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_012_body048_bird018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0,
+          "original_body_frame": 48,
+          "companion_video_frame": 18,
+          "companion_video_time_seconds": 0.75,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_013",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_013_body050_bird020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335,
+          "original_body_frame": 50,
+          "companion_video_frame": 20,
+          "companion_video_time_seconds": 0.8333333333333334,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_014",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_014_body051_bird021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125,
+          "original_body_frame": 51,
+          "companion_video_frame": 21,
+          "companion_video_time_seconds": 0.875,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_015",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_015_body052_bird022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665,
+          "original_body_frame": 52,
+          "companion_video_frame": 22,
+          "companion_video_time_seconds": 0.9166666666666666,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_016_body053_bird023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083333333333335,
+          "original_body_frame": 53,
+          "companion_video_frame": 23,
+          "companion_video_time_seconds": 0.9583333333333334,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_017",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_017_body054_bird026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25,
+          "original_body_frame": 54,
+          "companion_video_frame": 26,
+          "companion_video_time_seconds": 1.0833333333333333,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_018_body055_bird027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665,
+          "original_body_frame": 55,
+          "companion_video_frame": 27,
+          "companion_video_time_seconds": 1.125,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_019",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_019_body056_bird028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335,
+          "original_body_frame": 56,
+          "companion_video_frame": 28,
+          "companion_video_time_seconds": 1.1666666666666667,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_020_body058_bird030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665,
+          "original_body_frame": 58,
+          "companion_video_frame": 30,
+          "companion_video_time_seconds": 1.25,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_021",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_021_body058_bird031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665,
+          "original_body_frame": 58,
+          "companion_video_frame": 31,
+          "companion_video_time_seconds": 1.2916666666666667,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_022_body058_bird032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665,
+          "original_body_frame": 58,
+          "companion_video_frame": 32,
+          "companion_video_time_seconds": 1.3333333333333333,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_023",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_023_body060_bird034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5,
+          "original_body_frame": 60,
+          "companion_video_frame": 34,
+          "companion_video_time_seconds": 1.4166666666666667,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_024_body060_bird036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5,
+          "original_body_frame": 60,
+          "companion_video_frame": 36,
+          "companion_video_time_seconds": 1.5,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_025",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_025_body064_bird038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665,
+          "original_body_frame": 64,
+          "companion_video_frame": 38,
+          "companion_video_time_seconds": 1.5833333333333333,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_026_body064_bird039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665,
+          "original_body_frame": 64,
+          "companion_video_frame": 39,
+          "companion_video_time_seconds": 1.625,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_027",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_027_body064_bird040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665,
+          "original_body_frame": 64,
+          "companion_video_frame": 40,
+          "companion_video_time_seconds": 1.6666666666666667,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_028_body064_bird042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665,
+          "original_body_frame": 64,
+          "companion_video_frame": 42,
+          "companion_video_time_seconds": 1.75,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_029",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_029_body070_bird044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665,
+          "original_body_frame": 70,
+          "companion_video_frame": 44,
+          "companion_video_time_seconds": 1.8333333333333333,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_030_body070_bird046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665,
+          "original_body_frame": 70,
+          "companion_video_frame": 46,
+          "companion_video_time_seconds": 1.9166666666666667,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_031",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_031_body070_bird049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665,
+          "original_body_frame": 70,
+          "companion_video_frame": 49,
+          "companion_video_time_seconds": 2.0416666666666665,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_032_body070_bird050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665,
+          "original_body_frame": 70,
+          "companion_video_frame": 50,
+          "companion_video_time_seconds": 2.0833333333333335,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_033",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_033_body070_bird052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665,
+          "original_body_frame": 70,
+          "companion_video_frame": 52,
+          "companion_video_time_seconds": 2.1666666666666665,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_034_body070_bird054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665,
+          "original_body_frame": 70,
+          "companion_video_frame": 54,
+          "companion_video_time_seconds": 2.25,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_035",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_035_body070_bird056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665,
+          "original_body_frame": 70,
+          "companion_video_frame": 56,
+          "companion_video_time_seconds": 2.3333333333333335,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_036_body082_bird058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665,
+          "original_body_frame": 82,
+          "companion_video_frame": 58,
+          "companion_video_time_seconds": 2.4166666666666665,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_037",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_037_body082_bird060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665,
+          "original_body_frame": 82,
+          "companion_video_frame": 60,
+          "companion_video_time_seconds": 2.5,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_038_body082_bird062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665,
+          "original_body_frame": 82,
+          "companion_video_frame": 62,
+          "companion_video_time_seconds": 2.5833333333333335,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_039",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_039_body082_bird064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665,
+          "original_body_frame": 82,
+          "companion_video_frame": 64,
+          "companion_video_time_seconds": 2.6666666666666665,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_040_body082_bird065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665,
+          "original_body_frame": 82,
+          "companion_video_frame": 65,
+          "companion_video_time_seconds": 2.7083333333333335,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_041",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_041_body082_bird066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665,
+          "original_body_frame": 82,
+          "companion_video_frame": 66,
+          "companion_video_time_seconds": 2.75,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_042",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_042_body086_bird068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335,
+          "original_body_frame": 86,
+          "companion_video_frame": 68,
+          "companion_video_time_seconds": 2.8333333333333335,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_043",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_043_body086_bird070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335,
+          "original_body_frame": 86,
+          "companion_video_frame": 70,
+          "companion_video_time_seconds": 2.9166666666666665,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_044_body088_bird072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665,
+          "original_body_frame": 88,
+          "companion_video_frame": 72,
+          "companion_video_time_seconds": 3.0,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_045",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_045_body088_bird075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665,
+          "original_body_frame": 88,
+          "companion_video_frame": 75,
+          "companion_video_time_seconds": 3.125,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_046_body090_bird076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75,
+          "original_body_frame": 90,
+          "companion_video_frame": 76,
+          "companion_video_time_seconds": 3.1666666666666665,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_047",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_047_body092_bird078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335,
+          "original_body_frame": 92,
+          "companion_video_frame": 78,
+          "companion_video_time_seconds": 3.25,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_048_body092_bird079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335,
+          "original_body_frame": 92,
+          "companion_video_frame": 79,
+          "companion_video_time_seconds": 3.2916666666666665,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_049",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_049_body094_bird080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665,
+          "original_body_frame": 94,
+          "companion_video_frame": 80,
+          "companion_video_time_seconds": 3.3333333333333335,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_050_body094_bird081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665,
+          "original_body_frame": 94,
+          "companion_video_frame": 81,
+          "companion_video_time_seconds": 3.375,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_051",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_051_body094_bird082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665,
+          "original_body_frame": 94,
+          "companion_video_frame": 82,
+          "companion_video_time_seconds": 3.4166666666666665,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_052_body094_bird084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665,
+          "original_body_frame": 94,
+          "companion_video_frame": 84,
+          "companion_video_time_seconds": 3.5,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_053",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_053_body100_bird086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667,
+          "original_body_frame": 100,
+          "companion_video_frame": 86,
+          "companion_video_time_seconds": 3.5833333333333335,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_054_body100_bird088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667,
+          "original_body_frame": 100,
+          "companion_video_frame": 88,
+          "companion_video_time_seconds": 3.6666666666666665,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_055",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_055_body100_bird090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667,
+          "original_body_frame": 100,
+          "companion_video_frame": 90,
+          "companion_video_time_seconds": 3.75,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_056_body100_bird092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667,
+          "original_body_frame": 100,
+          "companion_video_frame": 92,
+          "companion_video_time_seconds": 3.8333333333333335,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_057",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_057_body100_bird094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667,
+          "original_body_frame": 100,
+          "companion_video_frame": 94,
+          "companion_video_time_seconds": 3.9166666666666665,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_058_body100_bird096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667,
+          "original_body_frame": 100,
+          "companion_video_frame": 96,
+          "companion_video_time_seconds": 4.0,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_059",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_059_body112_bird100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667,
+          "original_body_frame": 112,
+          "companion_video_frame": 100,
+          "companion_video_time_seconds": 4.166666666666667,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_060_body112_bird107.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667,
+          "original_body_frame": 112,
+          "companion_video_frame": 107,
+          "companion_video_time_seconds": 4.458333333333333,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_061",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_061_body112_bird114.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667,
+          "original_body_frame": 112,
+          "companion_video_frame": 114,
+          "companion_video_time_seconds": 4.75,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        },
+        {
+          "name": "death_companion_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_062_body123_bird122.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125,
+          "original_body_frame": 123,
+          "companion_video_frame": 122,
+          "companion_video_time_seconds": 5.083333333333333,
+          "composite_recipe": "build_composite.py: exact original body foreground, unchanged observed H3 companion behind body"
+        }
+      ],
+      "clips": {
+        "death": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 78
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Fixed original .5 death scale and anchor; no per-frame warp, interpolation or normalization.",
+      "provenance": {
+        "idle_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/idle_h3_v2/original_lossless.mkv",
+          "sha256": "e06fcbe58753ed03da418b1c2b030e0f6819a3908ebc94d1774bad1bd17af0ad"
+        },
+        "idle_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/idle_h3_v2/original.json",
+          "sha256": "2888975d31e60eca2915118d6b72421ef741f8b52fb24e7179e8b55f3c6b029a"
+        },
+        "idle_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/idle_h3_v2/workflow_api.json",
+          "sha256": "8fbfe5c08e3e8a47efe018c16399666df65657fc988f7ea22934d32607d90df1"
+        },
+        "idle_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/idle_h3_v2/prompt.txt",
+          "sha256": "38b352f0548b7f81d83a8bbecfacce411585728f8fc6dd8c1fa0b2e154174e57"
+        },
+        "idle_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/idle_h3_v2/reference.json",
+          "sha256": "90f26984b222c076f7c463773b668e3176befecf486fc304341d66693083e388"
+        },
+        "idle_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/idle_h3_v2/matte.json",
+          "sha256": "d754d510a9ecef13a348b0c8f7574bacac7589601c5585b00ec0188bdb73fbe7"
+        },
+        "idle_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/idle_h3_v2/staged_generation.json",
+          "sha256": "71c64f75fead13863fe2fc7bc5e58557dbd02208ecadc154380df78b339b0e18"
+        },
+        "idle_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/idle_h3_v2/sampling_workflow_api.json",
+          "sha256": "dab9b26612d2123591a747d2cbeaf98751369e318944417a5b3e918ce7e9346e"
+        },
+        "idle_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/idle_h3_v2/sampling_submission.json",
+          "sha256": "ed6765d98dbb567403af4b6679a8b7d60bf8324f92d8680d60699e3c5f234106"
+        },
+        "idle_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/idle_h3_v2/sampling_history.json",
+          "sha256": "cbda01e5d56a1e0ed0de8657dbdd580c27232c4cd847ee767228d63b0fad6da7"
+        },
+        "idle_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/idle_h3_v2/original.latent",
+          "sha256": "1dc18935790c93f73ac75b7483b1b5b082c864fb55f49f9e426c0f8b4c0ba3df"
+        },
+        "idle_h3_v2_guide_image_matched_keys_original.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/matched_keys_original.png",
+          "sha256": "01774f4c392c8debf1f08475bec878eda5e8f39cd3defc05576e350adbaa1c0c"
+        },
+        "idle_h3_v2_guide_prompt_matched_keys_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/matched_keys_prompt.txt",
+          "sha256": "2f500b569d1d6e2a4977eb0299e551e4fd9b25d4632bf77012fe97957a2a9e95"
+        },
+        "idle_h3_v2_guide_generation_matched_keys_original.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/matched_keys_original.generation.json",
+          "sha256": "a648da02bb92d7f4ec483687fc273316cdbb6f2e291d403c57288f87c97d1bca"
+        },
+        "move_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/move_h3_v2/original_lossless.mkv",
+          "sha256": "fd85ababae406d5bc42affdc195106c005a1942de4cca13e49bce9602843244e"
+        },
+        "move_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/move_h3_v2/original.json",
+          "sha256": "d4c65aa252a85d523b7c9b9500ac52532f3dfcec7995bcec9033b744cd14e02a"
+        },
+        "move_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/move_h3_v2/workflow_api.json",
+          "sha256": "7c9b33cda227f97ebdf89f10560add69c697d6c0491d1ab48762fa1e4aad4903"
+        },
+        "move_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/move_h3_v2/prompt.txt",
+          "sha256": "cc9db878647a764b3ded6f635294a40239ad52e8cae3bd5b71bf5464136e1c91"
+        },
+        "move_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/move_h3_v2/reference.json",
+          "sha256": "6fe73f7947b35af37963adccce35be5d1fcc3087c4a0e05d39ddc22208b272ce"
+        },
+        "move_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/move_h3_v2/matte.json",
+          "sha256": "ccea518a24d14db88bb3d5549cd6d54e338c8a7ef6c544ab0765aeb12043041f"
+        },
+        "move_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/move_h3_v2/staged_generation.json",
+          "sha256": "b87f89e4aa8f5382e37eeef36c17f522bec8b00b14ba6428d6f37dbfbe1bca91"
+        },
+        "move_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/move_h3_v2/sampling_workflow_api.json",
+          "sha256": "e701e842c00484c5f119765ac1421eed2cd722511cbcc7e2457b34c7cf62f463"
+        },
+        "move_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/move_h3_v2/sampling_submission.json",
+          "sha256": "3004180361dbc24802da3e214a12c7d7662a0da6432791a52952df2926f23681"
+        },
+        "move_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/move_h3_v2/sampling_history.json",
+          "sha256": "76a21819504b7ec15595b2e9e23d753c8484ff4dd40c6ea3c3d162c456c47c78"
+        },
+        "move_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/move_h3_v2/original.latent",
+          "sha256": "14805407c375a53e9115d240ae0eaaf4ff9bcf2717662465ed4bb9337869f7c6"
+        },
+        "attack_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/attack_h3_v2/original_lossless.mkv",
+          "sha256": "e09bb95a889c43f3f5cd80133260f3cfb5063ae70976317f8964a2371b932023"
+        },
+        "attack_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/attack_h3_v2/original.json",
+          "sha256": "d79b243f265297fa43b6039ac1a14bdb6be30b99980f4f6b6fcc38e0b1319184"
+        },
+        "attack_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/attack_h3_v2/workflow_api.json",
+          "sha256": "256f239b2a15c228285d777b4cd0632be9e7af8ec78e8fe57735f677645ad64f"
+        },
+        "attack_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/attack_h3_v2/prompt.txt",
+          "sha256": "de97311e1d5a2f352d265b98c02a0a0f909cf1e935b66d420d529848c5688bff"
+        },
+        "attack_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/attack_h3_v2/reference.json",
+          "sha256": "0710d6a0c7acd483b460bc3719bf482555c1f1530fdc00b61297e9e7cb8f1754"
+        },
+        "attack_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/attack_h3_v2/matte.json",
+          "sha256": "2d2699796f790cab3738e49915a9a424e341c4d6ace8a7a6cb78cb7b98ab883b"
+        },
+        "attack_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/attack_h3_v2/staged_generation.json",
+          "sha256": "0b9c185fa3193aa9c3bcebad9d3e01eeba52e888b12cd70a4d41856290252954"
+        },
+        "attack_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/attack_h3_v2/sampling_workflow_api.json",
+          "sha256": "262d56b44f114d780bd8681b94883d4f2f4261a6fc7b235a54fe0052ca0bd320"
+        },
+        "attack_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/attack_h3_v2/sampling_submission.json",
+          "sha256": "c859d559cf3a8e01428b14f149f744d22a0ac56aa9e5f3a274b5fbeba4e4c202"
+        },
+        "attack_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/attack_h3_v2/sampling_history.json",
+          "sha256": "aa825d1a9662849b6a8d2bfa5427d8cd1c0b603fa2a7712ee8b84ffc15fad062"
+        },
+        "attack_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/attack_h3_v2/original.latent",
+          "sha256": "ad5160ac84bc0059964f16fef20bd78e1b58a0b80dcb9a8ecc8ac4b2549efda3"
+        },
+        "defend_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/defend_h3_v1/original_lossless.mkv",
+          "sha256": "b4b398b03324017e492426c3f6754dcdb7085feba18d397122e76ec2d6050ee3"
+        },
+        "defend_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/defend_h3_v1/original.json",
+          "sha256": "ddbb664c6c1056ad31c64b5551b413f25ee7a660ea2f73d0167b5b34559d6b57"
+        },
+        "defend_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/defend_h3_v1/workflow_api.json",
+          "sha256": "75b3a54ff74765f5974c1c8e7baebdbf8ca7c2050bee576d0786f6802a448731"
+        },
+        "defend_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/defend_h3_v1/prompt.txt",
+          "sha256": "5934eb0185843d8524c199cdcb2fa4d2f9e18e92c6d86d20ca25dc8aaf86c5f0"
+        },
+        "defend_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/defend_h3_v1/reference.json",
+          "sha256": "3d05c9ec21d8757598232a123a541edbbfd5e551cb291a591d73c813422993a2"
+        },
+        "defend_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/defend_h3_v1/matte.json",
+          "sha256": "be71ddce7054b16624d23ef69154c203ef036f9634f846c7320a891a5586185e"
+        },
+        "defend_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/defend_h3_v1/staged_generation.json",
+          "sha256": "6f1bb610bc2c241d6cea929d029197adda5a782b0606e57b356aada56dec2235"
+        },
+        "defend_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/defend_h3_v1/sampling_workflow_api.json",
+          "sha256": "cc34ef368d7bec4b890246d001ea50e0f5c83ba2318291d0a42a1a4caf592837"
+        },
+        "defend_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/defend_h3_v1/sampling_submission.json",
+          "sha256": "0a9cd4bc203c93955f481adb0ab2844df048a458be6d4793833aa0d4fc842546"
+        },
+        "defend_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/defend_h3_v1/sampling_history.json",
+          "sha256": "26f5df3b94041983746d070de48048aaf75dbf51c760af88e3349f4dd0a81281"
+        },
+        "defend_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/defend_h3_v1/original.latent",
+          "sha256": "b18f1c4607d391e262f3d561c5513d4b6d97bbdb361436ab9e2755b07a4e59e0"
+        },
+        "hit_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/hit_h3_v2/original_lossless.mkv",
+          "sha256": "944d1958b00def2f6890d3cfaec063a0145a5467fc9c0a901d98fa9f4f70487d"
+        },
+        "hit_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/hit_h3_v2/original.json",
+          "sha256": "cead413f9fc80d94d421e4860b6b676b697fc3484f68c22727f4aaca4f4e5203"
+        },
+        "hit_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/hit_h3_v2/workflow_api.json",
+          "sha256": "5604560962b6877ec7822acafe8d00cd427899e6e7b44db8a7621a0f5c2bd652"
+        },
+        "hit_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/hit_h3_v2/prompt.txt",
+          "sha256": "a3e91e90ecf644bf61b98d4a30dd0e37bd0e97705d52b2dcf39efba286322218"
+        },
+        "hit_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/hit_h3_v2/reference.json",
+          "sha256": "edf4f3974e56c94e0a9b7720d94d347541ca6c87a3b1d2ef3e357f1b79767dc9"
+        },
+        "hit_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/hit_h3_v2/matte.json",
+          "sha256": "59c025091a79d1534b80ddddfcb51b217bbd735984b9d8e13fac2910bd0c9709"
+        },
+        "hit_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/hit_h3_v2/staged_generation.json",
+          "sha256": "2d9e0b73c054bd945c1e33b416c017a1d4c0538cb3a51d0cec17cbdf3fc80322"
+        },
+        "hit_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/hit_h3_v2/sampling_workflow_api.json",
+          "sha256": "0ebbb8695af1b497079b82aea5964beb164ae8e740041f1a7eff29d604731f59"
+        },
+        "hit_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/hit_h3_v2/sampling_submission.json",
+          "sha256": "614c4529e74cb3475712fc1eb9a1eaf3cf25fbc2126aba7395bffba84d5bbf83"
+        },
+        "hit_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/hit_h3_v2/sampling_history.json",
+          "sha256": "441a30d352409d2cc5c122a18fed95457516e65bc123ecf4855bf749e8c08efd"
+        },
+        "hit_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/hit_h3_v2/original.latent",
+          "sha256": "fb07a13d2845f6a06481595ef1fe1c9618bc0327e241e6050fc51c30a376f879"
+        },
+        "cast_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/cast_h3_v2/original_lossless.mkv",
+          "sha256": "c77fcab14345acb6ce971099a28ec959ffc30f236136a2c885ec24dc6b182ae6"
+        },
+        "cast_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/cast_h3_v2/original.json",
+          "sha256": "bbf91d893d1a607d8f50ca161fd4944f6e674851bfd091853f6dc14b747ac170"
+        },
+        "cast_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/cast_h3_v2/workflow_api.json",
+          "sha256": "b2d6d0bfe4a4884f3f52eea29bd3aa077be17271a11d0a645df2583f75b5e98d"
+        },
+        "cast_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/cast_h3_v2/prompt.txt",
+          "sha256": "a15c670cfcc43c9ae4ab013276c142c20910ec660d07e3bbb558ef0d8502941a"
+        },
+        "cast_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/cast_h3_v2/reference.json",
+          "sha256": "9d314b2349d1a89c6dd924601ec7d035832e2c292c408fbe5543d2b58dbfeeb0"
+        },
+        "cast_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/cast_h3_v2/matte.json",
+          "sha256": "51a882262d3c9382c0287a4a69d230abaebd7ec661d88d80583b7ec8e98f9145"
+        },
+        "cast_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/cast_h3_v2/staged_generation.json",
+          "sha256": "b39205d4fee6436f77c0b407a08df0d418614ac97a6bd6f35e198f4a21a7c98b"
+        },
+        "cast_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/cast_h3_v2/sampling_workflow_api.json",
+          "sha256": "8a84b95031a3e103b5d8a8d601c3101ab77946cf4e9e0adc50f4d63acfac7b43"
+        },
+        "cast_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/cast_h3_v2/sampling_submission.json",
+          "sha256": "a077295e158c5b488071a020eb821facb2a206002fdf0a5fa92d1c66d7a746a4"
+        },
+        "cast_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/cast_h3_v2/sampling_history.json",
+          "sha256": "fa9697c0a695a52813cd6d35124d3836c2f2291337988bfecd25dbc182e13dbf"
+        },
+        "cast_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/cast_h3_v2/original.latent",
+          "sha256": "fb8d3d9f0fd7ee79c085ed738f56573aab9214a7d769dc24a594a1167f50ca53"
+        },
+        "cast_h3_v2_guide_image_rally_key_original.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/rally_key_original.png",
+          "sha256": "211a2ea992a0967280469a23fc35290434095a49b860cbaeb808e8c0871f9a0e"
+        },
+        "cast_h3_v2_guide_prompt_rally_key_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/rally_key_prompt.txt",
+          "sha256": "98d65947cb294c1716fc0e27a6df71bc501ca36bb38d9dd56db9380c48825561"
+        },
+        "cast_h3_v2_guide_generation_rally_key_original.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/rally_key_original.generation.json",
+          "sha256": "bf411028effe7c2375eb45598b71a3294e423194cbe2bc86531b3703ac8df09f"
+        },
+        "death_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/original_lossless.mkv",
+          "sha256": "15d1345063de1b6170026274e4919c4c6475cf04d829e5774838eae8a91468ad"
+        },
+        "death_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/original.json",
+          "sha256": "b2029fb6bf2859a04f68aef88bfa05a30be20be34dff3e57baae261cb4d6f8dd"
+        },
+        "death_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/workflow_api.json",
+          "sha256": "9cc1e33c6ebe367f3dbcfe5eac22a6b65fee5f4bd4add9e7e416b629b83bbe46"
+        },
+        "death_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/prompt.txt",
+          "sha256": "ee072dcd3cf381adafefab1bd7ffe43aac2c6e87fd70788afb3e627e5d244f11"
+        },
+        "death_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/reference.json",
+          "sha256": "84840f8c6828a82014351cd6579785af3d17104bd46afb5465fecb41ae7fb2b5"
+        },
+        "death_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte.json",
+          "sha256": "2d06d429936f0e3b3b84225facb1860f575fc7a8455e161e7f253b140e3fdf2a"
+        },
+        "death_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/staged_generation.json",
+          "sha256": "15c6eec93a18ec49725f62726db6119d918bd69d76d86492d51db509cbb2c326"
+        },
+        "death_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "30303b066482b8d5bf7556a9453bd3f99273f3706f7beed6ba09f86536afbedb"
+        },
+        "death_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/sampling_submission.json",
+          "sha256": "9f4656cda0fb38607c1ac3ffa2a70e389802739bb30f515657478b7cdd969201"
+        },
+        "death_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/sampling_history.json",
+          "sha256": "e89c45f10ac489b93f83b6fffeda86ec84fafdaae37c428d2de1626dac6f31b8"
+        },
+        "death_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/original.latent",
+          "sha256": "12d2de64a80ed82ae172ffc504ac17a90558e073eb60caade59ec7a81a81825e"
+        },
+        "companion_correction": {
+          "recipe": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_recipe.json",
+          "sha256": "b25ab4ddb8d1fde819a4f8fb1fe9b33d72eb4773b7abbf9bab349dca8845a170"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Complete companion flight/landing/fold, original body as foreground occluder. Requires changed composite/native review."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_004.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_000_body036_bird000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_001_body038_bird002.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_002_body038_bird003.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_003_body038_bird004.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_004_body040_bird006.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_005_body042_bird008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_006_body044_bird010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_007_body044_bird011.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_008_body044_bird012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_009_body046_bird014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_010_body048_bird016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_011_body048_bird017.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_012_body048_bird018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_013_body050_bird020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_014_body051_bird021.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_015_body052_bird022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_016_body053_bird023.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_017_body054_bird026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_018_body055_bird027.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_019_body056_bird028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_020_body058_bird030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_021_body058_bird031.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_022_body058_bird032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_023_body060_bird034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_024_body060_bird036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_025_body064_bird038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_026_body064_bird039.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_027_body064_bird040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_028_body064_bird042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_029_body070_bird044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_030_body070_bird046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_031_body070_bird049.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_032_body070_bird050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_033_body070_bird052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_034_body070_bird054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_035_body070_bird056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_036_body082_bird058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_037_body082_bird060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_038_body082_bird062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_039_body082_bird064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_040_body082_bird065.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_041_body082_bird066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_042_body086_bird068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_043_body086_bird070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_044_body088_bird072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_045_body088_bird075.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_046_body090_bird076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_047_body092_bird078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_048_body092_bird079.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_049_body094_bird080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_050_body094_bird081.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_051_body094_bird082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_052_body094_bird084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_053_body100_bird086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_054_body100_bird088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_055_body100_bird090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_056_body100_bird092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_057_body100_bird094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_058_body100_bird096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_059_body112_bird100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_060_body112_bird107.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_061_body112_bird114.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/composite_death/rgba_062_body123_bird122.png": 0.5
+      },
+      "preserved_accepted_clips": [],
+      "accepted_clips": [
+        "idle",
+        "move",
+        "attack",
+        "defend",
+        "hit",
+        "cast",
+        "death"
+      ]
+    }
+  ]
+}

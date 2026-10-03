@@ -1,0 +1,41 @@
+{
+  "original_body": "All original 43 selected body frames remain exact",
+  "replaces_companion_interval": [
+    0,
+    40
+  ],
+  "retained_companion_interval": [
+    41,
+    122
+  ],
+  "retained_take": "companion_h3_v1",
+  "original_flight_controls": [
+    {
+      "original_frame": 40,
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_040.png",
+      "component_seed": [
+        640,
+        205
+      ],
+      "component_pixels": 11374,
+      "derived": "original_safe_flight_040.png",
+      "sha256": "8b6f2084330f8d0cba0ef0e3a7079755ca139aae27af6891161478913321ba38",
+      "rule": "Exactly one detached original bird component; unchanged RGBA inside it"
+    },
+    {
+      "original_frame": 48,
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/death_h3_v1/matte/rgba_048.png",
+      "component_seed": [
+        785,
+        150
+      ],
+      "component_pixels": 10357,
+      "derived": "original_safe_flight_048.png",
+      "sha256": "8ca2b94c1ec1613843761c5dbbcafb76ca7311214633d2f18d5f25f9eb0b3f91",
+      "rule": "Exactly one detached original bird component; unchanged RGBA inside it"
+    }
+  ],
+  "end_reference_sha256": "53d4e02c07d6f77328e03ce61ce542ff5b0b543ba3b7576c6d4a289ac8836cdc",
+  "settings": "Unchanged 960x544 /124 /20 res_multistep simple /tiled VAE",
+  "status": "pending full personal source and seam review"
+}
