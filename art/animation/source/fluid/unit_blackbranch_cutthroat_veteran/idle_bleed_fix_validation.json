@@ -1,9 +1,15 @@
 {
+  "schema_version": 1,
   "unit_id": "unit_blackbranch_cutthroat_veteran",
-  "baseline": "baseline.json",
-  "handoff": "reviewed_handoff.json",
-  "tool": "tools/publish_fluid_creature_animation.py",
-  "sources": {
+  "status": "personally_reviewed_current_live_both_facings",
+  "failures": [],
+  "changed_atlas_pixels": 57,
+  "hashes": {
+    "art/animation/runtime/fluid/unit_blackbranch_cutthroat_veteran.png": "e21d061c3ce70250880eb30a56ce97cdff0d47f66077460189224ec574d60b17",
+    "art/overworld/runtime/creature_idle/unit_blackbranch_cutthroat_veteran.png": "e07ff64caefce0fe997b4718a5a9d48dd7ef7a07b3618ada1e887043da14c275"
+  },
+  "original_atlas_sha256": "12bb1c4e0e050b20eacafce6299c64b265ab87573faf2b89beb29cde9bcb3313",
+  "original_source_hashes_retained": {
     "res://art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/idle_v1.png": "1030bca552143cd9cee7d131a922a98fd4a2ca9da58bf9f374d87ed666e5bf43",
     "res://art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_contacts_v3.png": "6e1b15b36ecfec4b7d8534596a16d782c898198daa24c16a0d8473a5f5c632a4",
     "res://art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_inbetweens_v1.png": "44b0bb4c8c6cf35fbc029fcf7a9833817122405abbef5cc1ee19d51e7ecadc91",
@@ -12,21 +18,28 @@
     "res://art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/death_v1.png": "6a231ca2b33c073ccb795d23d2576b7168ff6f4e775dbb7446bd2357e89c90f4",
     "res://art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/support_v1.png": "5ca96727cc6e1a3d7953d9bd901dfebd74bf4ee1beb145fa4a19b9d4fcfc246c"
   },
-  "accepted_clips": [
-    "idle",
-    "move",
-    "attack",
-    "hit",
-    "defend",
-    "death",
-    "cast"
-  ],
-  "review": {
-    "status": "accepted_selected_clips",
-    "notes": "Current native both-facing review: exclude only proven adjacent-cell blade bleed in idle phases3/7; preserve all subject art, registration and other actions."
+  "candidate_checks": {
+    "normal": 114,
+    "reflected": 114
   },
-  "preserved_accepted_clips": [],
-  "baseline_atlas_sha256": "1c55d02b3ec7e4484e39ee0209d40df98bb7bbd696f4c40236d6b26fe1906765",
-  "atlas_sha256": "e21d061c3ce70250880eb30a56ce97cdff0d47f66077460189224ec574d60b17",
-  "texture_bytes_rgba": 18464768
+  "live_checks": {
+    "normal": 145,
+    "reflected": 145
+  },
+  "checks_total": 518,
+  "native_authored_poses_per_facing": 48,
+  "held_corpse_routes_per_facing": 1,
+  "actual_strike_poses_each_normal_fast_facing": 8,
+  "reduced_strike_held_pose": 0,
+  "actual_strike_captures_personally_reviewed": 34,
+  "map_shader_phases_personally_reviewed": 8,
+  "map_reduced_held_personally_reviewed": true,
+  "raw_saved_sessions_unchanged": true,
+  "loaded_import_alpha_and_visible_rgba_exact": true,
+  "geometry_timing_all_other_pixels_unchanged": true,
+  "cleanup": {
+    "removed_files": 187,
+    "recovered_bytes": 89236142,
+    "rebuildable": true
+  }
 }

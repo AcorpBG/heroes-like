@@ -73,18 +73,6 @@
               1152,
               0,
               1536,
-              251
-            ],
-            [
-              1159,
-              251,
-              1536,
-              281
-            ],
-            [
-              1152,
-              281,
-              1536,
               512
             ]
           ],
@@ -160,18 +148,6 @@
             [
               1152,
               512,
-              1536,
-              774
-            ],
-            [
-              1154,
-              774,
-              1536,
-              787
-            ],
-            [
-              1152,
-              787,
               1536,
               1024
             ]
@@ -1057,43 +1033,19 @@
       "preserve_clips": [],
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/idle_v1.png": 0.45,
-        "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_contacts_v3.png": 0.2825,
-        "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_inbetweens_v1.png": 0.445,
         "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/attack_v1.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/reactions_v1.png": 0.46,
         "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/death_v1.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/support_v1.png": 0.47
+        "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/support_v1.png": 0.47,
+        "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_contacts_v3.png": 0.2825,
+        "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_inbetweens_v1.png": 0.445
       },
-      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "source_scale_reason": "Each complete original sheet has a fixed sourcewide resolution scale to207px hood-to-sole body reference. No individual pose rescaling or invented motion.",
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Current native both-facing review: exclude only proven adjacent-cell blade bleed in idle phases3/7; preserve all subject art, registration and other actions."
+        "notes": "Reviewed original painted phases in native Godot overview at battle scale: articulated limbs and equipment, coherent action recovery and grounded corpse. Only listed clips accepted; remaining clips retain prior artwork."
       },
-      "preserved_accepted_clips": [],
-      "extraction_correction": {
-        "frames": [
-          "idle_03",
-          "idle_07"
-        ],
-        "excluded_source_rectangles": [
-          [
-            1152,
-            251,
-            1159,
-            281
-          ],
-          [
-            1152,
-            774,
-            1154,
-            787
-          ]
-        ],
-        "reason": "Third-cell blades crossed into fourth grid cells; excluded only proven foreign fragments.",
-        "original_handoff": "reviewed_handoff_before_idle_bleed_fix.json",
-        "original_provenance": "provenance_before_idle_bleed_fix.json",
-        "original_source_sha256": "1030bca552143cd9cee7d131a922a98fd4a2ca9da58bf9f374d87ed666e5bf43"
-      }
+      "preserved_accepted_clips": []
     }
   ]
 }
