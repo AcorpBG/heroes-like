@@ -7,7 +7,13 @@ from creature_animation_lock import exclusive
 UID='unit_neutral_saltwake_bellwhales'
 ATTR=f'art/units/source/generated/fluid_animation/batch_e/{UID}/** -text\nart/animation/source/fluid/{UID}/*.json -text\n'
 def git(*args,input=None):
- return subprocess.run(['git','-c','gc.auto=0','-c','maintenance.auto=false','-c','user.name=AcorpBG','-c','user.email=10956556+AcorpBG@users.noreply.github.com',*args],cwd=p.ROOT,input=input,stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True).stdout
+ for attempt in range(5):
+  result=subprocess.run(['git','-c','gc.auto=0','-c','maintenance.auto=false','-c','user.name=AcorpBG','-c','user.email=10956556+AcorpBG@users.noreply.github.com',*args],cwd=p.ROOT,input=input,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+  if result.returncode==0:return result.stdout
+  if result.returncode==128 and b'index.lock' in result.stderr and attempt<4:
+   from recover_empty_git_lock import recover_empty_lock
+   recover_empty_lock();continue
+  print(result.stderr.decode(errors='replace'),flush=True);result.check_returncode()
 
 def blob(path,raw):
  digest=git('hash-object','-w','--stdin',input=raw).decode().strip();git('update-index','--add','--cacheinfo',f'100644,{digest},{path}');assert git('show',':'+path)==raw
@@ -32,6 +38,7 @@ if __name__=='__main__':
     before={k:v for k,v in head[key].items() if k!=UID};head[key][UID]=live[key][UID];assert {k:v for k,v in head[key].items() if k!=UID}==before
    raw=(json.dumps(head,separators=(',',':'))+'\n').encode() if key=='items' else (json.dumps(head,indent=2)+'\n').encode();blob(path,raw)
   staged=git('diff','--cached','--name-only').decode().splitlines()
+  assert not any('__pycache__' in f or f.endswith('.pyc') for f in staged),'Generated caches must remain local'
   allowed=['.gitattributes','content/unit_animation_manifest.json','art/overworld/creature_idle.json',*selected]
   assert all(any(f==x or f.startswith(x+'/') for x in allowed) for f in staged),staged
   for f in staged:
