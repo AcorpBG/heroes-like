@@ -22302,6 +22302,14 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "tooling-audio-ci-disable-20261003",
+      "title": "Disable the retired audio workflow across historical GitHub refs",
+      "status": "completed",
+      "classification": "owner_requested_ci_cleanup",
+      "source": "PLAN.md",
+      "notes": "Verified Audio integration run 37141621884 came from temporary branch codex/source-history-migration-20261003 at historical commit 93b5dc4564abe4210897b5bdfbf8e021be6f9e4f. It failed source validation on archived art/audio/source/stable_audio_3_v1/raw/ambient_day_pulse_v01.flac. Main retains the September 18 workflow removal, and the temporary branch is absent. Disabled GitHub workflow 356845337 via API and read back disabled_manually; other three workflows stay active. No audio/runtime code or unrelated local changes modified."
+    },
+    {
       "id": "tooling-rmg-evidence-consolidation-20261003",
       "title": "Consolidate RMG evidence and remove disposable restore/export outputs",
       "status": "completed",

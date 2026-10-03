@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Keep the retired audio workflow disabled
+
+`tooling-audio-ci-disable-20261003` (completed, repository automation only): GitHub workflow 356845337 is `disabled_manually`; `main` still has no audio workflow file. Historical migration-branch push run 37141621884 hit the retired source-audio validator after source media had been archived. The temporary branch is gone. Release Candidate, Release Promotion and Source storage remain active; deliberate local audio validation is unchanged.
+
 ### Consolidate local RMG recovery material
 
 `tooling-rmg-evidence-consolidation-20261003` (completed, storage/tooling only): consolidated restored RMG evidence under `.artifacts/rmg_recovery`, including the Ghidra project and supporting traces; all 22,899 retained files pass SHA-256 and all 330 checked ledger references resolve. Updated recovery input paths while retaining temporary game-validation output defaults. Removed 42 reviewed disposable files (148.631 MiB) and 804 empty directories; protected evidence, maps, saves, caches, server originals and unrelated edits remain. Verifier integrity/containment tests and relocated binary/trace checks pass on Windows; Linux replay not run. No native behavior/parity change. See `docs/rmg-evidence-storage.md`.
