@@ -5425,29 +5425,29 @@
       "frame_msec": 260,
       "static_frame": 0,
       "ground_anchor": [
-        152.0,
+        152,
         232
       ],
       "painted_extent": 299,
-      "source_sheet": "res://art/animation/runtime/poses/unit_mireclaw_moonbite_mirehorn_breakers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_mireclaw_moonbite_mirehorn_breakers.png",
       "source_indices": [
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        104,
-        4,
-        419,
-        248
+        80,
+        0,
+        395,
+        244
       ],
-      "source_sha256": "b5855e857cf8279a950d603a178950ebd92e0f763f02f37c2cbea204558781bd",
-      "source_provenance": "res://art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/provenance.json",
+      "source_sha256": "a1a0868cbcda339fe170b47dba1e6feba43be3db2e85d96c34bd18ffb323bc7e",
+      "source_provenance": "res://art/animation/source/fluid/unit_mireclaw_moonbite_mirehorn_breakers/provenance.json",
       "sha256": "a2e6af06c7017c4606c3c2b73fcd97f08d412196cd183851a0935f35682dc1c0"
     },
     "unit_sunvault_splitprism_heliograph_ballistae": {

@@ -1,0 +1,116 @@
+{
+  "status": "complete_selected_unit",
+  "unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
+  "completed_at_utc": "2026-10-03T08:54:37.136838+00:00",
+  "clips": {
+    "move": {
+      "frames": 42,
+      "frame_msec": 50,
+      "static_frame": 0,
+      "loop": true
+    },
+    "attack": {
+      "frames": 38,
+      "frame_msec": 50,
+      "contact_frame": 23,
+      "static_frame": 0,
+      "loop": false
+    },
+    "hit": {
+      "frames": 28,
+      "frame_msec": 35,
+      "static_frame": 0,
+      "loop": false
+    },
+    "defend": {
+      "frames": 24,
+      "frame_msec": 50,
+      "static_frame": 23,
+      "loop": false
+    },
+    "cast": {
+      "frames": 30,
+      "frame_msec": 50,
+      "static_frame": 0,
+      "loop": false
+    },
+    "death": {
+      "frames": 33,
+      "frame_msec": 50,
+      "static_frame": 32,
+      "loop": false
+    }
+  },
+  "preserved_idle": {
+    "frames": 8,
+    "frame_msec": 260,
+    "battle_map_pixels_exact": true
+  },
+  "new_action_poses": 195,
+  "original_take_count": 10,
+  "original_rgb_frames_preserved": 1240,
+  "focused_results": {
+    "candidate/native": {
+      "checks": 675,
+      "failures": []
+    },
+    "candidate/mirror": {
+      "checks": 675,
+      "failures": []
+    },
+    "live/native": {
+      "checks": 689,
+      "failures": []
+    },
+    "live/mirror": {
+      "checks": 689,
+      "failures": []
+    }
+  },
+  "passed_focused_assertions": 2728,
+  "atlas": {
+    "path": "art/animation/runtime/fluid/unit_mireclaw_moonbite_mirehorn_breakers.png",
+    "sha256": "a1a0868cbcda339fe170b47dba1e6feba43be3db2e85d96c34bd18ffb323bc7e",
+    "width": 3764,
+    "height": 3616,
+    "rgba_bytes": 54442496
+  },
+  "verification": {
+    "original_rgb_sha256": true,
+    "source_packed_pixel_anchor_exact": true,
+    "source_distinct_poses": true,
+    "imported_rgba_exact_after_default_alpha_border_fix": true,
+    "other_rows_preserved_at_mutex_publication": true
+  },
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Six dedicated physical Mirehorn actions personally passed full original124 RGB/alpha per source, enlarged anatomy/grips, all195 selected actual128px poses both facings and native Godot candidate pages beside eight preserved idle260ms. Actual battle contact/recovery, normal/Fast/reduced/static/dead/interrupt/RNG/save fixtures passed. Authentic four-paw two-horn beast plus two-legged handler with left staff/right rein, original mantle/lamps and fixed original painting registration retained. Original eight battle/map idle poses remain byte-exact. Melee ranged-to-attack fallback retained; no authored ranged action. Imported RGBA and both published live action routes passed; actual normal/Fast/reduced/static/dead/contact/interrupt/RNG/save and animated/reduced map checks are recorded in completion.json."
+  },
+  "scope": {
+    "windows_godot": "4.6.2",
+    "linux_validation": false,
+    "fullsuite": false,
+    "manual_game_playtest": false,
+    "continuous_manual_clip_playback": false
+  },
+  "preserved": "All original RGB videos, failed takes, latents, workflows, prompts, guide art, original packed poses, model/NN/plate recipes, selected source mattes, caches, saves, backups and RMG material.",
+  "cleanup": {
+    "records": {
+      "cleanup_duplicates": {
+        "files": 1289,
+        "bytes": 935140615
+      },
+      "cleanup_reviews": {
+        "files": 301,
+        "bytes": 573681327
+      },
+      "cleanup_unselected": {
+        "files": 959,
+        "bytes": 367875181
+      }
+    },
+    "removed_files": 2549,
+    "recovered_bytes": 1876697123,
+    "rebuildable": true
+  }
+}

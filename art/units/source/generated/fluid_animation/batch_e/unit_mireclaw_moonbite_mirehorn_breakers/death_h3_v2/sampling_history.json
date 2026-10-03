@@ -1,0 +1,285 @@
+{
+  "prompt": [
+    756,
+    "12f4959c-27ea-4334-8f1a-e5d38f37b7ad",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Original MIREHORN BREAKER group from the supplied painting, facing SCREEN RIGHT. Exactly ONE massive four-legged gray olive swamp beast with exactly FOUR clawed paws, TWO forelegs and TWO hindlegs, not arms. Exactly TWO large black ivory crescent horns, one ivory bone faceplate, original amber eyes, closed mouth, gold nose ring, wicker limb cuffs, bronze reed harness, tall reed-and-leaf back mantle, attached original amber lanterns on their unchanged fine chains. Exactly ONE small leaf-clad humanoid handler behind-left with exactly TWO arms, TWO legs and two feet. His LEFT hand holds ONE rigid crooked wooden lantern staff. His RIGHT hand holds only the single thin dark flexible rein attached to the beast harness. The staff moves as one rigid piece with the left wrist throughout the descent and comes to rest horizontally on the ground beside the prone handler as shown in the supplied fallen painting. The right wrist retains the thin rein throughout. Preserve both hands and grips, original hooked staff length/top lantern, reed hood, cloth and pale hand/face markings. No extra horns, lanterns, hands, legs, characters or equipment. The handler stays beside the same beast. Same painted fantasy artwork, scale and locked camera. One slow connected lowering of both figures into the supplied original ground-lying posture. The beast bends all four paw joints, lowers its shoulders, then settles its shoulder and hip onto its near side with all four paws folded beside it. At the same time, the handler bends both knees and lowers his torso beside the beast. His left wrist carries the entire unchanged wooden staff smoothly downward in one piece. The staff turns gradually from upright to horizontal as the handler settles onto his near side; its original hooked top and small amber glass piece follow that same rigid shaft. His right hand follows the thin dark rein down toward the harness. Both figures reach the supplied original side-lying posture during the first three seconds, then settle quietly into the supplied corpse endpoint and remain fully grounded for the final second. The original two horns, reed mantle, four paws, two handler legs and hands, staff, rein and attached chain links retain their identity through all intermediate poses. Every small amber glass piece remains the same contained painted glass. A single plain flat magenta RGB255,0,255 background fills the entire frame throughout. Locked camera, original painting and scale, fixed ground reference y576. Whole horns, mantle, staff, paws, feet and chains remain inside generous canvas margins.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "33",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026110376
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "mirehorn_breaker_death_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "mirehorn_breaker_death_h3_v2_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "mirehorn_breaker_death_h3_v2_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "mirehorn_breaker_death_h3_v2_guide_3.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 28,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 58,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 94,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "42",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "mirehorn_breaker_h3/death_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "mirehorn_breaker_h3",
+      "create_time": 1791007542381
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "mirehorn_breaker_h3\\death_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "12f4959c-27ea-4334-8f1a-e5d38f37b7ad",
+          "timestamp": 1791007542382
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "12f4959c-27ea-4334-8f1a-e5d38f37b7ad",
+          "timestamp": 1791007542419
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "12f4959c-27ea-4334-8f1a-e5d38f37b7ad",
+          "timestamp": 1791007721791
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+"""Reviewed original bow and salute, chronological joint phases only."""
+import json
+import produce as p
+if __name__ == '__main__':
+ out=p.SOURCE_DIR/'cast_h3_v1'
+ s=dict(source_frames=[0,12,16,18,20,22,24,26,28,30,32,42,54,62,64,66,68,70,72,74,76,78,80,82,86,90,96,104,116,123],frame_msec=50,review_note='Full124 original RGB and alpha plus enlarged group/grip/anatomy landmarks inspected. Grounded bow, original staff raised with two handler grips retained, smooth rise and return. Thirty chronological source poses, shortened original holds, no synthesized frames or coordinate adjustments. Actual128 both facings and Godot acceptance pending.')
+ p.write(out/'selection.json',s);p.build(out,json.loads((out/'config.json').read_bytes()))
+ print('SELECTED_SUPPORT_ORIGINAL_POSES',len(s['source_frames']),flush=True)

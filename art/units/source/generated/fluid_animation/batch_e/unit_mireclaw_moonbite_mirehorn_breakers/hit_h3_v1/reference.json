@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          194,
+          410
+        ],
+        "scale": 1.60902,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "dd7c8fb6392419611d6aa0bbfd44cbfc37dcb58502666f53aad5768ba111d5a5",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7fe0bf364614f776bde5e2db6479e0ef1eea581c37d89c5bef522bfc1bb27345",
+      "runtime_source_scale": 0.80451
+    },
+    {
+      "source_frame": {
+        "name": "hit",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/original.png",
+        "rects": [
+          [
+            0,
+            732,
+            350,
+            843
+          ],
+          [
+            0,
+            843,
+            305,
+            880
+          ],
+          [
+            0,
+            880,
+            350,
+            1034
+          ]
+        ],
+        "anchor": [
+          224,
+          1012
+        ],
+        "scale": 1.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5eab6685c5a7f22caf3c594f6ab58b08320e8adf51122d20f21d0fb0340232b6",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0af1acbfa20f495785ad01587d521e3f3287296ec9f3e38e326ab0abe8798a23",
+      "runtime_source_scale": 0.8
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

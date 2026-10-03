@@ -1,0 +1,7 @@
+{
+  "error": "Nearest NNclear pixel was locally nonuniform on original frame0",
+  "status": "rejected_extraction_zero_png",
+  "tool_sha256": "bced3cb165171cbf9060f61a8334faaa1ad5e45b79e7282c0c023a79b5551294",
+  "correction": "Qualify clear background using both semantic3x3 and RGBuniform3x3 before choosing nearest; all thresholds unchanged",
+  "original_preserved": true
+}

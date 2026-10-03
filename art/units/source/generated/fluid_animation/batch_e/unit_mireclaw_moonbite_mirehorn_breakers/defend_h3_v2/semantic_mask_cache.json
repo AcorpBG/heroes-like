@@ -1,0 +1,665 @@
+{
+  "frames": 124,
+  "source_rgb_sha256": [
+    "f1f70928b686b070d8748588728229db2fb02e598132eed09558251bdafdec88",
+    "3afe55896b97930ca68a06b49d12d870973fad8d5d209fdad60ab7baa4b1a46f",
+    "6191c5f167d41a500446efa901f00093b85dc48e6a8ec8ca966551cc85e7ce8c",
+    "bbb57a70901f8b8a6a5576d49c16f71dcdfb4488f350bdef92f183bf2c3fe4d4",
+    "54ae922b48f228d11e2de7297d8d461170ab33a21bb9734a9327f77238e44774",
+    "a914f15f4cf3415d7f0f6e517596c240d978988f5c12823346525be1843795c8",
+    "d0854db8f146563c02efaf2ef59f4515581003539de739a974cf66107e8a09bf",
+    "3496b7cce01aa1617d08f88ef5ed2708c9ad22d2f895f95d8d17bc6daf5b9654",
+    "b0ad645f278870f69759bc59f3612eef9ffd2383e0b530d1f3e6b6f8f682c3b0",
+    "c173eb457d91487584e0991693a77ec5138b1afb822c19b2e2b9d22d6de2fa66",
+    "6b8479f441c34094c8fb24ecbead72d26711120d34bb574bd578ba5ae0c73409",
+    "921cb944f053e2a6eafac411c09434b7e7ba248bceba5bed38f85646cb00d7a5",
+    "dede0b51bb2ef1b0058b8911d5eb74583eed507b313ffda4d8abf665daec3d22",
+    "218f649fab5f67415da61220c0d3179c84c5c640b934ddc121e893eca72e95f6",
+    "0dba9739e5b2af0a53b04ce073c49cb237c0dc7c36f923dcd8e34f2a5f349024",
+    "8999b522f725eba2a05bf58faa9d2ba541534816f6a670f01cd3e97e05349c3e",
+    "60d0aa66ea1a9ec69ae6b906a41b8b5f2e4fb7e97b93e6f8ba2d1790caff2e60",
+    "5a899adb8d62756a067b7ff72ee246824ad5c8f70deaca99130b539d7aa3c0c7",
+    "ecc21a1666066f2943d892adb85b15d604319cc7a7175cb703c89817c5ab1a38",
+    "47c8cb64c02683ae4b6674b82c0c5566249908232820874d3713e3733915dfff",
+    "5b237d53834c0092564e3b2c7ab11fd945ff3b54efcfbe122fd5cd8ceaa14dd1",
+    "b1019f2cd804fc52268b365fc406ba8148a5b1e7b7bcc869a2bc49d8b44ed42f",
+    "8a5ccb897a2448da37c9e0881859eeebc23a11d30d4c03a022d542892ed588b3",
+    "e88f762a90c8242c09f048d53079c0b366c1ef05f78ee5873a7d6e985c6ad904",
+    "236092783360b71e316101f05fb95af094753ec39a8f88b3bb4741e6a585af51",
+    "071347e50315d392330787e7e3ba70435e5f46b02c6659c826b8ece518d9c8b1",
+    "6449bacc88c8d1126c4b5abb143eb623f4b72ea645649a6331f25c7e33097adb",
+    "915a42ace898022034353a3a29c37b46865b81351eea733df793589ff891be15",
+    "1b289dc984443d42cb7d67341318c358ed079f8492b575681e5528ec0bdc219a",
+    "bebf66dc9de65bd93d338efb6b38e8bb258ee0547c6d85987c073de389edc664",
+    "4e59cb9a49abc7376c22180dbe5f16088820b3fdf8a59cce6119be3af54a569e",
+    "8f3dc4d2fd7dc003bf252fdcbbcd35ffcd5eeae751e05c6ee215cf78684d5722",
+    "4363e01b53e320d96f7cc70652cab9f9141675564e2a414609079a7782323254",
+    "6f15703a622049ad42cd5e6e6cf970a982a6f0b344babc7fe8d10b2f3868880d",
+    "b89935ee1299563a3f85892e5e56660a21095778ba78354898a92cfb6aba12c7",
+    "f95a7d5f1b693d4ba280d312fb92b44ebcb7988085d6cf4578b1a29018401910",
+    "35a66355025ad15db134ca02b41ec8d9784b0355c912036c9791c8ca323709d2",
+    "3cd3104e1cc9dab8dd78c79b84da5327f15eb7743f0b85fd503ada4e248211f2",
+    "df7831ce473255762db823fff14a926b105c372efca6e5b09fa40705d095ce41",
+    "98a704a16f63466e7a0a60c88686d49565ee881eac585cb23d752f2e17d9eb05",
+    "093925ac62e9b1befc703e7a7fa65736490247489acd13336355bb91ec681efd",
+    "e09cb80bc8d8dfdabd3ab47be8298a645185f9629050f68322242e105f199c26",
+    "877a7f490acf269320921db532ba1db2487f1e399cf71d19b13dbb148c8c761b",
+    "4292881b8ec0987b23523bdcfa3cc762ab3f55ac1169bc817ef5ef4bd22943b9",
+    "959a96c46c0c6b82dfd91f298afce0943a835415735e83d99e327a74b20f210e",
+    "23cdf74327a556264ad9e954f3ef699ab4139a8d5a572edfc61badc3c8907819",
+    "9a6a1a5d0abdcb9d94fc7e36df59e1a871d769a4869c90e83df2fe439378fb8c",
+    "32b25cbb74fc3eebd1c7ffefedf01664e7ec9c80ee8f9ac95d57c1c447454af2",
+    "b15ebb4f4f34a17d1303349e4ea250880e803481ecb3ceb17d170c11247021b3",
+    "ca36909240df93c4130f00358f5fe24ddb1b8d04cc731e095f89709539bafefc",
+    "4abcdbbf88771b80282a36ee5f40e17b6e7495bc9669e1c0a1089911ee1b705b",
+    "f320dad6ac7ee316eaa8f0dca12af556684d39f5cb0f374988a7c9f3c43457c0",
+    "aa3d0878d1fe43423c080192ecb633dee49c1c63b82054b318cf9f93ed430c3a",
+    "13979d595488b176353c952e81a57ba318f24ca8360e3260e819ae5756742c25",
+    "ade5f546931ae4e655e5b1926e5fa9c45666d7c0a5f5e30de0d8d6bc10f86bcc",
+    "81685e104d1563da020af355f1d5ecee28660f84d750facd8dc87ce98bb469b5",
+    "3ed3e98a22bce0e332e437465d16dca58c6538de6038b8291fa8db2ead595812",
+    "a63ea6660fa1e0676739ec49fa22829ec8257039e02907de6b163ba0d7a7585c",
+    "21a861ab9cc858dd207663a5c2be9a53399964fd9e7f30c4996293064495294e",
+    "77543b1d9a6076edba7ddda5c13e9c536dbecb242bf261963c342d447a6fc805",
+    "378a410f9ccd72f563a834f33d47e39e9436455696f80de58f57421ff7fe8c1f",
+    "39cd140df60e927e3458a9d40ff89db5a2b71505501bc86e3c229558582c603a",
+    "e805f7dae853df11d8c4c47ac415d58083044206332a8e462535d79f86d04e5c",
+    "011614811ef32e6558101ddbb39ef0d9d09097b41b51dec2a048fdba2df73247",
+    "b1fc8a8530f5a051275a9e938b98e17d8560e963203e772efa2be139ca93f9d3",
+    "67ff384923a0fd2a13927424f18a1b0377703f55f00c257cdeb4fb0ff0f9fbe2",
+    "7f74bc2138bffabc9a5ae2ad3b6e483122f47b9f1d737842004466d965880d7f",
+    "670cc0fd20de4a999bdb54fc5c7d4af2633ca067f21851af967ece39424d7787",
+    "bfa69e35ca3476117d3aebcad165e57db527d9f30f7ac26b5a0ebf4ee878d4d8",
+    "a14b9658e74b3d6eabeee7d9cb15598feb57c66730821ae1fbba8b177e37ad4b",
+    "96fd0e116bcb1aa6efef52524637eac2de64a363a55e1ab9ae87f3b0081aac3f",
+    "ff98579e5d0f8ccd3543f48a60d16ecb4022ff3bf3933b5245f208f8a33c74a3",
+    "945b654bcc420b8f760d45efbf99a1ba449b64687b317c2bedc7ff7738949cda",
+    "21411af04ad8ef5fe6e14175ec02223357d2bf282c48bbcd2b7476e90d138733",
+    "2a7fafa5b06d3e70bf9993601222aa01932ccc7666fcf7f848ee37622bd3fb46",
+    "643e9bd39d9bc3c807693558a2313fa004b91c5e1a83217f5f92d72bccd0f254",
+    "b285f7955f20512731205b214dab947a3c6fc4077c70d091d8c6d70b4a3c9a33",
+    "bdd01400c631a2ce4d980d96d60419bf4e46fcf00602305650229ff5c78785bd",
+    "e3b47287e7c19d5e29e11424db7a6bb77f00732036c6d64474702abd1ab5efe9",
+    "c4acddf10a1dd51f7a660196a5798084bfb65a10ac8cf060d689b6732bae2f32",
+    "df8c024d2a4a973356212728a2991d8bca0d95ac60b74eb450429dfc753cbe1c",
+    "59a551e1e30fe0fc6096fd6e557cb7e77da4e127fbc72eea71a34e40615737c3",
+    "b22e8419c332fa49755824edd4820c9ee90792162099d8019762a31988ce9a57",
+    "f45ad9370b4f9e59df76587dccbee827a134a5f805c96d60bd478163b2baaa4f",
+    "f31066954c60edf360c06b9656d90e67a664694d6f432dd59e5cebc709649007",
+    "1b0ab07e17d32555e5e7f05ebdd5d205eeaa8e144c358a08d48b85c1c362a082",
+    "eb84133921d7a220f7001cb9ceec93e7a15f56fa743a4182c9fb9e486be7fabd",
+    "709e928f3c6126de352bc45fcb190aa6e1d59a5784411e3cb2483a039e80d446",
+    "14edd350cc5a844bfcddacb3f6b0e3f1263d57c6a94c4f452898e795694f0791",
+    "016c71fb381b72d7f4181190cca62647476a20a39196152206d704767c4fb45e",
+    "970b99920a34ab9b1b18df500ff787d999028d377cb5dc941e07d8e996a547d2",
+    "8120030ed84568db598d858ea1952a490c45f4dc9ec2e9cffa89c7dc24f0e8d0",
+    "259cd6d20f26dcad5c415eabdbc466d08d6a96a10eb8e0640f985af9f8b8598d",
+    "2a7292265f0532d5d9d0d10be83eeff3ed4d0fafce25d05ff43bbb460dd149ae",
+    "d9632e48d4a7ee68aa324b13c756f6e3ef215792d04908494612faaeda6509cd",
+    "639a463955de1874e1146cdc7b2ee4e5268e214b606e6071b672dc5bd1e12500",
+    "b8855465db86bcc654f06f80edc1d7b9ddcdff33ea02b8c2b20bc99768313a8f",
+    "c8e8e5deb9b72d04bfeb214eeb63d7b78f88ddfcc50fb727bc0fc41890ca8072",
+    "43e58cd872ff74d73372f0c7240b175aca8ab33212dee757b19ea27452d3694f",
+    "56191805d3dcfe82f1fc220a4012a64607e5759f5e79c3ec478fa9ab91edbe9d",
+    "72e88a83f1942f0a0e16c09ce483a4fbc678f925f655ca1b3f2646cafa5c712f",
+    "dc09d9346a4b53db73b276cecadd2532822ec970edbf585f1b64b738b571ffac",
+    "b523e4d6e5f03c5357e54a6174dcdf3db8ff88515d7993b410956c1599860e8d",
+    "a1a825a75985d7e200fbe279384073913a39866440b95b3c395efb99742265f2",
+    "ed1e6dd0e09e612f124927329cd4a561a9bf9bd517c981292ec4f743efb7575a",
+    "151de0d68bb28617277584fc7b157fc336e5d6929c9184c74fb343930d84c8b5",
+    "ba39d6e75c9686a181b565b9cf1ff8d886162db9c94355c4ac4d7a73fedc29d8",
+    "de10f44342a8f0ccaefb4d5b003de424702b87d8293a94a62cf02a4bc9c075cb",
+    "9f231a140c30bac1cccabe20014c8c1b5a4f1088444f3e6f0fb50ebdcc1568e7",
+    "463aa22c45079247ea90e0debed2cf54af20e9a73a01eaf1bab5067c06f1dbe1",
+    "b0059f4d7104f56cf07b57d031205c6fe2772d737226cbd4160d26fc64772e01",
+    "44feca9fced2c302f8b62bb8e726370b125bac5398a6918a0f51c13f714afc9e",
+    "8a08030d60307dddb56464572d92ac6431f57960d90aa7bd6eb9487d8a54f274",
+    "db2eb251efad979fcce294658b39d240a0e7efddb432c669f7a9c7db8e734dda",
+    "c70496fdaddf3cc6b007f2cf4673483df01b7a289478bcaa149039eb3d5d3456",
+    "655ef06d4fb5a440997384b771073962355b8bfa42f3a688b0946c723b2fcbda",
+    "e27d2e822c0a3678a4b5f67ac2c6d13e1ef7645624c2a53f2d02dc5decd5c9de",
+    "8eea3550de2f00dd7343e80c7e805260fc9682bab899aeb015f11d6ee7d03b8b",
+    "040fe6bd4a3bb799145c02fe2fd47d804fab5c886d21c565af8c4388b0fe82fe",
+    "b12dc3209a9c59e5b9ef444272dd641f381b7b9d533e5963011e1bed3e81c725",
+    "91f455c48c6fdd85ac6dcbffd84da1781cdaeebf6d9e26442f1264c0b3d06c8f",
+    "8e23cb665287e251dd285bf05b62bcf3f3d87c415bc3c577ef3dd44be3f31770",
+    "fc8b1f4619fb75322f7a2b916ed33060cf225cefb04a6ecc8b477816c330c953",
+    "202aa0653a7ae73c6e7327ca21aebad71083b659b83cce5858451b5a99877c90"
+  ],
+  "masks": [
+    {
+      "file": "alpha_000.npy",
+      "sha256": "9a8cd6437c788f9bb87bbf8f079a22efd33dc4ce818c4ed32c29a7afe2278cef"
+    },
+    {
+      "file": "alpha_001.npy",
+      "sha256": "bc08ec37516ee72479d64a7cbe7c260981e3d3f7d1d49f530da54910455d8d32"
+    },
+    {
+      "file": "alpha_002.npy",
+      "sha256": "3bef4039ffd7baaa7737b42c6eca5645d3f6e1739e17abfa7068e9416125495e"
+    },
+    {
+      "file": "alpha_003.npy",
+      "sha256": "dcff7efb626168865f4f68270fc9af25c865add34974e55e0efa00ee8ce88352"
+    },
+    {
+      "file": "alpha_004.npy",
+      "sha256": "1dd98e3717b1f2284f191db5f4523174ceadc376001e6dc61d89d98659f15baa"
+    },
+    {
+      "file": "alpha_005.npy",
+      "sha256": "893e5a3dfd41efe48f0fce94b5259e4557e14308717414ef34cf9edd893c49e2"
+    },
+    {
+      "file": "alpha_006.npy",
+      "sha256": "8be306b143f291e4f0d0cae35ff331ac446e020866f4704a6e2ccf848d5e789c"
+    },
+    {
+      "file": "alpha_007.npy",
+      "sha256": "f2f1b3f3012da11963ea000bc409f0184710b9e613353fca46157e6fc2fb2067"
+    },
+    {
+      "file": "alpha_008.npy",
+      "sha256": "e0991f4c5ea8555eb4288e5b58850fb19437962acca7549ba7a7ce3705a42470"
+    },
+    {
+      "file": "alpha_009.npy",
+      "sha256": "c06d1c9300b1ba6708a85bc04532045f619dc6368eb8344aa122091a94b31e6f"
+    },
+    {
+      "file": "alpha_010.npy",
+      "sha256": "3573795e4e0e25b66147e9306aa88c5668f0e30e229594d3678492a47acd1470"
+    },
+    {
+      "file": "alpha_011.npy",
+      "sha256": "b0c0d889651b83f1f003187f42f2ba7f8dbccbef79a247413fb148831d29b342"
+    },
+    {
+      "file": "alpha_012.npy",
+      "sha256": "a1406b3041fdbaaa8062f0fd77610921bab80db1ac86035bba4f8b6688f2d75f"
+    },
+    {
+      "file": "alpha_013.npy",
+      "sha256": "574ae23be32dd40d3891e42882a4bcad795e31222a919cdcf7b0e929d5e45007"
+    },
+    {
+      "file": "alpha_014.npy",
+      "sha256": "a7ae737f391963f02652f2360ee4931170c5cf7b374ded94205a20db0697066d"
+    },
+    {
+      "file": "alpha_015.npy",
+      "sha256": "8d91bb60a53f26dc98fec322d118b32340842a453e1f03cad41d6395a90807ba"
+    },
+    {
+      "file": "alpha_016.npy",
+      "sha256": "2eafc00a364b8fdcd868deb601712ce1d587da789cde2d3dbed9e98b593df3cf"
+    },
+    {
+      "file": "alpha_017.npy",
+      "sha256": "f222035c740770b79a84a4d2257d181c2ddbd5687beb60af656ee09219d7d4a7"
+    },
+    {
+      "file": "alpha_018.npy",
+      "sha256": "6d91694953972d98a61173efa41f92457bfaa8d9279e83e8e203d02930ea9fa8"
+    },
+    {
+      "file": "alpha_019.npy",
+      "sha256": "ee03bf3579320a0b9093aac3b9b7f6b440cd871284dcccbe63a52a38a4c82796"
+    },
+    {
+      "file": "alpha_020.npy",
+      "sha256": "bab4cdff9d9aa7de3126638516fb6e5b754cb28e7a9899d2c716a373fec804e3"
+    },
+    {
+      "file": "alpha_021.npy",
+      "sha256": "1fbe6c0cc1b6bdeaa5168e8197e47e3a9c4795c6b9639957973bf01d0be85b81"
+    },
+    {
+      "file": "alpha_022.npy",
+      "sha256": "ec1ed8343ae50adfa36976ae8968ab2421bdbd0c39d1a209d4399453e0389d40"
+    },
+    {
+      "file": "alpha_023.npy",
+      "sha256": "fb82d0789c786a062ff626d73c6ea8d788e2dbb24f1fedac734ecf31df299081"
+    },
+    {
+      "file": "alpha_024.npy",
+      "sha256": "331429d310d30e592884c0fe154fd7d17dbfcad6cf17818121ae2c30fbd0c99c"
+    },
+    {
+      "file": "alpha_025.npy",
+      "sha256": "0304404d321be68bad93faa736a401d0413491e7039a4452cf902f7914c5552c"
+    },
+    {
+      "file": "alpha_026.npy",
+      "sha256": "0184ee93b2844d7e1dd970cca5847ec6f6c4bb4c8f902af4cc1f5012d1b34974"
+    },
+    {
+      "file": "alpha_027.npy",
+      "sha256": "4a0ebdb001b3b12c8bdce45dbc50f8843bdc249053ed6158d011b4f2a8544728"
+    },
+    {
+      "file": "alpha_028.npy",
+      "sha256": "322a8e44489d49a0a325df232a8c663ce203d3a987b6ac5319623688699e9049"
+    },
+    {
+      "file": "alpha_029.npy",
+      "sha256": "636ec089813c68aeb8f615e2cf60139d9f4bc7aca11622a15c59a00d3cbf648a"
+    },
+    {
+      "file": "alpha_030.npy",
+      "sha256": "7933bc21060a329146e241e4cb9d4e0b031a8240a13e249d63d06b77e55ffea7"
+    },
+    {
+      "file": "alpha_031.npy",
+      "sha256": "b572da8ee6fc5daf2ee7a4942f96773342846735bef73b3f2412f4e6f31f68d0"
+    },
+    {
+      "file": "alpha_032.npy",
+      "sha256": "8f7cfcc460f858759d5e9d0238917f83a44e90d7b62db768795e43bb221e220e"
+    },
+    {
+      "file": "alpha_033.npy",
+      "sha256": "0751e982108fd2119613060b64bd38cd207f8378edf45e6ea1e4ea79037a5318"
+    },
+    {
+      "file": "alpha_034.npy",
+      "sha256": "6ffed8caab1bacbd43ad9705c387383b724a4c4360aec8799d8163d86e1f011f"
+    },
+    {
+      "file": "alpha_035.npy",
+      "sha256": "25eb5e35c992d299d2579c5480110838034db12fa589f051c2b66b27c0239afe"
+    },
+    {
+      "file": "alpha_036.npy",
+      "sha256": "f6b7d803a3a828147db4126cb9d0c6b0e7d7e5e23dc9332f9962f3dd646dec15"
+    },
+    {
+      "file": "alpha_037.npy",
+      "sha256": "edc84fb9e6fa9051fd1ffefd2df0fb60e5ec9a15090513a2ae1029e8c76e6347"
+    },
+    {
+      "file": "alpha_038.npy",
+      "sha256": "7bef921a718a3ea5c3cc9a649de5c5cf7860b09219e3cb9a82a6fbb211d0b626"
+    },
+    {
+      "file": "alpha_039.npy",
+      "sha256": "cddb48abd1d3fedbc73b6a60a3dff9e7c49d89dcbf6082b822ce6f7cafda80aa"
+    },
+    {
+      "file": "alpha_040.npy",
+      "sha256": "78ccca7a7c2cc6aa1d573300ce8c522a5bf100fe1f939a025b154822403b5998"
+    },
+    {
+      "file": "alpha_041.npy",
+      "sha256": "97b3058c872a0cc2d83c417fe73521bc90875e742af6b25290d0a2de56168c0b"
+    },
+    {
+      "file": "alpha_042.npy",
+      "sha256": "b09121b11766ae61c319a20add660daa2d7650c7a31514dfd1c2762a693a1a4a"
+    },
+    {
+      "file": "alpha_043.npy",
+      "sha256": "059717de7e632de0c810ffae5f77717c91dd29c9f3776707e6f7f58904a87f63"
+    },
+    {
+      "file": "alpha_044.npy",
+      "sha256": "9f8126b3c1cd50889409136514989fa2f2ad80b9e8ccc6a8d0c9a1838ca8269b"
+    },
+    {
+      "file": "alpha_045.npy",
+      "sha256": "a5d22002747bc686c5b839956e477092024324a4d98b0472bb9189f35168ea7a"
+    },
+    {
+      "file": "alpha_046.npy",
+      "sha256": "bbd7c0e49b67c34b88a82d87044181be4272be910fd8b67853b00ff9c408f8a8"
+    },
+    {
+      "file": "alpha_047.npy",
+      "sha256": "7f2e675e34ddf652abc695adf3170c77f9757109142553725d4f66ab798d1f9c"
+    },
+    {
+      "file": "alpha_048.npy",
+      "sha256": "69978afe50c6873c9e3f36cb14d26463e6688f597671143f4e030ff66dafa44f"
+    },
+    {
+      "file": "alpha_049.npy",
+      "sha256": "6b202249f83a61eb0767fea67e1f9d66f41b5bbad3345ceb6334d0c7985655e6"
+    },
+    {
+      "file": "alpha_050.npy",
+      "sha256": "f5468654dcf195d06c00b490283d3bf849b4e98a8ca323e14fb323e0bc368ba6"
+    },
+    {
+      "file": "alpha_051.npy",
+      "sha256": "ed1b524fcf3cc9d48c97de7c09b34000a7acb3ece50ea81d31b529488a93cde3"
+    },
+    {
+      "file": "alpha_052.npy",
+      "sha256": "b7b38d1cf33479b9fd297c756bba88b2ef3a94f1b2cbf81d73d2cc94e605ce11"
+    },
+    {
+      "file": "alpha_053.npy",
+      "sha256": "ba96aa7b8ec985a1ca165d49eb4af910232c28f0dc80ee8b5ef89d13247d66af"
+    },
+    {
+      "file": "alpha_054.npy",
+      "sha256": "dfe212420e5a5fa93e29d5160a4a98efa4f551fd53d643d2c2e332bb8acc069a"
+    },
+    {
+      "file": "alpha_055.npy",
+      "sha256": "5cf7f9474af53927c780326dc0555b968c441573de7681eee2795d74e8374015"
+    },
+    {
+      "file": "alpha_056.npy",
+      "sha256": "83d1395ce107d8db655a6c5e7033d75086a5b8a43e94a2c80e3227b70c7f8331"
+    },
+    {
+      "file": "alpha_057.npy",
+      "sha256": "576ddf07acf45789062ce4547a41715daf34ae330fb5d857efa2527e64d20058"
+    },
+    {
+      "file": "alpha_058.npy",
+      "sha256": "00b7699e106fdde4540a803d4dcbad6bfc5268c6bc862a1bd128a7ea87797de4"
+    },
+    {
+      "file": "alpha_059.npy",
+      "sha256": "57fe05f7d50bfab25b06e5c3c6fecf40884e2947f99933bdad3ad41ddf201975"
+    },
+    {
+      "file": "alpha_060.npy",
+      "sha256": "98b02353d935d60e8f93aedb6532cc8196e8a086f5a59a62c7b0921044282aea"
+    },
+    {
+      "file": "alpha_061.npy",
+      "sha256": "4f2e9fae775b7b9988015151afeffc7b77da78ca57e9239ee08e2a57c8056b84"
+    },
+    {
+      "file": "alpha_062.npy",
+      "sha256": "80cd53e063e00e63b4e0cefbea21f67d708c845972c9bddb2b0ac93c366e9ad5"
+    },
+    {
+      "file": "alpha_063.npy",
+      "sha256": "416e4c5ef5986e9d22f4cb48060e29e663b0cf05b666d10ada90b12f5181e0b6"
+    },
+    {
+      "file": "alpha_064.npy",
+      "sha256": "361e54b37b25f086d022a771d27a659f09a03597d4fcba587bb33017c524dc02"
+    },
+    {
+      "file": "alpha_065.npy",
+      "sha256": "f373ea511f9f9795b3bb22b4d6fa8df0300e3110e2fa6e56570172e37773fa3e"
+    },
+    {
+      "file": "alpha_066.npy",
+      "sha256": "d26277167e6954839bbd16fc6712d3fd5789fccf2e2ab2076053676d62b8a055"
+    },
+    {
+      "file": "alpha_067.npy",
+      "sha256": "6a647b1d522e15bdb1477d470c4822729ac597ceb7493cb6bd705e4e9cd6ae16"
+    },
+    {
+      "file": "alpha_068.npy",
+      "sha256": "68ee157edd3fb6cc1e018ed6e188349c445ae7db922bd2fd389fa0f69cd26be6"
+    },
+    {
+      "file": "alpha_069.npy",
+      "sha256": "416f6c9287b497bb32b3556213d4cc5f40d2976130e2640812e33398f1b1e930"
+    },
+    {
+      "file": "alpha_070.npy",
+      "sha256": "0effdd3b4df838490e43055d78bdbdc96e53c03cf2154fa6f2b06755a1938574"
+    },
+    {
+      "file": "alpha_071.npy",
+      "sha256": "65ef86448aa27ea7ebd8e85be82056e029397bb61e27f58ca5f592facbf31630"
+    },
+    {
+      "file": "alpha_072.npy",
+      "sha256": "bf14ca41a45f84e6a6108bf6b7836779db657db259efa843dce488a32dac0c71"
+    },
+    {
+      "file": "alpha_073.npy",
+      "sha256": "6f33ad538ee2a57d0c43240b060098537dd5421313463558bf44db8e3f1f8e27"
+    },
+    {
+      "file": "alpha_074.npy",
+      "sha256": "60270b68d9837cc6154cc7a5941f4d2ebf66a1a22e03edacb4ca34b8e18c627a"
+    },
+    {
+      "file": "alpha_075.npy",
+      "sha256": "23236fc247175a64ef35dc108c11b16d0f879217cbbf34f83d130c338e581920"
+    },
+    {
+      "file": "alpha_076.npy",
+      "sha256": "bb95ee5dc330da408b547f3395f88f2c60429a82be3a8c95e1d163f7083ba1af"
+    },
+    {
+      "file": "alpha_077.npy",
+      "sha256": "f63c89bb8c3c777e1ef4211351bad24e56e1c0287c23d2826d66f7f3601419c4"
+    },
+    {
+      "file": "alpha_078.npy",
+      "sha256": "ac6346b5200ef6889d5e81bea0779eb70f5045dbb7c1dab3483583815b0148d3"
+    },
+    {
+      "file": "alpha_079.npy",
+      "sha256": "37c505d2c57baaabba10b683413a550393e3ae92ad191b37c9f1d876d72f8ee0"
+    },
+    {
+      "file": "alpha_080.npy",
+      "sha256": "c87731760c03f7aa7f533130c8a57aead5dbff68ae68565f919ecde51a138096"
+    },
+    {
+      "file": "alpha_081.npy",
+      "sha256": "40dd34c1c50656b99eacb74b27c03f387e29e5bee5a462687f6fa533543833f4"
+    },
+    {
+      "file": "alpha_082.npy",
+      "sha256": "94cc8f907fdca63582e07b85d98661c4284a78bf2c7ce12fbe7cf7fcb4d5606c"
+    },
+    {
+      "file": "alpha_083.npy",
+      "sha256": "af0a91dced4d9dea7547ea330ae265715840a6357fc22496ed3948dc2e91752e"
+    },
+    {
+      "file": "alpha_084.npy",
+      "sha256": "898f0986a66b76ae0a4e1243a524815761d41e658b0cda1eda311bb4041aee0c"
+    },
+    {
+      "file": "alpha_085.npy",
+      "sha256": "22f23d02c9e0e577ff9647edb627077c83e3d8c78dab78a2033af42892e1aab2"
+    },
+    {
+      "file": "alpha_086.npy",
+      "sha256": "082e680a8eb778d504fdf2af2d80007ea8582d3a6c2f8b440ad56bd952f76aca"
+    },
+    {
+      "file": "alpha_087.npy",
+      "sha256": "c17e147a292b8bea8489d028048919f65d8e435ab405192aa68f95bc1a3d64bb"
+    },
+    {
+      "file": "alpha_088.npy",
+      "sha256": "a188ee2a8cccacc6949f481b912da0612448c302fc5cb25043d95110a695379c"
+    },
+    {
+      "file": "alpha_089.npy",
+      "sha256": "836bd7339effc3c6b8e84c6dbb0f67d7307fe418e16da24ff2b42b7031a897bb"
+    },
+    {
+      "file": "alpha_090.npy",
+      "sha256": "7720841eff05f0712d5ebb3857955a8140abcd9aaa8c57e5c5b1575438c1dacb"
+    },
+    {
+      "file": "alpha_091.npy",
+      "sha256": "a290f94cd16a0ae456c9bbf201b5f5a6e349182e293f8ae314159c1bc394f20e"
+    },
+    {
+      "file": "alpha_092.npy",
+      "sha256": "bffdf9f9235cfe06607abccc81f9fe9623583bec65194328f7c7707af6784bab"
+    },
+    {
+      "file": "alpha_093.npy",
+      "sha256": "867163047f9efa565fedcc5593dc8c219a5112ecbd6437d7e3dabf461dae5c4a"
+    },
+    {
+      "file": "alpha_094.npy",
+      "sha256": "3bbb0b76cd0de4678c1c14f66bff5e0eda3bcf3c550fe1e131028a39539841ed"
+    },
+    {
+      "file": "alpha_095.npy",
+      "sha256": "32cbe10e47d88f2d5aa0e080c16d2efe05ed7b79ec5a888356c02a5c283e8b26"
+    },
+    {
+      "file": "alpha_096.npy",
+      "sha256": "4d52efc20e5ede2cf300e2a904c90cdd25fe7f9ce32ba7518e09ac76602d43e1"
+    },
+    {
+      "file": "alpha_097.npy",
+      "sha256": "5912cfb1260022ace5421d65fd7f7c1f466b3b79fdca271f3efd5b775e8b4796"
+    },
+    {
+      "file": "alpha_098.npy",
+      "sha256": "1546833b2331118ba202711f6a2c8b1cde8ddf4526975413f675aa4437fc9665"
+    },
+    {
+      "file": "alpha_099.npy",
+      "sha256": "a56a6b80c5003eb3303708116dc2045f9d980253183a13ba2a3c63dd80544040"
+    },
+    {
+      "file": "alpha_100.npy",
+      "sha256": "ce2f149114471c6ba72df94501e60d3e5d1941abc257562495b56e39493237ac"
+    },
+    {
+      "file": "alpha_101.npy",
+      "sha256": "05797a7eefef6a8c401dc0a604a6be1ddf083fda73173a159640443c470c79ea"
+    },
+    {
+      "file": "alpha_102.npy",
+      "sha256": "46a0f6ab731ece3cf0571ae7cc11df5968bac767016279ce7e455c8c27f3018d"
+    },
+    {
+      "file": "alpha_103.npy",
+      "sha256": "944224f7c645b768adc84d16b2be0ac69b7a9fd8431a798f923fde6c66b4c0b2"
+    },
+    {
+      "file": "alpha_104.npy",
+      "sha256": "55e91926cc2a189e514525fc162c550fe0311b4e8010e1dd22e5cc81ced124aa"
+    },
+    {
+      "file": "alpha_105.npy",
+      "sha256": "8df42deadd90ad46cd6154697c544e6a9ec3d266fb3df9ba96cd49293e0045ed"
+    },
+    {
+      "file": "alpha_106.npy",
+      "sha256": "cb129c05606e6c15ee94e25f4bf6e4af28847d1efe0b742d0f26eb29dbba4569"
+    },
+    {
+      "file": "alpha_107.npy",
+      "sha256": "7014ae52ee36a984ab3c1430072a9e40cfb3b31c799f457989c250b4c9e5ff09"
+    },
+    {
+      "file": "alpha_108.npy",
+      "sha256": "7995159ea6e3881608f9a2dbee0ed5d3cb5a11570e86c675434ac926e6c6f2a5"
+    },
+    {
+      "file": "alpha_109.npy",
+      "sha256": "b0833c1ff914bc79b0861675b22142150b43fae502687e5027bfbaf129a692af"
+    },
+    {
+      "file": "alpha_110.npy",
+      "sha256": "709d526298ab2c293a76f679427acb004cc2aad317aff41981ca3efe286ecac3"
+    },
+    {
+      "file": "alpha_111.npy",
+      "sha256": "98e27b7a4a0966a6353cb13da27a15e2925d7c6e28c2f13a2842bfd72e3154fd"
+    },
+    {
+      "file": "alpha_112.npy",
+      "sha256": "dde310b8a90059f1c6a4636ccbe2001674359fd645e7130472cebbf908d9442a"
+    },
+    {
+      "file": "alpha_113.npy",
+      "sha256": "40b2277891afee25116e4dba7c4d7c29f4990f33d8b0f1d0d53e63ffe515c71a"
+    },
+    {
+      "file": "alpha_114.npy",
+      "sha256": "02d9e9ceb4ce2221b3132ff9542565ee2e1c3a119a86b63f281715384d8f07f3"
+    },
+    {
+      "file": "alpha_115.npy",
+      "sha256": "500f3f2320a14bea6551eb46fe6586a7fcd647ad91fc1efb037a8c5eca4ffb01"
+    },
+    {
+      "file": "alpha_116.npy",
+      "sha256": "c9f6f6f7099a69e3f4b9f24590b64fd18f3ba8152c3796499eda0e3149086561"
+    },
+    {
+      "file": "alpha_117.npy",
+      "sha256": "740d4307c25a1f40a781249943dd5f324ec33420930dded8474c49945a96b5f1"
+    },
+    {
+      "file": "alpha_118.npy",
+      "sha256": "08870d14e142d4daf77f4ac2674e1df9be70d4464f80a382aede7dd1c886721e"
+    },
+    {
+      "file": "alpha_119.npy",
+      "sha256": "f5e09c7fe5207187a7bdb98c98ea6149ee0badca2e7dcd54e1b941f0e5e29d22"
+    },
+    {
+      "file": "alpha_120.npy",
+      "sha256": "a0a4199b7ef20a8f7e0e5f3a71bf275bebde4f36f66f483f87d3e6a1f01e381c"
+    },
+    {
+      "file": "alpha_121.npy",
+      "sha256": "c65c084887e62472b4d484098ea1f9e672f69c2fe1c6c2c548714771cd9bad9f"
+    },
+    {
+      "file": "alpha_122.npy",
+      "sha256": "e35953de49822a720a9d95301025572a79f7a59426a6f5b6d35e40aebf66c7c2"
+    },
+    {
+      "file": "alpha_123.npy",
+      "sha256": "3ec29f2a533dd1b0186eedf650023a81b68f0c4b7c36ba12e91e9328f26fca67"
+    }
+  ],
+  "model_manifest": {
+    "repository": "ZhengPeng7/BiRefNet-matting",
+    "revision": "eccde0a8cbdce7ac5fecfeb06340fe7b949e85d9",
+    "model_directory": "H:\\ai\\minimax-h3\\matting\\BiRefNet-matting",
+    "dependency_directory": "H:\\ai\\minimax-h3\\matting\\dependencies",
+    "files": {
+      "config.json": {
+        "bytes": 413,
+        "sha256": "b2b235983b80fbff325976ca517bb7eda25e915b84a97b150eca41266cf8a13b"
+      },
+      "BiRefNet_config.py": {
+        "bytes": 298,
+        "sha256": "e7b8c2a74f6cea6a59553d517f71d47f2c1d90e670a13416af17c25fe2f3dc52"
+      },
+      "birefnet.py": {
+        "bytes": 92134,
+        "sha256": "2a45b4e0ece72d7c4212bca1a988e7d7e52bfe9f98ec59c58b8809c8a8b7a831"
+      },
+      "model.safetensors": {
+        "bytes": 884878856,
+        "sha256": "a9875de5b1e6c8eb5fdaa8c727a82927ce442cdc87ba3abee6a77e6fa46c25bb"
+      },
+      "README.md": {
+        "bytes": 4724,
+        "sha256": "e43576e298fcfd143239f7c1dc080e1d03f4eef5e78156da4f0466d93f2c45a1"
+      },
+      "timm-1.0.30-py3-none-any.whl": {
+        "bytes": 2668917,
+        "sha256": "c8e27adf6801a2fdfb570dbbdd171f2f084756eefc673df8cfaab06bd14864f3"
+      }
+    }
+  },
+  "inference_precision": "float16",
+  "torch_version": "2.14.0+cu130",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "tool_sha256": "04e2e1750c407042139a63af952cc3af9c78028f2eb29986f97fe51bae79dfee",
+  "elapsed_seconds": 13.581,
+  "rule": "Lossless float32 original-size NN output from unchanged pinned1024/FP16 inference. Preserve for CPU-only matting analysis; no mask refinement, source geometry, poses or RGB changed."
+}

@@ -1,0 +1,123 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          194,
+          410
+        ],
+        "scale": 1.60902,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "dd7c8fb6392419611d6aa0bbfd44cbfc37dcb58502666f53aad5768ba111d5a5",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7fe0bf364614f776bde5e2db6479e0ef1eea581c37d89c5bef522bfc1bb27345",
+      "runtime_source_scale": 0.80451
+    },
+    {
+      "source_frame": {
+        "name": "kneel",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/original.png",
+        "rects": [
+          [
+            356,
+            781,
+            725,
+            951
+          ],
+          [
+            356,
+            951,
+            714,
+            1027
+          ]
+        ],
+        "anchor": [
+          587,
+          1011
+        ],
+        "scale": 1.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5eab6685c5a7f22caf3c594f6ab58b08320e8adf51122d20f21d0fb0340232b6",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f74ce5bd816e3d9cc6137ba81e2aef5e8f7df9643b85dc900422b9885638a8b6",
+      "runtime_source_scale": 0.8
+    },
+    {
+      "source_frame": {
+        "name": "side_fall",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/original.png",
+        "rects": [
+          [
+            728,
+            842,
+            1094,
+            955
+          ],
+          [
+            718,
+            955,
+            1094,
+            1035
+          ]
+        ],
+        "anchor": [
+          949,
+          1005
+        ],
+        "scale": 1.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5eab6685c5a7f22caf3c594f6ab58b08320e8adf51122d20f21d0fb0340232b6",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "49417e16d59dc738f020123423355a16a77aeb76ecda012f5e2b30b7a076e264",
+      "runtime_source_scale": 0.8
+    },
+    {
+      "source_frame": {
+        "name": "dead",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/original.png",
+        "rects": [
+          [
+            1094,
+            842,
+            1448,
+            1040
+          ]
+        ],
+        "anchor": [
+          1303,
+          1002
+        ],
+        "scale": 1.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5eab6685c5a7f22caf3c594f6ab58b08320e8adf51122d20f21d0fb0340232b6",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "16609d734c1c3e828fe502f1c744fd00ca5348a45e9083873e850689b7d45f88",
+      "runtime_source_scale": 0.8
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

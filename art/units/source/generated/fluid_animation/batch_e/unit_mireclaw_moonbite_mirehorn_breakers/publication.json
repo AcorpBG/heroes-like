@@ -1,0 +1,24 @@
+{
+  "result": [
+    {
+      "unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
+      "clips": [
+        "move",
+        "attack",
+        "hit",
+        "defend",
+        "cast",
+        "death"
+      ],
+      "texture_bytes_rgba": 54442496
+    }
+  ],
+  "other_rows_preserved": true,
+  "other_row_count": 231,
+  "before_other_battle_sha256": "6cdeae2713ab1ae626ebabb7bd2d41417a9aee7dbdfb0769aad3695cda216425",
+  "after_other_battle_sha256": "6cdeae2713ab1ae626ebabb7bd2d41417a9aee7dbdfb0769aad3695cda216425",
+  "before_other_map_sha256": "d801dbafeac8123d3005bbbf142ac34c8b4333068bdfddf19ba737fed9233311",
+  "after_other_map_sha256": "d801dbafeac8123d3005bbbf142ac34c8b4333068bdfddf19ba737fed9233311",
+  "published_own_battle_sha256": "3817f65c92556c1d2d702a326955eccf1ac69e9511a1332f6d3d349f4ed295ea",
+  "published_own_map_sha256": "dace43b3d8c066a8288e3bf32e14516eceef04fd64bff1b2fd5f6457bd21a501"
+}

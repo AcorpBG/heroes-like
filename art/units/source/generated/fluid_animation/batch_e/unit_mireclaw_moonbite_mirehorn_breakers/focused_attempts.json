@@ -1,0 +1,29 @@
+{
+  "candidate_initial": {
+    "report": {
+      "checks": 675,
+      "failures": [
+        "shell did not show every authored attack pose including recovery; observed=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37]"
+      ]
+    },
+    "terminal_exit": 1,
+    "gpu_released": true,
+    "notes": "Native first run skipped contact23 during readback; all other37 attack poses observed. All203 native overview poses personally inspected and passed. Mirror unsubmitted. Original source pixels/timing/assertions unchanged; warm identical pair retry pending."
+  },
+  "candidate_warm": {
+    "reports": {
+      "native": {
+        "checks": 675,
+        "failures": []
+      },
+      "mirror": {
+        "checks": 675,
+        "failures": []
+      }
+    },
+    "terminal_exit": 0,
+    "gpu_released": true,
+    "source_pixels_timing_assertions_unchanged": true,
+    "all38_strike_poses_observed": true
+  }
+}

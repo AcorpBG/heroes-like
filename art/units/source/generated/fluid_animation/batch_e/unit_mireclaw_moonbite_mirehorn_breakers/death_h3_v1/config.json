@@ -1,0 +1,123 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110306,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        194,
+        410
+      ],
+      "scale": 0.80451,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "kneel",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/original.png",
+      "rects": [
+        [
+          356,
+          781,
+          725,
+          951
+        ],
+        [
+          356,
+          951,
+          714,
+          1027
+        ]
+      ],
+      "anchor": [
+        587,
+        1011
+      ],
+      "scale": 0.8,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "side_fall",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/original.png",
+      "rects": [
+        [
+          728,
+          842,
+          1094,
+          955
+        ],
+        [
+          718,
+          955,
+          1094,
+          1035
+        ]
+      ],
+      "anchor": [
+        949,
+        1005
+      ],
+      "scale": 0.8,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/original.png",
+      "rects": [
+        [
+          1094,
+          842,
+          1448,
+          1040
+        ]
+      ],
+      "anchor": [
+        1303,
+        1002
+      ],
+      "scale": 0.8,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      38,
+      1
+    ],
+    [
+      77,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "Original MIREHORN BREAKER group from the supplied painting, facing SCREEN RIGHT. Exactly ONE massive four-legged gray olive swamp beast with exactly FOUR clawed paws, TWO forelegs and TWO hindlegs, not arms. Exactly TWO large black ivory crescent horns, one ivory bone faceplate, original amber eyes, closed mouth, gold nose ring, wicker limb cuffs, bronze reed harness, tall reed-and-leaf back mantle, attached original amber lanterns on their unchanged fine chains. Exactly ONE small leaf-clad humanoid handler behind-left with exactly TWO arms, TWO legs and two feet. His left hand holds the ONE crooked wooden lantern staff planted beside him; his right hand grips the ONE dark rein attached to the beast harness. Preserve both hands and grips, original hooked staff length/top lantern, reed hood, cloth and pale hand/face markings. No extra horns, lanterns, hands, legs, characters or equipment. The handler stays beside the same beast. Same painted fantasy artwork, scale and locked camera. One continuous slow settling movement of both figures, connected by ordinary joint bending and gravity. The beast bends its front paw joints and lowers its shoulders into the supplied kneeling posture. Its near shoulder and hip progressively settle sideways onto the ground, with all four paws folding alongside the body into the supplied original side-lying endpoint. The handler bends both knees beside it, lowers his torso, then settles onto his near side beside the beast with the original staff and rein retained in the supplied endpoint. Each body part moves through smooth intermediate joint positions. Both figures end fully grounded in the supplied original side-lying endpoint and remain still for the final second. The hooked staff, rein, two horns, four paws, handler two legs, reeds, chains and small amber glass pieces remain original and attached throughout. Every amber glass piece retains its small painted appearance. A single plain flat magenta RGB255,0,255 background fills the entire frame throughout. Locked camera and original painting scale, fixed ground reference y576. Whole horns, mantle, staff, paws, feet and chains stay inside generous canvas margins.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

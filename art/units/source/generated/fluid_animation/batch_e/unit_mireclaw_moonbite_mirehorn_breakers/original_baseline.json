@@ -1,0 +1,175 @@
+{
+  "row": {
+    "id": "unit_mireclaw_moonbite_mirehorn_breakers",
+    "unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
+    "name": "Mirehorn Breakers",
+    "faction_id": "faction_mireclaw",
+    "tier": 6,
+    "role": "melee",
+    "motif": "melee",
+    "sprite_sheet": "res://art/animation/runtime/units/unit_mireclaw_moonbite_mirehorn_breakers.png",
+    "states": [
+      "idle_hold",
+      "ready_active",
+      "move_path_step",
+      "melee_windup_release",
+      "ranged_aim_release",
+      "hit_stagger",
+      "death_rout_remove",
+      "cast_support_anchor",
+      "status_applied",
+      "status_expired",
+      "defend_brace",
+      "retaliation_release",
+      "retreat_withdraw_column",
+      "surrender_stand_down"
+    ],
+    "art_source_kind": "curated_original_character_v1",
+    "curated_source": "res://art/units/source/curated/unit_mireclaw_moonbite_mirehorn_breakers.png",
+    "curated_source_sha256": "59e6cec5cf412fa72a39e05f50c315d44b512ef222414ddd08af1e901f70a646",
+    "pose_sheet": "res://art/animation/runtime/poses/unit_mireclaw_moonbite_mirehorn_breakers.png",
+    "pose_frame_size": {
+      "width": 512,
+      "height": 256
+    },
+    "pose_columns": 4,
+    "pose_clips": {
+      "idle": {
+        "frames": 8,
+        "indices": [
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "loop": true,
+        "frame_msec": 260,
+        "static_frame": 0
+      },
+      "move": {
+        "frames": 4,
+        "indices": [
+          0,
+          2,
+          0,
+          3
+        ],
+        "loop": true,
+        "frame_msec": 180,
+        "static_frame": 0
+      },
+      "attack": {
+        "frames": 4,
+        "indices": [
+          4,
+          5,
+          4,
+          0
+        ],
+        "loop": false,
+        "frame_msec": 200,
+        "static_frame": 0
+      },
+      "defend": {
+        "frames": 2,
+        "indices": [
+          0,
+          6
+        ],
+        "loop": false,
+        "frame_msec": 350,
+        "static_frame": 1
+      },
+      "hit": {
+        "frames": 2,
+        "indices": [
+          7,
+          6
+        ],
+        "loop": false,
+        "frame_msec": 160,
+        "static_frame": 0
+      },
+      "death": {
+        "frames": 3,
+        "indices": [
+          8,
+          9,
+          10
+        ],
+        "loop": false,
+        "frame_msec": 200,
+        "static_frame": 0
+      },
+      "dead": {
+        "frames": 1,
+        "indices": [
+          10
+        ],
+        "loop": false,
+        "frame_msec": 150,
+        "static_frame": 0
+      }
+    },
+    "pose_aliases": {
+      "ranged": "attack",
+      "cast": "idle"
+    },
+    "pose_provenance": "res://art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/provenance.json",
+    "pose_review_status": "accepted_idle_articulation_20260919",
+    "pose_ground_margin": 20,
+    "pose_review_evidence": "docs/battle-unit-animation-acceptance.json"
+  },
+  "map_row": {
+    "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_moonbite_mirehorn_breakers.png",
+    "frame_size": [
+      315,
+      244
+    ],
+    "frames": 8,
+    "frame_msec": 260,
+    "static_frame": 0,
+    "ground_anchor": [
+      152.0,
+      232
+    ],
+    "painted_extent": 299,
+    "source_sheet": "res://art/animation/runtime/poses/unit_mireclaw_moonbite_mirehorn_breakers.png",
+    "source_indices": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "source_crop": [
+      104,
+      4,
+      419,
+      248
+    ],
+    "source_sha256": "b5855e857cf8279a950d603a178950ebd92e0f763f02f37c2cbea204558781bd",
+    "source_provenance": "res://art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/provenance.json",
+    "sha256": "a2e6af06c7017c4606c3c2b73fcd97f08d412196cd183851a0935f35682dc1c0"
+  },
+  "curated_sha256": "59e6cec5cf412fa72a39e05f50c315d44b512ef222414ddd08af1e901f70a646",
+  "original_pose_atlas_sha256": "b5855e857cf8279a950d603a178950ebd92e0f763f02f37c2cbea204558781bd",
+  "map_png_sha256": "a2e6af06c7017c4606c3c2b73fcd97f08d412196cd183851a0935f35682dc1c0",
+  "idle_rgba_sha256": [
+    "3d36b2fd2eb2ab9d226ad3cab8495acbf25766142af524c2d4542513a6a78a9b",
+    "5af48ab1fad3dff0e252ac10c670851d1a5cacc432a99b100af0e55b760a5822",
+    "95e1ffd108b0d21975f8d99da2f4f1c638bc64f8c3bae26f2cbec5e588b50d03",
+    "f467cf8675b3dfbcd943bb91243ed58488503574afeb12105f69994f89db7193",
+    "fb9bf12bb7685cc4f6920d1a4c4b603112a8b5dd48362c2ab8b9e6da4474b5b2",
+    "a9a8c8424abaf1f49c2668ee6c72a889626eb710dd23154dc83400f8585aed2f",
+    "5669ed89723483d80be497affded9d4d35f12ce19fe1326365f88c34f8510949",
+    "7ef961a93e67e1d7ddbcaf8e079c0cf54df4035303cf91e207fad9939e2e648f"
+  ]
+}

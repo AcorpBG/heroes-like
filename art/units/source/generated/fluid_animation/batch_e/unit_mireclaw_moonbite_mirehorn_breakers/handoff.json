@@ -1,0 +1,5023 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_000",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "move_h3_003",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "move_h3_006",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "move_h3_009",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_015",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_021",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_027",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_033",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_039",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_045",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_051",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_057",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_063",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "move_h3_066",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "move_h3_069",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_075",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "move_h3_078",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "move_h3_081",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "move_h3_084",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "move_h3_087",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "move_h3_090",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "move_h3_093",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_093.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 93,
+          "video_time_seconds": 3.875
+        },
+        {
+          "name": "move_h3_096",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "move_h3_099",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "move_h3_102",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "move_h3_105",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_105.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 105,
+          "video_time_seconds": 4.375
+        },
+        {
+          "name": "move_h3_108",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "move_h3_111",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_111.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 111,
+          "video_time_seconds": 4.625
+        },
+        {
+          "name": "move_h3_114",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_114.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 114,
+          "video_time_seconds": 4.75
+        },
+        {
+          "name": "move_h3_117",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_117.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 117,
+          "video_time_seconds": 4.875
+        },
+        {
+          "name": "move_h3_120",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "move_h3_123",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "attack_h3_000",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_022",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_h3_044",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "attack_h3_048",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "attack_h3_050",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "attack_h3_052",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "attack_h3_054",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "attack_h3_056",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "attack_h3_058",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "attack_h3_060",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "attack_h3_062",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "attack_h3_064",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "attack_h3_066",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "attack_h3_068",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "attack_h3_070",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_074",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "attack_h3_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "attack_h3_078",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "attack_h3_080",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "attack_h3_082",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "attack_h3_086",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "attack_h3_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_h3_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "attack_h3_098",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "attack_h3_102",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "attack_h3_108",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "attack_h3_116",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.833333333333333
+        },
+        {
+          "name": "attack_h3_123",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "hit_h3_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_042",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_h3_046",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "hit_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "hit_h3_050",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "hit_h3_054",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "hit_h3_058",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "hit_h3_062",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "hit_h3_066",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "hit_h3_070",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "hit_h3_074",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "hit_h3_078",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "hit_h3_082",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "hit_h3_086",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "hit_h3_090",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "hit_h3_094",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "hit_h3_100",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "hit_h3_108",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "hit_h3_116",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.833333333333333
+        },
+        {
+          "name": "hit_h3_123",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_008",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_042",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "defend_h3_044",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "defend_h3_046",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "defend_h3_048",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "defend_h3_050",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "defend_h3_052",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "defend_h3_054",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "defend_h3_056",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "defend_h3_058",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "defend_h3_060",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "defend_h3_062",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "defend_h3_070",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "defend_h3_086",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "defend_h3_108",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "defend_h3_123",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "cast_h3_000",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "cast_h3_012",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "cast_h3_016",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "cast_h3_018",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "cast_h3_020",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "cast_h3_022",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "cast_h3_024",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "cast_h3_026",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_030",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_042",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "cast_h3_054",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "cast_h3_062",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "cast_h3_064",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "cast_h3_066",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "cast_h3_068",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "cast_h3_070",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "cast_h3_072",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "cast_h3_074",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "cast_h3_076",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "cast_h3_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "cast_h3_082",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "cast_h3_086",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "cast_h3_090",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "cast_h3_096",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "cast_h3_104",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "cast_h3_116",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.833333333333333
+        },
+        {
+          "name": "cast_h3_123",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "death_h3_000",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "death_h3_012",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "death_h3_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_042",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_078",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "death_h3_086",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "death_h3_094",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "death_h3_108",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "death_h3_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41
+          ],
+          "frame_msec": 50,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 23
+        },
+        "hit": {
+          "indices": [
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 23
+        },
+        "cast": {
+          "indices": [
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 0
+        },
+        "death": {
+          "indices": [
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193,
+            194
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 32
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/config.json",
+          "sha256": "d1408d349ba3490425cbf7dc7dcd2ec54965292f1fa75a02f296c193a8f27304"
+        },
+        "move_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/selection.json",
+          "sha256": "7d48bb5d4727e1850976a1123f27442ca05e211ae4d48687b43d3fc845428189"
+        },
+        "move_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/original_lossless.mkv",
+          "sha256": "58b2bb6c37fa6369135ad55494e1902cf79263313f367fc87b0b970a48d3ec3c"
+        },
+        "move_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/original.json",
+          "sha256": "3752df23c17b1f693dde89bb2e9eff73b709bea74d5f64dbae615331fc327d76"
+        },
+        "move_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/workflow_api.json",
+          "sha256": "2f790c420877ec07e7931237c21ef9aaa4f4c0827d10ec9105558b852d01892c"
+        },
+        "move_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/prompt.txt",
+          "sha256": "f11dc81334f2d4a34661bc0c039174a7e097d3388a2e74f7de0a0c682747836c"
+        },
+        "move_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/reference.json",
+          "sha256": "be8c171bed28ec62ff5d9bb3737161561980cd26d68b725c1d64afaf02e121ee"
+        },
+        "move_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte.json",
+          "sha256": "bff7d8e29115bdcdd50771055c3ee74681c9f1631601974acf5a8fac8d45b7a6"
+        },
+        "move_h3_v1_edge_despill.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/edge_despill.json",
+          "sha256": "2eb798a6590afab478a1780f30c32a3e3d9df9226ba4ebfe38814177758c5446"
+        },
+        "move_h3_v1_matte_initial.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte_initial.json",
+          "sha256": "79e69cce3c36ab650cbf7508708fb3502eba00b118b2ec4226ae6cc494e743a2"
+        },
+        "move_h3_v1_bounded_session.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/bounded_session.json",
+          "sha256": "6e7101fd937ebc50a5302fcdf4700b1b9d72f8cf8b7abb1d107906a45ba4fd8e"
+        },
+        "move_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/segmentation_recipe.json",
+          "sha256": "d9732e5ff7120003ebba355420e82429c0c1ca192422c6d447ea84c95ff904c8"
+        },
+        "move_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/staged_generation.json",
+          "sha256": "06fdaa1bf0c64bc4da5dbbfb5e77bf6f31bb6a593f30d5bc8e8af51292798589"
+        },
+        "move_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/sampling_workflow_api.json",
+          "sha256": "938fed382e3914bde2199e23bccc3926dff25aa77a9b3a354d0b2099add6a298"
+        },
+        "move_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/sampling_submission.json",
+          "sha256": "490d0a7091755314d23814cc6e6611a5f0a026e9ab9d7c62686dc8d598c58257"
+        },
+        "move_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/sampling_history.json",
+          "sha256": "b6cc62529137ca00bbb08fb5133a1568487a8ccdebc4ad1d9a1a6728fde02043"
+        },
+        "move_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/original.latent",
+          "sha256": "40621f8e31ed4316a4d58e7478cb3740557d10433e401d908238e67e3bd54e07"
+        },
+        "attack_h3_v3_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/config.json",
+          "sha256": "a758d3420d5183779f8b842625e8d492c11fc5add2bef1d948164f72d44dba18"
+        },
+        "attack_h3_v3_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/selection.json",
+          "sha256": "42f3a0441fa2da815450d68a4e979c8399c870c606b327464db023bbd936d467"
+        },
+        "attack_h3_v3_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/original_lossless.mkv",
+          "sha256": "883a6cb7f8e76b7eec4e1903f37fb53836ae2a12c09bf72055de5c9931b016ea"
+        },
+        "attack_h3_v3_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/original.json",
+          "sha256": "f4c2da55648adb601a57fea782c98907478a6f12f5dbde9d07744336d9df54d0"
+        },
+        "attack_h3_v3_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/workflow_api.json",
+          "sha256": "eedad8645300b1a54a3a8abf9cafe3ae20fdb27a6fb9787fea9747e25c95012e"
+        },
+        "attack_h3_v3_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/prompt.txt",
+          "sha256": "d2e67351466880c146dc70e23bf82574ab607e0a3516e1dc7813559cb9c136e9"
+        },
+        "attack_h3_v3_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/reference.json",
+          "sha256": "994a2e86cceb7f57f26828735292d9bd28a33a49834c19ed4f04162816ecedb9"
+        },
+        "attack_h3_v3_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte.json",
+          "sha256": "4515800f884217b681241dc5865c2509d0dd079a45d9e825a3602ed8998d7ca4"
+        },
+        "attack_h3_v3_edge_despill.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/edge_despill.json",
+          "sha256": "5c0e0b41f2eb348204aab17618fa5db76f07d58c66e692c90c2086b8dce40457"
+        },
+        "attack_h3_v3_matte_initial.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte_initial.json",
+          "sha256": "76e7af183fcc098591f0933997f5942451b8c58c4588c6d0c8a2f6ae7a13ac4c"
+        },
+        "attack_h3_v3_bounded_session.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/bounded_session.json",
+          "sha256": "c72ebb996554113de943ed3313e087da2812046d7aea837c76f1ea67c62f0070"
+        },
+        "attack_h3_v3_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/segmentation_recipe.json",
+          "sha256": "d9732e5ff7120003ebba355420e82429c0c1ca192422c6d447ea84c95ff904c8"
+        },
+        "attack_h3_v3_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/staged_generation.json",
+          "sha256": "bdab24abc4b60730fb02d852f77c92a0eb4778c4fe2742791efd6a1f0c4249ed"
+        },
+        "attack_h3_v3_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/sampling_workflow_api.json",
+          "sha256": "bb25c7c335a9e4e387f9ccc8dfa5e9d6a883fe718ecfcaf0c829544b3947dd2f"
+        },
+        "attack_h3_v3_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/sampling_submission.json",
+          "sha256": "2dcd31576142423b6a654b94d73050e279153ff67248fb52ea2f4138403626e9"
+        },
+        "attack_h3_v3_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/sampling_history.json",
+          "sha256": "cc84431433cd7947f07b691b2b5a2555d9f45d0755454e58cf46085f8919fc92"
+        },
+        "attack_h3_v3_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/original.latent",
+          "sha256": "d56cd19c50f80daadc97de43d35c999b98a6ad76c2db8acaae78e1b6075276f7"
+        },
+        "hit_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/config.json",
+          "sha256": "20d611f569e08e9e28b0a8740f753698ea25f04874f516db368c139b62a2199a"
+        },
+        "hit_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/selection.json",
+          "sha256": "3e4e7ddcefd11f9b25ec7b72cdd8db38bc9f10de444eaa269709c3cc8ea60003"
+        },
+        "hit_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/original_lossless.mkv",
+          "sha256": "af190e8020bd94742f2e2ff52a80777d4eac5e95b4af599f7b03987b7a935f9f"
+        },
+        "hit_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/original.json",
+          "sha256": "5c1b8cf72539bd8e8f9376d3acd68e203811ac7368ce936205c3cfbfd4facd42"
+        },
+        "hit_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/workflow_api.json",
+          "sha256": "acc69d312ba94f93ae1b35ed4e6e3bb89518d490704e09be201771262c26790e"
+        },
+        "hit_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/prompt.txt",
+          "sha256": "08daf8f1520dbe529d52450f255d6ca8e6ef1f6ed2154687bc15a7f22dff230a"
+        },
+        "hit_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/reference.json",
+          "sha256": "d7f4d114d1169e14371613630008d23a320b8d9647bb4e9fdbf0ab57a644451b"
+        },
+        "hit_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte.json",
+          "sha256": "a6e2acd2914e75b8a5d2b68736d052de60461f3722d2a7a540fa722cf7153762"
+        },
+        "hit_h3_v1_edge_despill.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/edge_despill.json",
+          "sha256": "67e2123cf24262ef40004cd38f720de23a46e47f493f9622fb54caab8d48eaff"
+        },
+        "hit_h3_v1_matte_initial.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte_initial.json",
+          "sha256": "80adcb5bacae37f55447cd5d3a4ee368554b6529acd1c1fe90a2e89e2528bdc2"
+        },
+        "hit_h3_v1_bounded_session.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/bounded_session.json",
+          "sha256": "bf2963c27cb1648a2c4b964732b37bb7142757c1d5412fc9f2ee2649cdc89192"
+        },
+        "hit_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/segmentation_recipe.json",
+          "sha256": "d9732e5ff7120003ebba355420e82429c0c1ca192422c6d447ea84c95ff904c8"
+        },
+        "hit_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/staged_generation.json",
+          "sha256": "8d89b8b3bcdc81b0ecdd5cacc5879b7fc77b9827a90872549d2344422b5e7aea"
+        },
+        "hit_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/sampling_workflow_api.json",
+          "sha256": "b060c86b88c0dc4880c9f22e08b3c77e8b024641f42743f2ef00564d4e987539"
+        },
+        "hit_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/sampling_submission.json",
+          "sha256": "1062519178219719108edb8d44301fe1ce190f6d3abd5d4d33e3e690f761c7ac"
+        },
+        "hit_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/sampling_history.json",
+          "sha256": "e19107783e47d24f5f5c8038d773203729ab7a00ea236efad091fbbf84d5c284"
+        },
+        "hit_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/original.latent",
+          "sha256": "84ade4654166df3bd08993a036fa172b7c541556c5695f0f63ed2b1edb70de0e"
+        },
+        "defend_h3_v2_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/config.json",
+          "sha256": "84e3d2b5d4a86343c47e48f374745328d3af6fd19c1292a43935abc70eefee42"
+        },
+        "defend_h3_v2_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/selection.json",
+          "sha256": "a2e4467ee12a734a5b0447ccfd9ad3dd2b31c7022140ace4b6c63f73c5b52bc2"
+        },
+        "defend_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/original_lossless.mkv",
+          "sha256": "872760baddc61968ba76dccc2824e07cbc17ddfa781e194e46021aa10fee4a46"
+        },
+        "defend_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/original.json",
+          "sha256": "8ad5df5fec64b5269ffa9ffc7567adf3b31b9793bf679a348cdb87c3938496e8"
+        },
+        "defend_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/workflow_api.json",
+          "sha256": "ad9f0fa586c6c38828bdcbaf55fb33a5139d980ba295f90a9ca421454e38f306"
+        },
+        "defend_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/prompt.txt",
+          "sha256": "93a9b3e34af46cda273a78d54f1db4c895270a3880a3d4f8b33e0fcadaa760ae"
+        },
+        "defend_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/reference.json",
+          "sha256": "ea17edb6660a81a065c8527d6326f96fe2b209977b9ddfcacf9331352fb3ced4"
+        },
+        "defend_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte.json",
+          "sha256": "649e96561f525e6142b43ac92c5b7ed9b23a7149216928e942dfb6a8b8606f09"
+        },
+        "defend_h3_v2_semantic_mask_cache.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/semantic_mask_cache.json",
+          "sha256": "cb028d58875d0cc67af62980739d39a13241fc1955f47f145c552b6206a81b9b"
+        },
+        "defend_h3_v2_matte_local_plate_cpu.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte_local_plate_cpu.json",
+          "sha256": "ad62f5afb36d7548f270c5fb882d42c3411d351e3d943016557482d0c9ca0d4e"
+        },
+        "defend_h3_v2_strict_partial_preservation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/strict_partial_preservation.json",
+          "sha256": "1bce4d56452b0745176b9e239f34fe606804eab244b3d3c4e68e4a4f637a6e27"
+        },
+        "defend_h3_v2_edge_despill.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/edge_despill.json",
+          "sha256": "fa3116656b6d35483deca94c75c1615af4e6cc98a1ee3296b878c28831f227bf"
+        },
+        "defend_h3_v2_matte_initial.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte_initial.json",
+          "sha256": "ad62f5afb36d7548f270c5fb882d42c3411d351e3d943016557482d0c9ca0d4e"
+        },
+        "defend_h3_v2_bounded_session.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/bounded_session.json",
+          "sha256": "888e27f0f599a23147a43b8e4b8f5c6058f9198c02e3697ba2b1f75a824e62da"
+        },
+        "defend_h3_v2_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/segmentation_recipe.json",
+          "sha256": "7e7e569e8d9289a87c65d1e99dd71f2f02b9e821423c2b3f0861892acb7cc067"
+        },
+        "defend_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/staged_generation.json",
+          "sha256": "1cfe4e6fc7a52809dc779203d5ea7c9795c7d3e82125503efc3116a6085c00ea"
+        },
+        "defend_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/sampling_workflow_api.json",
+          "sha256": "ee9b96dd70c4e115746d511fad948e5984f772370d3e7473f6f0b3a3bac66d03"
+        },
+        "defend_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/sampling_submission.json",
+          "sha256": "b105e6dda4d3e8b581596290e99f16db17126a40b13fba3baa7e96fb6c7fe8be"
+        },
+        "defend_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/sampling_history.json",
+          "sha256": "ec0eafbb120dcf22b6deebcac14abbda6252053e8a4335f678ac6acc23b52fa2"
+        },
+        "defend_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/original.latent",
+          "sha256": "c5308254b0c06122f759f856a0a05864f3e2f0cd4fd510512408e8e47700fa25"
+        },
+        "cast_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/config.json",
+          "sha256": "81f178082663636c9bdeadd9f3de7ce734d02b2ef339a30addfd9e7d7cb50591"
+        },
+        "cast_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/selection.json",
+          "sha256": "ebaaacb9087e247778b56805c5cb6774879b28f788f00be19ae15101ae4d890c"
+        },
+        "cast_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/original_lossless.mkv",
+          "sha256": "6c3c959c8a801b05390733b5622c55eb52fe7febcb9fe21a8f288fdb9758d6ea"
+        },
+        "cast_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/original.json",
+          "sha256": "ae20adfd0214e7d392c84aca5dd382574af80ca60bde8d34e7996ca19fd1dbc0"
+        },
+        "cast_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/workflow_api.json",
+          "sha256": "d3fd78cf4818634140ee0cd41067a6832681c3404d7e1492b9cc9eac6a338e14"
+        },
+        "cast_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/prompt.txt",
+          "sha256": "7f41c441876ec9c8a7b350f2babe3650692e593b79a1f573cc825ec3a3d4f3af"
+        },
+        "cast_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/reference.json",
+          "sha256": "aea5a8bfd7221c9a81323c65f4728ec03682dd8544cfd38a8f706a323400561c"
+        },
+        "cast_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte.json",
+          "sha256": "972c8aa778b35fdd6ced467c834249884185a0953bcfd195496014750077c012"
+        },
+        "cast_h3_v1_edge_despill.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/edge_despill.json",
+          "sha256": "8f96042ddcbc38eb5556e6c19bce92fb6f949770c5eeccfb5be843bc425ddd24"
+        },
+        "cast_h3_v1_matte_initial.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte_initial.json",
+          "sha256": "06112ce975b1df917d13e70e562ac64abda3ba632c5751d23ec94d6f7d559452"
+        },
+        "cast_h3_v1_bounded_matte_session.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/bounded_matte_session.json",
+          "sha256": "4589f370a099f943d7f699b11f80140f6b13dbc757daa1286b308894a1bed4fc"
+        },
+        "cast_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/segmentation_recipe.json",
+          "sha256": "d9732e5ff7120003ebba355420e82429c0c1ca192422c6d447ea84c95ff904c8"
+        },
+        "cast_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/staged_generation.json",
+          "sha256": "dd8424d620ccc179d892bbf3c427b492643b25312a2356e813e0d0d169861be9"
+        },
+        "cast_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/sampling_workflow_api.json",
+          "sha256": "622892db03af69af0a57683ff9b157e4bf27d0f04a34b25f15532b8a07846e90"
+        },
+        "cast_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/sampling_submission.json",
+          "sha256": "3c3dec35b70a6885e8ba8f1bb2fefd5aa9178dd6c0ba4a134ff5d6787c7e57d5"
+        },
+        "cast_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/sampling_history.json",
+          "sha256": "fb4761af67c1727e82596d02a1dd6ebd2234c6843099444a5cb408ff40487bb5"
+        },
+        "cast_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/original.latent",
+          "sha256": "eceb486e319b4e063a36af250e31cfc1e5a1cd4d79caa66eb297151b40ecb613"
+        },
+        "death_h3_v2_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/config.json",
+          "sha256": "4b9e483a759c597b3d2ee23580f25014b55e3adeae0ac72c5ccacd9503133cc9"
+        },
+        "death_h3_v2_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/selection.json",
+          "sha256": "00ea3bb10a975025304dc9c808c925df8a05024fedf62fc3379af620124cb5df"
+        },
+        "death_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/original_lossless.mkv",
+          "sha256": "6b208c201cbf0fc7308bfa658ef0104d3fac51b3250c290d68928c464fdf9dd3"
+        },
+        "death_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/original.json",
+          "sha256": "a5a3d407266d2aa6ee2001d8a8fb453a6749bd493a4835d759f2e96b0eee6e0d"
+        },
+        "death_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/workflow_api.json",
+          "sha256": "88a260833d33e7486d0743269a23f97351e32f61bc1651dad1c055fdd0f3465d"
+        },
+        "death_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/prompt.txt",
+          "sha256": "58f7c5eda3ba78af75e4540205d379c3c6cf812c0a5cc0ab44deb933a077bb74"
+        },
+        "death_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/reference.json",
+          "sha256": "662a95365ea878958078ebbcc5341e382990ea2f1c47dd680113502f85aa9421"
+        },
+        "death_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte.json",
+          "sha256": "5dacc609629da2ed74fb4328d6bfe82005b9586cc6ef817ce756a14a971340de"
+        },
+        "death_h3_v2_edge_despill.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/edge_despill.json",
+          "sha256": "6a1a75f44ca9273bfd472af872a03e25e3bcd743b46955286b43f18725d2bba5"
+        },
+        "death_h3_v2_matte_initial.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte_initial.json",
+          "sha256": "f9b75f4ae18c8335fa655c5785bb6941ad718e387769e773697d8609d31d00e7"
+        },
+        "death_h3_v2_bounded_session.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/bounded_session.json",
+          "sha256": "84b663512fc594db38794ac685a275fed11495758993e1f4be8be3eeed3a3ad3"
+        },
+        "death_h3_v2_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/segmentation_recipe.json",
+          "sha256": "d9732e5ff7120003ebba355420e82429c0c1ca192422c6d447ea84c95ff904c8"
+        },
+        "death_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/staged_generation.json",
+          "sha256": "eb3fd00e5d7edbd3d113fa3e6cadcb1edad03bb915b69395d9cfbde4aa1bb459"
+        },
+        "death_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/sampling_workflow_api.json",
+          "sha256": "dfaec32ffe07c0e46a4ad07c02e6495326110d7f788a8ae062b56b2a11dd4570"
+        },
+        "death_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/sampling_submission.json",
+          "sha256": "703fd2490166a8d0dc8c4013b65c7f0c2638c583a5cc7245d1d1a49432ef91b7"
+        },
+        "death_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/sampling_history.json",
+          "sha256": "b1682e23f7786e38d49411c2a01a4c391214388665bfe7d53d823c6f0f8b4808"
+        },
+        "death_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/original.latent",
+          "sha256": "a8c472b5cdf9006b9d670e07fe2f40c98cc9b5dc0315769fdbee10556db5af4e"
+        },
+        "runtime_registration": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/runtime_registration.json",
+          "sha256": "de8a8b220a2cafc0999267f9436f1ba3799cb5c4754ec9d167782d28c3aecee4"
+        },
+        "semantic_mask_cache.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/semantic_mask_cache.py",
+          "sha256": "04e2e1750c407042139a63af952cc3af9c78028f2eb29986f97fe51bae79dfee"
+        },
+        "local_plate_cpu.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/local_plate_cpu.py",
+          "sha256": "59579a14207316c52247b342cac2467fd8381ccf3ca0867e7c5ab8c186d233ee"
+        },
+        "promote_guard_cpu.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/promote_guard_cpu.py",
+          "sha256": "3f0eac18cf75a28c563c51878fe1cd2a7450415e33e45270f3ee446ec348de84"
+        },
+        "foreground_measurement.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/foreground_measurement.json",
+          "sha256": "4d6e0766a86ca16c1ad4dc2b697d55cf72a35191a2e7b4114b7090815b2b33b4"
+        },
+        "delivery.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/delivery.json",
+          "sha256": "6f48103c6ba81500153fce780f774bd3611a71593bc3460fa71f7383a96d4237"
+        },
+        "segment.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/segment.py",
+          "sha256": "ecda4c06138639bf06098b01b3306a18aee9bc5aacc817ab524879c39490ad85"
+        },
+        "segment_initial.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/segment_initial.py",
+          "sha256": "df03cbaa1ba3f5a96d88a70b971d4f23f1067261e8a4095c8162df4ba0ecdf07"
+        },
+        "matting_model.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/matting_model.json",
+          "sha256": "03f0257fbccbfec2fd9ffa4bb3d27398665ea9db710ce65920387148ab179922"
+        },
+        "edge_despill.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/edge_despill.py",
+          "sha256": "c7a851c35ca9205b39b0b92ae0ec253c328392b95fae3ac19553b73474065298"
+        },
+        "original_curated_identity": {
+          "path": "art/units/source/curated/unit_mireclaw_moonbite_mirehorn_breakers.png",
+          "sha256": "59e6cec5cf412fa72a39e05f50c315d44b512ef222414ddd08af1e901f70a646"
+        },
+        "original_pose_packing": {
+          "path": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/packing.json",
+          "sha256": "4ebe3db4a2155967679626b4ba7ff2e23ab602f9808a0da84ba1f759c1b0304e"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Six dedicated physical Mirehorn actions personally passed full original124 RGB/alpha per source, enlarged anatomy/grips, all195 selected actual128px poses both facings and native Godot candidate pages beside eight preserved idle260ms. Actual battle contact/recovery, normal/Fast/reduced/static/dead/interrupt/RNG/save fixtures passed. Authentic four-paw two-horn beast plus two-legged handler with left staff/right rein, original mantle/lamps and fixed original painting registration retained. Original eight battle/map idle poses remain byte-exact. Melee ranged-to-attack fallback retained; no authored ranged action. Imported RGBA and both published live action routes passed; actual normal/Fast/reduced/static/dead/contact/interrupt/RNG/save and animated/reduced map checks are recorded in completion.json."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_003.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_006.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_009.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_015.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_021.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_027.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_033.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_039.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_045.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_051.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_057.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_063.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_069.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_075.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_081.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_087.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_093.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_099.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_102.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_105.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_111.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_114.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_117.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_120.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/move_h3_v1/matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_098.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_102.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_116.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/attack_h3_v3/matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_116.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/hit_h3_v1/matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/defend_h3_v2/matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_104.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_116.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/cast_h3_v1/matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_mirehorn_breakers/death_h3_v2/matte/rgba_123.png": 0.5
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ]
+    }
+  ]
+}

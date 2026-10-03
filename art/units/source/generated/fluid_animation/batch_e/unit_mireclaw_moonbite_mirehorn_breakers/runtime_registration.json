@@ -1,0 +1,50 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "ready_guide": {
+    "name": "idle_hands_0",
+    "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        384,
+        512
+      ]
+    ],
+    "anchor": [
+      194,
+      410
+    ],
+    "scale": 0.80451,
+    "alpha_noise_cutoff": 8
+  },
+  "corpse_guide": {
+    "name": "dead",
+    "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/original.png",
+    "rects": [
+      [
+        1094,
+        842,
+        1448,
+        1040
+      ]
+    ],
+    "anchor": [
+      1303,
+      1002
+    ],
+    "scale": 0.8,
+    "alpha_noise_cutoff": 8
+  },
+  "reason": "Inherited anatomical scales and grounded anchors from actual original pose packing retained per source. Accepted idle11 supplies common ready; original four-paw guide poses and group corpse retain original physical contacts. Fixed outputscale, no bounding-box normalization, per-frame shift, warp or invented articulation."
+}

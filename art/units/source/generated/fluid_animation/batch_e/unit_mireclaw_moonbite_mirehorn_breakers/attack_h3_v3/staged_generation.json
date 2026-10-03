@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "bb25c7c335a9e4e387f9ccc8dfa5e9d6a883fe718ecfcaf0c829544b3947dd2f",
+  "latent_sha256": "d56cd19c50f80daadc97de43d35c999b98a6ad76c2db8acaae78e1b6075276f7",
+  "decode_workflow_sha256": "eedad8645300b1a54a3a8abf9cafe3ae20fdb27a6fb9787fea9747e25c95012e",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "mirehorn_breaker_h3\\attack_h3_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

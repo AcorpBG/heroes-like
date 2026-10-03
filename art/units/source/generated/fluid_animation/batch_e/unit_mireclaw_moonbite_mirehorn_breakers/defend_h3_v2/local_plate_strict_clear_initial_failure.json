@@ -1,0 +1,29 @@
+{
+  "error": "Additional1/255 semantic background criterion rejected plate transition",
+  "status": "rejected_extraction_partial_preserved",
+  "partial_mattes": [
+    {
+      "file": "rgba_000.png",
+      "sha256": "8de4809cfa8e02bb10b6dda4c945205a7d2644ef081acf77ac2a1694841f3bba"
+    },
+    {
+      "file": "rgba_001.png",
+      "sha256": "17abe73893c9b8c15c456d61b089983c95c23335e61d0dc360646e3f5210fd53"
+    },
+    {
+      "file": "rgba_002.png",
+      "sha256": "36eb6a15a553cddb9eb24b1d3b73406103669342615ce7fdfe2310e44dfeccf7"
+    },
+    {
+      "file": "rgba_003.png",
+      "sha256": "0718cc7103c71b8f6f7ff0b4a32e6364eaccf87aa75b82975e6a6625c027269a"
+    },
+    {
+      "file": "rgba_004.png",
+      "sha256": "416dc367aaac8d51753f7f5d18b8d0cd78857f27e0d7807691c7a0e4308b19ae"
+    }
+  ],
+  "tool_sha256": "4c23cbf5b71d6ef508d7494cbd2137c6d5bac217796cec56b8458ae2c25d0010",
+  "correction": "Use original semantic background exclusion cutoff8/255, unchanged outputalpha and localRGBuniform/border criteria",
+  "original_preserved": true
+}

@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          194,
+          410
+        ],
+        "scale": 1.60902,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "dd7c8fb6392419611d6aa0bbfd44cbfc37dcb58502666f53aad5768ba111d5a5",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7fe0bf364614f776bde5e2db6479e0ef1eea581c37d89c5bef522bfc1bb27345",
+      "runtime_source_scale": 0.80451
+    },
+    {
+      "source_frame": {
+        "name": "step_diagonal_a",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/step-diagonal-a-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1413,
+            1113
+          ]
+        ],
+        "anchor": [
+          870,
+          1040
+        ],
+        "scale": 0.45,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "04b30411d03e112da0de624e8836129d5ffdf404e3cacf02c595bf9c0f2a8e76",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "fb613d922f91aef77159a4058ba654e7411498347d90b3b18b18348e00428f7b",
+      "runtime_source_scale": 0.225
+    },
+    {
+      "source_frame": {
+        "name": "step_diagonal_b",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/step-diagonal-b-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1413,
+            1113
+          ]
+        ],
+        "anchor": [
+          870,
+          1063
+        ],
+        "scale": 0.44,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "bc56e7bb123eef6ca0c712f22a7d9f86454f73857ac0145fb385a42db1851034",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "c93c128d9a58a3a9ccd069a37b375d219047dbdb54a96980be1087cf79b1f5f8",
+      "runtime_source_scale": 0.22
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

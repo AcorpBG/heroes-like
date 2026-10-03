@@ -1,0 +1,83 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110303,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        194,
+        410
+      ],
+      "scale": 0.80451,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/original.png",
+      "rects": [
+        [
+          0,
+          732,
+          350,
+          843
+        ],
+        [
+          0,
+          843,
+          305,
+          880
+        ],
+        [
+          0,
+          880,
+          350,
+          1034
+        ]
+      ],
+      "anchor": [
+        224,
+        1012
+      ],
+      "scale": 0.8,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      48,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original MIREHORN BREAKER group from the supplied painting, facing SCREEN RIGHT. Exactly ONE massive four-legged gray olive swamp beast with exactly FOUR clawed paws, TWO forelegs and TWO hindlegs, not arms. Exactly TWO large black ivory crescent horns, one ivory bone faceplate, original amber eyes, closed mouth, gold nose ring, wicker limb cuffs, bronze reed harness, tall reed-and-leaf back mantle, attached original amber lanterns on their unchanged fine chains. Exactly ONE small leaf-clad humanoid handler behind-left with exactly TWO arms, TWO legs and two feet. His left hand holds the ONE crooked wooden lantern staff planted beside him; his right hand grips the ONE dark rein attached to the beast harness. Preserve both hands and grips, original hooked staff length/top lantern, reed hood, cloth and pale hand/face markings. No extra horns, lanterns, hands, legs, characters or equipment. The handler stays beside the same beast. Same painted fantasy artwork, scale and locked camera. One short balance correction and recovery in empty air. Intact head and shoulders lean backward into the supplied original posture as the four paw joints bend and redistribute weight. The small handler leans back one step then steadies himself, left staff hand and right rein hand never release. Both figures remain screen-right at original grounded support height. Then lower head and return smoothly to exact ready. Only ordinary body and cloth motion; nothing touches either figure. Original amber lights remain small and enclosed inside their original glass lanterns. No fall, turn, leap, emission or new appendage.  Entire background flat magenta RGB255,0,255, no scenery, shadows, floor marks, text, zoom, camera movement or cuts. Fixed ground reference y576. Keep horn tips, reed mantle, whole staff, all paws, handler feet and chains inside generous canvas margins throughout. No growing lights, sparks, magic, smoke, fireball, projectile, detached emission or invented weapon. Original lantern glow remains enclosed in the original lanterns.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

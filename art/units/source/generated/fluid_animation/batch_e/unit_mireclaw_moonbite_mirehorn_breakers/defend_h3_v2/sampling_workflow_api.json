@@ -1,0 +1,163 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Original MIREHORN BREAKER group from the supplied painting, facing SCREEN RIGHT. Exactly ONE massive four-legged gray olive swamp beast with exactly FOUR clawed paws, TWO forelegs and TWO hindlegs, not arms. Exactly TWO large black ivory crescent horns, one ivory bone faceplate, original amber eyes, closed mouth, gold nose ring, wicker limb cuffs, bronze reed harness, tall reed-and-leaf back mantle, attached original amber lanterns on their unchanged fine chains. Exactly ONE small leaf-clad humanoid handler behind-left with exactly TWO arms, TWO legs and two feet. His left hand holds the ONE crooked wooden lantern staff planted beside him; his right hand grips the ONE dark rein attached to the beast harness. Preserve both hands and grips, original hooked staff length/top lantern, reed hood, cloth and pale hand/face markings. No extra horns, lanterns, hands, legs, characters or equipment. The handler stays beside the same beast. Same painted fantasy artwork, scale and locked camera. One slow connected weight adjustment into the supplied low posture. The four paw joints bend progressively as the shoulders settle downward and the faceplate tips forward. The handler bends both knees and lowers his torso beside the beast, retaining his left staff grip and right rein grip. The attached reed mantle, small amber glass pieces and chain links follow this ordinary body movement. Every amber glass piece keeps the same small painted appearance throughout. Complete the lowering over the first three seconds, then stay in the supplied low posture for the final two seconds. Every part of the group connects through smooth intermediate joint positions. The group remains grounded and faces screen right throughout. A single plain flat magenta RGB255,0,255 background fills the entire frame throughout. Locked camera, original artwork and scale, fixed ground reference y576. All original horns, mantle, staff, paws, feet and chains stay inside generous canvas margins.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "31",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026110364
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "mirehorn_breaker_defend_h3_v2_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "mirehorn_breaker_defend_h3_v2_guide_1.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 62,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "40",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "mirehorn_breaker_h3/defend_h3_v2/sampled"
+    }
+  }
+}
