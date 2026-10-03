@@ -243,18 +243,6 @@
               77,
               775,
               487,
-              1135
-            ],
-            [
-              77,
-              1135,
-              246,
-              1143
-            ],
-            [
-              286,
-              1135,
-              487,
               1143
             ]
           ],
@@ -263,16 +251,7 @@
             1140
           ],
           "scale": 0.6,
-          "alpha_noise_cutoff": 8,
-          "source_cell_exclusion": {
-            "box": [
-              246,
-              1135,
-              286,
-              1143
-            ],
-            "reason": "Detached hood from following source row; original boots lie outside this box."
-          }
+          "alpha_noise_cutoff": 8
         },
         {
           "name": "ranged_05",
@@ -283,18 +262,6 @@
               584,
               778,
               980,
-              1137
-            ],
-            [
-              584,
-              1137,
-              751,
-              1143
-            ],
-            [
-              773,
-              1137,
-              980,
               1143
             ]
           ],
@@ -303,16 +270,7 @@
             1140
           ],
           "scale": 0.6,
-          "alpha_noise_cutoff": 8,
-          "source_cell_exclusion": {
-            "box": [
-              751,
-              1137,
-              773,
-              1143
-            ],
-            "reason": "Detached hood from following source row; original boots lie outside this box."
-          }
+          "alpha_noise_cutoff": 8
         },
         {
           "name": "ranged_06",
@@ -361,18 +319,6 @@
               130,
               10,
               525,
-              387
-            ],
-            [
-              130,
-              387,
-              249,
-              402
-            ],
-            [
-              309,
-              387,
-              525,
               402
             ]
           ],
@@ -381,16 +327,7 @@
             399
           ],
           "scale": 0.58,
-          "alpha_noise_cutoff": 8,
-          "source_cell_exclusion": {
-            "box": [
-              249,
-              387,
-              309,
-              402
-            ],
-            "reason": "Detached hood from following source row; original boots lie outside this box."
-          }
+          "alpha_noise_cutoff": 8
         },
         {
           "name": "hit_01",
@@ -401,18 +338,6 @@
               595,
               17,
               966,
-              382
-            ],
-            [
-              595,
-              382,
-              703,
-              402
-            ],
-            [
-              767,
-              382,
-              966,
               402
             ]
           ],
@@ -421,16 +346,7 @@
             399
           ],
           "scale": 0.58,
-          "alpha_noise_cutoff": 8,
-          "source_cell_exclusion": {
-            "box": [
-              703,
-              382,
-              767,
-              402
-            ],
-            "reason": "Detached hood from following source row; original boots lie outside this box."
-          }
+          "alpha_noise_cutoff": 8
         },
         {
           "name": "hit_02",
@@ -441,18 +357,6 @@
               121,
               402,
               521,
-              791
-            ],
-            [
-              121,
-              791,
-              255,
-              799
-            ],
-            [
-              300,
-              791,
-              521,
               799
             ]
           ],
@@ -461,16 +365,7 @@
             797
           ],
           "scale": 0.58,
-          "alpha_noise_cutoff": 8,
-          "source_cell_exclusion": {
-            "box": [
-              255,
-              791,
-              300,
-              799
-            ],
-            "reason": "Detached hood from following source row; original boots lie outside this box."
-          }
+          "alpha_noise_cutoff": 8
         },
         {
           "name": "hit_03",
@@ -519,18 +414,6 @@
               578,
               799,
               977,
-              1160
-            ],
-            [
-              578,
-              1160,
-              717,
-              1168
-            ],
-            [
-              757,
-              1160,
-              977,
               1168
             ]
           ],
@@ -539,16 +422,7 @@
             1166
           ],
           "scale": 0.58,
-          "alpha_noise_cutoff": 8,
-          "source_cell_exclusion": {
-            "box": [
-              717,
-              1160,
-              757,
-              1168
-            ],
-            "reason": "Detached hood from following source row; original boots lie outside this box."
-          }
+          "alpha_noise_cutoff": 8
         },
         {
           "name": "defend_02",
@@ -673,18 +547,6 @@
               164,
               811,
               425,
-              1129
-            ],
-            [
-              164,
-              1129,
-              299,
-              1135
-            ],
-            [
-              314,
-              1129,
-              425,
               1135
             ]
           ],
@@ -693,16 +555,7 @@
             1133
           ],
           "scale": 0.6,
-          "alpha_noise_cutoff": 8,
-          "source_cell_exclusion": {
-            "box": [
-              299,
-              1129,
-              314,
-              1135
-            ],
-            "reason": "Detached hood from following source row; original boots lie outside this box."
-          }
+          "alpha_noise_cutoff": 8
         },
         {
           "name": "cast_05",
@@ -713,18 +566,6 @@
               639,
               777,
               925,
-              1129
-            ],
-            [
-              639,
-              1129,
-              773,
-              1135
-            ],
-            [
-              792,
-              1129,
-              925,
               1135
             ]
           ],
@@ -733,16 +574,7 @@
             1133
           ],
           "scale": 0.6,
-          "alpha_noise_cutoff": 8,
-          "source_cell_exclusion": {
-            "box": [
-              773,
-              1129,
-              792,
-              1135
-            ],
-            "reason": "Detached hood from following source row; original boots lie outside this box."
-          }
+          "alpha_noise_cutoff": 8
         },
         {
           "name": "cast_06",
@@ -2202,10 +2034,7 @@
       },
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": [
-          "Reviewed all124 chronological frames, enlarged40/44/48/52/56/60/64/68/72/76/78/80 on light/dark plates. Dark near leg leads40-48, passes52, trails56-68 while ivory-fronted far leg leads, passes72 and returns forward76-80. Two hands stay on separate crossbow grips; full rigid crystal/gold crossbow, hood and shoulder crystals retained, cloth follows stride.20 observed poses40-78 every2 at60ms produce1200ms loop retimed from1667ms source cycle; seam78/80/40 inspected. Original .385 guide scale matches accepted .6 body height; input.61 and extraction.385/.61, fixed anatomical anchor975,1217 to480,475. Ordered-frame/native-render review, not continuous browser playback; no manual playtest claimed. Autonomous acceptance per owner direction. Reviewed all124 chronological frames plus enlarged0/12/18/20/34/50/54/58/62/66/70/74 on light/dark grounds. Ready lowers weapon and buckles knees12-20, kneeling pause retains grips through50, body lowers sideways54-66 and head/shoulder settle70-74. Complete opaque crossbow remains attached and rests in front; no firing/drawing gesture or floating weapon.38 observed poses0-74 every2 at50ms give1900ms collapse retimed from approximately3167ms source interval. Final source74 supplies persistent corpse. Original .6 ready and .54 corpse/kneeling anatomical scales through fixed .6/.95 extraction, common480,475 ground; no pose-bound normalization. Five intermediate guides at18/34/50/66/84 fix the prior two rejected takes. Ordered-frame/native-render review, not continuous browser playback; no manual playtest claimed. Coordinator owns acceptance/publication. Native battle-scale candidate reviewed;162 focused Windows checks passed. Preserve six existing accepted actions including original idle. No continuous browser playback or manual game playtest claimed.",
-          "2026-10-03 source-cell correction: eight proven disconnected fragments from neighboring original rows excluded through rectangle unions. Original RGBA and source hashes, complete intended anatomy/equipment, scale, registration, frame order, timings/contact and acceptance coverage retained. Enlarged before/after source crops and all eight changed native128 poses personally inspected in both facings. Unchanged packed poses remain pixel-exact."
-        ]
+        "notes": "Reviewed all124 chronological frames, enlarged40/44/48/52/56/60/64/68/72/76/78/80 on light/dark plates. Dark near leg leads40-48, passes52, trails56-68 while ivory-fronted far leg leads, passes72 and returns forward76-80. Two hands stay on separate crossbow grips; full rigid crystal/gold crossbow, hood and shoulder crystals retained, cloth follows stride.20 observed poses40-78 every2 at60ms produce1200ms loop retimed from1667ms source cycle; seam78/80/40 inspected. Original .385 guide scale matches accepted .6 body height; input.61 and extraction.385/.61, fixed anatomical anchor975,1217 to480,475. Ordered-frame/native-render review, not continuous browser playback; no manual playtest claimed. Autonomous acceptance per owner direction. Reviewed all124 chronological frames plus enlarged0/12/18/20/34/50/54/58/62/66/70/74 on light/dark grounds. Ready lowers weapon and buckles knees12-20, kneeling pause retains grips through50, body lowers sideways54-66 and head/shoulder settle70-74. Complete opaque crossbow remains attached and rests in front; no firing/drawing gesture or floating weapon.38 observed poses0-74 every2 at50ms give1900ms collapse retimed from approximately3167ms source interval. Final source74 supplies persistent corpse. Original .6 ready and .54 corpse/kneeling anatomical scales through fixed .6/.95 extraction, common480,475 ground; no pose-bound normalization. Five intermediate guides at18/34/50/66/84 fix the prior two rejected takes. Ordered-frame/native-render review, not continuous browser playback; no manual playtest claimed. Coordinator owns acceptance/publication. Native battle-scale candidate reviewed;162 focused Windows checks passed. Preserve six existing accepted actions including original idle. No continuous browser playback or manual game playtest claimed."
       },
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_v1.png": 0.6,

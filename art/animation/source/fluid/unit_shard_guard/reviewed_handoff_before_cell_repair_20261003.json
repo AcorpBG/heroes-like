@@ -53,18 +53,6 @@
               145,
               388,
               408,
-              756
-            ],
-            [
-              145,
-              756,
-              290,
-              764
-            ],
-            [
-              302,
-              756,
-              408,
               764
             ]
           ],
@@ -73,16 +61,7 @@
             762
           ],
           "scale": 0.61,
-          "alpha_noise_cutoff": 8,
-          "source_cell_exclusion": {
-            "box": [
-              290,
-              756,
-              302,
-              764
-            ],
-            "reason": "Isolated helmet or boot from neighboring original row; whole intended character/equipment excluded from removal."
-          }
+          "alpha_noise_cutoff": 8
         },
         {
           "name": "attack_03",
@@ -129,21 +108,9 @@
           "rects": [
             [
               608,
-              769,
+              764,
               951,
               1124
-            ],
-            [
-              608,
-              764,
-              858,
-              769
-            ],
-            [
-              882,
-              764,
-              951,
-              769
             ]
           ],
           "anchor": [
@@ -151,16 +118,7 @@
             1120
           ],
           "scale": 0.61,
-          "alpha_noise_cutoff": 8,
-          "source_cell_exclusion": {
-            "box": [
-              858,
-              764,
-              882,
-              769
-            ],
-            "reason": "Isolated helmet or boot from neighboring original row; whole intended character/equipment excluded from removal."
-          }
+          "alpha_noise_cutoff": 8
         },
         {
           "name": "attack_06",
@@ -228,18 +186,6 @@
               540,
               33,
               864,
-              368
-            ],
-            [
-              540,
-              368,
-              692,
-              380
-            ],
-            [
-              710,
-              368,
-              864,
               380
             ]
           ],
@@ -248,16 +194,7 @@
             377
           ],
           "scale": 0.61,
-          "alpha_noise_cutoff": 8,
-          "source_cell_exclusion": {
-            "box": [
-              692,
-              368,
-              710,
-              380
-            ],
-            "reason": "Isolated helmet or boot from neighboring original row; whole intended character/equipment excluded from removal."
-          }
+          "alpha_noise_cutoff": 8
         },
         {
           "name": "hit_02",
@@ -266,21 +203,9 @@
           "rects": [
             [
               131,
-              384,
+              380,
               499,
               763
-            ],
-            [
-              131,
-              380,
-              444,
-              384
-            ],
-            [
-              465,
-              380,
-              499,
-              384
             ]
           ],
           "anchor": [
@@ -288,16 +213,7 @@
             760
           ],
           "scale": 0.61,
-          "alpha_noise_cutoff": 8,
-          "source_cell_exclusion": {
-            "box": [
-              444,
-              380,
-              465,
-              384
-            ],
-            "reason": "Isolated helmet or boot from neighboring original row; whole intended character/equipment excluded from removal."
-          }
+          "alpha_noise_cutoff": 8
         },
         {
           "name": "hit_03",
@@ -308,18 +224,6 @@
               553,
               380,
               857,
-              759
-            ],
-            [
-              553,
-              759,
-              752,
-              763
-            ],
-            [
-              761,
-              759,
-              857,
               763
             ]
           ],
@@ -328,16 +232,7 @@
             756
           ],
           "scale": 0.61,
-          "alpha_noise_cutoff": 8,
-          "source_cell_exclusion": {
-            "box": [
-              752,
-              759,
-              761,
-              763
-            ],
-            "reason": "Isolated helmet or boot from neighboring original row; whole intended character/equipment excluded from removal."
-          }
+          "alpha_noise_cutoff": 8
         },
         {
           "name": "defend_00",
@@ -348,18 +243,6 @@
               132,
               763,
               485,
-              1112
-            ],
-            [
-              132,
-              1112,
-              369,
-              1118
-            ],
-            [
-              380,
-              1112,
-              485,
               1118
             ]
           ],
@@ -368,16 +251,7 @@
             1117
           ],
           "scale": 0.61,
-          "alpha_noise_cutoff": 8,
-          "source_cell_exclusion": {
-            "box": [
-              369,
-              1112,
-              380,
-              1118
-            ],
-            "reason": "Isolated helmet or boot from neighboring original row; whole intended character/equipment excluded from removal."
-          }
+          "alpha_noise_cutoff": 8
         },
         {
           "name": "defend_01",
@@ -388,18 +262,6 @@
               563,
               763,
               870,
-              1111
-            ],
-            [
-              563,
-              1111,
-              727,
-              1118
-            ],
-            [
-              738,
-              1111,
-              870,
               1118
             ]
           ],
@@ -408,16 +270,7 @@
             1100
           ],
           "scale": 0.61,
-          "alpha_noise_cutoff": 8,
-          "source_cell_exclusion": {
-            "box": [
-              727,
-              1111,
-              738,
-              1118
-            ],
-            "reason": "Isolated helmet or boot from neighboring original row; whole intended character/equipment excluded from removal."
-          }
+          "alpha_noise_cutoff": 8
         },
         {
           "name": "defend_02",
@@ -426,21 +279,9 @@
           "rects": [
             [
               116,
-              1121,
+              1118,
               500,
               1479
-            ],
-            [
-              116,
-              1118,
-              452,
-              1121
-            ],
-            [
-              462,
-              1118,
-              500,
-              1121
             ]
           ],
           "anchor": [
@@ -448,16 +289,7 @@
             1478
           ],
           "scale": 0.61,
-          "alpha_noise_cutoff": 8,
-          "source_cell_exclusion": {
-            "box": [
-              452,
-              1118,
-              462,
-              1121
-            ],
-            "reason": "Isolated helmet or boot from neighboring original row; whole intended character/equipment excluded from removal."
-          }
+          "alpha_noise_cutoff": 8
         },
         {
           "name": "defend_03",
@@ -2069,10 +1901,7 @@
       },
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": [
-          "All124 chronological frames reviewed, enlarged0/6/12/18/24/30/36/42/48/54/62/64 on light/dark plates. Planted boots, sword elbow and wrist lift to a low ready position, brief hold, lower and settle; shield stays gripped, crystal blade intact with perspective foreshortening.32 observed poses0-62 every2 at83ms,2656ms loop approximately original2667ms interval. Seam62/64/0 inspected. Fixed original .61 anatomical scale through .95 input and .61/.95 extraction. Ordered-frame and native-render review; continuous playback unavailable through policy-blocked preview route, no manual playtest claimed. Coordinator owns acceptance and publication. All124 chronological frames reviewed, enlarged44/48/52/56/60/64/68/72/76/80/82/84. Near leg leads44-52, passes56, trails60-72 as far leg leads, passes76 and returns forward80-84. Armor, crown, both boots, shield and sword remain intact; natural shoulder counter-rotation, no travel-direction reversal.20 observed poses44-82 every2 at60ms,1200ms loop retimed from1667ms source cycle. Seam82/84/44 inspected. Fixed .172 guide runtime scale matching accepted .61 body height; .28 input and .172/.28 extraction. Ordered-frame and native-render review; continuous playback unavailable through policy-blocked preview route, no manual playtest claimed. Coordinator owns acceptance and publication. Native Godot battle-scale candidate reviewed;150 focused checks passed including Normal/Fast/reduced-motion. Accepted autonomously; no continuous browser playback or manual game playtest claimed.",
-          "2026-10-03 source-cell correction: eight proven disconnected fragments from neighboring original rows excluded through rectangle unions. Original RGBA and source hashes, complete intended anatomy/equipment, scale, registration, frame order, timings/contact and acceptance coverage retained. Enlarged before/after source crops and all eight changed native128 poses personally inspected in both facings. Unchanged packed poses remain pixel-exact."
-        ]
+        "notes": "All124 chronological frames reviewed, enlarged0/6/12/18/24/30/36/42/48/54/62/64 on light/dark plates. Planted boots, sword elbow and wrist lift to a low ready position, brief hold, lower and settle; shield stays gripped, crystal blade intact with perspective foreshortening.32 observed poses0-62 every2 at83ms,2656ms loop approximately original2667ms interval. Seam62/64/0 inspected. Fixed original .61 anatomical scale through .95 input and .61/.95 extraction. Ordered-frame and native-render review; continuous playback unavailable through policy-blocked preview route, no manual playtest claimed. Coordinator owns acceptance and publication. All124 chronological frames reviewed, enlarged44/48/52/56/60/64/68/72/76/80/82/84. Near leg leads44-52, passes56, trails60-72 as far leg leads, passes76 and returns forward80-84. Armor, crown, both boots, shield and sword remain intact; natural shoulder counter-rotation, no travel-direction reversal.20 observed poses44-82 every2 at60ms,1200ms loop retimed from1667ms source cycle. Seam82/84/44 inspected. Fixed .172 guide runtime scale matching accepted .61 body height; .28 input and .172/.28 extraction. Ordered-frame and native-render review; continuous playback unavailable through policy-blocked preview route, no manual playtest claimed. Coordinator owns acceptance and publication. Native Godot battle-scale candidate reviewed;150 focused checks passed including Normal/Fast/reduced-motion. Accepted autonomously; no continuous browser playback or manual game playtest claimed."
       },
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png": 0.61,
