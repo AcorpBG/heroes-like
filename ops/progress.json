@@ -12832,9 +12832,9 @@
       "currentSliceNotes": "2026-06-04: Source inspection of h3maped.exe 0x49e700 found no global/zone decorative type-limit gate; native decorative filler removed that source-inaccurate gate. Focused Small seed 11 and Medium seed 10 exports remained behavior-neutral (type-limit rejected 0 before removal), so remaining density/block-surface gap is still the exact 0x49e1bf private-state scorer and full 0x49e700 worklist lifecycle, not a count/scalar target.",
       "evidence": {
         "artifacts": {
-          "final_writer_disassembly": ".artifacts/objdump_4aa3e9_4aa603_20260604_goal_continue.txt",
-          "guard_attach_disassembly": ".artifacts/objdump_49cf34_49d2c7_20260604_goal_continue.txt",
-          "guard_candidate_prefill_disassembly": ".artifacts/objdump_49d7c3_49d913_20260604_goal_continue.txt",
+          "final_writer_disassembly": ".artifacts/rmg_recovery/support/objdump_4aa3e9_4aa603_20260604_goal_continue.txt",
+          "guard_attach_disassembly": ".artifacts/rmg_recovery/support/objdump_49cf34_49d2c7_20260604_goal_continue.txt",
+          "guard_candidate_prefill_disassembly": ".artifacts/rmg_recovery/support/objdump_49d7c3_49d913_20260604_goal_continue.txt",
           "medium_phase_snapshot": ".artifacts/rmg_native_batch_export_49cf34_guard_attach_checkpoint_20260604/medium_4p_seed_10_controlled.phase_snapshot.json",
           "native_export": ".artifacts/rmg_native_batch_export_49cf34_guard_attach_checkpoint_20260604",
           "safe_baseline_export": ".artifacts/rmg_native_batch_export_49d471_secondary_materialization_rejected_20260604",
@@ -12895,9 +12895,9 @@
         },
         "validation": {
           "diff_check": "git diff --check (pass before update)",
-          "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49cf34_guard_attach_checkpoint_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (known native rule failure only: near_stacked_towns small floor12 nearest10)",
+          "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49cf34_guard_attach_checkpoint_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (known native rule failure only: near_stacked_towns small floor12 nearest10)",
           "native_builds": "cmake builds passed for Linux debug, Linux release, Windows debug, Windows release",
-          "native_export": "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49cf34_guard_attach_checkpoint_20260604 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (pass exported=2 failed=0)",
+          "native_export": "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49cf34_guard_attach_checkpoint_20260604 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (pass exported=2 failed=0)",
           "progress_json": "jq empty ops/progress.json (pass before update)",
           "repo_validation": "python3 tests/validate_repo.py (pass)"
         }
@@ -12910,9 +12910,9 @@
       "currentSliceNotes": "2026-06-04: Source inspection of h3maped.exe 0x49e700 found no global/zone decorative type-limit gate; native decorative filler removed that source-inaccurate gate. Focused Small seed 11 and Medium seed 10 exports remained behavior-neutral (type-limit rejected 0 before removal), so remaining density/block-surface gap is still the exact 0x49e1bf private-state scorer and full 0x49e700 worklist lifecycle, not a count/scalar target.",
       "evidence": {
         "artifacts": {
-          "final_writer_disassembly": ".artifacts/objdump_4aa3e9_4aa603_20260604_goal_continue.txt",
-          "guard_attach_disassembly": ".artifacts/objdump_49cf34_49d2c7_20260604_goal_continue.txt",
-          "guard_candidate_prefill_disassembly": ".artifacts/objdump_49d7c3_49d913_20260604_goal_continue.txt",
+          "final_writer_disassembly": ".artifacts/rmg_recovery/support/objdump_4aa3e9_4aa603_20260604_goal_continue.txt",
+          "guard_attach_disassembly": ".artifacts/rmg_recovery/support/objdump_49cf34_49d2c7_20260604_goal_continue.txt",
+          "guard_candidate_prefill_disassembly": ".artifacts/rmg_recovery/support/objdump_49d7c3_49d913_20260604_goal_continue.txt",
           "medium_phase_snapshot": ".artifacts/rmg_native_batch_export_49d7c3_candidate_vector_checkpoint_20260604/medium_4p_seed_10_controlled.phase_snapshot.json",
           "native_export": ".artifacts/rmg_native_batch_export_49d7c3_candidate_vector_checkpoint_20260604",
           "previous_guard_attach_checkpoint": ".artifacts/rmg_native_batch_export_49cf34_guard_attach_checkpoint_20260604",
@@ -12979,9 +12979,9 @@
         },
         "validation": {
           "diff_check": "git diff --check (pass before update)",
-          "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49d7c3_candidate_vector_checkpoint_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (known native rule failure only: near_stacked_towns small floor12 nearest10)",
+          "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49d7c3_candidate_vector_checkpoint_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (known native rule failure only: near_stacked_towns small floor12 nearest10)",
           "native_builds": "cmake builds passed for Linux debug, Linux release, Windows debug, Windows release",
-          "native_export": "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49d7c3_candidate_vector_checkpoint_20260604 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (pass exported=2 failed=0)",
+          "native_export": "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49d7c3_candidate_vector_checkpoint_20260604 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (pass exported=2 failed=0)",
           "progress_json": "jq empty ops/progress.json (pass before update)",
           "repo_validation": "python3 tests/validate_repo.py (pass)"
         }
@@ -12994,10 +12994,10 @@
       "currentSliceNotes": "2026-06-04: Source inspection of h3maped.exe 0x49e700 found no global/zone decorative type-limit gate; native decorative filler removed that source-inaccurate gate. Focused Small seed 11 and Medium seed 10 exports remained behavior-neutral (type-limit rejected 0 before removal), so remaining density/block-surface gap is still the exact 0x49e1bf private-state scorer and full 0x49e700 worklist lifecycle, not a count/scalar target.",
       "evidence": {
         "artifacts": {
-          "final_writer_disassembly": ".artifacts/objdump_4aa3e9_4aa603_20260604_goal_continue.txt",
-          "guard_attach_disassembly": ".artifacts/objdump_49cf34_49d2c7_20260604_goal_continue.txt",
-          "guard_candidate_prefill_disassembly": ".artifacts/objdump_49d7c3_49d913_20260604_goal_continue.txt",
-          "guard_constructor_disassembly": ".artifacts/objdump_4a5c07_4a5e60_20260604_goal_continue.txt",
+          "final_writer_disassembly": ".artifacts/rmg_recovery/support/objdump_4aa3e9_4aa603_20260604_goal_continue.txt",
+          "guard_attach_disassembly": ".artifacts/rmg_recovery/support/objdump_49cf34_49d2c7_20260604_goal_continue.txt",
+          "guard_candidate_prefill_disassembly": ".artifacts/rmg_recovery/support/objdump_49d7c3_49d913_20260604_goal_continue.txt",
+          "guard_constructor_disassembly": ".artifacts/rmg_recovery/support/objdump_4a5c07_4a5e60_20260604_goal_continue.txt",
           "medium_phase_snapshot": ".artifacts/rmg_native_batch_export_49cf34_guard_constructor_checkpoint_20260604/medium_4p_seed_10_controlled.phase_snapshot.json",
           "native_export": ".artifacts/rmg_native_batch_export_49cf34_guard_constructor_checkpoint_20260604",
           "previous_candidate_vector_checkpoint": ".artifacts/rmg_native_batch_export_49d7c3_candidate_vector_checkpoint_20260604",
@@ -13066,9 +13066,9 @@
         },
         "validation": {
           "diff_check": "git diff --check (pass before update)",
-          "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49cf34_guard_constructor_checkpoint_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (known native rule failure only: near_stacked_towns small floor12 nearest10)",
+          "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49cf34_guard_constructor_checkpoint_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (known native rule failure only: near_stacked_towns small floor12 nearest10)",
           "native_builds": "cmake builds passed for Linux debug, Linux release, Windows debug, Windows release",
-          "native_export": "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49cf34_guard_constructor_checkpoint_20260604 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (pass exported=2 failed=0)",
+          "native_export": "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49cf34_guard_constructor_checkpoint_20260604 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (pass exported=2 failed=0)",
           "progress_json": "jq empty ops/progress.json (pass before update)",
           "repo_validation": "python3 tests/validate_repo.py (pass)"
         }
@@ -13308,7 +13308,7 @@
     {
       "artifact": ".artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json",
       "commands": [
-        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -noanalysis -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump.java .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610 0x40763d,0x407675,0x402461,0x4190cb,0x43acf0,0x43ad49,0x43aec6,0x43bb1b,0x43bb58,0x43bb95,0x43bbe1,0x43bc24,0x43bc67 (passed)",
+        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless .artifacts/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -noanalysis -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump.java .artifacts/rmg_recovery/ghidra_source_input_stream_helpers_dump_20260610 0x40763d,0x407675,0x402461,0x4190cb,0x43acf0,0x43ad49,0x43aec6,0x43bb1b,0x43bb58,0x43bb95,0x43bbe1,0x43bc24,0x43bc67 (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_source_input_stream_helper_summary.py tools/rmg_h3maped_recovery_manifest.py tools/rmg_h3maped_source_input_layout_frontier_summary.py (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_source_input_stream_helper_summary.py --out .artifacts/rmg_recovery/source_input_stream_helper_summary_20260610.json (passed: source_input_stream_helper_surface_recovered_nested_semantics_pending, markers=62/62)",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed: functions=142)",
@@ -13501,7 +13501,7 @@
     {
       "artifact": ".artifacts/rmg_recovery/descriptor_base_value_helper_summary_20260610.json",
       "commands": [
-        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -noanalysis -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump .artifacts/rmg_recovery/ghidra_descriptor_base_value_helper_dump_20260610 0x491eed,0x49228d,0x4923a1,0x4923e2,0x492564,0x4925c7 -readOnly (passed)",
+        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless .artifacts/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -noanalysis -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump .artifacts/rmg_recovery/ghidra_descriptor_base_value_helper_dump_20260610 0x491eed,0x49228d,0x4923a1,0x4923e2,0x492564,0x4925c7 -readOnly (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_descriptor_base_value_helper_summary.py tools/rmg_h3maped_descriptor_input_mapping_summary.py tools/rmg_h3maped_descriptor_static_loader_summary.py tools/rmg_h3maped_recovery_manifest.py (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_descriptor_base_value_helper_summary.py (passed; markers 21/21)",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/recovery_manifest_summary_20260610.json (passed; functions 170)",
@@ -16596,17 +16596,17 @@
       "validatedAt": "2026-09-05T19:02:05Z",
       "artifacts": [
         "docs/rmg-town-entrance-correction-report.md",
-        ".artifacts/rmg_start_audit_20260905/entrance_matrix/summary.json",
-        ".artifacts/rmg_start_audit_20260905/entrance_one_level_final/summary.json",
-        ".artifacts/rmg_start_audit_20260905/entrance_visual_final/summary.json",
-        ".artifacts/rmg_start_audit_20260905/entrance_town_click.log",
-        ".artifacts/rmg_start_audit_20260905/entrance_repo_final.log",
-        ".artifacts/rmg_start_audit_20260905/entrance_linux_selftest.log",
-        ".artifacts/rmg_start_audit_20260905/entrance_windows_selftest.log",
-        ".artifacts/rmg_start_audit_20260905/entrance_linux_package.log",
-        ".artifacts/rmg_start_audit_20260905/entrance_windows_package_final.log",
-        ".artifacts/rmg_start_audit_20260905/entrance_linux_generated/live_validation_report.json",
-        ".artifacts/rmg_start_audit_20260905/entrance_boundary_2.log"
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/entrance_matrix/summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/entrance_one_level_final/summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/entrance_visual_final/summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/entrance_town_click.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/entrance_repo_final.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/entrance_linux_selftest.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/entrance_windows_selftest.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/entrance_linux_package.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/entrance_windows_package_final.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/entrance_linux_generated/live_validation_report.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/entrance_boundary_2.log"
       ],
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
@@ -17345,9 +17345,9 @@
         "currentSliceNotes": "2026-06-04: Source inspection of h3maped.exe 0x49e700 found no global/zone decorative type-limit gate; native decorative filler removed that source-inaccurate gate. Focused Small seed 11 and Medium seed 10 exports remained behavior-neutral (type-limit rejected 0 before removal), so remaining density/block-surface gap is still the exact 0x49e1bf private-state scorer and full 0x49e700 worklist lifecycle, not a count/scalar target.",
         "evidence": {
           "artifacts": {
-            "final_writer_disassembly": ".artifacts/objdump_4aa3e9_4aa603_20260604_goal_continue.txt",
-            "guard_attach_disassembly": ".artifacts/objdump_49cf34_49d2c7_20260604_goal_continue.txt",
-            "guard_candidate_prefill_disassembly": ".artifacts/objdump_49d7c3_49d913_20260604_goal_continue.txt",
+            "final_writer_disassembly": ".artifacts/rmg_recovery/support/objdump_4aa3e9_4aa603_20260604_goal_continue.txt",
+            "guard_attach_disassembly": ".artifacts/rmg_recovery/support/objdump_49cf34_49d2c7_20260604_goal_continue.txt",
+            "guard_candidate_prefill_disassembly": ".artifacts/rmg_recovery/support/objdump_49d7c3_49d913_20260604_goal_continue.txt",
             "medium_phase_snapshot": ".artifacts/rmg_native_batch_export_49cf34_guard_attach_checkpoint_20260604/medium_4p_seed_10_controlled.phase_snapshot.json",
             "native_export": ".artifacts/rmg_native_batch_export_49cf34_guard_attach_checkpoint_20260604",
             "safe_baseline_export": ".artifacts/rmg_native_batch_export_49d471_secondary_materialization_rejected_20260604",
@@ -17408,9 +17408,9 @@
           },
           "validation": {
             "diff_check": "git diff --check (pass before update)",
-            "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49cf34_guard_attach_checkpoint_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (known native rule failure only: near_stacked_towns small floor12 nearest10)",
+            "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49cf34_guard_attach_checkpoint_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (known native rule failure only: near_stacked_towns small floor12 nearest10)",
             "native_builds": "cmake builds passed for Linux debug, Linux release, Windows debug, Windows release",
-            "native_export": "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49cf34_guard_attach_checkpoint_20260604 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (pass exported=2 failed=0)",
+            "native_export": "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49cf34_guard_attach_checkpoint_20260604 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (pass exported=2 failed=0)",
             "progress_json": "jq empty ops/progress.json (pass before update)",
             "repo_validation": "python3 tests/validate_repo.py (pass)"
           }
@@ -17423,9 +17423,9 @@
         "currentSliceNotes": "2026-06-04: Source inspection of h3maped.exe 0x49e700 found no global/zone decorative type-limit gate; native decorative filler removed that source-inaccurate gate. Focused Small seed 11 and Medium seed 10 exports remained behavior-neutral (type-limit rejected 0 before removal), so remaining density/block-surface gap is still the exact 0x49e1bf private-state scorer and full 0x49e700 worklist lifecycle, not a count/scalar target.",
         "evidence": {
           "artifacts": {
-            "final_writer_disassembly": ".artifacts/objdump_4aa3e9_4aa603_20260604_goal_continue.txt",
-            "guard_attach_disassembly": ".artifacts/objdump_49cf34_49d2c7_20260604_goal_continue.txt",
-            "guard_candidate_prefill_disassembly": ".artifacts/objdump_49d7c3_49d913_20260604_goal_continue.txt",
+            "final_writer_disassembly": ".artifacts/rmg_recovery/support/objdump_4aa3e9_4aa603_20260604_goal_continue.txt",
+            "guard_attach_disassembly": ".artifacts/rmg_recovery/support/objdump_49cf34_49d2c7_20260604_goal_continue.txt",
+            "guard_candidate_prefill_disassembly": ".artifacts/rmg_recovery/support/objdump_49d7c3_49d913_20260604_goal_continue.txt",
             "medium_phase_snapshot": ".artifacts/rmg_native_batch_export_49d7c3_candidate_vector_checkpoint_20260604/medium_4p_seed_10_controlled.phase_snapshot.json",
             "native_export": ".artifacts/rmg_native_batch_export_49d7c3_candidate_vector_checkpoint_20260604",
             "previous_guard_attach_checkpoint": ".artifacts/rmg_native_batch_export_49cf34_guard_attach_checkpoint_20260604",
@@ -17492,9 +17492,9 @@
           },
           "validation": {
             "diff_check": "git diff --check (pass before update)",
-            "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49d7c3_candidate_vector_checkpoint_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (known native rule failure only: near_stacked_towns small floor12 nearest10)",
+            "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49d7c3_candidate_vector_checkpoint_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (known native rule failure only: near_stacked_towns small floor12 nearest10)",
             "native_builds": "cmake builds passed for Linux debug, Linux release, Windows debug, Windows release",
-            "native_export": "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49d7c3_candidate_vector_checkpoint_20260604 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (pass exported=2 failed=0)",
+            "native_export": "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49d7c3_candidate_vector_checkpoint_20260604 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (pass exported=2 failed=0)",
             "progress_json": "jq empty ops/progress.json (pass before update)",
             "repo_validation": "python3 tests/validate_repo.py (pass)"
           }
@@ -17507,10 +17507,10 @@
         "currentSliceNotes": "2026-06-04: Source inspection of h3maped.exe 0x49e700 found no global/zone decorative type-limit gate; native decorative filler removed that source-inaccurate gate. Focused Small seed 11 and Medium seed 10 exports remained behavior-neutral (type-limit rejected 0 before removal), so remaining density/block-surface gap is still the exact 0x49e1bf private-state scorer and full 0x49e700 worklist lifecycle, not a count/scalar target.",
         "evidence": {
           "artifacts": {
-            "final_writer_disassembly": ".artifacts/objdump_4aa3e9_4aa603_20260604_goal_continue.txt",
-            "guard_attach_disassembly": ".artifacts/objdump_49cf34_49d2c7_20260604_goal_continue.txt",
-            "guard_candidate_prefill_disassembly": ".artifacts/objdump_49d7c3_49d913_20260604_goal_continue.txt",
-            "guard_constructor_disassembly": ".artifacts/objdump_4a5c07_4a5e60_20260604_goal_continue.txt",
+            "final_writer_disassembly": ".artifacts/rmg_recovery/support/objdump_4aa3e9_4aa603_20260604_goal_continue.txt",
+            "guard_attach_disassembly": ".artifacts/rmg_recovery/support/objdump_49cf34_49d2c7_20260604_goal_continue.txt",
+            "guard_candidate_prefill_disassembly": ".artifacts/rmg_recovery/support/objdump_49d7c3_49d913_20260604_goal_continue.txt",
+            "guard_constructor_disassembly": ".artifacts/rmg_recovery/support/objdump_4a5c07_4a5e60_20260604_goal_continue.txt",
             "medium_phase_snapshot": ".artifacts/rmg_native_batch_export_49cf34_guard_constructor_checkpoint_20260604/medium_4p_seed_10_controlled.phase_snapshot.json",
             "native_export": ".artifacts/rmg_native_batch_export_49cf34_guard_constructor_checkpoint_20260604",
             "previous_candidate_vector_checkpoint": ".artifacts/rmg_native_batch_export_49d7c3_candidate_vector_checkpoint_20260604",
@@ -17579,9 +17579,9 @@
           },
           "validation": {
             "diff_check": "git diff --check (pass before update)",
-            "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49cf34_guard_constructor_checkpoint_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (known native rule failure only: near_stacked_towns small floor12 nearest10)",
+            "fast_validation": "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49cf34_guard_constructor_checkpoint_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (known native rule failure only: near_stacked_towns small floor12 nearest10)",
             "native_builds": "cmake builds passed for Linux debug, Linux release, Windows debug, Windows release",
-            "native_export": "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49cf34_guard_constructor_checkpoint_20260604 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (pass exported=2 failed=0)",
+            "native_export": "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49cf34_guard_constructor_checkpoint_20260604 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (pass exported=2 failed=0)",
             "progress_json": "jq empty ops/progress.json (pass before update)",
             "repo_validation": "python3 tests/validate_repo.py (pass)"
           }
@@ -18542,7 +18542,7 @@
     "h3maped-final-header-metadata-payload-replay-20260610": {
       "artifact": ".artifacts/rmg_recovery/final_header_metadata_payload_summary_20260610.json",
       "checks": [
-        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -noanalysis -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump .artifacts/rmg_recovery/ghidra_final_header_metadata_helpers_20260610 0x4ac857,0x4ad140,0x4ad1e3,0x4ad3eb,0x4aed50,0x4aed89,0x4aedf9,0x4aee32,0x4aeea1,0x4aef12,0x4aef5e,0x4aefce,0x4af037 -readOnly",
+        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless .artifacts/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -noanalysis -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump .artifacts/rmg_recovery/ghidra_final_header_metadata_helpers_20260610 0x4ac857,0x4ad140,0x4ad1e3,0x4ad3eb,0x4aed50,0x4aed89,0x4aedf9,0x4aee32,0x4aeea1,0x4aef12,0x4aef5e,0x4aefce,0x4af037 -readOnly",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_final_header_metadata_static_summary.py",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 146 --out-dir .artifacts/rmg_recovery/medium_seed10_final_header_metadata_payload_20260610 --seed-control-mode pe-patch --seed 10 --map-size medium --water-none --human-computer-down 1 --computer-only-down 0 --breakpoints <57 recovered header/player/metadata raw stream-write sites> --stop-after 0x004ad3db --max-events 20000 --lite --no-info-reg --extra-command \"x/64x *(int*)$esp\" --generate-wait-seconds 2 --debugger-timeout 300 --breakpoint-timeout 300",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_final_header_metadata_payload_summary.py",
@@ -21953,7 +21953,7 @@
         "medium_1_land_10",
         "large_1_land_11"
       ],
-      "nativeRecoveryEvidence": ".artifacts/rmg_start_audit_20260905/exploration_retained_20260918/summary.json",
+      "nativeRecoveryEvidence": ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/exploration_retained_20260918/summary.json",
       "fullRepositoryValidation": "passed; 26 absent historical smokes not executed or counted",
       "densityReport": "Medium/Large/Extra Large pass; Small early 2<4 and mid 7<8 fail. All sizes retain all source records. Not counted as a green density report.",
       "officialExports": "Linux and Windows pass; Windows generated growth includes real day-ten assault victory and all 26 steps",
@@ -22218,7 +22218,7 @@
       ],
       "movement": "Three isolated-start production route fixtures complete without battle through omitted source bodies. Not journeys from starting towns.",
       "nativeComparison": "Medium seed10 and Large seed11 unassisted output matches retained original bytes; runtime sizes/FNV identities match. Standalone same-run authority package refusal preserved. No private-state or Large seed1 original-executable parity claim.",
-      "nativeRecoveryEvidence": ".artifacts/rmg_start_audit_20260905/guard_space_retained_20260918/summary.json",
+      "nativeRecoveryEvidence": ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/guard_space_retained_20260918/summary.json",
       "visualReview": "1920x1080 source/Linux OpenGL start, empty-region, guard overlap and lost-body bypass captures inspected; inspection-only reveal distinguished from normal fog",
       "cleanupAllocatedBytes": 200568832,
       "cleanup": "Disposed task-owned runtime snapshots/logs/screenshots; retained 307200 bytes native recovery comparison and all prior recovery/source/art/caches/saves/unrelated items",
@@ -22230,7 +22230,7 @@
     "docs/rmg-guards-and-empty-space-audit.md",
     "tools/rmg_guard_space_audit.py",
     "tests/test_rmg_guard_space_audit.py",
-    ".artifacts/rmg_start_audit_20260905/guard_space_retained_20260918/summary.json"
+    ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/guard_space_retained_20260918/summary.json"
   ],
   "latestEvidenceId": "audit-rmg-guards-and-empty-space-20260918",
   "latestFinding": "Audit complete, defects not fixed: partial scenery classification and adoption filtering drop 126-197 native objects per sampled map, opening 207-427 blocked source cells. Three production movement fixtures confirm guard bypasses; extra site guards also overlap native control. Six Python tests, 11293 rendered diagnostic checks and two retained native/original byte comparisons pass. No runtime/content/native changes or broad parity claim; 200.57 MB disposable outputs cleaned, recovery evidence retained.",
@@ -22302,6 +22302,17 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "tooling-rmg-evidence-consolidation-20261003",
+      "title": "Consolidate RMG evidence and remove disposable restore/export outputs",
+      "status": "completed",
+      "classification": "owner_requested_storage_and_tooling",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-evidence-storage.md"
+      ],
+      "notes": "Consolidated 3777 files / 5152350949 bytes from 273 old locations; main evidence payloads remain byte-identical. All 22899 retained files / 11212692907 bytes pass SHA-256 and 330 recovery references exist. Updated 40 tracked recovery/source-reference files, leaving temporary game-validation output defaults unchanged. Removed 42 explicit disposable reports/logs/package binary copies/restore scaffolding files (155851175 bytes) plus 804 empty directories. Three new verifier integrity/containment tests, two existing source-storage tests, binary instruction bytes and raw-trace parsed-payload equivalence pass on Windows; 25 modified Python recovery tools parse. Native/runtime source unchanged; no Linux/Wine replay or parity completion claim. Original Linux server layout untouched; platform migration requirements documented."
+    },
+    {
       "id": "tooling-rmg-evidence-restore-20261003",
       "title": "Restore ignored RMG reverse-engineering evidence from the Linux server",
       "status": "completed",
@@ -22310,7 +22321,7 @@
       "sourceDocs": [
         "docs/rmg-evidence-storage.md"
       ],
-      "notes": "Restored 23085 files / 11320919416 bytes; 1160 existing files already identical. All 24245 selected regular files / 11323245417 bytes match server SHA-256 after local read-back. All 330 explicit references across six recovery ledgers now exist. Recovered all 19122 regular files in .artifacts/rmg_recovery and original tmp/rmg_recovery/ghidra_project database. Preserved two differing local inspection files; server versions stored separately. Retained 5748 Linux link definitions and five unique shared inputs without duplicating targets. Windows symlink privilege unavailable; Wine not provisioned. Historical maps kept in ignored snapshot. Rebuildable exports, Wine system files and Ghidra installation excluded; server untouched. No native behavior/parity claim."
+      "notes": "Restored 23085 files / 11320919416 bytes; 1160 existing files already identical. All 24245 selected regular files / 11323245417 bytes match server SHA-256 after local read-back. All 330 explicit references across six recovery ledgers now exist. Recovered all 19122 regular files in .artifacts/rmg_recovery and original .artifacts/rmg_recovery/ghidra_project database. Preserved two differing local inspection files; server versions stored separately. Retained 5748 Linux link definitions and five unique shared inputs without duplicating targets. Windows symlink privilege unavailable; Wine not provisioned. Historical maps kept in ignored snapshot. Rebuildable exports, Wine system files and Ghidra installation excluded; server untouched. No native behavior/parity claim."
     },
     {
       "id": "tooling-source-material-history-migration-20261003",
@@ -25281,7 +25292,7 @@
         "python3 tools/rmg_start_placement_audit.py --label corrections_matrix",
         "python3 tools/rmg_retained_authority_audit.py --label corrections_retained",
         "bin/h3maped_rmg_core_selftest",
-        "WINEPREFIX=/root/dev/heroes-like/.artifacts/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
+        "WINEPREFIX=/root/dev/heroes-like/.artifacts/rmg_recovery/support/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
         "python3 tests/validate_repo.py",
         "python3 tests/packaging_linux_export_smoke.py",
         "python3 tests/packaging_windows_export_smoke.py",
@@ -25340,7 +25351,7 @@
         "python3 tools/rmg_start_placement_audit.py --label corrections_matrix",
         "python3 tools/rmg_retained_authority_audit.py --label corrections_retained",
         "bin/h3maped_rmg_core_selftest",
-        "WINEPREFIX=/root/dev/heroes-like/.artifacts/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
+        "WINEPREFIX=/root/dev/heroes-like/.artifacts/rmg_recovery/support/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
         "python3 tests/validate_repo.py",
         "python3 tests/packaging_linux_export_smoke.py",
         "python3 tests/packaging_windows_export_smoke.py",
@@ -25400,7 +25411,7 @@
         "python3 tools/rmg_start_placement_audit.py --label level_release_evidence --case small_seed68,matrix_72_2_land,xlarge_seed77 --require-level-runtime --resolution 2048x1079",
         "python3 tools/rmg_start_placement_audit.py --label level_validated_live_1280 --case small_seed68 --require-level-runtime --resolution 1280x720",
         "bin/h3maped_rmg_core_selftest",
-        "WINEPREFIX=/root/dev/heroes-like/.artifacts/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
+        "WINEPREFIX=/root/dev/heroes-like/.artifacts/rmg_recovery/support/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
         "python3 tests/validate_repo.py",
         "python3 tests/packaging_linux_export_smoke.py",
         "python3 tests/packaging_windows_export_smoke.py",
@@ -25528,11 +25539,11 @@
         "tests/validate_repo.py"
       ],
       "validationCommands": [
-        "python3 tools/rmg_native_transit_validation.py --label transit_final --render --resolution 2048x1079 --legacy-session .artifacts/rmg_start_audit_20260905/players_level_regression_1280/small_seed68_session.json --baseline-case .artifacts/rmg_start_audit_20260905/players_all_entrances/small_seed68.json",
-        "python3 tools/rmg_native_transit_validation.py --label transit_portals_large_final --portal-case large_seed1 --render --resolution 2048x1079 --baseline-case .artifacts/rmg_start_audit_20260905/players_all_entrances/matrix_108_1_land.json",
-        "python3 tools/rmg_native_transit_validation.py --label transit_portals_smaller_final --portal-case large_seed1 --representatives-only --render --resolution 1280x720 --baseline-case .artifacts/rmg_start_audit_20260905/players_all_entrances/matrix_108_1_land.json",
-        "python3 tools/rmg_native_transit_validation.py --label transit_portals_six_final --portal-case players_6 --baseline-case .artifacts/rmg_start_audit_20260905/players_all_entrances/players_6.json",
-        "python3 tools/rmg_native_transit_validation.py --label transit_portals_islands_final --portal-case small_islands --baseline-case .artifacts/rmg_start_audit_20260905/players_all_entrances/matrix_36_1_islands.json",
+        "python3 tools/rmg_native_transit_validation.py --label transit_final --render --resolution 2048x1079 --legacy-session .artifacts/rmg_recovery/support/rmg_start_audit_20260905/players_level_regression_1280/small_seed68_session.json --baseline-case .artifacts/rmg_recovery/support/rmg_start_audit_20260905/players_all_entrances/small_seed68.json",
+        "python3 tools/rmg_native_transit_validation.py --label transit_portals_large_final --portal-case large_seed1 --render --resolution 2048x1079 --baseline-case .artifacts/rmg_recovery/support/rmg_start_audit_20260905/players_all_entrances/matrix_108_1_land.json",
+        "python3 tools/rmg_native_transit_validation.py --label transit_portals_smaller_final --portal-case large_seed1 --representatives-only --render --resolution 1280x720 --baseline-case .artifacts/rmg_recovery/support/rmg_start_audit_20260905/players_all_entrances/matrix_108_1_land.json",
+        "python3 tools/rmg_native_transit_validation.py --label transit_portals_six_final --portal-case players_6 --baseline-case .artifacts/rmg_recovery/support/rmg_start_audit_20260905/players_all_entrances/players_6.json",
+        "python3 tools/rmg_native_transit_validation.py --label transit_portals_islands_final --portal-case small_islands --baseline-case .artifacts/rmg_recovery/support/rmg_start_audit_20260905/players_all_entrances/matrix_36_1_islands.json",
         "python3 -m unittest discover -s tests -p test_rmg_native_transit_validation.py",
         "python3 tools/rmg_player_identity_validation.py --label transit_player_regression",
         "python3 -m unittest discover -s tests -p test_rmg_start_placement_audit.py",
@@ -25546,8 +25557,8 @@
         "git diff --check",
         "python3 tools/rmg_native_transit_validation.py --label transit_profile_native_control --portal-case large_profile --representatives-only --baseline-session .artifacts/large_town_build_end_turn_20260905/verified_final/day_1_before_build.json",
         "python3 tests/large_town_build_end_turn_profile.py --label rmg_transit_profile_final --detail",
-        "python3 tools/rmg_native_transit_validation.py --label transit_islands_journey_final --portal-case small_islands --journey-only --baseline-case .artifacts/rmg_start_audit_20260905/players_all_entrances/matrix_36_1_islands.json",
-        "python3 tools/rmg_native_transit_validation.py --label transit_caves_journey_final --journey-only --baseline-case .artifacts/rmg_start_audit_20260905/players_all_entrances/small_seed68.json"
+        "python3 tools/rmg_native_transit_validation.py --label transit_islands_journey_final --portal-case small_islands --journey-only --baseline-case .artifacts/rmg_recovery/support/rmg_start_audit_20260905/players_all_entrances/matrix_36_1_islands.json",
+        "python3 tools/rmg_native_transit_validation.py --label transit_caves_journey_final --journey-only --baseline-case .artifacts/rmg_recovery/support/rmg_start_audit_20260905/players_all_entrances/small_seed68.json"
       ],
       "completionCriteria": [
         "Preserve source-proven native endpoint pairs and directionality through original-content packages and saves without changing RNG, terrain, placement or masks",
@@ -25592,7 +25603,7 @@
         "python3 tools/rmg_start_placement_audit.py --label corrections_matrix",
         "python3 tools/rmg_retained_authority_audit.py --label corrections_retained",
         "bin/h3maped_rmg_core_selftest",
-        "WINEPREFIX=/root/dev/heroes-like/.artifacts/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
+        "WINEPREFIX=/root/dev/heroes-like/.artifacts/rmg_recovery/support/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
         "python3 tests/validate_repo.py",
         "python3 tests/packaging_linux_export_smoke.py",
         "python3 tests/packaging_windows_export_smoke.py",
@@ -25644,7 +25655,7 @@
         "python3 tools/rmg_start_placement_audit.py --label corrections_matrix",
         "python3 tools/rmg_retained_authority_audit.py --label corrections_retained",
         "bin/h3maped_rmg_core_selftest",
-        "WINEPREFIX=/root/dev/heroes-like/.artifacts/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
+        "WINEPREFIX=/root/dev/heroes-like/.artifacts/rmg_recovery/support/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
         "python3 tests/validate_repo.py",
         "python3 tests/packaging_linux_export_smoke.py",
         "python3 tests/packaging_windows_export_smoke.py",
@@ -25709,7 +25720,7 @@
         "python3 tools/rmg_retained_authority_audit.py --label retained_matrix",
         "python3 -m unittest discover -s tests -p test_rmg_start_placement_audit.py",
         "bin/h3maped_rmg_core_selftest",
-        "WINEPREFIX=/root/dev/heroes-like/.artifacts/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
+        "WINEPREFIX=/root/dev/heroes-like/.artifacts/rmg_recovery/support/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
         "python3 tests/validate_repo.py",
         "python3 tests/packaging_linux_export_smoke.py",
         "python3 tests/packaging_windows_export_smoke.py",
@@ -25721,26 +25732,26 @@
       "completedAt": "2026-09-05T17:45:14Z",
       "completionEvidence": [
         "docs/rmg-start-placement-and-h3maped-audit.md",
-        ".artifacts/rmg_start_audit_20260905/matrix/summary.json",
-        ".artifacts/rmg_start_audit_20260905/rendered_final/ordinal95.json",
-        ".artifacts/rmg_start_audit_20260905/rendered_final/ordinal95.png",
-        ".artifacts/rmg_start_audit_20260905/rendered_final/small_seed68.json",
-        ".artifacts/rmg_start_audit_20260905/rendered_final/small_seed68.png",
-        ".artifacts/rmg_start_audit_20260905/legacy_proxy_repro/legacy_proxy_seed1.json",
-        ".artifacts/rmg_start_audit_20260905/retained_matrix/summary.json",
-        ".artifacts/rmg_start_audit_20260905/owner_medium_water_clean/extraction_summary.json",
-        ".artifacts/rmg_start_audit_20260905/owner_water_private/winedbg_interactive_trace_ledger.json",
-        ".artifacts/rmg_start_audit_20260905/private_water_compare/summary.json",
-        ".artifacts/rmg_start_audit_20260905/private_land_compare/summary.json",
-        ".artifacts/rmg_start_audit_20260905/runtime_boundary.log",
-        ".artifacts/rmg_start_audit_20260905/object_pool.log",
-        ".artifacts/rmg_start_audit_20260905/faction_hero_isolated_final.log",
-        ".artifacts/rmg_start_audit_20260905/linux_selftest.log",
-        ".artifacts/rmg_start_audit_20260905/windows_selftest_configured.log",
-        ".artifacts/rmg_start_audit_20260905/validate_repo_final.log",
-        ".artifacts/rmg_start_audit_20260905/linux_package.log",
-        ".artifacts/rmg_start_audit_20260905/windows_package.log",
-        ".artifacts/rmg_start_audit_20260905/linux-generated-flow/live_validation_report.json"
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/matrix/summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/rendered_final/ordinal95.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/rendered_final/ordinal95.png",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/rendered_final/small_seed68.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/rendered_final/small_seed68.png",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/legacy_proxy_repro/legacy_proxy_seed1.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/retained_matrix/summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/owner_medium_water_clean/extraction_summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/owner_water_private/winedbg_interactive_trace_ledger.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/private_water_compare/summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/private_land_compare/summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/runtime_boundary.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/object_pool.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/faction_hero_isolated_final.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/linux_selftest.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/windows_selftest_configured.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/validate_repo_final.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/linux_package.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/windows_package.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/linux-generated-flow/live_validation_report.json"
       ],
       "notes": "Audit complete, not runtime fixes: 36 generated-map requests (35 accepted plus one expected unsupported strength), 83 starts all displaced from town entrances, underground level loss with seed-68 immobility, ordinal-95 supplemental guard on hero start, faction-keyed opponent merging and missing source cross-level transit adoption. Fresh unassisted native comparisons match 23/24 retained owner payloads; Medium normal-water seed 10 diverges, confirmed by fresh H3MapEd final bytes and post-0x4a4c8e/pre-0x49eb8d private-state differences. Nine Python tests, repository checks, both native selftests and both platform export/startup/generated-entry smokes pass. The native mismatch and stale legacy raw-bank assertion remain failing and documented; no release or full-parity claim."
     },
@@ -61947,7 +61958,7 @@
         "2026-05-19 guards/rewards/blocker convergence: src/gdextension/src/h3maped_small_rmg.cpp now materializes reward guard records from the reward commit path, records score-gate recovery for reward coordinates without treating it as exact parity, seeds decorative occupancy from full mine/reward footprints plus reward guards, and adopts decorative objects with recovered H3M source body footprints while keeping movement block masks separate. tools/rmg_phase_drift_audit.py now includes reward guard and recovery evidence in private/package counts and earliest-divergence reporting. Fresh controlled seed-11 audit keeps reference_alignment_pass; same-seed diagnostic drift is explicit: rewards 45 vs h3maped 52, guards 24 vs 29, objects 250 vs 299, object-blocked tiles 659 vs 816, guarded-blocked tiles 749 vs 903, movement-blocked tiles 364 vs 816, guarded-movement-blocked tiles 490 vs 903, decorations 163 vs 158, and road cells 84 vs 81. Refreshed broad Small-land audit has 37/37 green native cases; averages are 253.62 package objects, 4.89 towns, 23.54 mines, 35.49 rewards, 36.92 connection guards, 16.59 blockers, and 109.78 road-overlay cells. Validation passed Linux debug/release native builds, Windows debug/release native builds, focused phase snapshot export, controlled phase-drift audit, package surface topology report, strict Small boundary report, refreshed broad divergence export/audit, Python compilation, jq empty ops/progress.json, git diff --check, and the heroes-progress helper.",
         "2026-05-19 executable-first h3maped convergence: src/gdextension/src/h3maped_small_rmg.cpp records 0x4a9c7c density mine attempts without treating density weights as guaranteed coordinate records, while preserving template/placement RNG calls and reporting deferred density materialization. tools/rmg_phase_drift_audit.py now emits earliest_divergence with phase-ordered checks and RNG checkpoints. Fresh controlled seed-11 audit keeps reference_alignment_pass; mine-like count matches h3maped 18/18; road type byte matches h3maped type 1; and first divergent phase is town_castle_endpoint_vector with h3maped endpoints 0:10,26 0:20,12 0:25,5 0:28,20 vs native 0:15,6 0:17,21 0:26,13 0:6,15. Remaining same-seed drift is explicit: rewards 36 vs 52, guards 19 vs 29, road cells 84 vs 81 with 9-cell overlap, objects 245 vs 299, object-blocked tiles 387 vs 816, and movement-blocked tiles 362 vs 816. Refreshed broad Small-land audit still has 37/37 green native cases; averages are 249.73 package objects, 4.89 towns, 23.54 mines, 23.57 rewards, 28.51 connection guards, 16.59 blockers, and 109.78 road-overlay cells. Validation passed Python compilation, Linux debug/release native builds, Windows debug/release native builds, focused phase snapshot export, controlled phase-drift audit, package surface topology report, strict Small boundary report, refreshed broad divergence audit, jq empty ops/progress.json, and git diff --check.",
         "2026-05-19 object/guard mask-surface repair: src/gdextension/src/h3maped_small_rmg.cpp now preserves source object passability masks into package body surfaces for mines, primary/scenic objects, rewards, towns, guards, and decorative blockers while keeping separately gated package block surfaces for runtime movement. tools/rmg_fast_audit.py and tools/rmg_phase_drift_audit.py now distinguish diagnostic H3M-style body footprint metrics from runtime movement-block metrics and report native surface totals by object kind. Fresh controlled seed-11 audit keeps reference_alignment_pass and improves same-seed diagnostic footprint drift without count fitting: object-blocked tiles are now native 498 vs h3maped 816 (previously 339 vs 816), guarded-blocked tiles are now 611 vs 903 (previously 339 vs 903), and road unique tiles are 84 vs 81. New runtime movement metrics report movement-blocked tiles 457 vs 816 and guarded-movement-blocked tiles 587 vs 903, so remaining movement divergence remains visible. Native surface attribution for the controlled case is connection blockers 38/38 body/block, decorative blockers 195/194, guards 29/29 plus 246 guard-control tiles, mines 180/180, rewards 36/0, scenic 9/9, and towns 52/48. Broad Small-land audit still has 37/37 green native cases; highest structural risk remains excessive road tiles in matrix_2p_seed_28, matrix_2p_seed_4, and matrix_3p_seed_3. Validation passed Python compile, Linux debug/release native builds, Windows debug/release native builds, focused phase snapshot export, controlled phase-drift audit, package surface topology report, strict Small boundary report, and refreshed broad divergence audit.",
-        "2026-05-19 Small h3maped divergence audit: added tools/rmg_h3maped_small_divergence_export.tscn and tools/rmg_h3maped_small_divergence_audit.py to quantify native Small 36x36 one-level land divergence without making exact h3maped byte/count parity a runtime success gate. Fresh report .artifacts/rmg_h3maped_small_divergence_audit/small_divergence_report.json covers 37 native 2p/3p/4p Small-land cases; all 37 pass the strict public-generation validator. Native broad averages are 290.65 package objects, 4.89 towns, 41.51 mines, 41.51 rewards, 39.14 connection guards, 16.59 blockers, and 109.78 road-overlay cells. Existing same-seed controlled h3maped seed-11 reference was reused without generating new Wine references and keeps reference_alignment_pass: native matches h3maped seed/player/template identity and now matches town count and guard count, but still diverges on mines 36 vs 18, rewards 72 vs 52, objects 291 vs 299, object-blocked tiles 339 vs 816, guarded-blocked tiles 339 vs 903, decorations 172 vs 158, road cells 84 vs 81 with only 9-cell overlap, and road placement classified as road_endpoint_vector_drift. Highest native structural-risk cases are matrix_2p_seed_28, matrix_2p_seed_4, and matrix_3p_seed_3, all because road tiles exceed the current broad Small-land heuristic. This audit identifies next real implementation pressure in reward/materialization density, package object masks, and endpoint/placement semantics; it remains diagnostic and read-only with respect to generator behavior.",
+        "2026-05-19 Small h3maped divergence audit: added tools/rmg_h3maped_small_divergence_export.tscn and tools/rmg_h3maped_small_divergence_audit.py to quantify native Small 36x36 one-level land divergence without making exact h3maped byte/count parity a runtime success gate. Fresh report .artifacts/rmg_recovery/support/rmg_h3maped_small_divergence_audit/small_divergence_report.json covers 37 native 2p/3p/4p Small-land cases; all 37 pass the strict public-generation validator. Native broad averages are 290.65 package objects, 4.89 towns, 41.51 mines, 41.51 rewards, 39.14 connection guards, 16.59 blockers, and 109.78 road-overlay cells. Existing same-seed controlled h3maped seed-11 reference was reused without generating new Wine references and keeps reference_alignment_pass: native matches h3maped seed/player/template identity and now matches town count and guard count, but still diverges on mines 36 vs 18, rewards 72 vs 52, objects 291 vs 299, object-blocked tiles 339 vs 816, guarded-blocked tiles 339 vs 903, decorations 172 vs 158, road cells 84 vs 81 with only 9-cell overlap, and road placement classified as road_endpoint_vector_drift. Highest native structural-risk cases are matrix_2p_seed_28, matrix_2p_seed_4, and matrix_3p_seed_3, all because road tiles exceed the current broad Small-land heuristic. This audit identifies next real implementation pressure in reward/materialization density, package object masks, and endpoint/placement semantics; it remains diagnostic and read-only with respect to generator behavior.",
         "2026-05-18 small-land usability parity regate: owner direction changed the active acceptance from byte/cell/count parity with controlled h3maped references to player-facing usability parity for strict Small 36x36 one-level land. Exact h3maped road/cell/coordinate drift remains diagnostic evidence only; it is not the generation success gate. tests/native_random_map_package_surface_topology_report.gd now asserts usable package topology instead of exact template counts: h3maped source provenance, 36x36x1 land, three owned start towns in distinct zones, guarded route links with zero unguarded route-link metrics, nonempty connected route-road records, route-node/town zone consistency, and object/town/guard/road floors. tests/native_rmg_small_h3maped_port_boundary_report.gd was reduced from a byte/count ledger to a Small-land usability boundary covering compiled h3maped data provenance, executable-template authority, green fast validator, generation determinism, package/session adoption, map/scenario validation, save/load round trip, explicit-template authority, and out-of-scope Medium rejection. Fresh validation passed both focused Godot gates. Current seed-1 3p usable output reports template h3maped_template_027, 4 towns, 274 package objects, 37 mines, 37 rewards, 37 connection guards, 16 blockers, 8/8 guarded route links, 6 connected road records, 92 unique road cells, zero unguarded route links, and zero disconnected road segments.",
         "2026-05-18 road endpoint-vector repair follow-up: src/gdextension/src/h3maped_small_rmg.cpp now builds generator+0x14b0 road endpoints from recovered town/castle append sites only, preserves 0x4a95af vs 0x4a932e append provenance, and reports mine/reward local coordinate records as excluded local vectors instead of feeding them into road topology. The same pass corrected duplicate inactive-player minimum-town scheduling so the controlled seed-11 native endpoint count matches the H3M town count. tools/rmg_h3m_native_phase_snapshot_export.gd and tools/rmg_phase_drift_audit.py now expose excluded local coordinates plus H3M/native endpoint-coordinate comparison. Fresh controlled small_3p_seed_11 audit keeps reference_alignment_pass and reduces native roads from 772 cells / 41 endpoints / 820 chains to 84 cells / 4 endpoints / 6 chains, with 36 local mine coordinates excluded. The exact-parity diagnostic still reports road_endpoint_vector_drift because endpoint coordinates differ from H3M towns: H3M 0:10,26 0:20,12 0:25,5 0:28,20 vs native 0:6,15 0:15,6 0:17,21 0:26,13; H3M road type byte distribution is 1:81 while native is 2:84.",
         "2026-05-18 road generation drift repair: src/gdextension/src/h3maped_small_rmg.cpp removed the local route-pair policy that routed all town-town pairs plus each mine to its nearest town. The road phase now walks generator+0x14b0 records in vector order, scans all later records, preserves provenance-tagged endpoint records, records 0x4aae2f reset/rerun telemetry, honors generated-cell +0x28 bit 25 when upstream materializes it, and reports endpoint-vector incompleteness instead of compensating. tools/rmg_h3m_native_phase_snapshot_export.gd now exports exact native private road comparison inputs, and tools/rmg_phase_drift_audit.py now compares controlled H3M road bytes 4/5/6 with native private/package road cells, cell-set intersections, native-only and H3M-only cells, coordinate-vector counts, pair counts, accepted chain contribution, and road byte distributions. Fresh controlled small_3p_seed_11 audit keeps reference_alignment_pass and reports diagnostic road_endpoint_vector_drift: H3M 81 road cells, native private/package 772, intersection 48, native-only 724, H3M-only 33, coordinate vector 41, pair count 820, accepted chains 820, route_pair_policy 0x4ab52a_vector_order_all_later_records. This remains diagnostic upstream endpoint-vector/town/mine producer drift rather than a count-fitting target.",
@@ -61962,7 +61973,7 @@
         "Town neutralization correction on 2026-05-15: owner manual review exposed that strict Small-land 2p/3p/4p outputs were only materializing player-count towns, unlike h3maped templates that keep inactive source-player minimum town/castle records and write them as neutral owner -1. h3maped_small_rmg.cpp now schedules inactive source-player minimum towns/castles as neutralized town records, preserves explicit neutral minimum towns, packages neutral towns with nullable player slots, includes neutral towns in road route nodes, and allows package adoption when total towns exceed player starts while still requiring one owned start town per active player. NativeRandomMapPackageSessionBridge.gd now accepts neutral town owner/player slots. Corpus, runtime, topology, and strict boundary reports now gate h3maped-scheduled neutral town counts. Regenerated manual packages now report manual-strict_small_2p_seed_1 as 4 towns / 2 neutral, manual-strict_small_3p_seed_2 as 4 towns / 1 neutral, and manual-strict_small_4p_seed_3 as 8 towns / 4 neutral. Validation passed native rebuild, strict boundary, corpus audit, runtime corpus acceptance, package topology, disk startup, guard/reward adoption, editor load, manual export, maps-folder browser integration, and git diff --check. The slice remains blocked for remaining owner-reported map-quality defects: blockers/resources, interactable density, road breadth, and edge density.",
         "Full strict Small-land gate verification on 2026-05-15: after the topology-preview/manual-review documentation update, the current state passed cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_random_map_package_surface_topology_report.tscn, tests/native_rmg_small_h3maped_runtime_corpus_acceptance_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, tests/native_rmg_small_h3maped_corpus_audit_report.tscn, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_negative_validator_report.tscn, tests/native_random_map_disk_package_startup_report.tscn, tests/native_random_map_guard_reward_package_adoption_report.tscn, tests/map_editor_load_map_package_report.tscn, tests/maps_folder_package_browser_integration_report.tscn, tools/rmg_small_manual_inspection_export.tscn, tests/native_rmg_small_h3maped_port_boundary_report.tscn, jq empty ops/progress.json, git diff --check, and the heroes-progress helper. The owner-review export manifest remained green for all three package pairs with 3/3 editor loads, 3/3 maps-folder index hits, zero unguarded route links, and validator-gated topology previews. A follow-up manual-export audit now distinguishes literal artifact objects from artifact-category reward proxies: the three owner-review packages report artifact proxy counts 2/1/2 and literal artifact object counts 0/0/0. Artifact and broader neutral-object family proof remains a post-owner-acceptance gap, but the current packages do have artifact-category reward proxies.",
         "Route-node zone correction on 2026-05-15: manual package-data inspection found generated route graph town nodes carrying runtime_zone_index -1 while referenced town records had valid h3maped runtime zones. src/gdextension/src/h3maped_small_rmg.cpp now copies town runtime_zone_index into route nodes, and tests/native_random_map_package_surface_topology_report.gd gates missing town references, unknown route-node runtime zones, and route-node/town zone mismatches for converted and loaded packages. cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_random_map_package_surface_topology_report.tscn, tools/rmg_small_manual_inspection_export.tscn, and tests/native_rmg_small_h3maped_port_boundary_report.tscn passed after the change; regenerated local manual inspection packages now show concrete route-node runtime zones for all 2p/3p/4p cases.",
-        "Manual inspection package export on 2026-05-15: tracked tool scene tools/rmg_small_manual_inspection_export.tscn exported three local owner-review strict Small 36x36 one-level land package pairs under maps/: manual-strict_small_2p_seed_1, manual-strict_small_3p_seed_2, and manual-strict_small_4p_seed_3. The exporter used native generate_random_map(), direct convert_generated_payload(), native package save/load, maps-folder package index validation, and MapEditorShell.validation_load_maps_folder_package(). Repeat with GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tools/rmg_small_manual_inspection_export.tscn. .artifacts/rmg_small_manual_inspection_manifest.json reports all three cases ok:true, full_generation_status h3maped_small_public_package_production_ready_strict_small_land, generation_status h3maped_small_validated_package_ready, production_ready true, production_ready_scope strict_small_36x36_one_level_land_only, paired package hashes, maps-folder index discovery for all three package ids, editor load success for all three package-backed working copies, and per-package inspection_summary counts for zones, player-owned/human/computer/neutral towns, route links, guarded links, road records, unique/source/segment road cells, guards, connection blockers, decorative obstacles, mines, rewards, artifacts, object totals, and object counts by kind. The manifest also carries compact town_start_summary, route_gate_summary, and package-derived topology_preview sections, and .artifacts/rmg_small_manual_inspection_summary.md gives a human-readable owner review handoff with package ids, acceptance checklist, defect-report format, package paths, editor-load status, topology previews, towns/starts, route gates, road edges, guarded/unguarded links, and object-family counts. The exporter fails if player-owned towns, start towns, start contract counts, town-start summaries, route-link counts, guarded-link counts, unguarded links, road records, or topology-preview dimensions are inconsistent with the strict Small-land case. Generated maps/*.amap and maps/*.ascenario files are local owner-inspection evidence and must not be committed.",
+        "Manual inspection package export on 2026-05-15: tracked tool scene tools/rmg_small_manual_inspection_export.tscn exported three local owner-review strict Small 36x36 one-level land package pairs under maps/: manual-strict_small_2p_seed_1, manual-strict_small_3p_seed_2, and manual-strict_small_4p_seed_3. The exporter used native generate_random_map(), direct convert_generated_payload(), native package save/load, maps-folder package index validation, and MapEditorShell.validation_load_maps_folder_package(). Repeat with GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tools/rmg_small_manual_inspection_export.tscn. .artifacts/rmg_recovery/support/rmg_small_manual_inspection_manifest.json reports all three cases ok:true, full_generation_status h3maped_small_public_package_production_ready_strict_small_land, generation_status h3maped_small_validated_package_ready, production_ready true, production_ready_scope strict_small_36x36_one_level_land_only, paired package hashes, maps-folder index discovery for all three package ids, editor load success for all three package-backed working copies, and per-package inspection_summary counts for zones, player-owned/human/computer/neutral towns, route links, guarded links, road records, unique/source/segment road cells, guards, connection blockers, decorative obstacles, mines, rewards, artifacts, object totals, and object counts by kind. The manifest also carries compact town_start_summary, route_gate_summary, and package-derived topology_preview sections, and .artifacts/rmg_recovery/support/rmg_small_manual_inspection_summary.md gives a human-readable owner review handoff with package ids, acceptance checklist, defect-report format, package paths, editor-load status, topology previews, towns/starts, route gates, road edges, guarded/unguarded links, and object-family counts. The exporter fails if player-owned towns, start towns, start contract counts, town-start summaries, route-link counts, guarded-link counts, unguarded links, road records, or topology-preview dimensions are inconsistent with the strict Small-land case. Generated maps/*.amap and maps/*.ascenario files are local owner-inspection evidence and must not be committed.",
         "Post-flag full Small-land acceptance bundle on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_random_map_package_surface_topology_report.tscn, tests/native_rmg_small_h3maped_runtime_corpus_acceptance_report.tscn, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, tests/native_rmg_small_h3maped_corpus_audit_report.tscn, tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn, tests/native_rmg_small_h3maped_negative_validator_report.tscn, tests/native_random_map_disk_package_startup_report.tscn, tests/native_random_map_guard_reward_package_adoption_report.tscn, tests/map_editor_load_map_package_report.tscn, tests/maps_folder_package_browser_integration_report.tscn, and tests/native_rmg_small_h3maped_port_boundary_report.tscn passed for strict Small 36x36 one-level land. Generated root maps/*.amap and maps/*.ascenario files were cleaned after validation; uploaded .h3m evidence remains uncommitted local inspection data. The production_ready flag boundary is scoped only to strict Small land; unsupported modes remain blocked.",
         "Focused Small-land runtime/editor/renderer acceptance on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2, tests/native_rmg_small_h3maped_runtime_acceptance_report.tscn, tests/native_rmg_small_h3maped_corpus_audit_report.tscn, tests/native_random_map_package_surface_topology_report.tscn, tests/native_rmg_small_h3maped_negative_validator_report.tscn, tests/native_random_map_disk_package_startup_report.tscn, and tests/native_random_map_guard_reward_package_adoption_report.tscn passed. The runtime acceptance report generates/saves/loads a strict Small 36x36 one-level land package, starts a session from disk package startup, checks package/runtime towns, guards, connection blockers, resources, roads, body/visit/block masks, finds a playable route from the start-town visit tile to a package road tile, and verifies normal overworld rendering, road overlay presentation, route preview, spatial indexes, and town presentation profiles. The fix tightened the native 0x41e951 footprint gate after attribution showed decorative object bodies blocking 30/35 focused road tiles. This is focused Slice H evidence only; template-selection hard lock, broader manual inspection, water/underground/larger sizes, and full production parity remain pending.",
         "Focused Small-land corpus audit on 2026-05-15: cmake --build .artifacts/map_persistence_native_build --parallel 2 and tests/native_rmg_small_h3maped_corpus_audit_report.tscn passed after gating 15 strict Small-land cases across player counts 2/3/4 and seeds 1..5. The corpus requires validated native package generation, fast structural validator green, exact source-state claim true, zero owner-transition diagnostic gap, requested player starts and owned towns, guarded route links, blocking connection blockers/guards, attached road route graph, nonzero roads/mines/rewards/decorative obstacles, package save/load object-count preservation, and production_ready false. The run exposed and fixed an over-strict local 0x4a93a2 town-footprint body-zone check; editor/runtime acceptance remains pending.",
@@ -92254,7 +92265,7 @@
         "python3 tools/rmg_h3maped_controlled_reference.py --size medium --water land --level-count 1 --players 4 --human-players 1 --seed <seed> --case <case_id>",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 300 tools/rmg_h3m_native_phase_snapshot_export.tscn -- --controlled-reference-manifest <manifest>",
         "python3 tools/rmg_phase_drift_audit.py --snapshot <snapshot> --h3m <controlled_reference_h3m>",
-        "python3 tools/rmg_h3maped_medium_reference_corpus_audit.py --reference-root .artifacts/rmg_h3maped_controlled_reference_medium --out .artifacts/rmg_h3maped_medium_reference_corpus_audit --pretty",
+        "python3 tools/rmg_h3maped_medium_reference_corpus_audit.py --reference-root .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium --out .artifacts/rmg_recovery/support/rmg_h3maped_medium_reference_corpus_audit --pretty",
         "python3 tests/validate_repo.py",
         "jq empty ops/progress.json",
         "git diff --check"
@@ -92269,7 +92280,7 @@
           "medium_3p_seed_11_controlled",
           "medium_4p_seed_10_controlled"
         ],
-        "corpus_audit": ".artifacts/rmg_h3maped_medium_reference_corpus_audit/medium_reference_corpus_audit.json",
+        "corpus_audit": ".artifacts/rmg_recovery/support/rmg_h3maped_medium_reference_corpus_audit/medium_reference_corpus_audit.json",
         "h3maped_sha256": "4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37",
         "native_snapshot_count": 3,
         "observed_4p_phase_drift": "template_selection_drift",
@@ -92282,7 +92293,7 @@
           4
         ],
         "ready_case_count": 3,
-        "reference_root": ".artifacts/rmg_h3maped_controlled_reference_medium"
+        "reference_root": ".artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium"
       },
       "id": "native-rmg-medium-h3maped-land-reference-corpus-10184",
       "implementationTargets": [
@@ -92290,7 +92301,7 @@
         "tools/rmg_h3m_native_phase_snapshot_export.gd",
         "tools/rmg_phase_drift_audit.py",
         "tools/rmg_h3maped_medium_reference_corpus_audit.py",
-        ".artifacts/rmg_h3maped_controlled_reference"
+        ".artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference"
       ],
       "nonGoals": [
         "native runtime implementation",
@@ -92484,7 +92495,7 @@
         "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 600 --scene res://tests/native_rmg_medium_h3maped_corpus_audit_report.tscn (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_medium_h3maped_template_selection_report.tscn (passed)",
-        "python3 tools/rmg_h3maped_medium_reference_corpus_audit.py --reference-root .artifacts/rmg_h3maped_controlled_reference_medium --out .artifacts/rmg_h3maped_medium_reference_corpus_audit --pretty (passed)",
+        "python3 tools/rmg_h3maped_medium_reference_corpus_audit.py --reference-root .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium --out .artifacts/rmg_recovery/support/rmg_h3maped_medium_reference_corpus_audit --pretty (passed)",
         "GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 240 --scene res://tests/native_rmg_small_h3maped_template_selection_hard_lock_report.tscn (passed)",
         "cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed)",
         "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2 (passed)",
@@ -114387,26 +114398,26 @@
       ],
       "artifacts": [
         "docs/rmg-start-placement-and-h3maped-audit.md",
-        ".artifacts/rmg_start_audit_20260905/matrix/summary.json",
-        ".artifacts/rmg_start_audit_20260905/rendered_final/ordinal95.json",
-        ".artifacts/rmg_start_audit_20260905/rendered_final/ordinal95.png",
-        ".artifacts/rmg_start_audit_20260905/rendered_final/small_seed68.json",
-        ".artifacts/rmg_start_audit_20260905/rendered_final/small_seed68.png",
-        ".artifacts/rmg_start_audit_20260905/legacy_proxy_repro/legacy_proxy_seed1.json",
-        ".artifacts/rmg_start_audit_20260905/retained_matrix/summary.json",
-        ".artifacts/rmg_start_audit_20260905/owner_medium_water_clean/extraction_summary.json",
-        ".artifacts/rmg_start_audit_20260905/owner_water_private/winedbg_interactive_trace_ledger.json",
-        ".artifacts/rmg_start_audit_20260905/private_water_compare/summary.json",
-        ".artifacts/rmg_start_audit_20260905/private_land_compare/summary.json",
-        ".artifacts/rmg_start_audit_20260905/runtime_boundary.log",
-        ".artifacts/rmg_start_audit_20260905/object_pool.log",
-        ".artifacts/rmg_start_audit_20260905/faction_hero_isolated_final.log",
-        ".artifacts/rmg_start_audit_20260905/linux_selftest.log",
-        ".artifacts/rmg_start_audit_20260905/windows_selftest_configured.log",
-        ".artifacts/rmg_start_audit_20260905/validate_repo_final.log",
-        ".artifacts/rmg_start_audit_20260905/linux_package.log",
-        ".artifacts/rmg_start_audit_20260905/windows_package.log",
-        ".artifacts/rmg_start_audit_20260905/linux-generated-flow/live_validation_report.json"
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/matrix/summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/rendered_final/ordinal95.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/rendered_final/ordinal95.png",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/rendered_final/small_seed68.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/rendered_final/small_seed68.png",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/legacy_proxy_repro/legacy_proxy_seed1.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/retained_matrix/summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/owner_medium_water_clean/extraction_summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/owner_water_private/winedbg_interactive_trace_ledger.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/private_water_compare/summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/private_land_compare/summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/runtime_boundary.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/object_pool.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/faction_hero_isolated_final.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/linux_selftest.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/windows_selftest_configured.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/validate_repo_final.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/linux_package.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/windows_package.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/linux-generated-flow/live_validation_report.json"
       ],
       "runtimeImplementationCredit": false
     }
@@ -114544,7 +114555,7 @@
         "medium_1_land_10",
         "large_1_land_11"
       ],
-      "nativeRecoveryEvidence": ".artifacts/rmg_start_audit_20260905/exploration_retained_20260918/summary.json",
+      "nativeRecoveryEvidence": ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/exploration_retained_20260918/summary.json",
       "fullRepositoryValidation": "passed; 26 absent historical smokes not executed or counted",
       "densityReport": "Medium/Large/Extra Large pass; Small early 2<4 and mid 7<8 fail. All sizes retain all source records. Not counted as a green density report.",
       "officialExports": "Linux and Windows pass; Windows generated growth includes real day-ten assault victory and all 26 steps",
@@ -118317,8 +118328,8 @@
       "commands": [
         "cmake --build src/gdextension/build/linux-debug --target aurelion_map_persistence -j 2 (passed)",
         "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_4a9e40_logical_selector_probe_20260604 --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2 --controlled-case medium_4p_seed_10_density_fresh_20260602:medium:4:10:land:1:1:3 --emit-phase-snapshot --print-manifest (passed, exported=2)",
-        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_compare_current/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_batch_export_4a9e40_logical_selector_probe_20260604/small_3p_seed_11_controlled.amap --compare --pretty > .artifacts/rmg_native_batch_export_4a9e40_logical_selector_probe_20260604/small_3p_seed_11_controlled.audit.json (diagnostic fail expected; metrics recorded)",
-        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_compare_current/h3maped_medium_4p_seed_10_density_fresh_20260602.h3m --amap .artifacts/rmg_native_batch_export_4a9e40_logical_selector_probe_20260604/medium_4p_seed_10_density_fresh_20260602.amap --compare --pretty > .artifacts/rmg_native_batch_export_4a9e40_logical_selector_probe_20260604/medium_4p_seed_10_density_fresh_20260602.audit.json (diagnostic fail expected; metrics recorded)",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_batch_export_4a9e40_logical_selector_probe_20260604/small_3p_seed_11_controlled.amap --compare --pretty > .artifacts/rmg_native_batch_export_4a9e40_logical_selector_probe_20260604/small_3p_seed_11_controlled.audit.json (diagnostic fail expected; metrics recorded)",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current/h3maped_medium_4p_seed_10_density_fresh_20260602.h3m --amap .artifacts/rmg_native_batch_export_4a9e40_logical_selector_probe_20260604/medium_4p_seed_10_density_fresh_20260602.amap --compare --pretty > .artifacts/rmg_native_batch_export_4a9e40_logical_selector_probe_20260604/medium_4p_seed_10_density_fresh_20260602.audit.json (diagnostic fail expected; metrics recorded)",
         "cmake --build src/gdextension/build/linux-release --target aurelion_map_persistence -j 2 (passed)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed before this update)",
@@ -118376,8 +118387,8 @@
         "objdump -d -Mintel --start-address=0x49e1bf --stop-address=0x49e700 /root/Downloads/h3maped.exe (inspected 0x49e27f..0x49e2a7 first-pass mask-A then 0x41e951 behavior)",
         "cmake --build src/gdextension/build/linux-debug --target aurelion_map_persistence -j 2 (passed)",
         "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49e1bf_maska_passable_skip_probe_20260604 --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2 --controlled-case medium_4p_seed_10_density_fresh_20260602:medium:4:10:land:1:1:3 --emit-phase-snapshot --print-manifest (passed, exported=2)",
-        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_compare_current/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_batch_export_49e1bf_maska_passable_skip_probe_20260604/small_3p_seed_11_controlled.amap --compare --pretty > .artifacts/rmg_native_batch_export_49e1bf_maska_passable_skip_probe_20260604/small_3p_seed_11_controlled.audit.json (diagnostic fail expected; metrics recorded)",
-        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_compare_current/h3maped_medium_4p_seed_10_density_fresh_20260602.h3m --amap .artifacts/rmg_native_batch_export_49e1bf_maska_passable_skip_probe_20260604/medium_4p_seed_10_density_fresh_20260602.amap --compare --pretty > .artifacts/rmg_native_batch_export_49e1bf_maska_passable_skip_probe_20260604/medium_4p_seed_10_density_fresh_20260602.audit.json (diagnostic fail expected; metrics recorded)",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_batch_export_49e1bf_maska_passable_skip_probe_20260604/small_3p_seed_11_controlled.amap --compare --pretty > .artifacts/rmg_native_batch_export_49e1bf_maska_passable_skip_probe_20260604/small_3p_seed_11_controlled.audit.json (diagnostic fail expected; metrics recorded)",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current/h3maped_medium_4p_seed_10_density_fresh_20260602.h3m --amap .artifacts/rmg_native_batch_export_49e1bf_maska_passable_skip_probe_20260604/medium_4p_seed_10_density_fresh_20260602.amap --compare --pretty > .artifacts/rmg_native_batch_export_49e1bf_maska_passable_skip_probe_20260604/medium_4p_seed_10_density_fresh_20260602.audit.json (diagnostic fail expected; metrics recorded)",
         "cmake --build src/gdextension/build/linux-release --target aurelion_map_persistence -j 2 (passed)",
         "python3 tests/validate_repo.py (passed)"
       ],
@@ -118452,8 +118463,8 @@
         "cmake --build src/gdextension/build/linux-debug --target aurelion_map_persistence -j 2 (passed)",
         "cmake --build src/gdextension/build/linux-release --target aurelion_map_persistence -j 2 (passed)",
         "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49abd6_clear_ready_kept_20260604 --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2 --controlled-case medium_4p_seed_10_density_fresh_20260602:medium:4:10:land:1:1:3 --emit-phase-snapshot --print-manifest (passed, exported=2)",
-        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_compare_current/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_batch_export_49abd6_clear_ready_kept_20260604/small_3p_seed_11_controlled.amap --compare --pretty > .artifacts/rmg_native_batch_export_49abd6_clear_ready_kept_20260604/small_3p_seed_11_controlled.audit.json (diagnostic fail expected; metrics recorded)",
-        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_compare_current/h3maped_medium_4p_seed_10_density_fresh_20260602.h3m --amap .artifacts/rmg_native_batch_export_49abd6_clear_ready_kept_20260604/medium_4p_seed_10_density_fresh_20260602.amap --compare --pretty > .artifacts/rmg_native_batch_export_49abd6_clear_ready_kept_20260604/medium_4p_seed_10_density_fresh_20260602.audit.json (diagnostic fail expected; metrics recorded)",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_batch_export_49abd6_clear_ready_kept_20260604/small_3p_seed_11_controlled.amap --compare --pretty > .artifacts/rmg_native_batch_export_49abd6_clear_ready_kept_20260604/small_3p_seed_11_controlled.audit.json (diagnostic fail expected; metrics recorded)",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current/h3maped_medium_4p_seed_10_density_fresh_20260602.h3m --amap .artifacts/rmg_native_batch_export_49abd6_clear_ready_kept_20260604/medium_4p_seed_10_density_fresh_20260602.amap --compare --pretty > .artifacts/rmg_native_batch_export_49abd6_clear_ready_kept_20260604/medium_4p_seed_10_density_fresh_20260602.audit.json (diagnostic fail expected; metrics recorded)",
         "python3 tests/validate_repo.py (passed)"
       ],
       "currentSliceNotes": "2026-06-04: Source inspection of h3maped.exe 0x49e700 found no global/zone decorative type-limit gate; native decorative filler removed that source-inaccurate gate. Focused Small seed 11 and Medium seed 10 exports remained behavior-neutral (type-limit rejected 0 before removal), so remaining density/block-surface gap is still the exact 0x49e1bf private-state scorer and full 0x49e700 worklist lifecycle, not a count/scalar target.",
@@ -118935,8 +118946,8 @@
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
         "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49e1bf_byte16_final_20260604 --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2 --controlled-case medium_4p_seed_10_density_fresh_20260602:medium:4:10:land:1:1:3 --emit-phase-snapshot --print-manifest (passed, exported=2)",
-        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_compare_current/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_batch_export_49e1bf_byte16_final_20260604/small_3p_seed_11_controlled.amap --compare --pretty --allow-failures > .artifacts/rmg_native_batch_export_49e1bf_byte16_final_20260604/small_3p_seed_11_controlled.audit.json (diagnostic fail expected: 308 objects / 113 decoration / 561 movement-blocked vs owner 299 / 158 / 816)",
-        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_compare_current/h3maped_medium_4p_seed_10_density_fresh_20260602.h3m --amap .artifacts/rmg_native_batch_export_49e1bf_byte16_final_20260604/medium_4p_seed_10_density_fresh_20260602.amap --compare --pretty --allow-failures > .artifacts/rmg_native_batch_export_49e1bf_byte16_final_20260604/medium_4p_seed_10_density_fresh_20260602.audit.json (diagnostic fail expected: 868 objects / 349 decoration / 1592 movement-blocked vs owner 1256 / 803 / 3313)",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_batch_export_49e1bf_byte16_final_20260604/small_3p_seed_11_controlled.amap --compare --pretty --allow-failures > .artifacts/rmg_native_batch_export_49e1bf_byte16_final_20260604/small_3p_seed_11_controlled.audit.json (diagnostic fail expected: 308 objects / 113 decoration / 561 movement-blocked vs owner 299 / 158 / 816)",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current/h3maped_medium_4p_seed_10_density_fresh_20260602.h3m --amap .artifacts/rmg_native_batch_export_49e1bf_byte16_final_20260604/medium_4p_seed_10_density_fresh_20260602.amap --compare --pretty --allow-failures > .artifacts/rmg_native_batch_export_49e1bf_byte16_final_20260604/medium_4p_seed_10_density_fresh_20260602.audit.json (diagnostic fail expected: 868 objects / 349 decoration / 1592 movement-blocked vs owner 1256 / 803 / 3313)",
         "jq empty ops/progress.json (passed after evidence update)",
         "git diff --check -- src/gdextension/src/h3maped_small_rmg.cpp ops/progress.json AGENTS.md docs/lessons-learned.md (passed after evidence update)",
         "python3 tests/validate_repo.py (passed after evidence update)"
@@ -118999,8 +119010,8 @@
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
         "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49b89c_descriptor_branch_20260604 --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2 --controlled-case medium_4p_seed_10_density_fresh_20260602:medium:4:10:land:1:1:3 --emit-phase-snapshot --print-manifest (passed, exported=2)",
-        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_compare_current/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_batch_export_49b89c_descriptor_branch_20260604/small_3p_seed_11_controlled.amap --compare --pretty --allow-failures > .artifacts/rmg_native_batch_export_49b89c_descriptor_branch_20260604/small_3p_seed_11_controlled.audit.json (diagnostic fail expected: 308 objects / 113 decoration / 561 movement-blocked vs owner 299 / 158 / 816)",
-        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_compare_current/h3maped_medium_4p_seed_10_density_fresh_20260602.h3m --amap .artifacts/rmg_native_batch_export_49b89c_descriptor_branch_20260604/medium_4p_seed_10_density_fresh_20260602.amap --compare --pretty --allow-failures > .artifacts/rmg_native_batch_export_49b89c_descriptor_branch_20260604/medium_4p_seed_10_density_fresh_20260602.audit.json (diagnostic fail expected: 868 objects / 349 decoration / 1592 movement-blocked vs owner 1256 / 803 / 3313)"
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_batch_export_49b89c_descriptor_branch_20260604/small_3p_seed_11_controlled.amap --compare --pretty --allow-failures > .artifacts/rmg_native_batch_export_49b89c_descriptor_branch_20260604/small_3p_seed_11_controlled.audit.json (diagnostic fail expected: 308 objects / 113 decoration / 561 movement-blocked vs owner 299 / 158 / 816)",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current/h3maped_medium_4p_seed_10_density_fresh_20260602.h3m --amap .artifacts/rmg_native_batch_export_49b89c_descriptor_branch_20260604/medium_4p_seed_10_density_fresh_20260602.amap --compare --pretty --allow-failures > .artifacts/rmg_native_batch_export_49b89c_descriptor_branch_20260604/medium_4p_seed_10_density_fresh_20260602.audit.json (diagnostic fail expected: 868 objects / 349 decoration / 1592 movement-blocked vs owner 1256 / 803 / 3313)"
       ],
       "currentSliceId": "rmg-small-generalization-hardening-10184",
       "currentSliceNotes": "2026-06-04: Source inspection of h3maped.exe 0x49e700 found no global/zone decorative type-limit gate; native decorative filler removed that source-inaccurate gate. Focused Small seed 11 and Medium seed 10 exports remained behavior-neutral (type-limit rejected 0 before removal), so remaining density/block-surface gap is still the exact 0x49e1bf private-state scorer and full 0x49e700 worklist lifecycle, not a count/scalar target.",
@@ -119046,8 +119057,8 @@
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
         "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49e1bf_bodycell_relation_scan_20260604 --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2 --controlled-case medium_4p_seed_10_density_fresh_20260602:medium:4:10:land:1:1:3 --emit-phase-snapshot --print-manifest (passed, exported=2)",
-        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_compare_current/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_batch_export_49e1bf_bodycell_relation_scan_20260604/small_3p_seed_11_controlled.amap --compare --pretty --allow-failures > .artifacts/rmg_native_batch_export_49e1bf_bodycell_relation_scan_20260604/small_3p_seed_11_controlled.audit.json (diagnostic fail expected: native 308 objects / 113 decoration / 561 movement-blocked vs owner 299 / 158 / 816)",
-        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_compare_current/h3maped_medium_4p_seed_10_density_fresh_20260602.h3m --amap .artifacts/rmg_native_batch_export_49e1bf_bodycell_relation_scan_20260604/medium_4p_seed_10_density_fresh_20260602.amap --compare --pretty --allow-failures > .artifacts/rmg_native_batch_export_49e1bf_bodycell_relation_scan_20260604/medium_4p_seed_10_density_fresh_20260602.audit.json (diagnostic fail expected: native 868 objects / 349 decoration / 1592 movement-blocked vs owner 1256 / 803 / 3313)",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_batch_export_49e1bf_bodycell_relation_scan_20260604/small_3p_seed_11_controlled.amap --compare --pretty --allow-failures > .artifacts/rmg_native_batch_export_49e1bf_bodycell_relation_scan_20260604/small_3p_seed_11_controlled.audit.json (diagnostic fail expected: native 308 objects / 113 decoration / 561 movement-blocked vs owner 299 / 158 / 816)",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current/h3maped_medium_4p_seed_10_density_fresh_20260602.h3m --amap .artifacts/rmg_native_batch_export_49e1bf_bodycell_relation_scan_20260604/medium_4p_seed_10_density_fresh_20260602.amap --compare --pretty --allow-failures > .artifacts/rmg_native_batch_export_49e1bf_bodycell_relation_scan_20260604/medium_4p_seed_10_density_fresh_20260602.audit.json (diagnostic fail expected: native 868 objects / 349 decoration / 1592 movement-blocked vs owner 1256 / 803 / 3313)",
         "cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed)",
         "cmake --build .artifacts/map_persistence_native_build_windows_cross_debug --parallel 2 (passed)",
         "cmake --build .artifacts/map_persistence_native_build_windows_cross_release --parallel 2 (passed)"
@@ -119192,8 +119203,8 @@
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
         "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49e1bf_byte18_overlap_probe_20260604 --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2 --controlled-case medium_4p_seed_10_density_fresh_20260602:medium:4:10:land:1:1:3 --emit-phase-snapshot --print-manifest (passed, exported=2)",
-        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_compare_current/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_batch_export_49e1bf_byte18_overlap_probe_20260604/small_3p_seed_11_controlled.amap --compare --pretty --allow-failures > .artifacts/rmg_native_batch_export_49e1bf_byte18_overlap_probe_20260604/small_3p_seed_11_controlled.audit.json (diagnostic fail expected: native 308 objects / 113 decoration / 561 movement-blocked vs owner 299 / 158 / 816)",
-        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_compare_current/h3maped_medium_4p_seed_10_density_fresh_20260602.h3m --amap .artifacts/rmg_native_batch_export_49e1bf_byte18_overlap_probe_20260604/medium_4p_seed_10_density_fresh_20260602.amap --compare --pretty --allow-failures > .artifacts/rmg_native_batch_export_49e1bf_byte18_overlap_probe_20260604/medium_4p_seed_10_density_fresh_20260602.audit.json (diagnostic fail expected: native 868 objects / 349 decoration / 1592 movement-blocked vs owner 1256 / 803 / 3313)",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_batch_export_49e1bf_byte18_overlap_probe_20260604/small_3p_seed_11_controlled.amap --compare --pretty --allow-failures > .artifacts/rmg_native_batch_export_49e1bf_byte18_overlap_probe_20260604/small_3p_seed_11_controlled.audit.json (diagnostic fail expected: native 308 objects / 113 decoration / 561 movement-blocked vs owner 299 / 158 / 816)",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current/h3maped_medium_4p_seed_10_density_fresh_20260602.h3m --amap .artifacts/rmg_native_batch_export_49e1bf_byte18_overlap_probe_20260604/medium_4p_seed_10_density_fresh_20260602.amap --compare --pretty --allow-failures > .artifacts/rmg_native_batch_export_49e1bf_byte18_overlap_probe_20260604/medium_4p_seed_10_density_fresh_20260602.audit.json (diagnostic fail expected: native 868 objects / 349 decoration / 1592 movement-blocked vs owner 1256 / 803 / 3313)",
         "cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed)",
         "cmake --build .artifacts/map_persistence_native_build_windows_cross_debug --parallel 2 (passed)",
         "cmake --build .artifacts/map_persistence_native_build_windows_cross_release --parallel 2 (passed)"
@@ -119353,8 +119364,8 @@
         "validation_commands": [
           "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
           "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49dc9e_attached_score_rows_20260604 --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:3:0 --controlled-case medium_4p_seed_10_density_fresh_20260602:medium:4:10:land:1:4:0 --emit-phase-snapshot --print-manifest (passed, exported=2)",
-          "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49dc9e_attached_score_rows_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (diagnostic fail: known route/topology parity gaps remain)",
-          "python3 tools/rmg_fast_audit.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49dc9e_attached_score_rows_20260604 --full --allow-failures --pretty > .artifacts/rmg_native_batch_export_49dc9e_attached_score_rows_20260604/fast_audit_with_owner.json (passed with allow-failures)",
+          "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49dc9e_attached_score_rows_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (diagnostic fail: known route/topology parity gaps remain)",
+          "python3 tools/rmg_fast_audit.py --h3m-dir .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49dc9e_attached_score_rows_20260604 --full --allow-failures --pretty > .artifacts/rmg_native_batch_export_49dc9e_attached_score_rows_20260604/fast_audit_with_owner.json (passed with allow-failures)",
           "cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed)",
           "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2 (passed)",
           "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2 (passed)",
@@ -119434,11 +119445,11 @@
           "object_origin": "0x4906fb scans object_row+0x0c action bits from bit47 downward and stores object+0x2c/+0x30."
         },
         "validation_commands": [
-          "objdump -d -Mintel --start-address=0x499db0 --stop-address=0x499e30 .artifacts/rmg_h3maped_controlled_reference/small_2p_land_gui_seed_11/runtime/h3maped.exe > .artifacts/objdump_499db3_direction_table_20260604.txt (recovered 0x5a2658 direction table initializer)",
+          "objdump -d -Mintel --start-address=0x499db0 --stop-address=0x499e30 .artifacts/rmg_recovery/storage/restore-20261003/shared-reference-data/h3maped.exe > .artifacts/rmg_recovery/support/objdump_499db3_direction_table_20260604.txt (recovered 0x5a2658 direction table initializer)",
           "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
           "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49d471_direction_checkpoint_20260604 --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:3:0 --controlled-case medium_4p_seed_10_density_fresh_20260602:medium:4:10:land:1:4:0 --emit-phase-snapshot --print-manifest (passed, exported=2)",
-          "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49d471_direction_checkpoint_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (diagnostic fail: known Small near_stacked_towns native rule; density/policy/topology gates disabled)",
-          "python3 tools/rmg_fast_audit.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49d471_direction_checkpoint_20260604 --full --allow-failures --pretty > .artifacts/rmg_native_batch_export_49d471_direction_checkpoint_20260604/fast_audit_with_owner.json (parsed)",
+          "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49d471_direction_checkpoint_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (diagnostic fail: known Small near_stacked_towns native rule; density/policy/topology gates disabled)",
+          "python3 tools/rmg_fast_audit.py --h3m-dir .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49d471_direction_checkpoint_20260604 --full --allow-failures --pretty > .artifacts/rmg_native_batch_export_49d471_direction_checkpoint_20260604/fast_audit_with_owner.json (parsed)",
           "cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed)",
           "cmake --build .artifacts/map_persistence_native_build_windows_cross_debug --parallel 2 (passed)",
           "cmake --build .artifacts/map_persistence_native_build_windows_cross_release --parallel 2 (passed)",
@@ -119544,13 +119555,13 @@
           "wrapper_stamp": "0x49abd6 stamps action cells through 0x4268eb and non-passable cells through !0x41e951 using selected_x-local_x / selected_y-local_y."
         },
         "validation_commands": [
-          "objdump -d -Mintel --start-address=0x49a6f0 --stop-address=0x49a880 ... > .artifacts/objdump_49a6f9_collision_20260604.txt (recovered collision helper surface)",
-          "objdump -d -Mintel --start-address=0x49abd0 --stop-address=0x49ae80 ... > .artifacts/objdump_49abd6_wrapper_stamp_20260604.txt (recovered wrapper stamp surface)",
+          "objdump -d -Mintel --start-address=0x49a6f0 --stop-address=0x49a880 ... > .artifacts/rmg_recovery/support/objdump_49a6f9_collision_20260604.txt (recovered collision helper surface)",
+          "objdump -d -Mintel --start-address=0x49abd0 --stop-address=0x49ae80 ... > .artifacts/rmg_recovery/support/objdump_49abd6_wrapper_stamp_20260604.txt (recovered wrapper stamp surface)",
           "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
           "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_reward_exact_mask_frame_20260604 --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:3:0 --controlled-case medium_4p_seed_10_density_fresh_20260602:medium:4:10:land:1:4:0 --emit-phase-snapshot --print-manifest (passed, rejected behavior probe)",
           "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_reward_mask_frame_diagnostic_20260604 --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:3:0 --controlled-case medium_4p_seed_10_density_fresh_20260602:medium:4:10:land:1:4:0 --emit-phase-snapshot --print-manifest (passed, kept diagnostic behavior)",
-          "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_reward_mask_frame_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (diagnostic fail: known Small near_stacked_towns native rule; density/policy/topology gates disabled)",
-          "python3 tools/rmg_fast_audit.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_reward_mask_frame_diagnostic_20260604 --full --allow-failures --pretty > .artifacts/rmg_native_batch_export_reward_mask_frame_diagnostic_20260604/fast_audit_with_owner.json (parsed)",
+          "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_reward_mask_frame_diagnostic_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary (diagnostic fail: known Small near_stacked_towns native rule; density/policy/topology gates disabled)",
+          "python3 tools/rmg_fast_audit.py --h3m-dir .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_reward_mask_frame_diagnostic_20260604 --full --allow-failures --pretty > .artifacts/rmg_native_batch_export_reward_mask_frame_diagnostic_20260604/fast_audit_with_owner.json (parsed)",
           "cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed)",
           "cmake --build .artifacts/map_persistence_native_build_windows_cross_debug --parallel 2 (passed)",
           "cmake --build .artifacts/map_persistence_native_build_windows_cross_release --parallel 2 (passed)",
@@ -119567,10 +119578,10 @@
     {
       "artifacts": {
         "medium_phase_snapshot": ".artifacts/rmg_native_batch_export_metadata_49d471_probe_20260604/medium_4p_seed_10_controlled.phase_snapshot.json",
-        "metadata_extract_json": ".artifacts/h3maped_object_metadata_0x598300_extract_20260604.json",
-        "metadata_initializer_disassembly": ".artifacts/objdump_401d5f_object_metadata_initializer_20260604.txt",
+        "metadata_extract_json": ".artifacts/rmg_recovery/support/h3maped_object_metadata_0x598300_extract_20260604.json",
+        "metadata_initializer_disassembly": ".artifacts/rmg_recovery/support/objdump_401d5f_object_metadata_initializer_20260604.txt",
         "native_export": ".artifacts/rmg_native_batch_export_metadata_49d471_probe_20260604",
-        "secondary_validation_disassembly": ".artifacts/objdump_49d2e0_secondary_validation_20260604.txt",
+        "secondary_validation_disassembly": ".artifacts/rmg_recovery/support/objdump_49d2e0_secondary_validation_20260604.txt",
         "small_phase_snapshot": ".artifacts/rmg_native_batch_export_metadata_49d471_probe_20260604/small_3p_seed_11_controlled.phase_snapshot.json"
       },
       "behavior_policy": "diagnostic_only_no_density_tuning_no_secondary_adoption_until_0x49d2e0_0x49a6f9_wrapper_collision_is_exact",
@@ -119629,8 +119640,8 @@
         "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
         "cmake --build .artifacts/map_persistence_native_build_windows_cross_debug --parallel 2",
         "cmake --build .artifacts/map_persistence_native_build_windows_cross_release --parallel 2",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_metadata_49d471_probe_20260604 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
-        "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_metadata_49d471_probe_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_metadata_49d471_probe_20260604 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
+        "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_metadata_49d471_probe_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary",
         "python3 tests/validate_repo.py",
         "jq empty ops/progress.json",
         "git diff --check"
@@ -119701,8 +119712,8 @@
         ],
         "validation_commands": [
           "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
-          "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_reward_owner_49a6f9_20260604 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --print-manifest (passed, exported=2)",
-          "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_reward_owner_49a6f9_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary --failure-limit 8 (known native near_stacked_towns only; identity/density/policy/topology/coverage gaps 0)",
+          "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_reward_owner_49a6f9_20260604 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --print-manifest (passed, exported=2)",
+          "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_reward_owner_49a6f9_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary --failure-limit 8 (known native near_stacked_towns only; identity/density/policy/topology/coverage gaps 0)",
           "cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed)",
           "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2 (passed)",
           "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2 (passed)",
@@ -119746,8 +119757,8 @@
         ],
         "validation_commands": [
           "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed)",
-          "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49abd6_stamp_state_final_20260604 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --print-manifest (passed, exported=2)",
-          "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49abd6_stamp_state_final_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary --failure-limit 8 (known near_stacked_towns only; identity/density/policy/topology/coverage gaps 0)"
+          "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49abd6_stamp_state_final_20260604 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --print-manifest (passed, exported=2)",
+          "python3 tools/rmg_fast_validation.py --h3m-dir .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current --amap-dir .artifacts/rmg_native_batch_export_49abd6_stamp_state_final_20260604 --no-density-gate --no-policy-gate --no-topology-gate --allow-failures --summary --failure-limit 8 (known near_stacked_towns only; identity/density/policy/topology/coverage gaps 0)"
         ]
       },
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -119788,7 +119799,7 @@
         ],
         "validation_commands": [
           "cmake --build .artifacts/map_persistence_native_build --parallel 2",
-          "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49e700_action_stamp_snapshot_20260604 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest"
+          "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49e700_action_stamp_snapshot_20260604 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest"
         ]
       },
       "sliceId": "rmg-small-generalization-hardening-10184",
@@ -119852,7 +119863,7 @@
           "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
           "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2",
           "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2",
-          "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49e1bf_primary_terrain_20260604 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
+          "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49e1bf_primary_terrain_20260604 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
           "python3 tests/validate_repo.py",
           "jq empty ops/progress.json",
           "git diff --check"
@@ -119886,7 +119897,7 @@
     {
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --parallel 2",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49e1bf_terrain_touched_once_20260604 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_49e1bf_terrain_touched_once_20260604 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
         "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
         "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2",
         "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2",
@@ -119946,7 +119957,7 @@
     {
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --parallel 2",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_source_order_road_after_decor_no_bit25_20260604 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_source_order_road_after_decor_no_bit25_20260604 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
         "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
         "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2",
         "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2",
@@ -120038,9 +120049,9 @@
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --parallel 2",
         "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_4a9f1c_template_timing_20260604 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
-        "python3 tools/rmg_fast_audit.py --compare --h3m .artifacts/rmg_h3maped_controlled_compare_current/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_batch_export_4a9f1c_template_timing_20260604/small_3p_seed_11_controlled.amap --pretty --allow-failures > .artifacts/rmg_native_batch_export_4a9f1c_template_timing_20260604/small_fast_audit.json || true",
-        "python3 tools/rmg_fast_audit.py --compare --h3m .artifacts/rmg_h3maped_controlled_compare_current/h3maped_medium_4p_seed_10_density_fresh_20260602.h3m --amap .artifacts/rmg_native_batch_export_4a9f1c_template_timing_20260604/medium_4p_seed_10_controlled.amap --pretty --allow-failures > .artifacts/rmg_native_batch_export_4a9f1c_template_timing_20260604/medium_fast_audit.json || true",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_4a9f1c_template_timing_20260604 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference/small_3p_seed_11_controlled/controlled_reference_manifest.json --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
+        "python3 tools/rmg_fast_audit.py --compare --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_batch_export_4a9f1c_template_timing_20260604/small_3p_seed_11_controlled.amap --pretty --allow-failures > .artifacts/rmg_native_batch_export_4a9f1c_template_timing_20260604/small_fast_audit.json || true",
+        "python3 tools/rmg_fast_audit.py --compare --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_compare_current/h3maped_medium_4p_seed_10_density_fresh_20260602.h3m --amap .artifacts/rmg_native_batch_export_4a9f1c_template_timing_20260604/medium_4p_seed_10_controlled.amap --pretty --allow-failures > .artifacts/rmg_native_batch_export_4a9f1c_template_timing_20260604/medium_fast_audit.json || true",
         "cmake --build .artifacts/map_persistence_native_build_windows_mingw_debug_linux_cross --parallel 2",
         "cmake --build .artifacts/map_persistence_native_build_windows_mingw_release_linux_cross --parallel 2",
         "python3 tests/validate_repo.py",
@@ -120065,8 +120076,8 @@
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --parallel 2",
         "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_town_post_append_mutation_20260605 --controlled-case small_3p_seed_11_controlled:small:3:11:none:1:3:0 --controlled-case medium_4p_seed_10_controlled:medium:4:10:none:1:4:0 --emit-phase-snapshot --print-manifest",
-        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_reference/small_2p_land_gui_seed_11/runtime/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_town_post_append_mutation_20260605/small_3p_seed_11_controlled.amap --compare",
-        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_h3maped_controlled_reference/small_2p_land_gui_seed_11/runtime/h3maped_medium_4p_seed_10_controlled.h3m --amap .artifacts/rmg_native_town_post_append_mutation_20260605/medium_4p_seed_10_controlled.amap --compare"
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference/small_2p_land_gui_seed_11/runtime/h3maped_small_3p_seed_11_controlled.h3m --amap .artifacts/rmg_native_town_post_append_mutation_20260605/small_3p_seed_11_controlled.amap --compare",
+        "python3 tools/rmg_fast_audit.py --h3m .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference/small_2p_land_gui_seed_11/runtime/h3maped_medium_4p_seed_10_controlled.h3m --amap .artifacts/rmg_native_town_post_append_mutation_20260605/medium_4p_seed_10_controlled.amap --compare"
       ],
       "evidence": {
         "artifact": ".artifacts/rmg_native_town_post_append_mutation_20260605",
@@ -120110,7 +120121,7 @@
     {
       "artifact": ".artifacts/rmg_recovery/connection_record_producer_static_summary.json",
       "commands": [
-        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump 0x4b3bbd,0x4b3bf0,0x4b3c03,0x4b3c4e,0x4b3caf,0x4b3cd2,0x4b3d3c,0x4b3d97 -readOnly (passed)",
+        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless .artifacts/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump .artifacts/rmg_recovery/ghidra_connection_record_plus9_writer_dump 0x4b3bbd,0x4b3bf0,0x4b3c03,0x4b3c4e,0x4b3caf,0x4b3cd2,0x4b3d3c,0x4b3d97 -readOnly (passed)",
         "python3 tools/rmg_h3maped_connection_record_producer_static_summary.py (passed: partial_static_ruleout_4b3c03_direct_generator_c8_producer)",
         "python3 tools/rmg_h3maped_connection_record_field_summary.py (passed: partial_recovery_connection_record_plus9_consumer_surface)",
         "python3 tools/rmg_h3maped_recovery_manifest.py --out .artifacts/rmg_recovery/h3maped_recovery_manifest.json (passed: functions=128)",
@@ -120129,7 +120140,7 @@
       "commands": [
         "python3 -m py_compile tools/rmg_h3maped_cursor_state_access_summary.py (passed)",
         "python3 tools/rmg_h3maped_cursor_state_access_summary.py (passed: rows=27, writers=004a5e73/004adb72/004add76, entries_4a5e73=6)",
-        "python3 tools/rmg_h3maped_recovery_interactive_trace.py --h3maped-runtime .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/runtime --breakpoints 0x0049cd9b 0x004adb72 0x004add76 0x004a5e73 --stop-after 0x004a5e73 (passed: first event is 0x4a5e73, no prior 0x49cd9b/0x4adb72/0x4add76)"
+        "python3 tools/rmg_h3maped_recovery_interactive_trace.py --h3maped-runtime .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/runtime --breakpoints 0x0049cd9b 0x004adb72 0x004add76 0x004a5e73 --stop-after 0x004a5e73 (passed: first event is 0x4a5e73, no prior 0x49cd9b/0x4adb72/0x4add76)"
       ],
       "sliceId": "rmg-small-generalization-hardening-10184",
       "status": "cursor_writer_surface_exhausted_natural_bg_still_unseeded",
@@ -121399,8 +121410,8 @@
     {
       "artifact": ".artifacts/rmg_recovery/source_input_tag_table_summary_20260610.json",
       "commands": [
-        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -noanalysis -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgTableDump .artifacts/rmg_recovery/ghidra_source_input_tag_table_dump_20260610 0x43ae9a 11",
-        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -noanalysis -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgRangeDump .artifacts/rmg_recovery/ghidra_source_input_tag_table_dump_20260610 0x43adaa 0x43ae95 0x43adaa,0x43add8,0x43ae1c,0x43ae41,0x43ae73,0x43ae78",
+        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless .artifacts/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -noanalysis -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgTableDump .artifacts/rmg_recovery/ghidra_source_input_tag_table_dump_20260610 0x43ae9a 11",
+        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless .artifacts/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -noanalysis -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgRangeDump .artifacts/rmg_recovery/ghidra_source_input_tag_table_dump_20260610 0x43adaa 0x43ae95 0x43adaa,0x43add8,0x43ae1c,0x43ae41,0x43ae73,0x43ae78",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_source_input_tag_table_summary.py --out .artifacts/rmg_recovery/source_input_tag_table_summary_20260610.json"
       ],
       "id": "rmg-small-generalization-hardening-10184",
@@ -121727,7 +121738,7 @@
     {
       "artifact": ".artifacts/rmg_recovery/final_header_metadata_payload_summary_20260610.json",
       "checks": [
-        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless tmp/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -noanalysis -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump .artifacts/rmg_recovery/ghidra_final_header_metadata_helpers_20260610 0x4ac857,0x4ad140,0x4ad1e3,0x4ad3eb,0x4aed50,0x4aed89,0x4aedf9,0x4aee32,0x4aeea1,0x4aef12,0x4aef5e,0x4aefce,0x4af037 -readOnly",
+        ".artifacts/tools/ghidra_12.1.2_PUBLIC/support/analyzeHeadless .artifacts/rmg_recovery/ghidra_project h3maped_rmg_recovery -process h3maped.exe -noanalysis -scriptPath tools/ghidra_scripts -postScript H3MapEdRmgDump .artifacts/rmg_recovery/ghidra_final_header_metadata_helpers_20260610 0x4ac857,0x4ad140,0x4ad1e3,0x4ad3eb,0x4aed50,0x4aed89,0x4aedf9,0x4aee32,0x4aeea1,0x4aef12,0x4aef5e,0x4aefce,0x4af037 -readOnly",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_final_header_metadata_static_summary.py",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_recovery_interactive_trace.py --display-number 146 --out-dir .artifacts/rmg_recovery/medium_seed10_final_header_metadata_payload_20260610 --seed-control-mode pe-patch --seed 10 --map-size medium --water-none --human-computer-down 1 --computer-only-down 0 --breakpoints <57 recovered header/player/metadata raw stream-write sites> --stop-after 0x004ad3db --max-events 20000 --lite --no-info-reg --extra-command \"x/64x *(int*)$esp\" --generate-wait-seconds 2 --debugger-timeout 300 --breakpoint-timeout 300",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_final_header_metadata_payload_summary.py",
@@ -122036,7 +122047,7 @@
       "artifact": ".artifacts/rmg_native_medium_seed10_relation_bit28_20260611/private_state_compare_hc4_comp0_pre_0x4a4c8e.json",
       "checks": [
         "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed; Linux debug .so only)",
-        "python3 tools/rmg_native_batch_export.py --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot (passed)",
+        "python3 tools/rmg_native_batch_export.py --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_private_state_compare.py (passed)",
         "python3 tools/rmg_h3maped_private_state_compare.py --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --h3maped-cell-base-address 0x0188d714 (ran; expected mismatch remains: word_0x20=5,184, word_0x24=5,184, word_0x28=4,977; native bit28=4,652 vs H3MapEd bit28=5,181)",
         "python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_relation_bit28_20260611/medium_4p_seed_10_controlled.phase_snapshot.json (ran; expected mismatch remains: 14,201 final tile byte mismatches, first drift terrain_generated_cell_word_0x24_before_0x49b2b6)",
@@ -122044,7 +122055,7 @@
       ],
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed; Linux debug .so only)",
-        "python3 tools/rmg_native_batch_export.py --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot (passed)",
+        "python3 tools/rmg_native_batch_export.py --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile tools/rmg_h3maped_private_state_compare.py (passed)",
         "python3 tools/rmg_h3maped_private_state_compare.py --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --h3maped-cell-base-address 0x0188d714 (ran; expected mismatch remains: word_0x20=5,184, word_0x24=5,184, word_0x28=4,977; native bit28=4,652 vs H3MapEd bit28=5,181)",
         "python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_relation_bit28_20260611/medium_4p_seed_10_controlled.phase_snapshot.json (ran; expected mismatch remains: 14,201 final tile byte mismatches, first drift terrain_generated_cell_word_0x24_before_0x49b2b6)",
@@ -122174,7 +122185,7 @@
       "checks": [
         "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed; Linux debug .so only)",
         "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_small2p_seed58_guard_projection_20260611 --controlled-case small_2p_seed_58_guard_projection:homm3_small:2:58:land:1:2:0 --emit-phase-snapshot --print-manifest (passed)",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_guard_projection_20260611 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (passed)",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_guard_projection_20260611 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (passed)",
         "python3 tools/rmg_h3maped_4a8260_route_replay_verify.py --native-phase-snapshot .artifacts/rmg_native_small2p_seed58_guard_projection_20260611/small_2p_seed_58_guard_projection.phase_snapshot.json --out .artifacts/rmg_native_small2p_seed58_guard_projection_20260611/route_rng_boundary_compare.json (passed route replay; native route RNG state still does not match; native reward preview exits offset 1780 vs H3MapEd route entry offset 5002)",
         "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_guard_projection_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --out .artifacts/rmg_native_medium_seed10_guard_projection_20260611/private_state_compare_pre_0x4a4c8e.json (ran; expected mismatch remains: word_0x28=2999)",
         "python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_guard_projection_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --out .artifacts/rmg_native_medium_seed10_guard_projection_20260611/final_tile_payload_compare.json (ran; expected mismatch remains: 11707 bytes; first drift terrain_generated_cell_word_0x24_before_0x49b2b6)",
@@ -122188,7 +122199,7 @@
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed; Linux debug .so only)",
         "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_small2p_seed58_guard_projection_20260611 --controlled-case small_2p_seed_58_guard_projection:homm3_small:2:58:land:1:2:0 --emit-phase-snapshot --print-manifest (passed)",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_guard_projection_20260611 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (passed)",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_guard_projection_20260611 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (passed)",
         "python3 tools/rmg_h3maped_4a8260_route_replay_verify.py --native-phase-snapshot .artifacts/rmg_native_small2p_seed58_guard_projection_20260611/small_2p_seed_58_guard_projection.phase_snapshot.json --out .artifacts/rmg_native_small2p_seed58_guard_projection_20260611/route_rng_boundary_compare.json (passed route replay; native route RNG state still does not match; native reward preview exits offset 1780 vs H3MapEd route entry offset 5002)",
         "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_guard_projection_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --out .artifacts/rmg_native_medium_seed10_guard_projection_20260611/private_state_compare_pre_0x4a4c8e.json (ran; expected mismatch remains: word_0x28=2999)",
         "python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_guard_projection_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --out .artifacts/rmg_native_medium_seed10_guard_projection_20260611/final_tile_payload_compare.json (ran; expected mismatch remains: 11707 bytes; first drift terrain_generated_cell_word_0x24_before_0x49b2b6)",
@@ -122241,7 +122252,7 @@
         "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed; Linux debug .so only)",
         "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_small2p_seed58_secondary_rng_20260611 --controlled-case small_2p_seed_58_secondary_rng:homm3_small:2:58:land:1:2:0 --emit-phase-snapshot --print-manifest (passed)",
         "python3 tools/rmg_h3maped_4a8260_route_replay_verify.py --native-phase-snapshot .artifacts/rmg_native_small2p_seed58_secondary_rng_20260611/small_2p_seed_58_secondary_rng.phase_snapshot.json --out .artifacts/rmg_native_small2p_seed58_secondary_rng_20260611/route_rng_boundary_compare.json (passed route replay; native route RNG state still does not match; native reward preview exits offset 4905 vs H3MapEd route entry offset 5002)",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_secondary_rng_20260611 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (passed)",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_secondary_rng_20260611 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (passed)",
         "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_secondary_rng_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --out .artifacts/rmg_native_medium_seed10_secondary_rng_20260611/private_state_compare_pre_0x4a4c8e.json (ran; expected mismatch remains: word_0x28=2999)",
         "python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_secondary_rng_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --out .artifacts/rmg_native_medium_seed10_secondary_rng_20260611/final_tile_payload_compare.json (ran; expected mismatch remains: 11724 bytes; first drift terrain_generated_cell_word_0x24_before_0x49b2b6)",
         "cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed; Linux release .so only)",
@@ -122253,7 +122264,7 @@
         "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed; Linux debug .so only)",
         "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_small2p_seed58_secondary_rng_20260611 --controlled-case small_2p_seed_58_secondary_rng:homm3_small:2:58:land:1:2:0 --emit-phase-snapshot --print-manifest (passed)",
         "python3 tools/rmg_h3maped_4a8260_route_replay_verify.py --native-phase-snapshot .artifacts/rmg_native_small2p_seed58_secondary_rng_20260611/small_2p_seed_58_secondary_rng.phase_snapshot.json --out .artifacts/rmg_native_small2p_seed58_secondary_rng_20260611/route_rng_boundary_compare.json (passed route replay; native route RNG state still does not match; native reward preview exits offset 4905 vs H3MapEd route entry offset 5002)",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_secondary_rng_20260611 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (passed)",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_secondary_rng_20260611 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (passed)",
         "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_secondary_rng_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --out .artifacts/rmg_native_medium_seed10_secondary_rng_20260611/private_state_compare_pre_0x4a4c8e.json (ran; expected mismatch remains: word_0x28=2999)",
         "python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_secondary_rng_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --out .artifacts/rmg_native_medium_seed10_secondary_rng_20260611/final_tile_payload_compare.json (ran; expected mismatch remains: 11724 bytes; first drift terrain_generated_cell_word_0x24_before_0x49b2b6)",
         "cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed; Linux release .so only)",
@@ -122300,7 +122311,7 @@
         "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed; Linux debug .so only)",
         "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_small2p_seed58_guard_branch_20260611 --controlled-case small_2p_seed_58_guard_branch:homm3_small:2:58:land:1:2:0 --emit-phase-snapshot --print-manifest (passed)",
         "python3 tools/rmg_h3maped_4a8260_route_replay_verify.py --native-phase-snapshot .artifacts/rmg_native_small2p_seed58_guard_branch_20260611/small_2p_seed_58_guard_branch.phase_snapshot.json --out .artifacts/rmg_native_small2p_seed58_guard_branch_20260611/route_rng_boundary_compare.json (passed route replay; native route RNG state still does not match; native reward preview exits offset 4905 vs H3MapEd route entry offset 5002)",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_guard_branch_20260611 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (passed)",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_guard_branch_20260611 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (passed)",
         "python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_guard_branch_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --out .artifacts/rmg_native_medium_seed10_guard_branch_20260611/private_state_compare_pre_0x4a4c8e.json (ran; expected mismatch remains: word_0x20=5184, word_0x24=4850, word_0x28=2999, owner_byte2=1745)",
         "python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_guard_branch_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --out .artifacts/rmg_native_medium_seed10_guard_branch_20260611/final_tile_payload_compare.json (ran; expected mismatch remains: 11724 bytes; first drift terrain_generated_cell_word_0x24_before_0x49b2b6)",
         "cmake --build .artifacts/map_persistence_native_build_release --parallel 2 (passed; Linux release .so only)",
@@ -122312,7 +122323,7 @@
         "cmake --build .artifacts/map_persistence_native_build --parallel 2",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_small2p_seed58_guard_branch_20260611 --controlled-case small_2p_seed_58_guard_branch:homm3_small:2:58:land:1:2:0 --emit-phase-snapshot --print-manifest",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_4a8260_route_replay_verify.py --native-phase-snapshot .artifacts/rmg_native_small2p_seed58_guard_branch_20260611/small_2p_seed_58_guard_branch.phase_snapshot.json --out .artifacts/rmg_native_small2p_seed58_guard_branch_20260611/route_rng_boundary_compare.json",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_guard_branch_20260611 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_guard_branch_20260611 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_guard_branch_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --out .artifacts/rmg_native_medium_seed10_guard_branch_20260611/private_state_compare_pre_0x4a4c8e.json",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_final_tile_payload_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_guard_branch_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --out .artifacts/rmg_native_medium_seed10_guard_branch_20260611/final_tile_payload_compare.json",
         "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
@@ -122375,8 +122386,8 @@
       "artifact": ".artifacts/rmg_native_medium_seed10_report_fix_current_20260611/private_state_compare_pre_0x4a4c8e.json",
       "checks": [
         "cmake --build .artifacts/map_persistence_native_build --parallel 2 (passed; Linux debug .so only)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_report_fix_current_20260611 --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (passed)",
-        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_phase_drift_audit.py --phase-snapshot .artifacts/rmg_native_medium_seed10_report_fix_current_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --amap .artifacts/rmg_native_medium_seed10_report_fix_current_20260611/medium_4p_seed_10_controlled.amap --controlled-reference-manifest .artifacts/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --out-dir .artifacts/rmg_native_medium_seed10_report_fix_current_20260611/phase_drift --pretty (ran; expected fail; first same-identity drift town_castle_endpoint_vector)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_medium_seed10_report_fix_current_20260611 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest (passed)",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_phase_drift_audit.py --phase-snapshot .artifacts/rmg_native_medium_seed10_report_fix_current_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --amap .artifacts/rmg_native_medium_seed10_report_fix_current_20260611/medium_4p_seed_10_controlled.amap --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium/medium_4p_seed_10_controlled/controlled_reference_manifest.json --out-dir .artifacts/rmg_native_medium_seed10_report_fix_current_20260611/phase_drift --pretty (ran; expected fail; first same-identity drift town_castle_endpoint_vector)",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_private_state_compare.py --native-phase-snapshot .artifacts/rmg_native_medium_seed10_report_fix_current_20260611/medium_4p_seed_10_controlled.phase_snapshot.json --native-checkpoint-id pre_0x4a4c8e --h3maped-cell-dump .artifacts/rmg_recovery/medium_seed10_hc4_comp0_4a4c8e_preobject_trace_20260611/winedbg_interactive_trace.log --expected-cell-count 5184 --out .artifacts/rmg_native_medium_seed10_report_fix_current_20260611/private_state_compare_pre_0x4a4c8e.json (ran; expected mismatch remains word_0x28=2999)",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_small2p_seed58_report_fix_current_20260611 --controlled-case small_2p_seed_58_surrogate_baseline:homm3_small:2:58:land:1:2:0 --emit-phase-snapshot --print-manifest (passed)",
         "PYTHONDONTWRITEBYTECODE=1 python3 tools/rmg_h3maped_4a8260_route_replay_verify.py --native-phase-snapshot .artifacts/rmg_native_small2p_seed58_report_fix_current_20260611/small_2p_seed_58_surrogate_baseline.phase_snapshot.json --out .artifacts/rmg_native_small2p_seed58_report_fix_current_20260611/route_rng_boundary_compare.json (passed route replay mechanically; native_match=False)"
@@ -122770,7 +122781,7 @@
         "cmake --build .artifacts/map_persistence_native_build --parallel 2",
         "cmake --build .artifacts/map_persistence_native_build_release --parallel 2",
         "python3 tools/rmg_h3maped_4aa354_source_stream_summary.py --ledger .artifacts/rmg_recovery/small_seed58_4aa354_source_stream_full_20260612145829/winedbg_interactive_trace_ledger.json --out .artifacts/rmg_recovery/small_seed58_4aa354_source_stream_full_20260612145829/4aa354_source_stream_summary.json",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509 --controlled-reference-manifest .artifacts/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509 --controlled-reference-manifest .artifacts/rmg_recovery/support/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/controlled_reference_manifest.json --emit-phase-snapshot --print-manifest",
         "python3 tools/rmg_h3maped_template_selection_reference_check.py --out .artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509/template_selection_reference_check.json",
         "python3 tools/rmg_h3maped_4aa9b7_native_handoff_compare.py --h3maped-handoff .artifacts/rmg_recovery/small_seed58_4aa354_source_stream_full_20260612145829/4aa354_source_stream_summary.json --native-phase-snapshot .artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509/small_2p_seed_58_manual20.phase_snapshot.json --out .artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509/4aa354_native_handoff_compare.json",
         "python3 tools/rmg_h3maped_4a8260_route_replay_verify.py --native-phase-snapshot .artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509/small_2p_seed_58_manual20.phase_snapshot.json --out .artifacts/rmg_native_small2p_seed58_reward_stream_fix_20260612153509/route_replay_verify.json",
@@ -126242,13 +126253,13 @@
     },
     {
       "artifacts": [
-        ".artifacts/tmp_native_workflow_selected_create_check/small_3p_seed_11_controlled.phase_snapshot.json"
+        ".artifacts/rmg_recovery/support/tmp_native_workflow_selected_create_check/small_3p_seed_11_controlled.phase_snapshot.json"
       ],
       "blocker": "The shared workflow still stops at reward_guard_materialization because the live 0x4ad947 projection object/global candidate table, projection coordinate triple, and reward-guard wrapper/candidate producer contents are not owned; connection/road/river phases and final tile/object/header writeout also remain unowned.",
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
         "./bin/h3maped_rmg_core_selftest (passed)",
-        "./bin/rmg_native_batch_export_cli --out .artifacts/tmp_native_workflow_selected_create_check --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2:0 --emit-phase-snapshot --print-manifest (passed with expected exit 2 blocked before final writeout)"
+        "./bin/rmg_native_batch_export_cli --out .artifacts/rmg_recovery/support/tmp_native_workflow_selected_create_check --controlled-case small_3p_seed_11_controlled:small:3:11:land:1:1:2:0 --emit-phase-snapshot --print-manifest (passed with expected exit 2 blocked before final writeout)"
       ],
       "id": "native-rmg-single-shared-workflow-owner-20260621",
       "remainingWork": "Continue the single shared workflow from reward_guard_materialization: port the live 0x4ad947 projection object/global candidate table feed, projection coordinate triple, and wrapper handoff to 0x4ad7f7; then port the 0x10f4/0x10f8 reward-guard candidate producer contents before 0x4a9f1c/0x4aa1db selected-create, remaining live descriptor/source producers, connection/road/river phases, and final tile/object/header writeout before enabling map output.",
@@ -126385,9 +126396,9 @@
     },
     {
       "artifacts": [
-        ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/small_2p_seed_10_setup3.phase_snapshot.json",
-        ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/small_2p_seed_58_setup3.phase_snapshot.json",
-        ".artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/medium_4p_seed_10_setup3.phase_snapshot.json",
+        ".artifacts/rmg_recovery/support/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/small_2p_seed_10_setup3.phase_snapshot.json",
+        ".artifacts/rmg_recovery/support/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/small_2p_seed_58_setup3.phase_snapshot.json",
+        ".artifacts/rmg_recovery/support/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer/medium_4p_seed_10_setup3.phase_snapshot.json",
         "src/gdextension/include/h3maped_rmg_core.hpp",
         "src/gdextension/src/h3maped_rmg_core.cpp",
         "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
@@ -126399,7 +126410,7 @@
       "commands": [
         "cmake --build .artifacts/map_persistence_native_build --target h3maped_rmg_core_selftest rmg_native_batch_export_cli --parallel 2 (passed)",
         "./bin/h3maped_rmg_core_selftest (passed)",
-        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer --phase-snapshot-only --controlled-case small_2p_seed_10_setup3:small:2:10:land:1:1:1:3 --controlled-case small_2p_seed_58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed_10_setup3:medium:4:10:land:1:1:3:3 --print-manifest (expected exit 1 wrapper blocked; failed_count=0; no Godot)",
+        "python3 tools/rmg_native_batch_export.py --out .artifacts/rmg_recovery/support/rmg_native_batch_export_cli/source_order_selected_candidate_relation_producer --phase-snapshot-only --controlled-case small_2p_seed_10_setup3:small:2:10:land:1:1:1:3 --controlled-case small_2p_seed_58_setup3:small:2:58:land:1:1:1:3 --controlled-case medium_4p_seed_10_setup3:medium:4:10:land:1:1:3:3 --print-manifest (expected exit 1 wrapper blocked; failed_count=0; no Godot)",
         "python3 tests/validate_repo.py (passed)",
         "jq empty ops/progress.json (passed)",
         "git diff --check (passed)"
@@ -128353,26 +128364,26 @@
       "validatedAt": "2026-09-05T17:45:14Z",
       "artifacts": [
         "docs/rmg-start-placement-and-h3maped-audit.md",
-        ".artifacts/rmg_start_audit_20260905/matrix/summary.json",
-        ".artifacts/rmg_start_audit_20260905/rendered_final/ordinal95.json",
-        ".artifacts/rmg_start_audit_20260905/rendered_final/ordinal95.png",
-        ".artifacts/rmg_start_audit_20260905/rendered_final/small_seed68.json",
-        ".artifacts/rmg_start_audit_20260905/rendered_final/small_seed68.png",
-        ".artifacts/rmg_start_audit_20260905/legacy_proxy_repro/legacy_proxy_seed1.json",
-        ".artifacts/rmg_start_audit_20260905/retained_matrix/summary.json",
-        ".artifacts/rmg_start_audit_20260905/owner_medium_water_clean/extraction_summary.json",
-        ".artifacts/rmg_start_audit_20260905/owner_water_private/winedbg_interactive_trace_ledger.json",
-        ".artifacts/rmg_start_audit_20260905/private_water_compare/summary.json",
-        ".artifacts/rmg_start_audit_20260905/private_land_compare/summary.json",
-        ".artifacts/rmg_start_audit_20260905/runtime_boundary.log",
-        ".artifacts/rmg_start_audit_20260905/object_pool.log",
-        ".artifacts/rmg_start_audit_20260905/faction_hero_isolated_final.log",
-        ".artifacts/rmg_start_audit_20260905/linux_selftest.log",
-        ".artifacts/rmg_start_audit_20260905/windows_selftest_configured.log",
-        ".artifacts/rmg_start_audit_20260905/validate_repo_final.log",
-        ".artifacts/rmg_start_audit_20260905/linux_package.log",
-        ".artifacts/rmg_start_audit_20260905/windows_package.log",
-        ".artifacts/rmg_start_audit_20260905/linux-generated-flow/live_validation_report.json"
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/matrix/summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/rendered_final/ordinal95.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/rendered_final/ordinal95.png",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/rendered_final/small_seed68.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/rendered_final/small_seed68.png",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/legacy_proxy_repro/legacy_proxy_seed1.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/retained_matrix/summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/owner_medium_water_clean/extraction_summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/owner_water_private/winedbg_interactive_trace_ledger.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/private_water_compare/summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/private_land_compare/summary.json",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/runtime_boundary.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/object_pool.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/faction_hero_isolated_final.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/linux_selftest.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/windows_selftest_configured.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/validate_repo_final.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/linux_package.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/windows_package.log",
+        ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/linux-generated-flow/live_validation_report.json"
       ],
       "result": "Audit complete, not runtime fixes: 36 generated-map requests (35 accepted plus one expected unsupported strength), 83 starts all displaced from town entrances, underground level loss with seed-68 immobility, ordinal-95 supplemental guard on hero start, faction-keyed opponent merging and missing source cross-level transit adoption. Fresh unassisted native comparisons match 23/24 retained owner payloads; Medium normal-water seed 10 diverges, confirmed by fresh H3MapEd final bytes and post-0x4a4c8e/pre-0x49eb8d private-state differences. Nine Python tests, repository checks, both native selftests and both platform export/startup/generated-entry smokes pass. The native mismatch and stale legacy raw-bank assertion remain failing and documented; no release or full-parity claim.",
       "commands": [
@@ -128381,7 +128392,7 @@
         "python3 tools/rmg_retained_authority_audit.py --label retained_matrix",
         "python3 -m unittest discover -s tests -p test_rmg_start_placement_audit.py",
         "bin/h3maped_rmg_core_selftest",
-        "WINEPREFIX=/root/dev/heroes-like/.artifacts/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
+        "WINEPREFIX=/root/dev/heroes-like/.artifacts/rmg_recovery/support/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
         "python3 tests/validate_repo.py",
         "python3 tests/packaging_linux_export_smoke.py",
         "python3 tests/packaging_windows_export_smoke.py",
@@ -128757,7 +128768,7 @@
       ],
       "movement": "Three isolated-start production route fixtures complete without battle through omitted source bodies. Not journeys from starting towns.",
       "nativeComparison": "Medium seed10 and Large seed11 unassisted output matches retained original bytes; runtime sizes/FNV identities match. Standalone same-run authority package refusal preserved. No private-state or Large seed1 original-executable parity claim.",
-      "nativeRecoveryEvidence": ".artifacts/rmg_start_audit_20260905/guard_space_retained_20260918/summary.json",
+      "nativeRecoveryEvidence": ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/guard_space_retained_20260918/summary.json",
       "visualReview": "1920x1080 source/Linux OpenGL start, empty-region, guard overlap and lost-body bypass captures inspected; inspection-only reveal distinguished from normal fog",
       "cleanupAllocatedBytes": 200568832,
       "cleanup": "Disposed task-owned runtime snapshots/logs/screenshots; retained 307200 bytes native recovery comparison and all prior recovery/source/art/caches/saves/unrelated items",
@@ -128776,26 +128787,26 @@
     "validatedAt": "2026-09-05T17:45:14Z",
     "artifacts": [
       "docs/rmg-start-placement-and-h3maped-audit.md",
-      ".artifacts/rmg_start_audit_20260905/matrix/summary.json",
-      ".artifacts/rmg_start_audit_20260905/rendered_final/ordinal95.json",
-      ".artifacts/rmg_start_audit_20260905/rendered_final/ordinal95.png",
-      ".artifacts/rmg_start_audit_20260905/rendered_final/small_seed68.json",
-      ".artifacts/rmg_start_audit_20260905/rendered_final/small_seed68.png",
-      ".artifacts/rmg_start_audit_20260905/legacy_proxy_repro/legacy_proxy_seed1.json",
-      ".artifacts/rmg_start_audit_20260905/retained_matrix/summary.json",
-      ".artifacts/rmg_start_audit_20260905/owner_medium_water_clean/extraction_summary.json",
-      ".artifacts/rmg_start_audit_20260905/owner_water_private/winedbg_interactive_trace_ledger.json",
-      ".artifacts/rmg_start_audit_20260905/private_water_compare/summary.json",
-      ".artifacts/rmg_start_audit_20260905/private_land_compare/summary.json",
-      ".artifacts/rmg_start_audit_20260905/runtime_boundary.log",
-      ".artifacts/rmg_start_audit_20260905/object_pool.log",
-      ".artifacts/rmg_start_audit_20260905/faction_hero_isolated_final.log",
-      ".artifacts/rmg_start_audit_20260905/linux_selftest.log",
-      ".artifacts/rmg_start_audit_20260905/windows_selftest_configured.log",
-      ".artifacts/rmg_start_audit_20260905/validate_repo_final.log",
-      ".artifacts/rmg_start_audit_20260905/linux_package.log",
-      ".artifacts/rmg_start_audit_20260905/windows_package.log",
-      ".artifacts/rmg_start_audit_20260905/linux-generated-flow/live_validation_report.json"
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/matrix/summary.json",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/rendered_final/ordinal95.json",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/rendered_final/ordinal95.png",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/rendered_final/small_seed68.json",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/rendered_final/small_seed68.png",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/legacy_proxy_repro/legacy_proxy_seed1.json",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/retained_matrix/summary.json",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/owner_medium_water_clean/extraction_summary.json",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/owner_water_private/winedbg_interactive_trace_ledger.json",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/private_water_compare/summary.json",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/private_land_compare/summary.json",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/runtime_boundary.log",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/object_pool.log",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/faction_hero_isolated_final.log",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/linux_selftest.log",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/windows_selftest_configured.log",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/validate_repo_final.log",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/linux_package.log",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/windows_package.log",
+      ".artifacts/rmg_recovery/support/rmg_start_audit_20260905/linux-generated-flow/live_validation_report.json"
     ],
     "result": "Audit complete, not runtime fixes: 36 generated-map requests (35 accepted plus one expected unsupported strength), 83 starts all displaced from town entrances, underground level loss with seed-68 immobility, ordinal-95 supplemental guard on hero start, faction-keyed opponent merging and missing source cross-level transit adoption. Fresh unassisted native comparisons match 23/24 retained owner payloads; Medium normal-water seed 10 diverges, confirmed by fresh H3MapEd final bytes and post-0x4a4c8e/pre-0x49eb8d private-state differences. Nine Python tests, repository checks, both native selftests and both platform export/startup/generated-entry smokes pass. The native mismatch and stale legacy raw-bank assertion remain failing and documented; no release or full-parity claim.",
     "commands": [
@@ -128804,7 +128815,7 @@
       "python3 tools/rmg_retained_authority_audit.py --label retained_matrix",
       "python3 -m unittest discover -s tests -p test_rmg_start_placement_audit.py",
       "bin/h3maped_rmg_core_selftest",
-      "WINEPREFIX=/root/dev/heroes-like/.artifacts/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
+      "WINEPREFIX=/root/dev/heroes-like/.artifacts/rmg_recovery/support/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe",
       "python3 tests/validate_repo.py",
       "python3 tests/packaging_linux_export_smoke.py",
       "python3 tests/packaging_windows_export_smoke.py",

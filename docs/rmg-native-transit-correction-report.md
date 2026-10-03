@@ -39,7 +39,7 @@ Implicit defense now requires same-level physical contact at the target town's a
 
 ## Validation evidence
 
-Artifact labels below are under `.artifacts/rmg_start_audit_20260905/` unless stated otherwise. Focused reports record source hashes and reject edits during execution.
+Artifact labels below are under `.artifacts/rmg_recovery/support/rmg_start_audit_20260905/` unless stated otherwise. Focused reports record source hashes and reject edits during execution.
 
 - `transit_caves_native_adjacency_journey`: PASS from the actual entrance to both other town approaches, 39/34 paid steps, one cave and two turns each, production passage saves. No journey relocation. All native object/terrain/payload controls unchanged.
 - `transit_native_adjacency_caves_1280`: PASS all eight ends, strategic AI, safety, historical save, production saves/fog and rendered layers. Exact private corner passes actual player route/move, AI step, save/return, authored-corner negative control and rock-destination rejection. Both 1280x720 screenshots visually inspected: hero, layer, main/minimap fog and commands agree.

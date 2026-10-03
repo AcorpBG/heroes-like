@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_BINARY = Path(".artifacts/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime/h3maped.exe")
+DEFAULT_BINARY = Path(".artifacts/rmg_recovery/support/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime/h3maped.exe")
 DEFAULT_INNER_SUMMARY = Path(".artifacts/rmg_recovery/direct_generation_4aa3e9_inner_calls/4aa3e9_inner_summary.json")
 TARGET = "0x0049baf5"
 EXPECTED_BYTES = ["b0", "01", "c3"]

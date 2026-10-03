@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_TRACE_DIR = Path(".artifacts/rmg_private_trace_seed58_20260605")
+DEFAULT_TRACE_DIR = Path(".artifacts/rmg_recovery/support/rmg_private_trace_seed58_20260605")
 DEFAULT_BIT26_LOG = DEFAULT_TRACE_DIR / "winedbg_0x49ec01_bit26_count.log"
 DEFAULT_E700_LOG = DEFAULT_TRACE_DIR / "winedbg_0x49e700_entry.log"
 DEFAULT_OUT = Path(".artifacts/rmg_recovery/seed58_49eb8d_trace_summary.json")

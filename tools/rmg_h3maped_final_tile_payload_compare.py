@@ -18,7 +18,7 @@ from typing import Any
 
 
 DEFAULT_H3MAPED_BYTES = Path(".artifacts/rmg_recovery/same_run_final_tile_payload_bytes_20260610.bin")
-DEFAULT_OUT = Path(".artifacts/rmg_native_h3maped_final_tile_payload_compare.json")
+DEFAULT_OUT = Path(".artifacts/rmg_recovery/support/rmg_native_h3maped_final_tile_payload_compare.json")
 TILE_BYTE_SCHEMA = "aurelion_h3maped_small_tile_bytes_0x49b2b6_draft_v1"
 LANES = [
     ("byte_0_terrain_u8", "terrain_id"),

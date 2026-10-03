@@ -14,9 +14,9 @@ from pathlib import Path
 
 
 DEFAULT_GHIDRA_URL = "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.1.2_build/ghidra_12.1.2_PUBLIC_20260605.zip"
-DEFAULT_H3MAPED = Path(".artifacts/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime/h3maped.exe")
+DEFAULT_H3MAPED = Path(".artifacts/rmg_recovery/support/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime/h3maped.exe")
 DEFAULT_TOOLS_DIR = Path(".artifacts/tools")
-DEFAULT_PROJECT_DIR = Path("tmp/rmg_recovery/ghidra_project")
+DEFAULT_PROJECT_DIR = Path(".artifacts/rmg_recovery/ghidra_project")
 DEFAULT_MANIFEST = Path(".artifacts/rmg_recovery/ghidra_bootstrap_manifest.json")
 
 

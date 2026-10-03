@@ -18,7 +18,7 @@ import textwrap
 from pathlib import Path
 
 
-DEFAULT_RUNTIME = Path(".artifacts/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime")
+DEFAULT_RUNTIME = Path(".artifacts/rmg_recovery/support/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime")
 DEFAULT_OUTPUT_MAP = "h3maped_small_2p_seed_58_manual20.h3m"
 DEFAULT_DUMP_COMMAND = "x/15552x *(int*)($esi+0x14)"
 
@@ -160,13 +160,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path.cwd(), help="Repository root.")
     parser.add_argument("--h3maped-runtime", type=Path, default=DEFAULT_RUNTIME, help="Directory containing h3maped.exe and runtime files.")
-    parser.add_argument("--out-dir", type=Path, default=Path(".artifacts/rmg_private_trace_seed58_20260606"), help="Artifact output directory.")
+    parser.add_argument("--out-dir", type=Path, default=Path(".artifacts/rmg_recovery/support/rmg_private_trace_seed58_20260606"), help="Artifact output directory.")
     parser.add_argument("--output-map-name", default=DEFAULT_OUTPUT_MAP, help="Saved H3M filename typed into H3MapEd.")
     parser.add_argument("--breakpoint", default="0x4a4c8e", help="winedbg breakpoint address.")
     parser.add_argument("--dump-command", default=DEFAULT_DUMP_COMMAND, help="winedbg memory dump command.")
     parser.add_argument("--display-number", type=int, default=106, help="Xvfb display number.")
     parser.add_argument("--screen-size", default="1024x768x24", help="Xvfb screen geometry.")
-    parser.add_argument("--wineprefix", type=Path, default=Path(".artifacts/wine/h3maped"), help="Wine prefix path.")
+    parser.add_argument("--wineprefix", type=Path, default=Path(".artifacts/rmg_recovery/support/wine/h3maped"), help="Wine prefix path.")
     parser.add_argument("--skip-existing", action="store_true", help="Only validate existing log/map artifacts.")
     return parser
 

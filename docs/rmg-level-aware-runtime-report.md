@@ -18,7 +18,7 @@ Battle payloads/normalization and scenario town-stationing preserve spatial leve
 
 ## Validation evidence
 
-All paths below are under `.artifacts/rmg_start_audit_20260905/` unless otherwise noted.
+All paths below are under `.artifacts/rmg_recovery/support/rmg_start_audit_20260905/` unless otherwise noted.
 
 - `level_all_entrances/summary.json`: 36 requests, 35 supported generations, one expected unsupported-strength refusal; all **83 native starts** match entrances and all **35 primary heroes** pass entry, legal exit, return and session restoration. No runtime errors. This includes the four previously failing two-level cases. Complete objects, terrain, payload hashes and lengths for all 35 cases equal the first-child `entrance_matrix` outputs. No recovered native generation code changed.
 - `level_release_evidence/summary.json`: **49/49 explicit live checks in each of three cases**, Medium two-level land seed 1, Small two-level land seed 68, and XLarge two-level normal-water seed 77. Actual captured images are **2048×1079**. The report records production GDScript SHA-256 hashes; all match the validated working tree (the revision field records its pre-commit base). No runtime errors or failed level/entrance checks.

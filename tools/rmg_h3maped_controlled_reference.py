@@ -31,8 +31,8 @@ import rmg_fast_audit as fast_audit  # noqa: E402
 
 DEFAULT_H3MAPED_EXE = Path("/root/Downloads/h3maped.exe")
 EXPECTED_H3MAPED_SHA256 = "4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37"
-DEFAULT_OUT_ROOT = Path(".artifacts/rmg_h3maped_controlled_reference")
-DEFAULT_WINEPREFIX = Path(".artifacts/wine/h3maped")
+DEFAULT_OUT_ROOT = Path(".artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference")
+DEFAULT_WINEPREFIX = Path(".artifacts/rmg_recovery/support/wine/h3maped")
 REQUIRED_RESOURCE_LODS = ("h3bitmap.lod", "h3sprite.lod", "h3ab_bmp.lod", "h3ab_spr.lod")
 HOMM3_RE_TEMPLATE_CATALOG = Path("/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json")
 

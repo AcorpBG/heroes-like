@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Consolidate local RMG recovery material
+
+`tooling-rmg-evidence-consolidation-20261003` (completed, storage/tooling only): consolidated restored RMG evidence under `.artifacts/rmg_recovery`, including the Ghidra project and supporting traces; all 22,899 retained files pass SHA-256 and all 330 checked ledger references resolve. Updated recovery input paths while retaining temporary game-validation output defaults. Removed 42 reviewed disposable files (148.631 MiB) and 804 empty directories; protected evidence, maps, saves, caches, server originals and unrelated edits remain. Verifier integrity/containment tests and relocated binary/trace checks pass on Windows; Linux replay not run. No native behavior/parity change. See `docs/rmg-evidence-storage.md`.
+
 ### Recover the server RMG evidence
 
 `tooling-rmg-evidence-restore-20261003` (completed, evidence recovery only): restored 23,085 files (10.543 GiB) from root@pleyc.com, including the Ghidra project, decompiler exports and reference traces; 24,245 regular files pass SHA-256 read-back and all 330 checked ledger paths exist. Two local differences are preserved with separate server copies. Bulk evidence stays ignored; Linux symlink definitions and shared inputs are retained separately. No runtime/parity status change. See `docs/rmg-evidence-storage.md`.

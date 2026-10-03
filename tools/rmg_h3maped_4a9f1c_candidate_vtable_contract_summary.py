@@ -26,7 +26,7 @@ from rmg_h3maped_recovery_trace import parse_winedbg_log
 
 
 DEFAULT_BINARY = Path(
-    ".artifacts/rmg_20seed_2p_small_h3maped_20260605/"
+    ".artifacts/rmg_recovery/support/rmg_20seed_2p_small_h3maped_20260605/"
     "small_2p_seed_58_manual20/runtime/h3maped.exe"
 )
 DEFAULT_OUT = Path(".artifacts/rmg_recovery/medium_4a9f1c_candidate_vtable_contract_summary_20260608.json")

@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_BINARY = Path(".artifacts/rmg_h3maped_controlled_reference/small_2p_land_gui_seed_11/runtime/h3maped.exe")
+DEFAULT_BINARY = Path(".artifacts/rmg_recovery/storage/restore-20261003/shared-reference-data/h3maped.exe")
 DEFAULT_DUMP_DIR = Path(".artifacts/rmg_recovery/ghidra_49c019_49c0a6_wrapper_callers_dump")
 DEFAULT_DRIVER_DUMP_DIR = Path(".artifacts/rmg_recovery/ghidra_4ad947_4adb72_projection_driver_dump")
 DEFAULT_OBJECT_PROJECTION_DUMP_DIR = Path(".artifacts/rmg_recovery/ghidra_object_projection_helper_dump")

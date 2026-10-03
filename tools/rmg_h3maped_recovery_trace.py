@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_RUNTIME = Path(".artifacts/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime")
+DEFAULT_RUNTIME = Path(".artifacts/rmg_recovery/support/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime")
 DEFAULT_OUT_DIR = Path(".artifacts/rmg_recovery/seed58_trace")
 DEFAULT_BREAKPOINTS = ["0x499ea3", "0x49a932", "0x49aa63", "0x49abd6", "0x4aa3e9", "0x4a4c8e"]
 DWORD_LINE_RE = re.compile(r"(?:^|>)\s*(?:0x)?([0-9a-fA-F]+)(?:\s+[^:]+)?:\s+(.+)$")
@@ -198,7 +198,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--generated-cell-stride", type=int, default=0x30)
     parser.add_argument("--display-number", type=int, default=107)
     parser.add_argument("--screen-size", default="1024x768x24")
-    parser.add_argument("--wineprefix", type=Path, default=Path(".artifacts/wine/h3maped"))
+    parser.add_argument("--wineprefix", type=Path, default=Path(".artifacts/rmg_recovery/support/wine/h3maped"))
     parser.add_argument("--output-map-name", default="h3maped_recovery_trace_seed58.h3m")
     parser.add_argument("--generate-wait-seconds", type=int, default=12)
     parser.add_argument("--parse-only", type=Path, default=None)

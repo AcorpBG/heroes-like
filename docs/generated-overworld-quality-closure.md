@@ -198,7 +198,7 @@ Current reproducible receipts are under
 `.artifacts/overworld-quality-20260918/{accepted-source,accepted-linux,accepted-windows,ground-accepted,followup}`;
 official packages under `accepted-linux-export` and `accepted-windows-export`.
 Native retained-reference and water/layer receipts are in
-`.artifacts/rmg_start_audit_20260905/{quality_retained_20260918,quality_water_levels_20260918}`;
+`.artifacts/rmg_recovery/support/rmg_start_audit_20260905/{quality_retained_20260918,quality_water_levels_20260918}`;
 the historical density receipt is
 `.artifacts/full_play_runtime_20260905/overworld-quality-density-20260918`.
 All native recovery evidence is retained. Cleanup removed exactly
@@ -274,7 +274,7 @@ guard-free immediate play. The separate production-route Small diagnostic gives
 **4/10** directly reachable interactions. Starting-town presence is included in
 these established counts. All 101 Small interactables still survive adoption.
 
-Receipts: `.artifacts/rmg_quality_continuation_20260918/guard-final-source` and
+Receipts: `.artifacts/rmg_recovery/support/rmg_quality_continuation_20260918/guard-final-source` and
 `.artifacts/full_play_runtime_20260905/guard-route-context-20260918`. Existing
 controller selection, selected-route cache, full movement/locomotion and
 interaction-optimization tests pass via the Python runner. Two legacy setup
@@ -292,7 +292,7 @@ python3 -B tests/full_play_validation_suite.py --label guard-route-review --only
 
 ### Guard-target final platform evidence and cleanup
 
-Evidence root: `.artifacts/rmg_quality_continuation_20260918`.
+Evidence root: `.artifacts/rmg_recovery/support/rmg_quality_continuation_20260918`.
 
 - `guard-final-{source,linux,windows}/report.json`: **7,195 checks each**.
   Both packages run the unchanged Python-owned probe with SHA-256
@@ -305,7 +305,7 @@ Evidence root: `.artifacts/rmg_quality_continuation_20260918`.
   Linux `f79c9fcd140503487a5a3097104dc404928c0420b83996dc45f82efcbd07705e`,
   Windows `8ad1d49bbd8062ec534fb7c8506072942a452ccc35a46ec54ba5604776c144a9`.
 - Existing exploration rerun passes **81,295 checks** at
-  `.artifacts/rmg-exploration-20260918/guard-routing-followup`. The controller,
+  `.artifacts/rmg_recovery/support/rmg-exploration-20260918/guard-routing-followup`. The controller,
   selected-route cache, full-route/locomotion and interaction-optimization
   regressions pass in `guard-route-compat-20260918` / `guard-route-final-20260918`
   under `.artifacts/full_play_runtime_20260905`; the corrected four-size density
@@ -375,7 +375,7 @@ a genuine occupied/guarded destination; no source mask or guard was removed to
 force passage. Final run receipts and integrated acceptance are still pending.
 
 The extended `generated_guard_approach_regression.py` source run at
-`.artifacts/rmg_quality_continuation_20260918/opening-barriers-source` passes
+`.artifacts/rmg_recovery/support/rmg_quality_continuation_20260918/opening-barriers-source` passes
 7,195 headless checks, including eight new opening-barrier assertions. Its
 conservative static search ignores fog and assumes all unguarded site visits
 are usable: Medium/10 has 122 guard-free reachable cells and Large/11 has 382,
@@ -390,7 +390,7 @@ screenshot assertions instead of these eight new barrier checks.
 ### Mandatory guarded portal defect: correction under validation
 
 The later read-only Godot diagnosis at
-`.artifacts/rmg_quality_continuation_20260918/guarded-portal-diagnosis` establishes
+`.artifacts/rmg_recovery/support/rmg_quality_continuation_20260918/guarded-portal-diagnosis` establishes
 that the occupied Medium portal is more than an optional detour. In the actual
 day-56 save, hero (16,46) has a legal 28-step approach to entrance (39,30),
 `native_h3maped_f8d41ec2_object_0967`. The linked exit is (59,46), object `0965`.
@@ -472,7 +472,7 @@ These commands describe required coverage, not automatically passing results.
 Final runtime owner SHA-256: `ea9ed8e9ab5c2c1cc217580b6d22f6aee2a2dd76bcfa9a6a014610db4afd8b6b`.
 
 - **2,104 checks pass** in source and the exact Linux/Windows releases under
-  `.artifacts/rmg_quality_continuation_20260918/portal-accepted-{source,linux,windows}`.
+  `.artifacts/rmg_recovery/support/rmg_quality_continuation_20260918/portal-accepted-{source,linux,windows}`.
   The packaged probe SHA is identical on both platforms (`3bb7ebed…e95a`), with
   all assertions retained. This includes source guards, hostile arrival,
   overlapping defenders and solid bodies, friendly/terrain/site/artifact/town
@@ -713,7 +713,7 @@ only closure:
 
 The current authoritative packages are `portal-final-linux-export/export` and
 `portal-final-windows-export/export` under
-`.artifacts/rmg_quality_continuation_20260918`; their identical 650,610,488-byte
+`.artifacts/rmg_recovery/support/rmg_quality_continuation_20260918`; their identical 650,610,488-byte
 PCK inventories differ only in expected `project.binary` platform features.
 No shipped runtime changed after `936b772c`; later commits only correct the
 validation player and close evidence. The final Large driver SHA-256

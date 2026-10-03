@@ -2,7 +2,7 @@
 
 Owner direction: fix every finding in `rmg-start-placement-and-h3maped-audit.md`, and always start the hero at the owning town entrance. This report covers the completed first implementation child only, `bugfix-rmg-town-entrance-starts-20260905`. It is not completion of the full correction goal or native source parity.
 
-Source chain: `project.md` → RMG audit correction parent/children in `PLAN.md` → `rmg-audit-corrections-requirements.md` and the baseline audit → implementation below → evidence under `.artifacts/rmg_start_audit_20260905/`.
+Source chain: `project.md` → RMG audit correction parent/children in `PLAN.md` → `rmg-audit-corrections-requirements.md` and the baseline audit → implementation below → evidence under `.artifacts/rmg_recovery/support/rmg_start_audit_20260905/`.
 
 ## Live changes
 

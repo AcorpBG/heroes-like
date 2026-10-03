@@ -492,7 +492,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--generated-cell-stride", type=int, default=0x30)
     parser.add_argument("--display-number", type=int, default=115)
     parser.add_argument("--screen-size", default="1024x768x24")
-    parser.add_argument("--wineprefix", type=Path, default=Path(".artifacts/wine/h3maped"))
+    parser.add_argument("--wineprefix", type=Path, default=Path(".artifacts/rmg_recovery/support/wine/h3maped"))
     parser.add_argument("--startup-settle-seconds", type=float, default=3.0, help="Seconds to wait after the first visible H3MapEd window before clicking menus.")
     parser.add_argument("--defer-breakpoints-until-generate", action="store_true", help="Configure the New Map dialog before installing breakpoints; useful for startup-hot addresses.")
     parser.add_argument("--generate-wait-seconds", type=int, default=2)

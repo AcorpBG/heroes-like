@@ -21,7 +21,7 @@ from typing import Any
 
 ROOT = Path(".artifacts/rmg_recovery")
 DEFAULT_H3MAPED = Path(
-    ".artifacts/rmg_20seed_2p_small_h3maped_20260605/"
+    ".artifacts/rmg_recovery/support/rmg_20seed_2p_small_h3maped_20260605/"
     "small_2p_seed_58_manual20/runtime/h3maped.exe"
 )
 DEFAULT_RUNTIME_DUMP_DIR = ROOT / "ghidra_source_catalog_runtime_table_targets_dump_20260610"

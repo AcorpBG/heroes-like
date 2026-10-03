@@ -18,7 +18,7 @@ The reported starting-hero issue is real. The native package adapter deliberatel
 
 Audited runtime revision: `e08da0990a24ac1e4cabf365bbb3c50ff3b30165`. No production scripts, native implementation, binaries, assets, generation inputs, topology, masks, balance, or save schema were changed. New Python audit tooling and tests collect evidence without supplying owner payload bytes to generation or repairing its output.
 
-Evidence root below: `.artifacts/rmg_start_audit_20260905/`. Raw evidence is local ignored project evidence; the methods, selected cases, hashes, measurements and findings are recorded here for durable review. Original unrelated artifact-retention files/reports remain untouched.
+Evidence root below: `.artifacts/rmg_recovery/support/rmg_start_audit_20260905/`. Raw evidence is local ignored project evidence; the methods, selected cases, hashes, measurements and findings are recorded here for durable review. Original unrelated artifact-retention files/reports remain untouched.
 
 ## Coverage and limits
 
@@ -170,10 +170,10 @@ Primary rerun commands (use a fresh `--label` because evidence directories are n
 python3 tools/rmg_start_placement_audit.py --label matrix_rerun
 python3 tools/rmg_start_placement_audit.py --label rendered_rerun --case ordinal95,small_seed68 --render
 python3 tools/rmg_retained_authority_audit.py --label retained_rerun
-python3 tools/rmg_retained_authority_audit.py --label private_water_rerun --private-log .artifacts/rmg_start_audit_20260905/native_water_private/rmg_native_batch_export.log --owner-ledger .artifacts/rmg_start_audit_20260905/owner_water_private/winedbg_interactive_trace_ledger.json
+python3 tools/rmg_retained_authority_audit.py --label private_water_rerun --private-log .artifacts/rmg_recovery/support/rmg_start_audit_20260905/native_water_private/rmg_native_batch_export.log --owner-ledger .artifacts/rmg_recovery/support/rmg_start_audit_20260905/owner_water_private/winedbg_interactive_trace_ledger.json
 python3 -m unittest discover -s tests -p test_rmg_start_placement_audit.py
 bin/h3maped_rmg_core_selftest
-WINEPREFIX=/root/dev/heroes-like/.artifacts/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe
+WINEPREFIX=/root/dev/heroes-like/.artifacts/rmg_recovery/support/wine-rmg-win64 WINEDEBUG=-all wine bin/h3maped_rmg_core_selftest.exe
 python3 tests/validate_repo.py
 python3 tests/packaging_linux_export_smoke.py
 python3 tests/packaging_windows_export_smoke.py
@@ -182,7 +182,7 @@ git diff --check
 
 Run standalone native comparisons when no Godot process is active. The native wrapper intentionally refuses concurrent engine use. The live adapter uses isolated `XDG_DATA_HOME`, dummy audio, and disabled accessibility for this host; it does not certify AT-SPI behavior.
 
-Fresh executable reproduction uses `tools/rmg_h3maped_recovery_interactive_trace.py` with the clean executable above, existing `.artifacts/wine/h3maped` prefix, `--map-size medium --level-count 1 --human-computer-down 1 --computer-only-down 1 --monster-strength-down 1 --water-mode normal --seed 10 --seed-control-mode pe-patch --defer-breakpoints-until-generate`. Final capture stops at `0x004ad3de` after intercepting `0x004ad1e3`; all exact breakpoint/address-command arguments and seed-patch evidence are in its ledger. Extraction uses `tools/rmg_h3maped_redirected_memory_payload_extract.py` with `--ledger`, `--out`, and `--bytes-out` pointing to fresh evidence paths.
+Fresh executable reproduction uses `tools/rmg_h3maped_recovery_interactive_trace.py` with the clean executable above, existing `.artifacts/rmg_recovery/support/wine/h3maped` prefix, `--map-size medium --level-count 1 --human-computer-down 1 --computer-only-down 1 --monster-strength-down 1 --water-mode normal --seed 10 --seed-control-mode pe-patch --defer-breakpoints-until-generate`. Final capture stops at `0x004ad3de` after intercepting `0x004ad1e3`; all exact breakpoint/address-command arguments and seed-patch evidence are in its ledger. Extraction uses `tools/rmg_h3maped_redirected_memory_payload_extract.py` with `--ledger`, `--out`, and `--bytes-out` pointing to fresh evidence paths.
 
 The private capture stops at `0x0049eb8d`, after `0x004a8c25` and `0x004a8c2c`, dumping the generator header at EBX+0x14 for the first two events and ECX+0x14 for the last, then all 62,208 grid words. Native trace flags are `AURELION_RMG_TRACE_POST_4A8260_GRID=1`, `AURELION_RMG_TRACE_POST_4A4C8E_GRID=1`, and `AURELION_RMG_TRACE_POST_49A1EF_GRID=1`, with controlled case `water_private:medium:2:10:normal_water:1:1:1:1:2:-1:1:1:1:0:-1` and `--include-unsupported --emit-final-h3m-payload`. The two fresh owner captures are separate matched-configuration runs; they are not misrepresented as one same-run private/final-stream trace.
 

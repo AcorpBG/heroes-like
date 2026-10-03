@@ -14,7 +14,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CATALOG = Path("/root/.openclaw/workspace/tasks/10184/artifacts/homm3-re/rmg-template-catalog.json")
 DEFAULT_MANIFEST_GLOB = (
-    ".artifacts/rmg_20seed_2p_small_h3maped_20260605/"
+    ".artifacts/rmg_recovery/support/rmg_20seed_2p_small_h3maped_20260605/"
     "small_2p_seed_*_manual20/controlled_reference_manifest.json"
 )
 

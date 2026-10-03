@@ -15,9 +15,9 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_OUT_DIR = Path(".artifacts/rmg_h3maped_small_divergence_audit")
+DEFAULT_OUT_DIR = Path(".artifacts/rmg_recovery/support/rmg_h3maped_small_divergence_audit")
 DEFAULT_NATIVE_SNAPSHOT = DEFAULT_OUT_DIR / "native_broad_snapshot.json"
-DEFAULT_REFERENCE_ROOT = Path(".artifacts/rmg_h3maped_controlled_reference")
+DEFAULT_REFERENCE_ROOT = Path(".artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference")
 
 
 def as_int(value: Any, default: int = 0) -> int:

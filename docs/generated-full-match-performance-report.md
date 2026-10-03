@@ -622,7 +622,7 @@ Thirteen existing AI/path/movement/fog/End-Turn/transactional-save reports pass 
 `.artifacts/full_play_runtime_20260905/path_keys_domains/report.json`. Expected
 autosave-failure injections remain explicitly classified by their existing exact
 prefixes, not suppressed as arbitrary engine errors. Under
-`.artifacts/rmg_start_audit_20260905/`, `path_keys_native_caves` passes all eight
+`.artifacts/rmg_recovery/support/rmg_start_audit_20260905/`, `path_keys_native_caves` passes all eight
 reciprocal trips, source-adjacency/player/AI/safety/save checks and inspected
 surface/underground captures.
 
@@ -966,7 +966,7 @@ saved states and ordered action identities equal to `recap_cache_full_play_after
 It ran alongside domain/native validation: profile output is retained, but this
 run is **functional evidence, not a new matched full-loop speed claim**.
 
-Under `.artifacts/rmg_start_audit_20260905/`, `blocker_masks_native_caves` passes
+Under `.artifacts/rmg_recovery/support/rmg_start_audit_20260905/`, `blocker_masks_native_caves` passes
 eight reciprocal journeys, exact AI destinations, real approaches, occupancy
 rejections, source geometry and production-save/fog checks. The underground
 1280x720 capture was inspected. `blocker_masks_native_large_portals` passes both
@@ -1102,7 +1102,7 @@ captures retained; no completed-play claim is made for that attempt. The fresh
 session-isolated run above exits normally with zero runtime errors. The resumed
 victory capture at 1280x720 was visually inspected.
 
-Under `.artifacts/rmg_start_audit_20260905/`, `commander_entry_native_caves` passes
+Under `.artifacts/rmg_recovery/support/rmg_start_audit_20260905/`, `commander_entry_native_caves` passes
 eight reciprocal journeys with 20 travel/AI/occupancy/save/fog checks per journey;
 its underground 1280x720 capture was inspected. `commander_entry_native_large_portals`
 passes the two representative shapes (`45:1`, `43:2`), seven gameplay/save checks

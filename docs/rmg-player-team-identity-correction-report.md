@@ -23,7 +23,7 @@ Already-played generated saves without player records explicitly retain `player_
 
 ## Evidence
 
-Paths are under `.artifacts/rmg_start_audit_20260905/` unless otherwise stated. Intermediate failures are retained, not relabeled as successful tests.
+Paths are under `.artifacts/rmg_recovery/support/rmg_start_audit_20260905/` unless otherwise stated. Intermediate failures are retained, not relabeled as successful tests.
 
 - `players_commit_validation/report.json`: **32/32 mandatory checks pass in each** of Medium land seed-10 six-player FFA, eight-player FFA, and eight-player/two-computer-team cases, with zero runtime errors. All recorded production script hashes match the final working tree. Each case saves/loads real native packages. Tests check distinct source slots/teams, disjoint town ownership, unique commander instances, isolated economy, two deterministic full turns, 50/70/70 player-owned tasks, unique player-owned spawned hosts, capture/retake, resource defense, battle context/reward isolation, real battle completion and production save/resume. Recursive checks reject player aliases in runtime faction-content fields; public labels retain faction and player identity.
 - `players_rendered_2048/summary.json`: both six/eight-player entrance, movement, return and save cases pass at actual 2048×1079. `players_level_regression_1280/summary.json`: underground seed 68 passes entrance regressions plus 49/49 level checks at actual 1280×720. The eight-player and underground images were visually inspected: painted entrance alignment, fog, minimap and edge controls remain intact. These are gameplay/layout regressions, not an art overhaul.

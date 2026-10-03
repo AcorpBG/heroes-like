@@ -8,7 +8,7 @@ This document records Ghidra-backed facts only. It is not a native RMG fix and i
 
 Canonical binary:
 
-- `.artifacts/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime/h3maped.exe`
+- `.artifacts/rmg_recovery/support/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime/h3maped.exe`
 - SHA-256: `f1ab1565fdfb7581cf67ca18a5349bf26fce59f696ea33061f941d80fcc069be`
 
 Generated artifacts:

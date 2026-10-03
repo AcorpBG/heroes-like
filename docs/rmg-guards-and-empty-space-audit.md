@@ -135,7 +135,7 @@ default `random` strength and explicit `weak` both currently normalize to raw
 setup `+0x48 = -1`; these are not a strong-monster test.
 
 Retained comparison evidence:
-`.artifacts/rmg_start_audit_20260905/guard_space_retained_20260918/`.
+`.artifacts/rmg_recovery/support/rmg_start_audit_20260905/guard_space_retained_20260918/`.
 No original bytes are fed into generation. The standalone wrapper still
 refuses package adoption with
 `same_run_payload_authority_missing_recovered_profile_metadata`; it was not

@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_H3MAPED = Path(".artifacts/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime/h3maped.exe")
+DEFAULT_H3MAPED = Path(".artifacts/rmg_recovery/support/rmg_20seed_2p_small_h3maped_20260605/small_2p_seed_58_manual20/runtime/h3maped.exe")
 DEFAULT_OUT = Path(".artifacts/rmg_recovery/h3maped_recovery_manifest.json")
 
 FRONTIER_SUMMARIES: list[dict[str, str]] = [

@@ -16,8 +16,8 @@ from typing import Any
 
 
 EXPECTED_H3MAPED_SHA256 = "4480fba145c9f885942cc668d4bce430fe39c0fa482d1a6e58f96318ab857a37"
-DEFAULT_REFERENCE_ROOT = Path(".artifacts/rmg_h3maped_controlled_reference_medium")
-DEFAULT_OUT = Path(".artifacts/rmg_h3maped_medium_reference_corpus_audit")
+DEFAULT_REFERENCE_ROOT = Path(".artifacts/rmg_recovery/support/rmg_h3maped_controlled_reference_medium")
+DEFAULT_OUT = Path(".artifacts/rmg_recovery/support/rmg_h3maped_medium_reference_corpus_audit")
 REQUIRED_PLAYER_COUNTS = {2, 3, 4}
 
 

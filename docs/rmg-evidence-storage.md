@@ -1,56 +1,63 @@
 # RMG reverse-engineering evidence storage
 
-The tracked recovery code and ledgers depend on local evidence that Git does not
-carry. `.artifacts/` and `tmp/` are ignored. A clone or pull does not restore their
-contents; ignoring a directory does not delete it. Preserve RMG evidence in these
-directories during cleanup, including historical traces and Ghidra projects.
+Local reverse-engineering evidence belongs under `.artifacts/rmg_recovery/`.
+It remains ignored and excluded from releases. A clone or pull does not supply
+these files. Preserve traces, disassembly, Ghidra databases, reference inputs,
+maps, saves and provenance; directory names alone do not establish disposability.
 
-## Verified restore
+## Layout
 
-Restored 23,085 files (11,320,919,416 bytes, 10.543 GiB); 1,160 files were already
-identical. All 24,245 selected regular files passed local SHA-256 read-back against
-the server manifest. All 330 explicit evidence references checked across six key
-recovery ledgers exist locally. The main `.artifacts/rmg_recovery/` tree contains
-all 19,122 server regular files (5.644 GiB). Two differing local inspection files
-were preserved, with the server versions saved separately.
+- Existing recovery subdirectories: original decompiler exports, traces,
+  private-state payloads and recovery summaries. Their file contents are unchanged.
+- `ghidra_project/h3maped_rmg_recovery.gpr` and its adjacent `.rep` directory:
+  the original Ghidra analysis project. Keep both together.
+- `support/`: the formerly separate H3MapEd reference runs, seed58 private traces,
+  historical native comparison runs and supporting research files. Names beneath
+  this directory retain their original identities.
+- `storage/restore-20261003/`: the original server hash manifest, reference-map
+  snapshot, shared reference inputs, Linux link definitions and separate copies
+  of two files that differed locally. Existing local versions were preserved.
+- `storage/consolidation-20261003/`: the current integrity manifest, exact old/new
+  path map, relocation journal and itemized cleanup receipt.
 
-## Local recovery locations
+The source was `root@pleyc.com:/root/dev/heroes-like` at
+`32ed167aac8b8a6c3fdee732a507320efadf6a06`. The server was not changed or pulled.
+The consolidated manifest covers 22,899 retained files / 11,212,692,907 bytes;
+all passed SHA-256 read-back after relocation. Evidence payloads and historical
+records keep their original bytes, including embedded historical paths. Use
+`path-map.json` to translate those paths; current tool defaults and tracked
+recovery references use the consolidated locations.
 
-The 2026-10-03 restore reads `root@pleyc.com:/root/dev/heroes-like`, whose source
-checkout is `32ed167aac8b8a6c3fdee732a507320efadf6a06`. It copies evidence without
-pulling that checkout's old Git history or replacing differing local files.
+## Verification and platforms
 
-- `.artifacts/rmg_recovery/`: decompiler exports, disassembly, private-state
-  traces, recovered payloads, reference runtimes and recovery summaries.
-- Other `.artifacts/rmg_*`, native RMG, H3MapEd, disassembly and related probe
-  paths: supporting reference runs and comparison evidence, at original paths.
-- `tmp/rmg_recovery/ghidra_project/h3maped_rmg_recovery.gpr` and the adjacent
-  `.rep` directory: the original Ghidra analysis project. Keep both together.
-- `.artifacts/rmg-restore-20261003/reference-maps/maps/`: the server's historical
-  reference map snapshot, kept outside the current game's map catalogue.
-- `.artifacts/rmg-restore-20261003/shared-reference-data/`: the four shared LOD
-  inputs and the separately referenced H3MapEd executable from `/root/Downloads`.
+From the repository root, run:
 
-The restore directory retains `manifest.json` (source paths, local destinations,
-sizes, timestamps and SHA-256), `transfer-plan.json`, `verification.json`, and
-`conflicts.json`. Differing server copies are under its `conflicts/` directory;
-the existing local versions stay in place. The task's `restore.py verify` command
-checks all selected regular-file contents against the remote hash manifest.
+```text
+python tools/verify_rmg_evidence.py
+```
 
-`remote-symlinks.json` preserves the Linux link definitions. File symlinks cannot
-be created with the current Windows privileges, so their shared data is stored
-once in `shared-reference-data`; the Linux absolute paths are not installed as
-Windows links. A Linux replay environment must reconnect the recorded inputs and
-provision Wine. This restore does not claim that every historical harness runs
-unchanged on Windows.
+This read-only verifier works with Windows and Linux paths and fails on missing,
+changed, duplicated or escaping manifest entries. Its integrity and containment
+tests and the restored binary/trace checks were run on Windows. Linux/Wine replay
+was not run. An existing Linux checkout must relocate its evidence using the
+recorded path map before using the updated defaults; its server files still use
+the original layout. Preserve its full Wine installation when migrating there.
 
-Rebuildable exported game packages, Wine system files, and the downloadable
-Ghidra application distribution are not part of the evidence restore. Their
-server copies remain untouched. The Ghidra analysis database itself is retained.
-`excluded-rebuildable.json` records the package and Wine-file exclusions.
+Windows could not create the original Linux symlinks. Their definitions remain
+in `storage/restore-20261003/remote-symlinks.json`, with the four LOD inputs and
+referenced executable stored once in `shared-reference-data/`. Reconnect these
+inputs and provision Wine when preparing a replay environment.
 
-Keep this bulk material outside Git and release packages. Future clones need an
-explicit evidence restore from a retained source such as the server; a successful
-Git pull is not evidence that these recovery inputs exist locally. Restoration
-is a storage operation and does not change native RMG implementation or parity
-status. Follow `docs/lessons-learned.md` before using these materials.
+## Cleanup boundary
+
+The consolidation removed 42 reviewed disposable files (155,851,175 bytes):
+generic game-export validation reports/logs, two packaged native binary copies,
+and obsolete one-time restore scaffolding. Production build tooling, all source
+evidence, reference maps, saves, caches and the original server copies remain.
+Other pre-existing art, caches and unrelated local work were not swept.
+
+Temporary game validation/export output defaults stay outside the protected
+recovery tree. Clean those outputs after validation under `AGENTS.md`; do not
+start treating everything inside `support/` as disposable. Restoration and
+consolidation do not establish native RMG parity or implementation completion.
+Follow `docs/lessons-learned.md` before using this material for native changes.

@@ -183,7 +183,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--target-return", default="0x004a9c3f")
     parser.add_argument("--display-number", type=int, default=170)
     parser.add_argument("--screen-size", default="1024x768x24")
-    parser.add_argument("--wineprefix", type=Path, default=Path(".artifacts/wine/h3maped"))
+    parser.add_argument("--wineprefix", type=Path, default=Path(".artifacts/rmg_recovery/support/wine/h3maped"))
     parser.add_argument("--generate-wait-seconds", type=int, default=8)
     parser.add_argument("--debugger-timeout", type=int, default=180)
     parser.add_argument("--max-events", type=int, default=2000)
