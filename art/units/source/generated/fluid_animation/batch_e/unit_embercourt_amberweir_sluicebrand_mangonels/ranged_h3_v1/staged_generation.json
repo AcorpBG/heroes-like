@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "abe31b446ef4a6ddd28c5303eff71f494f6a14d7e3cdd23d7bbf19678876558d",
+  "latent_sha256": "4a284c6ae5144f6d1c3d6588f27f759edf5ecea4520d6e35f3d257106bfe3d05",
+  "decode_workflow_sha256": "cefb4545fa9cd07699e4b2963effeaf93f6b8056dbe597776d78a9d46ab3a7d9",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "sluicebrand_mangonel_h3\\ranged_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

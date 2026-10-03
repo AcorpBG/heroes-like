@@ -1,0 +1,24 @@
+{
+  "accepted": true,
+  "remaining_defects": [],
+  "all_original_rgb_rgba_chronology": true,
+  "enlarged_original_alpha": true,
+  "all_native_reflected_poses": true,
+  "actual_melee_ranged_captures": true,
+  "live_map_phases": true,
+  "reviewer": "Independent producing agent, personal frame-by-frame visual review",
+  "original_rgb_frames": 1240,
+  "selected_original_action_poses": 244,
+  "preserved_idle_poses": 8,
+  "native_total_poses_per_facing": 252,
+  "actual_battle_captures": 40,
+  "map_phase_captures": 8,
+  "notes": [
+    "All 124 original RGB/RGBA frames of all10 takes personally reviewed in chronology; all124 native source poses of each selected take reviewed in both facings before selection. Enlarged mechanisms, hands, stone, wheels, alpha edges and collapse reviewed.",
+    "All252 candidate packed poses reviewed at exact128px reference height in both facings through lossless CPU tiles; source scale0.5/anchor480,500 and full source rectangle retained without normalization, exclusions or splicing.",
+    "Candidate normal/reflected actual melee fixtures and candidate Shoot plus published live melee/Shoot captures personally inspected. Mirroring applies to the complete native gallery; actual BattleShell captures use the ordinary actor facing.",
+    "All22 melee and62 Shoot poses observed in actual action playback. Firing keeps game-owned projectile/impact effects separate from clean original empty-cup/reset/reload source.",
+    "Eight actual overworld shader phase captures personally reviewed; exact old idle pixels and240ms timing preserved, ordinary/reduced-motion/static policies passed.",
+    "Published Godot texture exact3840x3084 RGBA pixels verified. All focused failures lists empty; no visual defects remaining. No Linux/fullsuite/manual game-play or continuous video-player playback claim."
+  ]
+}

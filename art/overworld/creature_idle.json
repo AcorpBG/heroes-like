@@ -5390,29 +5390,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        123.0,
+        123,
         212
       ],
       "painted_extent": 229,
-      "source_sheet": "res://art/animation/runtime/poses/unit_embercourt_amberweir_sluicebrand_mangonels.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_embercourt_amberweir_sluicebrand_mangonels.png",
       "source_indices": [
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        133,
-        24,
-        378,
-        247
+        29,
+        0,
+        274,
+        223
       ],
-      "source_sha256": "e2c630aa3f61b867fe35f8356b18a64633dc7a19909f8f8c0b58e99dca36e2e9",
-      "source_provenance": "res://art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/provenance.json",
+      "source_sha256": "309d7fa00ebb5a1fa9c6df3661931e4dc053b65c7ac7ceaf8f29420b8c43cfda",
+      "source_provenance": "res://art/animation/source/fluid/unit_embercourt_amberweir_sluicebrand_mangonels/provenance.json",
       "sha256": "600ed5b91c40af6ba14f7d908a2ba5efdbca4eaba7d24e2ece9d7defc94f9ccb"
     },
     "unit_mireclaw_moonbite_mirehorn_breakers": {

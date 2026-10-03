@@ -1,0 +1,142 @@
+{
+  "unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels",
+  "clip": "ranged",
+  "source_facing": "right",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    500
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110302,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          510
+        ]
+      ],
+      "anchor": [
+        197,
+        439
+      ],
+      "scale": 0.61371,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "ranged_aim",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-alpha/poses.png",
+      "rects": [
+        [
+          353,
+          475,
+          724,
+          700
+        ]
+      ],
+      "anchor": [
+        551,
+        684
+      ],
+      "scale": 0.65,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "ranged_release",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-alpha/poses.png",
+      "rects": [
+        [
+          727,
+          401,
+          1078,
+          701
+        ]
+      ],
+      "anchor": [
+        923,
+        689
+      ],
+      "scale": 0.65,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "ranged_06",
+      "clip": "ranged",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_v1.png",
+      "rects": [
+        [
+          11,
+          1216,
+          504,
+          1497
+        ]
+      ],
+      "anchor": [
+        245,
+        1497
+      ],
+      "scale": 0.49,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "reload_held_repaired",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/reload_held_repaired_original_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        836,
+        814
+      ],
+      "scale": 0.28811524609843936
+    }
+  ],
+  "guides": [
+    [
+      20,
+      1
+    ],
+    [
+      42,
+      2
+    ],
+    [
+      68,
+      3
+    ],
+    [
+      96,
+      4
+    ],
+    [
+      113,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Sluicebrand Mangonel group matching the references, fixed three-quarter orthographic camera facing SCREEN RIGHT. Exactly TWO adult human operators, one viewer-left at pump and one viewer-right at rope/winch. Each human has exactly TWO arms/gloved hands and TWO legs/brown boots, red tunic, cream sleeves, brass helmet/red plume and original facial hair. One wooden/red/brass wheeled mangonel chassis with exactly THREE ORIGINAL VISIBLE wood-spoked iron-rim wheels on fixed axles; no additional wheels or mechanical legs. Retain original red side plate/gold insignia, two glass pump cylinders, three original white pressure gauge faces, rope/winch, central pivot, single wooden throwing arm, single brass spherical counterweight and one claw cup. Loaded cup holds one original orange-fissured stone, never duplicated. Preserve original mechanism proportions and both crew identities/stations. One physical AIM, RELEASE, RESET and RELOAD of original mangonel. Both crew brace boots, right operator pulls original winch/rope to lower loaded arm. Original counterweight swings about same pivot while throwing arm rises to release; cup is clearly EMPTY after shot. No flying painted stone or effect. Both crew absorb movement without losing station. Right operator cranks original rope to lower EMPTY cup back to horizontal, then lifts ONE fresh orange-fissured stone with TWO gloved hands and carefully seats it inside the SAME original-size cup. He withdraws hands to original rope grip and raises loaded arm to original ready. Exactly one release and one reload, no stone teleport/duplication, no enlarged counterweight/cup, no vanishing operator. Complete boots, crew, cup and counterweight remain inside canvas with generous margins. Flat magenta RGB255,0,255 backdrop only; no floor, shadow, horizon, scenery, text, camera move, zoom or cuts. No airborne sparks, flames, smoke, painted impact flashes, beams or projectiles; live game owns release/impact effects. Physical human and mechanism articulation, fixed chassis registration, not whole-group bobbing or rigid sliding.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

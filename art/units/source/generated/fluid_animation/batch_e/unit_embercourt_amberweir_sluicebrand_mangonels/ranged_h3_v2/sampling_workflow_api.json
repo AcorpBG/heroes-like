@@ -1,0 +1,379 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "One original Sluicebrand Mangonel group matching the references, fixed three-quarter orthographic camera facing SCREEN RIGHT. Exactly TWO adult human operators, one viewer-left at pump and one viewer-right at rope/winch. Each human has exactly TWO arms/gloved hands and TWO legs/brown boots, red tunic, cream sleeves, brass helmet/red plume and original facial hair. One wooden/red/brass wheeled mangonel chassis with exactly THREE ORIGINAL VISIBLE wood-spoked iron-rim wheels on fixed axles; no additional wheels or mechanical legs. Retain original red side plate/gold insignia, two glass pump cylinders, three original white pressure gauge faces, rope/winch, central pivot, single wooden throwing arm, single brass spherical counterweight and one claw cup. Loaded cup holds one original orange-fissured stone, never duplicated. Preserve original mechanism proportions and both crew identities/stations.  One smooth original wooden-arm mechanism demonstration and return. Original three wheel hubs and axles remain fixed at the same canvas coordinates and every wheel stays grounded throughout. BOTH human operators keep original boots supported on the same floor throughout; torso and elbow articulation only. Original loaded arm lowers gently to horizontal reference20/24, then same single wood arm pivots upward29/34 while same brass spherical counterweight turns on original pivot. Raised claw cup is clearly EMPTY at29 through46 exactly as original empty-cup reference. Right person winds original rope to gently lower EMPTY arm68/80. He uses TWO connected gloved hands to lift ONE warm original orange-fissured stone above SAME original-size EMPTY cup96/102, then seats it into same cup113, withdraws both gloves to original rope grip and raises original loaded arm ready123. Left person braces through original reference postures and returns both gloves to original pump, retaining his grounded station. Exactly TWO people and THREE fixed original visible wheels throughout; original wood/red/brass chassis registration and wheel sizes stay unchanged. Warm stone material has constant contained original appearance; empty cup has clean bare original metal inside. Steady original lighting throughout the physical mechanism cycle. Entire two-person machine remains inside960x544 canvas. Same fixed orthographic camera, exact original perspective and object size throughout. Uniform flat magenta RGB255,0,255 backdrop. Constant original warm painted colors and steady lighting. Crisp isolated original two-person machine and physical components only.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026110342
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "sluicebrand_mangonel_ranged_h3_v2_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "sluicebrand_mangonel_ranged_h3_v2_guide_1.png"
+    }
+  },
+  "32": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "sluicebrand_mangonel_ranged_h3_v2_guide_2.png"
+    }
+  },
+  "33": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "sluicebrand_mangonel_ranged_h3_v2_guide_3.png"
+    }
+  },
+  "34": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "sluicebrand_mangonel_ranged_h3_v2_guide_4.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 20,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 24,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "42": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "41",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 29,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "32",
+        0
+      ]
+    }
+  },
+  "43": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "42",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 34,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "32",
+        0
+      ]
+    }
+  },
+  "44": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "43",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 46,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "32",
+        0
+      ]
+    }
+  },
+  "45": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "44",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 68,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "33",
+        0
+      ]
+    }
+  },
+  "46": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "45",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 80,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "33",
+        0
+      ]
+    }
+  },
+  "47": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "46",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 96,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "34",
+        0
+      ]
+    }
+  },
+  "48": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "47",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 102,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "34",
+        0
+      ]
+    }
+  },
+  "49": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "48",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 113,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "49",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "sluicebrand_mangonel_h3/ranged_h3_v2/sampled"
+    }
+  }
+}

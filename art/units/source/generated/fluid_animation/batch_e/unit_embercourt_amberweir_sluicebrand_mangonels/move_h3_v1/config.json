@@ -1,0 +1,116 @@
+{
+  "unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels",
+  "clip": "move",
+  "source_facing": "right",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    500
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110300,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          510
+        ]
+      ],
+      "anchor": [
+        197,
+        439
+      ],
+      "scale": 0.61371,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "move_contact",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-alpha/poses.png",
+      "rects": [
+        [
+          716,
+          35,
+          1095,
+          349
+        ]
+      ],
+      "anchor": [
+        918,
+        340
+      ],
+      "scale": 0.65,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "move_outer_lift",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-alpha/walk-outer-lift-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1376,
+          1143
+        ]
+      ],
+      "anchor": [
+        775,
+        1122
+      ],
+      "scale": 0.18,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "move_inner_lift",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-alpha/walk-inner-lift-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1376,
+          1143
+        ]
+      ],
+      "anchor": [
+        775,
+        1122
+      ],
+      "scale": 0.18,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      22,
+      1
+    ],
+    [
+      50,
+      2
+    ],
+    [
+      85,
+      3
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Sluicebrand Mangonel group matching the references, fixed three-quarter orthographic camera facing SCREEN RIGHT. Exactly TWO adult human operators, one viewer-left at pump and one viewer-right at rope/winch. Each human has exactly TWO arms/gloved hands and TWO legs/brown boots, red tunic, cream sleeves, brass helmet/red plume and original facial hair. One wooden/red/brass wheeled mangonel chassis with exactly THREE ORIGINAL VISIBLE wood-spoked iron-rim wheels on fixed axles; no additional wheels or mechanical legs. Retain original red side plate/gold insignia, two glass pump cylinders, three original white pressure gauge faces, rope/winch, central pivot, single wooden throwing arm, single brass spherical counterweight and one claw cup. Loaded cup holds one original orange-fissured stone, never duplicated. Preserve original mechanism proportions and both crew identities/stations. One smooth IN-PLACE pushing gait and return. Both real humans lean forward at their original pump/rope grips and alternately lift and plant their two boots through bent knees/hips. At least one boot per person remains on floor, normal wheel occlusion, never both operators airborne. All three original wheel spoke patterns rotate progressively about their unchanged fixed hubs; wheel diameters and count stay fixed. Loaded arm stays raised and stone seated. Chassis does not travel across frame. Recover original ready stance. Complete boots, crew, cup and counterweight remain inside canvas with generous margins. Flat magenta RGB255,0,255 backdrop only; no floor, shadow, horizon, scenery, text, camera move, zoom or cuts. No airborne sparks, flames, smoke, painted impact flashes, beams or projectiles; live game owns release/impact effects. Physical human and mechanism articulation, fixed chassis registration, not whole-group bobbing or rigid sliding.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

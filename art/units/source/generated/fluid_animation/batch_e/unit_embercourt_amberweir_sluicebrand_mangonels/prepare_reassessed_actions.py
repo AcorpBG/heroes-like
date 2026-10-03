@@ -1,0 +1,25 @@
+"""Constrain the actual bare-glove gesture and grounded cup transition on CPU."""
+import json
+import produce as p
+S=p.SOURCE_DIR
+reasons={
+ 'attack_h3_v2':'All124 original RGB/RGBA chronology, both actual128px facings and enlarged50 personally reviewed. Cup remains loaded and same connected fist articulates/retracts, but bright attached impact flare50..~59 is invented over original brown glove. Cannot remove it or skip the intervening beat. Original retained unchanged.',
+ 'ranged_h3_v1':'All124 original RGB/RGBA chronology, both actual128px facings and enlarged35/36/37/94/96 personally reviewed. Empty reset and two-hand loading are coherent, but release35..38 has attached flaming emission overlapping cup and stone, plus ungrounded chassis/crew kick. Cannot crop away overlapping flame or skip physical release. Original retained unchanged.'}
+for name,note in reasons.items():
+ t=S/name;p.write(t/'review.json',dict(status='rejected',original_sha256=p.sha(t/'original_lossless.mkv'),review=note))
+identity=json.loads((S/'unit_brief.json').read_bytes())['identity']
+plate=' Entire two-person machine remains inside960x544 canvas. Same fixed orthographic camera, exact original perspective and object size throughout. Uniform flat magenta RGB255,0,255 backdrop. Constant original warm painted colors and steady lighting. Crisp isolated original two-person machine and physical components only.'
+new={
+ 'attack_h3_v3':('attack_h3_v2',2026110341,[[15,0],[25,1],[35,2],[39,2],[45,1],[58,0],[80,0],[102,0],[118,0]],
+  ' One calm physical arm gesture by viewer-RIGHT human: same outer BROWN LEATHER closed glove bends back beside shoulder25, extends horizontally SCREEN RIGHT35 with straight elbow, remains an ordinary solid brown glove39, bends back through the same shoulder/elbow45 and returns to original rope grip58. Exactly one complete extension and withdrawal. The same person keeps inner glove on original rope the entire time and both original boots firmly grounded. Viewer-left person keeps both hands at original pump. Three wheels, chassis, raised wood arm, brass counterweight and cup remain fixed in original loaded ready position throughout. The same warm orange-fissured stone remains seated in cup throughout. Ordinary solid brown leather glove at every moment; steady original material colors and lighting. Remain in ready station58 through123.'),
+ 'ranged_h3_v2':('ranged_h3_v1',2026110342,[[20,1],[24,1],[29,2],[34,2],[46,2],[68,3],[80,3],[96,4],[102,4],[113,1]],
+  ' One smooth original wooden-arm mechanism demonstration and return. Original three wheel hubs and axles remain fixed at the same canvas coordinates and every wheel stays grounded throughout. BOTH human operators keep original boots supported on the same floor throughout; torso and elbow articulation only. Original loaded arm lowers gently to horizontal reference20/24, then same single wood arm pivots upward29/34 while same brass spherical counterweight turns on original pivot. Raised claw cup is clearly EMPTY at29 through46 exactly as original empty-cup reference. Right person winds original rope to gently lower EMPTY arm68/80. He uses TWO connected gloved hands to lift ONE warm original orange-fissured stone above SAME original-size EMPTY cup96/102, then seats it into same cup113, withdraws both gloves to original rope grip and raises original loaded arm ready123. Left person braces through original reference postures and returns both gloves to original pump, retaining his grounded station. Exactly TWO people and THREE fixed original visible wheels throughout; original wood/red/brass chassis registration and wheel sizes stay unchanged. Warm stone material has constant contained original appearance; empty cup has clean bare original metal inside. Steady original lighting throughout the physical mechanism cycle.')}
+for name,(prior,seed,guides,beat) in new.items():
+ t=S/name;t.mkdir(exist_ok=True);assert not (t/'sampling_submission.json').exists()
+ c=json.loads((S/prior/'config.json').read_bytes());c['seed']=seed;c['guides']=guides;c['prompt']=(identity+beat+plate).strip()
+ p.write(t/'config.json',c);p.prepare(t,c);p.verify(t,c)
+d=json.loads((S/'delivery.json').read_bytes());replace={'attack_h3_v2':'attack_h3_v3','ranged_h3_v1':'ranged_h3_v2'};d['takes']=[replace.get(t,t) for t in d['takes']]
+d['failed_takes']=list(dict.fromkeys(d['failed_takes']+list(reasons)))
+p.write(S/'delivery.json',d)
+p.write(S/'conditioning_reassessment.json',dict(original_defects=reasons,identified_gap='Long unconstrained extended-fist hold adds an effect; loaded-to-empty arm transition receives an exaggerated whole-machine kick and attached stone flame. Original guides already have bare brown glove, empty cup and grounded hubs. Recondition shorter connected extension/withdrawal and densely anchored original loaded/empty mechanism positions with literal physical descriptions, without attack/impact/firing terms in model prompt.',new_takes=list(new),settings_changed=False,originals_preserved=True,source_pixels_modified=False))
+print('REASSESSED_BARE_GLOVE_AND_GROUNDED_ARM_GUIDES_READY_CPU',flush=True)

@@ -1,0 +1,114 @@
+{
+  "unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            510
+          ]
+        ],
+        "anchor": [
+          197,
+          439
+        ],
+        "scale": 1.22742,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "8515cea5288b088293be074e81baa7d95ab5cb8fdb1f151cf51a941b7639e019",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "1955750455fc26d89baca282785c917acf5a7758b653596b3c5792c5d27b739a",
+      "runtime_source_scale": 0.61371
+    },
+    {
+      "source_frame": {
+        "name": "death_02",
+        "clip": "death",
+        "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_sluicebrand_mangonels/death_v1.png",
+        "rects": [
+          [
+            17,
+            511,
+            509,
+            767
+          ]
+        ],
+        "anchor": [
+          250,
+          767
+        ],
+        "scale": 0.98,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2f36e7e3a433207197334ca0fc56c94c6c6b3d566f72e06ff73b49bc20266155",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c309b38a4caab60ae28fbb4722ed09bedef39e824581d6e58fd7e0d4a2cb81f2",
+      "runtime_source_scale": 0.49
+    },
+    {
+      "source_frame": {
+        "name": "death_05",
+        "clip": "death",
+        "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_sluicebrand_mangonels/death_v1.png",
+        "rects": [
+          [
+            522,
+            904,
+            1012,
+            1118
+          ]
+        ],
+        "anchor": [
+          765,
+          1118
+        ],
+        "scale": 0.98,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2f36e7e3a433207197334ca0fc56c94c6c6b3d566f72e06ff73b49bc20266155",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "f3ac7b557bd75997bf3b18a7b47eb9a5510752b79d2852a1539cebb48e586f45",
+      "runtime_source_scale": 0.49
+    },
+    {
+      "source_frame": {
+        "name": "death_07",
+        "clip": "death",
+        "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_sluicebrand_mangonels/death_v1.png",
+        "rects": [
+          [
+            511,
+            1273,
+            1013,
+            1483
+          ]
+        ],
+        "anchor": [
+          765,
+          1483
+        ],
+        "scale": 0.98,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2f36e7e3a433207197334ca0fc56c94c6c6b3d566f72e06ff73b49bc20266155",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "7ce3a0d29b9e485f86fde8ed7c7e7e3ea4f77d5167e70c68d6786a19a187cf40",
+      "runtime_source_scale": 0.49
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    500
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

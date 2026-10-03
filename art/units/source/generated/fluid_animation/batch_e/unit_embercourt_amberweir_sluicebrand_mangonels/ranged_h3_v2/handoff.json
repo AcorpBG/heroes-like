@@ -1,0 +1,1534 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "ranged_h3_008",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "ranged_h3_010",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "ranged_h3_012",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "ranged_h3_014",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "ranged_h3_016",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "ranged_h3_018",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "ranged_h3_020",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "ranged_h3_022",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "ranged_h3_024",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "ranged_h3_025",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "ranged_h3_026",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "ranged_h3_027",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "ranged_h3_028",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "ranged_h3_029",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "ranged_h3_030",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "ranged_h3_031",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "ranged_h3_032",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "ranged_h3_034",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "ranged_h3_036",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "ranged_h3_038",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "ranged_h3_040",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "ranged_h3_042",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "ranged_h3_044",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "ranged_h3_046",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "ranged_h3_048",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "ranged_h3_050",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "ranged_h3_052",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "ranged_h3_054",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "ranged_h3_056",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "ranged_h3_058",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "ranged_h3_060",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "ranged_h3_062",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "ranged_h3_064",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "ranged_h3_066",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "ranged_h3_068",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "ranged_h3_070",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "ranged_h3_072",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "ranged_h3_074",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "ranged_h3_076",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "ranged_h3_078",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "ranged_h3_080",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "ranged_h3_082",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "ranged_h3_084",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "ranged_h3_086",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "ranged_h3_088",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "ranged_h3_090",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "ranged_h3_092",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "ranged_h3_094",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "ranged_h3_096",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "ranged_h3_098",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "ranged_h3_100",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "ranged_h3_102",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "ranged_h3_104",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "ranged_h3_106",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        },
+        {
+          "name": "ranged_h3_108",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "ranged_h3_110",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.583333333333333
+        },
+        {
+          "name": "ranged_h3_112",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "ranged_h3_114",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_114.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 114,
+          "video_time_seconds": 4.75
+        },
+        {
+          "name": "ranged_h3_116",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.833333333333333
+        },
+        {
+          "name": "ranged_h3_118",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_118.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 118,
+          "video_time_seconds": 4.916666666666667
+        },
+        {
+          "name": "ranged_h3_120",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "ranged_h3_122",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3/rgba_122.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 122,
+          "video_time_seconds": 5.083333333333333
+        }
+      ],
+      "clips": {
+        "ranged": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61
+          ],
+          "frame_msec": 83,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 12,
+          "frame_durations_msec": [
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83
+          ]
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/config.json",
+          "sha256": "20d5edff939f98e08e5edb300f431388ecf5b3caf089cf51fa945880fb20f4e2"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/selection.json",
+          "sha256": "08a7a8991c3859b297852547bd15ae61b5f2890b5f7ff0aefb8aa26d0bbf7c6e"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/original_lossless.mkv",
+          "sha256": "67ce707c80a74fe4b8dfbd34bc5ee915ab50aaf1c0e14b02ff95b917b19a21fc"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/original.json",
+          "sha256": "6c615d487ffc2f27082e43cf717568c6d2cae90fc88a9b057d749e69a73f492b"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/workflow_api.json",
+          "sha256": "6aeeb3291548bae00db7adaf60acdcd523ad169c576fc25a7db14e072d20fbb1"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/prompt.txt",
+          "sha256": "08d87d69217b28e74f54f3cc88c4969de0af82a60288930e04d47b8b33c39022"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/reference.json",
+          "sha256": "87e32982bbea0303f1ed9071790066d83d98e50834b9cfb99f6d616e5e457dc6"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte.json",
+          "sha256": "edec2a3bdd49556654fd6ce5ccda489d3eedf53c12f89cc87ec075d1769f2f3a"
+        },
+        "matte_v3.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/matte_v3.json",
+          "sha256": "bf999570f21ddf9b439f2cf718003b81dbbc9f1a888454a820ac9b737e647c6e"
+        },
+        "segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/segmentation_recipe.json",
+          "sha256": "8d717f437d2fd6ed245f41a269aaf9beb8d904a2bb55fac696f23ebf6a57bc0e"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/staged_generation.json",
+          "sha256": "5f6026e590853133361146fcb40924c3a4f02aa1c60a75567e26c9886ee22a2f"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/sampling_workflow_api.json",
+          "sha256": "4aaaeddad1b53b563b16aaff9440f4f2c5a86d9a8d1b27c9aec7a0d57081286f"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/sampling_submission.json",
+          "sha256": "6558fc27bfde02ae80b5c036f09e9e509408a4593ba32a6cf23da38838b3de10"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/sampling_history.json",
+          "sha256": "ef899a7603c20771cb63c0970b2d2f363e55ed47b7ef064be0357d03d88b3bd9"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_h3_v2/original.latent",
+          "sha256": "1efe3c7f02583b3bce149be75337d6530fdf7eb28b8d86766cf02e478fea5476"
+        },
+        "guide_image_reload_held_repaired_original_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/reload_held_repaired_original_v1.png",
+          "sha256": "f41f2961d77e43713aea5909152289a3e6f1419f4389557e3561b7b2bdd57975"
+        },
+        "guide_prompt_reload_held_repair_prompt_v1.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/reload_held_repair_prompt_v1.txt",
+          "sha256": "3a96ef9360816a2efd3b7270064ba61d19db469358548f2882b8fccb697bd0f2"
+        },
+        "guide_generation_reload_held_repaired_original_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/reload_held_repaired_original_v1.generation.json",
+          "sha256": "29372096a8292b6126860ad304538e1da48d6cad4a65db5c5ba582d857f58bda"
+        },
+        "guide_reference_reload_repair_reference.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/reload_repair_reference.png",
+          "sha256": "8a9cfd1ba083f89df5daa29ec993b7543eeb865f050d153d221dc1414ffbb8f6"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 original RGB and unchanged semantic RGBA chronology personally inspected, all124 actual128px poses each facing, enlarged24/27/29/34/68/96/102/113 light/dark and original comparisons. Original single loaded wood arm lowers, pivots to EMPTY cup28, empty raised cup29..64, empty horizontal reset68..80, two connected gloves lift one original stone96/102, seat113 and loaded ready119..122. Two original grounded workers and three original wheels remain; no attached emission or whole-chassis airborne kick. Entire complete8..122 cycle uses unique observed frames at12fps with original24fps samples across rapid release24..32; preserve actual source durations83/42ms accordingly. No effects erased, projectile crops, anatomy painting, stabilization, cuts or duplicated padding. Actual Godot acceptance pending."
+      }
+    }
+  ]
+}

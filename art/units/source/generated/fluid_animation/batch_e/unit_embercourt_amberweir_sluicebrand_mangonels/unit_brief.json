@@ -1,0 +1,49 @@
+{
+  "identity": "One original Sluicebrand Mangonel group matching the references, fixed three-quarter orthographic camera facing SCREEN RIGHT. Exactly TWO adult human operators, one viewer-left at pump and one viewer-right at rope/winch. Each human has exactly TWO arms/gloved hands and TWO legs/brown boots, red tunic, cream sleeves, brass helmet/red plume and original facial hair. One wooden/red/brass wheeled mangonel chassis with exactly THREE ORIGINAL VISIBLE wood-spoked iron-rim wheels on fixed axles; no additional wheels or mechanical legs. Retain original red side plate/gold insignia, two glass pump cylinders, three original white pressure gauge faces, rope/winch, central pivot, single wooden throwing arm, single brass spherical counterweight and one claw cup. Loaded cup holds one original orange-fissured stone, never duplicated. Preserve original mechanism proportions and both crew identities/stations. ",
+  "source_facing": "right",
+  "source_scale": 0.5,
+  "video_anchor": [
+    480,
+    500
+  ],
+  "accepted_idle": "All8 chronological enlarged native/reflected poses retain two human operators and attached hands, three original visible wheels, fixed arm/stone. Articulated pump/rope gestures return. Preserve exact battle/map pixels and240ms.",
+  "action_guides": {
+    "move": [
+      "idle_hands_0",
+      "move_contact",
+      "move_outer_lift",
+      "move_inner_lift"
+    ],
+    "attack": [
+      "idle_hands_0",
+      "melee_windup",
+      "melee_contact"
+    ],
+    "ranged": [
+      "idle_hands_0",
+      "ranged_aim",
+      "ranged_release",
+      "batch_ranged_06",
+      "reload_held_repaired"
+    ],
+    "hit": [
+      "idle_hands_0",
+      "batch_hit_01"
+    ],
+    "defend": [
+      "idle_hands_0",
+      "batch_defend_03"
+    ],
+    "cast": [
+      "idle_hands_0",
+      "batch_cast_04"
+    ],
+    "death": [
+      "idle_hands_0",
+      "batch_death_02",
+      "batch_death_05",
+      "batch_death_07"
+    ]
+  },
+  "known_guide_gap": "Original reload drafts retained but excluded. Built-in imagegen repaired two-glove loading key from original lowered-arm source; full original/native prepared guide personally inspected. Original H3 continuity remains pending."
+}

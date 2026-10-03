@@ -1,0 +1,21 @@
+{
+  "tool": "Built-in imagegen",
+  "model": "not_exposed_by_tool",
+  "date": "2026-10-03",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/reload_held_repaired_original_v1.png",
+    "sha256": "f41f2961d77e43713aea5909152289a3e6f1419f4389557e3561b7b2bdd57975"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/reload_held_repair_prompt_v1.txt",
+    "sha256": "3a96ef9360816a2efd3b7270064ba61d19db469358548f2882b8fccb697bd0f2"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/reload_repair_reference.png",
+      "sha256": "8a9cfd1ba083f89df5daa29ec993b7543eeb865f050d153d221dc1414ffbb8f6"
+    }
+  ],
+  "source_output": "C:/Users/acorp/.codex/generated_images/01a0fd4a-b27e-7940-b631-3e2e6a3966f3/exec-0d88c9a5-3396-4ea2-b64d-0e2b4e626ccb.png",
+  "review": "Original full RGBA and native conversion personally inspected. Exactly two complete crew, two gloves holding one stone above visibly empty cup, three original visible wheels, unchanged arm orientation and continuous counterweight/pivot. No checkerboard in enclosed gaps. One uniform canvas-size conversion and original central-wheel baseline y814; H3 acceptance pending."
+}

@@ -1,0 +1,119 @@
+{
+  "unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels",
+  "clip": "death",
+  "source_facing": "right",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    500
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110306,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          510
+        ]
+      ],
+      "anchor": [
+        197,
+        439
+      ],
+      "scale": 0.61371,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_02",
+      "clip": "death",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_sluicebrand_mangonels/death_v1.png",
+      "rects": [
+        [
+          17,
+          511,
+          509,
+          767
+        ]
+      ],
+      "anchor": [
+        250,
+        767
+      ],
+      "scale": 0.49,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_05",
+      "clip": "death",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_sluicebrand_mangonels/death_v1.png",
+      "rects": [
+        [
+          522,
+          904,
+          1012,
+          1118
+        ]
+      ],
+      "anchor": [
+        765,
+        1118
+      ],
+      "scale": 0.49,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_07",
+      "clip": "death",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_sluicebrand_mangonels/death_v1.png",
+      "rects": [
+        [
+          511,
+          1273,
+          1013,
+          1483
+        ]
+      ],
+      "anchor": [
+        765,
+        1483
+      ],
+      "scale": 0.49,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      38,
+      1
+    ],
+    [
+      82,
+      2
+    ],
+    [
+      110,
+      3
+    ]
+  ],
+  "last": 3,
+  "prompt": "One original Sluicebrand Mangonel group matching the references, fixed three-quarter orthographic camera facing SCREEN RIGHT. Exactly TWO adult human operators, one viewer-left at pump and one viewer-right at rope/winch. Each human has exactly TWO arms/gloved hands and TWO legs/brown boots, red tunic, cream sleeves, brass helmet/red plume and original facial hair. One wooden/red/brass wheeled mangonel chassis with exactly THREE ORIGINAL VISIBLE wood-spoked iron-rim wheels on fixed axles; no additional wheels or mechanical legs. Retain original red side plate/gold insignia, two glass pump cylinders, three original white pressure gauge faces, rope/winch, central pivot, single wooden throwing arm, single brass spherical counterweight and one claw cup. Loaded cup holds one original orange-fissured stone, never duplicated. Preserve original mechanism proportions and both crew identities/stations.  One continuous physical lowering and final rest of original wood machine AND BOTH original adult humans. Original wooden chassis fractures downward, the original three axles buckle, three original wheels tip and splay on their same hubs, the single throwing arm folds into the broken original wood frame. Each original person releases his original grip, bends the same knees to the original kneeling38 reference, lowers hips and connected shoulders/elbows beside his own station and comes fully prone on the same floor82. Viewer-left original pump person and viewer-right original rope person both remain separately visible, with their own two connected arms and two legs, original red cloth, brass helmet/red plume and brown boots. Original brass counterweight, glass pumps and three gauges settle among their own original broken wood and three grounded wheels. The single original stone remains beside its original cup as its contained warm color gradually darkens into the cold stone of the original grounded82 reference. Finish110 through123 in the original cold grounded wreck: BOTH original people fully prone, all original hardware still, cold dark stone. Keep complete two-person physical group and original hardware inside960x544 with generous margins. Fixed original three-quarter orthographic camera, original body scale and perspective throughout. Uniform flat magenta RGB255,0,255 backdrop. Steady original painted material colors; physical wood, brass, original cloth and people only.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

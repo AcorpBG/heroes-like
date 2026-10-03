@@ -1,0 +1,97 @@
+{
+  "unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels",
+  "clip": "cast",
+  "source_facing": "right",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    500
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110305,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          510
+        ]
+      ],
+      "anchor": [
+        197,
+        439
+      ],
+      "scale": 0.61371,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "cast_04",
+      "clip": "cast",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_sluicebrand_mangonels/cast_v1.png",
+      "rects": [
+        [
+          29,
+          784,
+          490,
+          1118
+        ]
+      ],
+      "anchor": [
+        255,
+        1118
+      ],
+      "scale": 0.49,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      14,
+      0
+    ],
+    [
+      30,
+      1
+    ],
+    [
+      34,
+      1
+    ],
+    [
+      48,
+      0
+    ],
+    [
+      65,
+      0
+    ],
+    [
+      95,
+      0
+    ],
+    [
+      115,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Sluicebrand Mangonel group matching the references, fixed three-quarter orthographic camera facing SCREEN RIGHT. Exactly TWO adult human operators, one viewer-left at pump and one viewer-right at rope/winch. Each human has exactly TWO arms/gloved hands and TWO legs/brown boots, red tunic, cream sleeves, brass helmet/red plume and original facial hair. One wooden/red/brass wheeled mangonel chassis with exactly THREE ORIGINAL VISIBLE wood-spoked iron-rim wheels on fixed axles; no additional wheels or mechanical legs. Retain original red side plate/gold insignia, two glass pump cylinders, three original white pressure gauge faces, rope/winch, central pivot, single wooden throwing arm, single brass spherical counterweight and one claw cup. Loaded cup holds one original orange-fissured stone, never duplicated. Preserve original mechanism proportions and both crew identities/stations.  Viewer-LEFT original pump worker keeps INNER glove on original pump control while his OTHER connected arm releases pump, bends elbow and raises that same ordinary solid BROWN LEATHER closed glove high beside original helmet30/34. He lowers SAME arm through connected shoulder/elbow and resumes original pump grip60. Solid original brown glove at every moment, steady material color and lighting. Viewer-right original rope worker deliberately bends elbows to tighten original winch/rope while remaining at his station. Both people keep original boots grounded. Exactly three original wheels, fixed original chassis, original loaded wood arm and brass counterweight intact; SAME stone remains seated in same cup throughout. Finish with both people at original pump/rope grips and original ready stance60 through123. Complete original two-person machine stays inside960x544 canvas. Fixed original orthographic perspective, camera and object size. Flat magenta RGB255,0,255 backdrop. Steady original colors and lighting; isolated painted people and original physical hardware only.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

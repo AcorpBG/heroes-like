@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            510
+          ]
+        ],
+        "anchor": [
+          197,
+          439
+        ],
+        "scale": 1.22742,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "8515cea5288b088293be074e81baa7d95ab5cb8fdb1f151cf51a941b7639e019",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "1955750455fc26d89baca282785c917acf5a7758b653596b3c5792c5d27b739a",
+      "runtime_source_scale": 0.61371
+    },
+    {
+      "source_frame": {
+        "name": "move_contact",
+        "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-alpha/poses.png",
+        "rects": [
+          [
+            716,
+            35,
+            1095,
+            349
+          ]
+        ],
+        "anchor": [
+          918,
+          340
+        ],
+        "scale": 1.3,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6652be31c8805b8f55a0f2ca3833e5f411f371cb498214907ae867cedcad0ac6",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "4724db6d05b3076dce9453a996e8870f21ad249b3907ec94564a44b84f24b255",
+      "runtime_source_scale": 0.65
+    },
+    {
+      "source_frame": {
+        "name": "move_outer_lift",
+        "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-alpha/walk-outer-lift-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1376,
+            1143
+          ]
+        ],
+        "anchor": [
+          775,
+          1122
+        ],
+        "scale": 0.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e050603202b4c71aa0bcdd24e659629c87543cdb5cbd28d04ea2d0271425a688",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "ec0e97cb248be62c90c4d303f35334380d77d146f8680ff0c41fb40eec40a05f",
+      "runtime_source_scale": 0.18
+    },
+    {
+      "source_frame": {
+        "name": "move_inner_lift",
+        "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-alpha/walk-inner-lift-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1376,
+            1143
+          ]
+        ],
+        "anchor": [
+          775,
+          1122
+        ],
+        "scale": 0.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a593ec6a9161bb3a59d7bff48df206638f44736511b1149f82cdd83b1881be5d",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "cd237c1881d2be1b597748c31c35642d388aaeef815434967945470ae5e9e457",
+      "runtime_source_scale": 0.18
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    500
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

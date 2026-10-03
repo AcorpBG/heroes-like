@@ -1,0 +1,23 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v3",
+    "ranged_h3_v2",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_unit",
+    "notes": "Personally reviewed all 124 RGB/RGBA original frames of every take in chronological and enlarged alpha views; accepted only complete physically coherent intervals. All 252 packed poses reviewed at exact native 128px reference scale in normal and reflected facings. Three rejected original takes retained without selected frames. Movement45, authentic outer brown-glove melee22, grounded release/empty reset/two-hand stone reload62, recoil24, held guard24, distinct left-operator fist signal19, collapse48 with both operators prone and cold wreck; eight existing idle poses retained at 240ms. Native and reflected Godot each passed 832 checks, actual candidate Shoot passed 832 checks and observed all62 poses; all24 actual melee/ranged captures personally accepted. Fixed source scale0.5 and anchor[480,500], no per-frame normalization, crops, exclusions, spliced poses or baked projectile/impact effects. Imported/live rendering remains a separate required check before completion."
+  },
+  "failed_takes": [
+    "attack_h3_v1",
+    "attack_h3_v2",
+    "ranged_h3_v1"
+  ]
+}

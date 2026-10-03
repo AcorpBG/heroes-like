@@ -1,0 +1,103 @@
+{
+  "unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels",
+  "status": "complete_selected_unit",
+  "date": "2026-10-03",
+  "clips": {
+    "idle": 8,
+    "move": 45,
+    "attack": 22,
+    "ranged": 62,
+    "hit": 24,
+    "defend": 24,
+    "cast": 19,
+    "death": 48
+  },
+  "held_corpse": "Dead uses the personally accepted final original death pose with both original operators prone beside the cold grounded wreck.",
+  "sources": {
+    "takes": 10,
+    "rgb_frames_per_take": 124,
+    "retained_original_rgb_frames": 1240,
+    "selected_take_rgb_frames": 868,
+    "selected_action_pose_pngs": 244,
+    "preserved_idle_poses": 8,
+    "rejected_takes": {
+      "attack_h3_v1": "Personally viewed all124 original RGB and semantic RGBA chronologically, both facings at actual128px game scale, and enlarged punch36/60 and burst66. Same attached right fist articulates correctly, but a baked cup discharge at65..75 interrupts recovery, empties stone cup and relights crew. Cannot accept a complete punch by erasing or splicing this shot. Preserve complete original and provenance.",
+      "attack_h3_v2": "All124 original RGB/RGBA chronology, both actual128px facings and enlarged50 personally reviewed. Cup remains loaded and same connected fist articulates/retracts, but bright attached impact flare50..~59 is invented over original brown glove. Cannot remove it or skip the intervening beat. Original retained unchanged.",
+      "ranged_h3_v1": "All124 original RGB/RGBA chronology, both actual128px facings and enlarged35/36/37/94/96 personally reviewed. Empty reset and two-hand loading are coherent, but release35..38 has attached flaming emission overlapping cup and stone, plus ungrounded chassis/crew kick. Cannot crop away overlapping flame or skip physical release. Original retained unchanged."
+    },
+    "all_original_ffv1_and_decoded_rgb_hashes_verified": true,
+    "selected_original_rgba_poses_byte_unique": true,
+    "failed_originals_and_provenance_retained": true,
+    "guide_repair": "Original lowered-arm image used for built-in imagegen repair of the two-glove stone loading pose. Complete original image, exact prompt/reference hashes and generation lineage retained."
+  },
+  "visual_review": {
+    "accepted": true,
+    "remaining_defects": [],
+    "all_original_rgb_rgba_chronology": true,
+    "enlarged_original_alpha": true,
+    "all_native_reflected_poses": true,
+    "actual_melee_ranged_captures": true,
+    "live_map_phases": true,
+    "reviewer": "Independent producing agent, personal frame-by-frame visual review",
+    "original_rgb_frames": 1240,
+    "selected_original_action_poses": 244,
+    "preserved_idle_poses": 8,
+    "native_total_poses_per_facing": 252,
+    "actual_battle_captures": 40,
+    "map_phase_captures": 8,
+    "notes": [
+      "All 124 original RGB/RGBA frames of all10 takes personally reviewed in chronology; all124 native source poses of each selected take reviewed in both facings before selection. Enlarged mechanisms, hands, stone, wheels, alpha edges and collapse reviewed.",
+      "All252 candidate packed poses reviewed at exact128px reference height in both facings through lossless CPU tiles; source scale0.5/anchor480,500 and full source rectangle retained without normalization, exclusions or splicing.",
+      "Candidate normal/reflected actual melee fixtures and candidate Shoot plus published live melee/Shoot captures personally inspected. Mirroring applies to the complete native gallery; actual BattleShell captures use the ordinary actor facing.",
+      "All22 melee and62 Shoot poses observed in actual action playback. Firing keeps game-owned projectile/impact effects separate from clean original empty-cup/reset/reload source.",
+      "Eight actual overworld shader phase captures personally reviewed; exact old idle pixels and240ms timing preserved, ordinary/reduced-motion/static policies passed.",
+      "Published Godot texture exact3840x3084 RGBA pixels verified. All focused failures lists empty; no visual defects remaining. No Linux/fullsuite/manual game-play or continuous video-player playback claim."
+    ]
+  },
+  "validation": {
+    "platform": "Windows Godot4.6.2 compatibility renderer on RTX5090",
+    "checks": {
+      "candidate": 832,
+      "mirrored": 832,
+      "ranged": 832,
+      "live": 846,
+      "live_ranged": 846
+    },
+    "total_focused_assertions": 4188,
+    "failures": [],
+    "all_source_pixel_and_ground_anchor_matches": 244,
+    "other_battle_and_map_rows_preserved": 231,
+    "idle_battle_and_map_pixels_timing_exact": true,
+    "idle_frame_msec": 240,
+    "atlas_size": [
+      3840,
+      3084
+    ],
+    "atlas_rgba_bytes": 47370240,
+    "atlas_import_rgba_exact": "Godot lossless texture equals original PNG after documented fix_alpha_edges transparent-border processing.",
+    "original_curated_identity_sha256": "5aaae55c0b4aba98e5f56b162b31eac8c82353760aff75591ab46676ca8689e1",
+    "policies_checked": [
+      "Normal/Fast timing",
+      "reduced motion",
+      "static/dead presentation",
+      "authored contact/recovery",
+      "interruption/input lock",
+      "unchanged serialized simulation/session save"
+    ],
+    "full_suite_run": false,
+    "linux_run": false,
+    "recovered_git_index_lock_backup_preserved": ".git/index-lock-recovery-20261002-93ec4839806c4886abb594d1167e878d.bin"
+  },
+  "cleanup": {
+    "external_comfy_duplicates": {
+      "files": 1293,
+      "bytes_removed": 730407648,
+      "rebuildable": true
+    },
+    "temporary_reviews_profiles_and_unselected_mattes": {
+      "files": 2577,
+      "bytes_removed": 953545605,
+      "rebuildable": true
+    }
+  }
+}

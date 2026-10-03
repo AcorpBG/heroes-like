@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "f377cc5058e4dd686fccabd5441ac207acb72a81b3d07d45a357884f4d0fdc08",
+  "latent_sha256": "20f93c874f26f516c1ce25edc4e96732d0afe01be246df8c477f96185fcc7a49",
+  "decode_workflow_sha256": "a946b562f67aacba7c8fb0a261e6aa923412c4b15f4678f2a32861dc03bed071",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "sluicebrand_mangonel_h3\\cast_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18991022400,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

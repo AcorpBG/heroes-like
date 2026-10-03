@@ -1,0 +1,122 @@
+{
+  "unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels",
+  "clip": "attack",
+  "source_facing": "right",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    500
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110341,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          510
+        ]
+      ],
+      "anchor": [
+        197,
+        439
+      ],
+      "scale": 0.61371,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-alpha/melee-windup-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1337,
+          1176
+        ]
+      ],
+      "anchor": [
+        679,
+        1153
+      ],
+      "scale": 0.175,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_contact",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-alpha/melee-contact-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1479,
+          1064
+        ]
+      ],
+      "anchor": [
+        626,
+        1055
+      ],
+      "scale": 0.191,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      15,
+      0
+    ],
+    [
+      25,
+      1
+    ],
+    [
+      35,
+      2
+    ],
+    [
+      39,
+      2
+    ],
+    [
+      45,
+      1
+    ],
+    [
+      58,
+      0
+    ],
+    [
+      80,
+      0
+    ],
+    [
+      102,
+      0
+    ],
+    [
+      118,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Sluicebrand Mangonel group matching the references, fixed three-quarter orthographic camera facing SCREEN RIGHT. Exactly TWO adult human operators, one viewer-left at pump and one viewer-right at rope/winch. Each human has exactly TWO arms/gloved hands and TWO legs/brown boots, red tunic, cream sleeves, brass helmet/red plume and original facial hair. One wooden/red/brass wheeled mangonel chassis with exactly THREE ORIGINAL VISIBLE wood-spoked iron-rim wheels on fixed axles; no additional wheels or mechanical legs. Retain original red side plate/gold insignia, two glass pump cylinders, three original white pressure gauge faces, rope/winch, central pivot, single wooden throwing arm, single brass spherical counterweight and one claw cup. Loaded cup holds one original orange-fissured stone, never duplicated. Preserve original mechanism proportions and both crew identities/stations.  One calm physical arm gesture by viewer-RIGHT human: same outer BROWN LEATHER closed glove bends back beside shoulder25, extends horizontally SCREEN RIGHT35 with straight elbow, remains an ordinary solid brown glove39, bends back through the same shoulder/elbow45 and returns to original rope grip58. Exactly one complete extension and withdrawal. The same person keeps inner glove on original rope the entire time and both original boots firmly grounded. Viewer-left person keeps both hands at original pump. Three wheels, chassis, raised wood arm, brass counterweight and cup remain fixed in original loaded ready position throughout. The same warm orange-fissured stone remains seated in cup throughout. Ordinary solid brown leather glove at every moment; steady original material colors and lighting. Remain in ready station58 through123. Entire two-person machine remains inside960x544 canvas. Same fixed orthographic camera, exact original perspective and object size throughout. Uniform flat magenta RGB255,0,255 backdrop. Constant original warm painted colors and steady lighting. Crisp isolated original two-person machine and physical components only.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "8f983368ae31f2b07c128f70e8a2e4f61fd3d116e6793c51c272b9236bd54ca6",
+  "latent_sha256": "64987454c33b684b7b969d3fee1d4ce6390ab4707890e36d809bd979058b9b12",
+  "decode_workflow_sha256": "3f480daedb33cdcec615f4798ebd364232889ef9ad70071d172183a793d66307",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "sluicebrand_mangonel_h3\\death_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

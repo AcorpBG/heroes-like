@@ -1,0 +1,135 @@
+{
+  "unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            510
+          ]
+        ],
+        "anchor": [
+          197,
+          439
+        ],
+        "scale": 1.22742,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "8515cea5288b088293be074e81baa7d95ab5cb8fdb1f151cf51a941b7639e019",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "1955750455fc26d89baca282785c917acf5a7758b653596b3c5792c5d27b739a",
+      "runtime_source_scale": 0.61371
+    },
+    {
+      "source_frame": {
+        "name": "ranged_aim",
+        "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-alpha/poses.png",
+        "rects": [
+          [
+            353,
+            475,
+            724,
+            700
+          ]
+        ],
+        "anchor": [
+          551,
+          684
+        ],
+        "scale": 1.3,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6652be31c8805b8f55a0f2ca3833e5f411f371cb498214907ae867cedcad0ac6",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "4edcf933611514a42d12e791adb9bb1464294693df689cbda8ea89b51bbc6fed",
+      "runtime_source_scale": 0.65
+    },
+    {
+      "source_frame": {
+        "name": "ranged_release",
+        "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-alpha/poses.png",
+        "rects": [
+          [
+            727,
+            401,
+            1078,
+            701
+          ]
+        ],
+        "anchor": [
+          923,
+          689
+        ],
+        "scale": 1.3,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6652be31c8805b8f55a0f2ca3833e5f411f371cb498214907ae867cedcad0ac6",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "0247f557124d025420c82a8f6fec4090e6433687b4c36846e8a5669715fa3bc6",
+      "runtime_source_scale": 0.65
+    },
+    {
+      "source_frame": {
+        "name": "ranged_06",
+        "clip": "ranged",
+        "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_sluicebrand_mangonels/ranged_v1.png",
+        "rects": [
+          [
+            11,
+            1216,
+            504,
+            1497
+          ]
+        ],
+        "anchor": [
+          245,
+          1497
+        ],
+        "scale": 0.98,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d5f5fb9dacf6772e31b0d3cb48ecdd5abac324a4ade68088381eda567dc79201",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "5d5210c9683358b74a4f048f23bfedf6b850640f5095c901ce62b3367c6599fa",
+      "runtime_source_scale": 0.49
+    },
+    {
+      "source_frame": {
+        "name": "reload_held_repaired",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_amberweir_sluicebrand_mangonels/reload_held_repaired_original_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1666,
+            944
+          ]
+        ],
+        "anchor": [
+          836,
+          814
+        ],
+        "scale": 0.5762304921968787
+      },
+      "source_sha256": "f41f2961d77e43713aea5909152289a3e6f1419f4389557e3561b7b2bdd57975",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "cf3b73ae3f276fdfb18facda0c81beffd81a5f2444e212312cf7e70e230c4d19",
+      "runtime_source_scale": 0.28811524609843936
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    500
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

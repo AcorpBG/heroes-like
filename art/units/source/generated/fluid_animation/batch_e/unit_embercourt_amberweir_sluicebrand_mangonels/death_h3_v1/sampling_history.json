@@ -1,0 +1,285 @@
+{
+  "prompt": [
+    716,
+    "73c00a29-bf9f-4b39-8c0e-483efceff9e3",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Sluicebrand Mangonel group matching the references, fixed three-quarter orthographic camera facing SCREEN RIGHT. Exactly TWO adult human operators, one viewer-left at pump and one viewer-right at rope/winch. Each human has exactly TWO arms/gloved hands and TWO legs/brown boots, red tunic, cream sleeves, brass helmet/red plume and original facial hair. One wooden/red/brass wheeled mangonel chassis with exactly THREE ORIGINAL VISIBLE wood-spoked iron-rim wheels on fixed axles; no additional wheels or mechanical legs. Retain original red side plate/gold insignia, two glass pump cylinders, three original white pressure gauge faces, rope/winch, central pivot, single wooden throwing arm, single brass spherical counterweight and one claw cup. Loaded cup holds one original orange-fissured stone, never duplicated. Preserve original mechanism proportions and both crew identities/stations.  One continuous physical lowering and final rest of original wood machine AND BOTH original adult humans. Original wooden chassis fractures downward, the original three axles buckle, three original wheels tip and splay on their same hubs, the single throwing arm folds into the broken original wood frame. Each original person releases his original grip, bends the same knees to the original kneeling38 reference, lowers hips and connected shoulders/elbows beside his own station and comes fully prone on the same floor82. Viewer-left original pump person and viewer-right original rope person both remain separately visible, with their own two connected arms and two legs, original red cloth, brass helmet/red plume and brown boots. Original brass counterweight, glass pumps and three gauges settle among their own original broken wood and three grounded wheels. The single original stone remains beside its original cup as its contained warm color gradually darkens into the cold stone of the original grounded82 reference. Finish110 through123 in the original cold grounded wreck: BOTH original people fully prone, all original hardware still, cold dark stone. Keep complete two-person physical group and original hardware inside960x544 with generous margins. Fixed original three-quarter orthographic camera, original body scale and perspective throughout. Uniform flat magenta RGB255,0,255 backdrop. Steady original painted material colors; physical wood, brass, original cloth and people only.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "33",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026110306
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "sluicebrand_mangonel_death_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "sluicebrand_mangonel_death_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "sluicebrand_mangonel_death_h3_v1_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "sluicebrand_mangonel_death_h3_v1_guide_3.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 38,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 82,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 110,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "42",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "sluicebrand_mangonel_h3/death_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "sluicebrand_mangonel_h3",
+      "create_time": 1791000848207
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "sluicebrand_mangonel_h3\\death_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "73c00a29-bf9f-4b39-8c0e-483efceff9e3",
+          "timestamp": 1791000848208
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "73c00a29-bf9f-4b39-8c0e-483efceff9e3",
+          "timestamp": 1791000848246
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "73c00a29-bf9f-4b39-8c0e-483efceff9e3",
+          "timestamp": 1791000991196
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

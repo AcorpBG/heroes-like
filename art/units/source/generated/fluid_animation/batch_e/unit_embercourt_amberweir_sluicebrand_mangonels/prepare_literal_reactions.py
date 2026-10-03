@@ -1,0 +1,15 @@
+"""Prepare unsampled reactions as literal original physical poses on CPU."""
+import json
+import produce as p
+S=p.SOURCE_DIR
+identity=json.loads((S/'unit_brief.json').read_bytes())['identity']
+plate=' Complete original two-person machine stays inside960x544 canvas. Fixed original orthographic perspective, camera and object size. Flat magenta RGB255,0,255 backdrop. Steady original colors and lighting; isolated painted people and original physical hardware only.'
+beats={
+ 'hit':(' Both original people briefly bend knees and lean back through connected hips/shoulders/elbows, staying supported on original boots and original stations. Left person keeps both gloved hands braced on original pump. Right person bends elbows at original rope. Same loaded wood arm gently settles to the original lowered reference45, then returns to original ready82. SAME stone stays seated in SAME cup throughout, brass counterweight on same pivot. Original three wheels stay attached and grounded; original chassis registration fixed. Both people recover full original upright pump/rope posture and steady loaded ready by82 and remain ready through123.',[[15,0],[45,1],[65,0],[82,0],[110,0]]),
+ 'defend':(' Both original people deeply bend knees and lower their torsos/helmets behind original three wheels and original wood frame. Connected arms remain at original pump/rope supports. Same loaded wood arm gently settles to original lowered brace reference45; SAME stone stays seated in SAME original cup, brass counterweight remains on original pivot. Three wheels stay grounded and attached. Complete original machine remains intact. Both people finish in deepest crouched original brace45 and keep that same low supported posture through123, with natural small cloth/plume settling.',[[45,1],[78,1],[108,1]]),
+ 'cast':(' Viewer-LEFT original pump worker keeps INNER glove on original pump control while his OTHER connected arm releases pump, bends elbow and raises that same ordinary solid BROWN LEATHER closed glove high beside original helmet30/34. He lowers SAME arm through connected shoulder/elbow and resumes original pump grip60. Solid original brown glove at every moment, steady material color and lighting. Viewer-right original rope worker deliberately bends elbows to tighten original winch/rope while remaining at his station. Both people keep original boots grounded. Exactly three original wheels, fixed original chassis, original loaded wood arm and brass counterweight intact; SAME stone remains seated in same cup throughout. Finish with both people at original pump/rope grips and original ready stance60 through123.',[[14,0],[30,1],[34,1],[48,0],[65,0],[95,0],[115,0]])}
+for name,(beat,guides) in beats.items():
+ t=S/f'{name}_h3_v1';assert not (t/'sampling_submission.json').exists()
+ c=json.loads((t/'config.json').read_bytes());c['prompt']=(identity+beat+plate).strip();c['guides']=guides
+ p.write(t/'config.json',c);p.prepare(t,c);p.verify(t,c)
+print('UNSAMPLED_LITERAL_ORIGINAL_REACTIONS_PREPARED',flush=True)
