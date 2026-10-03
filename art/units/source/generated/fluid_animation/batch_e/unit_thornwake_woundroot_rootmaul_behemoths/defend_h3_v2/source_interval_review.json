@@ -1,0 +1,43 @@
+{
+  "status": "personally_accepted_full_unit_candidate_pending_live_import",
+  "original_rgb_frames": 124,
+  "matte_frames": 124,
+  "source_native_facings_reviewed": [
+    "normal",
+    "reflected"
+  ],
+  "selected_frames": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    48,
+    64,
+    96,
+    123
+  ],
+  "notes": "All124 original RGB/RGBA and all124 fixed128-reference poses per facing personally reviewed. Stable painted plate/materials without the prior purple subject edge. Two front hands lower into a compact low crouch with both rear root feet supported; settling through32 and sustained guard through123. Trim only redundant stationary hold samples. All21 selected poses personally reviewed enlarged against their original RGB; actual full-unit runtime remains pending.",
+  "continuous_video_playback": false,
+  "selected_enlarged_frames_reviewed": 21,
+  "all_selected_matched_rgb_rgba_enlarged_reviewed": true,
+  "candidate_native_facings_reviewed": [
+    "normal",
+    "reflected"
+  ],
+  "candidate_all_selected_poses_reviewed": true,
+  "actual_normal_candidate_melee_phase_captures_reviewed": 8,
+  "live_import_verification": "pending"
+}

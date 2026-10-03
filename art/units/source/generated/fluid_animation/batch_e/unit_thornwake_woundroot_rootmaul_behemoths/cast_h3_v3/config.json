@@ -1,0 +1,71 @@
+{
+  "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026120305,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          510
+        ]
+      ],
+      "anchor": [
+        216,
+        451
+      ],
+      "scale": 0.59306,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "physical_near_claw_signal",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/support_near_claw_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        714,
+        1168
+      ],
+      "scale": 0.198,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      48,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "A locked painterly tactical view of the supplied original Rootmaul Behemoth on an entirely solid magenta backdrop. The backdrop remains the identical flat magenta through the whole sequence. The wooden creature keeps its four connected root limbs, three stone claws on each front hand, forked crown, stone shoulder plates, leafy mantle, curled tail and fixed painted amber insets. Only its near front elbow on SCREEN LEFT flexes slowly. That same clawed hand moves up to the supplied raised-hand position in front of the shoulder. The far front hand on SCREEN RIGHT and both rear feet stay planted. Then that near elbow extends and the same hand moves down into the identical starting pose. Its hunched body, camera, scale, lighting and original colors stay fixed. This is one quiet physical elbow flexion and extension on the same unchanging solid magenta backdrop.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

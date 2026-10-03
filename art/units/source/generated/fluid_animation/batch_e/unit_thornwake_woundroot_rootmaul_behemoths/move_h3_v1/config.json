@@ -1,0 +1,93 @@
+{
+  "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026120101,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          510
+        ]
+      ],
+      "anchor": [
+        216,
+        451
+      ],
+      "scale": 0.59306,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "near_contact",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-near-contact-draft.png",
+      "rects": [
+        [
+          0,
+          0,
+          1448,
+          1086
+        ]
+      ],
+      "anchor": [
+        832,
+        1005
+      ],
+      "scale": 0.18,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "far_contact",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-far-contact-draft.png",
+      "rects": [
+        [
+          0,
+          0,
+          1448,
+          1086
+        ]
+      ],
+      "anchor": [
+        832,
+        990
+      ],
+      "scale": 0.18,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      86,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original ROOTMAUL BEHEMOTH in supplied painterly reference, fixed three-quarter tactical camera facing SCREEN RIGHT. One stocky hunched living wooden creature with exactly FOUR limbs: TWO heavy front root ARMS with three stone talon claws each and TWO rear root LEGS with stone-toed feet. Near front arm is large on SCREEN LEFT of the chest in ready; far front arm on SCREEN RIGHT. Two rear legs support the hips beneath the leafy back; do not turn it into a two-legged human. Preserve original tangled brown bark anatomy, forked branching wooden crown enclosing the recessed face, fixed amber eye slits and central amber seed-heart, gray-green overlapping stone shoulder/elbow plates, dense green leafy moss mantle with small orange leaves, curled root tail on SCREEN LEFT and original three-toed stone claws. No held weapon, humanoid clothing or additional limbs. Amber details are fixed painted materials and do not emit effects or change color. Fixed original body proportions, painted camera and lighting. One complete reciprocal four-limbed walking cycle IN PLACE. Alternate original near and far front root arms through reaching, planted claw loading and elbow passing with opposite rear root leg support. Lift and bend the near front claw forward while the far front claw bears weight, then reverse these two jobs. Rear legs alternately flex and extend under hips, never disappear or fuse. Keep hips centered; weight rolls through grounded original claws, with subtle natural leafy mantle and curled tail response. Return continuously to original ready stance at the end. No root translation, sliding, hopping, simultaneous four-limb leap or striking.  Entire backdrop remains uniform magenta RGB255,0,255. No scenery, floor, shadows, camera cuts, motion or zoom. Original root support plane y576 and body horizontal anchor x480. Keep crown tips, rear tail and every claw inside generous margins. Quiet physical connected anatomy only; no particles, sparks, smoke, pulses, magical rings, detached effects, extra roots or new equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "status": "personally_accepted_full_unit_candidate_pending_live_import",
+  "original_rgb_frames": 124,
+  "matte_frames": 124,
+  "source_native_facings_reviewed": [
+    "normal",
+    "reflected"
+  ],
+  "selected_frames": [
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    38,
+    40,
+    42,
+    44,
+    46,
+    48,
+    50,
+    52,
+    54,
+    56,
+    58,
+    60,
+    62
+  ],
+  "notes": "All124original RGB and RGBA plus both facings at reference128 and14 enlargedmatched RGB/RGBA phase views personally inspected. Retain the first complete reciprocal four-limb cycle16-62: near claw lift/reach/contact/load, opposite front claw lift/reach/load, rear root knee/hip support and matching ready seam. The second generated cycle and exterior ready holds remain in original video. Stable forked crown/stone plates/three-clawed hands/leafy mantle; no effects or added limbs.",
+  "continuous_video_playback": false,
+  "selected_enlarged_rgb_rgba_poses_reviewed": 24,
+  "selected_enlarged_review": "Every selected pose personally reviewed as matched enlarged original RGB and matte RGBA. Native runtime acceptance remains pending.",
+  "original_pixel_proof_sha256": "7c7b1d9ae2e7e70e562a88c78743526eeaf09fa7a90579c0ef3a50984a6ab00c",
+  "candidate_native_facings_reviewed": [
+    "normal",
+    "reflected"
+  ],
+  "candidate_all_selected_poses_reviewed": true,
+  "actual_normal_candidate_melee_phase_captures_reviewed": 8,
+  "live_import_verification": "pending"
+}

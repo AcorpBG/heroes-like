@@ -1,0 +1,629 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_016",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_020",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "move_h3_022",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_026",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_058",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_062",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte_plate_v3/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 64,
+          "loop": true,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/config.json",
+          "sha256": "f53149489ab7c6b65576b20643abe4750b36ab1a27a19512657853c3c50925b2"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/selection.json",
+          "sha256": "d17365376d75516e8f2e81bcf7db8a7b0bfd15aa00b3c5c2e7bb5b029569f18e"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/original_lossless.mkv",
+          "sha256": "a162dd4a8ba142e8440c4947c6cd3009899bd9494984fcf74d68b622e72d0285"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/original.json",
+          "sha256": "4ba32971d255891fb86c07efcf4d5cfec9be8d33ad1843fa82907663bb205ea2"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/workflow_api.json",
+          "sha256": "3f7d739f54c48914e9354a4b4ad1f74c6ec763224ff45c98603ef551cb3e7317"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/prompt.txt",
+          "sha256": "f84b4e639ef96bc1bee336392e7b6a45b569cb64f25a9cf97020c61bc6d68eca"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/reference.json",
+          "sha256": "b2bc86297f1cc2be3cc6ce531937c838188299247c5e9fe5bd77fc21e3a5f78e"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/matte.json",
+          "sha256": "332694e2fad01fac007cb59b83125ec61def779554b1c64857c109c2741ef62c"
+        },
+        "segmentation_tool": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/segment.py",
+          "sha256": "1965bd1aeac1326c1e07c4146786ba7d5d4d698fedda2ebe3f101c014e81d7cd"
+        },
+        "segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/segmentation_recipe.json",
+          "sha256": "05217fdb37f2680ff8977efee0765d971288d4aba014b7729081aefd71b8ecc6"
+        },
+        "foreground_measurement.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/foreground_measurement.json",
+          "sha256": "baaf6f2034afaa1e97385ebfce64193774bb06a7f1cf1437cdb49d0dbf330d41"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/staged_generation.json",
+          "sha256": "071e638e8d06bc2f0ea6354b39f666479cd43204c6384552be8c852960e85807"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/sampling_workflow_api.json",
+          "sha256": "a8d96bc0842bbe979279fbafd450dbf654393c1319b32a0239b10701ede90cd9"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/sampling_submission.json",
+          "sha256": "ef5e4cc4d01bfdc0fb4ce045756f37375f774ca3e1211e6cf57926cb41a5789b"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/sampling_history.json",
+          "sha256": "dc5251eb96a1e5eabc4fa3557a211b729644013ebf28d5869acb9100c76b1092"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/original.latent",
+          "sha256": "f71055e8cd519b66eb72c287d693719dc55250158a702e5db04a6da2a0cb9173"
+        },
+        "source_interval_review.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/source_interval_review.json",
+          "sha256": "10643cac7da2c46ebb0609694e8ce7f6d1a6c3f31244a5b63b706e3a41e1a5ec"
+        },
+        "original_pixel_proof.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/move_h3_v1/original_pixel_proof.json",
+          "sha256": "7c7b1d9ae2e7e70e562a88c78743526eeaf09fa7a90579c0ef3a50984a6ab00c"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124original RGB and RGBA plus both facings at reference128 and14 enlargedmatched RGB/RGBA phase views personally inspected. Retain the first complete reciprocal four-limb cycle16-62: near claw lift/reach/contact/load, opposite front claw lift/reach/load, rear root knee/hip support and matching ready seam. The second generated cycle and exterior ready holds remain in original video. Stable forked crown/stone plates/three-clawed hands/leafy mantle; no effects or added limbs."
+      }
+    }
+  ]
+}

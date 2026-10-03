@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "a5c4fbaf784e6541441e53efa882fd34e9a37efec201ef0f5eaeb2f0653f96b5",
+  "latent_sha256": "cd069721c035a49be9103a474953d815acfb8b4245b8afa50cfe912992fb8153",
+  "decode_workflow_sha256": "f9847cd6e8de00b69ada70847a81fe7498a992442bd227a116866d9e84c07fc5",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "rootmaul_behemoth_h3\\defend_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

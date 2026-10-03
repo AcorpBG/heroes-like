@@ -1,0 +1,71 @@
+{
+  "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026120405,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          510
+        ]
+      ],
+      "anchor": [
+        216,
+        451
+      ],
+      "scale": 0.59306,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "original_two_arm_display",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/slam-windup.png",
+      "rects": [
+        [
+          0,
+          0,
+          1197,
+          1315
+        ]
+      ],
+      "anchor": [
+        668,
+        1268
+      ],
+      "scale": 0.18,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      48,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Rootmaul Behemoth makes one quiet physical arm gesture in the fixed tactical camera. Exactly two front root arms with three stone claws each and two rear root legs. Starting in supplied ready, draw both front elbows up and inward, displaying both heavy clawed hands in front of the chest as in the supplied original raised-arm painting. Both rear root feet support the same creature beneath its leafy mantle. Pause briefly with both hands raised, then smoothly extend the elbows and lower both hands into the identical supplied ready. Its forked crown, gray-green stone shoulder plates, brown bark, green moss, orange leaves, curled tail and painted amber insets stay attached and retain the supplied colors and anatomical proportions. One arm display and complete recovery. The entire empty backdrop stays uniformly magenta from the first frame through the last frame. Fixed original camera, lighting, scale and root support plane.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

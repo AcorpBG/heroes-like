@@ -1,0 +1,18 @@
+{
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/support_near_claw_v2.png",
+    "sha256": "22752b326bb0ce17a5e3ea2b432d96e94d0f020c45d306a79fa30daf0fa8b91a"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/support_near_claw_v2.prompt.txt",
+    "sha256": "55102c514ce4067e42a2bceb16484c2484de9276b7929035afe6062da7cbcef0"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/cast_h3_v3/guide_0_rgba.png",
+      "sha256": "971e06c6a7fdda57c85c22d68ee72f23413be2ceba6b5c1050bd255813029cdd"
+    }
+  ],
+  "tool_output": "C:/Users/acorp/.codex/generated_images/01a0fd50-f23a-7d32-8303-80fafa7a2272/exec-4cc354bd-9dde-4fc0-97a7-7da8b848c3f9.png",
+  "review": "Rejected conditioning painting. Added colored halo, partly transparent foreground and missing exposed far rear root foot. Preserve original; not used in H3 conditioning."
+}

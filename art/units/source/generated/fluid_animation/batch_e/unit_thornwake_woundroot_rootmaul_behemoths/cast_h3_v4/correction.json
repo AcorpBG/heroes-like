@@ -1,0 +1,7 @@
+{
+  "prior_take": "cast_h3_v3",
+  "prior_rejection_sha256": "f72433baa9adef82b7e9046268adc21db4531baa6f047d6c35863ccfab46f291",
+  "reassessed_installed_node_sha256": "5999ed8c22b13c8251084c0629fd82137d2fb52b55106abfc73bf5cafc73841d",
+  "reassessment": "ImageToVideo first/last and AddGuide image latents are re-injected each step. AddGuide exposes frame index but no guide-strength parameter. Prior single-arm painting extends rear knees against the fixed-torso instruction; targeted edit introduced a halo and missing foot. Use the original four-limb raised-two-arm painting with a dedicated physical display/recovery and no melee contact guide.",
+  "change": "Original ready/raised-arm/ready controls and new physical two-arm description, new seed. No model,20-step sampler, canvas, original anatomical scale, ground anchor or matte change. Rejected original sources and guide retained."
+}

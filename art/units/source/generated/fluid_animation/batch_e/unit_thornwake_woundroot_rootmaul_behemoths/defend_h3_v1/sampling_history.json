@@ -1,0 +1,207 @@
+{
+  "prompt": [
+    762,
+    "425527cf-eeeb-4e26-a898-643775d73e5c",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Original ROOTMAUL BEHEMOTH in supplied painterly reference, fixed three-quarter tactical camera facing SCREEN RIGHT. One stocky hunched living wooden creature with exactly FOUR limbs: TWO heavy front root ARMS with three stone talon claws each and TWO rear root LEGS with stone-toed feet. Near front arm is large on SCREEN LEFT of the chest in ready; far front arm on SCREEN RIGHT. Two rear legs support the hips beneath the leafy back; do not turn it into a two-legged human. Preserve original tangled brown bark anatomy, forked branching wooden crown enclosing the recessed face, fixed amber eye slits and central amber seed-heart, gray-green overlapping stone shoulder/elbow plates, dense green leafy moss mantle with small orange leaves, curled root tail on SCREEN LEFT and original three-toed stone claws. No held weapon, humanoid clothing or additional limbs. Amber details are fixed painted materials and do not emit effects or change color. Fixed original body proportions, painted camera and lighting. One quiet dedicated low four-contact brace transition. Spread original front claws slightly, flex elbows and rear knees, lower heavy stone shoulders and forked crown toward the ground behind the same two planted clawed front hands. Both rear root feet brace the hips. End in supplied original compact low guard; hold the final second. Stone shoulder plates remain rigid attached to original arms. No upward strike or return to ready.  Entire backdrop remains uniform magenta RGB255,0,255. No scenery, floor, shadows, camera cuts, motion or zoom. Original root support plane y576 and body horizontal anchor x480. Keep crown tips, rear tail and every claw inside generous margins. Quiet physical connected anatomy only; no particles, sparks, smoke, pulses, magical rings, detached effects, extra roots or new equipment.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026120104
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "rootmaul_behemoth_defend_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "rootmaul_behemoth_defend_h3_v1_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "rootmaul_behemoth_h3/defend_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "rootmaul_behemoth_h3",
+      "create_time": 1791008351669
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "rootmaul_behemoth_h3\\defend_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "425527cf-eeeb-4e26-a898-643775d73e5c",
+          "timestamp": 1791008351670
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "425527cf-eeeb-4e26-a898-643775d73e5c",
+          "timestamp": 1791008351689
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "425527cf-eeeb-4e26-a898-643775d73e5c",
+          "timestamp": 1791008513339
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

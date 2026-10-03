@@ -1,0 +1,129 @@
+{
+  "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            510
+          ]
+        ],
+        "anchor": [
+          216,
+          451
+        ],
+        "scale": 1.18612,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1f38b24f2b83b9666623d008fe781fe4689e1a78eced3f1e87b163e2dc17c81a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "437ed06171705b3dc417cf0d5f1c2bf0b45ebd388895d980de8393f631ecd43d",
+      "runtime_source_scale": 0.59306
+    },
+    {
+      "source_frame": {
+        "name": "death_buckle",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png",
+        "rects": [
+          [
+            365,
+            749,
+            704,
+            912
+          ],
+          [
+            365,
+            912,
+            691,
+            1066
+          ]
+        ],
+        "anchor": [
+          568,
+          1039
+        ],
+        "scale": 1.18,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9fb6b2e8a89382f4b15e9f0fcdeec5552417be2c8a21575d6bf5e03a10f6c934",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b44177ac4c83357dfb7222f2c0168be7d68428f7eb316b241b65a891e6e68638",
+      "runtime_source_scale": 0.59
+    },
+    {
+      "source_frame": {
+        "name": "death_collapse",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png",
+        "rects": [
+          [
+            704,
+            850,
+            1080,
+            930
+          ],
+          [
+            690,
+            930,
+            1080,
+            976
+          ],
+          [
+            704,
+            976,
+            1080,
+            1067
+          ]
+        ],
+        "anchor": [
+          932,
+          1040
+        ],
+        "scale": 1.18,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9fb6b2e8a89382f4b15e9f0fcdeec5552417be2c8a21575d6bf5e03a10f6c934",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "fcb5e3beafb41304c7a36277caa65473f38420e5751fddc519e0299d8aea94d3",
+      "runtime_source_scale": 0.59
+    },
+    {
+      "source_frame": {
+        "name": "corpse",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png",
+        "rects": [
+          [
+            1080,
+            750,
+            1448,
+            1086
+          ]
+        ],
+        "anchor": [
+          1298,
+          1040
+        ],
+        "scale": 1.18,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9fb6b2e8a89382f4b15e9f0fcdeec5552417be2c8a21575d6bf5e03a10f6c934",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "40fe9b7157db13a8791288b11e635a4e8ff929407c8b93470ba35d169367e4f1",
+      "runtime_source_scale": 0.59
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

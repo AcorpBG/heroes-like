@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "a1bd052051d423e1a9bf1702433bfe8235c569bde23fcc19c5b0ba8f86247d81",
+  "latent_sha256": "4bf5ea35411500b5fe97e21601434e884d2062a94587c1d0557f71fed5872ff3",
+  "decode_workflow_sha256": "3def88a719d6c22b851a68c9b117651334daac4c6836d475cd8239ca034f8043",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "rootmaul_behemoth_h3\\cast_h3_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17990672704,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

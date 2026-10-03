@@ -1,0 +1,43 @@
+{
+  "status": "rejected_source",
+  "original_rgb_frames_reviewed": 124,
+  "matte_frames_reviewed": 124,
+  "enlarged_matched_phase_indices": [
+    0,
+    12,
+    24,
+    36,
+    44,
+    55,
+    64,
+    80,
+    96,
+    112,
+    123
+  ],
+  "representative_native_frame_indices": [
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ],
+  "native_facings_reviewed": [
+    "normal",
+    "reflected"
+  ],
+  "reason": "Original source repeats green/yellow/magenta backdrop transitions. Connected bark, claws and leaf edges retain unnatural purple coloration at native and enlarged scale. Limb motion is coherent but full support interval cannot qualify; no masking or recoloring connected foreground.",
+  "all_originals_and_recipes_preserved": true,
+  "continuous_video_playback": false
+}

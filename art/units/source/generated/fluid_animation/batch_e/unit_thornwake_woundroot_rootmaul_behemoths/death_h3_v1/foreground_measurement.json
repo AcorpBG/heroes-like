@@ -1,0 +1,30 @@
+{
+  "guides": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/death_h3_v1/guide_0_rgba.png",
+      "sha256": "971e06c6a7fdda57c85c22d68ee72f23413be2ceba6b5c1050bd255813029cdd",
+      "opaque_pixels": 81638,
+      "opaque_magenta_chroma_max": 4
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/death_h3_v1/guide_1_rgba.png",
+      "sha256": "eb3e5838b2c979adee7811a8be67792c01ce9a895f205e7a51ebfff45bcc0d61",
+      "opaque_pixels": 68958,
+      "opaque_magenta_chroma_max": 11
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/death_h3_v1/guide_2_rgba.png",
+      "sha256": "80422c08e2f8d62485bfb6ca6a586c4a77d93eb4eda338127c9de3de1054dca7",
+      "opaque_pixels": 59737,
+      "opaque_magenta_chroma_max": 12
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/death_h3_v1/guide_3_rgba.png",
+      "sha256": "be6cee317e9ddb834284a9e162b1ae59a4aafd98ec577d213fe9c8ed772c5ac7",
+      "opaque_pixels": 49689,
+      "opaque_magenta_chroma_max": 11
+    }
+  ],
+  "protected_magenta_chroma": 24,
+  "rule": "Opaque original foreground max<=22 separated from magenta plate; fixed matte band24"
+}

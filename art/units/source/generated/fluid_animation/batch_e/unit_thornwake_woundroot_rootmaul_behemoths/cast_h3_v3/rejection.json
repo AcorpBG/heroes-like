@@ -1,0 +1,41 @@
+{
+  "status": "rejected_source",
+  "original_rgb_frames_reviewed": 124,
+  "matte_frames_reviewed": 124,
+  "enlarged_matched_phase_indices": [
+    0,
+    24,
+    36,
+    48,
+    60,
+    80,
+    96,
+    112,
+    123
+  ],
+  "representative_native_frame_indices": [
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111
+  ],
+  "native_facings_reviewed": [
+    "normal",
+    "reflected"
+  ],
+  "reason": "Source changes backdrop to cyan, green and yellow; connected leaf, crown, tail and claw edges remain purple. Full hand flex/recovery cannot qualify. No connected subject recoloring or masking.",
+  "all_originals_and_recipes_preserved": true,
+  "continuous_video_playback": false
+}

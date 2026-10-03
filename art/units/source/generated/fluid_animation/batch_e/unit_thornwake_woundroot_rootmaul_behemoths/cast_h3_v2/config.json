@@ -1,0 +1,71 @@
+{
+  "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026120205,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          510
+        ]
+      ],
+      "anchor": [
+        216,
+        451
+      ],
+      "scale": 0.59306,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "physical_near_claw_signal",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/support_near_claw_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        714,
+        1168
+      ],
+      "scale": 0.198,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      55,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "The entire empty backdrop is one unchanging flat magenta color RGB255,0,255 throughout every frame. Its color is identical to the supplied images from beginning to end. The background has no lighting, color transition or other objects. The creature has only quiet physical joint motion, while camera, original anatomical scale and root support plane remain fixed. One original painterly ROOTMAUL BEHEMOTH facing SCREEN RIGHT in a fixed three-quarter tactical camera. Exactly four connected limbs: two heavy front root arms with three stone claws each and two rear root legs with stone feet. Keep its tangled brown bark, forked wooden crown enclosing the face, amber painted eyes and seed-heart, gray-green stone shoulder plates, leafy green moss mantle with orange leaves and curled root tail. Every original material retains its painted color and fixed light. Beginning in supplied ready, bend the near front root elbow on SCREEN LEFT and raise that same three-stone-clawed hand to upper chest height as in the supplied hand gesture. The far front hand on SCREEN RIGHT and both rear root feet remain grounded under the same hunched creature. Hold the raised hand briefly, then lower it smoothly into the identical supplied ready. One complete quiet physical hand gesture and recovery. The entire empty backdrop is one unchanging flat magenta color RGB255,0,255 throughout every frame. Its color is identical to the supplied images from beginning to end. The background has no lighting, color transition or other objects. The creature has only quiet physical joint motion, while camera, original anatomical scale and root support plane remain fixed.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

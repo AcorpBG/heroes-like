@@ -1,0 +1,77 @@
+{
+  "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026120204,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          510
+        ]
+      ],
+      "anchor": [
+        216,
+        451
+      ],
+      "scale": 0.59306,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png",
+      "rects": [
+        [
+          1097,
+          404,
+          1448,
+          680
+        ],
+        [
+          1116,
+          680,
+          1448,
+          747
+        ]
+      ],
+      "anchor": [
+        1296,
+        733
+      ],
+      "scale": 0.59,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      64,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "The entire empty backdrop is one unchanging flat magenta color RGB255,0,255 throughout every frame. Its color is identical to the supplied images from beginning to end. The background has no lighting, color transition or other objects. The creature has only quiet physical joint motion, while camera, original anatomical scale and root support plane remain fixed. One original painterly ROOTMAUL BEHEMOTH facing SCREEN RIGHT in a fixed three-quarter tactical camera. Exactly four connected limbs: two heavy front root arms with three stone claws each and two rear root legs with stone feet. Keep its tangled brown bark, forked wooden crown enclosing the face, amber painted eyes and seed-heart, gray-green stone shoulder plates, leafy green moss mantle with orange leaves and curled root tail. Every original material retains its painted color and fixed light; the amber insets stay unchanged. Beginning in supplied ready, bend both front elbows and rear knees, lower the heavy shoulder plates and forked crown into the supplied compact low guard. Keep the same two front clawed hands and two rear root feet braced against the original support plane. Reach the supplied guard by the middle of the clip and hold this same quiet crouch through the last frame. The entire empty backdrop is one unchanging flat magenta color RGB255,0,255 throughout every frame. Its color is identical to the supplied images from beginning to end. The background has no lighting, color transition or other objects. The creature has only quiet physical joint motion, while camera, original anatomical scale and root support plane remain fixed.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

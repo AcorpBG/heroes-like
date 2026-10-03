@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            510
+          ]
+        ],
+        "anchor": [
+          216,
+          451
+        ],
+        "scale": 1.18612,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1f38b24f2b83b9666623d008fe781fe4689e1a78eced3f1e87b163e2dc17c81a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "437ed06171705b3dc417cf0d5f1c2bf0b45ebd388895d980de8393f631ecd43d",
+      "runtime_source_scale": 0.59306
+    },
+    {
+      "source_frame": {
+        "name": "physical_near_claw_signal",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/support_near_claw_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          714,
+          1168
+        ],
+        "scale": 0.396,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c1735a0a30fa72cd4d107e00a0661ffc3b4921d29be92d19d554dfb1c9a60963",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d4b5e88806dc7bc374a1684bc98c4e1d4088676bec71c51bfd501ed985b256c9",
+      "runtime_source_scale": 0.198
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

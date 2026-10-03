@@ -1,0 +1,18 @@
+{
+  "status": "rejected_source",
+  "original_rgb_frames_reviewed": 124,
+  "matte_frames_reviewed": 124,
+  "enlarged_matched_phase_indices": [
+    0,
+    16,
+    32,
+    48,
+    64,
+    80,
+    100,
+    123
+  ],
+  "reason": "Generated backdrop changes color and connected bark/leaf edges retain visibly unnatural purple coloration. Original RGB and opaque matte equality pass, but this source is unsuitable for publication. Do not recolor or mask connected subject pixels.",
+  "all_originals_and_recipes_preserved": true,
+  "continuous_video_playback": false
+}

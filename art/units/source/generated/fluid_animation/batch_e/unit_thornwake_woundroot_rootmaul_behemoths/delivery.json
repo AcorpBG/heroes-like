@@ -1,0 +1,41 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "hit_h3_v2",
+    "defend_h3_v2",
+    "cast_h3_v5",
+    "death_h3_v2"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_unit",
+    "notes": "Personally reviewed original curated identity/all22 original poses,8 retained idle/map poses, all124 RGB/RGBA and both native128 facings for each of6 accepted H3 sources, all165 selected matched enlarged RGB/RGBA poses, and all173 candidate native128 poses in normal/reflected galleries. All8 actual NORMAL melee phase captures reviewed at native size and2x nearest: rear-supported two-arm rise, downstroke/contact and complete recovery. Fixed original four root limbs/three stone claws/crown/stone plates/leafy mantle/tail and painted amber materials. Independent support nod has complete low pause and recovery without invented chest burst. Full collapse ends in grounded dull held corpse. Rejected takes retained without connected-pixel repair. Existing8 idle260ms and exact map strip retained. Actual imported/live map verification remains pending.",
+    "source_rgb_and_rgba_frames_reviewed": 744,
+    "source_native_all_poses_both_facings": true,
+    "selected_enlarged_original_and_rgba_poses_reviewed": 165,
+    "candidate_native_all_poses_per_facing": 173,
+    "candidate_facings": [
+      "normal",
+      "reflected"
+    ],
+    "actual_candidate_melee_captures_reviewed": 8,
+    "actual_candidate_melee_native_and_enlarged": true,
+    "actual_mirrored_melee_review": false,
+    "manual_game_session": false,
+    "continuous_video_playback": false
+  },
+  "failed_takes": [
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v2",
+    "cast_h3_v3",
+    "cast_h3_v4"
+  ],
+  "superseded_unsubmitted_takes": [
+    "cast_h3_v1",
+    "death_h3_v1"
+  ]
+}

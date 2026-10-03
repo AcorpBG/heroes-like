@@ -1,0 +1,48 @@
+{
+  "status": "personally_accepted_full_unit_candidate_pending_live_import",
+  "original_rgb_frames": 124,
+  "matte_frames": 124,
+  "source_native_facings_reviewed": [
+    "normal",
+    "reflected"
+  ],
+  "selected_frames": [
+    0,
+    12,
+    16,
+    20,
+    24,
+    27,
+    30,
+    33,
+    36,
+    39,
+    42,
+    45,
+    48,
+    56,
+    64,
+    80,
+    88,
+    92,
+    96,
+    100,
+    104,
+    108,
+    112,
+    116,
+    123
+  ],
+  "selected_enlarged_frames_reviewed": 25,
+  "all_selected_matched_rgb_rgba_enlarged_reviewed": true,
+  "original_pixel_proof_sha256": "faef0ec67f87e02e32b00882fb67013ad954f6ba772de9171d30cded03915e0b",
+  "notes": "All124 original RGB/RGBA frames and all124 fixed128-reference poses in each facing personally inspected. All25 selected original/matte poses inspected enlarged. One rear-knee/front-elbow supported shoulder/crown nod, low pause around48-92 and complete recovery96-123. Fixed painted chest and hip insets, stable original bark/stone/moss, four connected limbs and curled tail; no burst or connected recoloring. Trim only redundant ready and low holds; retain complete lowering and recovery. Full unit runtime acceptance remains pending.",
+  "continuous_video_playback": false,
+  "candidate_native_facings_reviewed": [
+    "normal",
+    "reflected"
+  ],
+  "candidate_all_selected_poses_reviewed": true,
+  "actual_normal_candidate_melee_phase_captures_reviewed": 8,
+  "live_import_verification": "pending"
+}

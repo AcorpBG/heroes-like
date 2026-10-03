@@ -1,0 +1,23 @@
+{
+  "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+  "preserved_clips": [
+    "idle"
+  ],
+  "idle_frame_msec": 260,
+  "anatomy": "Original ROOTMAUL BEHEMOTH in supplied painterly reference, fixed three-quarter tactical camera facing SCREEN RIGHT. One stocky hunched living wooden creature with exactly FOUR limbs: TWO heavy front root ARMS with three stone talon claws each and TWO rear root LEGS with stone-toed feet. Near front arm is large on SCREEN LEFT of the chest in ready; far front arm on SCREEN RIGHT. Two rear legs support the hips beneath the leafy back; do not turn it into a two-legged human. Preserve original tangled brown bark anatomy, forked branching wooden crown enclosing the recessed face, fixed amber eye slits and central amber seed-heart, gray-green overlapping stone shoulder/elbow plates, dense green leafy moss mantle with small orange leaves, curled root tail on SCREEN LEFT and original three-toed stone claws. No held weapon, humanoid clothing or additional limbs. Amber details are fixed painted materials and do not emit effects or change color. Fixed original body proportions, painted camera and lighting. ",
+  "guide_plate": " Entire backdrop remains uniform magenta RGB255,0,255. No scenery, floor, shadows, camera cuts, motion or zoom. Original root support plane y576 and body horizontal anchor x480. Keep crown tips, rear tail and every claw inside generous margins. Quiet physical connected anatomy only; no particles, sparks, smoke, pulses, magical rings, detached effects, extra roots or new equipment. ",
+  "required_actions": [
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "source_status": "complete_selected_unit",
+  "solo": true,
+  "selected_pose_count": 165,
+  "focused_checks": 2960,
+  "retained_original_rgb_frames": 1364,
+  "cleanup_recovered_bytes": 1575607533
+}

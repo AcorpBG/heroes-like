@@ -1,0 +1,180 @@
+{
+  "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+  "status": "complete_selected_unit",
+  "date": "2026-10-03",
+  "solo_unit_worker": true,
+  "source_method": "Original MiniMax H3 video, retained sampler latent and 124-frame FFV1 RGB proof per take; pinned local BiRefNet soft matte",
+  "clips": {
+    "idle": 8,
+    "move": 24,
+    "attack": 36,
+    "hit": 25,
+    "defend": 21,
+    "cast": 25,
+    "death": 34
+  },
+  "new_selected_poses": 165,
+  "preserved_idle_poses": 8,
+  "held_corpse_from_final_death": true,
+  "battle_atlas_size": [
+    3608,
+    4032
+  ],
+  "battle_texture_rgba_bytes": 58189824,
+  "original_selected_rgb_frames_reviewed": 744,
+  "preserved_original_rgb_frames": 1364,
+  "rejected_takes": [
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v2",
+    "cast_h3_v3",
+    "cast_h3_v4"
+  ],
+  "validation": {
+    "checks": {
+      "candidate": 238,
+      "candidate_mirrored": 238,
+      "live": 252,
+      "original_rgb_matte_opaque_pixels": 2232
+    },
+    "total": 2960,
+    "failures": [],
+    "source_pixel_and_ground_anchor_equality": true,
+    "selected_opaque_original_rgb_equality": true,
+    "other231_battle_and_map_rows_preserved": true,
+    "imported_atlas_exact_rgba": true,
+    "preserved_battle_and_overworld_idle_exact": true,
+    "visual_review": {
+      "status": "accepted_selected_unit",
+      "notes": "Personally reviewed original curated identity/all22 original poses,8 retained idle/map poses, all124 RGB/RGBA and both native128 facings for each of6 accepted H3 sources, all165 selected matched enlarged RGB/RGBA poses, and all173 candidate native128 poses in normal/reflected galleries. All8 actual NORMAL melee phase captures reviewed at native size and2x nearest: rear-supported two-arm rise, downstroke/contact and complete recovery. Fixed original four root limbs/three stone claws/crown/stone plates/leafy mantle/tail and painted amber materials. Independent support nod has complete low pause and recovery without invented chest burst. Full collapse ends in grounded dull held corpse. Rejected takes retained without connected-pixel repair. Existing8 idle260ms and exact map strip retained. Actual imported textures and live native/melee/map shader checks passed, including map reduced motion.",
+      "source_rgb_and_rgba_frames_reviewed": 744,
+      "source_native_all_poses_both_facings": true,
+      "selected_enlarged_original_and_rgba_poses_reviewed": 165,
+      "candidate_native_all_poses_per_facing": 173,
+      "candidate_facings": [
+        "normal",
+        "reflected"
+      ],
+      "actual_candidate_melee_captures_reviewed": 8,
+      "actual_candidate_melee_native_and_enlarged": true,
+      "actual_mirrored_melee_review": false,
+      "manual_game_session": false,
+      "continuous_video_playback": false,
+      "live_native_all_poses_reviewed": true,
+      "actual_live_melee_captures_reviewed": 8,
+      "actual_live_ranged_captures_reviewed": 0,
+      "live_action_native_and_enlarged_review": "All 8 actual live melee captures personally inspected at native size and 2x nearest enlargement; coherent root limbs, physical two-arm ground press and recovery and retained grounded anatomy.",
+      "live_overworld_idle_frames_reviewed": [
+        0,
+        3
+      ],
+      "imported_atlas_exact_rgba": true,
+      "imported_map_exact_rgba": true,
+      "actual_imported_textures": 2,
+      "all_selected_source_pixels_and_anchors_verified": true,
+      "other231_battle_and_map_rows_preserved": true,
+      "existing_idle_map_pixels_and_timing_exact": true,
+      "final_publication_review": "Published atlas byte-identical to accepted candidate; all selected new poses and 8 preserved idle poses personally inspected through actual live native gallery, with live map idle frames 0 and 3 and actual action captures accepted."
+    },
+    "normal_fast_reduced_static_dead_contact_interrupt_rng_save": true,
+    "manual_game_session": false,
+    "continuous_video_playback": false,
+    "linux_run": false,
+    "full_suite_run": false,
+    "original_pixel_proofs": {
+      "move_h3_v1": {
+        "take": "move_h3_v1",
+        "original_rgb_frames": 124,
+        "matte_frames": 124,
+        "original_lossless_sha256": "a162dd4a8ba142e8440c4947c6cd3009899bd9494984fcf74d68b622e72d0285",
+        "checks": 372,
+        "opaque_original_pixels_verified": 10651748,
+        "failures": []
+      },
+      "attack_h3_v1": {
+        "take": "attack_h3_v1",
+        "original_rgb_frames": 124,
+        "matte_frames": 124,
+        "original_lossless_sha256": "ace16b2dc700fa8795655812f9685602cd22954da99281ea3d8425133baacd07",
+        "checks": 372,
+        "opaque_original_pixels_verified": 10127629,
+        "failures": []
+      },
+      "hit_h3_v2": {
+        "take": "hit_h3_v2",
+        "original_rgb_frames": 124,
+        "matte_frames": 124,
+        "original_lossless_sha256": "6bd2f8b9748bab87e237e7a63a7f611144121295d3d30b2efa1b44edac879999",
+        "checks": 372,
+        "opaque_original_pixels_verified": 10748894,
+        "failures": []
+      },
+      "defend_h3_v2": {
+        "take": "defend_h3_v2",
+        "original_rgb_frames": 124,
+        "matte_frames": 124,
+        "original_lossless_sha256": "e2d2110fbeb03a17988768fac41cb868ec0d286807834cee886cef0e5724fa5e",
+        "checks": 372,
+        "opaque_original_pixels_verified": 9092693,
+        "failures": []
+      },
+      "cast_h3_v5": {
+        "take": "cast_h3_v5",
+        "original_rgb_frames": 124,
+        "matte_frames": 124,
+        "original_lossless_sha256": "a7482d7c9c8442a8195913b6ef83a768428a5b7005de87adcfe37de818f78ead",
+        "checks": 372,
+        "opaque_original_pixels_verified": 9828484,
+        "failures": []
+      },
+      "death_h3_v2": {
+        "take": "death_h3_v2",
+        "original_rgb_frames": 124,
+        "matte_frames": 124,
+        "original_lossless_sha256": "ef938f1a55f01003e30b2fda4fd5a1cf55a8475f452e0e18f4cef990ef2af9d9",
+        "checks": 372,
+        "opaque_original_pixels_verified": 7863979,
+        "failures": []
+      }
+    }
+  },
+  "broad_goal_status": "in_progress",
+  "cleanup": {
+    "applied": true,
+    "removed_files": 3021,
+    "recovered_bytes": 1575607533,
+    "categories": {
+      "unused_rebuildable_matte": {
+        "files": 1199,
+        "bytes": 349188868
+      },
+      "duplicate_decoded_rgb": {
+        "files": 1364,
+        "bytes": 808462161
+      },
+      "duplicate_mp4": {
+        "files": 11,
+        "bytes": 11150603
+      },
+      "duplicate_latent": {
+        "files": 11,
+        "bytes": 93816696
+      },
+      "duplicate_uploaded_guide": {
+        "files": 26,
+        "bytes": 6344778
+      },
+      "temporary_review": {
+        "files": 407,
+        "bytes": 306628629
+      },
+      "temporary_owned_setup": {
+        "files": 3,
+        "bytes": 15798
+      }
+    },
+    "original_videos_latents_guides_prompts_provenance_and_caches_preserved": true,
+    "rebuildable": true,
+    "retained_original_rgb_frames": 1364
+  }
+}

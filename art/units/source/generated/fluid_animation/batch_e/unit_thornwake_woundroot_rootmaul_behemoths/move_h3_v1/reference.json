@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            510
+          ]
+        ],
+        "anchor": [
+          216,
+          451
+        ],
+        "scale": 1.18612,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1f38b24f2b83b9666623d008fe781fe4689e1a78eced3f1e87b163e2dc17c81a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "437ed06171705b3dc417cf0d5f1c2bf0b45ebd388895d980de8393f631ecd43d",
+      "runtime_source_scale": 0.59306
+    },
+    {
+      "source_frame": {
+        "name": "near_contact",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-near-contact-draft.png",
+        "rects": [
+          [
+            0,
+            0,
+            1448,
+            1086
+          ]
+        ],
+        "anchor": [
+          832,
+          1005
+        ],
+        "scale": 0.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "214308ff9c09664f5f0c67e682ff0e95bfe97cc2726f9cf4e3dd27d4244800bd",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "8bec58543e222e0ade3d57d92679970bfce0bb9403441876383489c48f56c596",
+      "runtime_source_scale": 0.18
+    },
+    {
+      "source_frame": {
+        "name": "far_contact",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-far-contact-draft.png",
+        "rects": [
+          [
+            0,
+            0,
+            1448,
+            1086
+          ]
+        ],
+        "anchor": [
+          832,
+          990
+        ],
+        "scale": 0.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f9424213c2e87dbb1cffa26d415cae0092a50586c935a1db8361c3433123fd37",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "02cfb4e22922b10462f1680d0ae6988e593a60ad01d07cfb334394ad356299f6",
+      "runtime_source_scale": 0.18
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,129 @@
+{
+  "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026120206,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          510
+        ]
+      ],
+      "anchor": [
+        216,
+        451
+      ],
+      "scale": 0.59306,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_buckle",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png",
+      "rects": [
+        [
+          365,
+          749,
+          704,
+          912
+        ],
+        [
+          365,
+          912,
+          691,
+          1066
+        ]
+      ],
+      "anchor": [
+        568,
+        1039
+      ],
+      "scale": 0.59,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_collapse",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png",
+      "rects": [
+        [
+          704,
+          850,
+          1080,
+          930
+        ],
+        [
+          690,
+          930,
+          1080,
+          976
+        ],
+        [
+          704,
+          976,
+          1080,
+          1067
+        ]
+      ],
+      "anchor": [
+        932,
+        1040
+      ],
+      "scale": 0.59,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "corpse",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png",
+      "rects": [
+        [
+          1080,
+          750,
+          1448,
+          1086
+        ]
+      ],
+      "anchor": [
+        1298,
+        1040
+      ],
+      "scale": 0.59,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      42,
+      1
+    ],
+    [
+      75,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "The entire empty backdrop is one unchanging flat magenta color RGB255,0,255 throughout every frame. Its color is identical to the supplied images from beginning to end. The background has no lighting, color transition or other objects. The creature has only quiet physical joint motion, while camera, original anatomical scale and root support plane remain fixed. One original painterly ROOTMAUL BEHEMOTH facing SCREEN RIGHT in a fixed three-quarter tactical camera. Exactly four connected limbs: two heavy front root arms with three stone claws each and two rear root legs with stone feet. Keep its tangled brown bark, forked wooden crown enclosing the face, amber painted eyes and seed-heart, gray-green stone shoulder plates, leafy green moss mantle with orange leaves and curled root tail. Every original material retains its painted color and fixed light. Beginning in supplied ready, bend the two rear root knees and let the hips sink. Both front root elbows flex under the same heavy torso as the forked crown lowers. All four connected root limbs fold as the creature settles onto its original side, following the supplied buckle and grounded collapse paintings. End in the supplied quiet grounded corpse with its dull painted amber details and hold this final pose. One continuous physical collapse. The entire empty backdrop is one unchanging flat magenta color RGB255,0,255 throughout every frame. Its color is identical to the supplied images from beginning to end. The background has no lighting, color transition or other objects. The creature has only quiet physical joint motion, while camera, original anatomical scale and root support plane remain fixed.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

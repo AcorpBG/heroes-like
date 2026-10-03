@@ -1,0 +1,77 @@
+{
+  "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026120505,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          510
+        ]
+      ],
+      "anchor": [
+        216,
+        451
+      ],
+      "scale": 0.59306,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "original_grounded_nod",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png",
+      "rects": [
+        [
+          1097,
+          404,
+          1448,
+          680
+        ],
+        [
+          1116,
+          680,
+          1448,
+          747
+        ]
+      ],
+      "anchor": [
+        1296,
+        733
+      ],
+      "scale": 0.59,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      48,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original painted Rootmaul Behemoth performs one grounded shoulder and head nod in the fixed three-quarter tactical view. Starting in the supplied ready, bend the two rear knees a little and hinge both front elbows so the heavy shoulders and forked wooden crown settle forward and downward into the supplied low original painting. Its two front root arms keep their three stone claws low beside the two rear root feet. Both hands and both feet remain connected to the same body. Hold the low nod briefly, then extend the knees and elbows smoothly to recover the identical supplied ready. One complete nod and recovery. Every surface is fixed painted brown bark, gray-green stone, green moss and orange leaves with unchanged original shading and unchanged painted orange insets. The tail remains curled behind the body. The entire empty backdrop stays uniformly magenta RGB255,0,255 from first to last frame. Original anatomical proportions, four limbs, camera, scale, lighting and root support plane stay fixed throughout.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

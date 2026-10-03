@@ -1,0 +1,194 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Original ROOTMAUL BEHEMOTH in supplied painterly reference, fixed three-quarter tactical camera facing SCREEN RIGHT. One stocky hunched living wooden creature with exactly FOUR limbs: TWO heavy front root ARMS with three stone talon claws each and TWO rear root LEGS with stone-toed feet. Near front arm is large on SCREEN LEFT of the chest in ready; far front arm on SCREEN RIGHT. Two rear legs support the hips beneath the leafy back; do not turn it into a two-legged human. Preserve original tangled brown bark anatomy, forked branching wooden crown enclosing the recessed face, fixed amber eye slits and central amber seed-heart, gray-green overlapping stone shoulder/elbow plates, dense green leafy moss mantle with small orange leaves, curled root tail on SCREEN LEFT and original three-toed stone claws. No held weapon, humanoid clothing or additional limbs. Amber details are fixed painted materials and do not emit effects or change color. Fixed original body proportions, painted camera and lighting. One quiet nonmagical physical rally signal. The near front root arm on SCREEN LEFT bends its elbow and raises the SAME three-stone-clawed hand to upper chest/shoulder height, talons angled outward and down as in signal reference. Far front hand on SCREEN RIGHT stays planted and bears body weight together with both rear root feet. Keep torso hunched forward and forked crown steady, not upright. Pause briefly in raised near-hand signal, then lower that same front arm continuously to original ready. Exactly four connected limbs, original claw count. No two-arm downward press, new roots or spellcasting.  Entire backdrop remains uniform magenta RGB255,0,255. No scenery, floor, shadows, camera cuts, motion or zoom. Original root support plane y576 and body horizontal anchor x480. Keep crown tips, rear tail and every claw inside generous margins. Quiet physical connected anatomy only; no particles, sparks, smoke, pulses, magical rings, detached effects, extra roots or new equipment.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026120105
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecodeTiled",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "tile_size": 512,
+      "overlap": 64,
+      "temporal_size": 16,
+      "temporal_overlap": 4
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "rootmaul_behemoth_h3/cast_h3_v1/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "rootmaul_behemoth_h3/cast_h3_v1/frames/decoded"
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "rootmaul_behemoth_cast_h3_v1_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "rootmaul_behemoth_cast_h3_v1_guide_1.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 55,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "40",
+        0
+      ]
+    }
+  }
+}

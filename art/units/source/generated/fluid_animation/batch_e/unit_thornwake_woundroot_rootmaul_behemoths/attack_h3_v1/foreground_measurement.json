@@ -1,0 +1,24 @@
+{
+  "guides": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/attack_h3_v1/guide_0_rgba.png",
+      "sha256": "971e06c6a7fdda57c85c22d68ee72f23413be2ceba6b5c1050bd255813029cdd",
+      "opaque_pixels": 81638,
+      "opaque_magenta_chroma_max": 4
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/attack_h3_v1/guide_1_rgba.png",
+      "sha256": "0060695043671aff09c9731acc4aa25838e7cef480e7219f5a474df5ec9385d8",
+      "opaque_pixels": 90946,
+      "opaque_magenta_chroma_max": 16
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/attack_h3_v1/guide_2_rgba.png",
+      "sha256": "e59713e923255eacc94d3bbf2703aef8b04a3b0bce11f278aab026f78d98ac8a",
+      "opaque_pixels": 72326,
+      "opaque_magenta_chroma_max": 8
+    }
+  ],
+  "protected_magenta_chroma": 24,
+  "rule": "Opaque original foreground max<=22 is separated from fixed magenta plate; immutable matte band24"
+}

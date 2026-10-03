@@ -1,0 +1,18 @@
+{
+  "guides": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/cast_h3_v3/guide_0_rgba.png",
+      "sha256": "971e06c6a7fdda57c85c22d68ee72f23413be2ceba6b5c1050bd255813029cdd",
+      "opaque_pixels": 81638,
+      "opaque_magenta_chroma_max": 4
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_rootmaul_behemoths/cast_h3_v3/guide_1_rgba.png",
+      "sha256": "0e869b16b6b50a36b0bbf4124cf6d51a79a8801cd622660501b17c887587d5c1",
+      "opaque_pixels": 107874,
+      "opaque_magenta_chroma_max": 5
+    }
+  ],
+  "protected_magenta_chroma": 24,
+  "rule": "Opaque original foreground max<=22 separated from magenta plate; fixed matte band24"
+}
