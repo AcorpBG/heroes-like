@@ -1,0 +1,105 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          196,
+          429
+        ],
+        "scale": 1.35948,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "24ffba083726537ecb2ca06beaa45dd62533233c93fabf02b58607b370e6e76d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5c5c8c8d93b397e5254c68f4b62a2f503915e920bd061c569206a53795a5c7b9",
+      "runtime_source_scale": 0.67974
+    },
+    {
+      "source_frame": {
+        "name": "attack_windup",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/poses-quiet-vents.png",
+        "rects": [
+          [
+            371,
+            411,
+            735,
+            707
+          ],
+          [
+            366,
+            633,
+            371,
+            707
+          ]
+        ],
+        "anchor": [
+          553,
+          696
+        ],
+        "scale": 1.44,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5a197782b513e6d40742781f672b9d438b13aa31037a13ac6747deeb61c70628",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "954a3b31bda5f9e3b5967faa7870b7840a688f28e6ed47aa3779c456c63bf75f",
+      "runtime_source_scale": 0.72
+    },
+    {
+      "source_frame": {
+        "name": "melee_shove",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/supported-creep-melee-recoil.png",
+        "rects": [
+          [
+            0,
+            535,
+            537,
+            925
+          ],
+          [
+            0,
+            925,
+            504,
+            1024
+          ],
+          [
+            504,
+            925,
+            537,
+            937
+          ]
+        ],
+        "anchor": [
+          266,
+          978
+        ],
+        "scale": 0.92,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2c30a36f88bd7327efa6d369714e2c07549c438935c691a4e1d57903eae24009",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "c487095c34811639eec83dae7e1ee1cb72859276a20d7bfeaffc63ec9f79a9e2",
+      "runtime_source_scale": 0.46
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    500
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

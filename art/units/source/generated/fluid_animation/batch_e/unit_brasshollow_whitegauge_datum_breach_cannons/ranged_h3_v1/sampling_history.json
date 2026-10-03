@@ -1,0 +1,257 @@
+{
+  "prompt": [
+    536,
+    "28718509-9bee-437f-83f1-74f5313c3437",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original WHITEGAUGE DATUM BREACH CANNON unit exactly matching the supplied painting. One six-legged ivory/brass/black mechanical cannon walker AND exactly ONE human operator walking at its rear viewer-RIGHT side. Preserve SIX attached mechanical leg chains: three near ivory-armored legs and three far dark legs with normal occlusion, hinged knees/ankles and three-toed metal feet. Never add legs or detach a leg. Keep the single long black/brass inner gun barrel in its fixed ivory sleeve, same round muzzle diameter; boiler, two white-faced gauges, red valve wheels, original hoses, one tall chimney and warm orange furnace apertures. Operator keeps white split coat/helmet, orange goggles, two black-gloved hands, exactly two arms and two legs/boots. No new crew, weapons or mechanisms. Fixed three-quarter orthographic camera, gun points SCREEN LEFT, never mirror. Same anatomical/mechanical size and rooted chassis registration. One aimed cannon pressure discharge and complete mechanical recovery. Adjust barrel elevation slightly, operator squeezes existing control, all six legs brace. Inner black/brass barrel visibly telescopes BACK about one third into the unchanged fixed ivory sleeve, with SAME round muzzle diameter. Operator bends both elbows and knees to absorb recoil, hands remain on controls. Muzzle internal warm light briefly changes at release; no airborne flash or projectile. The recoil piston then drives the original inner barrel back out, restoring original exposed length and aim; operator resets grip and stance and returns to ready. One discharge only, no extra barrels or crew. Flat magenta RGB255,0,255 backdrop only, no floor/horizon/scenery/shadow/text/cuts/zoom/camera move. Complete barrel/chimney/leg chains/operator/boots stay safely inside canvas. Quiet physical vents, no airborne smoke, sparks, fire, shells or detached projectiles; game owns projectile and impact effects. No magical beam or new glowing hardware. Mechanical articulation rather than whole-unit wobble.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026109402
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "whitegauge_breach_cannon_ranged_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "whitegauge_breach_cannon_ranged_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "whitegauge_breach_cannon_ranged_h3_v1_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 25,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 55,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "whitegauge_breach_cannon_h3/ranged_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "whitegauge_breach_cannon_h3",
+      "create_time": 1790974851213
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "whitegauge_breach_cannon_h3\\ranged_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "28718509-9bee-437f-83f1-74f5313c3437",
+          "timestamp": 1790974851214
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "28718509-9bee-437f-83f1-74f5313c3437",
+          "timestamp": 1790974851241
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "28718509-9bee-437f-83f1-74f5313c3437",
+          "timestamp": 1790974987253
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "tool": "Built-in imagegen",
+  "edit_target": "attack_h3_v1/guide_2_chroma.png",
+  "edit_target_sha256": "c487095c34811639eec83dae7e1ee1cb72859276a20d7bfeaffc63ec9f79a9e2",
+  "original_sha256": "2c37e2b2e94fe0cb0f27ad6d5f9cd07fa8a11a56f431cf50108abbdb1a81c807",
+  "alpha_sha256": "3d2c1ffda6f35e3e35c870d6d79e8afa8dc7a15a7c4df39b2f665b95452e183b",
+  "prompt_file": "melee_guide_repair_prompt.txt",
+  "recipe": {
+    "background_rgb": [
+      252.0,
+      3.0,
+      250.5
+    ],
+    "corner_median_spread": 1.118,
+    "mode": "flat_magenta_chroma_unmix",
+    "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+  },
+  "source_size": [
+    1666,
+    944
+  ],
+  "source_anchor": [
+    833,
+    820
+  ],
+  "source_scale": 0.28811524609843936,
+  "note": "Uniform source-size conversion and original painted front-middle toe ground y820; no per-frame normalization. Camera and six-leg machine/single operator retained; joint-supported forward-load peak repaired because inherited peak was close to ready.",
+  "prompt_sha256": "ce196f76d7dcf93fa2758fe5ae00520dc4ba6ab163828c3b530e65af460701c0",
+  "guide_visual_review": "Personally inspected generated original, prepared RGB/alpha guide and fixed-native ready/windup/peak comparison. Three near ivory and three far dark attached leg chains, original toe supports, exactly one operator with two hands gripping existing bar and two planted boots. Dedicated supported forward load through joints with constant original cylinder opening/rings/length, two gauges/one chimney; no exterior effect. H3 source acceptance remains pending."
+}

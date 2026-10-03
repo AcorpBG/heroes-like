@@ -1,0 +1,26 @@
+{
+  "method": "CPU comparison of preserved native idle0 and guide0 at fixed .5 extraction scale, both at identical ground anchor; personally inspected side by side. This calibrates guides, not acceptance of generated footage.",
+  "original_idle0_native_size": [
+    255,
+    213
+  ],
+  "ready_guide_native_size": [
+    256,
+    214
+  ],
+  "original_idle0_ground_offset": [
+    -127,
+    -211
+  ],
+  "ready_guide_ground_offset": [
+    -127,
+    -211
+  ],
+  "fixed_extraction_scale": 0.5,
+  "source_video_anchor": [
+    480,
+    500
+  ],
+  "guide_sha256": "410e4fb3a6ef34a23d1d906deea16dd4e7d5c814e844385b14fa29218bd882fc",
+  "rule": "One-pixel guide resampling envelope rounding. No per-frame normalization, root stabilization or scale correction."
+}

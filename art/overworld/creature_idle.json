@@ -5530,29 +5530,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        135.0,
+        135,
         235
       ],
       "painted_extent": 255,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_whitegauge_datum_breach_cannons.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_whitegauge_datum_breach_cannons.png",
       "source_indices": [
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        121,
-        1,
-        392,
-        247
+        41,
+        -3,
+        312,
+        243
       ],
-      "source_sha256": "8c58b4bb79db39324d251592e7a5591d136d8ac82709aff3d2f71c70f5242d8a",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/provenance.json",
+      "source_sha256": "2fd9c04b65f322b9444173bcc344c5821d12e03da2e2a8767b3def2d9ddd768b",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_whitegauge_datum_breach_cannons/provenance.json",
       "sha256": "72f6f6dc82a6588c6910878171c341a4a32ebaf37838b1e507e9e6f19cf443b9"
     },
     "unit_veilmourn_dreamwake_foganchor_colossi": {

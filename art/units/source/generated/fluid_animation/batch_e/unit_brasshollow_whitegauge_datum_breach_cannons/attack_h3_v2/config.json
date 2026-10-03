@@ -1,0 +1,116 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
+  "clip": "attack",
+  "source_facing": "left",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    500
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110601,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        196,
+        429
+      ],
+      "scale": 0.67974,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "attack_windup",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          371,
+          411,
+          735,
+          707
+        ],
+        [
+          366,
+          633,
+          371,
+          707
+        ]
+      ],
+      "anchor": [
+        553,
+        696
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "repaired_joint_loaded_shove",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_breach_cannons/melee_shove_repaired_alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        833,
+        820
+      ],
+      "scale": 0.28811524609843936,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      18,
+      0
+    ],
+    [
+      38,
+      1
+    ],
+    [
+      62,
+      2
+    ],
+    [
+      76,
+      2
+    ],
+    [
+      103,
+      0
+    ],
+    [
+      115,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original ivory/brass/black six-legged mechanical walker and exactly ONE white-coated human operator at rear viewer-RIGHT, matching these supplied paintings. Three near ivory leg chains and three far dark leg chains with original hinge/ankle/three-toed feet. One rigid long black/brass cylindrical assembly in fixed ivory sleeve, same round opening/rings/diameter; original boiler, TWO white gauges, red wheels/hoses, ONE tall chimney, contained orange apertures. Operator original helmet, orange goggles, split coat, exactly two arms/hands/legs/boots. Same original anatomical and mechanical size. Fixed three-quarter camera, cylinder points SCREEN LEFT, centered ground registration. One deliberate supported forward PUSH and reset: ready0..18;18..38 pull elbows back and bend knees to load the original rear joints;38..62 extend rear joints while front knees bend, driving the original rigid cylinder/boiler/body forward and down into the supplied peak pose;62..76 hold brief strongest physical pressure;76..103 unload and bring joints, elbows and knees back to ready;103..123 hold. Operator spreads two real boots and drives with BOTH hands continuously gripping original control bar. Clear physical shove through original joints, with at least three mechanical feet supporting every phase. Original rigid cylinder length and diameter unchanged throughout.  The orange light remains steadily INSIDE the circular opening and furnace hardware. The surrounding magenta background is perfectly flat and uninterrupted on every frame, including all space immediately in front of the cylinder opening. Only original solid mechanisms and operator joints move. No added geometry, new limbs/crew, external lights, vapor, effects, scenery, text, shadows, cuts, zoom, camera changes or size changes. Entire original silhouette remains inside canvas.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "tool": "Built-in imagegen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_breach_cannons/melee_shove_repaired_alpha.png",
+    "sha256": "3d2c1ffda6f35e3e35c870d6d79e8afa8dc7a15a7c4df39b2f665b95452e183b"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_breach_cannons/melee_guide_repair_prompt.txt",
+    "sha256": "ce196f76d7dcf93fa2758fe5ae00520dc4ba6ab163828c3b530e65af460701c0"
+  },
+  "original_image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_breach_cannons/melee_shove_repaired_original.png",
+    "sha256": "2c37e2b2e94fe0cb0f27ad6d5f9cd07fa8a11a56f431cf50108abbdb1a81c807"
+  },
+  "matte_recipe": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_breach_cannons/melee_guide_repair.json",
+    "sha256": "ac924d94dd18a357e07c1e1f9917eb586da54cc0c337c33d5f0c527e8cc99827"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_breach_cannons/attack_h3_v1/guide_2_chroma.png",
+      "sha256": "c487095c34811639eec83dae7e1ee1cb72859276a20d7bfeaffc63ec9f79a9e2"
+    }
+  ]
+}

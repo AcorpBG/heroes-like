@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          196,
+          429
+        ],
+        "scale": 1.35948,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "24ffba083726537ecb2ca06beaa45dd62533233c93fabf02b58607b370e6e76d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5c5c8c8d93b397e5254c68f4b62a2f503915e920bd061c569206a53795a5c7b9",
+      "runtime_source_scale": 0.67974
+    },
+    {
+      "source_frame": {
+        "name": "hit",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/poses-quiet-vents.png",
+        "rects": [
+          [
+            0,
+            738,
+            373,
+            1044
+          ]
+        ],
+        "anchor": [
+          190,
+          1026
+        ],
+        "scale": 1.44,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5a197782b513e6d40742781f672b9d438b13aa31037a13ac6747deeb61c70628",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0fab773013447965144f2d65c9285b9c3768bf71322b3d5aa5f87db30d2d7add",
+      "runtime_source_scale": 0.72
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    500
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

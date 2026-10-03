@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "f206577ab7a7752f00e0ed6c6035b8e5d84d8937c95a96cb4ee78552c43aa2c4",
+  "latent_sha256": "c2bdd439ec9c10b874db0a85c2ef6bfb42bed027810431c040629ddddebe538c",
+  "decode_workflow_sha256": "4a9f4030683f3a8661205ae0726905ed954ceca0a99193b3ce8daa840a8fed0d",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "whitegauge_breach_cannon_h3\\attack_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18843592512,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

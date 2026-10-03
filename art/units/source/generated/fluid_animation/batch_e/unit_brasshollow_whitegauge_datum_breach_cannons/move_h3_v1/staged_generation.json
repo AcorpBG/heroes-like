@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "8f011c6bf00ef4b7e45bb3b5d80eec710aa4589c7aef69426c383603c3efd7d7",
+  "latent_sha256": "1d21057eaa1c29c77defed23a78f97a3389af0bada0d0a18a5537edfb33f5562",
+  "decode_workflow_sha256": "c585f4763cb7286f744f0889ffe9f197174ba669ed8a01cb03ffea33089124d3",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "whitegauge_breach_cannon_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17297822528,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

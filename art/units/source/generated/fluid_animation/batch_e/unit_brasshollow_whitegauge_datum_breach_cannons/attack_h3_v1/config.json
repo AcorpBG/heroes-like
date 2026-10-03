@@ -1,0 +1,124 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
+  "clip": "attack",
+  "source_facing": "left",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    500
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026109401,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        196,
+        429
+      ],
+      "scale": 0.67974,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "attack_windup",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          371,
+          411,
+          735,
+          707
+        ],
+        [
+          366,
+          633,
+          371,
+          707
+        ]
+      ],
+      "anchor": [
+        553,
+        696
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_shove",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/supported-creep-melee-recoil.png",
+      "rects": [
+        [
+          0,
+          535,
+          537,
+          925
+        ],
+        [
+          0,
+          925,
+          504,
+          1024
+        ],
+        [
+          504,
+          925,
+          537,
+          937
+        ]
+      ],
+      "anchor": [
+        266,
+        978
+      ],
+      "scale": 0.46,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      20,
+      0
+    ],
+    [
+      40,
+      1
+    ],
+    [
+      65,
+      2
+    ],
+    [
+      95,
+      0
+    ],
+    [
+      112,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original WHITEGAUGE DATUM BREACH CANNON unit exactly matching the supplied painting. One six-legged ivory/brass/black mechanical cannon walker AND exactly ONE human operator walking at its rear viewer-RIGHT side. Preserve SIX attached mechanical leg chains: three near ivory-armored legs and three far dark legs with normal occlusion, hinged knees/ankles and three-toed metal feet. Never add legs or detach a leg. Keep the single long black/brass inner gun barrel in its fixed ivory sleeve, same round muzzle diameter; boiler, two white-faced gauges, red valve wheels, original hoses, one tall chimney and warm orange furnace apertures. Operator keeps white split coat/helmet, orange goggles, two black-gloved hands, exactly two arms and two legs/boots. No new crew, weapons or mechanisms. Fixed three-quarter orthographic camera, gun points SCREEN LEFT, never mirror. Same anatomical/mechanical size and rooted chassis registration. One physical close-combat cannon-body/barrel shove with NO firing. Operator pulls the controls and braces both real boots, cannon legs spread and load; whole cannon leans forward a little through bent front joints and thrusts its solid barrel/mount forward against adjacent target. Barrel remains original full length, unchanged diameter. All six legs retain real support. Muzzle is inert during the shove, no discharge/flash/projectile. Recover by unfolding loaded joints and bringing operator elbows back to original ready. Flat magenta RGB255,0,255 backdrop only, no floor/horizon/scenery/shadow/text/cuts/zoom/camera move. Complete barrel/chimney/leg chains/operator/boots stay safely inside canvas. Quiet physical vents, no airborne smoke, sparks, fire, shells or detached projectiles; game owns projectile and impact effects. No magical beam or new glowing hardware. Mechanical articulation rather than whole-unit wobble. Surrounding magenta stays uninterrupted in front of muzzle and around the silhouette. Original muzzle orange aperture stays steady inside its ring.0..20 ready;20..40 windup;40..65 physical shove through supported leg joints;65..95 recover;95..123 hold original ready. Original barrel is one fixed-length rigid tool for this physical contact; its parts stay at the original full exposed length and thickness throughout.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          196,
+          429
+        ],
+        "scale": 1.35948,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "24ffba083726537ecb2ca06beaa45dd62533233c93fabf02b58607b370e6e76d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5c5c8c8d93b397e5254c68f4b62a2f503915e920bd061c569206a53795a5c7b9",
+      "runtime_source_scale": 0.67974
+    },
+    {
+      "source_frame": {
+        "name": "guard_a",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/poses-quiet-vents.png",
+        "rects": [
+          [
+            1098,
+            413,
+            1448,
+            716
+          ]
+        ],
+        "anchor": [
+          1270,
+          700
+        ],
+        "scale": 1.44,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5a197782b513e6d40742781f672b9d438b13aa31037a13ac6747deeb61c70628",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "7f7950311ced64bdea54265a75da19afd0797541673120ed596e72dfa86dbea0",
+      "runtime_source_scale": 0.72
+    },
+    {
+      "source_frame": {
+        "name": "guard_b",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/supported-creep-melee-recoil.png",
+        "rects": [
+          [
+            1038,
+            543,
+            1536,
+            1024
+          ],
+          [
+            1018,
+            543,
+            1038,
+            800
+          ]
+        ],
+        "anchor": [
+          1290,
+          975
+        ],
+        "scale": 0.92,
+        "alpha_noise_cutoff": 8,
+        "crop_recipe": {
+          "original_muzzle_recovery": [
+            1018,
+            543,
+            1038,
+            800
+          ],
+          "reason": "Restore existing original rim only across measured empty gap; no repaint/alpha alteration; fixed anchor and source scale."
+        }
+      },
+      "source_sha256": "2c30a36f88bd7327efa6d369714e2c07549c438935c691a4e1d57903eae24009",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "5e7cf0c55945dab74e40b92ca923c8a05da433a4faaaa70bfefa0347852d5094",
+      "runtime_source_scale": 0.46
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    500
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

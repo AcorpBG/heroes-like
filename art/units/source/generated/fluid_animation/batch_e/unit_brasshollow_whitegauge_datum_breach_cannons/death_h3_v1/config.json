@@ -1,0 +1,132 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
+  "clip": "death",
+  "source_facing": "left",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    500
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026109406,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        196,
+        429
+      ],
+      "scale": 0.67974,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_buckle",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          372,
+          753,
+          735,
+          970
+        ],
+        [
+          372,
+          970,
+          720,
+          1047
+        ]
+      ],
+      "anchor": [
+        555,
+        1030
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_settle",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          742,
+          831,
+          1091,
+          1051
+        ],
+        [
+          722,
+          934,
+          742,
+          1051
+        ]
+      ],
+      "anchor": [
+        913,
+        1031
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_operator_and_wreck",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          1093,
+          824,
+          1448,
+          1048
+        ]
+      ],
+      "anchor": [
+        1270,
+        1026
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      15,
+      0
+    ],
+    [
+      40,
+      1
+    ],
+    [
+      82,
+      2
+    ],
+    [
+      105,
+      3
+    ]
+  ],
+  "last": 3,
+  "prompt": "One original ivory/brass/black six-legged mechanical walker and exactly ONE white-coated human operator at rear viewer-RIGHT, matching these supplied paintings. Three near ivory leg chains and three far dark leg chains with original hinge/ankle/three-toed feet. One rigid long black/brass cylindrical assembly in fixed ivory sleeve, same round opening/rings/diameter; original boiler, TWO white gauges, red wheels/hoses, ONE tall chimney, contained orange apertures. Operator original helmet, orange goggles, split coat, exactly two arms/hands/legs/boots. Same original anatomical and mechanical size. Fixed three-quarter camera, cylinder points SCREEN LEFT, centered ground registration. One continuous terminal collapse of machine AND its single operator. Ready0..15;15..40 original six attached leg joints buckle under boiler weight, lowering chassis/cylinder toward same ground;40..82 all attached leg chains fold/splay into the supplied wreck. The ONE operator releases both hands, bends both knees, loses balance and falls beside rear plating at viewer-right, exactly two arms and two legs.82..105 machine and prone operator settle into the supplied grounded final wreck;105..123 remain fully still, cold and grounded. Original cylinder, gauges, hoses, chimney, plating and all six leg chains stay attached/present. Aperture, furnace and goggles cool completely DARK during terminal settling.  Flat uninterrupted magenta RGB255,0,255 outside original silhouette. Original hardware retained through complete grounded collapse. Fixed camera, same original scale; entire wreck AND prone operator inside canvas. No new limbs, crew, effects, scenery, text, shadows, cuts, zoom or recovery.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

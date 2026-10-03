@@ -1,0 +1,23 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v2",
+    "ranged_h3_v3",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_unit",
+    "notes": "Personally reviewed all1240 untouched original RGB poses from ten H3 takes, all selected alpha sequences chronologically and enlarged original trouble areas on light/dark backgrounds. Preserve original eight-pose idle after original/native review. Seven accepted distinct H3 actions use249 unique original poses: six attached mechanical leg chains creep, brace and shove; original barrel compresses and returns for ranged; one operator flinches, crouches, turns the original upper pressure-control valve, and falls with grounded intact cannon into a cold held corpse. Constant muzzle/barrel hardware, two gauges, chimney and one operator with two arms/two legs; no baked exterior effects or added anatomy. All257 Godot native poses personally reviewed in both facings, sixteen actual melee captures and eight actual ranged captures accepted; normal/reflected/ranged fixtures each passed845 checks, observing all36 melee/all30 ranged poses through unchanged shell clocks. Dedicated support and death are not idle aliases. Fixed source anchor480,500 and uniform scale0.5 retained without per-pose resizing. Three failed original takes retained; missing authentic melee peak repaired using original identity guides and built-in imagegen, then validated in original H3 footage. Published import/live/map review is verified separately before completion."
+  },
+  "failed_takes": [
+    "attack_h3_v1",
+    "ranged_h3_v1",
+    "ranged_h3_v2"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "identity": "One original WHITEGAUGE DATUM BREACH CANNON unit exactly matching the supplied painting. One six-legged ivory/brass/black mechanical cannon walker AND exactly ONE human operator walking at its rear viewer-RIGHT side. Preserve SIX attached mechanical leg chains: three near ivory-armored legs and three far dark legs with normal occlusion, hinged knees/ankles and three-toed metal feet. Never add legs or detach a leg. Keep the single long black/brass inner gun barrel in its fixed ivory sleeve, same round muzzle diameter; boiler, two white-faced gauges, red valve wheels, original hoses, one tall chimney and warm orange furnace apertures. Operator keeps white split coat/helmet, orange goggles, two black-gloved hands, exactly two arms and two legs/boots. No new crew, weapons or mechanisms. Fixed three-quarter orthographic camera, gun points SCREEN LEFT, never mirror. Same anatomical/mechanical size and rooted chassis registration. ",
+  "source_facing": "left",
+  "accepted_idle": "All8 source and enlarged poses inspected; operator controls/arm articulation and breech adjustments return smoothly, six support legs and one operator retained. Preserve battle/map pixels and240ms.",
+  "source_scale": 0.5,
+  "video_anchor": [
+    480,
+    500
+  ],
+  "action_guides": {
+    "move": [
+      "idle_hands_0",
+      "creep_front_lift",
+      "creep_middle_lift",
+      "creep_rear_lift"
+    ],
+    "attack": [
+      "idle_hands_0",
+      "attack_windup",
+      "melee_shove"
+    ],
+    "ranged": [
+      "idle_hands_0",
+      "attack_windup",
+      "ranged_telescoped_recoil"
+    ],
+    "hit": [
+      "idle_hands_0",
+      "hit"
+    ],
+    "defend": [
+      "idle_hands_0",
+      "guard_a",
+      "guard_b"
+    ],
+    "cast": [
+      "idle_hands_0",
+      "idle_hands_3"
+    ],
+    "death": [
+      "idle_hands_0",
+      "death_buckle",
+      "death_settle",
+      "dead_operator_and_wreck"
+    ]
+  },
+  "constraints": "No extra crew/legs, missing controls, barrel diameter/length morph, magic or airborne projectiles. Cold grounded machine AND prone operator for death.",
+  "guide_crop_recovery": {
+    "path": "guard_crop_recovery.json",
+    "status": "Original separated muzzle strip restored to guard_b guide without changing original art, anchor or scale."
+  }
+}

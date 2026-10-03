@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          196,
+          429
+        ],
+        "scale": 1.35948,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "24ffba083726537ecb2ca06beaa45dd62533233c93fabf02b58607b370e6e76d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5c5c8c8d93b397e5254c68f4b62a2f503915e920bd061c569206a53795a5c7b9",
+      "runtime_source_scale": 0.67974
+    },
+    {
+      "source_frame": {
+        "name": "creep_front_lift",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/supported-creep-melee-recoil.png",
+        "rects": [
+          [
+            0,
+            0,
+            520,
+            510
+          ]
+        ],
+        "anchor": [
+          261,
+          487
+        ],
+        "scale": 0.92,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2c30a36f88bd7327efa6d369714e2c07549c438935c691a4e1d57903eae24009",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "3475fd6714c5eed6cb7fa60ebbb8c371e2f9bd2575c00ea0ad3324e3b2951679",
+      "runtime_source_scale": 0.46
+    },
+    {
+      "source_frame": {
+        "name": "creep_middle_lift",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/supported-creep-melee-recoil.png",
+        "rects": [
+          [
+            522,
+            0,
+            1027,
+            510
+          ]
+        ],
+        "anchor": [
+          777,
+          480
+        ],
+        "scale": 0.92,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2c30a36f88bd7327efa6d369714e2c07549c438935c691a4e1d57903eae24009",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "2234995f87da23ad3f3462d7127cba5f864eac81df7281c8b990402db774b2fb",
+      "runtime_source_scale": 0.46
+    },
+    {
+      "source_frame": {
+        "name": "creep_rear_lift",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/supported-creep-melee-recoil.png",
+        "rects": [
+          [
+            1029,
+            0,
+            1536,
+            515
+          ]
+        ],
+        "anchor": [
+          1297,
+          493
+        ],
+        "scale": 0.92,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2c30a36f88bd7327efa6d369714e2c07549c438935c691a4e1d57903eae24009",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "300e395da352ac6a03b6567329cc101c246c0b6158894680e6c03807bfef4ddc",
+      "runtime_source_scale": 0.46
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    500
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

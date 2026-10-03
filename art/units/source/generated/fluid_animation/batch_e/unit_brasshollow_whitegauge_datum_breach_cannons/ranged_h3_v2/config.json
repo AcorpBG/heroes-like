@@ -1,0 +1,124 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
+  "clip": "ranged",
+  "source_facing": "left",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    500
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110501,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        196,
+        429
+      ],
+      "scale": 0.67974,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "attack_windup",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          371,
+          411,
+          735,
+          707
+        ],
+        [
+          366,
+          633,
+          371,
+          707
+        ]
+      ],
+      "anchor": [
+        553,
+        696
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "ranged_telescoped_recoil",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/supported-creep-melee-recoil.png",
+      "rects": [
+        [
+          536,
+          535,
+          1018,
+          1024
+        ],
+        [
+          506,
+          936,
+          536,
+          980
+        ],
+        [
+          1018,
+          889,
+          1035,
+          1000
+        ]
+      ],
+      "anchor": [
+        775,
+        978
+      ],
+      "scale": 0.46,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      20,
+      0
+    ],
+    [
+      40,
+      1
+    ],
+    [
+      65,
+      2
+    ],
+    [
+      90,
+      0
+    ],
+    [
+      112,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original WHITEGAUGE DATUM BREACH CANNON unit exactly matching the supplied painting. One six-legged ivory/brass/black mechanical cannon walker AND exactly ONE human operator walking at its rear viewer-RIGHT side. Preserve SIX attached mechanical leg chains: three near ivory-armored legs and three far dark legs with normal occlusion, hinged knees/ankles and three-toed metal feet. Never add legs or detach a leg. Keep the single long black/brass inner gun barrel in its fixed ivory sleeve, same round muzzle diameter; boiler, two white-faced gauges, red valve wheels, original hoses, one tall chimney and warm orange furnace apertures. Operator keeps white split coat/helmet, orange goggles, two black-gloved hands, exactly two arms and two legs/boots. No new crew, weapons or mechanisms. Fixed three-quarter orthographic camera, gun points SCREEN LEFT, never mirror. Same anatomical/mechanical size and rooted chassis registration. One controlled mechanical ranged firing-cycle animation: deliberate aim and operator trigger squeeze, small backward barrel recoil INSIDE its original fixed ivory sleeve, then original-ready reset. Frame0..20 original ready;20..40 slightly aim and brace the six original legs;40..65 operator squeezes original control while the SAME inner barrel slides BACK one third;65..90 restore EXACT original first-frame exposed barrel length and original stance;90..123 quietly hold original ready. Maximum exposed barrel length is exactly the first supplied ready guide, always. Same muzzle diameter, original barrel rings and original sleeve length throughout; original inner barrel stays within original mechanical travel and never grows long, extends past ready, gains rings or thickens. Muzzle internal orange aperture and furnace brightness remain STEADY and contained INSIDE the original hardware. Surrounding magenta is completely uninterrupted in front of muzzle and around gun/operator. Movement is visible in the original piston, operator elbows/knees and supported leg joints only; exactly one controlled recoil then reset. Keep both original hands on controls. No beam, plume, muzzle flash, sparks, shells, smoke, detached effects or extra mechanisms. Flat magenta RGB255,0,255 backdrop only, no floor/horizon/scenery/shadow/text/cuts/zoom/camera move. Complete barrel/chimney/leg chains/operator/boots stay safely inside canvas. Quiet physical vents, no airborne smoke, sparks, fire, shells or detached projectiles; game owns projectile and impact effects. No magical beam or new glowing hardware. Mechanical articulation rather than whole-unit wobble.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

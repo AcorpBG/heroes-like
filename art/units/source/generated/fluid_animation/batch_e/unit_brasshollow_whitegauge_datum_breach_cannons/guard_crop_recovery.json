@@ -1,0 +1,35 @@
+{
+  "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/supported-creep-melee-recoil.png",
+  "sha256": "2c30a36f88bd7327efa6d369714e2c07549c438935c691a4e1d57903eae24009",
+  "original_rect": [
+    1038,
+    543,
+    1536,
+    1024
+  ],
+  "added_rect": [
+    1018,
+    543,
+    1038,
+    800
+  ],
+  "added_rgba_pixel_sha256": "4c8f38c6380ac5e097b2680d565c24099bf04666945f03de639f4fdcafc0981e",
+  "original_muzzle_rows_in_added_strip": [
+    670,
+    742
+  ],
+  "empty_separator_rows": [
+    790,
+    810
+  ],
+  "excluded_neighbor_operator_rows": [
+    852,
+    880
+  ],
+  "anchor_unchanged": [
+    1290,
+    975
+  ],
+  "original_source_scale_unchanged": 0.46,
+  "rule": "Recover only intact original muzzle rim from original separated foreground. No repainted art, alpha modification or source guide normalization."
+}

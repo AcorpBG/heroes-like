@@ -1,0 +1,9 @@
+{
+  "status": "rejected_original_source",
+  "defects": [
+    "Airborne bright beam/flame in original RGB frames6..15; semantic matte removes much of the effect and muzzle while leaving unnatural illumination.",
+    "Original barrel grows to roughly twice its original exposed length in frames60..96."
+  ],
+  "review": "All124 original RGB and alpha frames personally reviewed chronologically; enlarged source9 and65 confirm effects and hardware failure. No range selection accepted; all footage/provenance retained.",
+  "correction": "Bracket aiming/recoil/restore with ready guides; explicitly constrain original maximum barrel length and constant contained warm aperture, preserve empty plate outside hardware."
+}

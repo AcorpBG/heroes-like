@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "542d33d500de7449960bdad36ffb2fa77a3b74a1f65fc8ad755b8f222fe6ded9",
+  "latent_sha256": "38b69012adc4f4ac0f08a45746325df882db8fd43f8976daf9c7b328c305fa91",
+  "decode_workflow_sha256": "5935a1389b3887a5af0d8bfcf562bbd7e1214663338c07c59db541d4aac17ca0",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "whitegauge_breach_cannon_h3\\defend_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
