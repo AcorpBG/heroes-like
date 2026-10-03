@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_neutral_saltwake_bellwhales",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          192,
+          440
+        ],
+        "scale": 1.4644,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "dd8478b60496047332d7ed9674a9d4dfcdf48f51cb8079d0937e96f4dfab9d8d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "fce91f61d5fa7068a2c4a644286d258255852001ea236009aa8a22857ae8b1e6",
+      "runtime_source_scale": 0.7322
+    },
+    {
+      "source_frame": {
+        "name": "melee_windup",
+        "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/alpha/poses.png",
+        "rects": [
+          [
+            375,
+            295,
+            715,
+            540
+          ]
+        ],
+        "anchor": [
+          537.4925000000001,
+          544.652
+        ],
+        "scale": 1.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e33afd7c5e9203cef2c1830fe48534476a08a59ecd10db8695a0da14e42f129e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "1d6497f6617595f7beeb75187119ae920a073867de4aa7f25a4578d5e83ba588",
+      "runtime_source_scale": 0.8
+    },
+    {
+      "source_frame": {
+        "name": "melee_bash",
+        "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/alpha/poses.png",
+        "rects": [
+          [
+            715,
+            305,
+            1115,
+            550
+          ]
+        ],
+        "anchor": [
+          893.4925000000001,
+          544.652
+        ],
+        "scale": 1.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e33afd7c5e9203cef2c1830fe48534476a08a59ecd10db8695a0da14e42f129e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "289a85d15efdcf1c428f0ba405c1f854df8a8a85fdfa7e355c6019175c072544",
+      "runtime_source_scale": 0.8
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

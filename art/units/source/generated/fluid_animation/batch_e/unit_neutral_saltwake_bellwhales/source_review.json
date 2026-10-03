@@ -1,0 +1,298 @@
+{
+  "unit_id": "unit_neutral_saltwake_bellwhales",
+  "review_scope": "Personal chronological review recorded separately for original RGB, completed extracted RGBA and native-scale previews; pending stages are not acceptance.",
+  "takes": {
+    "move_h3_v1": {
+      "original_lossless_sha256": "fb6b60576ce50a20111610240ebbabc4a01a7b890f1ca968bfc06195843b8b2f",
+      "matte_recipe_sha256": "c414d132f1edd7d85a0b7e250b5ed4902c4e33418821d1dbd8e7695244e8ee7d",
+      "reviewed_original_rgb_indices": [
+        0,
+        123
+      ],
+      "reviewed_original_rgb_coverage": "every frame in chronological order",
+      "reviewed_final_rgba_indices": [
+        0,
+        123
+      ],
+      "reviewed_final_rgba_coverage": "every frame in chronological order",
+      "enlarged_detail_indices": [
+        0,
+        16,
+        30,
+        45,
+        60,
+        75,
+        90,
+        108,
+        123
+      ],
+      "result": "accepted_selected_action",
+      "reason": "Two pectoral fins and paired flukes fold/stroke continuously; five attached bells sway. 50 distinct authored selections, ready registration matches all8 accepted idle poses.",
+      "native_cpu_both_facings": true,
+      "godot_native_live_passed": true,
+      "godot_candidate_both_facings_passed": true
+    },
+    "ranged_h3_v1": {
+      "original_lossless_sha256": "41c4e4487cfe09a930ebcd3526c00066c64f98d4a8eb5eaf9b788f03c9e983ae",
+      "matte_recipe_sha256": "3b0672a6a4110e2ddc0f68df15f802ac18897ac5a9b269c86d45b66873c2b594",
+      "reviewed_original_rgb_indices": [
+        0,
+        123
+      ],
+      "reviewed_original_rgb_coverage": "every frame in chronological order",
+      "reviewed_final_rgba_indices": [
+        0,
+        123
+      ],
+      "reviewed_final_rgba_coverage": "every frame in chronological order",
+      "enlarged_detail_indices": [
+        0,
+        16,
+        30,
+        45,
+        60,
+        75,
+        90,
+        108,
+        123
+      ],
+      "result": "rejected_source_motion",
+      "reason": "Frames34-37 introduce an invented teal missile with a bronze ring overlapping the opening jaw. Removing detached later projectile pixels cannot repair this original overlap. Correct the H3 source; preserve the failed original.",
+      "native_cpu_both_facings": false,
+      "godot_native_live_passed": false
+    },
+    "attack_h3_v1": {
+      "reviewed_original_rgb_frames": 124,
+      "reviewed_original_rgb_coverage": "every frame0-123 chronologically",
+      "enlarged_detail_indices": [
+        0,
+        16,
+        30,
+        45,
+        60,
+        75,
+        90,
+        108,
+        123
+      ],
+      "reviewed_final_rgba_frames": 0,
+      "result": "rejected_obscuring_source_effect",
+      "reason": "Incoming ring and full-canvas teal flash obscure the entire animal14-23. Strict corner validation stopped extraction; no matte relaxation or jumped start sequence.",
+      "godot_native_live_passed": false
+    },
+    "ranged_h3_v2": {
+      "reviewed_original_rgb_frames": 124,
+      "reviewed_original_rgb_coverage": "every frame0-123 chronologically",
+      "reviewed_final_rgba_frames": 124,
+      "reviewed_final_rgba_coverage": "every frame0-123 chronologically",
+      "enlarged_detail_indices": [
+        0,
+        16,
+        30,
+        45,
+        60,
+        75,
+        90,
+        108,
+        123
+      ],
+      "selected_frames": 47,
+      "source_contact_frame": 50,
+      "native_cpu_both_facings": true,
+      "result": "accepted_selected_action",
+      "reason": "Coherent throat expansion, natural dark jaw opening, recoil and recovery; no source projectile or ring.",
+      "godot_native_live_passed": true,
+      "godot_candidate_both_facings_passed": true
+    },
+    "attack_h3_v2": {
+      "reviewed_original_rgb_frames": 124,
+      "reviewed_original_rgb_coverage": "every frame0-123 chronologically",
+      "reviewed_final_rgba_frames": 124,
+      "reviewed_final_rgba_coverage": "every frame0-123 chronologically",
+      "enlarged_detail_indices": [
+        0,
+        16,
+        30,
+        45,
+        60,
+        75,
+        90,
+        108,
+        123
+      ],
+      "selected_frames": 40,
+      "source_contact_frame": 65,
+      "native_cpu_both_facings": true,
+      "result": "accepted_selected_action",
+      "reason": "Coherent closed-mouth torso/shoulder press with tucked pectoral fins and recovered ready pose; no obscuring source effect.",
+      "godot_native_live_passed": true,
+      "godot_candidate_both_facings_passed": true
+    },
+    "hit_h3_v1": {
+      "reviewed_original_rgb_frames": 124,
+      "reviewed_original_rgb_coverage": "every frame0-123 chronologically",
+      "enlarged_detail_indices": [
+        0,
+        16,
+        30,
+        45,
+        60,
+        75,
+        90,
+        108,
+        123
+      ],
+      "reviewed_final_rgba_frames": 81,
+      "result": "accepted_selected_action",
+      "reason": "Complete recoil/recovery0-80 is clean; late held plate circles86-120 excluded by explicit range, strict plate rule unchanged.",
+      "godot_native_live_passed": true,
+      "reviewed_final_rgba_coverage": "every frame0-80 chronologically",
+      "selected_frames": 22,
+      "native_cpu_both_facings": true,
+      "godot_candidate_both_facings_passed": true
+    },
+    "defend_h3_v1": {
+      "reviewed_original_rgb_frames": 124,
+      "reviewed_original_rgb_coverage": "every frame0-123 chronologically",
+      "enlarged_detail_indices": [
+        0,
+        16,
+        30,
+        45,
+        60,
+        75,
+        90,
+        108,
+        123
+      ],
+      "reviewed_final_rgba_frames": 124,
+      "result": "accepted_selected_action",
+      "reason": "All124 original RGB and final RGBA reviewed chronologically, enlarged0/16/30/45/60/75/90/108/123. Dedicated paired-fin fold reaches compact original guard with attached five bells, two flukes, coherent throat/eye, soft translucent fins and clean plate removal. Held suffix omitted from phase count. All selected CPU native and reflected poses reviewed at actual battle128/256 scale, light/dark backdrops; no clipping, detached effects, missing fin/fluke/chain/bell or scale discontinuity. Godot native/live review pending. Atlas selection retains the entire action; slow start/brace and held bow sampled sparsely with source-derived duration at 2x action pace, fixed original scale. Every source retained.",
+      "godot_native_live_passed": true,
+      "reviewed_final_rgba_coverage": "every frame0-123 chronologically",
+      "selected_frames": 23,
+      "native_cpu_both_facings": true,
+      "selected_duration_msec": 1701,
+      "godot_candidate_both_facings_passed": true
+    },
+    "cast_h3_v1": {
+      "reviewed_original_rgb_frames": 124,
+      "reviewed_original_rgb_coverage": "every frame0-123 chronologically",
+      "reviewed_final_rgba_frames": 124,
+      "reviewed_final_rgba_coverage": "every frame0-123 chronologically",
+      "enlarged_detail_indices": [
+        0,
+        16,
+        30,
+        45,
+        60,
+        75,
+        90,
+        108,
+        123
+      ],
+      "selected_frames": 31,
+      "reason": "Personally inspected all124 original RGB and final RGBA, enlarged face/paired pectoral fins/flukes/five attached bells. Physical head lift, compact bow with folded fins, then unfolds and recovers88; omit93-123 held ready. All original geometry retained. Every selected native CPU pose reviewed in both facings; Godot review pending. Atlas selection retains the entire action; slow start/brace and held bow sampled sparsely with source-derived duration at 2x action pace, fixed original scale. Every source retained.",
+      "result": "accepted_selected_action",
+      "native_cpu_both_facings": true,
+      "godot_native_live_passed": true,
+      "selected_duration_msec": 1884,
+      "godot_candidate_both_facings_passed": true
+    },
+    "death_h3_v1": {
+      "reviewed_original_rgb_frames": 124,
+      "reviewed_original_rgb_coverage": "every frame0-123 chronologically",
+      "reviewed_final_rgba_frames": 124,
+      "reviewed_final_rgba_coverage": "every frame0-123 chronologically",
+      "enlarged_detail_indices": [
+        0,
+        16,
+        30,
+        45,
+        60,
+        75,
+        90,
+        108,
+        123
+      ],
+      "selected_frames": 38,
+      "reason": "Personally inspected all124 original RGB and final RGBA with enlarged anatomy/alpha. Continuous loss of buoyancy, folding pectoral fins, pitching torso, tail fall and grounded ventral/body settlement. All five harness bells remain attached with natural occlusion. Settled88 supplies persistent corpse; omit long held89-123. Every selected native CPU pose reviewed in both facings; Godot review pending. Atlas selection retains the entire action; slow start/brace and held bow sampled sparsely with source-derived duration at 2x action pace, fixed original scale. Every source retained.",
+      "result": "accepted_selected_action",
+      "native_cpu_both_facings": true,
+      "godot_native_live_passed": true,
+      "selected_duration_msec": 1883,
+      "corpse_ground_review": "Full-resolution original corpse guide beside selected source88, common ground y576, personally reviewed: ventral body rests at original plane; folded fin edges and attached bells extend slightly in front. No anchor adjustment or geometry change.",
+      "godot_candidate_both_facings_passed": true
+    }
+  },
+  "candidate_native_review": {
+    "reviewed_at_utc": "2026-10-03T02:10:22.323805+00:00",
+    "checks": {
+      "native": 851,
+      "mirror": 851
+    },
+    "personal_visual_review": "All six unscaled actual-engine overview pages per facing inspected, covering every selected source pose and retained idle. All eight actual physical body-bash capture phases per case inspected at unscaled battle pixels. Coherent fins, paired flukes, attached bells, plain body contact, recovery and grounded ventral corpse; no matte plate residue or clipping. Candidate ranged action route pending.",
+    "manual_continuous_playback": false
+  },
+  "candidate_ranged_review": {
+    "checks": 851,
+    "observed_shot_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "personal_visual_review": "All eight unscaled actual battle sonar captures inspected including natural jaw contact and recoil/recovery; native engine gallery from both preceding cases inspected every ranged pose."
+  },
+  "live_personal_visual_review": {
+    "passed": true,
+    "reviewed_at_utc": "2026-10-03T02:49:23.932163+00:00",
+    "scope": "Every published selected pose and retained idle in six unscaled native pages, all16 actual native melee/Shoot phase captures including contact/recovery, animated map phase0/3 and separately saved reduced map capture inspected clean. Candidate mirrored gallery reviewed every selected pose. Imported RGBA exact, normal/Fast/reduced/static/dead/contact/interrupt/RNG/save checks passed.",
+    "assertions": 4287,
+    "manual_game_playtest": false,
+    "continuous_manual_clip_playback": false
+  }
+}

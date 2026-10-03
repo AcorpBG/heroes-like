@@ -1,0 +1,25 @@
+{
+  "measurements": [
+    {
+      "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/alpha/poses.png",
+      "sha256": "e33afd7c5e9203cef2c1830fe48534476a08a59ecd10db8695a0da14e42f129e",
+      "opaque_plate_axes_max": {
+        "magenta": 30.0,
+        "green": 80.0
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/idle-v2/hands-alpha.png",
+      "sha256": "dd8478b60496047332d7ed9674a9d4dfcdf48f51cb8079d0937e96f4dfab9d8d",
+      "opaque_plate_axes_max": {
+        "magenta": 24.0,
+        "green": 77.0
+      }
+    }
+  ],
+  "rule": "Each plate axis uses maximum actual opaque original RGB excess plus one, minimum30; no shape edits.",
+  "protected_chroma_bands": {
+    "magenta": 31,
+    "green": 81
+  }
+}

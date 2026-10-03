@@ -1,0 +1,25 @@
+{
+  "result": [
+    {
+      "unit_id": "unit_neutral_saltwake_bellwhales",
+      "clips": [
+        "move",
+        "attack",
+        "ranged",
+        "hit",
+        "defend",
+        "cast",
+        "death"
+      ],
+      "texture_bytes_rgba": 64963584
+    }
+  ],
+  "other_rows_preserved": true,
+  "other_row_count": 231,
+  "before_other_battle_sha256": "5e647911fb8041e6f05342ac37381cbbbb37ab4dab1ed37335732a2145af680e",
+  "after_other_battle_sha256": "5e647911fb8041e6f05342ac37381cbbbb37ab4dab1ed37335732a2145af680e",
+  "before_other_map_sha256": "4ca5fc1ee32bfddd7d2c2bf861c5c24a5f8eae081a04fc73aa12c1d20b9fe999",
+  "after_other_map_sha256": "4ca5fc1ee32bfddd7d2c2bf861c5c24a5f8eae081a04fc73aa12c1d20b9fe999",
+  "published_own_battle_sha256": "c85482deb76f9840c82a561306d50096087d97066f9cfdf16edc531405ee6d13",
+  "published_own_map_sha256": "0e1bffc08462f0de86273c1fd93c7cf4e3774c1923cc498ac69a080b2c6a0b09"
+}

@@ -1,0 +1,71 @@
+{
+  "unit_id": "unit_neutral_saltwake_bellwhales",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026108304,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        192,
+        440
+      ],
+      "scale": 0.7322,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "recoil",
+      "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          815,
+          375,
+          1080
+        ]
+      ],
+      "anchor": [
+        181.4925,
+        1074.652
+      ],
+      "scale": 0.8,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      48,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original SALTWAKE BELLWHALE from the supplied painting, hover-swimming SCREEN RIGHT. One dark navy whale body with pale ivory/turquoise ventral throat plates, original turquoise eye and small crystalline dorsal ridge. Exactly TWO teal pectoral fins: broad near fin flowing left/down and far fin beneath the jaw flowing right/down. ONE tail peduncle ending in exactly TWO frilled teal tail flukes. The original gold-edged translucent fin membranes, gold filigree bronze harness, THREE principal bronze underbelly bells and TWO small tail-base bells with blue clappers remain attached by their original fine chains. No extra fins, tails, bells, legs, arms, hands, weapons, horns or human anatomy. Painted fantasy game artwork, same body size and camera. One sudden physical backward startle. The intact closed-mouth head and torso jerk backward once, the two original pectoral fins fold closer to the belly, the same tail flukes lag and the five attached bells swing forward once. Recover smoothly to exact hovering ready. The whole original animal remains clearly visible throughout on a uniform stationary magenta field. Only the body, fins, flukes and original attached bells move.  Entire backdrop flat magenta RGB255,0,255 throughout, no scenery, water, floor, cast shadow, text, camera movement, zoom or cuts. Keep all fin and fluke tips, chains and bells inside generous canvas margins. Fixed world ground plane y576; living whale hovers above this plane and only the death ends with its body resting on it. Keep original pale throat plates and translucent teal fins without recoloring, swelling or dissolving anatomy.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

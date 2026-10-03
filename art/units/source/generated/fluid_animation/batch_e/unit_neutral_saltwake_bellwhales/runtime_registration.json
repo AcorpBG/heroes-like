@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_neutral_saltwake_bellwhales",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "ready_guide": {
+    "name": "idle_hands_0",
+    "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        384,
+        512
+      ]
+    ],
+    "anchor": [
+      192,
+      440
+    ],
+    "scale": 0.7322,
+    "alpha_noise_cutoff": 8
+  },
+  "corpse_guide": {
+    "name": "dead",
+    "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/alpha/poses.png",
+    "rects": [
+      [
+        1055,
+        875,
+        1426,
+        1080
+      ]
+    ],
+    "anchor": [
+      1249.4925,
+      1031
+    ],
+    "scale": 0.8,
+    "alpha_noise_cutoff": 8
+  },
+  "original_source_registration": {
+    "near_fin_joint_old": [
+      230,
+      177
+    ],
+    "near_fin_joint_idle": [
+      245,
+      312
+    ],
+    "old_source_scale": 0.8,
+    "idle_source_scale": 0.7322,
+    "old_master_anchor_adjustment": [
+      -68.5075,
+      -5.348
+    ],
+    "corpse_anatomical_body_contact_y": 1031
+  },
+  "reason": "Original scale per master retained; one master-wide torso/fin-joint registration aligns original ready to accepted idle. Death endpoint uses reviewed actual ventral body contact instead of floating original anchor. No per-frame bbox normalization, warping or motion synthesis."
+}

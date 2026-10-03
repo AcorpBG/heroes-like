@@ -1,0 +1,628 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_saltwake_bellwhales",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_008",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_019",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_025",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_031",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "defend_h3_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "defend_h3_037",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_043",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "defend_h3_046",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "defend_h3_049",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0416666666666665
+        },
+        {
+          "name": "defend_h3_052",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "defend_h3_055",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "defend_h3_058",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "defend_h3_061",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        },
+        {
+          "name": "defend_h3_064",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "defend_h3_067",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "defend_h3_072",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "defend_h3_080",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        }
+      ],
+      "clips": {
+        "defend": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 22,
+          "frame_durations_msec": [
+            167,
+            125,
+            42,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            62,
+            104,
+            167,
+            42
+          ]
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/config.json",
+          "sha256": "71f4e8b6a73ca9cb76a9840988a3a50eee350595c5ea623710971811b2815b29"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/selection.json",
+          "sha256": "848caeafb1d63b92ea4ff36a6c9abf4d6acb2a1e4270e4c0506cb9528733004e"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/original_lossless.mkv",
+          "sha256": "8995651ff933b980c24b55d4ce3be1ca3f1b2ec0e13eca776dddccc5362ae252"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/original.json",
+          "sha256": "47dc01221334a063948e49dfd5196c5e089ee11bf6ffa1d1d7d064195ebe7cc3"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/workflow_api.json",
+          "sha256": "150ce50faae020689b51622c9a8ce607504cb2baab23fa5e6ed9cbe4cb31a3f9"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/prompt.txt",
+          "sha256": "d41a576c1d1452d654188fd9fa0878e2fe57f132aa63b1e0f6fdd81577f19c66"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/reference.json",
+          "sha256": "01805d93caeccf7aeb0878a3d62aee8e18e7143e2cfa53ff8ab4103e6f5e5dfc"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte.json",
+          "sha256": "a2b3db7476d0857b0c01550ddb6bdc6e7d9d2bb4f899beebf227ab545819de31"
+        },
+        "edge_despill.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/edge_despill.json",
+          "sha256": "015734a41f2feabdd4a26edc15fee4dbbb9be71f4a490ae6aa96c1af7eda2b9d"
+        },
+        "matte_initial.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/matte_initial.json",
+          "sha256": "04d50bcd4556be4261e532d09a3cc3e5ec3cc0636cbd515d944ca512de61978e"
+        },
+        "bounded_matte_session.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/bounded_matte_session.json",
+          "sha256": "d8f694c08e6750c2610431bd7b2446f655d0bad448353bdb2514cc727af37c1d"
+        },
+        "segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/segmentation_recipe.json",
+          "sha256": "da4e1fbf0294da4371b008260df6925b974c521c7310b02d64fbf4e1fa01e642"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/staged_generation.json",
+          "sha256": "a84d5eb88017e1025fd58a069cc7e06354b63b3f5b1731538816960609a1f842"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/sampling_workflow_api.json",
+          "sha256": "15fc090c5730ae9eb36a57842a6edf8332fba162b8e80bb2595377a5dabd6e45"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/sampling_submission.json",
+          "sha256": "85a3beb426cc9fed90d5997eecd9ed1fe5240d6c1d3ea0de6a9a2f123aa5ada5"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/sampling_history.json",
+          "sha256": "c294dcab15b8f2ee180182c0330d3b12214b9f48f5c6adb4978d8950d9eeb136"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_saltwake_bellwhales/defend_h3_v1/original.latent",
+          "sha256": "0c523c29ac2790f6434eddfa1bd738a00b406af0b576acfa246e20023470dc23"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 original RGB and final RGBA reviewed chronologically, enlarged0/16/30/45/60/75/90/108/123. Dedicated paired-fin fold reaches compact original guard with attached five bells, two flukes, coherent throat/eye, soft translucent fins and clean plate removal. Held suffix omitted from phase count. All selected CPU native and reflected poses reviewed at actual battle128/256 scale, light/dark backdrops; no clipping, detached effects, missing fin/fluke/chain/bell or scale discontinuity. Godot native/live review pending. Atlas selection retains the entire action; slow start/brace and held bow sampled sparsely with source-derived duration at 2x action pace, fixed original scale. Every source retained."
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+"""Correct source emission, retaining the failed original rather than painting it."""
+import json
+import produce as p
+from prepare import IDENTITY,PLATE
+out=p.SOURCE_DIR/'ranged_h3_v2';assert not out.exists();out.mkdir()
+c=json.loads((p.SOURCE_DIR/'ranged_h3_v1/config.json').read_bytes());c['seed']=2026108313
+c['prompt']=(IDENTITY+' One complete natural baleen-whale vocalization. The original throat expands slightly, the lower jaw smoothly opens into the supplied original dark open-mouth pose, the intact head angles forward once, then the jaw closes and the torso recoils slightly before returning to exact hovering ready. This is ONLY anatomical jaw and throat motion. The mouth interior stays dark natural navy/red as in the guide; no glow, light, emission, projectile, orb, ring, disk, eye duplication, mist or beam appears anywhere. Exactly the original TWO pectoral fins, paired tail flukes and FIVE attached original bells remain in place, balancing this one vocalization. '+PLATE).strip()
+p.write(out/'config.json',c);p.prepare(out,c);p.verify(out,c)
+d=json.loads((p.SOURCE_DIR/'delivery.json').read_bytes());d['takes']=[t.replace('ranged_h3_v1','ranged_h3_v2') for t in d['takes']];p.write(p.SOURCE_DIR/'delivery.json',d)
+p.write(p.SOURCE_DIR/'rejected_takes.json',dict(takes=[dict(take='ranged_h3_v1',status='rejected_original_source_emission',reviewed_original_rgb_frames=124,reviewed_rgba_frames=124,defect='Original frames34-37 invent a ringed pulse overlapping the opening jaw, then38-44 a travelling projectile. This duplicates game-owned projectile motion; the overlapping transition cannot be safely separated. No painted jaw repair or jumped selection.',correction='Original dark-open-mouth guide unchanged; new source requests only natural throat/jaw articulation with no rendered emission, ring, projectile, disk or eye duplication.')]))
+p.write(p.SOURCE_DIR/'move_h3_v1/selection.json',dict(source_frames=[0,4,8]+list(range(10,101,2))+[102],frame_msec=42,review_note='All124 original RGB and all124 final alpha personally inspected chronologically, enlarged0/16/30/45/60/75/90/108/123. One coherent torso, two pectoral fins and paired flukes stroke reciprocally, five attached bells sway with natural foreshortening. Source102 returns to original ready; exclude long terminal held tail103-123. Fixed registration and source scale unchanged; native/reflected/Godot review pending.'))
+p.build(p.SOURCE_DIR/'move_h3_v1',json.loads((p.SOURCE_DIR/'move_h3_v1/config.json').read_bytes()))
+print('MOUTH_ONLY_CORRECTION_PREPARED; movement50 distinct source poses pending native review',flush=True)

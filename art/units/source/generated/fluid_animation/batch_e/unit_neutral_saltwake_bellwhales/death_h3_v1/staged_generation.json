@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "828b4acaeccdea7e6cbc9c5189651c59a02296ddfe92c5b41b28d31a31cdea0a",
+  "latent_sha256": "09a4390338605e2c3194bee304e7fad50a70fc89d5cbb219b1d6db8b8115249b",
+  "decode_workflow_sha256": "402a8135bfab6709bfe54b9509416be0eafac4694fca16dc309e2d4d1caaf34c",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "saltwake_bellwhale_h3\\death_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

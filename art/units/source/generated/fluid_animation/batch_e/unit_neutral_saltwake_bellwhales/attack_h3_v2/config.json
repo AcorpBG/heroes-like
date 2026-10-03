@@ -1,0 +1,93 @@
+{
+  "unit_id": "unit_neutral_saltwake_bellwhales",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026108322,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        192,
+        440
+      ],
+      "scale": 0.7322,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/alpha/poses.png",
+      "rects": [
+        [
+          375,
+          295,
+          715,
+          540
+        ]
+      ],
+      "anchor": [
+        537.4925000000001,
+        544.652
+      ],
+      "scale": 0.8,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_bash",
+      "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/alpha/poses.png",
+      "rects": [
+        [
+          715,
+          305,
+          1115,
+          550
+        ]
+      ],
+      "anchor": [
+        893.4925000000001,
+        544.652
+      ],
+      "scale": 0.8,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      65,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original SALTWAKE BELLWHALE from the supplied painting, hover-swimming SCREEN RIGHT. One dark navy whale body with pale ivory/turquoise ventral throat plates, original turquoise eye and small crystalline dorsal ridge. Exactly TWO teal pectoral fins: broad near fin flowing left/down and far fin beneath the jaw flowing right/down. ONE tail peduncle ending in exactly TWO frilled teal tail flukes. The original gold-edged translucent fin membranes, gold filigree bronze harness, THREE principal bronze underbelly bells and TWO small tail-base bells with blue clappers remain attached by their original fine chains. No extra fins, tails, bells, legs, arms, hands, weapons, horns or human anatomy. Painted fantasy game artwork, same body size and camera.  One restrained physical swimming-body exercise. The intact torso and sealed rounded upper lip draw backward slightly while both pectoral fins fold toward the belly, then the closed rounded head and shoulder press forward SCREEN RIGHT once into the supplied forward-leaning pose. Briefly hold this maximum forward extension at guide65, then recover the torso and spread the same original fins back to exact hovering ready. The mouth remains firmly closed throughout. Only the animal body, original fins, flukes and attached bells move; the whole painted animal stays clearly visible in every frame. The background remains a completely uniform stationary solid magenta field in every frame. Ordinary physical repositioning of the same animal, fixed camera and constant body size.  Entire backdrop flat magenta RGB255,0,255 throughout, no scenery, water, floor, cast shadow, text, camera movement, zoom or cuts. Keep all fin and fluke tips, chains and bells inside generous canvas margins. Fixed world ground plane y576; living whale hovers above this plane and only the death ends with its body resting on it. Keep original pale throat plates and translucent teal fins without recoloring, swelling or dissolving anatomy.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

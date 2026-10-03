@@ -1,0 +1,18 @@
+{
+  "sampling_release": {
+    "free_vram_bytes": 32180797440,
+    "required_free_vram_bytes": 17179869184
+  },
+  "decode_release": {
+    "free_vram_bytes": 17835236160,
+    "required_free_vram_bytes": 17179869184
+  },
+  "actions": [
+    "ranged_h3_v2",
+    "attack_h3_v2"
+  ],
+  "generated_sources": [
+    "attack_h3_v2"
+  ],
+  "rule": "One corrected original sampled and decoded, plus semantic matting of one previously decoded/reviewed original. Terminal completion, release and matting all held within one shared GPU lease."
+}

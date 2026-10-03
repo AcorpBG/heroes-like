@@ -1,0 +1,229 @@
+{
+  "status": "complete_selected_unit",
+  "unit_id": "unit_neutral_saltwake_bellwhales",
+  "completed_at_utc": "2026-10-03T02:49:25.245368+00:00",
+  "clips": {
+    "move": {
+      "frames": 50,
+      "frame_msec": 42,
+      "static_frame": 0,
+      "loop": true
+    },
+    "attack": {
+      "frames": 40,
+      "frame_msec": 42,
+      "contact_frame": 25,
+      "static_frame": 0,
+      "loop": false
+    },
+    "ranged": {
+      "frames": 47,
+      "frame_msec": 42,
+      "contact_frame": 19,
+      "static_frame": 0,
+      "loop": false
+    },
+    "hit": {
+      "frames": 22,
+      "frame_msec": 42,
+      "static_frame": 0,
+      "loop": false
+    },
+    "defend": {
+      "frames": 23,
+      "frame_msec": 42,
+      "frame_durations_msec": [
+        167,
+        125,
+        42,
+        62,
+        62,
+        62,
+        62,
+        62,
+        62,
+        62,
+        62,
+        62,
+        62,
+        62,
+        62,
+        62,
+        62,
+        62,
+        62,
+        62,
+        104,
+        167,
+        42
+      ],
+      "static_frame": 22,
+      "loop": false
+    },
+    "cast": {
+      "frames": 31,
+      "frame_msec": 42,
+      "frame_durations_msec": [
+        333,
+        125,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        167,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        125,
+        42
+      ],
+      "static_frame": 0,
+      "loop": false
+    },
+    "death": {
+      "frames": 38,
+      "frame_msec": 42,
+      "frame_durations_msec": [
+        83,
+        83,
+        83,
+        83,
+        83,
+        83,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        83,
+        42
+      ],
+      "static_frame": 37,
+      "loop": false
+    }
+  },
+  "preserved_idle": {
+    "frames": 8,
+    "frame_msec": 200,
+    "battle_map_pixels_exact": true
+  },
+  "new_action_poses": 251,
+  "original_take_count": 9,
+  "original_rgb_frames_preserved": 1116,
+  "focused_results": {
+    "candidate/native": {
+      "checks": 851,
+      "failures": []
+    },
+    "candidate/mirror": {
+      "checks": 851,
+      "failures": []
+    },
+    "candidate/ranged": {
+      "checks": 851,
+      "failures": []
+    },
+    "live/native": {
+      "checks": 865,
+      "failures": []
+    },
+    "live/ranged": {
+      "checks": 865,
+      "failures": []
+    },
+    "live/map_static": {
+      "checks": 4,
+      "failures": []
+    }
+  },
+  "passed_focused_assertions": 4287,
+  "atlas": {
+    "path": "art/animation/runtime/fluid/unit_neutral_saltwake_bellwhales.png",
+    "sha256": "c9df9d982572e90bafc6c03bfe74f25b306fda2e9ed6796fa0e4418ed38d1e47",
+    "width": 4028,
+    "height": 4032,
+    "rgba_bytes": 64963584
+  },
+  "verification": {
+    "original_rgb_sha256": true,
+    "source_packed_pixel_anchor_exact": true,
+    "source_distinct_poses": true,
+    "imported_rgba_exact_after_default_alpha_border_fix": true,
+    "other_rows_preserved_at_mutex_publication": true
+  },
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "All1116 original RGB frames across nine retained attempts personally inspected chronologically; seven selected actions accepted after complete extracted action alpha/enlarged anatomy, every selected native and reflected engine pose, and eight actual body-bash/sonar action captures per route. Fins, paired flukes, five attached bells, natural dark jaw interior, recovery and grounded ventral corpse are coherent. Original eight-pose idle pixels and200ms battle/map timing preserved. No interpolation, pixel exclusions, painted repairs, global warps or invented source effects. Windows offscreen focused fixtures; no manual continuous playback or manual game playtest claim. Imported RGBA and both published live action routes passed; actual normal/Fast/reduced/static/dead/contact/interrupt/RNG/save and animated/reduced map checks are recorded in completion.json."
+  },
+  "scope": {
+    "windows_godot": "4.6.2",
+    "linux_validation": false,
+    "fullsuite": false,
+    "manual_game_playtest": false,
+    "continuous_manual_clip_playback": false
+  },
+  "preserved": "All original RGB videos, failed takes, latents, workflows, prompts, guide art, original packed poses, model/NN/plate recipes, selected source mattes, caches, saves, backups and RMG material.",
+  "cleanup": {
+    "records": {
+      "cleanup_duplicates": {
+        "files": 1165,
+        "bytes": 772282034
+      },
+      "cleanup_reviews": {
+        "files": 245,
+        "bytes": 441072658
+      },
+      "cleanup_unselected": {
+        "files": 740,
+        "bytes": 237880025
+      }
+    },
+    "removed_files": 2150,
+    "recovered_bytes": 1451234717,
+    "rebuildable": true
+  }
+}

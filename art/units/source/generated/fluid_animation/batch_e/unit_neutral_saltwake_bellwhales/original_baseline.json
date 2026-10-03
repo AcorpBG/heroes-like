@@ -1,0 +1,178 @@
+{
+  "row": {
+    "id": "unit_neutral_saltwake_bellwhales",
+    "unit_id": "unit_neutral_saltwake_bellwhales",
+    "name": "Saltwake Bellwhales",
+    "faction_id": "neutral",
+    "tier": 7,
+    "role": "ranged",
+    "motif": "ranged",
+    "sprite_sheet": "res://art/animation/runtime/units/unit_neutral_saltwake_bellwhales.png",
+    "states": [
+      "idle_hold",
+      "ready_active",
+      "move_path_step",
+      "melee_windup_release",
+      "ranged_aim_release",
+      "hit_stagger",
+      "death_rout_remove",
+      "cast_support_anchor",
+      "status_applied",
+      "status_expired",
+      "defend_brace",
+      "retaliation_release",
+      "retreat_withdraw_column",
+      "surrender_stand_down"
+    ],
+    "art_source_kind": "curated_original_character_v1",
+    "curated_source": "res://art/units/source/curated/unit_neutral_saltwake_bellwhales.png",
+    "curated_source_sha256": "43b41662c2ac7b27c4fe4d095449da4da7754203dbac39642384023286a60725",
+    "pose_frame_size": {
+      "width": 512,
+      "height": 256
+    },
+    "pose_columns": 4,
+    "pose_review_status": "accepted_idle_articulation_20260919",
+    "pose_clips": {
+      "idle": {
+        "frames": 8,
+        "indices": [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23
+        ],
+        "loop": true,
+        "frame_msec": 200,
+        "static_frame": 0
+      },
+      "move": {
+        "frames": 4,
+        "indices": [
+          2,
+          4,
+          3,
+          4
+        ],
+        "loop": true,
+        "frame_msec": 170
+      },
+      "attack": {
+        "frames": 3,
+        "indices": [
+          5,
+          6,
+          0
+        ],
+        "loop": false,
+        "frame_msec": 150
+      },
+      "ranged": {
+        "frames": 4,
+        "indices": [
+          8,
+          9,
+          10,
+          11
+        ],
+        "loop": false,
+        "frame_msec": 150
+      },
+      "defend": {
+        "frames": 2,
+        "indices": [
+          7,
+          0
+        ],
+        "loop": true,
+        "frame_msec": 550
+      },
+      "hit": {
+        "frames": 2,
+        "indices": [
+          12,
+          7
+        ],
+        "loop": false,
+        "frame_msec": 150
+      },
+      "death": {
+        "frames": 3,
+        "indices": [
+          13,
+          14,
+          15
+        ],
+        "loop": false,
+        "frame_msec": 150
+      },
+      "dead": {
+        "frames": 1,
+        "indices": [
+          15
+        ],
+        "loop": false,
+        "frame_msec": 150
+      }
+    },
+    "pose_aliases": {
+      "cast": "idle"
+    },
+    "pose_sheet": "res://art/animation/runtime/poses/unit_neutral_saltwake_bellwhales.png",
+    "pose_provenance": "res://art/animation/source/poses/unit_neutral_saltwake_bellwhales/provenance.json",
+    "pose_ground_margin": 8,
+    "pose_review_evidence": "docs/battle-unit-animation-acceptance.json"
+  },
+  "map_row": {
+    "path": "res://art/overworld/runtime/creature_idle/unit_neutral_saltwake_bellwhales.png",
+    "frame_size": [
+      303,
+      244
+    ],
+    "frames": 8,
+    "frame_msec": 200,
+    "static_frame": 0,
+    "ground_anchor": [
+      152.0,
+      236
+    ],
+    "painted_extent": 287,
+    "source_sheet": "res://art/animation/runtime/poses/unit_neutral_saltwake_bellwhales.png",
+    "source_indices": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "source_crop": [
+      104,
+      12,
+      407,
+      256
+    ],
+    "source_sha256": "637a5206242b8043133e6d36a65bcb14d71422f0a3275463c81962fdd37f7e38",
+    "source_provenance": "res://art/animation/source/poses/unit_neutral_saltwake_bellwhales/provenance.json",
+    "sha256": "52224062da4c0567c3af1d0e947262b2b411930bd81a46cfb3bc110eb653ff4a"
+  },
+  "idle_rgba_sha256": [
+    "9ef8282242143337234a9e1983764dc22ca438d5723405971f443086e2b1a3c3",
+    "e72378054c8b775e16b6d15f362e4070d3ed3739f21ed0aefbfc2d81cd229297",
+    "d51865023338ee293c138a5017a8ad16be75b0ae44061c9e08d3c7cba15a02e9",
+    "9bb401fede035f1c4ab1a5c761abe11cbd323dbb1f6af73ae40ffc57fd6fbbe6",
+    "eaaada583ea7e058025b3f5d0c75be67da7db506d7eea187c67a495b730c8f8e",
+    "a1dacb0dad6312c0e24a57e28dad88a0323bf4ff7fa978876e67acdaa534ec4d",
+    "e735f1a8873450dd302905286de39861ba76cd62d70d536743e3b4a3318d679a",
+    "b4e7065516c9c26f5100df8edb70ee0a6780d8960803c0bae7da08e7e6bcdd83"
+  ],
+  "map_png_sha256": "52224062da4c0567c3af1d0e947262b2b411930bd81a46cfb3bc110eb653ff4a",
+  "original_pose_atlas_sha256": "637a5206242b8043133e6d36a65bcb14d71422f0a3275463c81962fdd37f7e38",
+  "curated_sha256": "43b41662c2ac7b27c4fe4d095449da4da7754203dbac39642384023286a60725"
+}

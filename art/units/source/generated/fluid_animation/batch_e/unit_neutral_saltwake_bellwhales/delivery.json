@@ -1,0 +1,18 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v2",
+    "ranged_h3_v2",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "All1116 original RGB frames across nine retained attempts personally inspected chronologically; seven selected actions accepted after complete extracted action alpha/enlarged anatomy, every selected native and reflected engine pose, and eight actual body-bash/sonar action captures per route. Fins, paired flukes, five attached bells, natural dark jaw interior, recovery and grounded ventral corpse are coherent. Original eight-pose idle pixels and200ms battle/map timing preserved. No interpolation, pixel exclusions, painted repairs, global warps or invented source effects. Windows offscreen focused fixtures; no manual continuous playback or manual game playtest claim. Imported RGBA and both published live action routes passed; actual normal/Fast/reduced/static/dead/contact/interrupt/RNG/save and animated/reduced map checks are recorded in completion.json."
+  }
+}

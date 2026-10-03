@@ -1,0 +1,20 @@
+{
+  "takes": [
+    {
+      "take": "ranged_h3_v1",
+      "status": "rejected_original_source_emission",
+      "reviewed_original_rgb_frames": 124,
+      "reviewed_rgba_frames": 124,
+      "defect": "Original frames34-37 invent a ringed pulse overlapping the opening jaw, then38-44 a travelling projectile. This duplicates game-owned projectile motion; the overlapping transition cannot be safely separated. No painted jaw repair or jumped selection.",
+      "correction": "Original dark-open-mouth guide unchanged; new source requests only natural throat/jaw articulation with no rendered emission, ring, projectile, disk or eye duplication."
+    },
+    {
+      "take": "attack_h3_v1",
+      "status": "rejected_obscuring_original_effect",
+      "reviewed_original_rgb_frames": 124,
+      "reviewed_rgba_frames": 0,
+      "defect": "Original frames1-33 invent an incoming ring and full-canvas teal flash, completely obscuring the whale at14-23. Later body motion cannot supply the missing full ready-to-windup sequence. Strict three-corner plate validation correctly stopped early. No matte relaxation, painted repair or jumped selection.",
+      "correction": "Retain the same original closed-mouth physical torso guides. Describe a restrained physical body exercise and forward shoulder press, with only animal and attached bells moving on an unchanged plate."
+    }
+  ]
+}

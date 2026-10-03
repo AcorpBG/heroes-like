@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_neutral_saltwake_bellwhales",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          192,
+          440
+        ],
+        "scale": 1.4644,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "dd8478b60496047332d7ed9674a9d4dfcdf48f51cb8079d0937e96f4dfab9d8d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "fce91f61d5fa7068a2c4a644286d258255852001ea236009aa8a22857ae8b1e6",
+      "runtime_source_scale": 0.7322
+    },
+    {
+      "source_frame": {
+        "name": "swim_up",
+        "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/alpha/poses.png",
+        "rects": [
+          [
+            715,
+            0,
+            1075,
+            300
+          ]
+        ],
+        "anchor": [
+          893.4925000000001,
+          294.652
+        ],
+        "scale": 1.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e33afd7c5e9203cef2c1830fe48534476a08a59ecd10db8695a0da14e42f129e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5ab27f5256e576f44d73b89840976963fab9d7d696240cc60079073791ea0afd",
+      "runtime_source_scale": 0.8
+    },
+    {
+      "source_frame": {
+        "name": "swim_down",
+        "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/alpha/poses.png",
+        "rects": [
+          [
+            1075,
+            0,
+            1426,
+            300
+          ]
+        ],
+        "anchor": [
+          1249.4925,
+          294.652
+        ],
+        "scale": 1.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e33afd7c5e9203cef2c1830fe48534476a08a59ecd10db8695a0da14e42f129e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "9765ca507e2672077132224f46812338bb2da04ff5ab15e5916dd5b86d4e0407",
+      "runtime_source_scale": 0.8
+    },
+    {
+      "source_frame": {
+        "name": "swim_pass",
+        "source": "art/animation/source/poses/unit_neutral_saltwake_bellwhales/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            295,
+            375,
+            540
+          ]
+        ],
+        "anchor": [
+          181.4925,
+          544.652
+        ],
+        "scale": 1.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e33afd7c5e9203cef2c1830fe48534476a08a59ecd10db8695a0da14e42f129e",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "d772760e34838561b55b049c4748c1c72e99a4e60cc3195cefeed7d02f8d8790",
+      "runtime_source_scale": 0.8
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

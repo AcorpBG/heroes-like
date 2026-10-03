@@ -1,0 +1,1240 @@
+{
+  "frames": 124,
+  "extracted_frames": 81,
+  "extracted_source_ranges": [
+    [
+      0,
+      80
+    ]
+  ],
+  "fps": 24,
+  "rgba_sha256": [
+    "ef3004b9c7b72db7a723659ae3ed91513d2de220f5fd8a8294dba2e6167660d9",
+    "65594d18c7f8e07ddece8e6c6ae4c34995fa77dfb0a6f06c07395303db61acae",
+    "511f4cc6ce20b5516b36ead41454e7863d8813caec07ffece7f13ff883706713",
+    "65ed603c8cfd26dc82a0052ad922d9a40146755b5fc3b2715823b80f3ec49866",
+    "51afc5957e2c19389e588c7c715fc597cbb539b6078bb2e5a742a4f741aa86ad",
+    "07656f9a443fc7caa5e09186de7c8d77953422ee4e2b446f49ef784a883d0cb5",
+    "6a8926a997f5c521b829fbce49bb3965d43d9e7fec4b65598684e7e35ce89ec2",
+    "afd7e5e17fea624a3114a7c647dfe40c94aecc00ca6f1f7f61b8613d60434a9a",
+    "5e35254a89d2e4fc17bd944cde6259d5081f27025f1021107ee57bc7402ee723",
+    "116083a862d533f599fdae301b82bc2917683c56e2c5a72cde137ccf54db3e5d",
+    "951ab8546870d779ae569e6dcb38d9b15b7bae674b7258858bcc58ecbae978bc",
+    "71aef89a5357f078edf00459e5091a561f036189cf9ccbf15c09e42c7d78c89d",
+    "25154303976ca54de5ef1bda1757840589037a778b3dabffb8d83089c3de39cb",
+    "d07cea0677f5b2803f2dc3324bfabc35dc3ccbadc458cbfcf12ec3ba106d9f88",
+    "b273eab06f407293f44f78536c8396977c8c3db2a04a7a5e2f0013c787f47487",
+    "d666dbdd00265474b045ec71a7af7f0ee0e5e3114a1f5a8c4bb4b890e2837999",
+    "a6005011e253adc591bf79102451323ac942f0390668dbea13a031c4df2a87ae",
+    "7982d49d21c4c3c485abf5140e7e654982a8b2280eeab2415eb0d5560e667c0d",
+    "99c546dd08291939ca10e374956dae05aa5baf7b4ecc6004b707fb45dd2e00ed",
+    "962f36fe9595bdbab95657a825914a3a6aca76647bd9630a0893bb7ec6a4db9c",
+    "f55e039c98af893f1a4ffa8b564f643eccebb89da39c2f4a6b0dacc8801c8751",
+    "12c565e65c72e3db439c935f0517f50c76423034cd522111f1fcb15d35da1fd1",
+    "685dcc39db3e3748e4cd5f6ff0c09eacd6f90cb3f8a8b0c91e3e716d1e811a9d",
+    "b246b5c436f6f1d92400882cb48652c797367ea204142446c5efdfb0e097380d",
+    "eecb5a508a460a702940b18d6b3f9b5af895ddf257d580abe087c680b9390d62",
+    "88ca651cc162cbf1f2489c3ada2a0684005aa565907ef7f1b48c29802a1f5e2a",
+    "7e2067de1269a0e56be92945a224c248d394f2ba5f5d2d2536427253f51d80e9",
+    "a2eca366b80b5b8ef2a192c0b6807b6d8c01eab4205df905e76492e955013627",
+    "35d5ff42b9a3258b8b538614ebce191b4447cb28b3377237f0abc51edc995072",
+    "0d67dcc284529bea7b5073fcce5db9a6a633cafe57e089db3663b3de669ff718",
+    "1056b4ce53bb3d3e5f77dee3bdd42abc4083e0dcb0adf14ace83bd028d1e994b",
+    "0497e18c026b2e13e313af8edff455947b966313742793f83285d83efe1b0dab",
+    "2a54b4698d570386310303a7c5c3438d761a8fa60fcf26fdae3bd227933b735f",
+    "bc4dd9bfa11b39281869a941ddc69774b2b431815d8a81c161d3ce3120aba0fc",
+    "725ce3eeeff7da1994414e9b7755ad85cf1763d38ef44afc6c9f1a1381f59d50",
+    "2030fa0c1e43c8be62848d06026d00a709057163d3e308bb010adfc3fff552ef",
+    "036a85a41724cce6cab5c19b36c6c9d0e2a7c0d070298958d4fbb266be0b8e3c",
+    "06a53ed915f2ab5fa1b2e5032e4314a5949a2aee2eb15bbe0e487e3c07e3a6d0",
+    "bc159563fa7d401d3f391f28acfa37b66cfe979bcf9953652132b84b34c7c7f9",
+    "1c4c4691cb4321263670bffee511acb2f73f6c8e7ee54840de011762671b5dcc",
+    "7251d255d23b6acabae7029dd10d93b31d346e56934686e4bc6a00a89d0794f8",
+    "cba667edb887a5454bd7079f2b0effdb82d7aa55df9b103cceb5a981d5eda430",
+    "bed92794b0596be3463fc64a088508d114b02b90c8eafb2a992c9da38e523605",
+    "e1ff3b4c21910151fb3d793d45366cc98ffa2b7c71865cd7bf0ca889abddddd4",
+    "2a0bbbf004ff196430ceb7bd727432b520a48118739e3c3d1e46b3958481f1c2",
+    "5077186ffc6d06fcf61d5413fcaf8fa754e9e46a95436ad2825fafe01adde0cc",
+    "eba465cc4cc85b9376d30c6a0cdaff6d5fc08c0e2a11d9c0016b1730de635ac4",
+    "8d36c5b154242b8d66238579fa36c8e682c90b22152379d5153ac8a0bb1e3e69",
+    "7bc7386c962d2fe5acfa09a79b3aa1863a27f2dc832166e8d4a0034479a39f79",
+    "0d44bbe9a1b1d5c4ea7b68475f74410a7c76a52b70a02018e9e89c4197227f31",
+    "c5c03d37790959da15667613ea9d3871c71e4df3842858d256433ee663e69675",
+    "61a46cc5038340c96940eb8d8cdf65d0280685a5283bd278c3bd33b6d97a355c",
+    "0ba5517268985ad764791d3b0cbc2799879976818461e0f92942782cbd39f19c",
+    "b308be7753e19849a947e1278766a734b693e7f96afdf297da509e573a15f297",
+    "e1225df844b2d234be179c91d0b0a32c2734140ad7540d68e9590e2c2ba75399",
+    "5f84003d02be0fc2191212886a1286a616bab4df3060ec73d69ba32286e40887",
+    "c412ca2178db4358751f618ea6b26c5af13249fd05e81bb5a3747a0d9a648cba",
+    "8805b69f2d8bd0af7520492a46cfded02ae11860a302dccbcad583b52c6c02c8",
+    "c01133d4cca893c998e865d378d574ad6f0dbbfc7c4dbd0d997fcf4b61347ae5",
+    "9cc75a3b6c9951e1aa41451aecaa056a89482757e7756ed2a717dacff8b3814e",
+    "bc6321b859906fd8361613d3b6bc28c2d492899cbfe33fbf86511d45ef214dcc",
+    "cdf0693557faa7b85820a648c6054c86a41e2df1818f8792eb216ca745034b94",
+    "3ad0f95633ff85389b69b5dfcab2a28b259cf0e73ba332ce0070276a21a11924",
+    "da29e2dad3cf0c04bfc9eb1591664a165b6f2ee59f2b8cbedf975eecfb132ec8",
+    "d5941bd7b8b7010e5b4d0aba709e14c9c7565204c653aae82bc66636be2886c4",
+    "5bc4b31ba7f5671a882c65ea8697942700efcb97350ea534d87150025c0b92c4",
+    "02431bea09cf693e69818b25b6ce9ef526cfa00ab4725004dae0f4589754c8f6",
+    "debd7ea88e985353fcb3c8582408cd6311cddce19a320c580af6a9731d4a4761",
+    "651244be790c601169f4e3b5a9e34b362ece9e3564f42f5a2581988625aaba15",
+    "fa75de06143da86ed22f127de8b005a1f4b44dbdd5e47ce6435b1e44f7bdea9c",
+    "8fb83e64cbd618ceb0a45616f53aa626d7aef4acc994d982622362b85e847038",
+    "c2122f8ccb2ac1c9ce5b0f7176682028abcc882462351c06296ce46a9842caf0",
+    "981f5a2b3aba38fc397be78fd270fbdbfa230c54775fbe211548afc2c23a8677",
+    "afbe843194a3bc82f6eadae602ab7b1d0b0bb7151ad3437a3abee105e84ee547",
+    "e1d6ee505788548ac594c763d94a059edf99d51564e133bd50191dd2598f0202",
+    "dbdd1d0999d880e33d828703fc826c30cef1005d61fb1308d8e2dcd3e79f5f88",
+    "35678f90b0eef2eb3dce54ee7018c51b086e9d71253ed15515dc1948a6ac1687",
+    "fc65e7eb6c0638dca74f44dce404ac731251019ee9e2bdf81d5a114d1e000a8c",
+    "82f323fc6d38be4dfff8655cccd4ef386e1a37a7c03868f73d76322682668601",
+    "fa3eb841cb902156e1ce3376609ff0e5e37a91daad03598776ad6b4349e98e90",
+    "5c96b9a9305e629a8fe21d07ec24cc07155b491f951019dbe702969068ddd275",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "background_frames": [
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        3.5,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.8284270763397217,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        250.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.25,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.015564441680908,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        253.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        252.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        253.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        253.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        252.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        253.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        252.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        252.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        252.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        253.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        253.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        252.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        252.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        253.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        253.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        252.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        252.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.1213202476501465,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        253.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        3.5,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        253.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        252.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        252.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        252.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        253.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        252.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        3.5,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        3.5,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        3.5,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.1213202476501465,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        3.5,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.1213202476501465,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.0,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    },
+    {
+      "excluded": true,
+      "reason": "Outside reviewed complete action interval; retained original RGB"
+    }
+  ],
+  "recipe": "Pinned BiRefNet-matting: 1024 input only for mask inference, soft mask resized to unchanged original RGB dimensions. Opaque alpha>=.98 retains original RGB; soft edges unmix measured uniform plate. Alpha<8 removed; connected regions retained when containing alpha>=128. Fixed anatomical scale/anchor, no stabilization or interpolation. Original RGB hashes verified even outside explicit reviewed action ranges.",
+  "model_manifest": {
+    "repository": "ZhengPeng7/BiRefNet-matting",
+    "revision": "eccde0a8cbdce7ac5fecfeb06340fe7b949e85d9",
+    "model_directory": "H:\\ai\\minimax-h3\\matting\\BiRefNet-matting",
+    "dependency_directory": "H:\\ai\\minimax-h3\\matting\\dependencies",
+    "files": {
+      "config.json": {
+        "bytes": 413,
+        "sha256": "b2b235983b80fbff325976ca517bb7eda25e915b84a97b150eca41266cf8a13b"
+      },
+      "BiRefNet_config.py": {
+        "bytes": 298,
+        "sha256": "e7b8c2a74f6cea6a59553d517f71d47f2c1d90e670a13416af17c25fe2f3dc52"
+      },
+      "birefnet.py": {
+        "bytes": 92134,
+        "sha256": "2a45b4e0ece72d7c4212bca1a988e7d7e52bfe9f98ec59c58b8809c8a8b7a831"
+      },
+      "model.safetensors": {
+        "bytes": 884878856,
+        "sha256": "a9875de5b1e6c8eb5fdaa8c727a82927ce442cdc87ba3abee6a77e6fa46c25bb"
+      },
+      "README.md": {
+        "bytes": 4724,
+        "sha256": "e43576e298fcfd143239f7c1dc080e1d03f4eef5e78156da4f0466d93f2c45a1"
+      },
+      "timm-1.0.30-py3-none-any.whl": {
+        "bytes": 2668917,
+        "sha256": "c8e27adf6801a2fdfb570dbbdd171f2f084756eefc673df8cfaab06bd14864f3"
+      }
+    }
+  },
+  "inference_precision": "float16",
+  "torch_version": "2.14.0+cu130",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "elapsed_seconds": 15.706,
+  "tool_sha256": "cc1a5d038e29f0e8237eaee4cf20f4f36199fbbcb5e47ed9781915e788e24282"
+}
