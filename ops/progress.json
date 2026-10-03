@@ -22302,6 +22302,50 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "tooling-source-material-history-migration-20261003",
+      "title": "Remove archived production media from Git history while preserving development history",
+      "status": "completed",
+      "classification": "owner_requested_history_migration",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/source-material-storage-map.md"
+      ],
+      "notes": "Completed authorized no-full-backup migration: all nine GitHub branches rewritten with expected-tip safeguards; 3830 main commits / 3832 local reachable commits preserved, with exact retained tree contents, parent edges, authors, dates and messages verified. 51185 archived-media paths removed throughout history. Private checkpoint trees and stash retained locally. Git now 7.099 GiB; old unreachable objects reclaimed. 961 existing uncommitted files plus staged state preserved in a verified 203195135-byte N: ZIP; user changes retained. Storage guard and ignore rules prevent recurrence. Two focused regression tests, nine release-pipeline tests, 3841 art references, 7334 export PNG paths, Git connectivity and 180-frame Windows startup pass. Existing content/scene audit has 846 non-archive errors; full source audit needs archived inputs. No full release or Linux run claimed. Commit IDs changed; 21 obsolete signatures stripped. No server files changed. Temporary migration branch removed."
+    },
+    {
+      "id": "tooling-source-material-local-cleanup-20261003",
+      "title": "Reclaim local space from verified archived source media",
+      "status": "completed",
+      "classification": "owner_requested_storage_cleanup",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/source-material-storage-map.md"
+      ],
+      "notes": "Completed D cleanup: 51214 archived binary sources plus 4275 paired sidecars removed (91594793086 bytes), after fresh archive SHA-256/CRC and exclusive original-file hash checks; no skipped files. Removed 57 old unlocked Git temporary garbage files (4215434990 bytes); valid objects/history preserved, zero garbage and Git connectivity check passed. All 17817 non-source art hashes, retained source metadata and 7334 export PNG paths unchanged. Windows Godot 4.6.2 headless startup passed 180 frames at up to 60 FPS with no errors using an isolated profile; initial sandbox certificate-store restriction resolved with normal Windows access. No full source-dependent suite, release export or Linux execution claimed. Task test fixtures, profiles and logs removed. Project 108.084 GiB, art 4.544 GiB, retained source 0.963 GiB, Git 89.241 GiB; D free 375.335 GiB. N archive index/README and local-cleanup-20261003-185518.json updated. Runtime/editor art, recipes, caches, saves and RMG preserved. Tracked removals remain local; no commit, publication or history rewrite."
+    },
+    {
+      "id": "tooling-source-material-archive-20261003",
+      "title": "Archive mapped art sources on N drive with full payload verification",
+      "status": "completed",
+      "classification": "owner_requested_archive_operation",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/source-material-storage-map.md"
+      ],
+      "notes": "Completed 2026-10-03: N:/heroes-like-archives/source-art/2026-10-03-ccc0d334 contains 23 verified ZIP64 archives, 86342 source files / 92628571835 original bytes / 92243923421 ZIP bytes. Every payload SHA-256 and ZIP CRC matched; exact member sets, embedded/external manifests and manifest hashes validated. Final source size/mtime/file-set scan unchanged. All 51214 mapped binary candidates are included, alongside metadata, editor exceptions, sidecars and small existing cache backup copies. Standalone verification helpers and restore README delivered beside archives. Focused ZIP64/Unicode/empty-file, overwrite, source-change and corruption checks passed; task test fixtures removed and no partial ZIPs remain. Originals, Git history and remote server unchanged; zero source bytes removed. Local removal and Git-history migration remain subsequent work; no publication authorized."
+    },
+    {
+      "id": "tooling-source-material-map-20261003",
+      "title": "Map source material storage and archive eligibility",
+      "status": "completed",
+      "classification": "tooling_inventory_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/source-material-storage-map.md"
+      ],
+      "notes": "Owner-requested inventory only completed: all 14 art source domains, 86342 source files and other build/local material mapped. 85.300 GiB across 51214 binary archive candidates; 0.508 GiB editor sources and 0.447 GiB source metadata retained. Linux/Windows preset parity, zero overlap with 7334 release-import PNGs, 24 focused classifier/grouping assertions, byte/file reconciliation and filtered CLI output pass. No game export or full suite; no art/source movement, deletion or history rewrite. Inventory tool writes to stdout; no disposable artifacts retained."
+    },
+    {
       "id": "art-fluid-creature-animation-20260923",
       "title": "Fluid, articulated animation for every deficient base, upgraded and neutral creature",
       "status": "completed",

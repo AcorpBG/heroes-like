@@ -22,6 +22,17 @@ Rules:
 
 ## Current Tactical State
 
+### Source material storage inventory
+
+`tooling-source-material-history-migration-20261003` (completed): all nine GitHub branches migrated without a full Git backup. All 3,830 main commits and retained files are preserved; Git storage is 7.099 GiB. Uncommitted work, stash, private checkpoints, runtime/editor inputs and RMG material remain. Storage guard, art-reference checks, Windows startup and Git connectivity pass. Full packaging remains subject to existing content/source-audit requirements; Linux server unchanged. See `docs/source-material-storage-map.md`.
+
+`tooling-source-material-local-cleanup-20261003` (completed): removed 51,214 archived binary sources and 4,275 paired sidecars (85.304 GiB) after fresh ZIP/SHA-256 verification and exclusive local-file checks; removed 57 old Git-reported temporary garbage files (3.926 GiB). All 17,817 non-source art hashes, retained source metadata and 7,334 export PNG paths are unchanged. Windows headless startup and Git connectivity checks pass; task profiles/logs were removed. Project is about 108.084 GiB, including 89.241 GiB of valid Git storage. Runtime/editor art, recipes, caches, saves and RMG material remain. Tracked source removals are local changes; shared-history migration/publication remain separate work.
+
+`tooling-source-material-archive-20261003` (completed, archive operation only): 23 ZIP64 archives on N: preserve all 86,342 source files from the snapshot (86.267 GiB), including provenance and editor-source backup copies. Every payload passed SHA-256/CRC read-back verification. ZIPs occupy 85.909 GiB. See the archive location and restore instructions in `docs/source-material-storage-map.md`. Originals were retained until the separately verified local cleanup above. No publication in this slice.
+
+`tooling-source-material-map-20261003` (completed, inventory only): mapped all 14 art source domains and other build/local material. The read-only inventory identifies 85.300 GiB of binary archive candidates, 0.508 GiB of editor-required sources and 0.447 GiB of source metadata to retain. Both preset exclusions agree; 7,334 export PNGs have no candidate overlap, 24 classification assertions and the filtered CLI check pass. See `docs/source-material-storage-map.md` and `tools/source_material_inventory.py`. Archival, deletion and Git-history migration remain separate work; no runtime/source assets changed.
+
+
 ### Fluid creature animation across the entire roster
 
 Closeout complete: all 232 creatures have accepted full animation sets. Heliograph Ballista movement and six other actions are integrated, with original idle/map pixels preserved; the confirmed Cliffhawk, Prism Adept and Shard Guard repairs are pushed. Original sources and rebuild recipes remain. All workers have stopped; do not restart broad roster audits or select new targets for this completed slice. Focused Windows rendering/import checks passed; no full suite or Linux run.
