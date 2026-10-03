@@ -52,6 +52,7 @@ art/overworld/runtime/homm3_local_prototype/
 /art/*/source/**/*.webm
 /art/*/source/**/*.webp
 /art/*/source/**/*.zip
-!/art/towns/source/buildings/curated/**
-!/art/campaigns/source/generated/emblems/**
-!/art/campaigns/source/generated/chapter_seals/**
+!/art/towns/source/buildings/curated/**/*.png
+!/art/campaigns/source/generated/emblems/**/*.png
+!/art/campaigns/source/generated/chapter_seals/**/*.png
+tools/__pycache__/
