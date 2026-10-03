@@ -1,0 +1,5043 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_000",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "move_h3_004",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "move_h3_008",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_016",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "move_h3_020",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_064",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "move_h3_068",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_076",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "move_h3_080",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "move_h3_084",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "move_h3_088",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "move_h3_092",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "move_h3_096",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "move_h3_100",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "move_h3_104",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "move_h3_108",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "move_h3_112",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "move_h3_116",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.833333333333333
+        },
+        {
+          "name": "move_h3_120",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "move_h3_123",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "attack_h3_000",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "attack_h3_004",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "attack_h3_008",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_h3_044",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "attack_h3_048",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "attack_h3_052",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "attack_h3_056",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "attack_h3_060",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "attack_h3_064",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "attack_h3_068",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "attack_h3_080",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "attack_h3_084",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "attack_h3_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "attack_h3_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "attack_h3_096",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "attack_h3_100",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "attack_h3_104",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "attack_h3_108",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "attack_h3_112",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "attack_h3_116",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.833333333333333
+        },
+        {
+          "name": "attack_h3_120",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "attack_h3_123",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "ranged_h3_000",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "ranged_h3_004",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "ranged_h3_008",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "ranged_h3_012",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "ranged_h3_016",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "ranged_h3_020",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "ranged_h3_024",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "ranged_h3_028",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "ranged_h3_032",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "ranged_h3_036",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "ranged_h3_040",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "ranged_h3_044",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "ranged_h3_048",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "ranged_h3_052",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "ranged_h3_056",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "ranged_h3_060",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "ranged_h3_064",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "ranged_h3_068",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "ranged_h3_072",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "ranged_h3_076",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "ranged_h3_080",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "ranged_h3_084",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "ranged_h3_088",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "ranged_h3_092",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "ranged_h3_096",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "ranged_h3_100",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "ranged_h3_104",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "ranged_h3_108",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "ranged_h3_112",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "ranged_h3_116",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.833333333333333
+        },
+        {
+          "name": "ranged_h3_120",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "ranged_h3_123",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "hit_h3_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_008",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "hit_h3_012",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "hit_h3_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "hit_h3_056",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "hit_h3_064",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_h3_080",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "hit_h3_084",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "hit_h3_088",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "hit_h3_092",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "hit_h3_096",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "hit_h3_100",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "hit_h3_108",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "hit_h3_123",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_004",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "defend_h3_008",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_044",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "defend_h3_048",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "defend_h3_052",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "defend_h3_056",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "defend_h3_060",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "defend_h3_064",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "cast_h3_000",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "cast_h3_005",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_005.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 5,
+          "video_time_seconds": 0.20833333333333334
+        },
+        {
+          "name": "cast_h3_010",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "cast_h3_015",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "cast_h3_020",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "cast_h3_025",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "cast_h3_030",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_035",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "cast_h3_040",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "cast_h3_045",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "cast_h3_050",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "cast_h3_055",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "cast_h3_060",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "cast_h3_065",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335
+        },
+        {
+          "name": "cast_h3_070",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "cast_h3_075",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "cast_h3_085",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5416666666666665
+        },
+        {
+          "name": "cast_h3_090",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "cast_h3_095",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583333333333335
+        },
+        {
+          "name": "cast_h3_100",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "cast_h3_105",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_105.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 105,
+          "video_time_seconds": 4.375
+        },
+        {
+          "name": "cast_h3_110",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.583333333333333
+        },
+        {
+          "name": "cast_h3_115",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_115.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 115,
+          "video_time_seconds": 4.791666666666667
+        },
+        {
+          "name": "cast_h3_120",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "cast_h3_123",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "death_h3_000",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "death_h3_002",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.08333333333333333
+        },
+        {
+          "name": "death_h3_004",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "death_h3_006",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "death_h3_008",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "death_h3_010",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "death_h3_012",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "death_h3_014",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "death_h3_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "death_h3_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_042",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_h3_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 55,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63
+          ],
+          "frame_msec": 55,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 11
+        },
+        "ranged": {
+          "indices": [
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95
+          ],
+          "frame_msec": 55,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 10
+        },
+        "hit": {
+          "indices": [
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133
+          ],
+          "frame_msec": 55,
+          "loop": false,
+          "static_frame": 16
+        },
+        "cast": {
+          "indices": [
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159
+          ],
+          "frame_msec": 55,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 11
+        },
+        "death": {
+          "indices": [
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 33
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/config.json",
+          "sha256": "1ca0709403c78dc9442bcb594a6d24b6638602fdec8986ce36e9353d6b9710d5"
+        },
+        "move_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/selection.json",
+          "sha256": "b26dee733661ca9d55021492e59d38b27cf0e284ba3d55b9e10212e574439420"
+        },
+        "move_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/original_lossless.mkv",
+          "sha256": "3be65d98a0005635e17707862efae533e3d4adf55184acf58bc039a8ae43e729"
+        },
+        "move_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/original.json",
+          "sha256": "7c8098ee9f7e5fa950068dd639f477f2b3b6071478823db47ec11fcff609e7d7"
+        },
+        "move_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/workflow_api.json",
+          "sha256": "23aa5c06856b96a6808c87766975391bef4b5a004f42c4759c78d1bf27e2c092"
+        },
+        "move_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/prompt.txt",
+          "sha256": "10937dee7ce05aec32ec5af1514e6e120981e684e701694876a4eed137bf3547"
+        },
+        "move_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/reference.json",
+          "sha256": "e7207ce6e920a78f02993dae5afc40c75b9730a595d0b4a3aee093edf2055580"
+        },
+        "move_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte.json",
+          "sha256": "f5a6551ba330af02b9d5d4c7c75009a1782ec34e9661ce543ffaac80a4051b28"
+        },
+        "move_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/segmentation_recipe.json",
+          "sha256": "61b0cb3b4815c957fdb27429f02791cb523358129b684f16e6b5118140c8b0c1"
+        },
+        "move_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/staged_generation.json",
+          "sha256": "b4055310f807391c487c04a0750138ce26f02adbfe7ae4b005440024da4f4f93"
+        },
+        "move_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/sampling_workflow_api.json",
+          "sha256": "c50fb9e839fda7c7d641f7cdd453b9d329bf3633eb78b7c36945f97867206abf"
+        },
+        "move_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/sampling_submission.json",
+          "sha256": "af09a12ec99a4e2829ec78156c3e3f829c4e106a79e801d92cad03aefc0ddeb2"
+        },
+        "move_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/sampling_history.json",
+          "sha256": "27ab570d8edfc4cb618c2059ed0821ccf12ad7922706197728eceddada4be404"
+        },
+        "move_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/original.latent",
+          "sha256": "50a87796f8c6125201918339ab146c36f6400447da985bffa3bd94af089df0ba"
+        },
+        "attack_h3_v2_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/config.json",
+          "sha256": "672f68b578c9948e5fd390dab769f961990219a1171441e07c3e77e4cb9793b1"
+        },
+        "attack_h3_v2_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/selection.json",
+          "sha256": "97725e2bb1c7e43bdea496799e380661416c6e24d4352731099084f76eabe366"
+        },
+        "attack_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/original_lossless.mkv",
+          "sha256": "fd317c3e36c180d0088cd1b0b360dcc82f58c82cc442dd3e77b2dd4592b826bb"
+        },
+        "attack_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/original.json",
+          "sha256": "a000c9025769b4f0e68d56411afc1504e1651e6a6acb4b54dc4060a4a55aed5b"
+        },
+        "attack_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/workflow_api.json",
+          "sha256": "3ffae948b65f58680460b998bdf5ca328571c7772a23831363dae70935301825"
+        },
+        "attack_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/prompt.txt",
+          "sha256": "a047abb5f0c625f637208ae50dad6ba6de4379dc03d59fe7a86d5a8639765512"
+        },
+        "attack_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/reference.json",
+          "sha256": "eb39dd9adb88f6897badb619c9600be10c087d8533855792cd5d5b79b97b83c0"
+        },
+        "attack_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte.json",
+          "sha256": "4b91b23976e0fdc6ef71ecadd5eb5d388afbd27b7ec9bb871cfd900444a02545"
+        },
+        "attack_h3_v2_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/segmentation_recipe.json",
+          "sha256": "61b0cb3b4815c957fdb27429f02791cb523358129b684f16e6b5118140c8b0c1"
+        },
+        "attack_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/staged_generation.json",
+          "sha256": "361ab3d82dd94cd74b2bfd4884fcd250f5399a7aba1876eec768bf0d108ea6e1"
+        },
+        "attack_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/sampling_workflow_api.json",
+          "sha256": "7ce2663399e617afad83756288d7ef4a8699b2345a81c8b028291031aed11215"
+        },
+        "attack_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/sampling_submission.json",
+          "sha256": "5eb384c21c47bf79e9544853837d0ad10df269426a03762124421bf25413790d"
+        },
+        "attack_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/sampling_history.json",
+          "sha256": "3595788ff7d518ee7fbc8f26b2dcc39c5eb9902ceafb156efd0e7de06773f863"
+        },
+        "attack_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/original.latent",
+          "sha256": "87bcb8d9829362d8a5d2d6fa0a3c8be12cbfefbf32f88e80c81a8b556772b429"
+        },
+        "ranged_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/config.json",
+          "sha256": "ffb66cdb5338639cce6eeaa3a7d847bd09a1812446ac78de4ccb52842b2ab587"
+        },
+        "ranged_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/selection.json",
+          "sha256": "42c0ed47bfe326ab8fe460d60c8fd7e674b798c56790f2b3f09b5fbc1a2811d3"
+        },
+        "ranged_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/original_lossless.mkv",
+          "sha256": "49ab5f005fc6755a4b131a213de185299efdb7ba68aa480c6bc26e0997e51c57"
+        },
+        "ranged_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/original.json",
+          "sha256": "a06edaee3ecb5f54730590785748d3d640c2b3ba8da1f1acb5965b977fc25e2b"
+        },
+        "ranged_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/workflow_api.json",
+          "sha256": "ac00945410f7ed71962b7dbfc913ab37a2cdb26275f7a6c855884e2769c3de67"
+        },
+        "ranged_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/prompt.txt",
+          "sha256": "2ec3757e910e6ba83b606b677cce9773c82c3be988df2b400b8e28c474c3da76"
+        },
+        "ranged_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/reference.json",
+          "sha256": "ebdf342f748568c0d819984d18a5f3aa98dfb369c57758cb761c5b51055e6123"
+        },
+        "ranged_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte.json",
+          "sha256": "b7f0adc631eae93ea2715365171e659cf0566daa52333d398aa1795645c5be9a"
+        },
+        "ranged_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/segmentation_recipe.json",
+          "sha256": "61b0cb3b4815c957fdb27429f02791cb523358129b684f16e6b5118140c8b0c1"
+        },
+        "ranged_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/staged_generation.json",
+          "sha256": "a2c88e753f422d0fbae253bef5c7d6911d76efdea822ceb1bccfa336bd028e72"
+        },
+        "ranged_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/sampling_workflow_api.json",
+          "sha256": "9c345093af963fe118887a1f49bc76877ea81babc93d2f68c95ef19aea29d2fb"
+        },
+        "ranged_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/sampling_submission.json",
+          "sha256": "a96998ade7a36ad4c9a42da85ba9b7b5f536685d913e0117c06b2cdd0dc65a7f"
+        },
+        "ranged_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/sampling_history.json",
+          "sha256": "1ec73ccef5087ab3742368d81567dd6a791aef6dd4cbac7e75175632290cc546"
+        },
+        "ranged_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/original.latent",
+          "sha256": "c121b4cdc92d21e388ce84221799f512731a63224829b4b53d62a28c64054cb5"
+        },
+        "ranged_h3_v1_preproduction_original_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/preproduction_original_config.json",
+          "sha256": "725ed99541c6495e6e582b0efd1823d63c3c3492c0ba5343f81a4a1f19896344"
+        },
+        "hit_h3_v2_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/config.json",
+          "sha256": "a28b30bfdc2b522f5d4db83c7ee3bf67925f673f723f630c07b486c8da70fa8c"
+        },
+        "hit_h3_v2_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/selection.json",
+          "sha256": "a325c12d6fe16dc49f80e7ebdf92937d0a31b4a4e49bb1ea17b2853caadb4d94"
+        },
+        "hit_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/original_lossless.mkv",
+          "sha256": "f7af074e799d8d3d3a7cf8a896f5739d5d9e3c9c9671ac451e64037ccd750141"
+        },
+        "hit_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/original.json",
+          "sha256": "c0cc2c65f28948877c70cd1e28fd2f855f17a7d9fe474e75234375d828008f65"
+        },
+        "hit_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/workflow_api.json",
+          "sha256": "e7306c0328fb10ef59cb8a065a8f365b1bffb6ea6d4ef9ea4d298d6da1837430"
+        },
+        "hit_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/prompt.txt",
+          "sha256": "3e7013e35806a233082e53b868137e9d770ea9fe36dc5f299cc8dc4cd4b61f94"
+        },
+        "hit_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/reference.json",
+          "sha256": "32867579910f3640dd4c77cb007d5db5e6d5ccc2a287d798b08146d9fe4e9314"
+        },
+        "hit_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte.json",
+          "sha256": "3f003cc8bd2b2ca9e6789a779f5312342439cc51590170f0e41849ba36655a03"
+        },
+        "hit_h3_v2_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/segmentation_recipe.json",
+          "sha256": "61b0cb3b4815c957fdb27429f02791cb523358129b684f16e6b5118140c8b0c1"
+        },
+        "hit_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/staged_generation.json",
+          "sha256": "8b52803cfbbc3127715b2dafb3882807e63ba1a320e714178944d00cb282c353"
+        },
+        "hit_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/sampling_workflow_api.json",
+          "sha256": "f34a5383673150e0c151f126fed46f8ba6740a7233fe3c9cca0f29bcda5f3ca5"
+        },
+        "hit_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/sampling_submission.json",
+          "sha256": "038894696bc8d118e2ffd5b64a9341a672bde60097767ddeec290b1281a53a5b"
+        },
+        "hit_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/sampling_history.json",
+          "sha256": "ecf1fdfacae550daf10e1fc4a7bbd5577a9e27351c45814fed59492bad467616"
+        },
+        "hit_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/original.latent",
+          "sha256": "ccd96aa15684df93e7fd0ac83c77c9e608c99f61a0e8df722c88aae5ee0b6887"
+        },
+        "defend_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/config.json",
+          "sha256": "458473cc34c36ffe79c7a232611f82f12db8efc7cb3dadeaba6fc1887430d92c"
+        },
+        "defend_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/selection.json",
+          "sha256": "29678eebca4cae0611678a371c70499f485f5a91ccce49326b9256205144a6bf"
+        },
+        "defend_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/original_lossless.mkv",
+          "sha256": "b0c325e88affd03a2f4ff432695a24dad57f6652ea3e40a04a5d4dbffec7ca52"
+        },
+        "defend_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/original.json",
+          "sha256": "b77d17412b5183d7d5bf1d7261c8cb513ef20ef7a519d7056913175a8de7fbc0"
+        },
+        "defend_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/workflow_api.json",
+          "sha256": "434ef38363bb85daa188277edc138f84fe0b1f9c40a746601e1f021b7e103488"
+        },
+        "defend_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/prompt.txt",
+          "sha256": "d30d4c2ed168c3cda85804dedc0568ddf9dcc7d72b5c744d9e82f1164b9ac927"
+        },
+        "defend_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/reference.json",
+          "sha256": "00747f87808b1ea1c4aa2d7ca3c814694f3c78e4fa79e3c50f5b733c03081fc5"
+        },
+        "defend_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte.json",
+          "sha256": "ff6b6b79d99da3163940df3dfd20be8f160dc8629c2fa2226c34ac336a3ef270"
+        },
+        "defend_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/segmentation_recipe.json",
+          "sha256": "61b0cb3b4815c957fdb27429f02791cb523358129b684f16e6b5118140c8b0c1"
+        },
+        "defend_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/staged_generation.json",
+          "sha256": "82e776c2ccc09c31135b4ca2720698d6a6773a1dd1a60b5dc6920ec4396cb90c"
+        },
+        "defend_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/sampling_workflow_api.json",
+          "sha256": "a1928720d1b81e432bf0f44c8a2cf14e20a7f6d1e905c3f18753edd8dbb9bbb4"
+        },
+        "defend_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/sampling_submission.json",
+          "sha256": "292bfd7bb786afb01cd614d11e4b81fd5ff46d4a78f81e5fd7f4e1c28570e04f"
+        },
+        "defend_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/sampling_history.json",
+          "sha256": "60c597fa663eb31d29f956da5c3540f705c5cdec9ca26a84f6bb3ded0cdb326e"
+        },
+        "defend_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/original.latent",
+          "sha256": "c544b113285460144fe51f03d570a34f51291323ecb3f1958e61ab96bc1ee983"
+        },
+        "cast_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/config.json",
+          "sha256": "7225fc557b3f8d0519dbb19babff4a9f9d84a3f26c1abb72eb790dccc2dd11e7"
+        },
+        "cast_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/selection.json",
+          "sha256": "6cde6fbe1d9e6e3675e0734816ac4c3c729205e660f0d199159bde102d58b2ed"
+        },
+        "cast_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/original_lossless.mkv",
+          "sha256": "101ea2b4ff3ab363578ce480af6a069c3991239c9ef1c353f168bd17a941c417"
+        },
+        "cast_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/original.json",
+          "sha256": "8d0998c842e31b623dd09f947d2d45100f369f5b3046b0a1f6f66bff910ffa35"
+        },
+        "cast_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/workflow_api.json",
+          "sha256": "dc55e1fe38fa338d48dd59630fc59aebf5998698e47366ea64c63982e3375e56"
+        },
+        "cast_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/prompt.txt",
+          "sha256": "9e4f9f6aee0b70764927bfa40a92b705be93753f55a6218c8b5e49ce334db69d"
+        },
+        "cast_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/reference.json",
+          "sha256": "692a64211896a8963f8b180c039ba60b6a9cf134d5f196831d9b949bc8d82772"
+        },
+        "cast_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte.json",
+          "sha256": "4b7eefbc42152aee7b537a5b18ef7ed4aea52878dd9ae42c6633ae5bd7a3e5d2"
+        },
+        "cast_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/segmentation_recipe.json",
+          "sha256": "61b0cb3b4815c957fdb27429f02791cb523358129b684f16e6b5118140c8b0c1"
+        },
+        "cast_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/staged_generation.json",
+          "sha256": "6e2547592f1d6b67ec0f94393cb2ae653e74609b0ced05d2f3f368c6fb82a69e"
+        },
+        "cast_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/sampling_workflow_api.json",
+          "sha256": "81cd7bd6ef6a4b9be360e851ca102b71a19a5da9bfecfccaaa2cad1498ceb8ce"
+        },
+        "cast_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/sampling_submission.json",
+          "sha256": "545e319069b491088ce34a30e19b8502bd39bcd34bf44cf89691f635c0d6284f"
+        },
+        "cast_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/sampling_history.json",
+          "sha256": "3e391480f429d80b6889d284827cd1b079b74c03ca439d859cae03ae2cc93dca"
+        },
+        "cast_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/original.latent",
+          "sha256": "85c0a41366ae4c4cc501631b3ad08f6bc254fbf91e3aa375409647fc1857b57c"
+        },
+        "cast_h3_v1_preproduction_original_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/preproduction_original_config.json",
+          "sha256": "ea83072424fc12db5e02959b9c2b359d41f94135f15ebe0a64673ab3b879682b"
+        },
+        "cast_h3_v1_guide_image_support_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/support_v1.png",
+          "sha256": "38cf5ce6ebee76a03c476fb2ff946989ef348f41d94ad2d545d6f494c7a6baa7"
+        },
+        "cast_h3_v1_guide_prompt_support_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/support_v1.prompt.txt",
+          "sha256": "4feee1d7aad38e4983ea5eb2dcae765d5b9aeeee9bd6c6d44c60420ba5c9625f"
+        },
+        "cast_h3_v1_guide_generation_support_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/support_v1.generation.json",
+          "sha256": "144df263121c31ebcabb6e62a9428f969fa58dd973fd3a58ff7ae0bf2ce21b44"
+        },
+        "cast_h3_v1_guide_reference_identity_ready_reference.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/identity_ready_reference.png",
+          "sha256": "51d86828795ed68dd40c0d373d0d0cb1241b09e129b5d02345e304ebaa632a71"
+        },
+        "death_h3_v4_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/config.json",
+          "sha256": "dad3b3982d04b8dbf09a296c128f0a8530c0546e77d78effda683d0d843b3317"
+        },
+        "death_h3_v4_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/selection.json",
+          "sha256": "7a16be4d9b71ddd298f4f8dcf3d13c62f228c867f125e97976a94ffdc128dcb1"
+        },
+        "death_h3_v4_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/original_lossless.mkv",
+          "sha256": "bc448ce512e0828d296876a35a6c57a35403a7b2c42f211105f4ce0e7192fa86"
+        },
+        "death_h3_v4_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/original.json",
+          "sha256": "1274b6bba3d9f0faeee6593450306c53df7951876d04eb6d08b2680836386dc6"
+        },
+        "death_h3_v4_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/workflow_api.json",
+          "sha256": "db2b925592cb94dde88b3f1976742cd59490b2a526bb438f4a72a5a92b5ad4a7"
+        },
+        "death_h3_v4_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/prompt.txt",
+          "sha256": "14c4ed1313bd8d3d1bfa228ebd8d3d5d1aa905d1c4ff8e9adc2729bed1f34fd8"
+        },
+        "death_h3_v4_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/reference.json",
+          "sha256": "630871c39146096d3b0d1ba2f8d7f6f587e15f426694d07c7bf7de517b27afe5"
+        },
+        "death_h3_v4_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte.json",
+          "sha256": "a70f2f76c972bf49a10bd79ab8381f36244116af717f31696432d86e6068d7f1"
+        },
+        "death_h3_v4_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/segmentation_recipe.json",
+          "sha256": "61b0cb3b4815c957fdb27429f02791cb523358129b684f16e6b5118140c8b0c1"
+        },
+        "death_h3_v4_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/staged_generation.json",
+          "sha256": "b7a846a5bfb5ea7415348f3e7d0b830360d5fc8cc379ae4437cb3ac974754f61"
+        },
+        "death_h3_v4_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/sampling_workflow_api.json",
+          "sha256": "b5e8f547d9cd571cc42a00cceb20792911c6232436d920b8ab2aa695e22ec3b9"
+        },
+        "death_h3_v4_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/sampling_submission.json",
+          "sha256": "8f99c005bcf5d4cd22f942dcbfeeba74d9ebbe589b631ae7e8a09f2db4063031"
+        },
+        "death_h3_v4_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/sampling_history.json",
+          "sha256": "d9da0881c20567fc09d57065da4523c8aeb4a119ad0f207b9114201e13e3b733"
+        },
+        "death_h3_v4_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/original.latent",
+          "sha256": "6b973c7973b76f0794a409ccaf88e60f4acb23a95d61ad9165d72f2bbfc5b5d0"
+        },
+        "death_h3_v4_guide_image_death_resting_continuity_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_resting_continuity_v1.png",
+          "sha256": "4af2d18ea3938781105698902d5fae9f9769da16ddc3c0eaec2f7e51ff2973af"
+        },
+        "death_h3_v4_guide_prompt_death_resting_continuity_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_resting_continuity_v1.prompt.txt",
+          "sha256": "2ce5e8c32c1e38e0acb61ae815f10c90ebf3f6504f95be3ed4e4c3c2d5749a72"
+        },
+        "death_h3_v4_guide_generation_death_resting_continuity_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_resting_continuity_v1.generation.json",
+          "sha256": "ca4ad09cc687fcc5899165a4d7fc2a7178a88b5b466a96c1461fcb810347bb6b"
+        },
+        "death_h3_v4_guide_reference_guide_3_rgba.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v1/guide_3_rgba.png",
+          "sha256": "a368d9798d5598c4610b319fa6c78dbf8a7818295b6eaa81e215ab248634d5d9"
+        },
+        "death_h3_v4_guide_reference_guide_0_rgba.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v1/guide_0_rgba.png",
+          "sha256": "832c3e4889b6a2e01553f887fa75f9664b03515a74bc5495d7cd53e752b9583a"
+        },
+        "runtime_registration": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/runtime_registration.json",
+          "sha256": "0c836400c2c5025679484ccfc9e785834c553e73bbabc31a516ba1c4a1f8a8a8"
+        },
+        "delivery.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/delivery.json",
+          "sha256": "228b1dd2b3d698dc9acc0d460f8004c46abe4306f1a922ffac179b92630d01ba"
+        },
+        "segment.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/segment.py",
+          "sha256": "9eb5e69e6fc45274cc3f52e5a9f96419c26ab7d8eadd97ab67c6248ec313b6bc"
+        },
+        "matting_model.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/matting_model.json",
+          "sha256": "03f0257fbccbfec2fd9ffa4bb3d27398665ea9db710ce65920387148ab179922"
+        },
+        "rejected_takes.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/rejected_takes.json",
+          "sha256": "b55a4597017c92a4ecf5616450fe9e1f7835d651b45dbed1dcdb529004bab2dd"
+        },
+        "prepare.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/prepare.py",
+          "sha256": "a4aa8b50a096fecdacf6e921043f4c56799c68166564b4989d68fc639a6b2178"
+        },
+        "prepare_death_revision.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/prepare_death_revision.py",
+          "sha256": "1b5c387681d242a94290c9fe87c28a71884d78ae5f0c5d502987c8e8c2e3b308"
+        },
+        "prepare_death_continuity.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/prepare_death_continuity.py",
+          "sha256": "9d40dbc84084a61e259b0dbb878f351fff4be882c6e60b609653e14114da1ee4"
+        },
+        "prepare_death_endpoints.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/prepare_death_endpoints.py",
+          "sha256": "a5e685636d1f88c5e68608f0e982fd9ab1f3fff4f17299d6d0ff536c8d2d12f3"
+        },
+        "identity_ready_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/identity_ready_reference.json",
+          "sha256": "180d09dc616c2757ef26b399e2ad3be0950a50cdeecca5bee2268e730c82a38a"
+        },
+        "source_reviews.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/source_reviews.json",
+          "sha256": "9bc8acb4816afe543c852d35109acc83b908c50f581aea1b19420fc5a4c5e02b"
+        },
+        "preproduction_corrections.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/preproduction_corrections.json",
+          "sha256": "8b93714f511a1f507b2bf9764830d6f7c21739d4c4fb4f42b915d17732a974c0"
+        },
+        "verify_original_pixels.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/verify_original_pixels.py",
+          "sha256": "6b7aa9270ef6cfc7c726946b7a47533b7c950d8d1467e796f5d13b1dcf9af8d7"
+        },
+        "original_curated_identity": {
+          "path": "art/units/source/curated/unit_thornwake_woundroot_hearthseed_slingers.png",
+          "sha256": "17e1997fe7a834599a75793fd412861aab0f0e3448f17904ce8829b564adc08d"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Personally reviewed every124 RGB/RGBA frame in each complete take, critical enlarged identity/prop transitions, and every selected native pose on both light/dark backgrounds and both directions. Seven dedicated original actions pass. Actual Godot candidate normal/reflected fixtures each682 checks, all202 native poses and eight Strike captures per fixture personally pass. Candidate Shoot682 checks, eight actual windup/release/recovery captures pass; native overview byte-identical to reviewed normal. Retain original eight240ms articulated idle/map. Dedicated physical buckler acknowledgement and sling release/reload; game owns projectile. Live import/action/map verification follows publication. Published source and runtime art personally accepted: all 202 actual Godot native poses in normal and reflected candidate fixtures, all eight actual Strike and eight actual Shoot captures per relevant fixture, preserved original map motion and held reduced-motion views. Final live Strike/map and Shoot each passed 696 focused checks; exact imported battle/map RGBA and lossless import proved. Final Shoot native overview is byte-identical to personally reviewed live native overview. The original eight articulated idle poses and 240ms timings, fixed registration and opaque subject RGB are preserved. Final acceptance republishes metadata with battle/map PNG bytes unchanged."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_004.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_104.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_112.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_116.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_120.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/move_h3_v1/matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_004.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_104.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_112.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_116.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_120.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/attack_h3_v2/matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_004.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_104.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_112.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_116.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_120.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/ranged_h3_v1/matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/hit_h3_v2/matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_004.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/defend_h3_v1/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_005.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_015.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_025.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_035.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_045.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_055.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_065.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_075.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_085.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_095.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_105.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_110.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_115.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_120.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/cast_h3_v1/matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_002.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_004.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_006.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v4/matte/rgba_123.png": 0.5
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ],
+      "accepted_clips": [
+        "move",
+        "attack",
+        "ranged",
+        "hit",
+        "defend",
+        "cast",
+        "death",
+        "idle"
+      ]
+    }
+  ]
+}

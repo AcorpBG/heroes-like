@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "2566b5e163f778568782d9dcb1b5b7ca56e3e40a2c6bf327bac0d72cb7af559d",
+  "latent_sha256": "364980415d518b70b5bbeaaccece4250dac501697d70e9eee8e4fb6f618c987f",
+  "decode_workflow_sha256": "16c014e58d6f7a6df269fc8fcc0e3b20254eb68d59ba754a901843b3f3261996",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "hearthseed_slinger_h3\\death_h3_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19503650112,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

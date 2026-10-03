@@ -1,0 +1,279 @@
+{
+  "prompt": [
+    737,
+    "60553186-15e1-4fb0-8268-f132bac7ddb4",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One slow continuous passive lowering study of the same original forest woman and ordinary equipment. Fixed three-quarter view facing screen right, exactly two attached human arms and two human legs, same flower-decorated brown hair, green scarf, cream sleeves and brown-green original clothing. The two knees bend directly downward into the supplied kneeling pose. The right elbow stays low beside the waist and the right hand keeps the wooden staff upright at screen left throughout this first descent. The staff remains beside her body, its butt resting at the ground while the knees lower. Then the right hand lowers the same staff directly forward onto the ground, the whole wooden fork turning gently downward as the palm reaches the ground in the supplied seated pose. The left forearm keeps its one wicker buckler close to the chest. One original wooden fork staff, two fixed amber ornaments beside its fork, two green sling straps and one brown leather pouch remain physically intact during every transition. The whole equipment assembly moves with the staff. The right palm supports the torso while both bent legs settle sideways, matching the supplied seated guide. Next the right elbow bends as the torso slowly lowers onto its side; the left buckler arm settles beside the chest and the head rests on the attached near arm, matching the supplied final resting pose by frame94. The knees and torso descend continuously, both arms remain below shoulder level, the staff moves only downward to the ground. The final original resting body, staff, straps and pouch stay still through the final second. Original body proportions and ordinary painted materials are constant. All amber ornaments are solid inert objects. Unchanging blank uniform neutral gray surrounds the full character and equipment at every instant. Fixed camera, scale, body root x480 and ground y576. Foreground staff and pouch lie below the near forearm contact in perspective. Full painted body and equipment stay inside the960 by704 canvas throughout.",
+          "width": 960,
+          "height": 704,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "33",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026109407
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "hearthseed_slinger_death_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "hearthseed_slinger_death_h3_v2_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "hearthseed_slinger_death_h3_v2_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "hearthseed_slinger_death_h3_v2_guide_3.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 24,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 56,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 94,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "42",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "hearthseed_slinger_h3/death_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "hearthseed_slinger_h3",
+      "create_time": 1791004367955
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "hearthseed_slinger_h3\\death_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "60553186-15e1-4fb0-8268-f132bac7ddb4",
+          "timestamp": 1791004367956
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "60553186-15e1-4fb0-8268-f132bac7ddb4",
+          "timestamp": 1791004367999
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "60553186-15e1-4fb0-8268-f132bac7ddb4",
+          "timestamp": 1791004614891
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          246,
+          492
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "cf3107d517b714cb55d00fea3949793ac5f3df51eb4390335b4bfbd5f095d86e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "cc5d1aa48db796548c11da67d819c1b675246137bfbb0f98275d174bec5f306d",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "ranged_loaded_windup",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/poses.png",
+        "rects": [
+          [
+            413,
+            654,
+            518,
+            674
+          ],
+          [
+            319,
+            674,
+            615,
+            984
+          ]
+        ],
+        "anchor": [
+          465,
+          976
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "599e93098094bc10103735475ced29cb4110458a15a4a01c20a7c1e919e24f9d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f534ab47cd9772b8f8a3b16269b9a435984e222b3c7eca71a20ecd87efed4d9e",
+      "runtime_source_scale": 0.66
+    },
+    {
+      "source_frame": {
+        "name": "ranged_release_empty",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/release-empty.png",
+        "rects": [
+          [
+            0,
+            0,
+            1194,
+            1317
+          ]
+        ],
+        "anchor": [
+          500,
+          1266
+        ],
+        "scale": 0.338,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "4b42f812d4de8221297a48f70dcb34251d80f569c4efc89ebfe195b746a087da",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "6921cf2e71152d11182e1b3db60ab30c75077ccf1a12f1fe6f89fbba64f1cb80",
+      "runtime_source_scale": 0.169
+    },
+    {
+      "source_frame": {
+        "name": "ranged_reload",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/poses.png",
+        "rects": [
+          [
+            1010,
+            658,
+            1230,
+            985
+          ]
+        ],
+        "anchor": [
+          1120,
+          978
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "599e93098094bc10103735475ced29cb4110458a15a4a01c20a7c1e919e24f9d",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "2aea139addd354676bccc5ea2b0520074e2903d6cb7c6517bcebef780978a106",
+      "runtime_source_scale": 0.66
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

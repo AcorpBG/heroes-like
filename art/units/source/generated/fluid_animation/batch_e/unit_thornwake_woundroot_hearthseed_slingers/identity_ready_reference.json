@@ -1,0 +1,13 @@
+{
+  "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/idle-pair.png",
+  "source_sha256": "0a7d37153f27975071834218fd49d665f037a733b7b478a18253064284db7118",
+  "crop": [
+    0,
+    0,
+    770,
+    1024
+  ],
+  "derived": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/identity_ready_reference.png",
+  "sha256": "51d86828795ed68dd40c0d373d0d0cb1241b09e129b5d02345e304ebaa632a71",
+  "rule": "Exact original-pixel identity crop; no artwork edits"
+}

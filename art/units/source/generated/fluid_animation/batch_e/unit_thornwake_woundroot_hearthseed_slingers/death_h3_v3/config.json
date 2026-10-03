@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+  "clip": "death",
+  "canvas": [
+    960,
+    704
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    128,
+    128,
+    128
+  ],
+  "seed": 2026109507,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        246,
+        492
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_seated_continuity_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1465,
+          1073
+        ]
+      ],
+      "anchor": [
+        779,
+        697
+      ],
+      "scale": 0.275,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_resting_continuity_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1465,
+          1073
+        ]
+      ],
+      "anchor": [
+        750,
+        826
+      ],
+      "scale": 0.1915,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      54,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "One continuous natural lowering movement of the original forest woman from the first ready pose through the supplied seated pose into the final resting pose. Both human knees gradually bend while the torso leans forward and lowers, with continuous joint movement throughout. The right hand lowers the one wooden fork staff beside the body toward the foreground ground as the knees descend. The right elbow remains low. The staff butt descends first, the whole staff slowly turns into the ground position and the right palm reaches the same ground to support the torso. The left arm keeps the one wicker buckler close to the chest. Both legs settle sideways into the supplied seated pose. Continue moving smoothly: the right elbow bends and the torso lowers onto its side, head rests on the near attached arm, left buckler arm rests beside the chest. The body settles gently in the final original resting pose and stays there. Exactly two attached human arms and two human legs, same adult woman, face, flower-decorated curly brown hair, green scarf, cream sleeves, green trousers and brown-green original armor throughout. One complete original Y-fork wooden staff retains its two small attached solid amber fork ornaments, two green sling straps and one brown leather pouch while lowering and resting on the ground. One original wicker buckler stays on the left forearm. Ordinary inert painted materials, continuous passive body descent with low arms and downward staff motion. Fixed three-quarter tactical camera, screen-right facing, same scale and body root x480. Ground contact for knees, supporting palm and resting near forearm is y576; fallen staff and pouch lie below in foreground perspective. Full body and all equipment stay inside the960 by704 canvas. Uniform neutral gray around the subject stays completely blank at every instant.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

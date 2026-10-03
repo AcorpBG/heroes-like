@@ -1,0 +1,27 @@
+{
+  "image": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_seated_continuity_v1.png",
+  "image_sha256": "f361215faa4ad731c0247f98d7618a353d5ad6661ca4e85aad4dc465c857e408",
+  "prompt_file": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_seated_continuity_v1.prompt.txt",
+  "prompt_sha256": "7b470bc88ffc0874306e93d0c9a9c42a81adb0124110a287e91d618fe0be4114",
+  "tool": "built-in imagegen",
+  "original_tool_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0fd4e-7754-7a91-8e06-2b328cba8526\\exec-be2c99fc-9d50-427f-9dc5-b4c13fbab05c.png",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v1/guide_2_rgba.png",
+      "sha256": "73a82f5995c18a13a10a9cd12756e3096fe75bb3091fedce5c2a58c648e5c666"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_h3_v1/guide_0_rgba.png",
+      "sha256": "832c3e4889b6a2e01553f887fa75f9664b03515a74bc5495d7cd53e752b9583a"
+    }
+  ],
+  "registration": {
+    "anchor": [
+      779,
+      697
+    ],
+    "scale": 0.275,
+    "reason": "Single whole-master anatomical scale from original seated/resting body width, near palm/forearm ground contact. Original seated guide used foreground equipment as ground and lifted body above common floor. No per-frame stabilization or opaque pixel cleanup."
+  },
+  "review": "Personally inspected original imagegen master, full prepared H3 guide and exact native-scale light/dark views in both directions: coherent two-arm/two-leg forest woman, one wicker buckler, one staff, twin green straps/one pouch and two attached amber fork ornaments. Fixed whole-master body registration matches ready anatomical scale and floor; full body/equipment inside canvas. No opaque extraction edits."
+}

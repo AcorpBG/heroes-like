@@ -1,0 +1,66 @@
+{
+  "attack_h3_v2": {
+    "from_take": "attack_h3_v1",
+    "reason": "Overlapping generated beam and ring during shield extension; ordinary physical buckler-shove prompt, inert amber and blank plate throughout; identical original guides, new take retained separately."
+  },
+  "ranged_h3_v1": {
+    "status": "unsubmitted_first_take_physics_correction",
+    "reason": "Original release guide11 clearly keeps one green strap anchored and unhooks the other release end. Clarify that actual staff-sling mechanism instead of contradicting it by requiring both ends attached throughout.",
+    "original_unsubmitted_config": "ranged_h3_v1/preproduction_original_config.json"
+  },
+  "cast_h3_v1": {
+    "reason": "Before first submission use inert anatomical movement-study wording and entirely blank gray plate; retain original unsubmitted config.",
+    "original_guides_byte_identical": true
+  },
+  "death_h3_v1": {
+    "reason": "Before first submission use inert anatomical movement-study wording and entirely blank gray plate; retain original unsubmitted config.",
+    "original_guides_byte_identical": true
+  },
+  "hit_h3_v2": {
+    "reason": "Replace complete rejected hit v1 with same original guides, inert movement-study wording and correct brief foreground boot lift matching original anatomy.",
+    "original_guides_byte_identical": true
+  },
+  "death_h3_v2": {
+    "from_take": "death_h3_v1",
+    "reason": "All124 RGB/RGBA and17 critical enlarged original poses reviewed. Overhand staff swing and elongated airborne right arm53-55, pouch/ornament temporarily lost, then restored. Source defect; keep full take and regenerate passive continuous downward lowering with identical original guides and earlier explicit resting guide.",
+    "original_guides_byte_identical": true,
+    "guide_frames": [
+      [
+        24,
+        1
+      ],
+      [
+        56,
+        2
+      ],
+      [
+        94,
+        3
+      ]
+    ]
+  },
+  "death_h3_v3": {
+    "from_take": "death_h3_v2",
+    "reason": "Every124 original RGB/RGBA and17 enlarged critical poses reviewed: long held kneel through41 jumps directly to seated42, with no original transition; bare fork inherited from original fallen guides. Reject entire take; retain video/latent/mattes and source-correct guides plus one middle landmark.",
+    "source_corrections": [
+      "Two amber fork ornaments restored through imagegen on seated/resting original guides",
+      "Seated near-palm ground registered once instead of original foreground equipment anchor",
+      "One middle seated guide; continuous descent without authored holds between stages"
+    ],
+    "guide_frames": [
+      [
+        54,
+        1
+      ]
+    ]
+  },
+  "death_h3_v4": {
+    "from_take": "death_h3_v3",
+    "reason": "All124 original RGB/RGBA and16 enlarged poses personally reviewed. Continuous body lowering passes, but fork carries four fixed amber ornaments during descent (24/34), resolving to two near96. Competing seated fork orientation likely caused duplication; reject original intact and remove seated middle guide.",
+    "source_corrections": [
+      "Original ready and corrected resting endpoints only; seated master retained unused",
+      "Same canvas, anchors, anatomical scale and extraction; no subject cleanup"
+    ],
+    "guide_frames": []
+  }
+}

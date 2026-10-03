@@ -1,0 +1,118 @@
+{
+  "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+  "clip": "death",
+  "canvas": [
+    960,
+    704
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    128,
+    128,
+    128
+  ],
+  "seed": 2026109307,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        246,
+        492
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/poses.png",
+      "rects": [
+        [
+          30,
+          958,
+          127,
+          993
+        ],
+        [
+          0,
+          993,
+          278,
+          1278
+        ]
+      ],
+      "anchor": [
+        150,
+        1240
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/poses.png",
+      "rects": [
+        [
+          282,
+          990,
+          607,
+          1278
+        ]
+      ],
+      "anchor": [
+        457,
+        1245
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "corpse",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/poses.png",
+      "rects": [
+        [
+          928,
+          1060,
+          1230,
+          1278
+        ]
+      ],
+      "anchor": [
+        1083,
+        1209
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8,
+      "registration_note": "Original corpse near forearm/body contact at source y1209; foreground wooden staff and sling extend below it. Whole-guide registration once, not per-frame stabilization."
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      66,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "Original forest woman from the supplied original paintings in a fixed three-quarter tactical view facing SCREEN RIGHT. Exactly two attached human arms and two human legs, same brown curly flower-decorated hair, green scarf, cream sleeves, brown leaf armor, green trousers and wrapped boots. One ordinary inert small round wicker buckler with amber boss on anatomical LEFT forearm, and one brown forked wooden sling staff in anatomical RIGHT hand. Two fixed amber ornaments and belt seeds remain solid unlit material. Two attached green straps end at one loaded brown leather pouch. One continuous anatomical movement study: both knees fold into the first kneeling guide, and the torso tips forward into the second lowered-body guide. The RIGHT hand naturally releases the one wooden staff onto the foreground ground and the LEFT buckler forearm folds beneath the chest. The body settles onto its side into the final supplied grounded body pose, with both human arms and legs attached throughout. One fork, twin straps, one pouch and one buckler remain intact. Near forearm and body settle at original ground y576; the one fallen staff and pouch lie slightly below in foreground perspective. Hold the exact final supplied grounded pose for the final second. Only body and ordinary equipment move. Full painted body and equipment remain in frame at fixed scale. Entire scene is a plain uniform neutral gray character-animation study. Unchanging gray stays completely blank around the moving character at every instant; original painted materials stay inert. Fixed camera, anatomical root x480 and floor y576. One original character and its ordinary equipment only.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

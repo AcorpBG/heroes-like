@@ -1,0 +1,2030 @@
+{
+  "frames": 124,
+  "fps": 24,
+  "rgba_sha256": [
+    "16bf5668988415cb02013623f5a011b0643a4efc0c0863cfef1823f8ed54d410",
+    "3711b0c0dc4dc6aca55173010efbb61308ce735d56aa8351bfdab2872753f335",
+    "f632ae439c1415926bc6a92a8d25f05a56ffb2c57286d203e37653d9ffb84306",
+    "867af7a38e3b87b8b42d7288bafd45952294ba9aba320f3e2bf6b27ebbc87347",
+    "f3aaf3142558dd307630f21a2ec8af888996a4046e7c28d919a3682299510c95",
+    "36e6a0c1f1f94653cd5a67502583f3f2aadedaeca74d006a2d994e0e026bb46a",
+    "1ba06ad7850ceeb61bfc86fcfad4f77cc1f56a3bf96e7dcd6aeffb1aabc222f1",
+    "1a3bb6b7de034930e5122b7e31e9f1b3585844653428cc13908928a166ed0e4f",
+    "170450e3237ebf15dc428721cc9979afd34878cd43c1080860d6f325c0cb6d36",
+    "445cc974277ffe520580bd7cef46855ea071867c52c8b72d71f8a4527f61982e",
+    "cffacb37257fd85d531ce5ff8057f0fc4da964b12a41a1639aecff7ec2500702",
+    "8f1be0ec665ffba523d31de6c4a1dbb61a537834a228e2451fc3fe9d7ff56902",
+    "ff673ab469caafc0596d93a356dd920e657d91cd41c569df542a115b4bb9f4db",
+    "dae1de78714e99b30fd0891fb29070621197a405cd24e1c904232564ba49a644",
+    "33c4ebabcfabe29e3bef88c5a83be35cf0e9cc029b67c3fca5736e649b02593f",
+    "2d20ef87801c37293af3069c98c14cecbd61f10b547a1bf0de9fecedf9a373d5",
+    "540ebadb595a257b2b54e06e889501dd04a1daa0c9308e5c62b0e3f3dd788a75",
+    "e458e269fe500f1c625d5eef4a2532860977d74c2dd74b78233d85bfae0c4ea4",
+    "12a0b75c08600fd1cd6e66a962f23935f4e1957366df2cee9c24d7e4ee7279a9",
+    "49ff9deaeffe04def4cd9124980f8741a158906de5dc3b260fae47a925fb6f69",
+    "6e59ce46b61516abbf8fecea937eb37e98635087e9760339e80c1779a31dd00d",
+    "3cf087bf70b00309576b9354b0969de17dea2785fa56ad7965f222aa30ace52f",
+    "2136fcaa1e7a6e4245e85c3216e6c6328d2d7b8abd5282372506d6dcbd5de78f",
+    "c1224536b5d6d648843e261af998c6a9b890557be062f884ec7fc7fd1eedc212",
+    "9ca5f815f3a048662ca32bed59ba6f8e43b7f764aa51c62c44d3f92a995c54a1",
+    "9ccfbf3a8ee8975c9f6959024cb706dc5c9e4e3e1bb2e7844e0aa73a65b60ad1",
+    "77b145d3ff92823265167bfaa366637f59e4744acd6c6f185733e62aea733a53",
+    "d205da3a3f51d50e5e0c7b7f45041e0ce36b7a452771af02db38ff25bfc2c203",
+    "e376d701a787947551d1f4c81b1279d64ede6c5ba2bedb908999c922a397260e",
+    "6a31da153c971e7c05cea12759caa385d787f53df58bb4afc749c12df0579e14",
+    "7c25fb071d501e4fba15a4f40de7fa0e6eed751dbe3b82171950debfc4e352de",
+    "196ccbe0319e609bc82efe4f3af02600f2fae67e421efb0121210eaf31c94e22",
+    "36fd906507279f46058e4f26f5fbacb73a47de2b344e9f57c41b5f8a1afedc56",
+    "9e285f18473ead4050f509a8ed13817d1fb0052db3cd284f23775d7b714b660b",
+    "ad3775fefb162848ce3fc6f1f67e8df52bc787292b24aa35532bf16e4e2972f7",
+    "33988a71fddcd2b8412c419e707ce9833a118f24c0ff93c7050c4ae01781511e",
+    "6d0bdeaf469a5008a56933f434704d55a3f2b51d16c3f7426fcf619843631654",
+    "8b228e1414ce5e992a360a48d197c78c6a355dd09b850d67a94a16aac5391151",
+    "3fe05cc13fee5dce3a1d87972ec1b443d51efe294adcaa041b142db33f167f7c",
+    "f0dfe0631f158fb14fff9df183971e87d16356d23ea6abbdd3038c6322a495b9",
+    "7b25a52380d53d95159490ea39cfb9b776f7cd58fb08cd1d9509301a5a8a019e",
+    "825d18937ee25f46847caab119778f59c49f5eec75417d829e915534848f4483",
+    "c8206b4f7cf42ca7b26daded87b2b15f00e5d34153bc9bf6364fc4a24c3a3d56",
+    "06b79a469325dd067ff0c2fab5d9ec8e2e9c763c75e00695eb7205e763a90ef6",
+    "b1a19bf85535b6994bcc0bbc50484b1aeae17eed6e284882d807c7e6f8077193",
+    "34254b4e6fbedc60f5fe9b66dffaefe7cee7e221306dac1711be65b65b84367a",
+    "e76fa04821289593c28ff434ba0303d9eeac631327980ba5e0477c186b003a66",
+    "0d34fbad079cc4f577f05f41d4e9e4be975f88d2c37c756c119d00ceb4e5a2cc",
+    "3ac520a3305cc3a64c4200ba7d9bd4784348d1a882dc337fa259fd7687cf662d",
+    "63efbe36bff81acbfacddde31e3dee47bc684b05e4a555fac0bbc370ba1a5a67",
+    "456f4f172491cc5056ca90afea2fa2e038945039d631f24953d30902212ac2d5",
+    "e444b4859ab129c8fed97748642fdcbc11525474969571eb4a07211b847e4c23",
+    "09881e8b84289c2c1d6a9b204f888942b7ce47f98e7dbc8c1031b9048c98e3a9",
+    "2dede43b02ea9a99fadae3cfc694f11a1ff65ee91d5f89b5b1a841640fe736fc",
+    "c59bb10e876df4e88a1490b14dd741c71bc93231ceac1c93fb07df48fff64314",
+    "e6b2797403ff520bd4860bac881072f0b4eea845d1a23daa3e0e082935e2a442",
+    "128438666a86e7367191740f7cc2701078717d1779ecbe6da8b183a1c9fdb27a",
+    "7b3be5cbc8fa6ac4dbbdac76330a04726819d74f75d4f12ea449054b2ba48715",
+    "1ab743eab8e4ecd346cd20a057858904ddae0d4c838d52f94571e9ea1a9a204d",
+    "e2931737ffbfca7bac8d469849e975073a875b54aa410d7b79304a6b9229fa4d",
+    "500bb6c8b0e0a4ee81a34c9e5823ac7aa11d0f1a94ead0e21f061a43b0852d69",
+    "97b2356f5c04a930bab1f1fc6dac3ee08425ccf1ae2515038eb6447f9ed3aced",
+    "b26c99d991ef89a5b447c7f2b3e94dc3249334b38ad7fd72cfd98b672eaa2a1e",
+    "bbb02eb5f5cccf3405f06d54f425dde59faf27a293e3504186fea188963c9613",
+    "3f9d3be84589701dc265233e08465cd7bea4bd3dbd6238cd7f50774de4625862",
+    "47843463d57b0f8f0324772fbfb4aaf48a2775456c5ede906cbbf3cb51132fa1",
+    "e6f74f4fc2959cf25f2f8aa7503de50b15e5bce208b91ed14cdefff41aa3eb3d",
+    "19476504de1a4cc07d4f7eeaa1940e5aae0ffa3137d10b1a9c4b345c1598b2b7",
+    "b2572a3aa4444e89149502d42dfecd9bb97093c36c94126c33a0e444e9f8d82d",
+    "2d4b8872cc8c2bae99d6248ddf72cf725cca5c58ad6b850bcce3ecb88a764fc2",
+    "be01764d2b6aa5a942226ae65e7878107068ae56762b7586d907e2e27b1efb8f",
+    "a47f82d1fcbcd5acdc78c059d03ba595844f1615462f10d638b17f3c8cdee262",
+    "b855fd6068faeec4983e665d4a1518768da3579c3639cde673d985d0c04219b2",
+    "f24434ea21cb672728f620e48422df9c14d719a25d5e4b44d75b8fdae9b1d183",
+    "72d82eb9fb0380b6aca8f44fc06d4b2b75bc11bc39f3b7f201b3ec301a8aeb31",
+    "7db02a78df9ebd3459f8a2b777101b04118d8a2cfc9bf3446703666a8c7e410e",
+    "42dab9af540c7fb481ef3ac0eb94269bf575f96b78d9f9e9626e1c5cfab786ad",
+    "a0a8a7164578eccb60196bdae63d4e679f8b5a1ca944d862e327c78cb2d4b451",
+    "74ee9bebff7cdd1145669af3ee506aff65979c74cde18b701bde16b26d67307d",
+    "2af57cb909de7dd67fb81de022e292dc3713b3d3d7481565702e8f3266257630",
+    "0a4599f30cc0bc0bd0f43e7b8202572c43745ea59e2407d1a1d142064a418e14",
+    "347e5d9e153f34322a687e59e4801e515216a9621fdc00680cfcc84fadc8c400",
+    "59f2f09d6d9da461c1de1474f7ede633ecc678e105dd3169804308e19b1ff14e",
+    "f82fb25872cc4458715c61e6c20d6da03641daeb37abcc9bf7ef3a4195d89fe8",
+    "398590d8589db02bbbf953ed3d0369d53123fb32e8f15aeddfa4fac1770012bc",
+    "289d1d53af5fb644f91512d953d8c4d1c7f5e33f33bf86e67526f96c411f5752",
+    "708b89a2d84c71a93e1c43d215eaa16ff36118ea4027cba785e5d5cfccd8a962",
+    "92dbe36cc70fac2964923eac8e3ba1791e40f851f0aff090eecac024f3003fd6",
+    "1a29182f3c40bade793f629a220e330bd140616f2c8bf89db04e1d499e166d34",
+    "6f654abe6c9d471ea0abea40cb087f1191af585bb751bc4f1d0ea07cdf60f562",
+    "4f560f9ed9b7491ae966cf9b4f25d587e699a7a9945b2ba1324131c857ba7fd7",
+    "272840e3a49cab931f3766fd65a250ebf609ec5c2a2e000978b1039ed29a4f8d",
+    "f0ccdc54d6e6c16b313130d3b735b1a6c3d25c4d981a37932f624c6af76f8baa",
+    "37715623315d76019530e31de7eeb3f9e5543c653abea3f9b5fd8c460e9a00ba",
+    "7451b1dbfd9bb369d9894ee74345f892960465508116ee1373cf4890414ba013",
+    "8328775672ce11f4c8a2333c747377d3747d160e62ada4510dec9c92338865d7",
+    "edebcba476e20298462c836609f3b710909940e38d61508bc1c2601944782824",
+    "777dda6470bdc0d70637732f47c2c20238c806fdcebb54af559a06652cafb575",
+    "0eeb42c0d91062b5db1ea688967c14391b11b4eaa3736231877c7ca813b2415b",
+    "7dd98ce08f9adc5c82bdf15deb26cd5ea7c64c106cb4d47a666b8c438c617fc8",
+    "83ea32410974d4b7dc843a0d9a8753841a0ef03ef575e052611dbb3aa14b226f",
+    "fba8e391efed838dd8ab74dea2f886524bd68377f318c51ba8c5ecc456efd44a",
+    "a6821c6487843810cac717069462b51d078c80a54fdd87846154bd1d4e070c5b",
+    "5348f48c0f9b582f0b3616394a2418db42effc38c33b0ac5e87f7aea5d95c0b2",
+    "4b43b053bd3dacde77714285ed19704ad1741c3fd5dcb6085110b849006b958e",
+    "ee317d3259079a11c8b0df7492af55dbef62273dba97ecd2266ac4f9b13792ee",
+    "e91ee1fec78c7321fd22596745a9bce3bfe5b576304beb4d3f2dfbec426f65a0",
+    "bf2ee779c3ae1eee716fe4b3f6bf7a239959f1be015994466f8d3a6e90f58e44",
+    "c8bcd1b9ea738d980d0d39f51723f5478778318523f38c3ad8218e51fe77cf5d",
+    "d9bee9c8534a189444d49d162d2fc563846e08a27bc280bd2eb60eadf8986bc1",
+    "5834b0de90496f5035b23cdbd8cb6d80d37f00a9cec958da7e3c47c74a7b346b",
+    "c25e2f756e8dc8536f9727dc8a0c480b3b0f432217e3ec6857fc6501039c1ca5",
+    "215c291a9d994a0c9ad74168e0a6ec82920ec606a98811f0b6a8b89d28631fe2",
+    "d4c0f61e93dbdc25596ed27a8d124bc270f1c6d186d33993e43ee846af0b713c",
+    "01be149612db7a40d79d934473ca0fcc558043867938a534b4f86c736e2f6daa",
+    "7a6c2e4a05f5b8af811fae9413f1ff6fc7bcf4d0f4eca20d5f33486bc4ee4219",
+    "ccc2515f8e5894347b3b81b092e7913a195f9b64d04e42f0bfa71bfceef2a5db",
+    "9bf23356a1f9c43f17fe1f9a39720cd0a3cae1045dcef9f876a617338d166464",
+    "033fce2df9804e09592384aa5817e4edea59308a1042a3ee46b765cc595616c0",
+    "60e066bf312433b6b1a671e7ae81871e96de620eecdfa4db36fc24574c98f27f",
+    "b43f9ed1bfe745d9f1b49460b6c906f6d4a01d404a90835abe65dd13f9ac2062",
+    "77d3ce287cae62d26b3d27e49ed9aad4f0419c042b4c28136254950440703c50",
+    "573f77e3b406b1304958f762aa7b827814c7f8971ca793fa9abbcbd1eda23155",
+    "1951acc0ea98d9dc2f4d8aa440a0b58c4010ed6ad18e1fa03d846a3def831017"
+  ],
+  "background_frames": [
+    {
+      "background_rgb": [
+        124.0,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.0,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        124.5,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        125.0,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.7320507764816284,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        125.0,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.7320507764816284,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        124.5,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        124.5,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        125.0,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.7320507764816284,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        125.0,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.7320507764816284,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        125.0,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.7320507764816284,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        124.5,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        125.0,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.7320507764816284,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        125.0,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.7320507764816284,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        124.5,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        124.5,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        125.0,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.7320507764816284,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        124.5,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.0,
+        124.5,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        125.0,
+        124.5,
+        124.75
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.346291184425354,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.0,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.0,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.0,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.0,
+        124.0,
+        124.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.0,
+        124.0,
+        124.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.0,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        125.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.0,
+        124.0,
+        124.25
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.75,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.5,
+        124.5,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.8660253882408142,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    },
+    {
+      "background_rgb": [
+        124.0,
+        124.0,
+        124.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "rule": "Canonical semantic alpha; measured neutral source plate soft-edge unmix only",
+        "changed_alpha_pixels": 0
+      }
+    }
+  ],
+  "recipe": "Pinned BiRefNet-matting: 1024 mask inference resized to unchanged RGB dimensions; canonical eight-bit semantic alpha. Neutral uniform plates retain canonical semantic contour without chroma thresholds or opaque artwork recoloring; unchanged spread assertion. Reviewed spatial plates require excluded corners and nearest alpha<.002 background at least three pixels from alpha>=.01, semantic contour only. Opaque output retains original RGB; soft edges unmix measured plate. Alpha<8 removed; connected regions retained when containing alpha>=128. Fixed anatomical scale/anchor, no stabilization or interpolation.",
+  "model_manifest": {
+    "repository": "ZhengPeng7/BiRefNet-matting",
+    "revision": "eccde0a8cbdce7ac5fecfeb06340fe7b949e85d9",
+    "model_directory": "H:\\ai\\minimax-h3\\matting\\BiRefNet-matting",
+    "dependency_directory": "H:\\ai\\minimax-h3\\matting\\dependencies",
+    "files": {
+      "config.json": {
+        "bytes": 413,
+        "sha256": "b2b235983b80fbff325976ca517bb7eda25e915b84a97b150eca41266cf8a13b"
+      },
+      "BiRefNet_config.py": {
+        "bytes": 298,
+        "sha256": "e7b8c2a74f6cea6a59553d517f71d47f2c1d90e670a13416af17c25fe2f3dc52"
+      },
+      "birefnet.py": {
+        "bytes": 92134,
+        "sha256": "2a45b4e0ece72d7c4212bca1a988e7d7e52bfe9f98ec59c58b8809c8a8b7a831"
+      },
+      "model.safetensors": {
+        "bytes": 884878856,
+        "sha256": "a9875de5b1e6c8eb5fdaa8c727a82927ce442cdc87ba3abee6a77e6fa46c25bb"
+      },
+      "README.md": {
+        "bytes": 4724,
+        "sha256": "e43576e298fcfd143239f7c1dc080e1d03f4eef5e78156da4f0466d93f2c45a1"
+      },
+      "timm-1.0.30-py3-none-any.whl": {
+        "bytes": 2668917,
+        "sha256": "c8e27adf6801a2fdfb570dbbdd171f2f084756eefc673df8cfaab06bd14864f3"
+      }
+    }
+  },
+  "inference_precision": "float16",
+  "torch_version": "2.14.0+cu130",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "elapsed_seconds": 23.942,
+  "tool_sha256": "9eb5e69e6fc45274cc3f52e5a9f96419c26ab7d8eadd97ab67c6248ec313b6bc"
+}

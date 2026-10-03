@@ -1,0 +1,71 @@
+{
+  "original_chronological_rgb_rgba": true,
+  "critical_enlarged": true,
+  "selected_native_light_dark_both_directions": true,
+  "actual_godot_native_normal_reflected": true,
+  "actual_strike": true,
+  "actual_shoot": true,
+  "map_motion_and_held_reduced_motion": true,
+  "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+  "runtime_stage_folders": [
+    "candidate_pair_native",
+    "candidate_pair_mirrored",
+    "candidate_ranged_ranged",
+    "live_native",
+    "live_ranged_ranged"
+  ],
+  "live_strike_folder": "live_native",
+  "live_shoot_folder": "live_ranged_ranged",
+  "source_takes": {
+    "move_h3_v1": {
+      "original_rgb_frames_reviewed": 124,
+      "original_rgba_frames_reviewed": 124,
+      "selected_frames_reviewed": 32
+    },
+    "attack_h3_v2": {
+      "original_rgb_frames_reviewed": 124,
+      "original_rgba_frames_reviewed": 124,
+      "selected_frames_reviewed": 32
+    },
+    "ranged_h3_v1": {
+      "original_rgb_frames_reviewed": 124,
+      "original_rgba_frames_reviewed": 124,
+      "selected_frames_reviewed": 32
+    },
+    "hit_h3_v2": {
+      "original_rgb_frames_reviewed": 124,
+      "original_rgba_frames_reviewed": 124,
+      "selected_frames_reviewed": 21
+    },
+    "defend_h3_v1": {
+      "original_rgb_frames_reviewed": 124,
+      "original_rgba_frames_reviewed": 124,
+      "selected_frames_reviewed": 17
+    },
+    "cast_h3_v1": {
+      "original_rgb_frames_reviewed": 124,
+      "original_rgba_frames_reviewed": 124,
+      "selected_frames_reviewed": 26
+    },
+    "death_h3_v4": {
+      "original_rgb_frames_reviewed": 124,
+      "original_rgba_frames_reviewed": 124,
+      "selected_frames_reviewed": 34
+    }
+  },
+  "all_complete_sources_reviewed": 12,
+  "all_original_rgb_frames_reviewed": 1488,
+  "all_original_rgba_frames_reviewed": 1488,
+  "rejected_complete_sources_reviewed": 5,
+  "final_notes": "Published source and runtime art personally accepted: all 202 actual Godot native poses in normal and reflected candidate fixtures, all eight actual Strike and eight actual Shoot captures per relevant fixture, preserved original map motion and held reduced-motion views. Final live Strike/map and Shoot each passed 696 focused checks; exact imported battle/map RGBA and lossless import proved. Final Shoot native overview is byte-identical to personally reviewed live native overview. The original eight articulated idle poses and 240ms timings, fixed registration and opaque subject RGB are preserved. Final acceptance republishes metadata with battle/map PNG bytes unchanged.",
+  "fixes": [
+    "Rejected attack v1 body-overlapping invented gold ring/beam; attack v2 provides continuous physical buckler reach and recovery.",
+    "Rejected hit v1 invented incoming projectile, body flash and outgoing trail; hit v2 gives clean grounded recoil and ready return.",
+    "Rejected death v1 elongated airborne arm and missing pouch/fork ornament; retained the full failed source.",
+    "Rejected death v2 held kneel to seated hard cut and bare fork inherited from incompatible guides; corrected original resting guide preserves two fixed amber ornaments, twin straps, pouch and buckler.",
+    "Rejected death v3 four fixed fork ornaments during its otherwise continuous fall; death v4 uses original ready and source-correct resting endpoint guides without the conflicting middle guide, producing continuous kneel and side fall with two ornaments.",
+    "Selected defense only through the clean continuous guard endpoint 64; excluded later body-overlapping ward phases.",
+    "Corrected fallen master registration from anatomical ground support without per-frame scaling or repainting opaque art; preserved original idle/map bytes.",
+    "Expanded only native review cell spacing to show the complete fixed-size source canvas and ten-pixel margins in both directions."
+  ]
+}

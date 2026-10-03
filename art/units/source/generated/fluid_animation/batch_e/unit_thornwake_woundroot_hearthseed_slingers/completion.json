@@ -1,0 +1,231 @@
+{
+  "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+  "status": "completed",
+  "source_verification": {
+    "checks": 826,
+    "original_rgb_frames": 1488,
+    "selected_source_takes": 7,
+    "rejected_source_takes": 5,
+    "published_h3_frames": 194,
+    "atlas_size": [
+      1920,
+      3860
+    ],
+    "atlas_rgba_bytes": 29644800
+  },
+  "runtime_stages": {
+    "candidate_pair_native": {
+      "checks": 682,
+      "failures": []
+    },
+    "candidate_pair_mirrored": {
+      "checks": 682,
+      "failures": []
+    },
+    "candidate_ranged_ranged": {
+      "checks": 682,
+      "failures": []
+    },
+    "live_native": {
+      "checks": 696,
+      "failures": []
+    },
+    "live_ranged_ranged": {
+      "checks": 696,
+      "failures": []
+    }
+  },
+  "clips": {
+    "move": 32,
+    "attack": 32,
+    "ranged": 32,
+    "hit": 21,
+    "defend": 17,
+    "cast": 26,
+    "death": 34,
+    "idle": 8,
+    "dead_alias": 1
+  },
+  "new_h3_poses": 194,
+  "published_unique_poses": 202,
+  "original_source_frames_retained": 1488,
+  "rejected_complete_takes": 5,
+  "personal_acceptance": {
+    "original_chronological_rgb_rgba": true,
+    "critical_enlarged": true,
+    "selected_native_light_dark_both_directions": true,
+    "actual_godot_native_normal_reflected": true,
+    "actual_strike": true,
+    "actual_shoot": true,
+    "map_motion_and_held_reduced_motion": true,
+    "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+    "runtime_stage_folders": [
+      "candidate_pair_native",
+      "candidate_pair_mirrored",
+      "candidate_ranged_ranged",
+      "live_native",
+      "live_ranged_ranged"
+    ],
+    "live_strike_folder": "live_native",
+    "live_shoot_folder": "live_ranged_ranged",
+    "source_takes": {
+      "move_h3_v1": {
+        "original_rgb_frames_reviewed": 124,
+        "original_rgba_frames_reviewed": 124,
+        "selected_frames_reviewed": 32
+      },
+      "attack_h3_v2": {
+        "original_rgb_frames_reviewed": 124,
+        "original_rgba_frames_reviewed": 124,
+        "selected_frames_reviewed": 32
+      },
+      "ranged_h3_v1": {
+        "original_rgb_frames_reviewed": 124,
+        "original_rgba_frames_reviewed": 124,
+        "selected_frames_reviewed": 32
+      },
+      "hit_h3_v2": {
+        "original_rgb_frames_reviewed": 124,
+        "original_rgba_frames_reviewed": 124,
+        "selected_frames_reviewed": 21
+      },
+      "defend_h3_v1": {
+        "original_rgb_frames_reviewed": 124,
+        "original_rgba_frames_reviewed": 124,
+        "selected_frames_reviewed": 17
+      },
+      "cast_h3_v1": {
+        "original_rgb_frames_reviewed": 124,
+        "original_rgba_frames_reviewed": 124,
+        "selected_frames_reviewed": 26
+      },
+      "death_h3_v4": {
+        "original_rgb_frames_reviewed": 124,
+        "original_rgba_frames_reviewed": 124,
+        "selected_frames_reviewed": 34
+      }
+    },
+    "all_complete_sources_reviewed": 12,
+    "all_original_rgb_frames_reviewed": 1488,
+    "all_original_rgba_frames_reviewed": 1488,
+    "rejected_complete_sources_reviewed": 5,
+    "final_notes": "Published source and runtime art personally accepted: all 202 actual Godot native poses in normal and reflected candidate fixtures, all eight actual Strike and eight actual Shoot captures per relevant fixture, preserved original map motion and held reduced-motion views. Final live Strike/map and Shoot each passed 696 focused checks; exact imported battle/map RGBA and lossless import proved. Final Shoot native overview is byte-identical to personally reviewed live native overview. The original eight articulated idle poses and 240ms timings, fixed registration and opaque subject RGB are preserved. Final acceptance republishes metadata with battle/map PNG bytes unchanged.",
+    "fixes": [
+      "Rejected attack v1 body-overlapping invented gold ring/beam; attack v2 provides continuous physical buckler reach and recovery.",
+      "Rejected hit v1 invented incoming projectile, body flash and outgoing trail; hit v2 gives clean grounded recoil and ready return.",
+      "Rejected death v1 elongated airborne arm and missing pouch/fork ornament; retained the full failed source.",
+      "Rejected death v2 held kneel to seated hard cut and bare fork inherited from incompatible guides; corrected original resting guide preserves two fixed amber ornaments, twin straps, pouch and buckler.",
+      "Rejected death v3 four fixed fork ornaments during its otherwise continuous fall; death v4 uses original ready and source-correct resting endpoint guides without the conflicting middle guide, producing continuous kneel and side fall with two ornaments.",
+      "Selected defense only through the clean continuous guard endpoint 64; excluded later body-overlapping ward phases.",
+      "Corrected fallen master registration from anatomical ground support without per-frame scaling or repainting opaque art; preserved original idle/map bytes.",
+      "Expanded only native review cell spacing to show the complete fixed-size source canvas and ten-pixel margins in both directions."
+    ]
+  },
+  "fixes": [
+    "Rejected attack v1 body-overlapping invented gold ring/beam; attack v2 provides continuous physical buckler reach and recovery.",
+    "Rejected hit v1 invented incoming projectile, body flash and outgoing trail; hit v2 gives clean grounded recoil and ready return.",
+    "Rejected death v1 elongated airborne arm and missing pouch/fork ornament; retained the full failed source.",
+    "Rejected death v2 held kneel to seated hard cut and bare fork inherited from incompatible guides; corrected original resting guide preserves two fixed amber ornaments, twin straps, pouch and buckler.",
+    "Rejected death v3 four fixed fork ornaments during its otherwise continuous fall; death v4 uses original ready and source-correct resting endpoint guides without the conflicting middle guide, producing continuous kneel and side fall with two ornaments.",
+    "Selected defense only through the clean continuous guard endpoint 64; excluded later body-overlapping ward phases.",
+    "Corrected fallen master registration from anatomical ground support without per-frame scaling or repainting opaque art; preserved original idle/map bytes.",
+    "Expanded only native review cell spacing to show the complete fixed-size source canvas and ten-pixel margins in both directions."
+  ],
+  "imported_atlas": {
+    "exact_rgba_pixels": true,
+    "atlas_size": [
+      1920,
+      3860
+    ],
+    "lossless_import": true,
+    "metadata_republication_artwork_byte_identical": true
+  },
+  "preserved": {
+    "original_idle_poses": 8,
+    "idle_frame_msec": 240,
+    "exact_idle_and_map_pixels": true,
+    "originals_latents_guides_prompts_recipes_history": true,
+    "caches_saves_backups_and_rmg": true,
+    "unrelated_work": true
+  },
+  "scope": "Focused Windows Godot4.6.2 source, import and runtime fixtures. Linux and whole-game suite not run.",
+  "cleanup": {
+    "removed_files": 3145,
+    "removed_bytes": 1185470725,
+    "all_deleted_paths_rechecked_absent": true,
+    "preserved": [
+      {
+        "take": "attack_h3_v1",
+        "selected_mattes": 0,
+        "original_frames": 124,
+        "rejected_source": true
+      },
+      {
+        "take": "attack_h3_v2",
+        "selected_mattes": 32,
+        "original_frames": 124,
+        "rejected_source": false
+      },
+      {
+        "take": "cast_h3_v1",
+        "selected_mattes": 26,
+        "original_frames": 124,
+        "rejected_source": false
+      },
+      {
+        "take": "death_h3_v1",
+        "selected_mattes": 0,
+        "original_frames": 124,
+        "rejected_source": true
+      },
+      {
+        "take": "death_h3_v2",
+        "selected_mattes": 0,
+        "original_frames": 124,
+        "rejected_source": true
+      },
+      {
+        "take": "death_h3_v3",
+        "selected_mattes": 0,
+        "original_frames": 124,
+        "rejected_source": true
+      },
+      {
+        "take": "death_h3_v4",
+        "selected_mattes": 34,
+        "original_frames": 124,
+        "rejected_source": false
+      },
+      {
+        "take": "defend_h3_v1",
+        "selected_mattes": 17,
+        "original_frames": 124,
+        "rejected_source": false
+      },
+      {
+        "take": "hit_h3_v1",
+        "selected_mattes": 0,
+        "original_frames": 124,
+        "rejected_source": true
+      },
+      {
+        "take": "hit_h3_v2",
+        "selected_mattes": 21,
+        "original_frames": 124,
+        "rejected_source": false
+      },
+      {
+        "take": "move_h3_v1",
+        "selected_mattes": 32,
+        "original_frames": 124,
+        "rejected_source": false
+      },
+      {
+        "take": "ranged_h3_v1",
+        "selected_mattes": 32,
+        "original_frames": 124,
+        "rejected_source": false
+      }
+    ]
+  }
+}

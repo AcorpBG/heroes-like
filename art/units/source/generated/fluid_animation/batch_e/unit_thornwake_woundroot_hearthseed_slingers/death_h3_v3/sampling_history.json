@@ -1,0 +1,229 @@
+{
+  "prompt": [
+    745,
+    "254b2b5d-c0d9-45a9-88f7-a90f79464c06",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One continuous natural lowering movement of the original forest woman from the first ready pose through the supplied seated pose into the final resting pose. Both human knees gradually bend while the torso leans forward and lowers, with continuous joint movement throughout. The right hand lowers the one wooden fork staff beside the body toward the foreground ground as the knees descend. The right elbow remains low. The staff butt descends first, the whole staff slowly turns into the ground position and the right palm reaches the same ground to support the torso. The left arm keeps the one wicker buckler close to the chest. Both legs settle sideways into the supplied seated pose. Continue moving smoothly: the right elbow bends and the torso lowers onto its side, head rests on the near attached arm, left buckler arm rests beside the chest. The body settles gently in the final original resting pose and stays there. Exactly two attached human arms and two human legs, same adult woman, face, flower-decorated curly brown hair, green scarf, cream sleeves, green trousers and brown-green original armor throughout. One complete original Y-fork wooden staff retains its two small attached solid amber fork ornaments, two green sling straps and one brown leather pouch while lowering and resting on the ground. One original wicker buckler stays on the left forearm. Ordinary inert painted materials, continuous passive body descent with low arms and downward staff motion. Fixed three-quarter tactical camera, screen-right facing, same scale and body root x480. Ground contact for knees, supporting palm and resting near forearm is y576; fallen staff and pouch lie below in foreground perspective. Full body and all equipment stay inside the960 by704 canvas. Uniform neutral gray around the subject stays completely blank at every instant.",
+          "width": 960,
+          "height": 704,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "32",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026109507
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "hearthseed_slinger_death_h3_v3_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "hearthseed_slinger_death_h3_v3_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "hearthseed_slinger_death_h3_v3_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 54,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "hearthseed_slinger_h3/death_h3_v3/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "hearthseed_slinger_h3",
+      "create_time": 1791005868335
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "hearthseed_slinger_h3\\death_h3_v3",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "254b2b5d-c0d9-45a9-88f7-a90f79464c06",
+          "timestamp": 1791005868337
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "254b2b5d-c0d9-45a9-88f7-a90f79464c06",
+          "timestamp": 1791005868364
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "254b2b5d-c0d9-45a9-88f7-a90f79464c06",
+          "timestamp": 1791006097191
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

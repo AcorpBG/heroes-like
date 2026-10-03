@@ -1,0 +1,44 @@
+{
+  "takes": [
+    {
+      "take": "attack_h3_v1",
+      "reason": "Personally reviewed all124 RGB/RGBA and enlarged original transitions. Generated gold ring/beam occupies shield extension38-54 and crosses subject. Not an extraction defect; never repaint opaque art or skip over incompatible action phases.",
+      "original_frames_retained": 124,
+      "original_sha256": "2d68431e14c76e0c7c7669833ab81630f6fcb63685baa04bb57bf4bb903079f5",
+      "latent_sha256": "0e24f6bb7ffba876106678b24c67dd0e16c9720ea0a35a765bb85097087fbf9c",
+      "replacement": "attack_h3_v2"
+    },
+    {
+      "take": "hit_h3_v1",
+      "reason": "Invented incoming shot6-14 and flash16-18 cross buckler/hair; outgoing trail19-28. Keep complete original and regenerate same anatomical guides with inert movement-study prompt.",
+      "original_frames_retained": 124,
+      "original_sha256": "187860053643a816c42f1cb0d65562b8ea8adf72e3e4b096c5d3844e6caa2b3e",
+      "latent_sha256": "b332bf66e6960f576fce313e0ae03814a654ef6f687a276c44a52d500e954252",
+      "replacement": "hit_h3_v2"
+    },
+    {
+      "take": "death_h3_v1",
+      "reason": "All124 RGB/RGBA and17 critical enlarged original poses reviewed. Overhand staff swing and elongated airborne right arm53-55, pouch/ornament temporarily lost, then restored. Source defect; keep full take and regenerate passive continuous downward lowering with identical original guides and earlier explicit resting guide.",
+      "original_frames_retained": 124,
+      "original_sha256": "9e2539bdd36268b32be3e307d2a9c4c904cf80f2765e29b7b717250c666e0557",
+      "latent_sha256": "5dfdf84f816f24517782902afd2d5fa19a2249f88a6994dd5741599161b9bf09",
+      "replacement": "death_h3_v2"
+    },
+    {
+      "take": "death_h3_v2",
+      "reason": "Every124 original RGB/RGBA and17 enlarged critical poses reviewed: long held kneel through41 jumps directly to seated42, with no original transition; bare fork inherited from original fallen guides. Reject entire take; retain video/latent/mattes and source-correct guides plus one middle landmark.",
+      "original_frames_retained": 124,
+      "original_sha256": "d57cde3483413574d61f6eed7843e62d5cc967edadf2b3e5acca0956b3da872b",
+      "latent_sha256": "82db20252027c8b64946846fc221bf603d92770fd913baf7d3db40214e158b26",
+      "replacement": "death_h3_v3"
+    },
+    {
+      "take": "death_h3_v3",
+      "reason": "All124 original RGB/RGBA and16 enlarged poses personally reviewed. Continuous body lowering passes, but fork carries four fixed amber ornaments during descent (24/34), resolving to two near96. Competing seated fork orientation likely caused duplication; reject original intact and remove seated middle guide.",
+      "original_frames_retained": 124,
+      "original_sha256": "0daa118826cd8bc6f3f3a670b8ad35f5d2b18c2602f8bf31b37b959767c183ec",
+      "latent_sha256": "364980415d518b70b5bbeaaccece4250dac501697d70e9eee8e4fb6f618c987f",
+      "replacement": "death_h3_v4"
+    }
+  ]
+}

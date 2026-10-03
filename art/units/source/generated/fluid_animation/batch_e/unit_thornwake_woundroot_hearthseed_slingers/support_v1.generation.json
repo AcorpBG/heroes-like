@@ -1,0 +1,23 @@
+{
+  "image": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/support_v1.png",
+  "image_sha256": "38cf5ce6ebee76a03c476fb2ff946989ef348f41d94ad2d545d6f494c7a6baa7",
+  "prompt_file": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/support_v1.prompt.txt",
+  "prompt_sha256": "4feee1d7aad38e4983ea5eb2dcae765d5b9aeeee9bd6c6d44c60420ba5c9625f",
+  "tool": "built-in imagegen",
+  "original_tool_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0fd4e-7754-7a91-8e06-2b328cba8526\\exec-8b2d5733-1f44-4990-96d9-b7cb3bafcc81.png",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/identity_ready_reference.png",
+      "sha256": "51d86828795ed68dd40c0d373d0d0cb1241b09e129b5d02345e304ebaa632a71"
+    }
+  ],
+  "registration": {
+    "anchor": [
+      665,
+      1360
+    ],
+    "scale": 0.16,
+    "reason": "Single original master registration from boots/body and preserved anatomical height; no per-frame resizing"
+  },
+  "review": "One full-body two-arm/two-leg woman; staff grip retained, attached green straps/loaded pouch and same buckler; left elbow bends buckler inward to chest. Clean natural edges, no magic or replacement props."
+}

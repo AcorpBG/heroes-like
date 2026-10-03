@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "81cd7bd6ef6a4b9be360e851ca102b71a19a5da9bfecfccaaa2cad1498ceb8ce",
+  "latent_sha256": "85c0a41366ae4c4cc501631b3ad08f6bc254fbf91e3aa375409647fc1857b57c",
+  "decode_workflow_sha256": "dc55e1fe38fa338d48dd59630fc59aebf5998698e47366ea64c63982e3375e56",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "hearthseed_slinger_h3\\cast_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

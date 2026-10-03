@@ -1,0 +1,257 @@
+{
+  "prompt": [
+    727,
+    "d5f13203-c8cc-4303-9f95-2d2c39bc44e5",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Original forest woman from the supplied original paintings in a fixed three-quarter tactical view facing SCREEN RIGHT. Exactly two attached human arms and two human legs, same brown curly flower-decorated hair, green scarf, cream sleeves, brown leaf armor, green trousers and wrapped boots. One ordinary inert small round wicker buckler with amber boss on anatomical LEFT forearm, and one brown forked wooden sling staff in anatomical RIGHT hand. Two fixed amber ornaments and belt seeds remain solid unlit material. Two attached green straps end at one loaded brown leather pouch. One continuous anatomical movement study: both knees fold into the first kneeling guide, and the torso tips forward into the second lowered-body guide. The RIGHT hand naturally releases the one wooden staff onto the foreground ground and the LEFT buckler forearm folds beneath the chest. The body settles onto its side into the final supplied grounded body pose, with both human arms and legs attached throughout. One fork, twin straps, one pouch and one buckler remain intact. Near forearm and body settle at original ground y576; the one fallen staff and pouch lie slightly below in foreground perspective. Hold the exact final supplied grounded pose for the final second. Only body and ordinary equipment move. Full painted body and equipment remain in frame at fixed scale. Entire scene is a plain uniform neutral gray character-animation study. Unchanging gray stays completely blank around the moving character at every instant; original painted materials stay inert. Fixed camera, anatomical root x480 and floor y576. One original character and its ordinary equipment only.",
+          "width": 960,
+          "height": 704,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "33",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026109307
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "hearthseed_slinger_death_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "hearthseed_slinger_death_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "hearthseed_slinger_death_h3_v1_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "hearthseed_slinger_death_h3_v1_guide_3.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 32,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 66,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "hearthseed_slinger_h3/death_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "hearthseed_slinger_h3",
+      "create_time": 1791002590469
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "hearthseed_slinger_h3\\death_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "d5f13203-c8cc-4303-9f95-2d2c39bc44e5",
+          "timestamp": 1791002590470
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "d5f13203-c8cc-4303-9f95-2d2c39bc44e5",
+          "timestamp": 1791002590516
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "d5f13203-c8cc-4303-9f95-2d2c39bc44e5",
+          "timestamp": 1791002830683
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

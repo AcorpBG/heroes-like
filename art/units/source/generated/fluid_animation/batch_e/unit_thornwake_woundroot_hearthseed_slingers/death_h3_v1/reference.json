@@ -1,0 +1,118 @@
+{
+  "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          246,
+          492
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "cf3107d517b714cb55d00fea3949793ac5f3df51eb4390335b4bfbd5f095d86e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "cc5d1aa48db796548c11da67d819c1b675246137bfbb0f98275d174bec5f306d",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/poses.png",
+        "rects": [
+          [
+            30,
+            958,
+            127,
+            993
+          ],
+          [
+            0,
+            993,
+            278,
+            1278
+          ]
+        ],
+        "anchor": [
+          150,
+          1240
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "599e93098094bc10103735475ced29cb4110458a15a4a01c20a7c1e919e24f9d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a7502120ed6a41a5748ddc787adc48c0423aeefa16b137e972ba0b91911b0fdd",
+      "runtime_source_scale": 0.66
+    },
+    {
+      "source_frame": {
+        "name": "death_fall",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/poses.png",
+        "rects": [
+          [
+            282,
+            990,
+            607,
+            1278
+          ]
+        ],
+        "anchor": [
+          457,
+          1245
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "599e93098094bc10103735475ced29cb4110458a15a4a01c20a7c1e919e24f9d",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "1d33fd820e4a6fce04e10cf5cf9645726d155d95747ba742b8d4120b8c22bc89",
+      "runtime_source_scale": 0.66
+    },
+    {
+      "source_frame": {
+        "name": "corpse",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/poses.png",
+        "rects": [
+          [
+            928,
+            1060,
+            1230,
+            1278
+          ]
+        ],
+        "anchor": [
+          1083,
+          1209
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8,
+        "registration_note": "Original corpse near forearm/body contact at source y1209; foreground wooden staff and sling extend below it. Whole-guide registration once, not per-frame stabilization."
+      },
+      "source_sha256": "599e93098094bc10103735475ced29cb4110458a15a4a01c20a7c1e919e24f9d",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "70b92e3848f19992f8a691584ddc87f8bae4a969a398fa0c34b281a779849159",
+      "runtime_source_scale": 0.66
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

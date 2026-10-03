@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+  "clip": "death",
+  "canvas": [
+    960,
+    704
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    128,
+    128,
+    128
+  ],
+  "seed": 2026109607,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        246,
+        492
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_resting_continuity_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1465,
+          1073
+        ]
+      ],
+      "anchor": [
+        750,
+        826
+      ],
+      "scale": 0.1915,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 1,
+  "prompt": "The original adult forest woman slowly falls from the ready standing pose into the supplied final resting pose in one continuous natural movement. Her knees bend, hips and torso lower, and the body gently settles on its side. The right elbow stays low while the right hand lowers the single wooden fork staff to the foreground ground. The left arm keeps the single wicker buckler beside the chest. The near hand and forearm support the body as it lowers; the head finally rests on the near arm. Keep moving smoothly throughout the descent, then remain still in the final resting pose. Same original face, flower-decorated curly brown hair, green scarf, cream sleeves, green trousers, bark armor and boots; exactly two attached human arms and two legs. The one complete original Y-fork staff carries exactly two small fixed amber ornaments at its fork junction, two green sling straps and one brown leather pouch. These same attached parts rotate together as the staff lowers. Ordinary inert painted materials. Fixed three-quarter tactical camera facing screen right, body root x480, ground y576, full body and equipment within the960 by704 canvas. Uniform neutral gray background stays blank throughout.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

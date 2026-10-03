@@ -1,0 +1,89 @@
+{
+  "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+  "clip": "defend",
+  "canvas": [
+    960,
+    704
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    128,
+    128,
+    128
+  ],
+  "seed": 2026109305,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        246,
+        492
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/guard-pair.png",
+      "rects": [
+        [
+          0,
+          0,
+          918,
+          887
+        ]
+      ],
+      "anchor": [
+        519,
+        849
+      ],
+      "scale": 0.22,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "guard_breath",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/guard-pair.png",
+      "rects": [
+        [
+          994,
+          0,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        1430,
+        849
+      ],
+      "scale": 0.22,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      62,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "Original HEARTHSEED SLINGER from supplied original paintings, fixed three-quarter tactical camera facing SCREEN RIGHT. One human forest woman with exactly TWO arms, TWO hands and TWO human legs. Brown curly tied hair with small yellow flowers, green scarf, cream sleeves, bark-brown leather and green leaf armor skirt, dark green trousers, vine-wrapped brown boots, belt amber seed pouches and metal hooks. ONE wooden Y-fork sling staff with two fixed amber ornaments beside the fork, TWO attached long green straps and ONE brown leather sling pouch. ONE original small round wicker buckler with amber boss. Anatomical RIGHT staff hand at SCREEN LEFT in ready grips the same wooden staff; anatomical LEFT arm at SCREEN RIGHT in ready carries the same buckler. Keep the hand jobs separate, full wooden butt, fork, straps and pouch attached; never duplicate a hand, shield, staff, fork or pouch. Original painted fantasy strategy sprite materials, proportions, camera and silhouette. One dedicated defensive brace. Both knees bend into original low wide guard, LEFT elbow brings wicker shield in front of chest and head bows behind it; RIGHT hand retains upright staff, hanging sling remains intact. Continue smoothly to original held guard. Hold defensive endpoint for final second; no return to idle or firing.  Plain uniform neutral gray RGB128,128,128 backdrop like every supplied guide, with clean natural brown/green/cream subject edges and no colored rim. No scenery, floor, cast shadow, cuts, zoom, camera turn or root travel. Anatomical root x480 and ground reference y576. Full equipment, hair, boot tips and corpse remain inside generous margins. Game owns projectile flight/effects: no detached rendered shots, trails, rings, particles, beams or magic.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "ready_guide": {
+    "name": "idle_hands_0",
+    "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        384,
+        512
+      ]
+    ],
+    "anchor": [
+      246,
+      492
+    ],
+    "scale": 0.44,
+    "alpha_noise_cutoff": 8
+  },
+  "corpse_guide": {
+    "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_resting_continuity_v1.png",
+    "rects": [
+      [
+        0,
+        0,
+        1465,
+        1073
+      ]
+    ],
+    "anchor": [
+      750,
+      826
+    ],
+    "scale": 0.1915,
+    "alpha_noise_cutoff": 8
+  },
+  "reason": "One original anatomical scale per painting, fixed .5 extraction scale. Extra lower canvas margin preserves foreground fallen staff; corpse contact corrected once from original near-forearm point.",
+  "original_corpse_guide": {
+    "name": "corpse",
+    "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/poses.png",
+    "rects": [
+      [
+        928,
+        1060,
+        1230,
+        1278
+      ]
+    ],
+    "anchor": [
+      1083,
+      1209
+    ],
+    "scale": 0.66,
+    "alpha_noise_cutoff": 8,
+    "registration_note": "Original corpse near forearm/body contact at source y1209; foreground wooden staff and sling extend below it. Whole-guide registration once, not per-frame stabilization."
+  },
+  "death_seated_guide": {
+    "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/death_seated_continuity_v1.png",
+    "rects": [
+      [
+        0,
+        0,
+        1465,
+        1073
+      ]
+    ],
+    "anchor": [
+      779,
+      697
+    ],
+    "scale": 0.275,
+    "alpha_noise_cutoff": 8
+  },
+  "death_registration_reason": "Imagegen source-corrected fallen guides retain two fixed amber fork ornaments. One anatomical scale per new master (.275 seated/.1915 resting), near-palm/forearm floor contact measured once. Original seated reference placed body about96 source pixels above common floor using loose equipment anchor. Same .5 extraction scale,960x704 canvas and480,576 anchor throughout; no per-frame normalization or opaque art cleanup."
+}

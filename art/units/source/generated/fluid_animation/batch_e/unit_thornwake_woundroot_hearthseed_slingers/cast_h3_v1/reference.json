@@ -1,0 +1,62 @@
+{
+  "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          246,
+          492
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "cf3107d517b714cb55d00fea3949793ac5f3df51eb4390335b4bfbd5f095d86e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "cc5d1aa48db796548c11da67d819c1b675246137bfbb0f98275d174bec5f306d",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_thornwake_woundroot_hearthseed_slingers/support_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1087,
+            1446
+          ]
+        ],
+        "anchor": [
+          665,
+          1360
+        ],
+        "scale": 0.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "38cf5ce6ebee76a03c476fb2ff946989ef348f41d94ad2d545d6f494c7a6baa7",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b06587657f90374d0c0f71ceb5566054be722276111ff36aa560c0d776e75ab7",
+      "runtime_source_scale": 0.16
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

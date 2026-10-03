@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "b95d6ee4fb992b94aff4b478817536a8a6a2c8043680f9a1527af5a632c000cc",
+  "latent_sha256": "0e24f6bb7ffba876106678b24c67dd0e16c9720ea0a35a765bb85097087fbf9c",
+  "decode_workflow_sha256": "74a5728def20f69d1fd4d5b4baea77fdf60646a3eed9ef90ffab4bf547e6d6af",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "hearthseed_slinger_h3\\attack_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
