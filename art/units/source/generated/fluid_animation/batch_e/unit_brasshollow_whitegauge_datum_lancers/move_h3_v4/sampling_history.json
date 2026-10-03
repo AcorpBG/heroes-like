@@ -1,0 +1,223 @@
+{
+  "prompt": [
+    661,
+    "7c638f3c-fa03-4e12-b4d9-aed4e1005958",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Original WHITEGAUGE DATUM LANCER from supplied painting, fixed three-quarter tactical camera facing SCREEN RIGHT. One human-sized armored adult with exactly TWO arms, TWO black-gloved hands and TWO armored human legs. Enclosed ivory domed gauge helmet with thin red calibration lines, brass circular side fittings and a small red tassel, black neck cloth, ivory/red shoulder and shin plates, brass round knee caps, black/brass boots, long dark charcoal split coat with red inner skirt, brass belt pendulum weights, rear brass pressure tank and red hoses. Helmet stays closed with no exposed face or new eyes. ONE long calibrated melee LANCE, not a gun or magical staff: original tapered ivory spearhead with thin red stripe, small brass circular gauge immediately beneath it, full black shaft sleeves, ivory shaft bands with red calibration marks and brass couplers, and pointed brass butt. ONE small round ivory gauge SHIELD with brass rim and center boss and thin red markings. Anatomical RIGHT near hand, on SCREEN LEFT in ready, holds the middle of the lance; anatomical LEFT far hand/forearm, on SCREEN RIGHT in ready, carries the shield. Hands have separate jobs: the lance never transfers to the shield hand. Preserve complete lance shaft/tip/butt, shield size, closed helmet, armor, coat, tank, hoses and weights. Original painterly strategy game artwork, no live action or plastic materials. One smooth natural reciprocal marching cycle in place. The first and last far-leg contact paintings match. Begin with FAR LEFT shield-side leg forward and NEAR RIGHT lance-side leg back. The NEAR RIGHT lance-side thigh swings forward in the foreground, lifting its round knee at SCREEN LEFT and its boot forward across the planted far leg, matching the supplied raised near-knee painting in the middle. This marked foreground near knee is the lead, with the FAR LEFT shield-side leg planted straight at SCREEN RIGHT. Continue the NEAR RIGHT foot forward and plant it in front, transferring body weight to it. Then FAR LEFT leg swings forward while the near leg supports the body, returning to the original far-leg contact. Both hips, knees and ankles bend continuously, with two opposed leading steps and natural loading and passing. Whole original upright lance stays in RIGHT hand, shield stays in LEFT arm, and coat and weights follow the march. Anatomical contact plane y576, root x480. Plain solid magenta chroma-key backdrop stays exactly as reference in every frame. Fixed original tactical camera, body proportions and original equipment materials, entire creature and full pole inside canvas.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026110431
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "datum_lancer_move_h3_v4_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "datum_lancer_move_h3_v4_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 62,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "datum_lancer_h3/move_h3_v4/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "datum_lancer_h3",
+      "create_time": 1790992970614
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "datum_lancer_h3\\move_h3_v4",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "7c638f3c-fa03-4e12-b4d9-aed4e1005958",
+          "timestamp": 1790992970615
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "7c638f3c-fa03-4e12-b4d9-aed4e1005958",
+          "timestamp": 1790992970635
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "7c638f3c-fa03-4e12-b4d9-aed4e1005958",
+          "timestamp": 1790993172738
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

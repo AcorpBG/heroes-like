@@ -1,0 +1,89 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110443,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          498
+        ]
+      ],
+      "anchor": [
+        228,
+        482
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_forward_fall",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/fall-side-draft.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        797,
+        889
+      ],
+      "scale": 0.17,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_equipped",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses.png",
+      "rects": [
+        [
+          1105,
+          846,
+          1536,
+          1019
+        ]
+      ],
+      "anchor": [
+        1322,
+        991
+      ],
+      "scale": 0.61,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      62,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "The same original painted Whitegauge armored adult in the reference images, fixed three-quarter view facing screen right. Enclosed ivory gauge helmet with red marks, brass side fitting and red tassel; charcoal split coat and red lining; ivory shoulder and shin plates, brass knees, black gloves and boots, brass belt weights, rear tank and red hoses. Exactly two human arms and legs. Right near hand holds the middle of the one complete rigid calibrated pole, with ivory tapered head, brass round gauge below the head, black sleeves, ivory bands, brass couplers and pointed brass butt. Left far forearm carries the same small round ivory shield with brass rim and boss. Same original body proportions and equipment materials. One continuous physical lowering and settling of the body onto its side. Begin balanced upright in the original ready painting. Both knees gradually bend beneath the torso, lowering the body onto the knees while the closed helmet leans forward. Then the torso tips onto the original side, and the right hand opens as the complete straight pole tips down onto the same ground in front of the body. Left forearm carries the same round shield down with the torso. At frame62 the body is supported low on its side as in the supplied intermediate painting, with the complete pole lying flat in front and the original right glove resting beside it. Then shoulders and closed helmet settle fully onto the ground, while both original legs, coat, rear tank and hoses settle into the supplied final side-lying painting. Remain completely still in that final grounded original posture for the last second. Exactly the same two original arms and legs, shield and whole pole throughout; coat folds and hanging weights follow the torso naturally.  Complete original character and both pole ends visible, fixed body root x480 and boot ground y576. Plain solid magenta backdrop identical to the reference throughout. Only quiet physical movement of this original body, cloth and held equipment between the original poses.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,643 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "hit_h3_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_006",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "hit_h3_008",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "hit_h3_012",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "hit_h3_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_050",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "hit_h3_062",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_h3_080",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "hit_h3_084",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "hit_h3_088",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "hit_h3_092",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "hit_h3_096",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "hit_h3_100",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "hit_h3_104",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "hit_h3_108",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "hit_h3_112",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "hit_h3_116",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.833333333333333
+        },
+        {
+          "name": "hit_h3_120",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "hit_h3_123",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte_plate_v3/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "hit": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/config.json",
+          "sha256": "6e8eca5ae31380b35ec57d89cb7fcf24e97741c6cd386357cbd37222c3fa8f60"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/selection.json",
+          "sha256": "47798844ee6f0fb23fdf277ecee46d5ca3b8f78855ee7ef884a79dc5094efc53"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/original_lossless.mkv",
+          "sha256": "8e838be97bbab971f17e7c14941ca005aa3ce1b0a74bfb9faaa1ded3e78f68b1"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/original.json",
+          "sha256": "f138cc46a84cdd0a77d2576e9602e2d74e23c68bec581344a93f531054d25adc"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/workflow_api.json",
+          "sha256": "f456e7e4abffaf146cee46a2f0c48f4e957669fa26c32a801872af05d2249865"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/prompt.txt",
+          "sha256": "d7e3eea8bf6e8a2888095b8a62a7d6c3e9ac05d3749af1e6459693cb768b9270"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/reference.json",
+          "sha256": "0c3668a13f905ab0bd76e31fff0bf93afcd85e70f0b472f2f2b128005aa076ec"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/matte.json",
+          "sha256": "c3faf5ba2327e6e71f7923af79ba4d49a27ad9be1643eb2fddc722cbe5c125a4"
+        },
+        "segmentation_tool": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/segment.py",
+          "sha256": "7cce6a305ce78365c230dcdfbcd119ad8395a2722ddf46ddffa9d31e0fa872b5"
+        },
+        "segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/segmentation_recipe.json",
+          "sha256": "87e0cc7bd0c34856fe3a4f7c3e1bec916ce9ad2a5d3f987a5cfe749dc5902bdc"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/staged_generation.json",
+          "sha256": "4bf70cf14e7dad860f7b5697c4be001ec5607c42625aca4257d27c102eb71e31"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/sampling_workflow_api.json",
+          "sha256": "35901e2effcdf3a49c9988ff9583a9282915767e0276dfbb8804e7f09d7c45da"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/sampling_submission.json",
+          "sha256": "8bf65abc637a83f2670c1ddd740bab2241af988da35eceea82ae03ddb3e4acae"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/sampling_history.json",
+          "sha256": "de40c49a97c14034709931df47ebad61282db2c3f1fb467086d4a11c465f9da6"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/original.latent",
+          "sha256": "5a260217e5b6efb34bb182c72563e0d9ce8fae93422428aa4bff28b0fb9430f8"
+        },
+        "source_interval_review.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/hit_h3_v2/source_interval_review.json",
+          "sha256": "72b49ca8d08c819aab014049f7857b6caf5dec8126233fb00c6b22024d39c0d8"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Complete planted-boot knee and torso lean with closed helmet, both original grips and whole upright pole; gradual return to ready. Warm painted shading varies slightly during rotation, with ivory/red/brass materials retained; no exposed face or connected effect. Source plate cycles colors; unchanged semantic/key matte removes it. Near-static lean holds are thinned while the entire lean and recovery remain chronological. All124 original RGB/RGBA chronology and every selected original-size matched pair personally inspected; native/reflected acceptance pending. No interpolation, reversal, subject exclusion or opaque repainting."
+      }
+    }
+  ]
+}

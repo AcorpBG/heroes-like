@@ -1,0 +1,11 @@
+{
+  "status": "rejected_full_take",
+  "personal_rgb_frames": 124,
+  "personal_rgba_frames": 124,
+  "note": "Full124 RGB/RGBA chronology and16 original-size matched details inspected. Source56-60 adds connected white/green lance effects and74-78 adds connected butt flash, while background cycles and tints foreground. Semantic extraction removes some effects but that is not acceptance. Reject take and preserve original effects. V2 reassessment also failed because source42 interrupts contact; its proposed interval selection remains rejected.",
+  "original_sha256": "fc870e87bffef9be595f35884f12023e6461b649b1a7f4034e6813fa58f664ae",
+  "latent_sha256": "343990aa83dcb127c0a29ded0beb6af060397e71bd6e88e436d0c83f377d14d2",
+  "matte_sha256": "fec8037b6c83b38e7e4386c89ab3c18409f8acc8bd08e704248d9329867cb646",
+  "segmentation_tool_sha256": "7cce6a305ce78365c230dcdfbcd119ad8395a2722ddf46ddffa9d31e0fa872b5",
+  "rule": "All original pixels/latents/videos/prompts/guides and exact failed matte recipes retained. No connected effect masking or synthetic motion."
+}

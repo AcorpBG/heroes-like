@@ -1,0 +1,11 @@
+{
+  "status": "rejected_full_take",
+  "personal_rgb_frames": 124,
+  "personal_rgba_frames": 124,
+  "note": "All124 RGB and all124 RGBA frames plus24 enlarged matched RGB/RGBA details personally inspected. Spear bends/smears during ready-to-horizontal at14-19, changes orientation and loses its butt during36-39, and lifts overhead again during66-71 recovery. Reject entire take; supply original complete diagonal carry and denser physical windup/contact guides.",
+  "original_sha256": "78dbad227f24bf476c2ddcbc02124433fce800b7e8c656e1949a7d40f329f9e2",
+  "latent_sha256": "3d2d33a05953a8836558e67d3f9c8152d6b512c7661c198b3c2a20fbd2acb872",
+  "matte_sha256": "fba63505070bd85e9b27af591cf896063b3b263924c1bb0f73c7ac825567f0e6",
+  "segmentation_tool_sha256": "7cce6a305ce78365c230dcdfbcd119ad8395a2722ddf46ddffa9d31e0fa872b5",
+  "rule": "Preserve original art, videos, latents, guide/prompt/workflow and exact failed extraction provenance. No synthetic limb motion, reversal, frame duplication or geometry repair."
+}

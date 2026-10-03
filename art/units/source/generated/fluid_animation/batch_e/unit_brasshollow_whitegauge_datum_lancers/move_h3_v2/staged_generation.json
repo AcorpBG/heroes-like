@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "2d3ae81a9522a161ac8b085a6d29e467224b6f3a07a7749ab114e41c01c5d7ed",
+  "latent_sha256": "7fa094e3a75c7fe484e7d8bd0a66a80e1bf6c097b3852b2aa598914b9be7c4df",
+  "decode_workflow_sha256": "6dffa9985aebf7d5034bbca9bd9b169368e9a032e711700d7c4ae5a648d13dee",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "datum_lancer_h3\\move_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18997313856,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

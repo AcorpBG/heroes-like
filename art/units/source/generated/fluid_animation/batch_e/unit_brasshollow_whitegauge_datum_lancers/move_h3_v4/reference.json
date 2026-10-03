@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_contact",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/walk-contact-draft.png",
+        "rects": [
+          [
+            0,
+            0,
+            1145,
+            1374
+          ]
+        ],
+        "anchor": [
+          631,
+          1288
+        ],
+        "scale": 0.346,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "65fb041523d2edbb02c428dd413b7695a40b5ee9ababfc38b45bd96654c4e79f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ec93db523f5eba14a6c8d09eb20d2cb78dccb1daf58930eb40436c365a9b3fea",
+      "runtime_source_scale": 0.173
+    },
+    {
+      "source_frame": {
+        "name": "move_near_passing_v1",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/move_near_passing_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1024,
+            1536
+          ]
+        ],
+        "anchor": [
+          630,
+          1400
+        ],
+        "scale": 0.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "90ffceba6b65264168f5c23283dce83183e54fccd6dbc33a25917c20d9d9ccfa",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e0af4b8d98c448a5bd422ecbd4baf51b5894214d4b8eccd63a65a30b09eaab6b",
+      "runtime_source_scale": 0.14
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

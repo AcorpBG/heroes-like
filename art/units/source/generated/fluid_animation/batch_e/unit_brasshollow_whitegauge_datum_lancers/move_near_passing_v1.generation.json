@@ -1,0 +1,25 @@
+{
+  "tool": "builtin_imagegen",
+  "date": "2026-10-03",
+  "original_tool_path": "C:/Users/acorp/.codex/generated_images/01a0fd50-f23a-7d32-8303-80fafa7a2272/exec-24527c27-ae97-4ecf-adc3-796c922b55d1.png",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/move_near_passing_v1.png",
+    "sha256": "90ffceba6b65264168f5c23283dce83183e54fccd6dbc33a25917c20d9d9ccfa"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/move_near_passing_v1.prompt.txt",
+    "sha256": "458f4686b3732562b5a9023c365e1b5abcc25955d75edf7c300a2af2ab6b25d3"
+  },
+  "references": [
+    {
+      "path": "art/units/source/curated/unit_brasshollow_whitegauge_datum_lancers.png",
+      "sha256": "4dce0e57e04ecb05c4019340c9c07a86da39f6ff2f73ad23f416885a2ce12704"
+    }
+  ],
+  "transparent_background_requested": true,
+  "review": {
+    "status": "accepted_original_pose_guide",
+    "identity": "One enclosed gauge-armored adult, full original lance, small round shield, tank/hoses/weights and original two-arm/two-leg anatomy.",
+    "note": "Personally inspected original returned full-size pixels. Near contact has foreground right thigh crossing to forward boot; near passing raises lance-side knee with opposite shield-side foot planted; diagonal carry retains complete shaft and both grips. Fixed whole-painting scale and anatomical ground anchor only; no authored motion."
+  }
+}

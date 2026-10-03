@@ -1,0 +1,103 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110402,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          498
+        ]
+      ],
+      "anchor": [
+        228,
+        482
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_forward_windup",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-windup-corrected.png",
+      "rects": [
+        [
+          346,
+          385,
+          700,
+          684
+        ],
+        [
+          700,
+          430,
+          783,
+          476
+        ]
+      ],
+      "anchor": [
+        552,
+        675
+      ],
+      "scale": 0.61,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_full_shaft_thrust",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-thrust-shaft-corrected.png",
+      "rects": [
+        [
+          695,
+          425,
+          1194,
+          681
+        ]
+      ],
+      "anchor": [
+        864,
+        675
+      ],
+      "scale": 0.61,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      26,
+      1
+    ],
+    [
+      53,
+      2
+    ],
+    [
+      88,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original WHITEGAUGE DATUM LANCER from supplied painting, fixed three-quarter tactical camera facing SCREEN RIGHT. One human-sized armored adult with exactly TWO arms, TWO black-gloved hands and TWO armored human legs. Enclosed ivory domed gauge helmet with thin red calibration lines, brass circular side fittings and a small red tassel, black neck cloth, ivory/red shoulder and shin plates, brass round knee caps, black/brass boots, long dark charcoal split coat with red inner skirt, brass belt pendulum weights, rear brass pressure tank and red hoses. Helmet stays closed with no exposed face or new eyes. ONE long calibrated melee LANCE, not a gun or magical staff: original tapered ivory spearhead with thin red stripe, small brass circular gauge immediately beneath it, full black shaft sleeves, ivory shaft bands with red calibration marks and brass couplers, and pointed brass butt. ONE small round ivory gauge SHIELD with brass rim and center boss and thin red markings. Anatomical RIGHT near hand, on SCREEN LEFT in ready, holds the middle of the lance; anatomical LEFT far hand/forearm, on SCREEN RIGHT in ready, carries the shield. Hands have separate jobs: the lance never transfers to the shield hand. Preserve complete lance shaft/tip/butt, shield size, closed helmet, armor, coat, tank, hoses and weights. Original painterly strategy game artwork, no live action or plastic materials. One physical melee spear thrust and recovery. RIGHT lance hand draws the complete shaft back across shoulder to original horizontal windup, then extends the same arm once SCREEN RIGHT, stepping into one grounded forward lunge and reaching with the same original spear tip. LEFT shield arm remains in front of chest through the lunge, never touching the shaft. Keep the spear shaft one rigid complete object with unchanged length and gauge. Around frame53 is full extended physical contact; no firing or energy beam. Recover continuously through drawn-back windup to original upright lance ready. Exactly one thrust and one recovery, no repeated attack.  Entire backdrop stays uniform magenta RGB255,0,255. No floor, cast shadow, scenery, text, camera motion, cuts or zoom. Fixed anatomical boot ground plane y576, body anchored at x480. Lifted feet may move but planted contacts cannot slide. Keep lance tip/butt, shield, both hands and all boots inside generous canvas margins. No projectile, sparks, particles, muzzle flash, smoke, magic rings, beams, glow or new equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

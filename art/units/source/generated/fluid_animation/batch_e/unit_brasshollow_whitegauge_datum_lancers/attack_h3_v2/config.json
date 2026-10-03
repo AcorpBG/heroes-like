@@ -1,0 +1,149 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110412,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          498
+        ]
+      ],
+      "anchor": [
+        228,
+        482
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "attack_diagonal_carry_v1",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/attack_diagonal_carry_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        680,
+        1155
+      ],
+      "scale": 0.176,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_forward_windup",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-windup-corrected.png",
+      "rects": [
+        [
+          346,
+          385,
+          700,
+          684
+        ],
+        [
+          700,
+          430,
+          783,
+          476
+        ]
+      ],
+      "anchor": [
+        552,
+        675
+      ],
+      "scale": 0.61,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_full_shaft_thrust",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-thrust-shaft-corrected.png",
+      "rects": [
+        [
+          695,
+          425,
+          1194,
+          681
+        ]
+      ],
+      "anchor": [
+        864,
+        675
+      ],
+      "scale": 0.61,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      14,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      34,
+      2
+    ],
+    [
+      44,
+      3
+    ],
+    [
+      57,
+      3
+    ],
+    [
+      66,
+      3
+    ],
+    [
+      77,
+      2
+    ],
+    [
+      87,
+      2
+    ],
+    [
+      103,
+      1
+    ],
+    [
+      116,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original WHITEGAUGE DATUM LANCER from supplied painting, fixed three-quarter tactical camera facing SCREEN RIGHT. One human-sized armored adult with exactly TWO arms, TWO black-gloved hands and TWO armored human legs. Enclosed ivory domed gauge helmet with thin red calibration lines, brass circular side fittings and a small red tassel, black neck cloth, ivory/red shoulder and shin plates, brass round knee caps, black/brass boots, long dark charcoal split coat with red inner skirt, brass belt pendulum weights, rear brass pressure tank and red hoses. Helmet stays closed with no exposed face or new eyes. ONE long calibrated melee LANCE, not a gun or magical staff: original tapered ivory spearhead with thin red stripe, small brass circular gauge immediately beneath it, full black shaft sleeves, ivory shaft bands with red calibration marks and brass couplers, and pointed brass butt. ONE small round ivory gauge SHIELD with brass rim and center boss and thin red markings. Anatomical RIGHT near hand, on SCREEN LEFT in ready, holds the middle of the lance; anatomical LEFT far hand/forearm, on SCREEN RIGHT in ready, carries the shield. Hands have separate jobs: the lance never transfers to the shield hand. Preserve complete lance shaft/tip/butt, shield size, closed helmet, armor, coat, tank, hoses and weights. Original painterly strategy game artwork, no live action or plastic materials. One physical lance thrust with a continuous rigid weapon and recover. Smoothly lower the original upright lance through the supplied complete diagonal carry at14 to horizontal shoulder-height windup at24-34. Only pivot about unchanged RIGHT middle grip: spear tip moves toward upper SCREEN RIGHT and butt toward lower SCREEN LEFT, entire unchanged shaft always visible, NEVER bend, shorten, melt, reverse or truncate its butt. At34-44 extend RIGHT arm and one grounded lunge directly SCREEN RIGHT, thrusting along the horizontal shaft axis into supplied full contact. Around44-66 the entire physical lance is horizontal and extended. LEFT arm keeps small shield in front of chest, never grabs spear. At66-77 retract RIGHT arm directly BACK along that same horizontal axis to windup; NO overhead lift, spin, circular swing, point reversal, back-facing torso or repeated thrust. Keep horizontal windup through87 then smoothly pivot back through original diagonal carry103 to original upright ready116. Exactly one deliberate thrust and one complete recovery, no firing or magic. Preserve full pointed butt behind hand, shaft bands, couplers, spearhead and gauge with fixed proportions at every transition.  Entire backdrop stays uniform magenta RGB255,0,255. No floor, cast shadow, scenery, text, camera motion, cuts or zoom. Fixed anatomical boot ground plane y576, body anchored at x480. Lifted feet may move but planted contacts cannot slide. Keep lance tip/butt, shield, both hands and all boots inside generous canvas margins. No projectile, sparks, particles, muzzle flash, smoke, magic rings, beams, glow or new equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

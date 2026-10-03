@@ -1,0 +1,1908 @@
+{
+  "matte_directory": "matte_plate_v3",
+  "protected_foreground_magenta_chroma": 24,
+  "frames": 124,
+  "fps": 24,
+  "rgba_sha256": [
+    "3a7475637d03dad61de8974ddfd62594a70dd419467fc79f82fe986215cf77c4",
+    "7bcc395aaf500750c0e572853d724a45d832fdfebb23f43832fb41371530e0dc",
+    "4af5deb69f9c158f95f778709f5607ed916217a3867276cd9abe0a791a90b078",
+    "7cc617e37f0ff01f7a30355ed26423b028aab263233b7e685bfc3fdaf16078ed",
+    "7dd0715fce4264e51698761aff5080ff04c50c889d3a80f19e4fc5b0077041cb",
+    "bed0987d9f3ec3bccffccb0e30f7868a0c62f550cab5355984b0d4dfe0fc3606",
+    "52fc6cff08d34c0912a3a31e83ba18ef8362a6d18286513de0aee907343467db",
+    "6d10e6c7ac3f64725dd92c229b6d934056c6b58076da7906d19d6744b1cccf9f",
+    "c7b4a5f9fa2b053ad0a69054ff575472d966f252075b400c0a1157e134d43bbe",
+    "cc9662c53d5e8826ed2ce113450733f2c5b55192ac974d04dc896dd3e8500f83",
+    "bcfe21dd2e7876f345db8fe830e5e6313d47ab2aa698a253de60c1ecf45f98f1",
+    "3a73707f4e705d642ade2c28906fbc49bcc32bbdcfde0a158f600bc571e779ad",
+    "2c4f3b8ee709563e52ad838307058d86704821d164e582525369d31ba937abd6",
+    "2b3e98af56cb750804b3599df63078bb5edf7a3a860554d9646f74cb66962b43",
+    "43d6e28e7f514e276612d84e27064d9bc405973cb4d741b46c120260936381ff",
+    "43c98df80a434202aaf98e1376fad09b38f293c82f4d5b77b3f12c92d791fb49",
+    "678e843ace76c39bac3fe114b6374defeaf8414473f2bcb64b87139daa3f5cfd",
+    "4dc25ad43ecde45c448f9a5d6cbb6dbbef946eafdd15aed6562b50b23cd1571f",
+    "ef17ad1d04df4420b20cf920a8f219e9a2bb1eed50541364c5946ccfba4368ab",
+    "f034124b0c72f43daa2bd5f2fb9f5dab9b9a12354c4727e1764ca0670a490f26",
+    "518b0510b348d0004dda770cbe69054c21067c11aed2c4ed8bc4295efc8e557d",
+    "d372a1829d389205dd6e16c0c5aeb7d8a0ac113a36aaeaec18a3d91e0f86484e",
+    "9a744b8397f0d7995c840ce89c37967fd5f6d9cfdcc959970edd781be538b078",
+    "2b2a03ed371eb078141b42ef9563293b3aa1adf6653f751fe506f51270ffe343",
+    "a2b506a5b78f93a621b52e55b2f44998d488c14c872bf42c95376c4700d5a4fb",
+    "f08468f9db5ff17f71debc714955508fade806b6688ba81002cb3ebd09dcb7ad",
+    "c379d632d356aec5c4e75ad88e1ebd137de8e13f29934fbd054c33e6c19d0d44",
+    "3b5477cf4f202131190768bf6f56d64504af73b114193d7e37f3253c507a9173",
+    "a79b3fe7f34b530ca47ac7e4ad899b3185aaa1b96de603365191e80006653fa7",
+    "d8983d2ede40663423b5944d88b94db4e4d9141a2aa1c4df206e2c0fccf10c15",
+    "df446b89312821d94adf7e4bbd9e772505a3fc472d856f3b01c32defbfec1deb",
+    "da19f82a7ff2c4e04f0b17103bc22b180b11b98f637e70039ec8388a3ce55821",
+    "d776c6d44aac5378215fbed78883de6d81b2caeac4dd276e2dacedad4243c33a",
+    "fe4a83ecca8b44d3f021d751e20052c049a958f43cd72c7e3cfd4d23be08042e",
+    "a67d9c686e740604264ec8fb74a6c5f812ff336f19d65e5f0c55802dfea56ae7",
+    "1a96ee1bafadcbdddac3630ad653aa908d41645899e5a8c8ab4d37a7bd2689d3",
+    "822b812192fd29345244c6808bff5717775523553676cb5163bd2335914e0bdf",
+    "f3e3622f4918b7c650ddf4dcd853373893f944d15525fee3050a3b2c87b44226",
+    "e82927b8faaed88b5edf162c4b440cfe15e05bdc4c98885746bdba5863199c8f",
+    "5709d1a8382c62a7d91f12e4a9970c465a221b94a73aa3e6fd63f2f796e9aaac",
+    "be419e9c4f1d4ee1e75917e3c84af4303e603312308b2555ef375f80c0c07ee1",
+    "21b15926e63b402fd5471ccfab7db289c5620d1803a6614f84ccfdde74150659",
+    "7b2833fdad1d0888798956acebccd9a8a2bb0535b535d744b0950ec73357040f",
+    "68a686e4b00b2b88e79eec729abbfc0c68dcc73aedee0344e9e069e5439520a7",
+    "c4c22ee69cc66b7b3d09e3f21964ddc6b4e4078040766ee43ac548f1fb841b8e",
+    "c516be4678e3eea6afcbfca5cb7ce5d23e8ab2373f26c10d3565d8f9a6ea8208",
+    "1fb01dfb65de4573f3ed987f85627d89b63c63073da7164234e6afe981b28ddb",
+    "1668c30b93571f10b771051ac14ee2ae48d3a77ce8b06d6162894a5d58c8bf57",
+    "3c0d01f6e9c329e7dcf63ade76a6c766f796a0a27f9e734342c77787e2c1a4b0",
+    "9604db4fee50fa8924c5e7e7a560e68755014a63a02eb6bf503e0f6f57298717",
+    "a847fd50fb4d066accd649cbd27128c50fde9ffcee4367e744dba6f0ab1af238",
+    "3e3b9f471af0bfbdb1be066dc93781cd8145191f1a2ceb2fa6c1c3898ccadaa7",
+    "d2e7334083a8098256ea7a003ffdbd1880be2c6ff01e5fe733acf581e48b6d05",
+    "948ff7034937551005164b378f9f4680cf4bbaef93e2b560704875bcc793eb6e",
+    "9fb8ebe3366f87b5ca7f46a93d99a4ddbced965ff81039a51e9ecc9e1fba39e2",
+    "e2205e79daa5c932ca5ddd8a852ff41a5c58a68854df12d88b288084fa1d4bd3",
+    "02696bcb4188ebf2aa53fa6c87fc2ffeed324ee65c7f4f4d7b08ff480059c0f3",
+    "4366f06a992247f2331a48c7e62bf454bde4f260bed495197c7c4361b6cdd7a0",
+    "2d1e50d269f9a1eb85663bb214303ba58d76b811a502d112a816cdb6475a4d77",
+    "db587d78f2480e6786b8acee1dbd4a5579b2a1320b695c46082be1f9c37c1ac9",
+    "29eecb040a67b5a6843b7516e835ddcbc847747e6dbf7d7a4bfa769ca6d97538",
+    "e7562711bde5c827c62804a3918a75e5bd0ad0cb6ee291c8a8fdbe2c6346761d",
+    "684af08098a59da69c0f374c22fe7a89ec92debca717158bdc3b93ba5701465c",
+    "c5f3c7a24c4167a3cb4cfe717b0431e6a0599b19f0e21447bb8d624e74bb7a69",
+    "602aebd58ffc5dad1ba00f1598a56f6e50c6ebe88f91c8d2d16d0fb371255717",
+    "3fe867666298c0feaaef24e2bcf589e7e52c5e09f4a94e21339547a6b71b3ccb",
+    "82c607e9f4d58db2d65c7c1cc38806d6b250a37a899efdd06a34c5686cf80759",
+    "209183de4c96641693d9f25a5ea5d110c8436f6827241df44fa821114e2962cf",
+    "921f9b50b6aa1ee3e425b06e4224d1a0ec4a78917deed7c1b49adce476d69b97",
+    "9ca0a5ba27dfe3a34aac9f3d69cae3e95993b5cf441ff969285d8c344e80dace",
+    "1afc91102691e218fae65ec0cfd288c9abfca71efb242ca81978da4e3e4e71bd",
+    "512a45f9580e8120b4df215c78a842673d565e0a01453f82dd81c8c22759f3a2",
+    "05a764d3fd1966cde19567a67b9b14bca521b4dc9fc7f472642edff280d39c1e",
+    "696ea41cfc62bc56469ac90ee6c0578deb59f7ca88ff220f52f701f0266b825d",
+    "e6d42734c5fb5df9551fc97f8a7907b76df3759dcbfa9e125b4c3cccd2372700",
+    "e45ab416ab1ef8382de75e356d95910dd784ad6adb8ed7423314d56194fdb3a9",
+    "37a2337a1359f3845d26723051827236f5735d5f29da70c4752bdba231fc97f7",
+    "fdf53ecfe1d6d60d256260a9f36513bdfa96bac5783b3c19ae6c160df51f888a",
+    "158deadc858eac5c733f883d643212070fc068570e9a44b7803abc41e3d85e52",
+    "d242b901c6ba773653249fafc2de2f6db75703cc1eb128294efc3468332e8d57",
+    "9322ea5ec38d0f846387755d947750acbc5ace3ac644fefb3a135891d2d3c9fe",
+    "f2f6abfc3a463ace03fbdd73058fcc9cc52a039a17ac2e8786a832a0e0d34e9a",
+    "f9b8468a7efbe76eeda475d00cdc975c0934260e3ca72c5bf1f2506d6fd0b138",
+    "314385564d9971cb1eeaf3229f99f8498cc01e76e52fcbcf05a2bd68c66cc008",
+    "eb24806715c4b0e0b9557ad1c8f912d3f459ef1adc92bfa893c1bf86587de173",
+    "247f7a6662d1c28e8a793d86fa271ff3ca7a8eab9c71d8957569989d19ee21be",
+    "a4ae6b9ac59ff8e859e3a62ed323e2a85050dbbbbf8c2cd8c065e51a20200265",
+    "79a20755ac266ee30941f370d9a29f101067a1d68deba24d80ef93640ac39589",
+    "e2dab6323324ed03eb953977c76391d49d5cc96362ff254437fe6933cb3ca276",
+    "3d1164558d42f14eea2a56c27edc770f4fbd7701450ecbf3fed679c4739b2381",
+    "4c1b8d690a01e0f9bb60773b94300e095f26ade66e559e52e9ddb2ed60612ce2",
+    "0d9eca7398e14f2c310b29ab29dcfbc73cb90b113bd30529b2bfeb50a62c5552",
+    "b38c745faa8a5ce715dc4b4d1fc00cd594508971bb21447e4f1fe4dc72eb2b43",
+    "8a646911c31ef8aee07c786ff710790994e60e0b54124be37c2fc3d767d62321",
+    "d4781667f0d01e2c192717b6f101e2e25c50b31d03666dc48ebbc573e1eb1b92",
+    "176d62acca39d7af7ed99d0180cc3ffc55f7f8bf071d1967d4b7b1e5ccab2841",
+    "bccdad31ea2a1931ccd3b05c11362cf282fdf3aacc3e9b4e77f530b16b845981",
+    "6398856d8457c345bcdc6519157d7598184119d060e12f3f9ece63cd29d59462",
+    "9659b7568255b37829b924a3ac3187be95aa3e9d3b11e3cfb59406e56a8bd5b8",
+    "a7f028ce03c3df962fea05ebe03377c77ff5216926a6715cd6384f912955d5e2",
+    "8400e7531812ebcaf3b15ba26cc895312bcaeca4cbed1d56d027e4b67a8ccb87",
+    "3263255336f95336141c07ea45c87a2f6b98bddc2f4a903d1fb5998aa0294c89",
+    "97faf393bdfad1bd03ee4b19bdd69214a8cbef4858ed03996d6061856821cda9",
+    "3bf001a1410bae94f914bfe99e22da9ad8cebf65072ad852221600726dfb74ac",
+    "0706d6733af3dac180c256d94112fa253b2cb1736fb88786f88b244b4b090a61",
+    "0f5d94933ae50adad6e03f9d2011d7667b6ea31ff2674848f573698db3d40683",
+    "72f6352782abb10d16c011969a793134d6af506cabdf48b53583e83df9da3c2a",
+    "aa7edcfc10d1a1c71103fafd32bdae8b0995cc589f41b702bb9c7706aa8d5d99",
+    "c054c4ad3eade8fadbae1748aa3e19f55f0235911d37e46de92bcce44ea150d9",
+    "8986416105e0cd5cacb5c99c6f5e4cdfae4814dfcda58eed4df07c958322e908",
+    "64eee125eac180c988cc1350903814dadcbf13148a72181e8a2c00c2571d7756",
+    "109319c051b81ecaefe414a24ea0e309b2374f6963964c07d7ea6ea06f3d0634",
+    "6914ca0933dcc61c17b9c76e0dd320aec341e3911f4854c4f7bedf631924c157",
+    "609704e6b15d2274caa6b66d496e7584939856ed212d7b1c9b6ee2228557f40f",
+    "2a90184577d81a6feee088fb0988ca43594b277013881faf9961c7e38b7d8d91",
+    "cb7d90f142dfd90aa8fdf880bcbf5f1d4f70d596ef0a6ee7bc64959d20a71797",
+    "8c03fa2b145ce6271186ad2ffa472ffab04048e17911542fec7d870264b9e2dc",
+    "d1f0e464dc2377214c30bb22930c46d5c5c694bdca72ade5ab73facd952ce5f8",
+    "87db9653f03758f6c00d565f70f65658a46c98af04baf0f3e47e3342e729ff08",
+    "436c523fe3455ec157b524e9e4b9ef9a670b4af5b7a061d3d5b58302b66a26cd",
+    "b40e8910a1df3047c5ae0c0e94ab99dc96d95388870e232f9f8e7c885d8811ae",
+    "f870cb7a050290d124c0906de0d107b872fa5f3655624171c89b5f9ebcbf419b",
+    "ddb4d9a5b26d5a9d231bebda9d0be07e4b1add4f940ece4a02b98303bfc56416",
+    "ef4da27910a4e55fc8fad9eae4e2b18c18d39fcc28f2f736e354eee9ead5a169"
+  ],
+  "background_frames": [
+    {
+      "background_rgb": [
+        185.5,
+        202.0,
+        218.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        218.5
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.0,
+        218.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.0,
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        185.5,
+        202.0,
+        218.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        218.5
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        218.5
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        185.5,
+        202.0,
+        218.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.0,
+        218.5
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.0,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.0,
+        218.5
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.0,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        185.5,
+        202.0,
+        218.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.0,
+        218.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.0,
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.0,
+        218.5
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.0,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.0,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.0,
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.0,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.0,
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        185.5,
+        202.0,
+        218.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.0,
+        218.5
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.0,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.0,
+        218.5
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.0,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        203.0,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -17.0,
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.75,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.75,
+      "corner_median_spread": 0.75,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        203.0,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -17.0,
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        203.0,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -17.0,
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        185.5,
+        202.0,
+        218.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        218.5
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        185.5,
+        202.0,
+        218.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    },
+    {
+      "background_rgb": [
+        186.0,
+        202.5,
+        219.0
+      ],
+      "mode": "birefnet_semantic_alpha_flat_plate_unmix",
+      "magenta_plate_confirmed": false,
+      "protected_foreground_magenta_chroma": 24,
+      "measured_plate_chroma": -16.5,
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+    }
+  ],
+  "recipe": "Pinned BiRefNet-matting: 1024 input only for mask inference, soft mask resized to unchanged original RGB dimensions. Guide opaque magenta chroma max<=22; protected band24. For measured magenta plates only, confirm semantic alpha with protected band24 to clear lance/shield gaps. Red/green plates retain semantic foreground authority; never key red cloth. All uniform plates clear RGB within12 of measured background. Opaque alpha>=.98 retains original RGB; soft edges unmix measured uniform plate. Alpha<8 removed; connected regions retained when containing alpha>=128. Fixed anatomical scale/anchor, no stabilization or interpolation.",
+  "model_manifest": {
+    "repository": "ZhengPeng7/BiRefNet-matting",
+    "revision": "eccde0a8cbdce7ac5fecfeb06340fe7b949e85d9",
+    "model_directory": "H:\\ai\\minimax-h3\\matting\\BiRefNet-matting",
+    "dependency_directory": "H:\\ai\\minimax-h3\\matting\\dependencies",
+    "files": {
+      "config.json": {
+        "bytes": 413,
+        "sha256": "b2b235983b80fbff325976ca517bb7eda25e915b84a97b150eca41266cf8a13b"
+      },
+      "BiRefNet_config.py": {
+        "bytes": 298,
+        "sha256": "e7b8c2a74f6cea6a59553d517f71d47f2c1d90e670a13416af17c25fe2f3dc52"
+      },
+      "birefnet.py": {
+        "bytes": 92134,
+        "sha256": "2a45b4e0ece72d7c4212bca1a988e7d7e52bfe9f98ec59c58b8809c8a8b7a831"
+      },
+      "model.safetensors": {
+        "bytes": 884878856,
+        "sha256": "a9875de5b1e6c8eb5fdaa8c727a82927ce442cdc87ba3abee6a77e6fa46c25bb"
+      },
+      "README.md": {
+        "bytes": 4724,
+        "sha256": "e43576e298fcfd143239f7c1dc080e1d03f4eef5e78156da4f0466d93f2c45a1"
+      },
+      "timm-1.0.30-py3-none-any.whl": {
+        "bytes": 2668917,
+        "sha256": "c8e27adf6801a2fdfb570dbbdd171f2f084756eefc673df8cfaab06bd14864f3"
+      }
+    }
+  },
+  "inference_precision": "float16",
+  "torch_version": "2.14.0+cu130",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "elapsed_seconds": 23.302,
+  "tool_sha256": "7cce6a305ce78365c230dcdfbcd119ad8395a2722ddf46ddffa9d31e0fa872b5"
+}

@@ -5320,29 +5320,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        69.0,
+        69,
         219
       ],
       "painted_extent": 213,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_whitegauge_datum_lancers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_whitegauge_datum_lancers.png",
       "source_indices": [
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        187,
-        17,
-        322,
-        246
+        119,
+        49,
+        254,
+        278
       ],
-      "source_sha256": "25a6f8f5ff3247641b072bc1ccbb834efc64ffef0278eb76adc9f3d0f5122cef",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/provenance.json",
+      "source_sha256": "bb2b7b975c32e84bd5402d11ec13d45e92d1f69999ff0c87cde144959966e3aa",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_whitegauge_datum_lancers/provenance.json",
       "sha256": "867619539e0ea702a15c150ed1d539ca232174a8f3de37ab686d961729e63faf"
     },
     "unit_veilmourn_dreamwake_tideglass_oracles": {

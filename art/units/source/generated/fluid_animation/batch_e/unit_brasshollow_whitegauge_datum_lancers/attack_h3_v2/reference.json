@@ -1,0 +1,117 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            498
+          ]
+        ],
+        "anchor": [
+          228,
+          482
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2eb74352a84a2590e27fee7443af4046c0ccc805571e248a8381a611a6414e3d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "318b973c26511fc8732b1eeae422f9930842a3474a912cea54205e3ce1c0840f",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "attack_diagonal_carry_v1",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/attack_diagonal_carry_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          680,
+          1155
+        ],
+        "scale": 0.352,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "947ba61fe3aa6e5351e589649c67d61eb05f0064fe98e9edd0e8b057966ac708",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "12ab8467cd831ab44fbbd7e908944e733c9efb0df0c3bc6a0f10a4cbe0877f76",
+      "runtime_source_scale": 0.176
+    },
+    {
+      "source_frame": {
+        "name": "melee_forward_windup",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-windup-corrected.png",
+        "rects": [
+          [
+            346,
+            385,
+            700,
+            684
+          ],
+          [
+            700,
+            430,
+            783,
+            476
+          ]
+        ],
+        "anchor": [
+          552,
+          675
+        ],
+        "scale": 1.22,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0439892d5a7a4d933c1a736438ae1024315e501f512162b7333ab1753d3b8eba",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "fbf3a0c36dc5f3d8e2a63d9a18466279ba0f8039c4986d6ffa244c49f5e43687",
+      "runtime_source_scale": 0.61
+    },
+    {
+      "source_frame": {
+        "name": "melee_full_shaft_thrust",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-thrust-shaft-corrected.png",
+        "rects": [
+          [
+            695,
+            425,
+            1194,
+            681
+          ]
+        ],
+        "anchor": [
+          864,
+          675
+        ],
+        "scale": 1.22,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "45a234d6767b72de1c892a48fce5f12f5bdbddf2b1a58bed8ce343fa91fa7d14",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "9fd7dd00e5268484ba0f1c579b9975a2317d3b13cd03566f556f5e8b6bf6829c",
+      "runtime_source_scale": 0.61
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

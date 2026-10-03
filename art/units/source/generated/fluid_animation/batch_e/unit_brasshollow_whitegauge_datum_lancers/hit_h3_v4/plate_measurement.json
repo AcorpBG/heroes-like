@@ -1,0 +1,14 @@
+{
+  "plate_rgb": [
+    190,
+    206,
+    222
+  ],
+  "original_guide_opaque_rgb_min_distance": [
+    18.0,
+    17.46424919657298
+  ],
+  "unchanged_matte_uniform_plate_band": 12,
+  "original_foreground_rgba_identical": true,
+  "reason": "Pure128gray would collide with70 opaque guide highlights. Pale cool-gray is desaturated and more than16RGB units from every opaque original guide pixel; no matte threshold or source painting changes."
+}

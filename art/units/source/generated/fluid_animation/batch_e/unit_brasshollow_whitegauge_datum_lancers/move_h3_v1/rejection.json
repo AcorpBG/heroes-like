@@ -1,0 +1,11 @@
+{
+  "status": "rejected_full_take",
+  "personal_rgb_frames": 124,
+  "personal_rgba_frames": 124,
+  "note": "All124 RGB and all124 RGBA frames plus14 enlarged matched RGB/RGBA details personally inspected. Original named walk_planted_bridge pose4 repeats the far/shield-side leading stance; H3 repeats that lead instead of a true opposed near/lance-side step. Reject entire take; supply original explicit near-leg contact and passing paintings.",
+  "original_sha256": "be5087d808f01eb9d7788f5db845e4ca2c2423aa531fbc9ee516c6dd8760ce62",
+  "latent_sha256": "c4aa73798997fd3b6e0ee9e1928daeaea9df38aa9837a8676f1a232efadb7a32",
+  "matte_sha256": "44941b67050cdc601c7e79d7db077ece4e4f2bbd9a8a8b26e061b7236c7509f4",
+  "segmentation_tool_sha256": "7cce6a305ce78365c230dcdfbcd119ad8395a2722ddf46ddffa9d31e0fa872b5",
+  "rule": "Preserve original art, videos, latents, guide/prompt/workflow and exact failed extraction provenance. No synthetic limb motion, reversal, frame duplication or geometry repair."
+}

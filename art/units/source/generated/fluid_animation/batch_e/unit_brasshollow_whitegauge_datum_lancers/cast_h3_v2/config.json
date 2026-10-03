@@ -1,0 +1,71 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110442,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          498
+        ]
+      ],
+      "anchor": [
+        228,
+        482
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "support_raised_original_shield",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/support_shield_salute_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        700,
+        1168
+      ],
+      "scale": 0.188,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      62,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "The same original painted Whitegauge armored adult in the reference images, fixed three-quarter view facing screen right. Enclosed ivory gauge helmet with red marks, brass side fitting and red tassel; charcoal split coat and red lining; ivory shoulder and shin plates, brass knees, black gloves and boots, brass belt weights, rear tank and red hoses. Exactly two human arms and legs. Right near hand holds the middle of the one complete rigid calibrated pole, with ivory tapered head, brass round gauge below the head, black sleeves, ivory bands, brass couplers and pointed brass butt. Left far forearm carries the same small round ivory shield with brass rim and boss. Same original body proportions and equipment materials. One continuous physical left-arm shield lift and lowering. Start in the balanced original ready stance. The left elbow gradually lifts and then straightens, carrying the same small round shield above and to screen right of the closed helmet until the supplied raised-shield painting at frame62. Helmet tilts slightly upward with the left arm. Right hand retains the original upright pole in the same middle grip. Both boots remain planted while torso posture follows the raised left shoulder. Then left elbow bends and lowers the same shield smoothly to the original ready position; helmet and torso settle back to their original posture. Natural coat, belt weights, tassel and hoses follow this small body movement.  Complete original character and both pole ends visible, fixed body root x480 and boot ground y576. Plain solid magenta backdrop identical to the reference throughout. Only quiet physical movement of this original body, cloth and held equipment between the original poses.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

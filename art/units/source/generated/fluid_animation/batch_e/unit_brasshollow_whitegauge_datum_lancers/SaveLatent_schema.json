@@ -1,0 +1,51 @@
+{
+  "SaveLatent": {
+    "input": {
+      "required": {
+        "samples": [
+          "LATENT"
+        ],
+        "filename_prefix": [
+          "STRING",
+          {
+            "default": "latents/ComfyUI"
+          }
+        ]
+      },
+      "hidden": {
+        "prompt": "PROMPT",
+        "extra_pnginfo": "EXTRA_PNGINFO"
+      }
+    },
+    "input_order": {
+      "required": [
+        "samples",
+        "filename_prefix"
+      ],
+      "hidden": [
+        "prompt",
+        "extra_pnginfo"
+      ]
+    },
+    "is_input_list": false,
+    "output": [
+      "LATENT"
+    ],
+    "output_is_list": [
+      false
+    ],
+    "output_name": [
+      "samples"
+    ],
+    "name": "SaveLatent",
+    "display_name": "Save Latent",
+    "description": "",
+    "python_module": "nodes",
+    "category": "model/latent",
+    "output_node": true,
+    "has_intermediate_output": false,
+    "search_aliases": [
+      "export latent"
+    ]
+  }
+}

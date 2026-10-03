@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            498
+          ]
+        ],
+        "anchor": [
+          228,
+          482
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2eb74352a84a2590e27fee7443af4046c0ccc805571e248a8381a611a6414e3d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "318b973c26511fc8732b1eeae422f9930842a3474a912cea54205e3ce1c0840f",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses.png",
+        "rects": [
+          [
+            361,
+            684,
+            674,
+            995
+          ]
+        ],
+        "anchor": [
+          552,
+          968
+        ],
+        "scale": 1.22,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7e3b2cdd97a3b3d030c4bfd01d5bfcd7dbe477b7425624d918828125e88f9e18",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0cb7c1a858d83530a0897cc2ce442342ad26830b8739ad27541c0e917f5c50b9",
+      "runtime_source_scale": 0.61
+    },
+    {
+      "source_frame": {
+        "name": "death_forward_fall",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/fall-side-draft.png",
+        "rects": [
+          [
+            0,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          797,
+          889
+        ],
+        "scale": 0.34,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "44a50189df87e9bbb84e14898022f1f4f1143ca86ccaaff8c1bd34f51ba203f3",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "18c7895d16ed4659ddb567d64bd122721bbd0977520fa3433f8aa4789b290f3e",
+      "runtime_source_scale": 0.17
+    },
+    {
+      "source_frame": {
+        "name": "dead_equipped",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses.png",
+        "rects": [
+          [
+            1105,
+            846,
+            1536,
+            1019
+          ]
+        ],
+        "anchor": [
+          1322,
+          991
+        ],
+        "scale": 1.22,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7e3b2cdd97a3b3d030c4bfd01d5bfcd7dbe477b7425624d918828125e88f9e18",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "f8a1284b3d58eec788c94c418c8867e7345541e8dadc2f1a8675dc579ff004aa",
+      "runtime_source_scale": 0.61
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

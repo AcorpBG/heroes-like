@@ -1,0 +1,64 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+  "status": "complete_selected_unit",
+  "identity": "Enclosed ivory/red gauge helmet with brass fittings and tassel; dark split coat/red lining; ivory-red shoulder/shin plates, brass knees/boots, belt weights, rear tank and hoses; exactly two arms/hands/legs; one full calibrated lance and one small round gauge shield",
+  "grips": "Right near hand (screen left in ready) holds lance; left far forearm/hand (screen right) carries shield; jobs never swap",
+  "preserved": [
+    "idle"
+  ],
+  "replace": [
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "support": "Nonmagical raised left shield salute with right lance grip retained",
+  "guides": 46,
+  "body_scale": 0.5,
+  "anchor": [
+    480,
+    576
+  ],
+  "runtime_reference_height": 256,
+  "personal_initial_review": "Curated master, all 22 original atlas poses, all 8 enlarged articulated idle poses and full map strip, all 18 prepared guides, built-in original shield-salute guide",
+  "gpu_generation_admission": "All bounded original/candidate/import/live stages terminal and drained; no own GPU waiter remains.",
+  "broad_goal_status": "in_progress",
+  "rejected_original_takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "move_h3_v2",
+    "attack_h3_v2",
+    "move_h3_v3",
+    "attack_h3_v3",
+    "hit_h3_v1",
+    "hit_h3_v2"
+  ],
+  "corrected_takes_prepared": [
+    "move_h3_v4",
+    "attack_h3_v4",
+    "hit_h3_v4",
+    "defend_h3_v1",
+    "cast_h3_v2",
+    "death_h3_v2"
+  ],
+  "personal_source_review": "All14 original takes each124 RGB and124 RGBA personally inspected; all202 selected new poses additionally inspected as original-size matched pairs. Original video/latent/guide hashes, selected opaque RGB and foreground margins pass. Neutral hitv4 corrects the visible red material pulse seen in native128px comparison of rejected hitv2. Five other sources retain genuine opposite-leg gait, complete physical thrust contact/recovery, held brace, left-shield lift/lower and grounded side collapse. Whole-unit normal/reflected/actual melee, imported textures and live map acceptance completed.",
+  "qualified_sources_native_pending": {},
+  "accepted_sources": {
+    "move_h3_v4": 41,
+    "attack_h3_v4": 46,
+    "hit_h3_v4": 23,
+    "defend_h3_v1": 18,
+    "cast_h3_v2": 31,
+    "death_h3_v2": 43
+  },
+  "final_validation": {
+    "checks": 2102,
+    "failures": [],
+    "imported_textures_exact_rgba": 2,
+    "all46_actual_attack_poses_observed": true,
+    "cleanup_bytes": 1388881851,
+    "cleanup_files": 3655
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "status": "full_take_rejected",
+  "personal_rgb_frames": 124,
+  "personal_rgba_frames": 124,
+  "personal_original_size_matched_details": 39,
+  "personal_selected_original_size_pairs": 25,
+  "reason": "Native128px dark/light original-pixel comparison reveals conspicuous red tint on ivory helmet/shoulder/shin plates and whole body at32-50 and92-108, despite intact anatomy and no connected effect. Full lean/recovery requires these phases. Do not skip motion, recolor opaque pixels or accept the material pulse.",
+  "correction": "Same original RGBA paintings, anatomical scale, ground anchor, one62 midpoint and matched endpoints; composite only guide backdrop to neutral gray and describe constant neutral illumination. Fixed H3 model/quality and pinned semantic matte unchanged.",
+  "original_video_sha256": "8e838be97bbab971f17e7c14941ca005aa3ce1b0a74bfb9faaa1ded3e78f68b1",
+  "original_latent_sha256": "5a260217e5b6efb34bb182c72563e0d9ce8fae93422428aa4bff28b0fb9430f8"
+}

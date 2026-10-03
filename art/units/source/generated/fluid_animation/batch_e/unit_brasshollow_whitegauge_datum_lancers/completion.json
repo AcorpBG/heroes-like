@@ -1,0 +1,131 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+  "status": "complete_selected_unit",
+  "date": "2026-10-03",
+  "solo_unit_worker": true,
+  "source_method": "Original MiniMax H3 video, retained sampler latent and 124-frame FFV1 RGB proof per take; pinned local BiRefNet soft matte",
+  "clips": {
+    "idle": 8,
+    "move": 41,
+    "attack": 46,
+    "hit": 23,
+    "defend": 18,
+    "cast": 31,
+    "death": 43
+  },
+  "new_selected_poses": 202,
+  "preserved_idle_poses": 8,
+  "held_corpse_from_final_death": true,
+  "battle_atlas_size": [
+    3264,
+    2388
+  ],
+  "battle_texture_rgba_bytes": 31177728,
+  "original_selected_rgb_frames_reviewed": 744,
+  "preserved_original_rgb_frames": 1736,
+  "rejected_takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "move_h3_v2",
+    "attack_h3_v2",
+    "move_h3_v3",
+    "attack_h3_v3",
+    "hit_h3_v1",
+    "hit_h3_v2"
+  ],
+  "validation": {
+    "checks": {
+      "candidate": 696,
+      "candidate_mirrored": 696,
+      "live": 710
+    },
+    "total": 2102,
+    "failures": [],
+    "source_pixel_and_ground_anchor_equality": true,
+    "selected_opaque_original_rgb_equality": true,
+    "other231_battle_and_map_rows_preserved": true,
+    "imported_atlas_exact_rgba": true,
+    "preserved_battle_and_overworld_idle_exact": true,
+    "visual_review": {
+      "status": "accepted_selected_unit",
+      "notes": "Personally accepted all six complete H3 action clips: 202 original chronological poses plus 8 preserved articulated idle poses. All14 takes each124 RGB/RGBA chronology reviewed; every selected enlarged matched pair reviewed. All210 unique poses plus held final corpse personally inspected at actual128px in normal and game-reflected native galleries. Eight actual NORMAL BattleShell attack captures inspected at native size and2x nearest; full anticipation/contact/recovery, original complete lance/right grip, left shield, closed helmet and grounded two-leg anatomy remain readable. Gait has opposed leads; hitv4 materials remain stable; guard braces and holds; support raises/lowers left shield; collapse retains rapid fall blur/brief shield occlusion and settles grounded. Original8-pose map strip and240ms idle timing personally reviewed for exact preservation. Publication and live imported/map checks follow; no manual game session, continuous playback, Linux or full suite claimed.",
+      "original_takes_reviewed": 14,
+      "complete_rgb_frames_reviewed": 1736,
+      "complete_rgba_frames_reviewed": 1736,
+      "selected_original_size_rgb_rgba_pairs_reviewed": 202,
+      "native_unique_poses_per_facing": 210,
+      "native_reflected_all_poses_reviewed": true,
+      "held_final_corpse_reviewed": true,
+      "actual_candidate_melee_captures_reviewed": 8,
+      "actual_melee_facing": "normal",
+      "mirrored_actual_battle_claimed": false,
+      "candidate_map_gpu_captures": 0,
+      "preserved_overworld_idle_source_frames_reviewed": 8,
+      "preserved_idle_frame_msec": 240,
+      "manual_game_session": false,
+      "continuous_video_playback": false,
+      "linux_run": false,
+      "full_suite_run": false,
+      "live_native_all_poses_reviewed": true,
+      "actual_live_melee_captures_reviewed": 8,
+      "actual_live_ranged_captures_reviewed": 0,
+      "live_action_native_and_enlarged_review": "All 8 actual live melee captures personally inspected at native size and 2x nearest enlargement; coherent grips, physical lance thrust and recovery and retained grounded anatomy.",
+      "live_overworld_idle_frames_reviewed": [
+        0,
+        3
+      ],
+      "imported_atlas_exact_rgba": true,
+      "imported_map_exact_rgba": true,
+      "actual_imported_textures": 2,
+      "all_selected_source_pixels_and_anchors_verified": true,
+      "other231_battle_and_map_rows_preserved": true,
+      "existing_idle_map_pixels_and_timing_exact": true,
+      "final_publication_review": "Published atlas byte-identical to accepted candidate; all selected new poses and 8 preserved idle poses personally inspected through actual live native gallery, with live map idle frames 0 and 3 and actual action captures accepted."
+    },
+    "normal_fast_reduced_static_dead_contact_interrupt_rng_save": true,
+    "manual_game_session": false,
+    "continuous_video_playback": false,
+    "linux_run": false,
+    "full_suite_run": false,
+    "prior_live_observation_attempt": {
+      "failures": 1,
+      "missed_attack_pose": 37,
+      "resolution": "Unchanged live-only retry passed all710 checks and observed all46 authored attack poses; no source, timing, setting or assertion changed."
+    }
+  },
+  "broad_goal_status": "in_progress",
+  "cleanup": {
+    "applied": true,
+    "removed_files": 3655,
+    "recovered_bytes": 1388881851,
+    "categories": {
+      "unused_rebuildable_matte": {
+        "files": 1534,
+        "bytes": 222624747
+      },
+      "duplicate_decoded_rgb": {
+        "files": 1736,
+        "bytes": 812506159
+      },
+      "duplicate_mp4": {
+        "files": 14,
+        "bytes": 8901061
+      },
+      "duplicate_latent": {
+        "files": 14,
+        "bytes": 119417096
+      },
+      "duplicate_uploaded_guide": {
+        "files": 38,
+        "bytes": 4518471
+      },
+      "temporary_review": {
+        "files": 319,
+        "bytes": 220914317
+      }
+    },
+    "original_videos_latents_guides_prompts_provenance_and_caches_preserved": true,
+    "rebuildable": true,
+    "retained_original_rgb_frames": 1736
+  }
+}

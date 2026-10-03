@@ -1,0 +1,69 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            498
+          ]
+        ],
+        "anchor": [
+          228,
+          482
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2eb74352a84a2590e27fee7443af4046c0ccc805571e248a8381a611a6414e3d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "318b973c26511fc8732b1eeae422f9930842a3474a912cea54205e3ce1c0840f",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "hit_corrected_hand",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-hit-hand-corrected.png",
+        "rects": [
+          [
+            0,
+            684,
+            342,
+            996
+          ],
+          [
+            32,
+            642,
+            103,
+            684
+          ]
+        ],
+        "anchor": [
+          209,
+          973
+        ],
+        "scale": 1.22,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "4c8b1d31b3f62758cfdb1f0c094307d3a538c06a4cbab88a189ff2ab3e580655",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "1a7428fc8a4fd397bd9730168941eba65496c6a29a9469417193663a2826c8ca",
+      "runtime_source_scale": 0.61
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

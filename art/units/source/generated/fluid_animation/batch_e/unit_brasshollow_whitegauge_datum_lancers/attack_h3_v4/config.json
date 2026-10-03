@@ -1,0 +1,71 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110432,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          498
+        ]
+      ],
+      "anchor": [
+        228,
+        482
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_full_shaft_thrust",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-thrust-shaft-corrected.png",
+      "rects": [
+        [
+          695,
+          425,
+          1194,
+          681
+        ]
+      ],
+      "anchor": [
+        864,
+        675
+      ],
+      "scale": 0.61,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      62,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "The original painted Whitegauge armored adult from the supplied images. Same enclosed ivory gauge helmet with red calibration marks, brass side fitting and red tassel, charcoal split coat with red lining, ivory shoulder and shin plates, round brass knees, black gloves and boots, hanging brass weights, rear brass tank and red hoses. Exactly two human arms and legs. The right near hand holds the middle of one complete long rigid calibrated pole, with original ivory tapered head, round brass gauge beneath it, black sleeves, ivory bands, brass couplers and pointed brass butt. Left far forearm carries the original small round ivory shield with brass rim and boss. Fixed three-quarter camera facing screen right, same body proportions and materials. The entire pole begins upright in the right hand as shown. Right shoulder and elbow smoothly pivot the whole straight pole down into horizontal position above the shoulder. One quiet continuous physical right-arm extension and retraction. Right elbow gradually straightens, moving the same hand and whole rigid horizontal pole forward along its long axis, with a grounded weight shift and bent forward knee, until the original extended-arm painting at frame62. Then right elbow bends and the same hand and entire horizontal pole slide back along exactly the same axis into the shoulder position. Smoothly pivot the whole straight pole back upright and recover the original balanced ready posture at the end. Left elbow and small shield remain at chest; both boots stay planted in the same support locations as weight transfers forward and back. The pole remains a single unchanged straight physical object. Natural coat folds, weights and hoses follow the torso; complete hands, head, feet and both ends of the pole stay visible. Plain solid magenta backdrop identical to reference in every frame. Fixed root x480 and boot ground y576. Only the quiet physical arm, leg and cloth movement of this original character, smoothly moving between the three original poses.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

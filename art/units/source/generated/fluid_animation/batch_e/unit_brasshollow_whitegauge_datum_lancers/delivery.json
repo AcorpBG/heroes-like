@@ -1,0 +1,49 @@
+{
+  "takes": [
+    "move_h3_v4",
+    "attack_h3_v4",
+    "hit_h3_v4",
+    "defend_h3_v1",
+    "cast_h3_v2",
+    "death_h3_v2"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_unit",
+    "notes": "Personally accepted all six complete H3 action clips: 202 original chronological poses plus 8 preserved articulated idle poses. All14 takes each124 RGB/RGBA chronology reviewed; every selected enlarged matched pair reviewed. All210 unique poses plus held final corpse personally inspected at actual128px in normal and game-reflected native galleries. Eight actual NORMAL BattleShell attack captures inspected at native size and2x nearest; full anticipation/contact/recovery, original complete lance/right grip, left shield, closed helmet and grounded two-leg anatomy remain readable. Gait has opposed leads; hitv4 materials remain stable; guard braces and holds; support raises/lowers left shield; collapse retains rapid fall blur/brief shield occlusion and settles grounded. Original8-pose map strip and240ms idle timing personally reviewed for exact preservation. Publication and live imported/map checks follow; no manual game session, continuous playback, Linux or full suite claimed.",
+    "original_takes_reviewed": 14,
+    "complete_rgb_frames_reviewed": 1736,
+    "complete_rgba_frames_reviewed": 1736,
+    "selected_original_size_rgb_rgba_pairs_reviewed": 202,
+    "native_unique_poses_per_facing": 210,
+    "native_reflected_all_poses_reviewed": true,
+    "held_final_corpse_reviewed": true,
+    "actual_candidate_melee_captures_reviewed": 8,
+    "actual_melee_facing": "normal",
+    "mirrored_actual_battle_claimed": false,
+    "candidate_map_gpu_captures": 0,
+    "preserved_overworld_idle_source_frames_reviewed": 8,
+    "preserved_idle_frame_msec": 240,
+    "manual_game_session": false,
+    "continuous_video_playback": false,
+    "linux_run": false,
+    "full_suite_run": false
+  },
+  "failed_takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "move_h3_v2",
+    "attack_h3_v2",
+    "move_h3_v3",
+    "attack_h3_v3",
+    "hit_h3_v1",
+    "hit_h3_v2"
+  ],
+  "superseded_unsubmitted_takes": [
+    "cast_h3_v1",
+    "death_h3_v1",
+    "hit_h3_v3"
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+  "reference_height": 256,
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "ready_guide": {
+    "name": "idle_hands_0",
+    "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        384,
+        498
+      ]
+    ],
+    "anchor": [
+      228,
+      482
+    ],
+    "scale": 0.44,
+    "alpha_noise_cutoff": 8
+  },
+  "corpse_guide": {
+    "name": "dead_equipped",
+    "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses.png",
+    "rects": [
+      [
+        1105,
+        846,
+        1536,
+        1019
+      ]
+    ],
+    "anchor": [
+      1322,
+      991
+    ],
+    "scale": 0.61,
+    "alpha_noise_cutoff": 8
+  },
+  "support_guide": {
+    "name": "support_raised_original_shield",
+    "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/support_shield_salute_v1.png",
+    "rects": [
+      [
+        0,
+        0,
+        1254,
+        1254
+      ]
+    ],
+    "anchor": [
+      700,
+      1168
+    ],
+    "scale": 0.188,
+    "alpha_noise_cutoff": 8
+  },
+  "reason": "One original anatomical scale per painting divided by fixed extraction scale; anatomical boots/corpse ground contact, not dangling spear butt; no per-frame normalization.",
+  "correction_original_guides": {
+    "near_passing": {
+      "name": "move_near_passing_v1",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/move_near_passing_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1024,
+          1536
+        ]
+      ],
+      "anchor": [
+        630,
+        1400
+      ],
+      "scale": 0.14,
+      "alpha_noise_cutoff": 8
+    },
+    "near_contact": {
+      "name": "move_near_contact_v1",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/move_near_contact_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1024,
+          1536
+        ]
+      ],
+      "anchor": [
+        650,
+        1385
+      ],
+      "scale": 0.15,
+      "alpha_noise_cutoff": 8
+    },
+    "diagonal_carry": {
+      "name": "attack_diagonal_carry_v1",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/attack_diagonal_carry_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        680,
+        1155
+      ],
+      "scale": 0.176,
+      "alpha_noise_cutoff": 8
+    }
+  }
+}

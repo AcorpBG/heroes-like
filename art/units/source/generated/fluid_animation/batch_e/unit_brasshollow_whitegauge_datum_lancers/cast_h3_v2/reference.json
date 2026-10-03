@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            498
+          ]
+        ],
+        "anchor": [
+          228,
+          482
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2eb74352a84a2590e27fee7443af4046c0ccc805571e248a8381a611a6414e3d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "318b973c26511fc8732b1eeae422f9930842a3474a912cea54205e3ce1c0840f",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "support_raised_original_shield",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_brasshollow_whitegauge_datum_lancers/support_shield_salute_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          700,
+          1168
+        ],
+        "scale": 0.376,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "34d28d99aef0211852497e044905b8266436f41b68ddcecf4a8642266eca4459",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "9470e27427ebdc3a688b2a4890fd186b89ae85858b98b7790cf8f8a3c6ae75f0",
+      "runtime_source_scale": 0.188
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

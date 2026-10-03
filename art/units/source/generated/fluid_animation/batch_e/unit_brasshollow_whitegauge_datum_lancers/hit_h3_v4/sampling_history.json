@@ -1,0 +1,223 @@
+{
+  "prompt": [
+    703,
+    "f04ceb43-a110-434c-85e5-ea9dad19396c",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "The same original painted Whitegauge armored adult in the reference images, fixed three-quarter view facing screen right. Enclosed ivory gauge helmet with red marks, brass side fitting and red tassel; charcoal split coat and red lining; ivory shoulder and shin plates, brass knees, black gloves and boots, brass belt weights, rear tank and red hoses. Exactly two human arms and legs. Right near hand holds the middle of the one complete rigid calibrated pole, with ivory tapered head, brass round gauge below the head, black sleeves, ivory bands, brass couplers and pointed brass butt. Left far forearm carries the same small round ivory shield with brass rim and boss. Same original body proportions and equipment materials. One continuous gentle backward lean and return. Both knees gradually bend and the torso and closed helmet lean back, with body weight settling toward the rear boot, until the supplied leaning-body painting at frame62. Both boots remain on the same ground contacts. Right elbow bends slightly while the same hand retains its middle grip on the whole upright pole; left elbow carries the small shield close to the chest. Then both knees gradually straighten and the torso returns smoothly forward to the original balanced upright posture. Coat folds, weights, tassel and hoses follow the body naturally. The pole stays whole and straight and the shield stays on the same forearm.  Complete original character and both pole ends visible, fixed body root x480 and boot ground y576. Plain solid pale cool-gray backdrop identical to the reference throughout. Constant neutral studio illumination throughout; the original ivory plates, charcoal cloth, red painted marks and brass fittings keep their same painted colors as the supplied original paintings. Only quiet physical movement of this original body, cloth and held equipment between the original poses.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026110451
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "datum_lancer_hit_h3_v4_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "datum_lancer_hit_h3_v4_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 62,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "datum_lancer_h3/hit_h3_v4/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "datum_lancer_h3",
+      "create_time": 1790998920817
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "datum_lancer_h3\\hit_h3_v4",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "f04ceb43-a110-434c-85e5-ea9dad19396c",
+          "timestamp": 1790998920818
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "f04ceb43-a110-434c-85e5-ea9dad19396c",
+          "timestamp": 1790998920837
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "f04ceb43-a110-434c-85e5-ea9dad19396c",
+          "timestamp": 1790999123297
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

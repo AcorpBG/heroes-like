@@ -1,0 +1,307 @@
+{
+  "prompt": [
+    601,
+    "11da1bc6-39fd-41a6-8b86-b6f2764eb9cd",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Original WHITEGAUGE DATUM LANCER from supplied painting, fixed three-quarter tactical camera facing SCREEN RIGHT. One human-sized armored adult with exactly TWO arms, TWO black-gloved hands and TWO armored human legs. Enclosed ivory domed gauge helmet with thin red calibration lines, brass circular side fittings and a small red tassel, black neck cloth, ivory/red shoulder and shin plates, brass round knee caps, black/brass boots, long dark charcoal split coat with red inner skirt, brass belt pendulum weights, rear brass pressure tank and red hoses. Helmet stays closed with no exposed face or new eyes. ONE long calibrated melee LANCE, not a gun or magical staff: original tapered ivory spearhead with thin red stripe, small brass circular gauge immediately beneath it, full black shaft sleeves, ivory shaft bands with red calibration marks and brass couplers, and pointed brass butt. ONE small round ivory gauge SHIELD with brass rim and center boss and thin red markings. Anatomical RIGHT near hand, on SCREEN LEFT in ready, holds the middle of the lance; anatomical LEFT far hand/forearm, on SCREEN RIGHT in ready, carries the shield. Hands have separate jobs: the lance never transfers to the shield hand. Preserve complete lance shaft/tip/butt, shield size, closed helmet, armor, coat, tank, hoses and weights. Original painterly strategy game artwork, no live action or plastic materials. One complete reciprocal walking cycle IN PLACE. Alternate the original two armored legs through forward contact, loading, passing, opposite forward contact and opposite passing, then return to original ready. Near RIGHT leg is on lance side, far LEFT leg on shield side. Both hips, knees and boot ankles articulate. Coat tails and belt weights respond subtly. RIGHT hand carries the complete upright lance; LEFT arm keeps the shield beside its chest. Keep the long weapon vertical while walking, no thrust or firing. Two distinct legs and opposite planted support, no sliding, hopping or root travel.  Entire backdrop stays uniform magenta RGB255,0,255. No floor, cast shadow, scenery, text, camera motion, cuts or zoom. Fixed anatomical boot ground plane y576, body anchored at x480. Lifted feet may move but planted contacts cannot slide. Keep lance tip/butt, shield, both hands and all boots inside generous canvas margins. No projectile, sparks, particles, muzzle flash, smoke, magic rings, beams, glow or new equipment.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026110401
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "datum_lancer_move_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "datum_lancer_move_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "datum_lancer_move_h3_v1_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "datum_lancer_move_h3_v1_guide_3.png"
+        }
+      },
+      "34": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "datum_lancer_move_h3_v1_guide_4.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 24,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 44,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 70,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "43": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "42",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 93,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "34",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "43",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "datum_lancer_h3/move_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "datum_lancer_h3",
+      "create_time": 1790984311870
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "datum_lancer_h3\\move_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "11da1bc6-39fd-41a6-8b86-b6f2764eb9cd",
+          "timestamp": 1790984311872
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "11da1bc6-39fd-41a6-8b86-b6f2764eb9cd",
+          "timestamp": 1790984311916
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "11da1bc6-39fd-41a6-8b86-b6f2764eb9cd",
+          "timestamp": 1790984532181
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

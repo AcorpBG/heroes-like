@@ -1,0 +1,11 @@
+{
+  "status": "rejected_full_take",
+  "personal_rgb_frames": 124,
+  "personal_rgba_frames": 124,
+  "note": "Full124 RGB/RGBA chronology and12 original-size matched details inspected. Continuous walking is smoother, but the old far-contact and new near-contact paintings both show the screen-right boot leading with no unambiguous near thigh ownership; source12/18/30/44/56/62 confirms the same leading boot repeats. The contact-painting control itself is insufficient. Background cycles through colors, and associated source material tint varies. Reassess to one explicit raised near-knee painting, with far foot planted, and retain magenta endpoints.",
+  "original_sha256": "0a22d9c6aa5b1c9cbaf310038862e9bb60a5e3df3994d662805d0ddb5fb6ee9e",
+  "latent_sha256": "010a57a32a534bea8a5ff5f8ba70cf3fbc5d5a0785d0e64686c3f3517bf7c4ff",
+  "matte_sha256": "740f67648c0d4dfd87b8178df79ecd317714fd6cec5b81c0657165c1e5dc3985",
+  "segmentation_tool_sha256": "7cce6a305ce78365c230dcdfbcd119ad8395a2722ddf46ddffa9d31e0fa872b5",
+  "rule": "All original pixels/latents/videos/prompts/guides and exact failed matte recipes retained. No connected effect masking or synthetic motion."
+}
