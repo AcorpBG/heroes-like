@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "2c7b4961edf550c81171d7d12e27c728cfb0c98bf04a02977294d87eb1a6e76b",
+  "latent_sha256": "41a26668cc458f68bc8eb5854ce741583b6b2af5dc794106f6472eefbc602ecd",
+  "decode_workflow_sha256": "20c6fe55cd806ee20077e3fa83c579477b5e496806bb2e6afeaec7f7166602d5",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "prismwake_rayling_h3\\defend_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

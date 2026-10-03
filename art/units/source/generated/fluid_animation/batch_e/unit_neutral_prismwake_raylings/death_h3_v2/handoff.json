@@ -1,0 +1,1113 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_prismwake_raylings",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_h3_059",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583333333333335
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_061",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_063",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_h3_065",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335
+        },
+        {
+          "name": "death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_067",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_h3_069",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_h3_071",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_073",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "death_h3_074",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "death_h3_075",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "death_h3_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "death_h3_077",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083333333333335
+        },
+        {
+          "name": "death_h3_078",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "death_h3_079",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2916666666666665
+        },
+        {
+          "name": "death_h3_080",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "death_h3_081",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "death_h3_082",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "death_h3_083",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583333333333335
+        },
+        {
+          "name": "death_h3_084",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "death_h3_085",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5416666666666665
+        },
+        {
+          "name": "death_h3_086",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "death_h3_087",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "death_h3_088",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "death_h3_089",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083333333333335
+        },
+        {
+          "name": "death_h3_090",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "death_h3_091",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7916666666666665
+        },
+        {
+          "name": "death_h3_092",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "death_h3_093",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_093.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 93,
+          "video_time_seconds": 3.875
+        },
+        {
+          "name": "death_h3_094",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "death_h3_095",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583333333333335
+        },
+        {
+          "name": "death_h3_096",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "death_h3_097",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.041666666666667
+        },
+        {
+          "name": "death_h3_098",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "death_h3_099",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "death_h3_100",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "death_h3_108",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "death_h3_116",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.833333333333333
+        },
+        {
+          "name": "death_h3_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "death": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 45
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/config.json",
+          "sha256": "d1e2b6d37addf2ec58ac3d9b04d8f8986d363c8ae0ec63bead397812dd63458b"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/selection.json",
+          "sha256": "439f50f5afdc86057e6dbd6f36eff050724840b2c26a44ca5be63d96af5d97a3"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/original_lossless.mkv",
+          "sha256": "dc0c1c53a20075f93818c30c26e5993ba00d8117605d79ba31a38cf85b3d50f8"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/original.json",
+          "sha256": "fb417eaea63a41d3b593a0d1f0b9e6103de221a258f0dc2ca53f7f15e4760bcd"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/workflow_api.json",
+          "sha256": "d0da5a3b552bbf54c65cfa2d10db597a840031231146cec779a0f8782cb551bf"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/prompt.txt",
+          "sha256": "e67d605a4e1a8144aa54d91f1abffa5757f376d18d47553de861db8ce0df53e2"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/reference.json",
+          "sha256": "e01fe640e8551ff19d6a175853881d9e3292d60853cb4d6aeb0aae280e6a7c5e"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte.json",
+          "sha256": "7a7d2d75f58e2631f47783f6126aa4f687caa9f112be9b86a7405db85d4f186b"
+        },
+        "segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/segmentation_recipe.json",
+          "sha256": "fb87fd0be6cbc11ab32f138d4750851268400588dce7e8df6b7d9d65842261d9"
+        },
+        "semantic_matte_initial.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/semantic_matte_initial.json",
+          "sha256": "d0215b76a08dd3740ac61b0d0923e756d6029502d99130e99cefada2212ac472"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/staged_generation.json",
+          "sha256": "8acdf7200d2994cbd37e7b43fb6aea48ef4ebc4686c435285369b8081bb44970"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/sampling_workflow_api.json",
+          "sha256": "d27785b1f45bfe0ccff7f1b7f8585f3edb5180c3a6b0fa0b798ac97db631d9c1"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/sampling_submission.json",
+          "sha256": "7fc8bcab3ac819c9b6eddfd4ceeefc6370301336a02f75dd31fd63c0c0290eaf"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/sampling_history.json",
+          "sha256": "4ddbf5ea0f73840cd27422c31cae0b39bc948fe2d9c539ff50a7c19da0f78abf"
+        },
+        "generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/generation_history.json",
+          "sha256": "a30b47f2032019d0b5a128a800014216acf3054fbeb13c08eda2a689fa3ce83a"
+        },
+        "decode_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/decode_submission.json",
+          "sha256": "d270c703bc379b48ecd9d024c0aab57c243f7ff12600d5d20581888d7b8bb404"
+        },
+        "original.mp4": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/original.mp4",
+          "sha256": "32a1b5c9171cdf3543918369d14b70ad5a50f6685aa1e4692b4759f612cb7325"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/original.latent",
+          "sha256": "2df836a83dddca8b9c382f665d9dbe53fdb47a750382c4992f4f2c45a885b1e2"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 original RGB and alpha frames in both facings personally inspected, plus18 full-original-scale RGB and alpha details each facing. Gradual loss of hover and downward body pitch lead to a fast two-frame fin fold on ground contact76-77; the single eye dims inside its original rim. Full single beak, attached gold framework and both folded membranes remain intact. Two tail tips overlap77-80, then all three attached leaf ends separate by84 during settling. Preserve every original descent/landing/settling frame58-100; sample only the sustained final rest108/116/123, with original123 held as the corpse. Actual Godot entry/ground placement/timing review pending. No reversed, duplicated, interpolated or normalized frames. Complete candidate native/reflected and actual melee/Shoot fixtures subsequently passed; all402 native poses both facings and24 actual captures personally accepted. Published ordinary import/live checks are performed separately before final handoff."
+      }
+    }
+  ]
+}

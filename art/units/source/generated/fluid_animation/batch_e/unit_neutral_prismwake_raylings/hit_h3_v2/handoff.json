@@ -1,0 +1,953 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_prismwake_raylings",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_025",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "hit_h3_026",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "hit_h3_027",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_029",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "hit_h3_030",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "hit_h3_031",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_033",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "hit_h3_034",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "hit_h3_035",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_h3_037",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "hit_h3_038",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_h3_052",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "hit_h3_060",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "hit_h3_063",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "hit_h3_064",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "hit_h3_065",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335
+        },
+        {
+          "name": "hit_h3_066",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "hit_h3_067",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "hit_h3_068",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "hit_h3_069",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "hit_h3_070",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "hit_h3_071",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_h3_073",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "hit_h3_074",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "hit_h3_075",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "hit_h3_076",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "hit_h3_077",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083333333333335
+        },
+        {
+          "name": "hit_h3_078",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "hit_h3_079",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2916666666666665
+        },
+        {
+          "name": "hit_h3_080",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "hit_h3_081",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "hit_h3_082",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            568
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        }
+      ],
+      "clips": {
+        "hit": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/config.json",
+          "sha256": "8e8e77c895eb7223adb14cfb3b048fb7c6f052a512ba78db156d3aacea1c1f3e"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/selection.json",
+          "sha256": "c962ec1c22c9d5bdf8c20f5fe213f155d0483fb338292d96f72c0e105516375c"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/original_lossless.mkv",
+          "sha256": "f9d7c3f7295a1877e5ccf2660269b075d24ee732ee93887abfd192364f2055a3"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/original.json",
+          "sha256": "17d7ca00fa2afeacf8e84aba71edd82ef3d9d6d2e18d7c1b2f3ddf235609c0e5"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/workflow_api.json",
+          "sha256": "081c36adaacce3554df0b964cc2cf22cf37d4a53cc70279529e4d1c02c5ce18f"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/prompt.txt",
+          "sha256": "8424eeed4154c6486a5f07c919b7c23e38348dfe9cdcb65797d6892cd4728d54"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/reference.json",
+          "sha256": "da36f4a77751c794c7c71203fbdd3b9e188df6aaf602d2c18aeb10bc50907067"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte.json",
+          "sha256": "06124bcf0f2c3ba356fbcbccf8e6a52b068bfcbd03379ab8bfb7b740bb45e027"
+        },
+        "segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/segmentation_recipe.json",
+          "sha256": "fb87fd0be6cbc11ab32f138d4750851268400588dce7e8df6b7d9d65842261d9"
+        },
+        "semantic_matte_initial.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/semantic_matte_initial.json",
+          "sha256": "7931d01c4a6e2a69d06e3c32615d612e9ac9b097456e9ea4995160aca29c68ce"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/staged_generation.json",
+          "sha256": "2eba6e83ecfcdd8128ff1f758ad90d8f85218efeeea6712fb256e1a3a85c3c0b"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/sampling_workflow_api.json",
+          "sha256": "811f2cddac9aa169b4b00c2aec3b1864d3439557014c5af394ecb9fe5236879e"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/sampling_submission.json",
+          "sha256": "56d0a70f42f9567a74cbe1e7acde10ff806143b6fae5413721a63e45037237ac"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/sampling_history.json",
+          "sha256": "09af506fb6c3b2521cdeda6349fa68618e19a2ae5a66546d3d97fede9151ec53"
+        },
+        "generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/generation_history.json",
+          "sha256": "991de1e26dfa3ae3319bffc558152d3d2974c54b5101d2d218a06c0c3904b220"
+        },
+        "decode_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/decode_submission.json",
+          "sha256": "4e35b6e0b2a1ca7fe664d99752e1a2c15dd4a74f4a9dfd6bebfefd897a0a42b0"
+        },
+        "original.mp4": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/original.mp4",
+          "sha256": "3be4bf35d3c603f8df159192f210a5c10605a9411588b920929931c807aa143b"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/original.latent",
+          "sha256": "f4a8c12f4669ce150594498201f9032e5d1e2432a05901c61bffb4fa4dceacb2"
+        },
+        "guide_image_hit_guard_v2.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/hit_guard_v2.png",
+          "sha256": "4923a3b4cf3701e96729a147f690205bbcbb5b3d5d28b9cab741bc093f08048e"
+        },
+        "guide_prompt_hit_guard_v2.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/hit_guard_v2.prompt.txt",
+          "sha256": "43428521d2917b82502890b2486c20b3cff7e6ffc133ab48bb5aecb5fffa1ff2"
+        },
+        "guide_generation_hit_guard_v2.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/hit_guard_v2.generation.json",
+          "sha256": "16c2f0454b609176986b7abd902bea455974863d064e3058e86bde156be59b3a"
+        },
+        "guide_reference_guide_0_rgba.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/guide_0_rgba.png",
+          "sha256": "b6ceb4c909858c7f1f84243dbb23c6db8b24d47d64be78b09e23b62c762ef9c4"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 original RGB and alpha frames in both facings personally inspected, plus8 full-original-scale RGB and alpha details each facing. One rapid recoil raises the single complete beak, folds the fins back and returns coherently to ready. Three attached leaf-tip tendrils remain present. The short backward gold chin flange is attached filigree, not a second long beak. Retain the complete impact24-38 and recovery64-82; sustained head-up hold uses chronological original samples. Actual Godot timing and entry review pending. No reversed, duplicated, interpolated or normalized frames. Complete candidate native/reflected and actual melee/Shoot fixtures subsequently passed; all402 native poses both facings and24 actual captures personally accepted. Published ordinary import/live checks are performed separately before final handoff."
+      }
+    }
+  ]
+}

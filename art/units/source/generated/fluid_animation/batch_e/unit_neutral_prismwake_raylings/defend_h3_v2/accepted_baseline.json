@@ -1,0 +1,135 @@
+{
+  "id": "unit_neutral_prismwake_raylings",
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "name": "Prismwake Raylings",
+  "faction_id": "neutral",
+  "tier": 5,
+  "role": "ranged",
+  "motif": "ranged",
+  "sprite_sheet": "res://art/animation/runtime/units/unit_neutral_prismwake_raylings.png",
+  "states": [
+    "idle_hold",
+    "ready_active",
+    "move_path_step",
+    "melee_windup_release",
+    "ranged_aim_release",
+    "hit_stagger",
+    "death_rout_remove",
+    "cast_support_anchor",
+    "status_applied",
+    "status_expired",
+    "defend_brace",
+    "retaliation_release",
+    "retreat_withdraw_column",
+    "surrender_stand_down"
+  ],
+  "art_source_kind": "curated_original_character_v1",
+  "curated_source": "res://art/units/source/curated/unit_neutral_prismwake_raylings.png",
+  "curated_source_sha256": "1daf91a952fcd2dc40deccee6594ecedf2a9ad776202fa61ddebbfc910723901",
+  "pose_frame_size": {
+    "width": 512,
+    "height": 256
+  },
+  "pose_columns": 4,
+  "pose_review_status": "accepted_idle_articulation_20260919",
+  "pose_clips": {
+    "idle": {
+      "frames": 8,
+      "indices": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "loop": true,
+      "frame_msec": 200,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        4,
+        2,
+        4,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        5,
+        6,
+        4
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        12
+      ],
+      "loop": true,
+      "frame_msec": 500,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        8,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        9,
+        10,
+        11
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        11
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        13,
+        14,
+        15,
+        4
+      ],
+      "loop": false,
+      "frame_msec": 175,
+      "static_frame": 1
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  },
+  "pose_sheet": "res://art/animation/runtime/poses/unit_neutral_prismwake_raylings.png",
+  "pose_provenance": "res://art/animation/source/poses/unit_neutral_prismwake_raylings/provenance.json",
+  "pose_ground_margin": 8,
+  "pose_review_evidence": "docs/battle-unit-animation-acceptance.json"
+}

@@ -1,0 +1,117 @@
+{
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "status": "complete_candidate_acceptance",
+  "retained_idle": {
+    "frames": 8,
+    "frame_msec": 200,
+    "exact_original_battle_and_map_required": true
+  },
+  "takes": {
+    "move_h3_v1": {
+      "rgb_frames_personally_inspected": 124,
+      "alpha_frames_personally_inspected_each_facing": 124,
+      "original_scale_rgb_details": 8,
+      "original_scale_alpha_details_each_facing": 8,
+      "status": "rejected",
+      "reason": "Complete124 RGB/alpha bothfacings personally reviewed plus original-scale details. Hard guide-pose cuts23-to24 and71-to72 replace ready with raised fins and shorter projected beak in one source frame. No fluid closed fin-beat cycle without retaining a cut; preserve original videos/latent/guides/recipes unchanged."
+    },
+    "attack_h3_v1": {
+      "rgb_frames_personally_inspected": 124,
+      "alpha_frames_personally_inspected_each_facing": 124,
+      "original_scale_rgb_details": 8,
+      "original_scale_alpha_details_each_facing": 8,
+      "status": "rejected",
+      "reason": "Complete124 RGB/alpha bothfacings personally reviewed plus original-scale details. Repeated rapid fin beats16-48 replace a single deliberate jab windup; three distinct attached leaf tips merge/miss in windup. Legacy guide registration aligns the eye but does not resolve incompatible body/beak camera articulation. Preserve source; use anatomy-consistent new guides rather than omit defective transitions."
+    },
+    "move_h3_v2": {
+      "rgb_frames_personally_inspected": 124,
+      "alpha_frames_personally_inspected_each_facing": 124,
+      "original_scale_rgb_details": 8,
+      "original_scale_alpha_details_each_facing": 8,
+      "status": "accepted_original_source_and_candidate_runtime",
+      "reason": "All124 RGB and alpha frames both facings plus8 full-original-scale details per representation reviewed. Continuous two-fin upstroke/downstroke/recovery replaces v1 source cuts. All3 attached tail ends remain present, with real occlusion behind near fin during68. Gold eye/core, long single beak, rainbow membranes and legitimate pink tips retained. Source qualifies; Exact native loop endpoints and actual candidate combat accepted.",
+      "candidate_original_frame_count": 95
+    },
+    "attack_h3_v2": {
+      "rgb_frames_personally_inspected": 124,
+      "alpha_frames_personally_inspected_each_facing": 124,
+      "original_scale_rgb_details": 23,
+      "original_scale_alpha_details_each_facing": 16,
+      "status": "accepted_original_source_and_candidate_runtime",
+      "reason": "All124 RGB/alpha frames in both facings and8 original-scale details per representation personally inspected. One initial fin anticipation0-12 folds into the sustained swept-fin windup, one horizontal beak jab44-50 and ready recovery. All3 attached tail leaves remain present. Candidate retains all physical transitions and shortens only observed sustained holds with chronological original samples. Actual Godot contact/timing/entry accepted; every75 attack poses observed. Original-scale44-51 contact transition identifies first full horizontal extension48; source60 is a later hold, so candidate combat contact uses48.",
+      "candidate_original_frame_count": 75,
+      "candidate_contact_source_frame": 48
+    },
+    "hit_h3_v2": {
+      "rgb_frames_personally_inspected": 124,
+      "alpha_frames_personally_inspected_each_facing": 124,
+      "original_scale_rgb_details": 8,
+      "original_scale_alpha_details_each_facing": 8,
+      "status": "accepted_original_source_and_candidate_runtime",
+      "reason": "One rapid recoil24-38 into a coherent held head-up pose and smooth ready recovery64-82. One full long beak, one blue eye and three attached tail leaf tips retained. Enlarged35/44 confirms the short backward gold chin flange is attached filigree rather than a second beak. Complete original/matte chronology and both facings qualify; Actual/native entry and timing accepted.",
+      "candidate_original_frame_count": 38
+    },
+    "defend_h3_v2": {
+      "rgb_frames_personally_inspected": 124,
+      "alpha_frames_personally_inspected_each_facing": 124,
+      "original_scale_rgb_details": 8,
+      "original_scale_alpha_details_each_facing": 8,
+      "status": "accepted_original_source_and_candidate_runtime",
+      "reason": "One fin anticipation7-19 becomes a continuous inward two-fin fold20-32, ending in a stable protective brace32-123. Full single beak, eye and all three tail leaf paddles retained. The gold point alongside the face belongs to the folded rainbow far fin. All fold transitions retained; Native entry and final static guard accepted in both facings.",
+      "candidate_original_frame_count": 37
+    },
+    "cast_h3_v2": {
+      "rgb_frames_personally_inspected": 124,
+      "alpha_frames_personally_inspected_each_facing": 124,
+      "original_scale_rgb_details": 10,
+      "original_scale_alpha_details_each_facing": 10,
+      "status": "accepted_original_source_and_candidate_runtime",
+      "reason": "One physical fin flare, held display, bow with continuous fin rotation69-81, and gradual94-97 return. All three attached leaf paddles, single unchanged blue eye/full beak and thin edge-on fin71-72 retained in original/alpha. Preserve all moving transitions and shorten only observed sustained displays. Runtime gesture/entry accepted in the complete native/reflected gallery.",
+      "candidate_original_frame_count": 39
+    },
+    "ranged_h3_v2": {
+      "rgb_frames_personally_inspected": 124,
+      "alpha_frames_personally_inspected_each_facing": 124,
+      "original_scale_rgb_details": 10,
+      "original_scale_alpha_details_each_facing": 10,
+      "status": "accepted_original_source_and_candidate_runtime",
+      "reason": "One preparing fin stroke curls attached three tendrils behind the near fin23-32, followed by raised V lens charge36, broad downward fin release45 and complete ready recovery. Enlarged23/26/28/30/31/32 shows real curled-stem/paddle occlusion; three tips distinctly uncoil by36 and remain through release/recovery. Single-eye glow stays inside original rim, full beak/pink tip retained with no baked projectile. All consecutive15-78 retained; Actual Shoot passed, including every64 drawn poses and the original45 release.",
+      "candidate_original_frame_count": 64,
+      "candidate_contact_source_frame": 45
+    },
+    "death_h3_v2": {
+      "rgb_frames_personally_inspected": 124,
+      "alpha_frames_personally_inspected_each_facing": 124,
+      "original_scale_rgb_details": 18,
+      "original_scale_alpha_details_each_facing": 18,
+      "status": "accepted_original_source_and_candidate_runtime",
+      "reason": "Gradual hover loss and downward body pitch lead to rapid attached-fin ground fold76-77. Single eye dims inside original rim; full single beak, gold framework and both folded membranes retained. Two tail ends overlap77-80 and all three separate by84 during settling. All original descent/landing/settling58-100 retained; final sustained rest sampled108/116/123 with real123 corpse. Native grounded collapse/static corpse placement accepted in both facings.",
+      "candidate_original_frame_count": 46
+    }
+  },
+  "original_guide_decisions": {
+    "initial_h3_pair": "Rejected hard flight guide cuts and repeated attack/tail-merging windup; originals/latent/config immutable.",
+    "flight_jab_v2": "Original generated upstroke and two jab guides inspected, uniform whole-master scale0.43; contact source crop starts560 to exclude neighboring upper-row leaf-tip fragments.",
+    "flight_down_v2": "Original generated both-fin downstroke inspected; fixed whole-original scale0.30 and hover root registration, all3 attached tips preserved.",
+    "flight_jab_v2_clean": "Original alternative retained unused. Gray-composite check proves first master already has alpha-zero outside the silhouette, despite hidden RGB halo in the tool preview.",
+    "hit_guard_v2": "Original two-figure master inspected after compositing; one full beak, two broad fins and3 leaf tips per figure, uniform whole-master scale0.30.",
+    "lens_release_v2": "Retained unused: excessive elongated tendrils. Original13 charge/original14 release and exact accepted ready recovery used instead.",
+    "death_h3_v2": "Preserve unsubmitted death-v1 recipe and all original guides. Same seed/settings and byte-exact three guide images; only replace generic hover-position sentence with explicit physical vertical descent to existing ground-contact corpse. Original artwork and registration unchanged."
+  },
+  "runtime_review": {
+    "candidate_normal_checks": 1281,
+    "candidate_mirrored_checks": 1281,
+    "candidate_shoot_checks": 1281,
+    "failures": [],
+    "new_original_poses": 394,
+    "retained_idle_poses": 8,
+    "native_poses_personally_inspected_each_facing": 402,
+    "actual_battle_captures_personally_inspected": 24,
+    "actual_melee_drawn_poses": 75,
+    "actual_shoot_drawn_poses": 64,
+    "mirrored_gallery_uses_actual_game_transform": true,
+    "actual_combat_facing": "player_right",
+    "published_import_and_live_checks": "required separately before handoff",
+    "observation_budget": "Actual committed active snapshot and retained shell queue determine bounds; all queue/focus/pose assertions unchanged. Fixed20s was insufficient for12 real events; retained sources and timing unchanged."
+  }
+}

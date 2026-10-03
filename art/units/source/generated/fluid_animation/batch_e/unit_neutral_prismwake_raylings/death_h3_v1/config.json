@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    568
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    210,
+    210,
+    210
+  ],
+  "seed": 2026100337,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        240,
+        456
+      ],
+      "scale": 0.50473,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+      "rects": [
+        [
+          670,
+          750,
+          1045,
+          985
+        ],
+        [
+          670,
+          985,
+          1073,
+          1086
+        ]
+      ],
+      "anchor": [
+        967,
+        1030
+      ],
+      "scale": 0.55,
+      "alpha_noise_cutoff": 8,
+      "guide_registration_reason": "Retain original corpse physical ground-contact anchor; do not raise or normalize fallen anatomy to the hover pose."
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+      "rects": [
+        [
+          1045,
+          840,
+          1448,
+          980
+        ],
+        [
+          1075,
+          980,
+          1448,
+          1010
+        ]
+      ],
+      "anchor": [
+        1344,
+        1000
+      ],
+      "scale": 0.55,
+      "alpha_noise_cutoff": 8,
+      "guide_registration_reason": "Retain original corpse physical ground-contact anchor; do not raise or normalize fallen anatomy to the hover pose."
+    }
+  ],
+  "guides": [
+    [
+      76,
+      1
+    ],
+    [
+      98,
+      2
+    ]
+  ],
+  "last": 2,
+  "prompt": "Original PRISMWAKE RAYLING, facing SCREEN RIGHT at the fixed elevated three-quarter camera of the supplied painting. ONE hovering ivory-and-gold filigree ray creature, ONE blue-violet eye/core, ONE long tapered ivory-gold beak with the original pink tip. Exactly TWO broad rainbow membrane fins: near fin spreads to SCREEN LEFT behind the core, far fin rises to SCREEN RIGHT above the core. Small original dorsal crest fins remain distinct from the two broad fins. Exactly THREE attached thin trailing tendrils, each ending in ONE rainbow leaf-shaped paddle. No legs, feet, humanoid hands or arms, teeth, held weapons or extra bodies. Keep the original eye size, beak length, filigree, rainbow membrane colours, translucency, crest and three complete leaf-ended tendrils. Articulate the fin membranes and their roots physically; preserve the painted fantasy raster surface. One continuous physical collapse from hovering to GROUNDED CORPSE. Both broad fins lose support and droop, the single core slowly sinks, the beak approaches the ground and the ray rolls slightly onto its folded fins. Lay the whole body, long beak and all THREE leaf-ended tendrils down into the supplied final resting corpse. The original eye darkens but stays present. No disintegration, glass shards, missing fins, added limbs, shrinking, guide-pose cuts or resurrection. Final second still and grounded.  Locked orthographic studio camera and unchanged anatomical scale. Flat neutral gray RGB210,210,210 background throughout, no scenery, floor, shadows, text, cuts, zoom or camera motion. Keep the single core near the same hover reference; the engine owns travel across the map. Entire beak, both broad fins, all crest fins and all THREE leaf tips remain inside generous canvas margins. No added armour, detached shards, stars, particles, rings, beams, smoke or projectile baked into the video.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

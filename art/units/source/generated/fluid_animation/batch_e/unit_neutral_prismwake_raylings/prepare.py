@@ -1,0 +1,41 @@
+"""Original Prismwake Rayling key-pose registration and immutable H3 recipes."""
+import json,sys
+import produce as p
+UID='unit_neutral_prismwake_raylings'
+SELECTED=sys.argv[1:] if __name__=='__main__' else []
+B=p.ROOT/'art/animation/source/poses'/UID
+IDENTITY=('Original PRISMWAKE RAYLING, facing SCREEN RIGHT at the fixed elevated three-quarter camera of the supplied painting. ONE hovering ivory-and-gold filigree ray creature, ONE blue-violet eye/core, ONE long tapered ivory-gold beak with the original pink tip. Exactly TWO broad rainbow membrane fins: near fin spreads to SCREEN LEFT behind the core, far fin rises to SCREEN RIGHT above the core. Small original dorsal crest fins remain distinct from the two broad fins. Exactly THREE attached thin trailing tendrils, each ending in ONE rainbow leaf-shaped paddle. No legs, feet, humanoid hands or arms, teeth, held weapons or extra bodies. Keep the original eye size, beak length, filigree, rainbow membrane colours, translucency, crest and three complete leaf-ended tendrils. Articulate the fin membranes and their roots physically; preserve the painted fantasy raster surface. ')
+PLATE=(' Locked orthographic studio camera and unchanged anatomical scale. Flat neutral gray RGB210,210,210 background throughout, no scenery, floor, shadows, text, cuts, zoom or camera motion. Keep the single core near the same hover reference; the engine owns travel across the map. Entire beak, both broad fins, all crest fins and all THREE leaf tips remain inside generous canvas margins. No added armour, detached shards, stars, particles, rings, beams, smoke or projectile baked into the video. ')
+
+def reference(index):
+ f=dict(json.loads((B/'packing.json').read_bytes())['frames'][index]);f['source']=(B/f['source']).relative_to(p.ROOT).as_posix();f['alpha_noise_cutoff']=8
+ if index<=8 or index==12:
+  f['guide_offset']=[60,80]
+  f['guide_registration_reason']='One fixed whole-reference translation of earlier hover paintings: measured eye center differs from accepted ready by [30,40] packed pixels; preserve original scale and physical fin articulation.'
+ elif index in [13,14,15]:
+  f['guide_offset']=[62,34]
+  f['guide_registration_reason']='One fixed whole-reference translation across the original ranged source group: release eye center differs from accepted ready by [31,17] packed pixels, preserving original anatomical scale.'
+ elif index in [9,10,11]:
+  f['guide_registration_reason']='Retain original corpse physical ground-contact anchor; do not raise or normalize fallen anatomy to the hover pose.'
+ return f
+
+def recipe(clip,indices,guides,last,action,seed):
+ if SELECTED and clip not in SELECTED:return
+ out=p.SOURCE_DIR/(clip+'_h3_v1');out.mkdir(exist_ok=True)
+ c=dict(unit_id=UID,clip=clip,canvas=[960,640],anchor=[480,568],scale=.5,key_rgb=[210,210,210],seed=seed,references=[reference(i) for i in indices],guides=guides,last=last,prompt=(IDENTITY+action+PLATE).strip(),tiled_decode=dict(tile_size=512,overlap=64,temporal_size=16,temporal_overlap=4))
+ if (out/'sampling_submission.json').exists() or (out/'submission.json').exists():
+  assert json.loads((out/'config.json').read_bytes())==c,'Submitted recipe immutable; use new take'
+  for guide in json.loads((out/'reference.json').read_bytes())['guides']:assert p.sha(out/guide['input_file'])==guide['input_sha256']
+  print('Preserved submitted',clip,flush=True);return
+ p.write(out/'config.json',c);p.prepare(out,c);p.verify(out,c);print('Prepared',clip,flush=True)
+
+if __name__=='__main__':
+ recipe('move',[16,2,3,4],[[24,1],[50,2],[75,1],[100,2]],0,'Two smooth full FLIGHT IN PLACE fin-beat cycles. Raise both broad membrane fins through a high curled upstroke, flex the fin roots into a lowered downstroke, pass through the original level spread, repeat once and settle to the exact ready pose. Three attached leaf-ended tendrils trail and curl naturally with each fin stroke. Keep the single eye/core at steady hover height and size; do not substitute global bouncing, camera rotation or whole-body travel for articulated fin motion. ',2026100331)
+ recipe('attack',[16,5,6,19],[[32,1],[60,2],[84,3]],0,'One close-range physical BEAK JAB. Sweep both broad fins back, coil the body behind the original long beak, then extend that SAME attached beak forward SCREEN RIGHT into the supplied clear contact, without shortening or growing it. Withdraw and recover to ready. Exactly three attached tendrils follow the body coil; retain the single eye/core and both rainbow fins. No second beak, arms, weapon, projectile, explosion or flash hiding contact. ',2026100332)
+ recipe('hit',[16,8],[[44,1]],0,'One clear impact recoil away from SCREEN RIGHT. Tilt the beak upward, flex both broad fins into a bracing bend and draw the three attached tendrils back; keep the original core/eye and full beak intact. Recover once to the exact hover-ready painting. No spin, collapse, repeated hit, limb replacement or shattering. ',2026100333)
+ recipe('defend',[16,7],[[58,1]],1,'One continuous defensive FIN CURL. Bring the TWO broad rainbow fins inward around the single eye/core as a protective folded guard, angle the attached beak down and let the three leaf-ended tendrils settle close behind. Keep all gold borders and coloured membranes intact and visibly separate. Finish held in the supplied guard for the final second; never return to idle or turn into a sphere/extra shell. ',2026100334)
+ recipe('cast',[16,19,2,20],[[32,2],[60,1],[88,3]],0,'One deliberate physical SUPPORT SALUTE. Open and raise BOTH broad rainbow fins into a wide attentive flare, bow the long beak slightly downward, hold the physical fin display as a rally cue, then lower the fins and return to ready. Three attached tendrils spread and settle naturally. This is a non-spell gesture: original eye brightness remains steady, with no added magic, pulses, beams, objects or symbols. ',2026100335)
+ recipe('ranged',[16,13,14,15],[[36,1],[64,2],[90,3]],0,'One coordinated PRISMWAKE LENS RELEASE cue. Gather the TWO broad rainbow membrane fins into the original raised V charge, focus the existing SINGLE blue eye/core, then open both broad fins into one clear forward release cue before recovering to ready. The long beak and exactly THREE attached leaf-ended tendrils retain their original shape and attachment throughout. Only the original eye briefly brightens; no added orb or second pupil and no projectile, beam, ring or particles. The game owns all distant projectile flight. ',2026100336)
+ recipe('death',[16,10,11],[[76,1],[98,2]],2,'One continuous physical collapse from hovering to GROUNDED CORPSE. Both broad fins lose support and droop, the single core slowly sinks, the beak approaches the ground and the ray rolls slightly onto its folded fins. Lay the whole body, long beak and all THREE leaf-ended tendrils down into the supplied final resting corpse. The original eye darkens but stays present. No disintegration, glass shards, missing fins, added limbs, shrinking, guide-pose cuts or resurrection. Final second still and grounded. ',2026100337)
+ if not (p.SOURCE_DIR/'delivery.json').exists():p.write(p.SOURCE_DIR/'delivery.json',dict(takes=[c+'_h3_v1' for c in ['move','attack','hit','defend','cast','ranged','death']],preserved_accepted_clips=['idle'],visual_review=dict(status='pending',notes='Original curated identity and all24 packed poses personally inspected at native and original scale. Existing idle16-23 articulates two fins and three tendrils, retains one eye/full beak and coherent return; preserve eight paintings and200ms battle/map timing. Seven new source actions await full chronological RGB/alpha/native/reflected/actual action/map review.')))
+ if not (p.SOURCE_DIR/'runtime_registration.json').exists():p.write(p.SOURCE_DIR/'runtime_registration.json',dict(unit_id=UID,reference_height=256,output_scale=.5,canvas=[960,640],ground_anchor=[480,568],ready_guide=reference(16),original_hover_group_guide_translation=[60,80],original_ranged_group_guide_translation=[62,34],corpse_guides='original anatomical ground-contact anchors',reason='Original anatomical scales retained. Uniform original-group guide translations align the single-eye center with accepted ready, except the separately grounded corpse anchors. Extracted H3 frames have one fixed anchor/scale; no per-frame normalization or stabilization.'))

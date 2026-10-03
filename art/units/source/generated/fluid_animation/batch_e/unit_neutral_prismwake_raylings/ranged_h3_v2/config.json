@@ -1,0 +1,125 @@
+{
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    568
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    210,
+    210,
+    210
+  ],
+  "seed": 2026100346,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        240,
+        456
+      ],
+      "scale": 0.50473,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "ranged_lens_charge",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/ranged-correction-20260916/alpha/ranged-tail-corrected.png",
+      "rects": [
+        [
+          0,
+          0,
+          560,
+          805
+        ]
+      ],
+      "anchor": [
+        432,
+        760
+      ],
+      "scale": 0.3,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        62,
+        34
+      ],
+      "guide_registration_reason": "One fixed whole-reference translation across the original ranged source group: release eye center differs from accepted ready by [31,17] packed pixels, preserving original anatomical scale."
+    },
+    {
+      "name": "ranged_lens_release",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/ranged-correction-20260916/alpha/ranged-source.png",
+      "rects": [
+        [
+          560,
+          0,
+          1265,
+          805
+        ]
+      ],
+      "anchor": [
+        1065,
+        735
+      ],
+      "scale": 0.3,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        62,
+        34
+      ],
+      "guide_registration_reason": "One fixed whole-reference translation across the original ranged source group: release eye center differs from accepted ready by [31,17] packed pixels, preserving original anatomical scale."
+    },
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        240,
+        456
+      ],
+      "scale": 0.50473,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      36,
+      1
+    ],
+    [
+      64,
+      2
+    ],
+    [
+      96,
+      3
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original PRISMWAKE RAYLING, facing SCREEN RIGHT at the fixed elevated three-quarter camera of the supplied painting. ONE hovering ivory-and-gold filigree ray creature, ONE blue-violet eye/core, ONE long tapered ivory-gold beak with the original pink tip. Exactly TWO broad rainbow membrane fins: near fin spreads to SCREEN LEFT behind the core, far fin rises to SCREEN RIGHT above the core. Small original dorsal crest fins remain distinct from the two broad fins. Exactly THREE attached thin trailing tendrils, each ending in ONE rainbow leaf-shaped paddle. No legs, feet, humanoid hands or arms, teeth, held weapons or extra bodies. Keep the original eye size, beak length, filigree, rainbow membrane colours, translucency, crest and three complete leaf-ended tendrils. Articulate the fin membranes and their roots physically; preserve the painted fantasy raster surface. ONE coordinated original PRISMWAKE LENS RELEASE cue. Raise TWO broad rainbow membrane fins into the supplied V charge, focus the existing SINGLE blue eye/core within its original rim, open both fins into one clear forward release cue, then recover directly to the exact original ready painting. All THREE attached leaf-ended tendrils retain their original length and separate tips. The long beak, gold borders and single eye retain their original anatomy/camera. Only the existing eye briefly brightens; no new orb, pupil, particles, projected beam or baked projectile. The game owns projectile flight.  Locked orthographic studio camera and unchanged anatomical scale. Flat neutral gray RGB210,210,210 background throughout, no scenery, floor, shadows, text, cuts, zoom or camera motion. Keep the single core near the same hover reference; the engine owns travel across the map. Entire beak, both broad fins, all crest fins and all THREE leaf tips remain inside generous canvas margins. No added armour, detached shards, stars, particles, rings, beams, smoke or projectile baked into the video.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

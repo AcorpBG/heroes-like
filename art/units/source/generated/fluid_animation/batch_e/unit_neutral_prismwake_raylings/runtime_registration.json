@@ -1,0 +1,41 @@
+{
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    568
+  ],
+  "ready_guide": {
+    "name": "idle_hands_0",
+    "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        384,
+        512
+      ]
+    ],
+    "anchor": [
+      240,
+      456
+    ],
+    "scale": 0.50473,
+    "alpha_noise_cutoff": 8
+  },
+  "original_hover_group_guide_translation": [
+    60,
+    80
+  ],
+  "original_ranged_group_guide_translation": [
+    62,
+    34
+  ],
+  "corpse_guides": "original anatomical ground-contact anchors",
+  "reason": "Original anatomical scales retained. Uniform original-group guide translations align the single-eye center with accepted ready, except the separately grounded corpse anchors. Extracted H3 frames have one fixed anchor/scale; no per-frame normalization or stabilization."
+}

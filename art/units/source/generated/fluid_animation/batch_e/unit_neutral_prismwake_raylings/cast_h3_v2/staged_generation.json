@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "c58677c27dae4f728a2baf53adda441fab0e06f23fb6fcd3b1ef93c56d2cc239",
+  "latent_sha256": "ef31d47115c7b56001230dcda641567ade02a0870307785500ae50d8d2ea94e0",
+  "decode_workflow_sha256": "31035879972deb7c102f95088b96bcd5124c453ec58ca510382ac3728c10d8a1",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "prismwake_rayling_h3\\cast_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18339475264,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

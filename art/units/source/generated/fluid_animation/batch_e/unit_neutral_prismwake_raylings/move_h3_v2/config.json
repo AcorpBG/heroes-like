@@ -1,0 +1,93 @@
+{
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    568
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    210,
+    210,
+    210
+  ],
+  "seed": 2026100341,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        240,
+        456
+      ],
+      "scale": 0.50473,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/flight_jab_v2.png",
+      "rects": [
+        [
+          0,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        475,
+        498
+      ],
+      "scale": 0.43,
+      "alpha_noise_cutoff": 8,
+      "guide_registration_reason": "Original generated guide master with one fixed anatomical scale0.43 for all of its poses; whole-reference placement aligns the single-eye hover origin without geometry changes. No output frame stabilization or per-frame scaling."
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/flight_down_v2.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        814,
+        822
+      ],
+      "scale": 0.3,
+      "alpha_noise_cutoff": 8,
+      "guide_registration_reason": "Original single downstroke guide at fixed anatomical scale0.30, measured25x30 reference-eye match. Whole-reference registration only; both broad fins physically descend and all3 leaf tails remain attached."
+    }
+  ],
+  "guides": [
+    [
+      36,
+      1
+    ],
+    [
+      76,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original PRISMWAKE RAYLING, facing SCREEN RIGHT at the fixed elevated three-quarter camera of the supplied painting. ONE hovering ivory-and-gold filigree ray creature, ONE blue-violet eye/core, ONE long tapered ivory-gold beak with the original pink tip. Exactly TWO broad rainbow membrane fins: near fin spreads to SCREEN LEFT behind the core, far fin rises to SCREEN RIGHT above the core. Small original dorsal crest fins remain distinct from the two broad fins. Exactly THREE attached thin trailing tendrils, each ending in ONE rainbow leaf-shaped paddle. No legs, feet, humanoid hands or arms, teeth, held weapons or extra bodies. Keep the original eye size, beak length, filigree, rainbow membrane colours, translucency, crest and three complete leaf-ended tendrils. Articulate the fin membranes and their roots physically; preserve the painted fantasy raster surface. ONE slow continuous FLIGHT IN PLACE fin-beat cycle only. Begin raising BOTH broad fins smoothly from ready during the first second, continue through the supplied high upstroke, rotate both fin roots down into the low power stroke, then raise gently back to the exact ready. Core, eye diameter, head camera and full long beak stay steady; three separate leaf tails trail naturally. Continuous articulation between the supplied states, no static wait then pose jump, repeated cycles, body rotation or global bounce.  Locked orthographic studio camera and unchanged anatomical scale. Flat neutral gray RGB210,210,210 background throughout, no scenery, floor, shadows, text, cuts, zoom or camera motion. Keep the single core near the same hover reference; the engine owns travel across the map. Entire beak, both broad fins, all crest fins and all THREE leaf tips remain inside generous canvas margins. No added armour, detached shards, stars, particles, rings, beams, smoke or projectile baked into the video.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

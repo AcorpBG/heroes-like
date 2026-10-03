@@ -5670,29 +5670,29 @@
       "frame_msec": 200,
       "static_frame": 0,
       "ground_anchor": [
-        124.0,
+        124,
         203
       ],
       "painted_extent": 196,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_prismwake_raylings.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_prismwake_raylings.png",
       "source_indices": [
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        132,
-        45,
-        337,
-        257
+        56,
+        13,
+        261,
+        225
       ],
-      "source_sha256": "a80269fd771f4a4a89d53a808e81ca0ebbc50ca8dbe11dbeb25409b990f80b23",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_prismwake_raylings/provenance.json",
+      "source_sha256": "852ba0b8c9effc53dba1c3357c462e456f76bbb849215307e8a9c0713bee8da3",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_prismwake_raylings/provenance.json",
       "sha256": "53483984f3809078b50359c5bd498806deaf029c82f397a6d451a6bcaa891663"
     },
     "unit_neutral_rootcrown_knotstags": {

@@ -1,0 +1,126 @@
+{
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          240,
+          456
+        ],
+        "scale": 1.00946,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2d876fd6f2e07e4676bd7584d34ab79f5ab76e96b74291e3c36df41ba6ac21c8",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "c82bf8a950b5b670c5af6b6fc458398ab1165b8adf94f549b6c2d6b83fb02a14",
+      "runtime_source_scale": 0.50473
+    },
+    {
+      "source_frame": {
+        "name": "ranged_lens_charge",
+        "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/ranged-correction-20260916/alpha/ranged-tail-corrected.png",
+        "rects": [
+          [
+            0,
+            0,
+            560,
+            805
+          ]
+        ],
+        "anchor": [
+          432,
+          760
+        ],
+        "scale": 0.6,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          62,
+          34
+        ],
+        "guide_registration_reason": "One fixed whole-reference translation across the original ranged source group: release eye center differs from accepted ready by [31,17] packed pixels, preserving original anatomical scale."
+      },
+      "source_sha256": "6e8454a1f6b10eb5ae0f6f986128106902886e50511ceb096e7aca40d9442a97",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e514996bee08690e25b8d87f057717d5354384590976e89e62da727bc0c8fc95",
+      "runtime_source_scale": 0.3
+    },
+    {
+      "source_frame": {
+        "name": "ranged_lens_release",
+        "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/ranged-correction-20260916/alpha/ranged-source.png",
+        "rects": [
+          [
+            560,
+            0,
+            1265,
+            805
+          ]
+        ],
+        "anchor": [
+          1065,
+          735
+        ],
+        "scale": 0.6,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          62,
+          34
+        ],
+        "guide_registration_reason": "One fixed whole-reference translation across the original ranged source group: release eye center differs from accepted ready by [31,17] packed pixels, preserving original anatomical scale."
+      },
+      "source_sha256": "ac065f7efac0f8139ab92c15161cb5b6b963213ffac97f527c91b7029b861666",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "24704ee069d79e83cca8867890e43ea646b2f474ec6a1a2e84e375535a861442",
+      "runtime_source_scale": 0.3
+    },
+    {
+      "source_frame": {
+        "name": "ranged_lens_recover",
+        "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/ranged-correction-20260916/alpha/ranged-source.png",
+        "rects": [
+          [
+            1265,
+            0,
+            1954,
+            805
+          ]
+        ],
+        "anchor": [
+          1754,
+          753
+        ],
+        "scale": 0.6,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          62,
+          34
+        ],
+        "guide_registration_reason": "One fixed whole-reference translation across the original ranged source group: release eye center differs from accepted ready by [31,17] packed pixels, preserving original anatomical scale."
+      },
+      "source_sha256": "ac065f7efac0f8139ab92c15161cb5b6b963213ffac97f527c91b7029b861666",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "d69a113cbfda0ecdbe933566cdde02f74316aabb10ef9b3559521ace13944ecc",
+      "runtime_source_scale": 0.3
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    568
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

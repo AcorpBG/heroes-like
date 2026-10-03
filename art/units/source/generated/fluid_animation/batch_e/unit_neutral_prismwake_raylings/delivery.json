@@ -1,0 +1,18 @@
+{
+  "takes": [
+    "move_h3_v2",
+    "attack_h3_v2",
+    "hit_h3_v2",
+    "defend_h3_v2",
+    "cast_h3_v2",
+    "ranged_h3_v2",
+    "death_h3_v2"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_unit",
+    "notes": "Personally accepted394 original H3 action frames after complete nine124-frame original RGB/alpha review in both facings and enlarged anatomical details; two first takes rejected and preserved. All402 native poses including8 preserved idle paintings reviewed in both actual game draw facings;24 actual melee/Shoot captures reviewed at native and enlarged scale. Candidate normal/mirror/Shoot each1281 checks with failures[]; actual75 melee/64 Shoot drawn poses observed with correct contact28/30. Complete two-fin flight, one beak jab, recoil, held inward guard, physical fin flare/bow, lens release and grounded collapse retain one eye/full beak/three attached leaf tendrils with real source occlusions. Preserve8 exact accepted idle paintings at200ms and map pixels. No output normalization, reversed/duplicated/interpolated frames or chroma suppression. Ordinary import and published live verification required before final handoff."
+  }
+}

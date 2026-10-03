@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          240,
+          456
+        ],
+        "scale": 1.00946,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2d876fd6f2e07e4676bd7584d34ab79f5ab76e96b74291e3c36df41ba6ac21c8",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "c82bf8a950b5b670c5af6b6fc458398ab1165b8adf94f549b6c2d6b83fb02a14",
+      "runtime_source_scale": 0.50473
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/flight_jab_v2.png",
+        "rects": [
+          [
+            0,
+            0,
+            768,
+            512
+          ]
+        ],
+        "anchor": [
+          475,
+          498
+        ],
+        "scale": 0.86,
+        "alpha_noise_cutoff": 8,
+        "guide_registration_reason": "Original generated guide master with one fixed anatomical scale0.43 for all of its poses; whole-reference placement aligns the single-eye hover origin without geometry changes. No output frame stabilization or per-frame scaling."
+      },
+      "source_sha256": "cd1f6c27644066f6b9c9b0f53d2dc867878ffb69707cd0b99d91b9a1b7e83484",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d63807f5e1341e4a3304034651cd2b3b58e64515a95b560654e33a3ca0e2c202",
+      "runtime_source_scale": 0.43
+    },
+    {
+      "source_frame": {
+        "name": "idle_hands_3",
+        "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            1152,
+            0,
+            1536,
+            512
+          ]
+        ],
+        "anchor": [
+          1392,
+          456
+        ],
+        "scale": 1.00946,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2d876fd6f2e07e4676bd7584d34ab79f5ab76e96b74291e3c36df41ba6ac21c8",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "5425b50fa6c7dcf55bdb96f64b2c2f1fea8df7de49dc95c70cc1f85f2476f0b6",
+      "runtime_source_scale": 0.50473
+    },
+    {
+      "source_frame": {
+        "name": "idle_hands_4",
+        "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            512,
+            384,
+            1024
+          ]
+        ],
+        "anchor": [
+          240,
+          940
+        ],
+        "scale": 1.00946,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2d876fd6f2e07e4676bd7584d34ab79f5ab76e96b74291e3c36df41ba6ac21c8",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "1b936ad77988c552542851f3285ba7b72e15f729cf25bebf96436f09b4a727bf",
+      "runtime_source_scale": 0.50473
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    568
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

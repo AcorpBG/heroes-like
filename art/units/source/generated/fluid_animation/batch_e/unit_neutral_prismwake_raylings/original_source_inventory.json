@@ -1,0 +1,1258 @@
+{
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "takes": {
+    "attack_h3_v1": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/accepted_baseline.json",
+        "bytes": 2942,
+        "sha256": "290f9b98dada2b71b0e82bdc5014f913fd2a6bf49bf9d011a3d7504c13cad879"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/config.json",
+        "bytes": 4628,
+        "sha256": "1890f9ba897fdecc6d9a578a5d8ef330eadc399bc0fc9e49846d1b6b36e38800"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/decode_submission.json",
+        "bytes": 777,
+        "sha256": "c0b32eb24ff5d6988d147a7857dc428059932f5bc1caeed118705ee97a409217"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/generation_history.json",
+        "bytes": 23545,
+        "sha256": "05fc70d99f93839f50007baad6bb53025fafa004a23b38dc2fe4171c0f561101"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/guide_0_chroma.png",
+        "bytes": 117625,
+        "sha256": "c82bf8a950b5b670c5af6b6fc458398ab1165b8adf94f549b6c2d6b83fb02a14"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/guide_0_rgba.png",
+        "bytes": 151705,
+        "sha256": "b6ceb4c909858c7f1f84243dbb23c6db8b24d47d64be78b09e23b62c762ef9c4"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/guide_1_chroma.png",
+        "bytes": 91786,
+        "sha256": "84654bdbb91886622bc8adc9b75d6bba704bf7002389a40f968ca111dcca319b"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/guide_1_rgba.png",
+        "bytes": 119453,
+        "sha256": "d0fc62a62887bf06f9737cc20e3e59a4c52f5a512d9bbe01ce5c3a3f06018c1d"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/guide_2_chroma.png",
+        "bytes": 95985,
+        "sha256": "6beb92eb21575923a3cfa7ab0d095b1f8bd0371cce2a6778556da8464e4604eb"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/guide_2_rgba.png",
+        "bytes": 124178,
+        "sha256": "12e886cccc988eb20af2c5e5888ccf5b305a11ad9b73ab42d224d5b6f82070a4"
+      },
+      "guide_3_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/guide_3_chroma.png",
+        "bytes": 130493,
+        "sha256": "5425b50fa6c7dcf55bdb96f64b2c2f1fea8df7de49dc95c70cc1f85f2476f0b6"
+      },
+      "guide_3_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/guide_3_rgba.png",
+        "bytes": 169138,
+        "sha256": "608699201aeb7b69a70f5458a883a0a7ff6d59e207c4bf6952cc322e4752c53e"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/matte.json",
+        "bytes": 51648,
+        "sha256": "19b89878109254ab421f5f6f21ba2b9617d6215996986b6542906406a24a55f3"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/original.json",
+        "bytes": 9460,
+        "sha256": "087beb5c8b4ccfc17a970d470031b07f7f0b01967295d372130c978a56cf379e"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/original.latent",
+        "bytes": 8529696,
+        "sha256": "3a6891bf401ace30364772021ce07c3ee3a0c8fe5b56fe323e74359ec7ef1ec3"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/original.mp4",
+        "bytes": 428290,
+        "sha256": "12fa5ed4fe4b2c8740ddebb7671b122654fd9f2017df53c1ecbd177f61c9019f"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/original_lossless.mkv",
+        "bytes": 36508835,
+        "sha256": "0925d497f864fa99b824bc0269aace79e2904e682a61715d71d182fba8044396"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/prompt.txt",
+        "bytes": 1812,
+        "sha256": "0f4ae024b449892ef145e522176161d519fcb1781856ad7472778c57d84d93f5"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/reference.json",
+        "bytes": 3938,
+        "sha256": "5588e106e3c4a212c2efb71d87a2772d868eab92bf5bc8e00d1e74bb01431f5b"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/sampling_history.json",
+        "bytes": 7723,
+        "sha256": "539e011c750a65974f24d18d3e84953f9d9d556dede5916e6a730354ae883aea"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/sampling_submission.json",
+        "bytes": 713,
+        "sha256": "d6bb746683b263f59599bd84f15935213b5882955fe6fc5bb4f6af0b56ff19e1"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/sampling_workflow_api.json",
+        "bytes": 5524,
+        "sha256": "a51c3f02d51530da5aaca8d1f4e70c1846bb73fe9ad9082e0e29fd4962ad76c9"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "fb87fd0be6cbc11ab32f138d4750851268400588dce7e8df6b7d9d65842261d9"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/semantic_matte_initial.json",
+        "bytes": 51152,
+        "sha256": "c951e6c6f0d37d96feabac3862043a02a72dcc7e15c5b698ac268ceaed46b6bf"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/staged_generation.json",
+        "bytes": 784,
+        "sha256": "b9188788d399239b939b5ac70d86aa7648fbdd02fca9fc48a405bbf1a0f404be"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/submission.json",
+        "bytes": 777,
+        "sha256": "c0b32eb24ff5d6988d147a7857dc428059932f5bc1caeed118705ee97a409217"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v1/workflow_api.json",
+        "bytes": 1219,
+        "sha256": "531d8d29837744e08c4482fa0d67c1a4ceb2160520c84299db42bbfed0f3223e"
+      }
+    },
+    "attack_h3_v2": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/accepted_baseline.json",
+        "bytes": 2942,
+        "sha256": "290f9b98dada2b71b0e82bdc5014f913fd2a6bf49bf9d011a3d7504c13cad879"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/config.json",
+        "bytes": 4549,
+        "sha256": "e87ad354322746693175d99dbcf7eb2f6303d3956dfec685db64d504bbec7b9d"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/decode_submission.json",
+        "bytes": 778,
+        "sha256": "643f3285af9e62c240ba604b850ed4e4e8557d308c3ff43554017ff894a35093"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/generation_history.json",
+        "bytes": 23545,
+        "sha256": "9baf4b6d4cc3095e61a44a91c5bde491dd705a25fcb840a2a1e93d5a06606d32"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/guide_0_chroma.png",
+        "bytes": 117625,
+        "sha256": "c82bf8a950b5b670c5af6b6fc458398ab1165b8adf94f549b6c2d6b83fb02a14"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/guide_0_rgba.png",
+        "bytes": 151705,
+        "sha256": "b6ceb4c909858c7f1f84243dbb23c6db8b24d47d64be78b09e23b62c762ef9c4"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/guide_1_chroma.png",
+        "bytes": 128843,
+        "sha256": "3dd68f6b1b1a8774ac0fe4ef54f891af476cac1054391ec8c4c53d27af99e2f8"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/guide_1_rgba.png",
+        "bytes": 160483,
+        "sha256": "97de619fb0833b102415bf1f1fb4fa3dcb6dc22dc3ce8d391c2e817ec31a614d"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/guide_2_chroma.png",
+        "bytes": 126753,
+        "sha256": "86a6b9bc7b06c67a37e1f608c2e58a7c05098938ef3bb884e6f9c02ae6432b36"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/guide_2_rgba.png",
+        "bytes": 158308,
+        "sha256": "df36ef4a5ced00081f0c7fc4696c4f844da770c3bc6c5f38ca34a987da9216e3"
+      },
+      "guide_3_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/guide_3_chroma.png",
+        "bytes": 130493,
+        "sha256": "5425b50fa6c7dcf55bdb96f64b2c2f1fea8df7de49dc95c70cc1f85f2476f0b6"
+      },
+      "guide_3_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/guide_3_rgba.png",
+        "bytes": 169138,
+        "sha256": "608699201aeb7b69a70f5458a883a0a7ff6d59e207c4bf6952cc322e4752c53e"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/matte.json",
+        "bytes": 51289,
+        "sha256": "3bd7887d45e1bc8545559db3676f83b1fb6c66ab678ebc6bde26a6ee9f304f3c"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/original.json",
+        "bytes": 9460,
+        "sha256": "6a65f689a31a6911781bd1efcac3623f42c181e30d3b118311c3ef0ca48627c8"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/original.latent",
+        "bytes": 8529872,
+        "sha256": "8d050270ffe3ca7d83610a93f7c03c9d2eb60836a16d53b5cc1bb744c80d43d5"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/original.mp4",
+        "bytes": 328118,
+        "sha256": "6ddef977a5bcfebadbdf8766e1010f81a625f7885a51fa780ed9a8b49863a9b9"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/original_lossless.mkv",
+        "bytes": 37511983,
+        "sha256": "eb27e510452fc0f7ab10d0ca21683860d64e2bf6e74af093e729165fa1a4d3c9"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/prompt.txt",
+        "bytes": 1989,
+        "sha256": "029eb28102bc854a6c169fb266ee2a80ac88db92dfbb6bc614a58f910d89f548"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/reference.json",
+        "bytes": 3640,
+        "sha256": "3cbbd699569e1f8869e9c3273238a132e6108cdc67b0627db363f1d8c2a57410"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/sampling_history.json",
+        "bytes": 7900,
+        "sha256": "db63e79154461140a8536d87b11760e525464a26e4a4c1338f669b5df6357023"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/sampling_submission.json",
+        "bytes": 713,
+        "sha256": "69eb40738d4665dc33d259c5af65cc05a76c2237d4590d8229844363addd5d62"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/sampling_workflow_api.json",
+        "bytes": 5701,
+        "sha256": "fb11b9e08f402d7dc82f696525aa441bd91716df949016e4e189c63f99536ecd"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "fb87fd0be6cbc11ab32f138d4750851268400588dce7e8df6b7d9d65842261d9"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/semantic_matte_initial.json",
+        "bytes": 50793,
+        "sha256": "72bd209c7f73cacaf7177a49723de8ded1a0400cb7bb3e5a422941a6df7f074d"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/staged_generation.json",
+        "bytes": 784,
+        "sha256": "cf9bcde871d00bf9f84b5422e0cf124577e58c619a34efd66763be55432a4759"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/submission.json",
+        "bytes": 778,
+        "sha256": "643f3285af9e62c240ba604b850ed4e4e8557d308c3ff43554017ff894a35093"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/attack_h3_v2/workflow_api.json",
+        "bytes": 1219,
+        "sha256": "a8ca8edc108cbaecd94597eb335943b07d2f0d9db46c69a64b3859d5360788cd"
+      }
+    },
+    "cast_h3_v2": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/accepted_baseline.json",
+        "bytes": 2942,
+        "sha256": "290f9b98dada2b71b0e82bdc5014f913fd2a6bf49bf9d011a3d7504c13cad879"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/config.json",
+        "bytes": 4137,
+        "sha256": "b8ce499c3ca269a63c7f48dc15f0626e893ec01f29272325b9d666ee871868d5"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/decode_submission.json",
+        "bytes": 770,
+        "sha256": "2dc3aebd7bd8e2890c7e506269895b725a72a8e330c04da790b544a67969552a"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/generation_history.json",
+        "bytes": 23260,
+        "sha256": "4a3e4b3137a0b7243cffec6b48a0913f38dd2775a9e5f5c015fb7d7663ca2ad4"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/guide_0_chroma.png",
+        "bytes": 117625,
+        "sha256": "c82bf8a950b5b670c5af6b6fc458398ab1165b8adf94f549b6c2d6b83fb02a14"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/guide_0_rgba.png",
+        "bytes": 151705,
+        "sha256": "b6ceb4c909858c7f1f84243dbb23c6db8b24d47d64be78b09e23b62c762ef9c4"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/guide_1_chroma.png",
+        "bytes": 150833,
+        "sha256": "d63807f5e1341e4a3304034651cd2b3b58e64515a95b560654e33a3ca0e2c202"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/guide_1_rgba.png",
+        "bytes": 188384,
+        "sha256": "ceefbbc91af8f9116b1a646e55b008b29869e4e4462c88742f3946124b51c7aa"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/guide_2_chroma.png",
+        "bytes": 130493,
+        "sha256": "5425b50fa6c7dcf55bdb96f64b2c2f1fea8df7de49dc95c70cc1f85f2476f0b6"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/guide_2_rgba.png",
+        "bytes": 169138,
+        "sha256": "608699201aeb7b69a70f5458a883a0a7ff6d59e207c4bf6952cc322e4752c53e"
+      },
+      "guide_3_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/guide_3_chroma.png",
+        "bytes": 123836,
+        "sha256": "1b936ad77988c552542851f3285ba7b72e15f729cf25bebf96436f09b4a727bf"
+      },
+      "guide_3_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/guide_3_rgba.png",
+        "bytes": 159976,
+        "sha256": "80c27e019249d1d6e9a71960bf0f01c18ef32025892957788dc394f1110572eb"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/matte.json",
+        "bytes": 51965,
+        "sha256": "1a27ae9c7f2bc2ac406696f7f08b2b10caac15b70842cc2d0558e610bbd9316a"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/original.json",
+        "bytes": 9460,
+        "sha256": "5da2fda97c4097b32be692c6d9292f328fafa900b1a5da86b2905cbb2c4adea7"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/original.latent",
+        "bytes": 8529720,
+        "sha256": "ef31d47115c7b56001230dcda641567ade02a0870307785500ae50d8d2ea94e0"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/original.mp4",
+        "bytes": 279571,
+        "sha256": "87483e5f25f55bbab5ed1df75f3f5fd2368825a1359db0ed32d03cc4aed1b54f"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/original_lossless.mkv",
+        "bytes": 39889561,
+        "sha256": "bdc552842e956ad000b95632790559089927a60a036588c251040cacb7ace311"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/prompt.txt",
+        "bytes": 1845,
+        "sha256": "942df5cd8e11545a5b47cc4d136fe128084129449180600a7da72f68bbea2726"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/reference.json",
+        "bytes": 3377,
+        "sha256": "c07309029a65ef638a53f3289ee673ad60d322bb15fd4f33a59e9c608145dfd7"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/sampling_history.json",
+        "bytes": 7643,
+        "sha256": "7d266876a14a36fffec6a76eead7f5472cc333db0d720c33776b9ad0cc2007fa"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/sampling_submission.json",
+        "bytes": 705,
+        "sha256": "dcd54d3a31a1fbd56475cd59057f932464271474c2033874b5d891e37da050d3"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/sampling_workflow_api.json",
+        "bytes": 5547,
+        "sha256": "c58677c27dae4f728a2baf53adda441fab0e06f23fb6fcd3b1ef93c56d2cc239"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "fb87fd0be6cbc11ab32f138d4750851268400588dce7e8df6b7d9d65842261d9"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/semantic_matte_initial.json",
+        "bytes": 51469,
+        "sha256": "8e661a4cb80d580e9d312e0367fa5132d7dc8107a911fb324cf07e264ee9511e"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/staged_generation.json",
+        "bytes": 729,
+        "sha256": "211d3d2cba57a24f454e7eb67b71641089001aeab69ce277fe07aab9774d960f"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/submission.json",
+        "bytes": 770,
+        "sha256": "2dc3aebd7bd8e2890c7e506269895b725a72a8e330c04da790b544a67969552a"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/cast_h3_v2/workflow_api.json",
+        "bytes": 1213,
+        "sha256": "31035879972deb7c102f95088b96bcd5124c453ec58ca510382ac3728c10d8a1"
+      }
+    },
+    "death_h3_v2": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/accepted_baseline.json",
+        "bytes": 2942,
+        "sha256": "290f9b98dada2b71b0e82bdc5014f913fd2a6bf49bf9d011a3d7504c13cad879"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/config.json",
+        "bytes": 4070,
+        "sha256": "d1e2b6d37addf2ec58ac3d9b04d8f8986d363c8ae0ec63bead397812dd63458b"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/decode_submission.json",
+        "bytes": 646,
+        "sha256": "d270c703bc379b48ecd9d024c0aab57c243f7ff12600d5d20581888d7b8bb404"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/generation_history.json",
+        "bytes": 23388,
+        "sha256": "a30b47f2032019d0b5a128a800014216acf3054fbeb13c08eda2a689fa3ce83a"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/guide_0_chroma.png",
+        "bytes": 117625,
+        "sha256": "c82bf8a950b5b670c5af6b6fc458398ab1165b8adf94f549b6c2d6b83fb02a14"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/guide_0_rgba.png",
+        "bytes": 151705,
+        "sha256": "b6ceb4c909858c7f1f84243dbb23c6db8b24d47d64be78b09e23b62c762ef9c4"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/guide_1_chroma.png",
+        "bytes": 83300,
+        "sha256": "1ef5ba62f501cc8951cdd1fd132d43b346a3d85f236d936f04b54d0306a71756"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/guide_1_rgba.png",
+        "bytes": 105831,
+        "sha256": "238b7b4e9c6ebb708e53c1b5158d9dba92da2034902a1a65d13a69c372f4d7c6"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/guide_2_chroma.png",
+        "bytes": 66102,
+        "sha256": "6fc84557f7e13a155ad5601d69308a5e718c025a589f6792c1463b7f4c643c55"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/guide_2_rgba.png",
+        "bytes": 82756,
+        "sha256": "76b344acab5a3a90001945fc6b3780ec95ebff22ebf23994660b4ef53b3aa392"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/matte.json",
+        "bytes": 50850,
+        "sha256": "7a7d2d75f58e2631f47783f6126aa4f687caa9f112be9b86a7405db85d4f186b"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/original.json",
+        "bytes": 9460,
+        "sha256": "fb417eaea63a41d3b593a0d1f0b9e6103de221a258f0dc2ca53f7f15e4760bcd"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/original.latent",
+        "bytes": 8529448,
+        "sha256": "2df836a83dddca8b9c382f665d9dbe53fdb47a750382c4992f4f2c45a885b1e2"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/original.mp4",
+        "bytes": 183920,
+        "sha256": "32a1b5c9171cdf3543918369d14b70ad5a50f6685aa1e4692b4759f612cb7325"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/original_lossless.mkv",
+        "bytes": 30285467,
+        "sha256": "dc0c1c53a20075f93818c30c26e5993ba00d8117605d79ba31a38cf85b3d50f8"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/prompt.txt",
+        "bytes": 1950,
+        "sha256": "e67d605a4e1a8144aa54d91f1abffa5757f376d18d47553de861db8ce0df53e2"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/reference.json",
+        "bytes": 2930,
+        "sha256": "e01fe640e8551ff19d6a175853881d9e3292d60853cb4d6aeb0aae280e6a7c5e"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/sampling_history.json",
+        "bytes": 7189,
+        "sha256": "4ddbf5ea0f73840cd27422c31cae0b39bc948fe2d9c539ff50a7c19da0f78abf"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/sampling_submission.json",
+        "bytes": 581,
+        "sha256": "7fc8bcab3ac819c9b6eddfd4ceeefc6370301336a02f75dd31fd63c0c0290eaf"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/sampling_workflow_api.json",
+        "bytes": 5204,
+        "sha256": "d27785b1f45bfe0ccff7f1b7f8585f3edb5180c3a6b0fa0b798ac97db631d9c1"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "fb87fd0be6cbc11ab32f138d4750851268400588dce7e8df6b7d9d65842261d9"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/semantic_matte_initial.json",
+        "bytes": 50354,
+        "sha256": "d0215b76a08dd3740ac61b0d0923e756d6029502d99130e99cefada2212ac472"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/staged_generation.json",
+        "bytes": 730,
+        "sha256": "8acdf7200d2994cbd37e7b43fb6aea48ef4ebc4686c435285369b8081bb44970"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/submission.json",
+        "bytes": 646,
+        "sha256": "d270c703bc379b48ecd9d024c0aab57c243f7ff12600d5d20581888d7b8bb404"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/death_h3_v2/workflow_api.json",
+        "bytes": 1216,
+        "sha256": "d0da5a3b552bbf54c65cfa2d10db597a840031231146cec779a0f8782cb551bf"
+      }
+    },
+    "defend_h3_v2": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/accepted_baseline.json",
+        "bytes": 2942,
+        "sha256": "290f9b98dada2b71b0e82bdc5014f913fd2a6bf49bf9d011a3d7504c13cad879"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/config.json",
+        "bytes": 3249,
+        "sha256": "b6aee548b7da7b3d41ff126c528cc83243af0d83fb76bc510316da0eba1caf0c"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/decode_submission.json",
+        "bytes": 520,
+        "sha256": "0a8f35dd38c66dfbc9e51786055b942dcf685d32b8d7063926ec46e3981265eb"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/generation_history.json",
+        "bytes": 23545,
+        "sha256": "c273a73eebc7f0539feec0b4d063a1c159cd6ec78d4c014c668b7f23fb7ff54f"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/guide_0_chroma.png",
+        "bytes": 117625,
+        "sha256": "c82bf8a950b5b670c5af6b6fc458398ab1165b8adf94f549b6c2d6b83fb02a14"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/guide_0_rgba.png",
+        "bytes": 151705,
+        "sha256": "b6ceb4c909858c7f1f84243dbb23c6db8b24d47d64be78b09e23b62c762ef9c4"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/guide_1_chroma.png",
+        "bytes": 120113,
+        "sha256": "370c0a4db0b07ebf5863c4efdfc37fbf6ddc1ac5f41763ba33b6a3c3add9d6b9"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/guide_1_rgba.png",
+        "bytes": 148466,
+        "sha256": "c520f997d2fabea28cb054c9d19e68bf58bb7ca9713b2b5319583e472d66d7c2"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/matte.json",
+        "bytes": 51230,
+        "sha256": "fdbcef52901cd46f4874c7335a0a18f5ca5ee23cb0c3880680ee0e99ef646300"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/original.json",
+        "bytes": 9460,
+        "sha256": "53611cf942e3252ce509bde82531474fdb7e764a1bd7bf9c6efd389967386424"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/original.latent",
+        "bytes": 8528968,
+        "sha256": "41a26668cc458f68bc8eb5854ce741583b6b2af5dc794106f6472eefbc602ecd"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/original.mp4",
+        "bytes": 249193,
+        "sha256": "5b45aa02e26194c063f3fa955e3956c2458d116ea19803f86efebe03cc6a148d"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/original_lossless.mkv",
+        "bytes": 38637909,
+        "sha256": "249d4866b2bc5834dbabe8acf782104ac293db41e3eb3284613ac864b17d3bc0"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/prompt.txt",
+        "bytes": 1842,
+        "sha256": "9dc89fcbb0846e9dcebe5d909c502147a1b0fe3d88b29b782c2b566d6c7aa5d6"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/reference.json",
+        "bytes": 1895,
+        "sha256": "b1e24c96e8558eb860cbb2f23c1ba3bebcf934cc603f06a97ff0c256a244eefe"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/sampling_history.json",
+        "bytes": 6621,
+        "sha256": "026abd79363da2b5816ec107a5c2ef8fb9b60c3282bd2e2059e0cfc8db00b151"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/sampling_submission.json",
+        "bytes": 454,
+        "sha256": "b1ad9893207fbde2f15c5b680fd5d5d857eee0b50fe880a02e42f0f65d4df7c0"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/sampling_workflow_api.json",
+        "bytes": 4646,
+        "sha256": "2c7b4961edf550c81171d7d12e27c728cfb0c98bf04a02977294d87eb1a6e76b"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "fb87fd0be6cbc11ab32f138d4750851268400588dce7e8df6b7d9d65842261d9"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/semantic_matte_initial.json",
+        "bytes": 50734,
+        "sha256": "d374cf3dac950c981e9c493bab3ea2b418bbdcf08e209facd9df618ab7a8ee01"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/staged_generation.json",
+        "bytes": 784,
+        "sha256": "3d8303f6d8c17221ccbec84df90851510ab5844b406bb8f3a529089ba6bccdfe"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/submission.json",
+        "bytes": 520,
+        "sha256": "0a8f35dd38c66dfbc9e51786055b942dcf685d32b8d7063926ec46e3981265eb"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/defend_h3_v2/workflow_api.json",
+        "bytes": 1219,
+        "sha256": "20c6fe55cd806ee20077e3fa83c579477b5e496806bb2e6afeaec7f7166602d5"
+      }
+    },
+    "hit_h3_v2": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/accepted_baseline.json",
+        "bytes": 2942,
+        "sha256": "290f9b98dada2b71b0e82bdc5014f913fd2a6bf49bf9d011a3d7504c13cad879"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/config.json",
+        "bytes": 3126,
+        "sha256": "8e8e77c895eb7223adb14cfb3b048fb7c6f052a512ba78db156d3aacea1c1f3e"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/decode_submission.json",
+        "bytes": 514,
+        "sha256": "4e35b6e0b2a1ca7fe664d99752e1a2c15dd4a74f4a9dfd6bebfefd897a0a42b0"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/generation_history.json",
+        "bytes": 23132,
+        "sha256": "991de1e26dfa3ae3319bffc558152d3d2974c54b5101d2d218a06c0c3904b220"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/guide_0_chroma.png",
+        "bytes": 117625,
+        "sha256": "c82bf8a950b5b670c5af6b6fc458398ab1165b8adf94f549b6c2d6b83fb02a14"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/guide_0_rgba.png",
+        "bytes": 151705,
+        "sha256": "b6ceb4c909858c7f1f84243dbb23c6db8b24d47d64be78b09e23b62c762ef9c4"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/guide_1_chroma.png",
+        "bytes": 118729,
+        "sha256": "5f899462a26179a3ae0cd7be37bcc733c0fedba193d1fa463fbdf8bd8e054263"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/guide_1_rgba.png",
+        "bytes": 146940,
+        "sha256": "1b4e1c1df601dcd90abf21847c645e655e1f687a305de8bca34c46f71ab4927f"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/matte.json",
+        "bytes": 51844,
+        "sha256": "06124bcf0f2c3ba356fbcbccf8e6a52b068bfcbd03379ab8bfb7b740bb45e027"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/original.json",
+        "bytes": 9460,
+        "sha256": "17d7ca00fa2afeacf8e84aba71edd82ef3d9d6d2e18d7c1b2f3ddf235609c0e5"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/original.latent",
+        "bytes": 8528840,
+        "sha256": "f4a8c12f4669ce150594498201f9032e5d1e2432a05901c61bffb4fa4dceacb2"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/original.mp4",
+        "bytes": 303282,
+        "sha256": "3be4bf35d3c603f8df159192f210a5c10605a9411588b920929931c807aa143b"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/original_lossless.mkv",
+        "bytes": 39881066,
+        "sha256": "f9d7c3f7295a1877e5ccf2660269b075d24ee732ee93887abfd192364f2055a3"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/prompt.txt",
+        "bytes": 1720,
+        "sha256": "8424eeed4154c6486a5f07c919b7c23e38348dfe9cdcb65797d6892cd4728d54"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/reference.json",
+        "bytes": 1897,
+        "sha256": "da36f4a77751c794c7c71203fbdd3b9e188df6aaf602d2c18aeb10bc50907067"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/sampling_history.json",
+        "bytes": 6386,
+        "sha256": "09af506fb6c3b2521cdeda6349fa68618e19a2ae5a66546d3d97fede9151ec53"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/sampling_submission.json",
+        "bytes": 448,
+        "sha256": "56d0a70f42f9567a74cbe1e7acde10ff806143b6fae5413721a63e45037237ac"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/sampling_workflow_api.json",
+        "bytes": 4515,
+        "sha256": "811f2cddac9aa169b4b00c2aec3b1864d3439557014c5af394ecb9fe5236879e"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "fb87fd0be6cbc11ab32f138d4750851268400588dce7e8df6b7d9d65842261d9"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/semantic_matte_initial.json",
+        "bytes": 51348,
+        "sha256": "7931d01c4a6e2a69d06e3c32615d612e9ac9b097456e9ea4995160aca29c68ce"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/staged_generation.json",
+        "bytes": 728,
+        "sha256": "2eba6e83ecfcdd8128ff1f758ad90d8f85218efeeea6712fb256e1a3a85c3c0b"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/submission.json",
+        "bytes": 514,
+        "sha256": "4e35b6e0b2a1ca7fe664d99752e1a2c15dd4a74f4a9dfd6bebfefd897a0a42b0"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/hit_h3_v2/workflow_api.json",
+        "bytes": 1210,
+        "sha256": "081c36adaacce3554df0b964cc2cf22cf37d4a53cc70279529e4d1c02c5ce18f"
+      }
+    },
+    "move_h3_v1": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/accepted_baseline.json",
+        "bytes": 2942,
+        "sha256": "290f9b98dada2b71b0e82bdc5014f913fd2a6bf49bf9d011a3d7504c13cad879"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/config.json",
+        "bytes": 4904,
+        "sha256": "0fc860ee0c75120863c2092717a08e85d516d7b9c6f573bfe34938217e98dc23"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/decode_submission.json",
+        "bytes": 770,
+        "sha256": "ece62dfc97be168c32546b9ba12799355e7f159a06379fadb73e5f3d1059dcab"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/generation_history.json",
+        "bytes": 23260,
+        "sha256": "cd786f35833e18002b145e46919b8c226f0499abc01890e2e32712e4bf54b432"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/guide_0_chroma.png",
+        "bytes": 117625,
+        "sha256": "c82bf8a950b5b670c5af6b6fc458398ab1165b8adf94f549b6c2d6b83fb02a14"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/guide_0_rgba.png",
+        "bytes": 151705,
+        "sha256": "b6ceb4c909858c7f1f84243dbb23c6db8b24d47d64be78b09e23b62c762ef9c4"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/guide_1_chroma.png",
+        "bytes": 119422,
+        "sha256": "0c490c14114fd3eb601047dce5fabc8c1efa4bd98b2614024e3cbe3c9f68bc49"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/guide_1_rgba.png",
+        "bytes": 154983,
+        "sha256": "a332fbc5fc34342024fb48088fa50a8dc80e285f58cf5e310e041ea135d3ae97"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/guide_2_chroma.png",
+        "bytes": 103109,
+        "sha256": "f80bc7e093d70b6a9a6f82d5ea5a45e2ad63eb67b96ae8273d01564e24af1e56"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/guide_2_rgba.png",
+        "bytes": 132007,
+        "sha256": "b5f00d9a2b036de1c80e65f3efe6a85cdec3a81b9f84d524228ea53e131baeee"
+      },
+      "guide_3_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/guide_3_chroma.png",
+        "bytes": 107438,
+        "sha256": "53965cd9b594557fbaa30c49287c85f5568f319229600e94bbb7302a4bd39e0a"
+      },
+      "guide_3_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/guide_3_rgba.png",
+        "bytes": 140438,
+        "sha256": "535e49340551abc52f474e12ea26b22a86d1ead15bba9bc3453591ca9e300395"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/matte.json",
+        "bytes": 51510,
+        "sha256": "ae0581e26d944ea3e5bb2d57d5b00f41766d7a7fded4d73e24ca4cf1d9345ceb"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/original.json",
+        "bytes": 9460,
+        "sha256": "bd5e2f64ba8d2b81e81aa9f77b83f441cd0dacfff3c02628643dd2e7af17dc62"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/original.latent",
+        "bytes": 8529912,
+        "sha256": "56f41258943c1eef820f8c86341f1a475b549ce37090bd1a3383fd1a65da8f80"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/original.mp4",
+        "bytes": 432557,
+        "sha256": "236dfc6a5192e8353981337bf910adf0890d8f02bc6da1c093ebf8afe0e4694e"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/original_lossless.mkv",
+        "bytes": 38636983,
+        "sha256": "e431ed87592c0c32bd40c149177b1165814ae0000dd3d83d0e2d9f8bb55c2705"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/prompt.txt",
+        "bytes": 1854,
+        "sha256": "c62c66dc16e34b54d90a187ff951c8ee197b03a69541216ca64453a1ecd047b0"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/reference.json",
+        "bytes": 4132,
+        "sha256": "10d22fb57bba76390f15664c20fbf65f45eaa969a6f529b89e48ed5122cba303"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/sampling_history.json",
+        "bytes": 8061,
+        "sha256": "b0fb594a1401781d77404409ff04d82a1eed1d69c270d2086256f77f1c8b9ceb"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/sampling_submission.json",
+        "bytes": 705,
+        "sha256": "75ba3ed68982c499e2f23e43fc14a4208fd035f2f91156111920916427f83405"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/sampling_workflow_api.json",
+        "bytes": 5877,
+        "sha256": "3bc8bdad45fa2500fe8bb47de6ae8f524244dfe16882e72a534cf7e5bce1f9dc"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "fb87fd0be6cbc11ab32f138d4750851268400588dce7e8df6b7d9d65842261d9"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/semantic_matte_initial.json",
+        "bytes": 51014,
+        "sha256": "38253c1c852dfc992bc874eb3d3e11cb5b31f288fef6335e1d5d02f1723d9a20"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/staged_generation.json",
+        "bytes": 729,
+        "sha256": "2766efdc9729178c0a3ce340bc82e374605db829a80a96ebaf526a5d7f5d0764"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/submission.json",
+        "bytes": 770,
+        "sha256": "ece62dfc97be168c32546b9ba12799355e7f159a06379fadb73e5f3d1059dcab"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/workflow_api.json",
+        "bytes": 1213,
+        "sha256": "80128a0769affce070aa1c624a26c6ba8d8fbe1907874c11658adfeb9c2f5f6f"
+      }
+    },
+    "move_h3_v2": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/accepted_baseline.json",
+        "bytes": 2942,
+        "sha256": "290f9b98dada2b71b0e82bdc5014f913fd2a6bf49bf9d011a3d7504c13cad879"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/config.json",
+        "bytes": 3999,
+        "sha256": "69a43abff7561cfc40d63dbf26a5f0e4ef263d0f0581dc3a11e41c10152c0173"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/decode_submission.json",
+        "bytes": 643,
+        "sha256": "c5dd369a86d0c8d4f9fd3a00254c1863b316450db937d2d831f09fd6fe014030"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/generation_history.json",
+        "bytes": 23260,
+        "sha256": "e65331ea8939e017bd3c7b5e295a1c059787202b3bf1b860be8618135142f835"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/guide_0_chroma.png",
+        "bytes": 117625,
+        "sha256": "c82bf8a950b5b670c5af6b6fc458398ab1165b8adf94f549b6c2d6b83fb02a14"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/guide_0_rgba.png",
+        "bytes": 151705,
+        "sha256": "b6ceb4c909858c7f1f84243dbb23c6db8b24d47d64be78b09e23b62c762ef9c4"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/guide_1_chroma.png",
+        "bytes": 150833,
+        "sha256": "d63807f5e1341e4a3304034651cd2b3b58e64515a95b560654e33a3ca0e2c202"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/guide_1_rgba.png",
+        "bytes": 188384,
+        "sha256": "ceefbbc91af8f9116b1a646e55b008b29869e4e4462c88742f3946124b51c7aa"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/guide_2_chroma.png",
+        "bytes": 163530,
+        "sha256": "9aa98299df08fdf8234ff85cbb2ce75ddec410e28bdd6a8e9708b443075f348f"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/guide_2_rgba.png",
+        "bytes": 203329,
+        "sha256": "09043fd8d576850ec4f888878bd7db3618d3a530d7705b29b1ae91552ed17b53"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/matte.json",
+        "bytes": 51374,
+        "sha256": "bf7e0bb965aefe895bdbb511c3d5e78c6fcb1fded73933460a6bcc677634adf8"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/original.json",
+        "bytes": 9460,
+        "sha256": "343e6222f654e14b2d46c0390de5a72370e7a714993c88249b71fd50fdc83647"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/original.latent",
+        "bytes": 8529376,
+        "sha256": "7d0aaef9e8fb1c9f14a9ee332d526d6ec660600c25837ca96652be1a82a2688b"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/original.mp4",
+        "bytes": 476501,
+        "sha256": "06e736470bf5da7788588a864e89e05f780a2e35f82f1be3e9a419ddcbf325c0"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/original_lossless.mkv",
+        "bytes": 38278863,
+        "sha256": "f6604ec200515cba788ed11b95a485c1d0d3033c9daeab8fe2eaf4de20df9a93"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/prompt.txt",
+        "bytes": 1882,
+        "sha256": "d680a6407487b5f749cc63c572c2e8f0745d3e9d78047c380738a38e62ee8768"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/reference.json",
+        "bytes": 2901,
+        "sha256": "b6cf618f436c1f79e555b3f51ca178d3ea248c976c92de4cc02111fabfc8b823"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/sampling_history.json",
+        "bytes": 7116,
+        "sha256": "23e5727e4b1f3625956fabb270c0798d322d97f77c9171d3c41d48891ef883bd"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/sampling_submission.json",
+        "bytes": 578,
+        "sha256": "c59ec300a550aafda9d2c55af8bb3105bc7d27272288356d72162d92374bbf26"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/sampling_workflow_api.json",
+        "bytes": 5132,
+        "sha256": "d08dbe4b691a5f6f231e3d5c9bc1fcd8ec8e66023147c5442c962f6881011aa0"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "fb87fd0be6cbc11ab32f138d4750851268400588dce7e8df6b7d9d65842261d9"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/semantic_matte_initial.json",
+        "bytes": 50878,
+        "sha256": "46d8e49d2f48764cdeeada2f01ea8781e642a1314b702edd3ae9fadf4aef860c"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/staged_generation.json",
+        "bytes": 729,
+        "sha256": "1ab88f51f089f41d5ed0aede5028c412e0762a55bd04f5ff1647a90ef59c925c"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/submission.json",
+        "bytes": 643,
+        "sha256": "c5dd369a86d0c8d4f9fd3a00254c1863b316450db937d2d831f09fd6fe014030"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v2/workflow_api.json",
+        "bytes": 1213,
+        "sha256": "b91e00589031fdee1a405c3cd82d6aad4d79155759d8835363f190348a32d989"
+      }
+    },
+    "ranged_h3_v2": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/accepted_baseline.json",
+        "bytes": 2942,
+        "sha256": "290f9b98dada2b71b0e82bdc5014f913fd2a6bf49bf9d011a3d7504c13cad879"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/config.json",
+        "bytes": 4647,
+        "sha256": "23e3e1ae2c484e4d79efab4b518dd3b6ea712e4212d9e885de4be095a26a5919"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/decode_submission.json",
+        "bytes": 778,
+        "sha256": "83092d923ac7eafc1dff596dcabf2d9ee09b13550f8e150f82bdb9ea520fbb1c"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/generation_history.json",
+        "bytes": 23545,
+        "sha256": "6d535cfa413a935e1b8ccd947b0d57fa06fd19c3f4774d4dd987972a4020dc77"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/guide_0_chroma.png",
+        "bytes": 117625,
+        "sha256": "c82bf8a950b5b670c5af6b6fc458398ab1165b8adf94f549b6c2d6b83fb02a14"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/guide_0_rgba.png",
+        "bytes": 151705,
+        "sha256": "b6ceb4c909858c7f1f84243dbb23c6db8b24d47d64be78b09e23b62c762ef9c4"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/guide_1_chroma.png",
+        "bytes": 109676,
+        "sha256": "e514996bee08690e25b8d87f057717d5354384590976e89e62da727bc0c8fc95"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/guide_1_rgba.png",
+        "bytes": 136094,
+        "sha256": "f4d048996a611213051ae15f1d27c3cb0e593a9c5bd7044dc63058d0080b5d2e"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/guide_2_chroma.png",
+        "bytes": 120971,
+        "sha256": "24704ee069d79e83cca8867890e43ea646b2f474ec6a1a2e84e375535a861442"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/guide_2_rgba.png",
+        "bytes": 150782,
+        "sha256": "e3fa90af5bacde1bafe49e27083ca63fd185d7fbe775061ed5867649b3824e1d"
+      },
+      "guide_3_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/guide_3_chroma.png",
+        "bytes": 117625,
+        "sha256": "c82bf8a950b5b670c5af6b6fc458398ab1165b8adf94f549b6c2d6b83fb02a14"
+      },
+      "guide_3_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/guide_3_rgba.png",
+        "bytes": 151705,
+        "sha256": "b6ceb4c909858c7f1f84243dbb23c6db8b24d47d64be78b09e23b62c762ef9c4"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/matte.json",
+        "bytes": 51626,
+        "sha256": "30ddb2077809c940cd18d2a66abb87b03cb1c44353340adb74505c8bf0d39de8"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/original.json",
+        "bytes": 9460,
+        "sha256": "df23a9054008ee52e4e3c74eaf1a53a33cedde9e8668deec0b5764ba147a5f9c"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/original.latent",
+        "bytes": 8529856,
+        "sha256": "11a76f7ad1fa2163ec499ca69ede83ce22b9cb25130cbcb6cd30524f20dfd49a"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/original.mp4",
+        "bytes": 361378,
+        "sha256": "fcc6dac9af74cceb54c0250355271347633ca05a303566ddb28d03f887005618"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/original_lossless.mkv",
+        "bytes": 40766884,
+        "sha256": "1eecdfa89ce3bb3ffae92456dcaf39732fc2876650c31d1229ea99fb6f65c65f"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/prompt.txt",
+        "bytes": 1971,
+        "sha256": "3b31683e4735669a31b0c796ee5bfb1fb7e18900affa7415821b08e7b0616fe5"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/reference.json",
+        "bytes": 3774,
+        "sha256": "c1c7f329e57270c35db0a259f8bc01581526503c5156a3d1b819e4410fd53a0d"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/sampling_history.json",
+        "bytes": 7882,
+        "sha256": "f67df47fd8e37faa3b90a26ff60071f57f533bfe5cf375bd80c1322ba837f81a"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/sampling_submission.json",
+        "bytes": 713,
+        "sha256": "f6c9235498af083d268b8f47f46a14ad7869ae328bb36d771ba50ac2c15262d9"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/sampling_workflow_api.json",
+        "bytes": 5683,
+        "sha256": "5fcd2067e216a8e63dc928aedf6be13efb8834aba19f001b537164d079aa944c"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "fb87fd0be6cbc11ab32f138d4750851268400588dce7e8df6b7d9d65842261d9"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/semantic_matte_initial.json",
+        "bytes": 51130,
+        "sha256": "1cc9477ef9d821dde9c451e47a9654848a951ee719313e3fe90842f8670b1ad4"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/staged_generation.json",
+        "bytes": 784,
+        "sha256": "283cc0bd17e7ecbaa19396c3a87877018b494f502907e1f7c84d784bcb3ef00e"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/submission.json",
+        "bytes": 778,
+        "sha256": "83092d923ac7eafc1dff596dcabf2d9ee09b13550f8e150f82bdb9ea520fbb1c"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/ranged_h3_v2/workflow_api.json",
+        "bytes": 1219,
+        "sha256": "c62837e07255f424e84395947959b6c5539fc0854151d6766dfedef29c9c40ad"
+      }
+    }
+  },
+  "guide_art": {
+    "guides/flight_down_v2.generation.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/flight_down_v2.generation.json",
+      "bytes": 1317,
+      "sha256": "fdd2f41f8c4d899b95b1886abd8963b187faac9e05ad592efbb803a984f32918"
+    },
+    "guides/flight_down_v2.png": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/flight_down_v2.png",
+      "bytes": 1306618,
+      "sha256": "558061848e4258897c10b6d329bf8d7aa93fb660a4f0295c920117ea30855f79"
+    },
+    "guides/flight_down_v2.prompt.txt": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/flight_down_v2.prompt.txt",
+      "bytes": 1320,
+      "sha256": "0c7b3a9813aef91b83def9b8db99397766fbefdcebb6ec58972421fad53cd941"
+    },
+    "guides/flight_jab_v2.generation.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/flight_jab_v2.generation.json",
+      "bytes": 1315,
+      "sha256": "0e0442bbe5dfe642656372954d7083799afbea23a66caa80f2e0fddf79cfc8a1"
+    },
+    "guides/flight_jab_v2.png": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/flight_jab_v2.png",
+      "bytes": 1842240,
+      "sha256": "cd1f6c27644066f6b9c9b0f53d2dc867878ffb69707cd0b99d91b9a1b7e83484"
+    },
+    "guides/flight_jab_v2.prompt.txt": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/flight_jab_v2.prompt.txt",
+      "bytes": 2157,
+      "sha256": "e1bad831a1bf8812e6db44ee8e46aa88b0ce6896ba10df8d11cac8b3d3b7f776"
+    },
+    "guides/flight_jab_v2_clean.generation.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/flight_jab_v2_clean.generation.json",
+      "bytes": 1324,
+      "sha256": "5443fd39f589223ccd5ffd3e539edbb43f1c49edd0168a772632e43de1c0aecf"
+    },
+    "guides/flight_jab_v2_clean.png": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/flight_jab_v2_clean.png",
+      "bytes": 1906582,
+      "sha256": "62b6b59e81b49812e8f2f064a376f477ce44d3843d431da00399b627f05edf8f"
+    },
+    "guides/flight_jab_v2_clean.prompt.txt": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/flight_jab_v2_clean.prompt.txt",
+      "bytes": 898,
+      "sha256": "b42cbeda1bb33bf86f6faf8b17b65959a35484267bb68725aec961b04ca2d06c"
+    },
+    "guides/hit_guard_v2.generation.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/hit_guard_v2.generation.json",
+      "bytes": 1232,
+      "sha256": "16c2f0454b609176986b7abd902bea455974863d064e3058e86bde156be59b3a"
+    },
+    "guides/hit_guard_v2.png": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/hit_guard_v2.png",
+      "bytes": 755193,
+      "sha256": "4923a3b4cf3701e96729a147f690205bbcbb5b3d5d28b9cab741bc093f08048e"
+    },
+    "guides/hit_guard_v2.prompt.txt": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/hit_guard_v2.prompt.txt",
+      "bytes": 1761,
+      "sha256": "43428521d2917b82502890b2486c20b3cff7e6ffc133ab48bb5aecb5fffa1ff2"
+    },
+    "guides/lens_release_v2.generation.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/lens_release_v2.generation.json",
+      "bytes": 1287,
+      "sha256": "86b746e486afdcfb0309314bda91557ad78d2d9d272303ce4833d3e00eed0496"
+    },
+    "guides/lens_release_v2.png": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/lens_release_v2.png",
+      "bytes": 969193,
+      "sha256": "e22581bc852a5162bfa8deb09a0e38d50ae0c7ec2d23fcdff58c39e87f48aa09"
+    },
+    "guides/lens_release_v2.prompt.txt": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/lens_release_v2.prompt.txt",
+      "bytes": 1715,
+      "sha256": "96adc73a822db4dc51abd39283f99208cd236ea2e6c48a6edc9f6ac32accdbb4"
+    }
+  },
+  "original_rgb_frames": 1116,
+  "status": "complete",
+  "rule": "Retain all immutable original takes including rejected art and original generated guide images, exact requests, prompts and provenance. Rebuildable extraction files are governed by their exact matte hashes."
+}

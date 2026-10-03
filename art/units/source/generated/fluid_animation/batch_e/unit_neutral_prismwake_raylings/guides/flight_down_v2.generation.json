@@ -1,0 +1,19 @@
+{
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/flight_down_v2.png",
+    "sha256": "558061848e4258897c10b6d329bf8d7aa93fb660a4f0295c920117ea30855f79"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/flight_down_v2.prompt.txt",
+    "sha256": "0c7b3a9813aef91b83def9b8db99397766fbefdcebb6ec58972421fad53cd941"
+  },
+  "tool_output_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0fd4b-f505-7052-9ed7-ba3c0ee99994\\exec-3f50bb83-cd99-4b21-be06-b20b0501ebf3.png",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/guide_0_rgba.png",
+      "sha256": "b6ceb4c909858c7f1f84243dbb23c6db8b24d47d64be78b09e23b62c762ef9c4"
+    }
+  ],
+  "status": "original_preserved",
+  "review": "Personally inspected original RGBA over neutral gray; alpha-zero outside silhouette. Initial displayed RGB halo lies entirely in transparent pixels, not in composited guide. Original four-pose master used for upstroke/windup/contact; its top-right pose is not a full two-fin downstroke, so original separate downstroke master supplies that physical guide. Clean variation retained but unused."
+}

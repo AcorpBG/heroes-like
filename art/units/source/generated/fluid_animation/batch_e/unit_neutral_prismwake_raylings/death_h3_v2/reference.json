@@ -1,0 +1,101 @@
+{
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          240,
+          456
+        ],
+        "scale": 1.00946,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2d876fd6f2e07e4676bd7584d34ab79f5ab76e96b74291e3c36df41ba6ac21c8",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "c82bf8a950b5b670c5af6b6fc458398ab1165b8adf94f549b6c2d6b83fb02a14",
+      "runtime_source_scale": 0.50473
+    },
+    {
+      "source_frame": {
+        "name": "death_fall",
+        "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+        "rects": [
+          [
+            670,
+            750,
+            1045,
+            985
+          ],
+          [
+            670,
+            985,
+            1073,
+            1086
+          ]
+        ],
+        "anchor": [
+          967,
+          1030
+        ],
+        "scale": 1.1,
+        "alpha_noise_cutoff": 8,
+        "guide_registration_reason": "Retain original corpse physical ground-contact anchor; do not raise or normalize fallen anatomy to the hover pose."
+      },
+      "source_sha256": "8898a70d074be7a0188b38cb15f2684e5a59d6aec26e8483b715dd88e2ee6c51",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "1ef5ba62f501cc8951cdd1fd132d43b346a3d85f236d936f04b54d0306a71756",
+      "runtime_source_scale": 0.55
+    },
+    {
+      "source_frame": {
+        "name": "dead",
+        "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+        "rects": [
+          [
+            1045,
+            840,
+            1448,
+            980
+          ],
+          [
+            1075,
+            980,
+            1448,
+            1010
+          ]
+        ],
+        "anchor": [
+          1344,
+          1000
+        ],
+        "scale": 1.1,
+        "alpha_noise_cutoff": 8,
+        "guide_registration_reason": "Retain original corpse physical ground-contact anchor; do not raise or normalize fallen anatomy to the hover pose."
+      },
+      "source_sha256": "8898a70d074be7a0188b38cb15f2684e5a59d6aec26e8483b715dd88e2ee6c51",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "6fc84557f7e13a155ad5601d69308a5e718c025a589f6792c1463b7f4c643c55",
+      "runtime_source_scale": 0.55
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    568
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

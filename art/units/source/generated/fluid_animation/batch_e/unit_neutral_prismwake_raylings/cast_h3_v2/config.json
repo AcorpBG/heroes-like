@@ -1,0 +1,115 @@
+{
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    568
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    210,
+    210,
+    210
+  ],
+  "seed": 2026100345,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        240,
+        456
+      ],
+      "scale": 0.50473,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/flight_jab_v2.png",
+      "rects": [
+        [
+          0,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        475,
+        498
+      ],
+      "scale": 0.43,
+      "alpha_noise_cutoff": 8,
+      "guide_registration_reason": "Original generated guide master with one fixed anatomical scale0.43 for all of its poses; whole-reference placement aligns the single-eye hover origin without geometry changes. No output frame stabilization or per-frame scaling."
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1392,
+        456
+      ],
+      "scale": 0.50473,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle_hands_4",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          512,
+          384,
+          1024
+        ]
+      ],
+      "anchor": [
+        240,
+        940
+      ],
+      "scale": 0.50473,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      68,
+      1
+    ],
+    [
+      96,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original PRISMWAKE RAYLING, facing SCREEN RIGHT at the fixed elevated three-quarter camera of the supplied painting. ONE hovering ivory-and-gold filigree ray creature, ONE blue-violet eye/core, ONE long tapered ivory-gold beak with the original pink tip. Exactly TWO broad rainbow membrane fins: near fin spreads to SCREEN LEFT behind the core, far fin rises to SCREEN RIGHT above the core. Small original dorsal crest fins remain distinct from the two broad fins. Exactly THREE attached thin trailing tendrils, each ending in ONE rainbow leaf-shaped paddle. No legs, feet, humanoid hands or arms, teeth, held weapons or extra bodies. Keep the original eye size, beak length, filigree, rainbow membrane colours, translucency, crest and three complete leaf-ended tendrils. Articulate the fin membranes and their roots physically; preserve the painted fantasy raster surface. ONE deliberate physical SUPPORT SALUTE. Raise BOTH broad rainbow fins into the supplied wide attentive flare, hold that physical display with a small bow of the original long beak as a rally cue, then lower both fins and return to ready once. All THREE attached separate leaf-ended tendrils spread and settle. Original single-eye brightness remains steady; this is not a spell, flight-cycle repetition or global sprite bounce. No added light, symbols, pulses or magic objects.  Locked orthographic studio camera and unchanged anatomical scale. Flat neutral gray RGB210,210,210 background throughout, no scenery, floor, shadows, text, cuts, zoom or camera motion. Keep the single core near the same hover reference; the engine owns travel across the map. Entire beak, both broad fins, all crest fins and all THREE leaf tips remain inside generous canvas margins. No added armour, detached shards, stars, particles, rings, beams, smoke or projectile baked into the video.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

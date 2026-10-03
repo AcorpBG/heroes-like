@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          240,
+          456
+        ],
+        "scale": 1.00946,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2d876fd6f2e07e4676bd7584d34ab79f5ab76e96b74291e3c36df41ba6ac21c8",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "c82bf8a950b5b670c5af6b6fc458398ab1165b8adf94f549b6c2d6b83fb02a14",
+      "runtime_source_scale": 0.50473
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/hit_guard_v2.png",
+        "rects": [
+          [
+            0,
+            0,
+            1086,
+            724
+          ]
+        ],
+        "anchor": [
+          675,
+          577
+        ],
+        "scale": 0.6,
+        "alpha_noise_cutoff": 8,
+        "guide_registration_reason": "One fixed whole-master scale0.30 for both original recoil/guard paintings; one root registration places recoiling eye24px back and5px up without altering anatomy."
+      },
+      "source_sha256": "4923a3b4cf3701e96729a147f690205bbcbb5b3d5d28b9cab741bc093f08048e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5f899462a26179a3ae0cd7be37bcc733c0fedba193d1fa463fbdf8bd8e054263",
+      "runtime_source_scale": 0.3
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    568
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

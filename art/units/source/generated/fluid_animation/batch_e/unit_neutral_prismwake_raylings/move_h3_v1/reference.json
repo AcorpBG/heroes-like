@@ -1,0 +1,132 @@
+{
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          240,
+          456
+        ],
+        "scale": 1.00946,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2d876fd6f2e07e4676bd7584d34ab79f5ab76e96b74291e3c36df41ba6ac21c8",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "c82bf8a950b5b670c5af6b6fc458398ab1165b8adf94f549b6c2d6b83fb02a14",
+      "runtime_source_scale": 0.50473
+    },
+    {
+      "source_frame": {
+        "name": "flight_up",
+        "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+        "rects": [
+          [
+            724,
+            0,
+            1060,
+            362
+          ]
+        ],
+        "anchor": [
+          994,
+          448
+        ],
+        "scale": 1.1,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          60,
+          80
+        ],
+        "guide_registration_reason": "One fixed whole-reference translation of earlier hover paintings: measured eye center differs from accepted ready by [30,40] packed pixels; preserve original scale and physical fin articulation."
+      },
+      "source_sha256": "8898a70d074be7a0188b38cb15f2684e5a59d6aec26e8483b715dd88e2ee6c51",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0c490c14114fd3eb601047dce5fabc8c1efa4bd98b2614024e3cbe3c9f68bc49",
+      "runtime_source_scale": 0.55
+    },
+    {
+      "source_frame": {
+        "name": "flight_down",
+        "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+        "rects": [
+          [
+            1060,
+            0,
+            1448,
+            362
+          ]
+        ],
+        "anchor": [
+          1358,
+          425
+        ],
+        "scale": 1.1,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          60,
+          80
+        ],
+        "guide_registration_reason": "One fixed whole-reference translation of earlier hover paintings: measured eye center differs from accepted ready by [30,40] packed pixels; preserve original scale and physical fin articulation."
+      },
+      "source_sha256": "8898a70d074be7a0188b38cb15f2684e5a59d6aec26e8483b715dd88e2ee6c51",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "f80bc7e093d70b6a9a6f82d5ea5a45e2ad63eb67b96ae8273d01564e24af1e56",
+      "runtime_source_scale": 0.55
+    },
+    {
+      "source_frame": {
+        "name": "flight_level",
+        "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+        "rects": [
+          [
+            0,
+            362,
+            290,
+            700
+          ],
+          [
+            290,
+            362,
+            362,
+            680
+          ]
+        ],
+        "anchor": [
+          280,
+          781
+        ],
+        "scale": 1.1,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          60,
+          80
+        ],
+        "guide_registration_reason": "One fixed whole-reference translation of earlier hover paintings: measured eye center differs from accepted ready by [30,40] packed pixels; preserve original scale and physical fin articulation."
+      },
+      "source_sha256": "8898a70d074be7a0188b38cb15f2684e5a59d6aec26e8483b715dd88e2ee6c51",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "53965cd9b594557fbaa30c49287c85f5568f319229600e94bbb7302a4bd39e0a",
+      "runtime_source_scale": 0.55
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    568
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

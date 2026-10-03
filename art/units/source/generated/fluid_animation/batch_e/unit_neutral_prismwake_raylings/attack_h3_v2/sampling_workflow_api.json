@@ -1,0 +1,219 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Original PRISMWAKE RAYLING, facing SCREEN RIGHT at the fixed elevated three-quarter camera of the supplied painting. ONE hovering ivory-and-gold filigree ray creature, ONE blue-violet eye/core, ONE long tapered ivory-gold beak with the original pink tip. Exactly TWO broad rainbow membrane fins: near fin spreads to SCREEN LEFT behind the core, far fin rises to SCREEN RIGHT above the core. Small original dorsal crest fins remain distinct from the two broad fins. Exactly THREE attached thin trailing tendrils, each ending in ONE rainbow leaf-shaped paddle. No legs, feet, humanoid hands or arms, teeth, held weapons or extra bodies. Keep the original eye size, beak length, filigree, rainbow membrane colours, translucency, crest and three complete leaf-ended tendrils. Articulate the fin membranes and their roots physically; preserve the painted fantasy raster surface. ONE deliberate close-range physical BEAK JAB, no flight wing-beat cycles. Slowly sweep BOTH broad fins backward and lean the core slightly back into the supplied windup, then lean forward so the SAME rigid full-length attached beak thrusts SCREEN RIGHT into one contact. Keep both fins swept back during contact. Withdraw the core and return to ready once. Exactly THREE separate visible leaf-ended tendrils follow this one lean/strike; none vanish, shorten, merge into fins or change their attachment. Single eye and head camera remain stable. No repeated attacks, fin flapping, nose contraction, projectile or effects.  Locked orthographic studio camera and unchanged anatomical scale. Flat neutral gray RGB210,210,210 background throughout, no scenery, floor, shadows, text, cuts, zoom or camera motion. Keep the single core near the same hover reference; the engine owns travel across the map. Entire beak, both broad fins, all crest fins and all THREE leaf tips remain inside generous canvas margins. No added armour, detached shards, stars, particles, rings, beams, smoke or projectile baked into the video.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026100342
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "prismwake_rayling_attack_h3_v2_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "prismwake_rayling_attack_h3_v2_guide_1.png"
+    }
+  },
+  "32": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "prismwake_rayling_attack_h3_v2_guide_2.png"
+    }
+  },
+  "33": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "prismwake_rayling_attack_h3_v2_guide_3.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 32,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 60,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "32",
+        0
+      ]
+    }
+  },
+  "42": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "41",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 92,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "33",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "42",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "prismwake_rayling_h3/attack_h3_v2/sampled"
+    }
+  }
+}

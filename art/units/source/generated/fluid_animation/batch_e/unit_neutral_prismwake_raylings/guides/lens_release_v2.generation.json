@@ -1,0 +1,19 @@
+{
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/lens_release_v2.png",
+    "sha256": "e22581bc852a5162bfa8deb09a0e38d50ae0c7ec2d23fcdff58c39e87f48aa09"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/guides/lens_release_v2.prompt.txt",
+    "sha256": "96adc73a822db4dc51abd39283f99208cd236ea2e6c48a6edc9f6ac32accdbb4"
+  },
+  "tool_output_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0fd4b-f505-7052-9ed7-ba3c0ee99994\\exec-1d99b61d-5220-4f0b-9d6a-0585cca4c832.png",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_prismwake_raylings/move_h3_v1/guide_0_rgba.png",
+      "sha256": "b6ceb4c909858c7f1f84243dbb23c6db8b24d47d64be78b09e23b62c762ef9c4"
+    }
+  ],
+  "status": "unused_original_guide_master",
+  "review": "Original RGBA/gray composite personally inspected. Three complete tendrils and one eye/beak are present, but long stretched trailing stems differ too much from the accepted ready anatomy. Do not use this generated master for H3. Preserve exact original output/request; use original ranged charge/release paintings and accepted ready recovery instead."
+}
