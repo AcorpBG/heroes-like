@@ -1,0 +1,33 @@
+{
+  "tool": "built-in image_gen",
+  "external_original": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-8f25a599-7551-47f3-9c4c-396a7b36e292.png",
+  "original_sha256": "57a58bbd0cf372d679494c1931079209eb8996e5c1225e4c46cfdadd9d982cb1",
+  "size": [
+    1506,
+    1044
+  ],
+  "mode": "RGBA",
+  "alpha8_bounds": [
+    42,
+    143,
+    1468,
+    912
+  ],
+  "prompt": "attack_closed_guide_v2.prompt.txt",
+  "prompt_sha256": "9e669487c70c34c9554b47f0aa1ab41e8385993679c38e07f814c777e4385fef",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_fenmirror_gallowshells/attack_closed_guide_v1/original.png",
+      "sha256": "9eb1bce5f05ebb6b04e0c3d950f9521989d13c5fb645adaabed3bfbb730a3711"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_fenmirror_gallowshells/references/ready_original.png",
+      "sha256": "8ba139234321c6d11d9f04547297114920e5449c2de38cc17702c2ab7cbdd9ce"
+    },
+    {
+      "path": "art/units/source/curated/unit_neutral_fenmirror_gallowshells.png",
+      "sha256": "634ad7a6b9f09011a932b14dd8e558b7a738371c04a066e98c6fc785f55388ed"
+    }
+  ],
+  "review": "personally reviewed original full RGBA, native128 and enlarged2x, normal/reflected, dark/light; same torso/eye/carapace scale and ground origin. Both claws and all visible walking-foot tips complete. Original closed master qualifies as H3 guide only; animation not yet accepted."
+}

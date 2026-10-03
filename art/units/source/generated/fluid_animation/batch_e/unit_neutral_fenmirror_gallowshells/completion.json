@@ -1,0 +1,99 @@
+{
+  "unit_id": "unit_neutral_fenmirror_gallowshells",
+  "status": "complete_selected_unit",
+  "solo": true,
+  "date": "2026-10-03",
+  "source_method": "Original MiniMax H3 video and pinned BiRefNet soft matte; original missing key poses from built-in imagegen; no synthetic sprite motion or interpolation",
+  "clips": {
+    "move": 40,
+    "attack": 28,
+    "hit": 24,
+    "defend": 30,
+    "cast": 40,
+    "death": 42,
+    "idle": 8
+  },
+  "new_selected_poses": 204,
+  "preserved_idle_poses": 8,
+  "battle_atlas_size": [
+    4096,
+    2864
+  ],
+  "battle_texture_rgba_bytes": 46923776,
+  "preserved_original_rgb_frames": 868,
+  "provenance_digests": 147,
+  "validation": {
+    "checks": {
+      "candidate": 702,
+      "mirrored": 702,
+      "live": 716
+    },
+    "total": 2120,
+    "failures": [],
+    "source_pixel_and_ground_anchor_equality": true,
+    "other231_battle_and_map_rows_preserved": true,
+    "imported_atlas_exact_rgba": true,
+    "preserved_battle_and_overworld_idle_exact": true,
+    "visual_review": {
+      "status": "accepted_selected_clips",
+      "all_original_takes_personally_reviewed": true,
+      "continuous_playback_reviewed": false,
+      "native_poses_personally_reviewed_each_facing": 212,
+      "actual_normal_strike_captures_personally_reviewed_each_run": 8,
+      "actual_mirrored_strike_reviewed": false,
+      "checks": {
+        "candidate": 702,
+        "mirrored": 702
+      },
+      "first_attempt": {
+        "checks": 702,
+        "missed_observed_attack_pose": 12,
+        "unchanged_repeat_passed": true
+      },
+      "notes": "Accepted six original H3 actions after complete chronological RGB/alpha/native both-facing source review and personally inspected normal/reflected Godot native128px galleries (204 new plus eight retained idle poses). Reciprocal six-leg gait40; upper-pincer strike28 with open extension, first fully closed jaw at contact12/source34, quiet held contact and full retract; torso/two-claw recoil24 with recovery; crossed protective guard30; physical upper-claw salute40 with coherent lift, closure and return; continuous knee fold/shell lowering42 to grounded corpse, three attached rings and two pincers intact. All eight actual RIGHT-facing Normal Strike captures in both unchanged repeat fixtures personally reviewed, including contact and recovery; reflected gallery is not an actual reflected Strike claim. The first normal fixture missed one observed contact frame; unchanged 702-check repeat and mirrored702 both pass. Preserve exact eight accepted270ms battle/map idle originals, melee ranged fallback, fixed anatomical scale/ground anchors and no authored magic, interpolation, duplicate padding or continuous-video/manual-play claim."
+    },
+    "final_live_visual_review": {
+      "status": "accepted",
+      "native_original_poses_personally_reviewed": 212,
+      "overworld_shader_idle_phases_personally_reviewed": 8,
+      "actual_normal_strike_captures_personally_reviewed": 8,
+      "actual_reflected_strike_reviewed": false,
+      "continuous_video_playback": false,
+      "manual_game_session": false,
+      "notes": "Personally reviewed every212 imported live native128px pose, all eight real Normal Strike captures including first closure and recovery, and all eight original shader/map-idle phases plus reduced-motion/static output. Six legs/two pincer arms and attached arch/rings remain coherent, fixed body scale, ground contacts and grounded persistent corpse. Full recovery returns to original ready. No alpha clipping/foreign pixels. Eight accepted original idle drawings and270ms timing preserved exactly. Focused live716 assertions pass; exact Godot-import RGBA equality confirmed; no full suite or Linux/manual/continuous-video claim."
+    },
+    "all_selected_normal_reflected_and_live_poses_personally_reviewed": true,
+    "actual_melee_captures_personally_reviewed": true,
+    "authored_ranged": false,
+    "ranged_attack_alias_preserved": true,
+    "full_suite_run": false,
+    "linux_run": false,
+    "manual_game_session": false,
+    "continuous_video_playback": false
+  },
+  "roster": {
+    "complete": 226,
+    "total": 232,
+    "remaining": 6
+  },
+  "broad_goal_status": "in_progress",
+  "cleanup": {
+    "files_removed_by_kind": {
+      "unselected_rebuildable_matte": 664,
+      "verified_comfy_duplicate": 882,
+      "verified_uploaded_duplicate": 21,
+      "disposable_review": 322
+    },
+    "bytes_removed_by_kind": {
+      "unselected_rebuildable_matte": 243363409,
+      "verified_comfy_duplicate": 539739400,
+      "verified_uploaded_duplicate": 6239883,
+      "disposable_review": 342825103
+    },
+    "recovered_bytes": 1132167795,
+    "retained_original_rgb_frames": 868,
+    "original_videos_latents_guides_prompts_and_provenance_preserved": true,
+    "caches_preserved": true,
+    "rebuildable": true
+  }
+}

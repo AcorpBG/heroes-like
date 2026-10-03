@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_fenmirror_gallowshells",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle",
+        "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+        "rects": [
+          [
+            0,
+            0,
+            385,
+            345
+          ]
+        ],
+        "anchor": [
+          215,
+          340
+        ],
+        "scale": 1.6666666666666665,
+        "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+      },
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "99c329a4d989447c43332a08bcfccb1c1030306eba2d645281d1983200d67b64",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "recoil",
+        "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+        "rects": [
+          [
+            0,
+            655,
+            385,
+            1000
+          ]
+        ],
+        "anchor": [
+          215,
+          990
+        ],
+        "scale": 1.6666666666666665,
+        "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+      },
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ae4f783c460f383c9f7643deaaa794b905762c87af37debe58ab2cf197614e19",
+      "runtime_source_scale": 0.7
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    480,
+    584
+  ],
+  "output_scale": 0.42,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

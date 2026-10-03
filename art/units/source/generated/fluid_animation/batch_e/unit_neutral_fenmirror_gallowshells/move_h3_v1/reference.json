@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_neutral_fenmirror_gallowshells",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle",
+        "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+        "rects": [
+          [
+            0,
+            0,
+            385,
+            345
+          ]
+        ],
+        "anchor": [
+          215,
+          340
+        ],
+        "scale": 1.6666666666666665,
+        "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+      },
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "99c329a4d989447c43332a08bcfccb1c1030306eba2d645281d1983200d67b64",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "walk_contact_a",
+        "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+        "rects": [
+          [
+            770,
+            0,
+            1155,
+            345
+          ]
+        ],
+        "anchor": [
+          983,
+          340
+        ],
+        "scale": 1.6666666666666665,
+        "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+      },
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "4f728c8619a4c5bdf88e5dbdee47f7cefbbd24467c446e901cb114ee786e78d6",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "walk_pass",
+        "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+        "rects": [
+          [
+            0,
+            345,
+            385,
+            655
+          ]
+        ],
+        "anchor": [
+          215,
+          655
+        ],
+        "scale": 1.6666666666666665,
+        "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+      },
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "d3b4af38b01c2b270936c5d9e9dd101f74195d3a55185a80099af70785f2e932",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "walk_contact_b",
+        "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+        "rects": [
+          [
+            1155,
+            0,
+            1536,
+            345
+          ]
+        ],
+        "anchor": [
+          1367,
+          340
+        ],
+        "scale": 1.6666666666666665,
+        "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+      },
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "dcf02fe2027b2185a9fb0470cf4644d2e25f61f8eb288f681f5e7b4f6b1fe0a3",
+      "runtime_source_scale": 0.7
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    480,
+    584
+  ],
+  "output_scale": 0.42,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

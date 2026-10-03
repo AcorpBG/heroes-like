@@ -1,0 +1,33 @@
+{
+  "tool": "built-in image_gen",
+  "external_original": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-3a4fb2d6-7aef-4b6b-87d5-18bc08a1fa40.png",
+  "original_sha256": "9eb1bce5f05ebb6b04e0c3d950f9521989d13c5fb645adaabed3bfbb730a3711",
+  "size": [
+    1506,
+    1044
+  ],
+  "mode": "RGBA",
+  "alpha8_bounds": [
+    0,
+    112,
+    1473,
+    919
+  ],
+  "prompt": "attack_closed_guide_v1.prompt.txt",
+  "prompt_sha256": "3c31bebfc375291ff3552dc2ab01276a8ac2145acb8e6134d0907e9032899901",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_fenmirror_gallowshells/references/extended_open_pincer_original.png",
+      "sha256": "d378659ab47dd963dbc08c292747db8ddbae0fca7529c3adc7291942bd89c694"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_fenmirror_gallowshells/references/ready_original.png",
+      "sha256": "8ba139234321c6d11d9f04547297114920e5449c2de38cc17702c2ab7cbdd9ce"
+    },
+    {
+      "path": "art/units/source/curated/unit_neutral_fenmirror_gallowshells.png",
+      "sha256": "634ad7a6b9f09011a932b14dd8e558b7a738371c04a066e98c6fc785f55388ed"
+    }
+  ],
+  "review": "rejected: original left foot cut by canvas"
+}

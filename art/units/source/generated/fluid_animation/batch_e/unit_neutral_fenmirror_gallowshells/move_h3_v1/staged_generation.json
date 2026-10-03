@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "2f5232a844ba6cb18a30df055c7f9bc5bebd15cc9cad396802a618bfc1bfc0cb",
+  "latent_sha256": "74ad0f97bbdd9790552f622491df0d563468411a87dc1f7d9a43d32227d30517",
+  "decode_workflow_sha256": "562778e87725c6df08c372f64e0622ffb7e4a414bd03d09d16ad94a236763905",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "fenmirror_gallowshell_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18449414464,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

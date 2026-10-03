@@ -1,0 +1,13 @@
+{
+  "status": "source_qualified_native_runtime_pending",
+  "all_original_rgb_frames_reviewed": 124,
+  "all_original_alpha_frames_reviewed": 124,
+  "all_native_frames_reviewed_each_facing": 124,
+  "normal_and_reflected_dark_light": true,
+  "continuous_playback_reviewed": false,
+  "original_lossless_sha256": "92e384812769cef573d5ffb77bb99b17126755ce29ce3317851c6a72d3d41e34",
+  "matte_sha256": "618cea2b608dc9b887f90549142d03bcdde14962bddee8d157c190d898f027fb",
+  "selected_original_pose_count": 40,
+  "selected_original_pixels_unique": true,
+  "notes": "Personally reviewed all124 original RGB, all124 enlarged RGBA and all124 fixed128px native poses in each facing chronologically on dark/light. Actual physical support salute: the upper pincer lifts and extends12-35 while open, closes43-47, holds upright48-63, then lowers and reopens64-90 to ready. The generated motion differs from the requested closed-jaw throughout guide but remains coherent and appropriate; no claim of closed jaw throughout. Retain every closure frame43-48, reciprocal lift/lower joints and full recovery, shorten prolonged still holds. Lower foreground pincer remains separate counterbalance, walking feet remain planted, three attached rings and arch retain identity. No emission, unattached ring, extra limb, clipping or magic. Forty observed poses at provisional50ms cadence; dedicated support replaces idle alias after actual native review. No per-pose fitting, reverse copies or interpolation. Source24fps preserved; continuous playback and runtime acceptance remain pending."
+}

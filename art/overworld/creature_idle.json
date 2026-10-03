@@ -5635,29 +5635,29 @@
       "frame_msec": 270,
       "static_frame": 0,
       "ground_anchor": [
-        136.0,
+        136,
         222
       ],
       "painted_extent": 234,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_fenmirror_gallowshells.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_fenmirror_gallowshells.png",
       "source_indices": [
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        120,
+        32,
         26,
-        370,
+        282,
         254
       ],
-      "source_sha256": "187bdf73cf78bcab69cd00785a52bce6a84ce6ae9342c4e36805c9d18f4c6e29",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_fenmirror_gallowshells/provenance.json",
+      "source_sha256": "96b7f3dc49298c5b9e9bf69b4c68b331e267e834661f22048d57b2dfaec1feb8",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_fenmirror_gallowshells/provenance.json",
       "sha256": "83594722eea9aa9496beedb77a54a12d4ce819fe05c5e4e013f761310181e509"
     },
     "unit_neutral_prismwake_raylings": {

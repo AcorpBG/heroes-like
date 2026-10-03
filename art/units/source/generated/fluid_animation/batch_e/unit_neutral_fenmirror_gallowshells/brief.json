@@ -1,0 +1,25 @@
+{
+  "unit_id": "unit_neutral_fenmirror_gallowshells",
+  "status": "in_progress_original_h3_generation",
+  "solo": true,
+  "preserve_clips": [
+    "idle"
+  ],
+  "preserved_idle_frames": 8,
+  "preserved_idle_frame_msec": 270,
+  "required_actions": [
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "anatomy": "Low blue-gray and bronze armored crab, exactly six jointed walking legs in three pairs and exactly two separate serrated pincer arms; moss-covered curved carapace arch, bronze hanging rings and moss cords, amber eyes. Far limbs may naturally occlude, never transform into new claws. Locked elevated three-quarter RIGHT view.",
+  "observed_reference_motion": "All20 original native poses personally reviewed in both normal/reflected facings on light/dark grounds. Eight accepted idle drawings show a pincer lift/lower and hanging-ornament motion; exact original pixels and270ms map/battle timing will be preserved pending focused Godot verification.",
+  "source_method": "Local MiniMax H3 original video -> lossless original RGB -> pinned semantic soft matte -> personal full sequence/enlarged/native/reflected review -> source-pixel/anchor exact publication. No source generation or acceptance yet.",
+  "support_missing_guide": "New closed-pincer upward physical salute distinct from open-claw hit recoil; six walking feet remain planted.",
+  "publication": "Only after complete personally reviewed actions and focused imported live checks; no full suite.",
+  "preexisting_legacy_drafts": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenmirror_gallowshells contains 2026-09-23 unaccepted image-sheet drafts, no handoff; retained untouched. Current main workflow remains original MiniMax H3 video.",
+  "new_support_key": "One original closed-pincer salute, uniform original scale0.225 and anatomical anchor[704,1190], personally reviewed at native128/enlarged2x both facings on dark/light. All15 original H3 guide canvases personally inspected; six actions prepared, video acceptance pending."
+}

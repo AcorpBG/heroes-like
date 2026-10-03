@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "09a125b6f267a35323f33a6bf0b3ed6f85141804ce1818c7719faa7f266da234",
+  "latent_sha256": "b3198c41af3857be78989906f8ee3e3c87e85a154b7f933c731512321fc44d0c",
+  "decode_workflow_sha256": "0d6eaec7b30e73280454fd964964c7732836d7c9be59dbf479ed1311c6c09a27",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "fenmirror_gallowshell_h3\\hit_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

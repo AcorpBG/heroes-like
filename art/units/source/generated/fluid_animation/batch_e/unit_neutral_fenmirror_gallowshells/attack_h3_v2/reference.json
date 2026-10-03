@@ -1,0 +1,123 @@
+{
+  "unit_id": "unit_neutral_fenmirror_gallowshells",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle",
+        "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+        "rects": [
+          [
+            0,
+            0,
+            385,
+            345
+          ]
+        ],
+        "anchor": [
+          215,
+          340
+        ],
+        "scale": 1.6666666666666665,
+        "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+      },
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "99c329a4d989447c43332a08bcfccb1c1030306eba2d645281d1983200d67b64",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "attack_windup",
+        "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+        "rects": [
+          [
+            385,
+            345,
+            775,
+            560
+          ],
+          [
+            385,
+            560,
+            760,
+            655
+          ]
+        ],
+        "anchor": [
+          599,
+          655
+        ],
+        "scale": 1.6666666666666665,
+        "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+      },
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "cd53e8183e085cb791c58833881a21ba2e6b7b632465018bb13382385146b94b",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "attack_snap",
+        "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+        "rects": [
+          [
+            775,
+            350,
+            1155,
+            655
+          ],
+          [
+            1155,
+            425,
+            1215,
+            540
+          ]
+        ],
+        "anchor": [
+          983,
+          655
+        ],
+        "scale": 1.6666666666666665,
+        "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+      },
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "2ed4c27379cd558700f20332a9fc4dabf2b5d8d96c346fef86920bf622a1c4bb",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "closed_horizontal_pincer_original",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_fenmirror_gallowshells/attack_closed_guide_v2/original.png",
+        "rects": [
+          [
+            0,
+            0,
+            1506,
+            1044
+          ]
+        ],
+        "anchor": [
+          658,
+          935
+        ],
+        "scale": 0.5357142857142857,
+        "source_sha256": "57a58bbd0cf372d679494c1931079209eb8996e5c1225e4c46cfdadd9d982cb1"
+      },
+      "source_sha256": "57a58bbd0cf372d679494c1931079209eb8996e5c1225e4c46cfdadd9d982cb1",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "332648055cb2c59fd46b2b350b42b344d9ad4e39702d2d22772afa1b912e6e25",
+      "runtime_source_scale": 0.225
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    480,
+    584
+  ],
+  "output_scale": 0.42,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

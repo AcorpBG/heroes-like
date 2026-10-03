@@ -1,0 +1,40 @@
+{
+  "reference": {
+    "name": "idle_v2_0",
+    "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/idle-v2/alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        384,
+        512
+      ]
+    ],
+    "anchor": [
+      210,
+      438
+    ],
+    "scale": 0.62,
+    "source_sha256": "b70b226f651a8f54e386cab30ce906a315e7647129add10e5b92e2a91e858e0b"
+  },
+  "support": {
+    "name": "closed_pincer_salute_original",
+    "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_fenmirror_gallowshells/support_guide_v1/original.png",
+    "rects": [
+      [
+        0,
+        0,
+        1243,
+        1265
+      ]
+    ],
+    "anchor": [
+      704,
+      1190
+    ],
+    "scale": 0.225,
+    "source_sha256": "94c50add5f98246ec2bf15d12618b885cd1c1053333d095286ffa983ca0de9c8"
+  },
+  "reason": "One original master scale0.225 matches torso width and carapace height against original scale0.62; eye horizontal offset and walking-foot clearance match the old anchor. No individual frame fit, stabilization or anatomical repaint.",
+  "visual_review": "personally_reviewed_native128_and_enlarged2x_both_facings_dark_light; key pose only, video acceptance pending"
+}

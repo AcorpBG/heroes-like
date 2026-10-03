@@ -1,0 +1,11 @@
+"""Complete original six-action native gallery, real Strike and reflected gallery."""
+import os,subprocess,sys
+import produce as p
+from creature_animation_lock import exclusive
+
+if __name__=='__main__':
+    out=p.ROOT/'.artifacts/parallel_animation_20261003'/p.SOURCE_DIR.name
+    godot=os.environ.get('GODOT_BIN','D:/Games/godot/Godot_v4.6.2-stable_win64_console.exe' if os.name=='nt' else 'godot')
+    with exclusive('gpu'):
+        for script,name in [('run_native_review.py','candidate_native'),('run_mirrored_native.py','mirrored_native')]:
+            subprocess.run([sys.executable,str(p.SOURCE_DIR/script),'--godot',godot,'--handoff',str(p.SOURCE_DIR/'handoff.json'),'--render','--output',str(out/name)],cwd=p.ROOT,check=True)

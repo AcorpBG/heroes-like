@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_fenmirror_gallowshells",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle",
+        "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+        "rects": [
+          [
+            0,
+            0,
+            385,
+            345
+          ]
+        ],
+        "anchor": [
+          215,
+          340
+        ],
+        "scale": 1.6666666666666665,
+        "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+      },
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "99c329a4d989447c43332a08bcfccb1c1030306eba2d645281d1983200d67b64",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "closed_pincer_salute_original",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_fenmirror_gallowshells/support_guide_v1/original.png",
+        "rects": [
+          [
+            0,
+            0,
+            1243,
+            1265
+          ]
+        ],
+        "anchor": [
+          704,
+          1190
+        ],
+        "scale": 0.5357142857142857,
+        "source_sha256": "94c50add5f98246ec2bf15d12618b885cd1c1053333d095286ffa983ca0de9c8"
+      },
+      "source_sha256": "94c50add5f98246ec2bf15d12618b885cd1c1053333d095286ffa983ca0de9c8",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d6a9e2c142ce97f5e7f712f721e650e897f5f24f4b89f41d557e985f84e288bb",
+      "runtime_source_scale": 0.225
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    480,
+    584
+  ],
+  "output_scale": 0.42,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

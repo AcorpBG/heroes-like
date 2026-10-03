@@ -1,0 +1,46 @@
+{
+  "reference": {
+    "name": "attack_snap",
+    "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+    "rects": [
+      [
+        775,
+        350,
+        1155,
+        655
+      ],
+      [
+        1155,
+        425,
+        1215,
+        540
+      ]
+    ],
+    "anchor": [
+      983,
+      655
+    ],
+    "scale": 0.7,
+    "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+  },
+  "closed": {
+    "name": "closed_horizontal_pincer_original",
+    "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_fenmirror_gallowshells/attack_closed_guide_v2/original.png",
+    "rects": [
+      [
+        0,
+        0,
+        1506,
+        1044
+      ]
+    ],
+    "anchor": [
+      658,
+      935
+    ],
+    "scale": 0.225,
+    "source_sha256": "57a58bbd0cf372d679494c1931079209eb8996e5c1225e4c46cfdadd9d982cb1"
+  },
+  "reason": "One original master scale0.225 and anchor[658,935] match original head/torso and eye-to-ground registration; extended claw is not used to normalize anatomy. No individual video-frame fitting or repaint.",
+  "visual_review": "personally reviewed original full RGBA, native128 and enlarged2x, normal/reflected, dark/light; same torso/eye/carapace scale and ground origin. Both claws and all visible walking-foot tips complete. Original closed master qualifies as H3 guide only; animation not yet accepted."
+}

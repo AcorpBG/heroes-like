@@ -1,0 +1,137 @@
+{
+  "unit_id": "unit_neutral_fenmirror_gallowshells",
+  "canvas": [
+    960,
+    704
+  ],
+  "scale": 0.42,
+  "anchor": [
+    480,
+    584
+  ],
+  "key_rgb": [
+    190,
+    206,
+    222
+  ],
+  "seed": 2026100311,
+  "references": [
+    {
+      "name": "idle",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          0,
+          0,
+          385,
+          345
+        ]
+      ],
+      "anchor": [
+        215,
+        340
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "attack_windup",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          385,
+          345,
+          775,
+          560
+        ],
+        [
+          385,
+          560,
+          760,
+          655
+        ]
+      ],
+      "anchor": [
+        599,
+        655
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "attack_snap",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          775,
+          350,
+          1155,
+          655
+        ],
+        [
+          1155,
+          425,
+          1215,
+          540
+        ]
+      ],
+      "anchor": [
+        983,
+        655
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "closed_horizontal_pincer_original",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_fenmirror_gallowshells/attack_closed_guide_v2/original.png",
+      "rects": [
+        [
+          0,
+          0,
+          1506,
+          1044
+        ]
+      ],
+      "anchor": [
+        658,
+        935
+      ],
+      "scale": 0.225,
+      "source_sha256": "57a58bbd0cf372d679494c1931079209eb8996e5c1225e4c46cfdadd9d982cb1"
+    }
+  ],
+  "guides": [
+    [
+      18,
+      1
+    ],
+    [
+      32,
+      2
+    ],
+    [
+      42,
+      3
+    ],
+    [
+      52,
+      3
+    ],
+    [
+      78,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "A quiet anatomical joint-motion study of exactly one original armored Fenmirror Gallowshell crab on a completely empty opaque flat pale blue-gray plate. Fixed elevated three-quarter camera, facing RIGHT throughout, no camera movement. Original blue-gray peatglass and aged bronze carapace with moss, amber eyes, curved back arch with exactly three hanging bronze rings/moss cords. Exactly two original serrated pincer arms and six original jointed walking legs in three pairs, far feet naturally occluded. Same original torso dimensions, registration, material colors, limb identity and full uncropped silhouette. Every motion uses only this creature's anatomical joints. No other objects, actor, projectile, flying ring, connecting beam, flashes, starburst, sparks, particles, aura, text, fog, floor or shadow. The upper forward pincer draws back while opening, the same arm extends horizontally into empty space toward screen RIGHT, its serrated jaws close together to the closed guide, briefly hold CLOSED, then the same arm retracts and lowers smoothly to the original ready posture. Lower foreground closed pincer remains lowered and separate, counterbalancing the torso. Six walking legs brace without stepping. The three bronze rings stay attached only to the back arch. One deliberate extension, jaw closure and recovery; nothing is held, caught, thrown or emitted.",
+  "action": "attack",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "visual_review": "pending",
+  "selection": "not_selected"
+}

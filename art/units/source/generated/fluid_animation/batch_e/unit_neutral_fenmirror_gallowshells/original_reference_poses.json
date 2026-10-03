@@ -1,0 +1,385 @@
+{
+  "unit_id": "unit_neutral_fenmirror_gallowshells",
+  "original_packing": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/packing.json",
+  "original_packing_sha256": "192218db1f7ce234dd8d39777da2daacf2644ac02980443a8062331791c05d50",
+  "frames": [
+    {
+      "name": "idle",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          0,
+          0,
+          385,
+          345
+        ]
+      ],
+      "anchor": [
+        215,
+        340
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "idle_breath",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          385,
+          0,
+          770,
+          345
+        ]
+      ],
+      "anchor": [
+        599,
+        340
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          770,
+          0,
+          1155,
+          345
+        ]
+      ],
+      "anchor": [
+        983,
+        340
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          1155,
+          0,
+          1536,
+          345
+        ]
+      ],
+      "anchor": [
+        1367,
+        340
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "walk_pass",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          0,
+          345,
+          385,
+          655
+        ]
+      ],
+      "anchor": [
+        215,
+        655
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "attack_windup",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          385,
+          345,
+          775,
+          560
+        ],
+        [
+          385,
+          560,
+          760,
+          655
+        ]
+      ],
+      "anchor": [
+        599,
+        655
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "attack_snap",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          775,
+          350,
+          1155,
+          655
+        ],
+        [
+          1155,
+          425,
+          1215,
+          540
+        ]
+      ],
+      "anchor": [
+        983,
+        655
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          1215,
+          345,
+          1536,
+          560
+        ],
+        [
+          1155,
+          560,
+          1536,
+          655
+        ]
+      ],
+      "anchor": [
+        1367,
+        655
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "recoil",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          0,
+          655,
+          385,
+          1000
+        ]
+      ],
+      "anchor": [
+        215,
+        990
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "death_fold",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          385,
+          710,
+          775,
+          1000
+        ]
+      ],
+      "anchor": [
+        599,
+        990
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          775,
+          750,
+          1155,
+          1000
+        ]
+      ],
+      "anchor": [
+        983,
+        990
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          1155,
+          750,
+          1536,
+          1000
+        ]
+      ],
+      "anchor": [
+        1367,
+        990
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "idle_v2_0",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/idle-v2/alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        210,
+        438
+      ],
+      "scale": 0.62,
+      "source_sha256": "b70b226f651a8f54e386cab30ce906a315e7647129add10e5b92e2a91e858e0b"
+    },
+    {
+      "name": "idle_v2_1",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/idle-v2/alpha.png",
+      "rects": [
+        [
+          384,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        594,
+        438
+      ],
+      "scale": 0.62,
+      "source_sha256": "b70b226f651a8f54e386cab30ce906a315e7647129add10e5b92e2a91e858e0b"
+    },
+    {
+      "name": "idle_v2_2",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/idle-v2/alpha.png",
+      "rects": [
+        [
+          768,
+          0,
+          1152,
+          512
+        ]
+      ],
+      "anchor": [
+        978,
+        438
+      ],
+      "scale": 0.62,
+      "source_sha256": "b70b226f651a8f54e386cab30ce906a315e7647129add10e5b92e2a91e858e0b"
+    },
+    {
+      "name": "idle_v2_3",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/idle-v2/alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1362,
+        438
+      ],
+      "scale": 0.62,
+      "source_sha256": "b70b226f651a8f54e386cab30ce906a315e7647129add10e5b92e2a91e858e0b"
+    },
+    {
+      "name": "idle_v2_4",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/idle-v2/alpha.png",
+      "rects": [
+        [
+          0,
+          512,
+          384,
+          1024
+        ]
+      ],
+      "anchor": [
+        210,
+        948
+      ],
+      "scale": 0.62,
+      "source_sha256": "b70b226f651a8f54e386cab30ce906a315e7647129add10e5b92e2a91e858e0b"
+    },
+    {
+      "name": "idle_v2_5",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/idle-v2/alpha.png",
+      "rects": [
+        [
+          384,
+          512,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        594,
+        948
+      ],
+      "scale": 0.62,
+      "source_sha256": "b70b226f651a8f54e386cab30ce906a315e7647129add10e5b92e2a91e858e0b"
+    },
+    {
+      "name": "idle_v2_6",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/idle-v2/alpha.png",
+      "rects": [
+        [
+          768,
+          512,
+          1152,
+          1024
+        ]
+      ],
+      "anchor": [
+        978,
+        948
+      ],
+      "scale": 0.62,
+      "source_sha256": "b70b226f651a8f54e386cab30ce906a315e7647129add10e5b92e2a91e858e0b"
+    },
+    {
+      "name": "idle_v2_7",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/idle-v2/alpha.png",
+      "rects": [
+        [
+          1152,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1362,
+        948
+      ],
+      "scale": 0.62,
+      "source_sha256": "b70b226f651a8f54e386cab30ce906a315e7647129add10e5b92e2a91e858e0b"
+    }
+  ]
+}

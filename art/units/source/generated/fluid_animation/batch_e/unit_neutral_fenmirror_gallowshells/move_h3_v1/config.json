@@ -1,0 +1,125 @@
+{
+  "unit_id": "unit_neutral_fenmirror_gallowshells",
+  "canvas": [
+    960,
+    704
+  ],
+  "scale": 0.42,
+  "anchor": [
+    480,
+    584
+  ],
+  "key_rgb": [
+    190,
+    206,
+    222
+  ],
+  "seed": 2026100300,
+  "references": [
+    {
+      "name": "idle",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          0,
+          0,
+          385,
+          345
+        ]
+      ],
+      "anchor": [
+        215,
+        340
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          770,
+          0,
+          1155,
+          345
+        ]
+      ],
+      "anchor": [
+        983,
+        340
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "walk_pass",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          0,
+          345,
+          385,
+          655
+        ]
+      ],
+      "anchor": [
+        215,
+        655
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          1155,
+          0,
+          1536,
+          345
+        ]
+      ],
+      "anchor": [
+        1367,
+        340
+      ],
+      "scale": 0.7,
+      "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+    }
+  ],
+  "guides": [
+    [
+      20,
+      1
+    ],
+    [
+      40,
+      2
+    ],
+    [
+      60,
+      3
+    ],
+    [
+      80,
+      2
+    ],
+    [
+      100,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original armored Fenmirror Gallowshell crab, exactly six jointed walking legs in three pairs and exactly two separate serrated pincer arms. Blue-gray peatglass carapace, bronze edge armor, moss tufts, curved back arch with original hanging bronze rings and moss cords, amber eyes. Low broad torso, original proportions. Fixed elevated three-quarter tactical camera, facing RIGHT. No camera movement, body growth, duplicate limbs, changed claw identities, new ornaments, glow, sparks, particles, projectile, fog, scenery, shadow floor or text. Entire creature and every claw and leg tip safely inside the frame. Opaque flat pale blue-gray background. Crawl naturally in place through reciprocal alternating support tripods. Opposite near/far legs lift, pass, contact, load and extend; weight transfers across three planted feet without root translation. Both original pincer arms remain distinct, slightly balancing the torso. Back arch ornaments sway subtly from leg effort. Two coherent crawl cycles and settle to the original ready stance.",
+  "action": "move",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "visual_review": "pending",
+  "selection": "not_selected"
+}

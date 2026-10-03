@@ -1,0 +1,41 @@
+{
+  "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+  "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e",
+  "original_frame": 6,
+  "original": {
+    "name": "attack_snap",
+    "source": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/alpha/poses-anatomy-v3.png",
+    "rects": [
+      [
+        775,
+        350,
+        1155,
+        655
+      ],
+      [
+        1155,
+        425,
+        1215,
+        540
+      ]
+    ],
+    "anchor": [
+      983,
+      655
+    ],
+    "scale": 0.7,
+    "source_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e"
+  },
+  "union_bounds": [
+    775,
+    350,
+    1215,
+    655
+  ],
+  "anchor": [
+    208,
+    305
+  ],
+  "extraction": "Exact original rectangle pixels, including source alpha; no resize or repaint.",
+  "sha256": "d378659ab47dd963dbc08c292747db8ddbae0fca7529c3adc7291942bd89c694"
+}
