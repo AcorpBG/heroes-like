@@ -1,0 +1,10 @@
+{
+  "status": "rejected_at_original_RGB_review",
+  "reviewer": "coordinator",
+  "examined": "All124 original RGB chronologically in eight pages.",
+  "defect": "Removing interior guides did not repair near-stationary blue spokes. The operator cycles, but both wheels remain effectively fixed. This is not an accepted rolling animation.",
+  "alpha_native_acceptance": "Not performed or claimed after RGB rejection.",
+  "selection": [],
+  "reassessment": "The in-place constraints are ineffective for this mechanism. Generate a genuinely rolling leftward carriage with first/last positions450px apart on a1280x704 canvas. Wheels must roll counterclockwise as the carriage travels left. After observing genuine rolling, trace the original anatomical wheel contacts to remove only root translation for engine-driven travel; preserve one global anatomical scale, original frame pixels and all observed articulation. No per-frame bounding-box normalization or generated motion in extraction.",
+  "preservation": "All source video, latent,124 RGB hashes/mattes, references and generation settings retained."
+}

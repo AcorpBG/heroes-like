@@ -1,0 +1,10 @@
+{
+  "status": "rejected_at_original_transition_review",
+  "reviewer": "coordinator",
+  "examined": "All124 original RGB chronologically; alpha32..95 on dark/light; original-size59,60,90,91.",
+  "defect": "Baked ring is gone, but source59..60 abruptly substitutes the supplied calibration chassis attitude: launcher axis, mirror, front strut and operator shift together.90..91 makes another whole-carriage shift during recovery. The manual lean alone does not repair the missing mechanical transitions.",
+  "selection": [],
+  "native_acceptance": "Not performed or claimed after source rejection.",
+  "reassessment": "After two failed support takes, the interior separately painted peak is unsuitable as a hard temporal constraint despite wheel-diameter registration. Remove it entirely, use the same ready original at both endpoints, and request only an operator crank gesture with the stationary carriage retaining its original attitude.",
+  "preservation": "All original video, latent,124 RGB hashes/mattes, guides and provenance retained."
+}

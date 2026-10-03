@@ -1,0 +1,277 @@
+{
+  "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+  "actions": {
+    "attack_h3_v1": {
+      "action": "attack",
+      "guides": [
+        {
+          "image": "guide_0_chroma.png",
+          "sha256": "5fd69da5157a69892e7b8b5dde2598e2207ee41437a3d16e41c8da2ab02eee64",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+          "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        },
+        {
+          "image": "guide_1_chroma.png",
+          "sha256": "73960ea9a759e6c2f6b5b3de271445beeed47c75bd3bd374b85df82ba2d75729",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/contact_support_keys_v1/original.png",
+          "source_sha256": "78c5a39285ac08e6f8b373cf27e1fa1523aa19f786041641183c6c674b422bc6",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        }
+      ],
+      "source_pose_guide_review": "personally reviewed original masters, complete 960x704 guide canvases and fixed native128/enlarged2x originals on dark/light both facings; correct two wheels, three star feet, single two-arm/two-leg operator, blue-front LEFT/amber-rear RIGHT and original lens. These are conditioning keys only.",
+      "video_review": "pending; no selected frame indices or generated motion accepted"
+    },
+    "cast_h3_v1": {
+      "action": "cast",
+      "guides": [
+        {
+          "image": "guide_0_chroma.png",
+          "sha256": "5fd69da5157a69892e7b8b5dde2598e2207ee41437a3d16e41c8da2ab02eee64",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+          "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        },
+        {
+          "image": "guide_1_chroma.png",
+          "sha256": "51483f9eb61da580ef8269c64871b485759a1bdbf0a629bcfa6add7a015e456f",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/contact_support_keys_v1/original.png",
+          "source_sha256": "78c5a39285ac08e6f8b373cf27e1fa1523aa19f786041641183c6c674b422bc6",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        }
+      ],
+      "source_pose_guide_review": "personally reviewed original masters, complete 960x704 guide canvases and fixed native128/enlarged2x originals on dark/light both facings; correct two wheels, three star feet, single two-arm/two-leg operator, blue-front LEFT/amber-rear RIGHT and original lens. These are conditioning keys only.",
+      "video_review": "pending; no selected frame indices or generated motion accepted"
+    },
+    "death_h3_v1": {
+      "action": "death",
+      "guides": [
+        {
+          "image": "guide_0_chroma.png",
+          "sha256": "5fd69da5157a69892e7b8b5dde2598e2207ee41437a3d16e41c8da2ab02eee64",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+          "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        },
+        {
+          "image": "guide_1_chroma.png",
+          "sha256": "104fc85c9e245330c2a7c8e8c7af0b5a1581aa75de316a5109f4b3b6ec56b7b4",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/death-hit.png",
+          "source_sha256": "3bad4bf5d01dcc9506590b4d6c8c7788c89a98204236d9c4a4229ad9afbfdacf",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        },
+        {
+          "image": "guide_2_chroma.png",
+          "sha256": "d9f4bbc19702240745f29101ceec276fa3e73ea8383d6dbf97c167f56f281aba",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/death-hit.png",
+          "source_sha256": "3bad4bf5d01dcc9506590b4d6c8c7788c89a98204236d9c4a4229ad9afbfdacf",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        },
+        {
+          "image": "guide_3_chroma.png",
+          "sha256": "52f7c33fadf9f527a7fb0d7dee216fa09cb5f3c27442ff6ab32239c9b2553296",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/death-hit.png",
+          "source_sha256": "3bad4bf5d01dcc9506590b4d6c8c7788c89a98204236d9c4a4229ad9afbfdacf",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        }
+      ],
+      "source_pose_guide_review": "personally reviewed original masters, complete 960x704 guide canvases and fixed native128/enlarged2x originals on dark/light both facings; correct two wheels, three star feet, single two-arm/two-leg operator, blue-front LEFT/amber-rear RIGHT and original lens. These are conditioning keys only.",
+      "video_review": "pending; no selected frame indices or generated motion accepted"
+    },
+    "defend_h3_v1": {
+      "action": "defend",
+      "guides": [
+        {
+          "image": "guide_0_chroma.png",
+          "sha256": "5fd69da5157a69892e7b8b5dde2598e2207ee41437a3d16e41c8da2ab02eee64",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+          "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        },
+        {
+          "image": "guide_1_chroma.png",
+          "sha256": "a9fdb3263c16598c80a7dc82316df49ed337f6c6a7800ed6cbd8492ba9429f22",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+          "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        },
+        {
+          "image": "guide_2_chroma.png",
+          "sha256": "b304ce5a81357efa2a3b27802a35f3d20cc292b8496bebe282c0f7422da4a9c1",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+          "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        }
+      ],
+      "source_pose_guide_review": "personally reviewed original masters, complete 960x704 guide canvases and fixed native128/enlarged2x originals on dark/light both facings; correct two wheels, three star feet, single two-arm/two-leg operator, blue-front LEFT/amber-rear RIGHT and original lens. These are conditioning keys only.",
+      "video_review": "pending; no selected frame indices or generated motion accepted"
+    },
+    "hit_h3_v1": {
+      "action": "hit",
+      "guides": [
+        {
+          "image": "guide_0_chroma.png",
+          "sha256": "5fd69da5157a69892e7b8b5dde2598e2207ee41437a3d16e41c8da2ab02eee64",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+          "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        },
+        {
+          "image": "guide_1_chroma.png",
+          "sha256": "6174ff32477d294f61d4b57b8d385bdd3cb127d5db0f777364ed4b51a29da540",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/death-hit.png",
+          "source_sha256": "3bad4bf5d01dcc9506590b4d6c8c7788c89a98204236d9c4a4229ad9afbfdacf",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        }
+      ],
+      "source_pose_guide_review": "personally reviewed original masters, complete 960x704 guide canvases and fixed native128/enlarged2x originals on dark/light both facings; correct two wheels, three star feet, single two-arm/two-leg operator, blue-front LEFT/amber-rear RIGHT and original lens. These are conditioning keys only.",
+      "video_review": "pending; no selected frame indices or generated motion accepted"
+    },
+    "move_h3_v1": {
+      "action": "move",
+      "guides": [
+        {
+          "image": "guide_0_chroma.png",
+          "sha256": "4dbb82abc9e6d1bcc1e4e11b48e7ed9d4a537cdf1eca6853e196b842f4504406",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+          "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        },
+        {
+          "image": "guide_1_chroma.png",
+          "sha256": "e3b85986466b66958e5e22e394d741cba5ad2de9da0285a688792eb89e0f7a01",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+          "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        },
+        {
+          "image": "guide_2_chroma.png",
+          "sha256": "9e328bdf0c04cad24299f51414cf03179d2da1fd2f021510be944dd49a3f4074",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+          "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        },
+        {
+          "image": "guide_3_chroma.png",
+          "sha256": "ef0e2142c9b22ecba705584404e70af34dad821dc749d82ddab4ba8898a77a4f",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+          "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        }
+      ],
+      "source_pose_guide_review": "personally reviewed original masters, complete 960x704 guide canvases and fixed native128/enlarged2x originals on dark/light both facings; correct two wheels, three star feet, single two-arm/two-leg operator, blue-front LEFT/amber-rear RIGHT and original lens. These are conditioning keys only.",
+      "video_review": "pending; no selected frame indices or generated motion accepted"
+    },
+    "ranged_h3_v1": {
+      "action": "ranged",
+      "guides": [
+        {
+          "image": "guide_0_chroma.png",
+          "sha256": "5fd69da5157a69892e7b8b5dde2598e2207ee41437a3d16e41c8da2ab02eee64",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+          "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        },
+        {
+          "image": "guide_1_chroma.png",
+          "sha256": "c139fa96a400fbed62c9f7d6cdec7be323448ddc999fc333c6364d0d97021ac5",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/actions-four.png",
+          "source_sha256": "04121f36568899198532dda4388a7e0a04768cffd2c1bf16f1273fa47234fe46",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        },
+        {
+          "image": "guide_2_chroma.png",
+          "sha256": "53362a32691c95f9a651fbf10066719b5a636ba6667c3e106651f752d599027e",
+          "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/actions-four.png",
+          "source_sha256": "04121f36568899198532dda4388a7e0a04768cffd2c1bf16f1273fa47234fe46",
+          "anchor": [
+            480,
+            576
+          ],
+          "output_scale": 0.45
+        }
+      ],
+      "source_pose_guide_review": "personally reviewed original masters, complete 960x704 guide canvases and fixed native128/enlarged2x originals on dark/light both facings; correct two wheels, three star feet, single two-arm/two-leg operator, blue-front LEFT/amber-rear RIGHT and original lens. These are conditioning keys only.",
+      "video_review": "pending; no selected frame indices or generated motion accepted"
+    }
+  },
+  "new_key_master": "contact_support_keys_v1/original.png",
+  "new_key_note": "Built-in original contact/support pair .26 fixed master scale, anchors tied to frontal star-foot contact; no per-pose bounds fit. Old legacy melee guide rejected before video for scale/camera inconsistency and archived without destruction. New keys personally checked in both facings at native128/2x on dark/light. Video identity/continuity remain pending.",
+  "idle_preservation": "Eight idle16-23 individually reviewed; preserve exact240ms original battle and map pixels and anchor. Qualifying hand-crank movement, coherent cape and stable wheels/stabilizers; no generated idle needed."
+}

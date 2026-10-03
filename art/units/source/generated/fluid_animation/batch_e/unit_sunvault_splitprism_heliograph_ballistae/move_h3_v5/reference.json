@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "rolling_crank_up",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+        "rects": [
+          [
+            0,
+            0,
+            627,
+            627
+          ]
+        ],
+        "anchor": [
+          285,
+          515
+        ],
+        "scale": 0.888888888888889,
+        "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a"
+      },
+      "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "1fc3778498eae5fdc23472c0471b5a2b8524d4d6af20d9abb76e1cbacf63ff40",
+      "runtime_source_scale": 0.4
+    },
+    {
+      "source_frame": {
+        "name": "rolling_original_leftward_destination",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+        "rects": [
+          [
+            0,
+            0,
+            627,
+            627
+          ]
+        ],
+        "anchor": [
+          285,
+          515
+        ],
+        "scale": 0.888888888888889,
+        "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a",
+        "guide_offset": [
+          -450,
+          0
+        ]
+      },
+      "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6eaa8a9265e3db106ec77ba36eca86ff60bc04efbd9831d127e61938c2cd993a",
+      "runtime_source_scale": 0.4
+    }
+  ],
+  "canvas": [
+    1280,
+    704
+  ],
+  "ground_anchor": [
+    875,
+    576
+  ],
+  "output_scale": 0.45,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

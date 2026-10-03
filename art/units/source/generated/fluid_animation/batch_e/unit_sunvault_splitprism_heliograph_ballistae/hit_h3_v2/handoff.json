@@ -1,0 +1,589 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+      "reference_height": 256,
+      "source_facing": "left",
+      "frames": [
+        {
+          "name": "hit_original_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_original_h3_026",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "hit_original_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_original_h3_030",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "hit_original_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_original_h3_034",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "hit_original_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_original_h3_038",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "hit_original_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_original_h3_041",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "hit_original_h3_042",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "hit_original_h3_043",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "hit_original_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_original_h3_046",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "hit_original_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "hit_original_h3_050",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "hit_original_h3_052",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "hit_original_h3_054",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "hit_original_h3_056",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "hit_original_h3_058",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "hit_original_h3_060",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.45,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        }
+      ],
+      "clips": {
+        "hit": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "frame_msec": 84,
+          "loop": false,
+          "static_frame": 0,
+          "frame_durations_msec": [
+            84,
+            84,
+            84,
+            84,
+            84,
+            84,
+            84,
+            84,
+            42,
+            42,
+            42,
+            42,
+            84,
+            84,
+            84,
+            84,
+            84,
+            84,
+            84,
+            84,
+            42
+          ]
+        }
+      },
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/config.json",
+          "sha256": "3878c4c6a9447c58ccbad184c410d42c4978ce313005692b3fbdba13e71ce549"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/selection.json",
+          "sha256": "858d49a122b4fe7fd94f1b4bf5a7f3c65ed5936bc7f7f3b6d83f4a0bc346a8d4"
+        },
+        "selection_full24fps.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/selection_full24fps.json",
+          "sha256": "c7a09bc993e7fc4a3555a7ca2e70a11d5326321dd75864de9ddc359f93c49430"
+        },
+        "visual_review.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/visual_review.json",
+          "sha256": "9924de8a4729691189c55258076d3ce1c61fcdce0a52f9662bfe07daf3238cf6"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/original_lossless.mkv",
+          "sha256": "29c6dadb3639eff3a67a2f08795a39ddea0c614976beb496e9c8635e2739c525"
+        },
+        "original.mp4": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/original.mp4",
+          "sha256": "b116c20f11f4ad21dff1669b6773eab231fc70c492958057d7e8a47fe1bc9d08"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/original.json",
+          "sha256": "a36d528a4fcf558b397a3aa084acb8d87f0bacaaa32261684b9b824dd970bf4b"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/original.latent",
+          "sha256": "6e5f896c38e4f5099450f621c099d451a6e8af33ac5b6e96d2311f74d10d972c"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/reference.json",
+          "sha256": "53704e52b98c3447735169ba7ba236943285406503d927afba0a81874967bc09"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/prompt.txt",
+          "sha256": "03b3dd123216f94c33a316cd777ebb8644d3cc7ad1edd1b5c5869a94d9e7fe69"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/matte.json",
+          "sha256": "339299b61336a65ca231c20b6cbea00a7c467fbe93a640a6bea6463daed9fcff"
+        },
+        "segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/segmentation_recipe.json",
+          "sha256": "1ae81cfbfbc0140ff2f906b939f9b16b6ee5873870e259b6d90530ff3e910294"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/workflow_api.json",
+          "sha256": "b250ef8b27b05d63fb7aca6b8aa3a3165a5f4e67f95326f56673f19e818b3fad"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/sampling_workflow_api.json",
+          "sha256": "cde251e5dc8df8998e7c65025106a3ca3159e6a19b520673812c633ed0547532"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/sampling_submission.json",
+          "sha256": "c083793791d750d7d0358db61e29dd02232d9be4b358aa6fc22e72e0afff3b73"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/sampling_history.json",
+          "sha256": "e4fa13ab3c730336ff50061e83018fe6e4636643bec2d6df3ac0dd67b066694b"
+        },
+        "decode_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/decode_submission.json",
+          "sha256": "7f07fe35c595e3995c069ceb9a48df2e463f6c3bf5dd54b177b96c542cb2b6d5"
+        },
+        "generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/generation_history.json",
+          "sha256": "0615ec0dcc79699223dd4816746c748aae6a59b524b8f8fa95a1017cfe6712f6"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/hit_h3_v2/staged_generation.json",
+          "sha256": "06f88307a388b55b347a1176b4bb16bf77b10e78ac42c50b7d2fabd2fb88c601"
+        }
+      },
+      "source_scale_reason": "Fixed .45 anatomical scale with ground origin480,576; six whole-source H3 actions and original H3 wheel/body component movement. Fixed component scales, original axle registration and foreground occlusion; no per-frame size normalization, synthetic rotation or poses.",
+      "visual_review": {
+        "status": "pending",
+        "notes": "37 consecutive original poses retain physical recoil and recovery. No baked shot. Source-qualified; actual runtime pending. Production sampling keeps original duration and all physical contact/collapse transitions; 12fps elsewhere, original24fps source retained. Retimed native runtime review remains pending."
+      }
+    }
+  ]
+}

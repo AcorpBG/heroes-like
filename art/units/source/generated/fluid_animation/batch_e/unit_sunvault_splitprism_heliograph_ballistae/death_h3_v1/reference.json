@@ -1,0 +1,123 @@
+{
+  "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_0",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+        "rects": [
+          [
+            0,
+            0,
+            640,
+            627
+          ]
+        ],
+        "anchor": [
+          355,
+          540
+        ],
+        "scale": 1.0,
+        "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586"
+      },
+      "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5fd69da5157a69892e7b8b5dde2598e2207ee41437a3d16e41c8da2ab02eee64",
+      "runtime_source_scale": 0.45
+    },
+    {
+      "source_frame": {
+        "name": "death_buckle",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/death-hit.png",
+        "rects": [
+          [
+            648,
+            0,
+            1254,
+            300
+          ],
+          [
+            686,
+            300,
+            1254,
+            410
+          ],
+          [
+            648,
+            410,
+            1254,
+            627
+          ]
+        ],
+        "anchor": [
+          955,
+          599
+        ],
+        "scale": 0.7999999999999999,
+        "source_sha256": "3bad4bf5d01dcc9506590b4d6c8c7788c89a98204236d9c4a4229ad9afbfdacf"
+      },
+      "source_sha256": "3bad4bf5d01dcc9506590b4d6c8c7788c89a98204236d9c4a4229ad9afbfdacf",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "104fc85c9e245330c2a7c8e8c7af0b5a1581aa75de316a5109f4b3b6ec56b7b4",
+      "runtime_source_scale": 0.36
+    },
+    {
+      "source_frame": {
+        "name": "death_fall",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/death-hit.png",
+        "rects": [
+          [
+            0,
+            627,
+            660,
+            1254
+          ]
+        ],
+        "anchor": [
+          340,
+          1123
+        ],
+        "scale": 0.7999999999999999,
+        "source_sha256": "3bad4bf5d01dcc9506590b4d6c8c7788c89a98204236d9c4a4229ad9afbfdacf"
+      },
+      "source_sha256": "3bad4bf5d01dcc9506590b4d6c8c7788c89a98204236d9c4a4229ad9afbfdacf",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "d9f4bbc19702240745f29101ceec276fa3e73ea8383d6dbf97c167f56f281aba",
+      "runtime_source_scale": 0.36
+    },
+    {
+      "source_frame": {
+        "name": "dead",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/death-hit.png",
+        "rects": [
+          [
+            660,
+            627,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          940,
+          1152
+        ],
+        "scale": 0.7999999999999999,
+        "source_sha256": "3bad4bf5d01dcc9506590b4d6c8c7788c89a98204236d9c4a4229ad9afbfdacf"
+      },
+      "source_sha256": "3bad4bf5d01dcc9506590b4d6c8c7788c89a98204236d9c4a4229ad9afbfdacf",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "52f7c33fadf9f527a7fb0d7dee216fa09cb5f3c27442ff6ab32239c9b2553296",
+      "runtime_source_scale": 0.36
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.45,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

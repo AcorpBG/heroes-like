@@ -5460,29 +5460,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        124.0,
+        124,
         193
       ],
       "painted_extent": 243,
-      "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_splitprism_heliograph_ballistae.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_sunvault_splitprism_heliograph_ballistae.png",
       "source_indices": [
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        132,
-        55,
-        391,
-        260
+        32,
+        -1,
+        291,
+        204
       ],
-      "source_sha256": "95b247592920698063eb3a35a0ebbbc584b887b47f32cf2e4504bd5e0f17d820",
-      "source_provenance": "res://art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/provenance.json",
+      "source_sha256": "c6f6443509c15a7489c0bede537871687acdbbc4db391e6474911017f29c3875",
+      "source_provenance": "res://art/animation/source/fluid/unit_sunvault_splitprism_heliograph_ballistae/provenance.json",
       "sha256": "f7dff4c5e93678f6b558cd7e6dbd0c68acc2c129afd96d5f9bd1559eb21b33fe"
     },
     "unit_thornwake_woundroot_rootmaul_behemoths": {

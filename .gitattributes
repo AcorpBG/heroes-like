@@ -449,3 +449,7 @@ art/animation/source/fluid/unit_blackbranch_cutthroat_veteran/idle_bleed_fixed_h
 art/animation/source/fluid/unit_blackbranch_cutthroat_veteran/idle_bleed_fix_validation.json -text
 
 art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_wardens/** -text
+
+# Preserve original Heliograph action pixels and hash-bound production recipes.
+art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/** -text
+art/animation/source/fluid/unit_sunvault_splitprism_heliograph_ballistae/*.json -text

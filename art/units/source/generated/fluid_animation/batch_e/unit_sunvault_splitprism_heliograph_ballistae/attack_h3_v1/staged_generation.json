@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "47702ac2b6704538b3659bef18dceb98ed05cc0100305d47ab3388d77f8a1f78",
+  "latent_sha256": "ba744b9ba325afdabfdb369f3fe2c6aa45d3b4068d0b8c2734f45aac31a68e43",
+  "decode_workflow_sha256": "9308ba6511100b907d0901712c3d2db342208cea686fe9c358f43265f88bc73a",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "heliograph_ballista_h3\\attack_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 20160579392,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

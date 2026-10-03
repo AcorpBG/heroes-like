@@ -1,0 +1,476 @@
+[
+  {
+    "name": "idle_0",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+    "rects": [
+      [
+        0,
+        0,
+        640,
+        627
+      ]
+    ],
+    "anchor": [
+      355,
+      540
+    ],
+    "scale": 0.45,
+    "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586"
+  },
+  {
+    "name": "idle_1",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+    "rects": [
+      [
+        640,
+        0,
+        1254,
+        627
+      ]
+    ],
+    "anchor": [
+      915,
+      540
+    ],
+    "scale": 0.45,
+    "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586"
+  },
+  {
+    "name": "rolling_crank_up",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+    "rects": [
+      [
+        0,
+        0,
+        627,
+        627
+      ]
+    ],
+    "anchor": [
+      285,
+      515
+    ],
+    "scale": 0.36,
+    "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a"
+  },
+  {
+    "name": "rolling_crank_forward",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+    "rects": [
+      [
+        627,
+        0,
+        1254,
+        627
+      ]
+    ],
+    "anchor": [
+      900,
+      518
+    ],
+    "scale": 0.36,
+    "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a"
+  },
+  {
+    "name": "rolling_crank_down",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+    "rects": [
+      [
+        0,
+        627,
+        627,
+        1254
+      ]
+    ],
+    "anchor": [
+      285,
+      1086
+    ],
+    "scale": 0.36,
+    "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a"
+  },
+  {
+    "name": "rolling_crank_back",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+    "rects": [
+      [
+        627,
+        627,
+        1254,
+        1254
+      ]
+    ],
+    "anchor": [
+      910,
+      1093
+    ],
+    "scale": 0.36,
+    "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a"
+  },
+  {
+    "name": "ranged_windup",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/actions-four.png",
+    "rects": [
+      [
+        0,
+        0,
+        620,
+        270
+      ],
+      [
+        0,
+        270,
+        644,
+        627
+      ]
+    ],
+    "anchor": [
+      320,
+      580
+    ],
+    "scale": 0.34,
+    "source_sha256": "04121f36568899198532dda4388a7e0a04768cffd2c1bf16f1273fa47234fe46"
+  },
+  {
+    "name": "ranged_recoil",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/actions-four.png",
+    "rects": [
+      [
+        620,
+        0,
+        1254,
+        270
+      ],
+      [
+        644,
+        270,
+        1254,
+        627
+      ]
+    ],
+    "anchor": [
+      930,
+      584
+    ],
+    "scale": 0.34,
+    "source_sha256": "04121f36568899198532dda4388a7e0a04768cffd2c1bf16f1273fa47234fe46"
+  },
+  {
+    "name": "melee_windup",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/actions-four.png",
+    "rects": [
+      [
+        0,
+        627,
+        620,
+        800
+      ],
+      [
+        0,
+        800,
+        640,
+        1254
+      ]
+    ],
+    "anchor": [
+      310,
+      1134
+    ],
+    "scale": 0.34,
+    "source_sha256": "04121f36568899198532dda4388a7e0a04768cffd2c1bf16f1273fa47234fe46"
+  },
+  {
+    "name": "melee_contact",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/melee-pair.png",
+    "rects": [
+      [
+        887,
+        0,
+        1774,
+        887
+      ]
+    ],
+    "anchor": [
+      1290,
+      735
+    ],
+    "scale": 0.28,
+    "source_sha256": "7e6e297b8450ad3c59e035ad20a57daa399655bc3514b581f13f4fde0815801f"
+  },
+  {
+    "name": "defend_0",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+    "rects": [
+      [
+        0,
+        627,
+        640,
+        1254
+      ]
+    ],
+    "anchor": [
+      355,
+      1072
+    ],
+    "scale": 0.45,
+    "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586"
+  },
+  {
+    "name": "defend_1",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+    "rects": [
+      [
+        640,
+        627,
+        1254,
+        1254
+      ]
+    ],
+    "anchor": [
+      915,
+      1072
+    ],
+    "scale": 0.45,
+    "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586"
+  },
+  {
+    "name": "hit",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/death-hit.png",
+    "rects": [
+      [
+        0,
+        0,
+        648,
+        300
+      ],
+      [
+        0,
+        300,
+        686,
+        410
+      ],
+      [
+        0,
+        410,
+        648,
+        627
+      ]
+    ],
+    "anchor": [
+      335,
+      573
+    ],
+    "scale": 0.32,
+    "source_sha256": "3bad4bf5d01dcc9506590b4d6c8c7788c89a98204236d9c4a4229ad9afbfdacf"
+  },
+  {
+    "name": "death_buckle",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/death-hit.png",
+    "rects": [
+      [
+        648,
+        0,
+        1254,
+        300
+      ],
+      [
+        686,
+        300,
+        1254,
+        410
+      ],
+      [
+        648,
+        410,
+        1254,
+        627
+      ]
+    ],
+    "anchor": [
+      955,
+      599
+    ],
+    "scale": 0.34,
+    "source_sha256": "3bad4bf5d01dcc9506590b4d6c8c7788c89a98204236d9c4a4229ad9afbfdacf"
+  },
+  {
+    "name": "death_fall",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/death-hit.png",
+    "rects": [
+      [
+        0,
+        627,
+        660,
+        1254
+      ]
+    ],
+    "anchor": [
+      340,
+      1123
+    ],
+    "scale": 0.34,
+    "source_sha256": "3bad4bf5d01dcc9506590b4d6c8c7788c89a98204236d9c4a4229ad9afbfdacf"
+  },
+  {
+    "name": "dead",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/death-hit.png",
+    "rects": [
+      [
+        660,
+        627,
+        1254,
+        1254
+      ]
+    ],
+    "anchor": [
+      940,
+      1152
+    ],
+    "scale": 0.34,
+    "source_sha256": "3bad4bf5d01dcc9506590b4d6c8c7788c89a98204236d9c4a4229ad9afbfdacf"
+  },
+  {
+    "name": "idle_hands_0",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        384,
+        512
+      ]
+    ],
+    "anchor": [
+      192,
+      460
+    ],
+    "scale": 0.71654,
+    "source_sha256": "be306944ad81424fb2a98656f796cc2709bb935d6c4241a1aedf8bdef0f7ce1b"
+  },
+  {
+    "name": "idle_hands_1",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        384,
+        0,
+        768,
+        512
+      ]
+    ],
+    "anchor": [
+      576,
+      460
+    ],
+    "scale": 0.71654,
+    "source_sha256": "be306944ad81424fb2a98656f796cc2709bb935d6c4241a1aedf8bdef0f7ce1b"
+  },
+  {
+    "name": "idle_hands_2",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        768,
+        0,
+        1152,
+        512
+      ]
+    ],
+    "anchor": [
+      960,
+      460
+    ],
+    "scale": 0.71654,
+    "source_sha256": "be306944ad81424fb2a98656f796cc2709bb935d6c4241a1aedf8bdef0f7ce1b"
+  },
+  {
+    "name": "idle_hands_3",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        1152,
+        0,
+        1536,
+        512
+      ]
+    ],
+    "anchor": [
+      1344,
+      460
+    ],
+    "scale": 0.71654,
+    "source_sha256": "be306944ad81424fb2a98656f796cc2709bb935d6c4241a1aedf8bdef0f7ce1b"
+  },
+  {
+    "name": "idle_hands_4",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        512,
+        384,
+        1024
+      ]
+    ],
+    "anchor": [
+      192,
+      928
+    ],
+    "scale": 0.71654,
+    "source_sha256": "be306944ad81424fb2a98656f796cc2709bb935d6c4241a1aedf8bdef0f7ce1b"
+  },
+  {
+    "name": "idle_hands_5",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        384,
+        512,
+        768,
+        1024
+      ]
+    ],
+    "anchor": [
+      576,
+      928
+    ],
+    "scale": 0.71654,
+    "source_sha256": "be306944ad81424fb2a98656f796cc2709bb935d6c4241a1aedf8bdef0f7ce1b"
+  },
+  {
+    "name": "idle_hands_6",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        768,
+        512,
+        1152,
+        1024
+      ]
+    ],
+    "anchor": [
+      960,
+      928
+    ],
+    "scale": 0.71654,
+    "source_sha256": "be306944ad81424fb2a98656f796cc2709bb935d6c4241a1aedf8bdef0f7ce1b"
+  },
+  {
+    "name": "idle_hands_7",
+    "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        1152,
+        512,
+        1536,
+        1024
+      ]
+    ],
+    "anchor": [
+      1344,
+      928
+    ],
+    "scale": 0.71654,
+    "source_sha256": "be306944ad81424fb2a98656f796cc2709bb935d6c4241a1aedf8bdef0f7ce1b"
+  }
+]

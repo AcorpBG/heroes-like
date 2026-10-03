@@ -1,0 +1,10 @@
+{
+  "source_sha256": "4d940721d6aa6534b2f012c8c37dc542bc1531c2bd4b0a54e01c80e1158c029b",
+  "semantic_matte_sha256": "2ba8b7f9d4f839501c97016288dbbfc42f4509aec146aa374c1183d581ff16a0",
+  "rgba_sha256": "f21a22fbd3a6f2cff469cb0fc311afdbde924e960de85b3aaa27363499170f51",
+  "unchanged_alpha": true,
+  "opaque_source_rgb_exact": true,
+  "recipe": "Preserve the existing pinned BiRefNet alpha byte for byte. Recompute only soft-edge RGB from original pixels using nearest confidently excluded spatial plate (alpha0, distance at least3px from alpha>=.01). Uniform corner unmix previously left pale gray/white contamination in spoke gaps and under the rods. No foreground coordinates, anatomy, wheel phase or opaque colors change.",
+  "tool_sha256": "af2b8b5031012486adc2563c9e1d8d8edce56ef9f0ec12d4c83a5af45516fa06",
+  "visual_review": "pending personal dark/light/native review"
+}

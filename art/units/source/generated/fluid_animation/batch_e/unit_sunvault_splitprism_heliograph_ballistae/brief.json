@@ -1,0 +1,23 @@
+{
+  "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+  "status": "in_progress_original_h3_generation",
+  "source_facing": "left",
+  "identity": "One original ivory/gold/cobalt Heliograph Ballista siege engine; exactly two large blue/gold spoked wheels, three articulated cobalt/gold stabilizers with star feet, one central blue glass lens, blue front launcher LEFT and amber rear arm RIGHT. Exactly one rear-right ivory/gold human operator, two arms and two legs, blue plume/cape, hands on rear control crank. Fixed elevated tactical camera. No invented wheels, legs, operator, ornaments or magic.",
+  "preserve": "All eight existing idle poses16-23 at240ms personally reviewed native128/enlarged on dark/light both facings. Stable two wheels, three star feet, operator hand-crank articulation and cape return; preserve their exact battle/map pixels, timing and anchors.",
+  "required_new_actions": [
+    "move",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "review": "pending; no generated sequence accepted",
+  "safe_background": [
+    190,
+    206,
+    222
+  ],
+  "guide_review": "Seven genuine action guide sets personally reviewed, including new original physical contact and lens-calibration keys. All generated clips pending, no production acceptance."
+}

@@ -1,0 +1,8 @@
+{
+  "status": "qualified_original_video_guide",
+  "reviewer": "coordinator",
+  "examined": "Original1466x1073 RGB, initial semantic extraction, spatial soft-edge correction on full dark/light backgrounds, fixed native128/256 registration in both facings, original rolling guide960x704.",
+  "findings": "The alternate painted wheel has a visible half-spoke phase offset: lower near-wheel hub ray/gap differs from the original rolling phase. Two wheel rims and gold hubs remain fixed in the same axle; three star supports stay folded, single operator retains both hand grips, blue front and amber rear rods and round mirror. New extraction removes pale plate contamination around spoke holes/rods while retaining original alpha and all opaque RGB byte for byte.",
+  "anatomical_scale": "Fixed .21 for this1466x1073 original, versus .45 for960x704 original rolling guide. Near-wheel anatomical diameter original135px*.45=60.75 reference pixels, alternate287px*.21=60.27. Anchor746,899 follows wheel ground/central chassis, never a changing whole-sprite bounding box.",
+  "limits": "A useful original guide, not an accepted animation. H3 must actually rotate the wheels continuously between guides without reshaping rims, flickering spoke count or changing the chassis."
+}

@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+  "canvas": [
+    960,
+    704
+  ],
+  "scale": 0.45,
+  "anchor": [
+    480,
+    576
+  ],
+  "key_rgb": [
+    190,
+    206,
+    222
+  ],
+  "seed": 2026100386,
+  "references": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+      "rects": [
+        [
+          0,
+          0,
+          640,
+          627
+        ]
+      ],
+      "anchor": [
+        355,
+        540
+      ],
+      "scale": 0.45,
+      "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586"
+    },
+    {
+      "name": "original_lens_calibration_peak",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/contact_support_keys_v1/original.png",
+      "rects": [
+        [
+          991,
+          0,
+          1983,
+          793
+        ]
+      ],
+      "anchor": [
+        1454,
+        724
+      ],
+      "scale": 0.26,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      60,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original ivory, gold and cobalt Heliograph Ballista, a mechanical fantasy siege carriage. Exactly two large cobalt-and-gold spoked wheels on one axle. Exactly three articulated stabilizer struts ending in gold star-shaped feet. One central tilted round blue-glass mirror with a gold rim, one long cobalt-blue crystalline front launcher pointing LEFT, and one shorter amber rear crystal arm pointing RIGHT. Exactly one ivory-and-gold armored human operator on the rear-right platform, blue helmet plume and blue cape, exactly two arms and two legs, hands on the original rear control crank. Preserve all original wheel diameters, axle, launcher lengths, mirror, gold fittings, limb counts and operator proportions. Fixed elevated three-quarter tactical camera facing LEFT. No camera move, zoom, new wheels, extra operators, added legs, changing colors, new weapon, text, scenery, floor plane, smoke, glow pulses, projectiles, rays, flash, sparks or particles. Use the same flat pale blue-gray background over the entire image in every frame. One manual rear handle adjustment and recovery. The operator leans forward and visibly turns the existing rear crank with both hands, bending shoulders, elbows and knees. The round mirror gently tilts along its existing mount as he adjusts the handle. Then he smoothly restores the original mirror angle and ready stance. Both solid crystal rods remain inert and attached. All three original star feet remain planted, both wheels stay still. Empty uniform background throughout. The only movement is the operator arms/torso, control handle, small mirror angle and trailing cape. Continuous slow approach and return, no pose jump.",
+  "action": "cast",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "visual_review": "pending original video; original guides personally rechecked",
+  "selection": "not_selected",
+  "scale_reason": "Fixed .45 extraction at preserved 256 reference height; complete ready master .45, rolling .40, actions .39, melee .28 and collapse .36 registered by wheel diameter, ivory chassis and operator height, never per-frame bounds or shrinking to fit atlas.",
+  "correction_of": "cast_h3_v1"
+}

@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_0",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+        "rects": [
+          [
+            0,
+            0,
+            640,
+            627
+          ]
+        ],
+        "anchor": [
+          355,
+          540
+        ],
+        "scale": 1.0,
+        "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586"
+      },
+      "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5fd69da5157a69892e7b8b5dde2598e2207ee41437a3d16e41c8da2ab02eee64",
+      "runtime_source_scale": 0.45
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.45,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,122 @@
+{
+  "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+  "canvas": [
+    960,
+    704
+  ],
+  "scale": 0.45,
+  "anchor": [
+    480,
+    576
+  ],
+  "key_rgb": [
+    190,
+    206,
+    222
+  ],
+  "seed": 2026100340,
+  "references": [
+    {
+      "name": "rolling_crank_up",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        285,
+        515
+      ],
+      "scale": 0.4,
+      "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a"
+    },
+    {
+      "name": "rolling_crank_forward",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        900,
+        518
+      ],
+      "scale": 0.4,
+      "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a"
+    },
+    {
+      "name": "rolling_crank_down",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "anchor": [
+        285,
+        1086
+      ],
+      "scale": 0.4,
+      "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a"
+    },
+    {
+      "name": "rolling_crank_back",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        910,
+        1093
+      ],
+      "scale": 0.4,
+      "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a"
+    }
+  ],
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      48,
+      2
+    ],
+    [
+      72,
+      3
+    ],
+    [
+      96,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original ivory, gold and cobalt Heliograph Ballista, a mechanical fantasy siege carriage. Exactly two large cobalt-and-gold spoked wheels on one axle. Exactly three articulated stabilizer struts ending in gold star-shaped feet. One central tilted round blue-glass mirror with a gold rim, one long cobalt-blue crystalline front launcher pointing LEFT, and one shorter amber rear crystal arm pointing RIGHT. Exactly one ivory-and-gold armored human operator on the rear-right platform, blue helmet plume and blue cape, exactly two arms and two legs, hands on the original rear control crank. Preserve all original wheel diameters, axle, launcher lengths, mirror, gold fittings, limb counts and operator proportions. Fixed elevated three-quarter tactical camera facing LEFT. No camera move, zoom, new wheels, extra operators, added legs, changing colors, new weapon, text, scenery, floor plane, smoke, glow pulses, projectiles, rays, flash, sparks or particles. Use the same flat pale blue-gray background over the whole image in every frame. Entire carriage, tips and feet stay safely inside the frame. With all three star-foot stabilizers folded tightly upward beside the chassis throughout travel, roll naturally in place on the two original wheels. Spokes turn continuously about their own fixed hubs, both wheels turn together. The operator performs a full hand-crank circle using bending elbows, knees softly balancing on the platform; cape follows the effort. Keep the same centered axle position and ground contact. Complete two steady rolling cycles and match the first rolling pose at the end. Do not deploy stabilizers during rolling, do not walk on them, do not replace rotation with whole-carriage sliding.",
+  "action": "move",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "visual_review": "pending_personal_guides_and_original_video",
+  "selection": "not_selected",
+  "scale_reason": "Fixed .45 extraction at preserved 256 reference height; complete ready master .45, rolling .40, actions .39, melee .28 and collapse .36 registered by wheel diameter, ivory chassis and operator height, never per-frame bounds or shrinking to fit atlas."
+}

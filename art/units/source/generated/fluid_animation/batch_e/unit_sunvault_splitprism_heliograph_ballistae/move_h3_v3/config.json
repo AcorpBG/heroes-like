@@ -1,0 +1,153 @@
+{
+  "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+  "canvas": [
+    960,
+    704
+  ],
+  "scale": 0.45,
+  "anchor": [
+    480,
+    576
+  ],
+  "key_rgb": [
+    190,
+    206,
+    222
+  ],
+  "seed": 2026100388,
+  "references": [
+    {
+      "name": "rolling_crank_up",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        285,
+        515
+      ],
+      "scale": 0.4,
+      "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a"
+    },
+    {
+      "name": "rolling_crank_forward",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        900,
+        518
+      ],
+      "scale": 0.4,
+      "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a"
+    },
+    {
+      "name": "rolling_crank_down",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "anchor": [
+        285,
+        1086
+      ],
+      "scale": 0.4,
+      "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a"
+    },
+    {
+      "name": "rolling_crank_back",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        910,
+        1093
+      ],
+      "scale": 0.4,
+      "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a"
+    },
+    {
+      "name": "alternate actual painted wheel phase",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/rolling_rotation_key_v4/matte_spatial_plate.png",
+      "rects": [
+        [
+          0,
+          0,
+          1466,
+          1073
+        ]
+      ],
+      "anchor": [
+        746,
+        899
+      ],
+      "scale": 0.21,
+      "source_sha256": "f21a22fbd3a6f2cff469cb0fc311afdbde924e960de85b3aaa27363499170f51"
+    }
+  ],
+  "guides": [
+    [
+      16,
+      4
+    ],
+    [
+      32,
+      2
+    ],
+    [
+      48,
+      4
+    ],
+    [
+      64,
+      3
+    ],
+    [
+      80,
+      4
+    ],
+    [
+      96,
+      1
+    ],
+    [
+      112,
+      4
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original ivory, gold and cobalt Heliograph Ballista, a mechanical fantasy siege carriage. Exactly two large cobalt-and-gold spoked wheels on one axle. Exactly three articulated stabilizer struts ending in gold star-shaped feet. One central tilted round blue-glass mirror with a gold rim, one long cobalt-blue crystalline front launcher pointing LEFT, and one shorter amber rear crystal arm pointing RIGHT. Exactly one ivory-and-gold armored human operator on the rear-right platform, blue helmet plume and blue cape, exactly two arms and two legs, hands on the original rear control crank. Preserve all original wheel diameters, axle, launcher lengths, mirror, gold fittings, limb counts and operator proportions. Fixed elevated three-quarter tactical camera facing LEFT. No camera move, zoom, new wheels, extra operators, added legs, changing colors, new weapon, text, scenery, floor plane, smoke, glow pulses, projectiles, rays, flash, sparks or particles. Use the same flat pale blue-gray background over the whole image in every frame. Continuous wheeled travel cycle in place. Both existing blue spoke disks must rotate visibly in the same clockwise direction around their stationary gold hubs. Between each supplied spoke-phase guide, show intermediate spoke angles; continue through the next repeated pattern rather than reversing or settling on a stationary wheel. The fixed ivory-and-gold wheel rims do not grow, wobble or change perspective; the one axle and vertical blue chassis plate remain stationary. Exactly three original star-foot struts stay folded UP off the ground throughout. The single operator turns the existing crank with both hands, visibly bending elbows and knees. Cape follows. Both original crystal rods remain attached, inactive, and the round mirror remains mounted. All wheel diameters, chassis proportions, three folded supports and operator size remain consistent with the supplied references. Fixed elevated tactical camera and central axle; the engine supplies travel so do not translate or zoom. Smooth return to the original first spoke/arm phase at the end. No glows, flash, beam, particles or extra parts.",
+  "action": "move",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "visual_review": "pending original video; original wheel phase and anatomical registration personally reviewed",
+  "selection": "not_selected",
+  "scale_reason": "Fixed .45 extraction at preserved 256 reference height; complete ready master .45, rolling .40, actions .39, melee .28 and collapse .36 registered by wheel diameter, ivory chassis and operator height, never per-frame bounds or shrinking to fit atlas.",
+  "correction_of": "move_h3_v2"
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "name": "original_physical_counterthrust",
+    "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/contact_support_keys_v1/original.png",
+    "rects": [
+      [
+        0,
+        0,
+        991,
+        793
+      ]
+    ],
+    "anchor": [
+      444,
+      720
+    ],
+    "scale": 0.26,
+    "alpha_noise_cutoff": 8
+  },
+  {
+    "name": "original_lens_calibration_peak",
+    "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/contact_support_keys_v1/original.png",
+    "rects": [
+      [
+        991,
+        0,
+        1983,
+        793
+      ]
+    ],
+    "anchor": [
+      1454,
+      724
+    ],
+    "scale": 0.26,
+    "alpha_noise_cutoff": 8
+  }
+]

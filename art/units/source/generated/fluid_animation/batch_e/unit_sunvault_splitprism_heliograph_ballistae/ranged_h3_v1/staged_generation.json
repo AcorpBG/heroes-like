@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "816a20d2d6fcd147ec1f927570f1862adb1652b73e519c85720900bee739cca7",
+  "latent_sha256": "dbc8eb3ce0bfeab5b7006b59fe16cf363bc253861fe77a472fc3746d46947628",
+  "decode_workflow_sha256": "d195ab7527a00a46b4bdb1537822f7a8cd0e91426aceb5eb418f482d860af26e",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "heliograph_ballista_h3\\ranged_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

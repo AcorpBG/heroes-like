@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "rolling_crank_up",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+        "rects": [
+          [
+            0,
+            0,
+            627,
+            627
+          ]
+        ],
+        "anchor": [
+          285,
+          515
+        ],
+        "scale": 0.888888888888889,
+        "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a"
+      },
+      "source_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "4dbb82abc9e6d1bcc1e4e11b48e7ed9d4a537cdf1eca6853e196b842f4504406",
+      "runtime_source_scale": 0.4
+    },
+    {
+      "source_frame": {
+        "name": "alternate actual painted wheel phase",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/rolling_rotation_key_v4/matte_spatial_plate.png",
+        "rects": [
+          [
+            0,
+            0,
+            1466,
+            1073
+          ]
+        ],
+        "anchor": [
+          746,
+          899
+        ],
+        "scale": 0.4666666666666666,
+        "source_sha256": "f21a22fbd3a6f2cff469cb0fc311afdbde924e960de85b3aaa27363499170f51"
+      },
+      "source_sha256": "f21a22fbd3a6f2cff469cb0fc311afdbde924e960de85b3aaa27363499170f51",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f105ffb716c94af7146f6f388e1f82ec2c9ffaf8d1b9e33f64c5592e3cff73a6",
+      "runtime_source_scale": 0.21
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.45,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

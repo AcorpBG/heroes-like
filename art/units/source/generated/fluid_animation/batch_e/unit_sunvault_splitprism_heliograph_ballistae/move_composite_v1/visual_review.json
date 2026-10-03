@@ -1,0 +1,20 @@
+{
+  "status": "qualified_source_pending_runtime",
+  "reviewed_original_wheel_rgb_frames": 124,
+  "reviewed_selected_composites": 62,
+  "enlarged_join_source_frames": [
+    0,
+    32,
+    64,
+    96,
+    122
+  ],
+  "native_facing_review": "62selected original pair composites each facing; actual battle/runtime remains pending",
+  "motion": "Original chronological H3 spinning wheel faces/rims (~2CCWrevolutions) and original continuous operator crank. Fixed perspective/scale and original measured axle contacts. No reversed/interpolated/software-rotated pixels.",
+  "alpha": "Old wheel interiors and lower rims removed conservatively, original foreground chassis/forks occlude replacement; enlarged final joins preserve all upper-body anatomy and equipment. No detached lower rim remnants.",
+  "parents": [
+    "move_h3_v4",
+    "wheel_assembly_h3_v1"
+  ],
+  "recipe_sha256": "9725bc7d781fa6dc448283bad9df840dcb126cb21961186784709a20f82059b0"
+}

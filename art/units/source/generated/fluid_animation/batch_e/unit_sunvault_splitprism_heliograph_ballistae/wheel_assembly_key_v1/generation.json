@@ -1,0 +1,21 @@
+{
+  "tool": "built-in image_gen",
+  "original_sha256": "93d988520d39f9639b643ad1cb029f83029b9430c16de391c8aa9e0182e17c28",
+  "prompt_sha256": "ecd477bf67254695b1f894e28319517a1726b55a41a8e213ce1f00ebf265fee3",
+  "reference": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/move_h3_v5/matte/rgba_000.png",
+    "sha256": "ef1ebee70d1e9be3e083570cc8cc0f6751d0384b1d39118e160dbb4b5f151cd0",
+    "role": "Original wheel design and relative axle geometry; isolate without changing the rest of the accepted cart."
+  },
+  "tool_output": "exec-ee2f0cd9-2a35-45f6-9779-63eedb3fe4e6.png",
+  "status": "reviewed_component_control_only; full-unit integration still pending",
+  "observed": "Two parallel blue eight-spoked wheels, ivory/gold rims and a gold connecting axle; one near-right and one far-left. Main wheel material/perspective retained. Relative vertical offset differs from the original chassis and must be matched to its actual separate axle contacts during any later source compositing. This key alone does not qualify movement.",
+  "alpha_recipe": {
+    "threshold": 8,
+    "keep_component": 1,
+    "detached_component_limit_pixels": 3,
+    "retained_pixels": 180984,
+    "derived_sha256": "ea48f93448eb3ca5752d8dadb5a028380c8b22faf174f85986681900217a3e9b",
+    "rule": "Retained connected assembly RGB/alpha bytes unchanged; only isolated alpha specks and alpha<8 plate noise cleared. Original immutable."
+  }
+}

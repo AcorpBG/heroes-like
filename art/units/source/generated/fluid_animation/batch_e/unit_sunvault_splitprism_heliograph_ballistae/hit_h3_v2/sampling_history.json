@@ -1,0 +1,223 @@
+{
+  "prompt": [
+    827,
+    "72df81b3-b71d-4708-a6ad-f41d1a2e949f",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original ivory, gold and cobalt Heliograph Ballista, a mechanical fantasy siege carriage. Exactly two large cobalt-and-gold spoked wheels on one axle. Exactly three articulated stabilizer struts ending in gold star-shaped feet. One central tilted round blue-glass mirror with a gold rim, one long cobalt-blue crystalline front launcher pointing LEFT, and one shorter amber rear crystal arm pointing RIGHT. Exactly one ivory-and-gold armored human operator on the rear-right platform, blue helmet plume and blue cape, exactly two arms and two legs, hands on the original rear control crank. Preserve all original wheel diameters, axle, launcher lengths, mirror, gold fittings, limb counts and operator proportions. Fixed elevated three-quarter tactical camera facing LEFT. No camera move, zoom, new wheels, extra operators, added legs, changing colors, new weapon, text, scenery, floor plane, smoke, glow pulses, projectiles, rays, flash, sparks or particles. Use the same flat pale blue-gray background over the entire image in every frame. Animate exactly one brief rearward mechanical jolt and recovery. The single operator bends elbows and knees while leaning backward, then restores his original two-handed crank grip and upright stance. The original lens mount tilts slightly backward with him and smoothly returns. All three gold star feet remain planted; the two wheels remain still. Both solid crystalline rods, including their blue and amber triangular ends, stay attached and INERT throughout. Nothing launches, fires, shines, explodes or leaves this carriage. The empty background stays entirely empty. One physical backward jolt followed by return to the original ready pose; no repeated action or whole-carriage rotation.",
+          "width": 960,
+          "height": 704,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026100384
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "heliograph_ballista_hit_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "heliograph_ballista_hit_h3_v2_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 40,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "heliograph_ballista_h3/hit_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "heliograph_ballista_h3",
+      "create_time": 1791018411001
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "heliograph_ballista_h3\\hit_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "72df81b3-b71d-4708-a6ad-f41d1a2e949f",
+          "timestamp": 1791018411010
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "72df81b3-b71d-4708-a6ad-f41d1a2e949f",
+          "timestamp": 1791018411028
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "72df81b3-b71d-4708-a6ad-f41d1a2e949f",
+          "timestamp": 1791018637580
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

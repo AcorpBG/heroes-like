@@ -1,0 +1,96 @@
+{
+  "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+  "canvas": [
+    960,
+    704
+  ],
+  "scale": 0.45,
+  "anchor": [
+    480,
+    576
+  ],
+  "key_rgb": [
+    190,
+    206,
+    222
+  ],
+  "seed": 2026100344,
+  "references": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+      "rects": [
+        [
+          0,
+          0,
+          640,
+          627
+        ]
+      ],
+      "anchor": [
+        355,
+        540
+      ],
+      "scale": 0.45,
+      "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586"
+    },
+    {
+      "name": "defend_0",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+      "rects": [
+        [
+          0,
+          627,
+          640,
+          1254
+        ]
+      ],
+      "anchor": [
+        355,
+        1072
+      ],
+      "scale": 0.45,
+      "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586"
+    },
+    {
+      "name": "defend_1",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+      "rects": [
+        [
+          640,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        915,
+        1072
+      ],
+      "scale": 0.45,
+      "source_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586"
+    }
+  ],
+  "guides": [
+    [
+      38,
+      1
+    ],
+    [
+      64,
+      2
+    ]
+  ],
+  "last": 2,
+  "prompt": "One original ivory, gold and cobalt Heliograph Ballista, a mechanical fantasy siege carriage. Exactly two large cobalt-and-gold spoked wheels on one axle. Exactly three articulated stabilizer struts ending in gold star-shaped feet. One central tilted round blue-glass mirror with a gold rim, one long cobalt-blue crystalline front launcher pointing LEFT, and one shorter amber rear crystal arm pointing RIGHT. Exactly one ivory-and-gold armored human operator on the rear-right platform, blue helmet plume and blue cape, exactly two arms and two legs, hands on the original rear control crank. Preserve all original wheel diameters, axle, launcher lengths, mirror, gold fittings, limb counts and operator proportions. Fixed elevated three-quarter tactical camera facing LEFT. No camera move, zoom, new wheels, extra operators, added legs, changing colors, new weapon, text, scenery, floor plane, smoke, glow pulses, projectiles, rays, flash, sparks or particles. Use the same flat pale blue-gray background over the whole image in every frame. Entire carriage, tips and feet stay safely inside the frame. A dedicated defensive brace: lock the three articulated gold star feet down, lower the axle slightly between the original two wheels, rotate the round mirror more upright as cover and have the operator tuck behind it while retaining the crank grip. Reach the supplied distinct low brace, hold this protective pose through the end, no return to ready and no new shield.",
+  "action": "defend",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "visual_review": "pending_personal_guides_and_original_video",
+  "selection": "not_selected",
+  "scale_reason": "Fixed .45 extraction at preserved 256 reference height; complete ready master .45, rolling .40, actions .39, melee .28 and collapse .36 registered by wheel diameter, ivory chassis and operator height, never per-frame bounds or shrinking to fit atlas."
+}

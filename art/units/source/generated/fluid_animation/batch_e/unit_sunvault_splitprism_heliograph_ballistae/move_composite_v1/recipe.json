@@ -1,0 +1,4976 @@
+{
+  "body": "move_h3_v4",
+  "wheels": "wheel_assembly_h3_v1",
+  "parts": [
+    {
+      "name": "far",
+      "source_hub": [
+        264,
+        290
+      ],
+      "source_crop": [
+        98,
+        110,
+        425,
+        465
+      ],
+      "scale": 0.36,
+      "body_hub": [
+        412,
+        492
+      ],
+      "erase_center": [
+        404,
+        489
+      ],
+      "erase_radii": [
+        57,
+        68
+      ],
+      "occluder": [
+        [
+          430,
+          414
+        ],
+        [
+          528,
+          416
+        ],
+        [
+          532,
+          469
+        ],
+        [
+          501,
+          500
+        ],
+        [
+          473,
+          519
+        ],
+        [
+          440,
+          500
+        ],
+        [
+          436,
+          468
+        ]
+      ]
+    },
+    {
+      "name": "near",
+      "source_hub": [
+        722,
+        386
+      ],
+      "source_crop": [
+        525,
+        185,
+        870,
+        590
+      ],
+      "scale": 0.34,
+      "body_hub": [
+        558,
+        507
+      ],
+      "erase_center": [
+        545,
+        506
+      ],
+      "erase_radii": [
+        61,
+        72
+      ],
+      "occluder": [
+        [
+          511,
+          418
+        ],
+        [
+          566,
+          433
+        ],
+        [
+          558,
+          449
+        ],
+        [
+          576,
+          457
+        ],
+        [
+          566,
+          470
+        ],
+        [
+          548,
+          465
+        ],
+        [
+          537,
+          481
+        ],
+        [
+          527,
+          479
+        ],
+        [
+          525,
+          459
+        ],
+        [
+          505,
+          462
+        ]
+      ]
+    }
+  ],
+  "frame_correspondence": "Identical chronological source indices at24fps, no reversal/interpolation.",
+  "anatomical_scale": 0.45,
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "registration": "Original gold axle hub25px template, measured translation only; fixed source scales; original foreground chassis occludes wheel parts.",
+  "source_rotation": "Observed original near-wheel spoke correlation: -711.5 degrees over124frames, minimum adjacent correlation.863; no software rotation.",
+  "frames": [
+    {
+      "frame": 0,
+      "body_sha256": "041cf536a3b470ac9b614cd47d72ef2925ae0a3956978a866b8c704cb1b77870",
+      "wheel_sha256": "655ee16d30afa432e2641dbfc2d15625352c285645ce347b3c55ff2b08edc26e",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            412,
+            492
+          ],
+          "score": 1.0,
+          "offset": [
+            0,
+            0
+          ],
+          "paste": [
+            352,
+            427
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            558,
+            507
+          ],
+          "score": 1.0,
+          "offset": [
+            0,
+            0
+          ],
+          "paste": [
+            491,
+            439
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 1,
+      "body_sha256": "28f755ffa3d1a5d3d8ccad215c9339797cfbae4d7d707bba439ac0aca82ea4c9",
+      "wheel_sha256": "26fe39db4eaf6dbdf0fcf23bb6734d1a011e261d15eadd321be5f8e452cae7f6",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            412,
+            492
+          ],
+          "score": 0.9702528119087219,
+          "offset": [
+            0,
+            0
+          ],
+          "paste": [
+            352,
+            427
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            558,
+            507
+          ],
+          "score": 0.9445637464523315,
+          "offset": [
+            0,
+            0
+          ],
+          "paste": [
+            491,
+            439
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 2,
+      "body_sha256": "eb7134b76e49a50df40448d6aab6023ab4b75807e0d5add8922c77b1dccf6290",
+      "wheel_sha256": "abca953d6dfaa740ff92d156bdcd45745b15484e3beabef7a6085a6141a70844",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            412,
+            492
+          ],
+          "score": 0.9151622653007507,
+          "offset": [
+            0,
+            0
+          ],
+          "paste": [
+            352,
+            427
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            558,
+            507
+          ],
+          "score": 0.9320849180221558,
+          "offset": [
+            0,
+            0
+          ],
+          "paste": [
+            491,
+            439
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 3,
+      "body_sha256": "74ccd285fcb7e34bd9f8fb5036c2a4916d62ee57c272f1bbe2a07eee12c1417b",
+      "wheel_sha256": "512fec672c2f7cf61cc7d5d3fc29cc03df563fb467e1ee25c7c1e6141e91be8a",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            411,
+            492
+          ],
+          "score": 0.8915992379188538,
+          "offset": [
+            -1,
+            0
+          ],
+          "paste": [
+            351,
+            427
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            558,
+            507
+          ],
+          "score": 0.9168441891670227,
+          "offset": [
+            0,
+            0
+          ],
+          "paste": [
+            491,
+            439
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 4,
+      "body_sha256": "9a60396c2ea7b89b4e4ef31f74aca3306d387fb3b7087c3983a14c712a25a4a9",
+      "wheel_sha256": "569ed6aa8c82a0a775753b729e1d1c65f2e7bbda404cee9a88f2dcfd951aeab2",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            411,
+            492
+          ],
+          "score": 0.8729015588760376,
+          "offset": [
+            -1,
+            0
+          ],
+          "paste": [
+            351,
+            427
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            558,
+            507
+          ],
+          "score": 0.880316436290741,
+          "offset": [
+            0,
+            0
+          ],
+          "paste": [
+            491,
+            439
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 5,
+      "body_sha256": "682f8e68f5815c47f74bda973f1f1a41b40d273c5b8703cc19e07d522d97710b",
+      "wheel_sha256": "2dd4a6bc862ee0c1f2791751be58ec127a7f2556a388e265e0c42f421ed3655f",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            410,
+            492
+          ],
+          "score": 0.851492702960968,
+          "offset": [
+            -2,
+            0
+          ],
+          "paste": [
+            350,
+            427
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            558,
+            507
+          ],
+          "score": 0.8567806482315063,
+          "offset": [
+            0,
+            0
+          ],
+          "paste": [
+            491,
+            439
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 6,
+      "body_sha256": "5289917b1618fbb4f3c741e50ccb1e8df8154dd91f3d6b4a80d34eac773efe57",
+      "wheel_sha256": "5c86672c27b8670c29e0015de166d82352c577bc3eee14bb0302de67e8c2d949",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            410,
+            491
+          ],
+          "score": 0.8690434694290161,
+          "offset": [
+            -2,
+            -1
+          ],
+          "paste": [
+            350,
+            426
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            557,
+            506
+          ],
+          "score": 0.8490891456604004,
+          "offset": [
+            -1,
+            -1
+          ],
+          "paste": [
+            490,
+            438
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 7,
+      "body_sha256": "d361b33a50afd908b15ae3a60532e366789312cdd246802c266b7fa00185fc87",
+      "wheel_sha256": "b1a38025e7ed35db69004d810c53f872909c9a826c33099ce86ae4fd55194233",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            410,
+            491
+          ],
+          "score": 0.8752721548080444,
+          "offset": [
+            -2,
+            -1
+          ],
+          "paste": [
+            350,
+            426
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            557,
+            506
+          ],
+          "score": 0.8512375950813293,
+          "offset": [
+            -1,
+            -1
+          ],
+          "paste": [
+            490,
+            438
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 8,
+      "body_sha256": "efa670595d2b7c96b5c4aa4f5c9a9781c19d44a9c3d7923d93bbae6f5fd18cff",
+      "wheel_sha256": "c95882eb4a2230ddb19d55103293351bff72178fe49153ee2e320ff13d63da1b",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            410,
+            491
+          ],
+          "score": 0.852947473526001,
+          "offset": [
+            -2,
+            -1
+          ],
+          "paste": [
+            350,
+            426
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            557,
+            506
+          ],
+          "score": 0.8554021120071411,
+          "offset": [
+            -1,
+            -1
+          ],
+          "paste": [
+            490,
+            438
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 9,
+      "body_sha256": "202fa391590374e6241301b1f12e0746582490c09c1b57f4b782dd58de4207e3",
+      "wheel_sha256": "10bc8bad80fd8ffd3210db8ec25a63ba8f20a3586340e9ef4a396e7c3d5c13e9",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            409,
+            491
+          ],
+          "score": 0.8426052927970886,
+          "offset": [
+            -3,
+            -1
+          ],
+          "paste": [
+            349,
+            426
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            556,
+            507
+          ],
+          "score": 0.8421352505683899,
+          "offset": [
+            -2,
+            0
+          ],
+          "paste": [
+            489,
+            439
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 10,
+      "body_sha256": "9299f1a8f56458beedd616f8f8ad4010fac661be7d08feb1e204485fbc20a3d9",
+      "wheel_sha256": "6411679e1cb9a5b9044f562176d18e9c3c677a0e5e93dbaf48551bceb59c207d",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            409,
+            491
+          ],
+          "score": 0.8754483461380005,
+          "offset": [
+            -3,
+            -1
+          ],
+          "paste": [
+            349,
+            426
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            556,
+            506
+          ],
+          "score": 0.8821609020233154,
+          "offset": [
+            -2,
+            -1
+          ],
+          "paste": [
+            489,
+            438
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 11,
+      "body_sha256": "7101562bf9ccfa61f9573758dcf50b2a50fba7038967e8b524a126e2797b445a",
+      "wheel_sha256": "67d9a69610e3c7dc8b9823ff53581a9947ffddcbad8e2c5be64de221e762739f",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            409,
+            491
+          ],
+          "score": 0.8645075559616089,
+          "offset": [
+            -3,
+            -1
+          ],
+          "paste": [
+            349,
+            426
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            556,
+            506
+          ],
+          "score": 0.8953530192375183,
+          "offset": [
+            -2,
+            -1
+          ],
+          "paste": [
+            489,
+            438
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 12,
+      "body_sha256": "05014c1001446c8903cccbba723452645bf4d60edf5e27fafcfe8d82567b8062",
+      "wheel_sha256": "338d496f116f6113cb8cd78a5ff40099e2ae3e4e2d5a026fae9ebd8a487ca7a3",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            408,
+            491
+          ],
+          "score": 0.8676698803901672,
+          "offset": [
+            -4,
+            -1
+          ],
+          "paste": [
+            348,
+            426
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            556,
+            506
+          ],
+          "score": 0.8896190524101257,
+          "offset": [
+            -2,
+            -1
+          ],
+          "paste": [
+            489,
+            438
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 13,
+      "body_sha256": "885c2df58715c96045926ab0ffdc7abe9e86af6b3b9cea18ce3e7d8fc357aa22",
+      "wheel_sha256": "3853f433583cdc159a6a8b812797fe1ea3ca95e9bd40a62efdc761cb1c361818",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            408,
+            491
+          ],
+          "score": 0.8552519679069519,
+          "offset": [
+            -4,
+            -1
+          ],
+          "paste": [
+            348,
+            426
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            556,
+            506
+          ],
+          "score": 0.84188312292099,
+          "offset": [
+            -2,
+            -1
+          ],
+          "paste": [
+            489,
+            438
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 14,
+      "body_sha256": "bd043b09eee18df98bc591f7bec64e9002bc64820ffd21e92534af0c5b56defd",
+      "wheel_sha256": "679bb93322eb44ea0334e3235e19b3980051a33c513f92ce4bbb227319264fbc",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            407,
+            491
+          ],
+          "score": 0.8368850946426392,
+          "offset": [
+            -5,
+            -1
+          ],
+          "paste": [
+            347,
+            426
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            556,
+            506
+          ],
+          "score": 0.829323410987854,
+          "offset": [
+            -2,
+            -1
+          ],
+          "paste": [
+            489,
+            438
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 15,
+      "body_sha256": "28e999ef56908597a35ecb771bce16aa0fde230e194d065ad4569db38f9eaf0f",
+      "wheel_sha256": "dcdd5ecb20993a71d7d3c15ddee72de4108d017a03387ff4c2d57dfe28f985f4",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            407,
+            491
+          ],
+          "score": 0.8378279209136963,
+          "offset": [
+            -5,
+            -1
+          ],
+          "paste": [
+            347,
+            426
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            556,
+            506
+          ],
+          "score": 0.8220298290252686,
+          "offset": [
+            -2,
+            -1
+          ],
+          "paste": [
+            489,
+            438
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 16,
+      "body_sha256": "0876f034ddc7584dd1469bd52ec441d1bb80ed9253fd2ab0ee50252130124149",
+      "wheel_sha256": "edc3f7f7d41a25ad95273a39a97f30686a5e6b94e3bba66324188db4c271c3f7",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            407,
+            491
+          ],
+          "score": 0.8292707800865173,
+          "offset": [
+            -5,
+            -1
+          ],
+          "paste": [
+            347,
+            426
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            556,
+            506
+          ],
+          "score": 0.8089699149131775,
+          "offset": [
+            -2,
+            -1
+          ],
+          "paste": [
+            489,
+            438
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 17,
+      "body_sha256": "1521b7bfb63f985ef823a912804da4e20a30fc27f1ff13730d4b868aef2509e0",
+      "wheel_sha256": "ba0fef94dffbb8841dab00872a637458eaa7e729bcd5de94bf539f7051b50817",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            407,
+            491
+          ],
+          "score": 0.8353828191757202,
+          "offset": [
+            -5,
+            -1
+          ],
+          "paste": [
+            347,
+            426
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            556,
+            506
+          ],
+          "score": 0.8140342831611633,
+          "offset": [
+            -2,
+            -1
+          ],
+          "paste": [
+            489,
+            438
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 18,
+      "body_sha256": "5ded6122bd39e022018ad8a056dff56d6c4900494802fe6e5525295cd6063dac",
+      "wheel_sha256": "779965785284777f4b5e7793bca4d8596e4e4aece0875daf4788965a906e7bc6",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            406,
+            491
+          ],
+          "score": 0.8314552903175354,
+          "offset": [
+            -6,
+            -1
+          ],
+          "paste": [
+            346,
+            426
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            555,
+            506
+          ],
+          "score": 0.8431388735771179,
+          "offset": [
+            -3,
+            -1
+          ],
+          "paste": [
+            488,
+            438
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 19,
+      "body_sha256": "16bb6d5d935f444a5f448755e0df25023a27c776366ff02babbf6cfd8c5f1f79",
+      "wheel_sha256": "5e7d3132864f1c62ace0b291f137414ebd1c004c58337ba0ba33072a7b368de6",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            406,
+            490
+          ],
+          "score": 0.8466617465019226,
+          "offset": [
+            -6,
+            -2
+          ],
+          "paste": [
+            346,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            555,
+            505
+          ],
+          "score": 0.8368656039237976,
+          "offset": [
+            -3,
+            -2
+          ],
+          "paste": [
+            488,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 20,
+      "body_sha256": "048fb8146914343844b9ce3eedb5a73a86bcccc2f84657d1f72c11326319445c",
+      "wheel_sha256": "9ed0757247b8fe4f16421e161186a09417362e1fa4cb9cdece24e2e87b25380e",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            406,
+            490
+          ],
+          "score": 0.8321345448493958,
+          "offset": [
+            -6,
+            -2
+          ],
+          "paste": [
+            346,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            555,
+            506
+          ],
+          "score": 0.8443907499313354,
+          "offset": [
+            -3,
+            -1
+          ],
+          "paste": [
+            488,
+            438
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 21,
+      "body_sha256": "e5c5dd1d5f7ebc6a6d602cf24830f952fc2731c7d0bf509acd2194d3f5d7eb24",
+      "wheel_sha256": "f3c73c45f6899ab765c1def674997309e87d217763a8d3b101650ccaa2452677",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            406,
+            490
+          ],
+          "score": 0.8455374240875244,
+          "offset": [
+            -6,
+            -2
+          ],
+          "paste": [
+            346,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            555,
+            505
+          ],
+          "score": 0.8515897393226624,
+          "offset": [
+            -3,
+            -2
+          ],
+          "paste": [
+            488,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 22,
+      "body_sha256": "24d202e8e8e174134c97bfeaabb6df366dc4eed4d00a172464e36045f7bea37e",
+      "wheel_sha256": "877cff16a3d238d1cfa3eb3956dc560f8608cadbcf2e1005a0c0db2235e793b8",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            405,
+            490
+          ],
+          "score": 0.8384517431259155,
+          "offset": [
+            -7,
+            -2
+          ],
+          "paste": [
+            345,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            555,
+            505
+          ],
+          "score": 0.8454926013946533,
+          "offset": [
+            -3,
+            -2
+          ],
+          "paste": [
+            488,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 23,
+      "body_sha256": "d34ab42eeaee89f7cefc7d7cab16b7e49b2c44f344bc22746a49087bfc8b8911",
+      "wheel_sha256": "a54b0a5daa9793d8bb7d501eda6d7064b07c97365a92b833854afd5abb6e65ac",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            405,
+            490
+          ],
+          "score": 0.8395683765411377,
+          "offset": [
+            -7,
+            -2
+          ],
+          "paste": [
+            345,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            555,
+            505
+          ],
+          "score": 0.8356166481971741,
+          "offset": [
+            -3,
+            -2
+          ],
+          "paste": [
+            488,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 24,
+      "body_sha256": "3b2e0292c9e9eb808f6c133250ea0f9363ff40a2494d9420a4fb3c8ecf8b24bb",
+      "wheel_sha256": "291ead6576539b291076112bc63622ddf140775af6e09b6f0afd8f892fc6b9d8",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            405,
+            490
+          ],
+          "score": 0.830072820186615,
+          "offset": [
+            -7,
+            -2
+          ],
+          "paste": [
+            345,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            555,
+            505
+          ],
+          "score": 0.826029360294342,
+          "offset": [
+            -3,
+            -2
+          ],
+          "paste": [
+            488,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 25,
+      "body_sha256": "e79cf5eb79dc1d9b0880062651f72702cfedc5140fc2d62f04c075cd78b1fc31",
+      "wheel_sha256": "73bbd8bef0214116774ba8b25cc74db66f798ba7b5ac31a59cb16aa3b3d3e9d6",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            405,
+            490
+          ],
+          "score": 0.8001840114593506,
+          "offset": [
+            -7,
+            -2
+          ],
+          "paste": [
+            345,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            555,
+            505
+          ],
+          "score": 0.8026784062385559,
+          "offset": [
+            -3,
+            -2
+          ],
+          "paste": [
+            488,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 26,
+      "body_sha256": "1bb1380711da0f2a7fc3f768889cb5217348db34f9a9f5a3d718f838e3c8767a",
+      "wheel_sha256": "ac6248b42c36ee9448df0310628c6d029b252bea473f14131c2f6d1df7348e5e",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            404,
+            490
+          ],
+          "score": 0.8160585165023804,
+          "offset": [
+            -8,
+            -2
+          ],
+          "paste": [
+            344,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            554,
+            505
+          ],
+          "score": 0.8145094513893127,
+          "offset": [
+            -4,
+            -2
+          ],
+          "paste": [
+            487,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 27,
+      "body_sha256": "d153c8ae50f389ae14a99471ed06ad5e21c81996a9dba0a00099fe11d3f29b24",
+      "wheel_sha256": "7755da645f6cd967d48badfee61ec7e4184f0909bb559933a8e8c43271b0208f",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            404,
+            490
+          ],
+          "score": 0.8202158212661743,
+          "offset": [
+            -8,
+            -2
+          ],
+          "paste": [
+            344,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            554,
+            505
+          ],
+          "score": 0.8160547614097595,
+          "offset": [
+            -4,
+            -2
+          ],
+          "paste": [
+            487,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 28,
+      "body_sha256": "abf6961ff70f5f7958d9569170ffc1332a1061adc1c89ecaeada8f7b18d8a373",
+      "wheel_sha256": "51bcf88db768a310ab127253647253d2cfacf22c2dad53fdea19b569d001630b",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            404,
+            490
+          ],
+          "score": 0.8178029656410217,
+          "offset": [
+            -8,
+            -2
+          ],
+          "paste": [
+            344,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            554,
+            505
+          ],
+          "score": 0.8127288818359375,
+          "offset": [
+            -4,
+            -2
+          ],
+          "paste": [
+            487,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 29,
+      "body_sha256": "724308714592c9d39aa5a4e9352b9a4d14e3d2b048b63c6d47949b87f644a22f",
+      "wheel_sha256": "26355105b8f3023abddeb2bac8d9addd529e7b2d2a35e8d4891685f645efb3d3",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            404,
+            490
+          ],
+          "score": 0.8175339102745056,
+          "offset": [
+            -8,
+            -2
+          ],
+          "paste": [
+            344,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            554,
+            505
+          ],
+          "score": 0.8137064576148987,
+          "offset": [
+            -4,
+            -2
+          ],
+          "paste": [
+            487,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 30,
+      "body_sha256": "d26ee19185c5f2fcfb80c0aeb45640c6e7badc7de4d61d0fff4e6ef12f468796",
+      "wheel_sha256": "aefd769ba1cf72fcfb0ef8d341015b4b92466917bfcb9f059a1459ab96d23fd2",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            404,
+            490
+          ],
+          "score": 0.801383912563324,
+          "offset": [
+            -8,
+            -2
+          ],
+          "paste": [
+            344,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            554,
+            505
+          ],
+          "score": 0.8287259936332703,
+          "offset": [
+            -4,
+            -2
+          ],
+          "paste": [
+            487,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 31,
+      "body_sha256": "18cd3a53cf13f4ae8458291029650551e57c0754ba28b64e3575af2ee38bd7ca",
+      "wheel_sha256": "4a106019eefb1eb3aae20c3d0d008ea82a5345cfdc5d51cc5228d08ee9a58d8a",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            403,
+            490
+          ],
+          "score": 0.8016033172607422,
+          "offset": [
+            -9,
+            -2
+          ],
+          "paste": [
+            343,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            554,
+            505
+          ],
+          "score": 0.8322091102600098,
+          "offset": [
+            -4,
+            -2
+          ],
+          "paste": [
+            487,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 32,
+      "body_sha256": "5bec53070d236d6b7542de091d23d8a8c91720989812f1db1582f727dd220d71",
+      "wheel_sha256": "b810e098137b92c7cb4a3a3299f031786f5bd3be1a522ecf0587d951ab216112",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            403,
+            490
+          ],
+          "score": 0.8089184761047363,
+          "offset": [
+            -9,
+            -2
+          ],
+          "paste": [
+            343,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            554,
+            505
+          ],
+          "score": 0.8420723676681519,
+          "offset": [
+            -4,
+            -2
+          ],
+          "paste": [
+            487,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 33,
+      "body_sha256": "4d215bc9431021125ad0d2678f80b5362bbd00973ca92d77b05bdf540dda7c1b",
+      "wheel_sha256": "4e01abb33f8c7ec859f8b860f0686c1390777676780bad78b94842a640638ca5",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            403,
+            490
+          ],
+          "score": 0.8167791962623596,
+          "offset": [
+            -9,
+            -2
+          ],
+          "paste": [
+            343,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            554,
+            505
+          ],
+          "score": 0.8339083790779114,
+          "offset": [
+            -4,
+            -2
+          ],
+          "paste": [
+            487,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 34,
+      "body_sha256": "8d19efcd6720d9b59a595c829c11ad6322baaae4a2927754fe7c47c0041c9056",
+      "wheel_sha256": "b93edf4c4e0c41e61860616d678331a2dfeff60bcc0338b200bd526791135f3e",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            403,
+            490
+          ],
+          "score": 0.8002817630767822,
+          "offset": [
+            -9,
+            -2
+          ],
+          "paste": [
+            343,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            554,
+            505
+          ],
+          "score": 0.8564687371253967,
+          "offset": [
+            -4,
+            -2
+          ],
+          "paste": [
+            487,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 35,
+      "body_sha256": "de5fd3eedbd6bc4dce5c4de3ac4ea9bf7ff0f1e7fdd58836a0b7d8dde43931f0",
+      "wheel_sha256": "045f7699f40f51e5a1e4a6bffef674e2a79e7767d83a8c86a5190f378bcab769",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            403,
+            490
+          ],
+          "score": 0.8102064728736877,
+          "offset": [
+            -9,
+            -2
+          ],
+          "paste": [
+            343,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            554,
+            505
+          ],
+          "score": 0.8501197695732117,
+          "offset": [
+            -4,
+            -2
+          ],
+          "paste": [
+            487,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 36,
+      "body_sha256": "a9520fe1b9b28313e0a00cd38fd5099f7935533d8b6156f2763e13b8b772dd94",
+      "wheel_sha256": "61d100c2a35a9d5b416e1e67c611ccc047f4c7a31c825a343e761fab0639a034",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            402,
+            490
+          ],
+          "score": 0.8100662231445312,
+          "offset": [
+            -10,
+            -2
+          ],
+          "paste": [
+            342,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            554,
+            505
+          ],
+          "score": 0.8545622825622559,
+          "offset": [
+            -4,
+            -2
+          ],
+          "paste": [
+            487,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 37,
+      "body_sha256": "b9ba700aaf720e1117d34c3337c084a7f47267dd16e36931854aa99d322e4a6c",
+      "wheel_sha256": "98e079bdc24dc7e18e912fa6ad3c29c26e993d807b71529598f22e5539fe946b",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            402,
+            490
+          ],
+          "score": 0.817442774772644,
+          "offset": [
+            -10,
+            -2
+          ],
+          "paste": [
+            342,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            554,
+            505
+          ],
+          "score": 0.8071854114532471,
+          "offset": [
+            -4,
+            -2
+          ],
+          "paste": [
+            487,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 38,
+      "body_sha256": "91f1e0860f34b6de6ab40b0a12aee4a8fbde33324a13755856bf34380970eb94",
+      "wheel_sha256": "2e3a84574adfc0b523c640736f26b1339d3c4b59949b8b54f6dffc437b699ff2",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            402,
+            490
+          ],
+          "score": 0.818832516670227,
+          "offset": [
+            -10,
+            -2
+          ],
+          "paste": [
+            342,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            554,
+            505
+          ],
+          "score": 0.7962504029273987,
+          "offset": [
+            -4,
+            -2
+          ],
+          "paste": [
+            487,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 39,
+      "body_sha256": "8399e04d79ea1672d5254eeb2851ad9962aebc33b1b1e99a9d6ab9c8761e96ac",
+      "wheel_sha256": "0da1f4312ee7f7f2a47364cbeab22f3f50caa62d82c228f7abdd120041cb49d2",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            402,
+            490
+          ],
+          "score": 0.8102291226387024,
+          "offset": [
+            -10,
+            -2
+          ],
+          "paste": [
+            342,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7694043517112732,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 40,
+      "body_sha256": "379dbd75cf8bad9fa68e500b24a334d0fca7c791d24cc72f945db8db8b105f8f",
+      "wheel_sha256": "a1f0b631122e6119c1916acf607b12405b4f14b21e9d489560938bb7c746cfba",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            402,
+            490
+          ],
+          "score": 0.8067195415496826,
+          "offset": [
+            -10,
+            -2
+          ],
+          "paste": [
+            342,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7727939486503601,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 41,
+      "body_sha256": "d87a5612ee7d7bf3afcbb47e4a0bf4460e50e7261b3e6c3c37d4a7a8e31df7b0",
+      "wheel_sha256": "50275e52379bba9b1ee50402ae29de6558c32e8d04202466a6fc103eb0d3fede",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            402,
+            490
+          ],
+          "score": 0.8069798350334167,
+          "offset": [
+            -10,
+            -2
+          ],
+          "paste": [
+            342,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7757059931755066,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 42,
+      "body_sha256": "e9a0c956d87a00f41df9441c22b18a10ef12a24a9c401fef81948dfcb2873e12",
+      "wheel_sha256": "8c6fd69a600fb718da067310dc4614971b38eb1ec32683c5dfe4da04086b7be0",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            402,
+            489
+          ],
+          "score": 0.8075926899909973,
+          "offset": [
+            -10,
+            -3
+          ],
+          "paste": [
+            342,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7661624550819397,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 43,
+      "body_sha256": "2bab4c87988f71dbbb6d440de80fb71c812e2c6582a78e21a326bc1d247501da",
+      "wheel_sha256": "2bbfda5a69d068ad7706113cfd96089e8aff7a5c19199a85d2198292a77141de",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            402,
+            489
+          ],
+          "score": 0.8047618269920349,
+          "offset": [
+            -10,
+            -3
+          ],
+          "paste": [
+            342,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7791645526885986,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 44,
+      "body_sha256": "2c606f24b5eeeff960fb362255c01348abbe4eb13c55557f4f29e5707623078a",
+      "wheel_sha256": "fe1d262f50ac0440892ae44730794c527e02ef677f1004916a3bcca95155b57f",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            402,
+            490
+          ],
+          "score": 0.8176305294036865,
+          "offset": [
+            -10,
+            -2
+          ],
+          "paste": [
+            342,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.8084202408790588,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 45,
+      "body_sha256": "d200d304becb5f6f492ff9302f4b61f162806a25a59b0c0938bb4319436349ee",
+      "wheel_sha256": "f1c31a40f56297385cdb2c8a37537f625b6602c988a19138ef8a599e9b764bbc",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            402,
+            490
+          ],
+          "score": 0.8261159658432007,
+          "offset": [
+            -10,
+            -2
+          ],
+          "paste": [
+            342,
+            425
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.8078659772872925,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 46,
+      "body_sha256": "7534e3b65606d8a9504d2ee8792cdc994ce29d01706e9e1d8af38d124f6d2b64",
+      "wheel_sha256": "8fa1fb6f79eef53c2810d13fd04e4185604cd756e65f2807965426fb3de07127",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            402,
+            489
+          ],
+          "score": 0.7987820506095886,
+          "offset": [
+            -10,
+            -3
+          ],
+          "paste": [
+            342,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.8075531125068665,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 47,
+      "body_sha256": "e436c897d873405a413442121a56e50d7750d1be52989d340680761ac16b7585",
+      "wheel_sha256": "3f6314843aa0a6c668607d22ecafaa15191c839495504b30989a9a6b33fc0c7e",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            402,
+            489
+          ],
+          "score": 0.7961355447769165,
+          "offset": [
+            -10,
+            -3
+          ],
+          "paste": [
+            342,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            554,
+            505
+          ],
+          "score": 0.8043951988220215,
+          "offset": [
+            -4,
+            -2
+          ],
+          "paste": [
+            487,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 48,
+      "body_sha256": "027da974e4955928837ab0b7ce0203e3cc03cb28adaa6f536a7168aff2ff47b1",
+      "wheel_sha256": "bc94fab9d8a4adc2448589848a66f9182b6614a206930582769c286a63a85c82",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            402,
+            489
+          ],
+          "score": 0.7980979681015015,
+          "offset": [
+            -10,
+            -3
+          ],
+          "paste": [
+            342,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7936654090881348,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 49,
+      "body_sha256": "9d3b4a12cb4e16d7e20a220e09f47bb5be4d82bf4e833fd7f7128c2ac0a6429c",
+      "wheel_sha256": "a972dec872c486adbd0b3b220dac6a8934f45191e22a5224fedb6917de729dec",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            401,
+            489
+          ],
+          "score": 0.7880657911300659,
+          "offset": [
+            -11,
+            -3
+          ],
+          "paste": [
+            341,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7712389826774597,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 50,
+      "body_sha256": "90ebd33a291b362edd196475a510d8344afceb73900944ef909bb6ed7c857e51",
+      "wheel_sha256": "1473f54fef90c759fb925c8492f724918d378d68e042de184aa030290dce80f6",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            401,
+            489
+          ],
+          "score": 0.7869022488594055,
+          "offset": [
+            -11,
+            -3
+          ],
+          "paste": [
+            341,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7686366438865662,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 51,
+      "body_sha256": "2f7542dfe8555c238752b70a1029762ac0c62bb1b8e131d6148769750eaf6836",
+      "wheel_sha256": "0d1b9e60eca385b1503e1b263d74e334bbcd47f4a5a44732284373cb5c579fd0",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            401,
+            489
+          ],
+          "score": 0.8040230870246887,
+          "offset": [
+            -11,
+            -3
+          ],
+          "paste": [
+            341,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7641929984092712,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 52,
+      "body_sha256": "c623f65794203cb01fb28185bb1226c6ffdb58c933f236b513f48d89c461262d",
+      "wheel_sha256": "00a657c34addb293f6c76ad0cf9b13d4090dfb3c88f0f446649bef580b553d60",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            401,
+            489
+          ],
+          "score": 0.8037807941436768,
+          "offset": [
+            -11,
+            -3
+          ],
+          "paste": [
+            341,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.8004792332649231,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 53,
+      "body_sha256": "d7657912bb35689db6608a4e65f6efd4914cde03ebf19dc19481a5279de8ef0c",
+      "wheel_sha256": "3f5f5e683502f3f5860fcb804faf28c12bfc3a20d3005894562a9eaf9cdbce12",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            401,
+            489
+          ],
+          "score": 0.8028574585914612,
+          "offset": [
+            -11,
+            -3
+          ],
+          "paste": [
+            341,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.8106776475906372,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 54,
+      "body_sha256": "c94800b8026daa5b8117a915c1b6946dd69f0116028765a43554fb5c48e2bf2d",
+      "wheel_sha256": "eb534b1b572469c0bdfa2b7950ac062844cb7a5762180ac60c6d501511ab5871",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            401,
+            489
+          ],
+          "score": 0.8141757845878601,
+          "offset": [
+            -11,
+            -3
+          ],
+          "paste": [
+            341,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.8214203715324402,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 55,
+      "body_sha256": "6c205e75347a462e53a5e3a01437427649d4a57b9cb731d9424b40ccf70ae32b",
+      "wheel_sha256": "fdb9c8fbdde75893d62724c50d328f046361e550427e76fb960111e124a130cf",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            401,
+            489
+          ],
+          "score": 0.8116400241851807,
+          "offset": [
+            -11,
+            -3
+          ],
+          "paste": [
+            341,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.8229689002037048,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 56,
+      "body_sha256": "cd937db0871d55c2eafa6707eafefdd98dcfd13a17da613c74eee10d7b2a60aa",
+      "wheel_sha256": "afc0cdb232bdca049fd78824d82d845f51ce643bba692150bc77a166d418eb97",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            401,
+            489
+          ],
+          "score": 0.7996371984481812,
+          "offset": [
+            -11,
+            -3
+          ],
+          "paste": [
+            341,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7983496785163879,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 57,
+      "body_sha256": "74c9c9f61235a8480bcd90188a4bdfbc3a0480c1371e3368b1d2083a506d2743",
+      "wheel_sha256": "25745915cb32200b3018ef1f5aec8d935e6df8ad88a66d0c68ef5246205e1039",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            401,
+            489
+          ],
+          "score": 0.7997411489486694,
+          "offset": [
+            -11,
+            -3
+          ],
+          "paste": [
+            341,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.8048015236854553,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 58,
+      "body_sha256": "4d843fb643474fd4d19dd8ea847d7e47396758f2cf0c8d49a99c8727d016e1e9",
+      "wheel_sha256": "62a9f25d0d3fc0f2b2d6f23a1ca9f906e64fe4aff528b363236ad76acfecfae2",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            401,
+            489
+          ],
+          "score": 0.7950757741928101,
+          "offset": [
+            -11,
+            -3
+          ],
+          "paste": [
+            341,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7874199151992798,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 59,
+      "body_sha256": "767c69d9ac1ee8642ccddda507cc6b2571ab267e029a0eb7ef182a4f06277a5a",
+      "wheel_sha256": "3629c2a4d41f7e9c05eccc4d4f5105b569ec4c50ebc4e3f4f915f5adc0815f73",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            401,
+            489
+          ],
+          "score": 0.7952486276626587,
+          "offset": [
+            -11,
+            -3
+          ],
+          "paste": [
+            341,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7742182612419128,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 60,
+      "body_sha256": "d13afab3b0f4088c47751b868f6333d5a64d9053d2dc441ff7b5289850a5e2e6",
+      "wheel_sha256": "181372fd95847e222bcd2704caf5301dd23f35a2215ae7c0a11d844b79a860dd",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            401,
+            489
+          ],
+          "score": 0.7881445288658142,
+          "offset": [
+            -11,
+            -3
+          ],
+          "paste": [
+            341,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7645454406738281,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 61,
+      "body_sha256": "5f08c36da03fe95c48fc0c4633e90c254150378c1de41120292dda6744d76a70",
+      "wheel_sha256": "35a8de8612c78b90dafdd1d43a393d5953adaf9a9b2cc2779ac415df85d2c2a0",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            401,
+            489
+          ],
+          "score": 0.7858783006668091,
+          "offset": [
+            -11,
+            -3
+          ],
+          "paste": [
+            341,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7662193179130554,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 62,
+      "body_sha256": "e111d6fc5440649f38c5b932f4fcb0996043296f816c7073f690bb6d9a66666b",
+      "wheel_sha256": "cce879611a211481312660c42d37c9dabd010450d7f7c7f17e23637393f07555",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            401,
+            489
+          ],
+          "score": 0.8058037161827087,
+          "offset": [
+            -11,
+            -3
+          ],
+          "paste": [
+            341,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7676916718482971,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 63,
+      "body_sha256": "e82e2c84536773e2cd4f54e9e5a2b7caf63d44bd9c605cecaa3c70ef54d93b28",
+      "wheel_sha256": "f9a1b1c6cdfd4f2ebc5bfbc0744202070fea28bc71db35eedd7ccc265c20ec4b",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            401,
+            489
+          ],
+          "score": 0.8081644177436829,
+          "offset": [
+            -11,
+            -3
+          ],
+          "paste": [
+            341,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7695428729057312,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 64,
+      "body_sha256": "131886d7fe6e5650c7773ccb48537abf31d55f2a5714ca38f891905b3c3e0de3",
+      "wheel_sha256": "1a70221bb942f07f885cef5a81b1ac2318e07f75e8ae3d41e738ba08151215f5",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7959446907043457,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7840181589126587,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 65,
+      "body_sha256": "530587adeabdb6db12f26d2b71c63e9af21a893fd9b2820b23fb1da2ba97c497",
+      "wheel_sha256": "bb844f9e5913e74c33827452eebea03df851b72e3b2c3ab85bd94261135dc90e",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7968654036521912,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7878734469413757,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 66,
+      "body_sha256": "8237cdf1850612dfaa3d6d66c1c1b7999ea36c8b003a4425f5451682a7b0c094",
+      "wheel_sha256": "3db90e603c8fecf7adbde7ac90adc017bbb3f6632733964690b274574c9e70ab",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.791389524936676,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.774658203125,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 67,
+      "body_sha256": "ef2001fd4a5d94901e7e728a9f099cf59e47b0912ad9ea6354200d95eead1671",
+      "wheel_sha256": "31ebf04bdf4f1b152f0db31b7b2fd3286c2b721d7a1f2f697685e4c9a775c027",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7922179102897644,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7740628123283386,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 68,
+      "body_sha256": "7a4aa2d4843d9bc97112c9b40931baf9f89dcc08c62be2f9de01623ddd6c9456",
+      "wheel_sha256": "9abf573106c79a9b20d86fb6204b8120d77326d716d8ad7cff8e76ea5aee8715",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7921363115310669,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7687327265739441,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 69,
+      "body_sha256": "e98b5808e12b0b29ebcfd9c214ecd7298afbe9be2b10e8682d8dc3f368f86f5d",
+      "wheel_sha256": "dca3cd751b2f5f318de3af60faffd0dc8e713f72a14950b841970d75d36ff10e",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7987124919891357,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7975976467132568,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 70,
+      "body_sha256": "947a1e97db4c688ebe823fe339f367148ff87035c9a14fdda6cec24bb7e79423",
+      "wheel_sha256": "aec69be25038770631614c74d5befdfcbfa3cd67c5bfcbcf90203b5e5640f8c7",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.8078799247741699,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.8079497814178467,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 71,
+      "body_sha256": "d86f43f59787d5e6cbab7a9769e492ebd2e53da8f436704a45b81642629d9918",
+      "wheel_sha256": "caaf10d5fbd65f9dddad36072640c251d5ebb6c1e78b009e21161ad3f2d7c274",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            401,
+            489
+          ],
+          "score": 0.808775782585144,
+          "offset": [
+            -11,
+            -3
+          ],
+          "paste": [
+            341,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.8100178241729736,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 72,
+      "body_sha256": "036ca38bb87ab02ec01ed64702c7cc10f2aff9cdaf04e88e157499972a8c3145",
+      "wheel_sha256": "4b4ef8a7362bfed2691df9c6eb07bf9193bc4384e6be6cf4f4e065aeaa4f7414",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7794000506401062,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.8079957365989685,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 73,
+      "body_sha256": "3a21172f67735e1e7bce24ea5eb24b1aa329d47ebbd95d1584dcfbffd093c342",
+      "wheel_sha256": "a2219d941fd6603297c3f26a72cbc088b0c0393cdfebdbb1d3662361c6c955c7",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7772231101989746,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7930811047554016,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 74,
+      "body_sha256": "dd3ec26776d471d39e7aba17dccab588a018df66e4e345addf5bad3c7c701144",
+      "wheel_sha256": "e3a646f3d4b4764ec96cad669c3f6e3231faf5cdb8e699025b5f38aa25242f06",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7800126671791077,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7831882238388062,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 75,
+      "body_sha256": "53d8fabf38399d22b3868a2c569a830a21bdaeb00db551b69358bf23360b1a27",
+      "wheel_sha256": "2beb04c9e87db91f4c9fe7b4e0bf0c0174d2b506166540ad70bc95ca5fa026ee",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7773438096046448,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7735821604728699,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 76,
+      "body_sha256": "b83aa106a409466e4af86da0d4b4ed3453cb917dfe9ab7bd12923fa8443f394f",
+      "wheel_sha256": "6d8b8c8f745759d5994e95f34c849b2d4d8aa3a6e07da5038e431667f01c96e3",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7736908793449402,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7664884328842163,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 77,
+      "body_sha256": "770e7ec14441bb184260f3f93b0e8d28f8aa14c443b5f5349a0546d93a440287",
+      "wheel_sha256": "e65cd14c0b490aaaacefee92b6c8f2e527f48ddb844f09e3eaa8630610ac866c",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7727740406990051,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7662776708602905,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 78,
+      "body_sha256": "b89544ae961aa8d62bc33cf9c8d08d3efcfd14453ec949d713059eb0e8823787",
+      "wheel_sha256": "679747d06f5cf7656316c623138c2096ddb21ad6b82b6f18ff88981b76355b14",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7623689770698547,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7937139272689819,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 79,
+      "body_sha256": "b88b73d79abc562c7b8136110e18d7e1b92af16a712994fea0513c167af3d579",
+      "wheel_sha256": "7bcb85b4d0bb278497868d744703a9b0a7221aa9e1d71ebb70e037f6e7332ed0",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.764994204044342,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7999576926231384,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 80,
+      "body_sha256": "752035ddecf2699f2fdc190f8fa5d13965af608a6db2a20acd20ef450e5ea1bd",
+      "wheel_sha256": "849ab2b307eceb8b8af136c65d2d9431cebfa6ed88da37b857befa53431c3a90",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7895344495773315,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.8021944761276245,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 81,
+      "body_sha256": "57079156a27799ca577402c22fc48b06a8f351aa5bbd007a96a26cfbe7b0b47c",
+      "wheel_sha256": "12bde033ae912dcd6d6501895f528877d1944d2263d411f6efdedb6f3ce27139",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7829489707946777,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.8067982196807861,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 82,
+      "body_sha256": "718ec7762bfe4d481a99d46a3d9e23252e3cfc0d476e46d2b449f1ec5b2a6f4c",
+      "wheel_sha256": "89468e2e718a4e7b4308308039dc5c8b3966da0e9514e5a8524445b5f99a834c",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7830783128738403,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.778259813785553,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 83,
+      "body_sha256": "67f8aee922866bab175c844f400a6c89d3178a79065f3be2e6079e6c3605b705",
+      "wheel_sha256": "415f7234fa3369aef955831de342c7c747dd07a322ab47b70d1698becb840a23",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7780026197433472,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7700045704841614,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 84,
+      "body_sha256": "3c5d98b6dec6f56c9364680508df4a4aa318258b0e5973d92efca3070eef54ca",
+      "wheel_sha256": "38cb8fd86a00952bad5b8e34e564fdd1caa33cb356b64ae2de0831457f3a3981",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7783517837524414,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7686666250228882,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 85,
+      "body_sha256": "8487828314cdef2817388df25f435bd67a4d557c4dc4ce7165f0ad683ebee629",
+      "wheel_sha256": "bd5f96d480ec08300c5f3ce3f45447410384906a8111e76ecac687f59b9d5456",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7745338678359985,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7555368542671204,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 86,
+      "body_sha256": "7214c4ad839a5f5b37ffe826b189c33f165d2cb819af69cafca5bf7fb53b5524",
+      "wheel_sha256": "c5b43f7f2c2b6b3b5eb9aa3979123ec1c6088c381e4de29c20f75eddc0da841b",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7687674164772034,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7631670236587524,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 87,
+      "body_sha256": "650802b05779b38d65b69fdacb907e62dbedfab0053cb917c722dda0498b4ba7",
+      "wheel_sha256": "5c2a69adb574e32d2a00b5d37e7c8e1349ab40ec8dcba8e4e9f0611adfa515c4",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7742924094200134,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7687232494354248,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 88,
+      "body_sha256": "4ed2594572b88f820b11b798fe44e429f04a0843730f00353f325324799d8d65",
+      "wheel_sha256": "c20cb489d95dc602ce8f1fb8d5a5a9b9af7de82cc0d2005740bd119bd64aabfd",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7704030871391296,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7846230268478394,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 89,
+      "body_sha256": "e856d8ba870817a4f618cb32ff7745d19f923818ddec16c7f3ee33f5a7429caa",
+      "wheel_sha256": "73bb77b6860160ea90819eb669fb01172d044bb678adf12a42fcab9b8772cd45",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7687810063362122,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7851910591125488,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 90,
+      "body_sha256": "036ed84bcf5cae6a3f284b0e3eaf66cda2d545e81132da5f9679c5eae2842275",
+      "wheel_sha256": "902e31f8b9d5c1421eec3ee2538fbcfb0f9eb7d559fc887551107754e8b77e37",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7981000542640686,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.8064241409301758,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 91,
+      "body_sha256": "2459ab0c9739f88c9cd42954caa7e2a824d65b640d811490872e985ab9ef43b1",
+      "wheel_sha256": "bc68b6297ce85768d27efd5f41adf295e0e5bbd0a63a0a700ecd03d39cfda6e1",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.8043163418769836,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.8103175163269043,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 92,
+      "body_sha256": "1a596ca81e5315f096307b8299cd5f7e81d023309542dadc78b6c25f9180fb62",
+      "wheel_sha256": "0dd4aea5754275a72afc8c02d8062ade39ef932d653cf0a005e32aebaee1f5fe",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.8038498163223267,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.8068923950195312,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 93,
+      "body_sha256": "11318924f093efe30113916993fc4a1176aae7469738cae7eafd69e3ea6551f4",
+      "wheel_sha256": "b8ea10f74917193108a733a2b5ad8bd16f1444154fe7eb10b2888d1fcda6fcd2",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7906936407089233,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.8044549822807312,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 94,
+      "body_sha256": "f8e110b8027eca8228a66151fd69d9e7113475a23546d2311bb24208974de172",
+      "wheel_sha256": "77dc645b31c70e6f0cb14b4811b7fec0e2ef73fed3003c231fbc75d05c3c6b53",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7787375450134277,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7871043086051941,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 95,
+      "body_sha256": "569d7e4293fe958d6b16efe4dfb4bb19032bee3696571f8176e11b5f6ba80938",
+      "wheel_sha256": "dd41113dd2d9b9204c019b252a0055519d1464af76528c23b4860c68c1a6fd38",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7797383069992065,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7908542156219482,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 96,
+      "body_sha256": "b56e1fee3bb8419a6251e0ac88b861fa65b4fa5014e738931d543389cd2c2a76",
+      "wheel_sha256": "6c4e4542938054e20e91bcdf899b5ae9019dc6d8b2be02eb0ae41c3beb355ac1",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7754297256469727,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7741093635559082,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 97,
+      "body_sha256": "537b609b2f0dda66d5563f9ea5101aa51c57557156c5eef583dee6fe6821fd35",
+      "wheel_sha256": "e5e533718e56824838be9162e8ffcfa28faef2b15c84dae6cdb899fbe2f2cc4f",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7760663032531738,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7729158997535706,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 98,
+      "body_sha256": "cb51e53e34d9a9d8984aa4a7f1e6e2b273c4cd5e38312a0bf84fc71b06a41f9d",
+      "wheel_sha256": "cdc385e4e5c9512bcab4ec42c995e995d73ee4892983c7eed6f5f660d25f0816",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7933663725852966,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7679629921913147,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 99,
+      "body_sha256": "36de7d9dd23be45c3b41afba66fccc1c7398189c3b25c76e1e127b743a13b9bf",
+      "wheel_sha256": "2ff08543998a499c38f8e793f362a7da776cbf1f371496a4ae3a4cac9e17378a",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.795723557472229,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7643049955368042,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 100,
+      "body_sha256": "080b99ca08689754b65841ba4bc8df41e6c48934682f37132b9ba2933d1b94ee",
+      "wheel_sha256": "f197f916622c208d8b55837bb9d4a4571ca19c4911bd11bac2b88d5f2b264808",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.8081251382827759,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7623952627182007,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 101,
+      "body_sha256": "559f0241227c99bac4aef470899103bbf3b08c76196bac3241f61387c294addc",
+      "wheel_sha256": "03289e3e61c770cb6d80b622362cbe01b09df8a3154cffdbe9ddbe24ac061cad",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.8030073642730713,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            552,
+            504
+          ],
+          "score": 0.7627230286598206,
+          "offset": [
+            -6,
+            -3
+          ],
+          "paste": [
+            485,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 102,
+      "body_sha256": "e1dc6d609d91fbada99542c0b329b4c1e96d4f2c29da28c0ec83ce65dae075a5",
+      "wheel_sha256": "664e53a3bc7afc6749606ee52308524802eda4d568f2b0cc5a83071cf4a7d1b1",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7850496768951416,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.765376091003418,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 103,
+      "body_sha256": "71533995926ceb0923ebfa7c3617450f561ce5352a0c0600a80e6538d8d56f91",
+      "wheel_sha256": "9c64b39fecbd935ca49a7fb07d3c17f5434296152d18e84f31f66723e1ea7690",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7882901430130005,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7737987637519836,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 104,
+      "body_sha256": "e2a9d0c5c67772329d3ba0c42981997e75dd2d537e9d980f6912a857ae228c1a",
+      "wheel_sha256": "bfeda89493c9ec6e972088c40421e49ecebd7545c4143a33f411439f3bc2355f",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7918557524681091,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7875452637672424,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 105,
+      "body_sha256": "279c0fe0248ccaf282dd5752555f999d8e7d63eb545c56276157ae599d87f989",
+      "wheel_sha256": "9c082864635b3e39c66cd2dd1e4a9c1ba26bbef0c203fcdb19c84954e7ed8a44",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7931172847747803,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7873730659484863,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 106,
+      "body_sha256": "4c85c6ace0f22fedb96c7bc8f38f5a393aa8e34d64f8efe25ce0534d88abf5d2",
+      "wheel_sha256": "1a0697558fbc77e72568a888ed7fd45b08bec2f3144131a86130c3a9da840c90",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7987056374549866,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.785377562046051,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 107,
+      "body_sha256": "af7786c9c4c9fb87a57a7ad1b4e74284372ae76623ee0daf77b6a9bf2b4eb32d",
+      "wheel_sha256": "83c8b1a1fd955634b455cb61c7bc4a86cc9fbbbe3cc400b0b6eb4afbb59f75c6",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.8007003664970398,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7924448847770691,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 108,
+      "body_sha256": "d6d24725ac47eb048e0a12b956e7ef49e0eccb844c49ffafd1c4ec266e017585",
+      "wheel_sha256": "5a77ffd6e8a88594c82cf09584b56babd17b7ea2a5421d0c70797d10fa1be277",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.8013481497764587,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7917602062225342,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 109,
+      "body_sha256": "5393bded0aedd923320f10276e6e05af3f283bbba02a5c4bba451ee436e68a91",
+      "wheel_sha256": "1a946feffe23735a43d189c59bc0cae79b19aadf56414273c1328b20cabc0ebe",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.800945520401001,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7835558652877808,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 110,
+      "body_sha256": "beca8e075717db870339b7fb88070537bf6a247fa2d19c5b61b51cc905973c5b",
+      "wheel_sha256": "0c5381ee93ce770f3861c329b5c2db89fcc7fbecbad8ee33228cc27a6cc89586",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.8000762462615967,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7883766293525696,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 111,
+      "body_sha256": "8ce44faea83b9d4f10a74724f7b5899883c0a8cb6d041ef417c5779ee12b598e",
+      "wheel_sha256": "1093e008313cfdb8b7bf847838f1f66307a560363e8f7b85ed98934c496d3d74",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7941234111785889,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7938506603240967,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 112,
+      "body_sha256": "61751bb4eafd1cb6fad19e610b79995ecda62928e31ffa2cd63644214e1d0c77",
+      "wheel_sha256": "e0532009ae5cb9ac67ab546ee37a3840503e3ed5b73baf143e11eba7a0c2a89c",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7993177771568298,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7886093258857727,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 113,
+      "body_sha256": "2204d72ad7a5693ec976c86f5ab8cb6d199648cef012ca00d31e89e501bfb252",
+      "wheel_sha256": "dc47c848657be4644c78be89c5854c8fd830258d3ecff4e357b46d06bb5eeaad",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.8009896278381348,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7875331044197083,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 114,
+      "body_sha256": "782f2ae546c54933ef0ca23f4e2abe927b365e49d2463607b109cc7f32dd4694",
+      "wheel_sha256": "5b9f738aa673da27407abf9626ad8e3977a016b36a84c61e725233c2dd9da496",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7981475591659546,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7888606190681458,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 115,
+      "body_sha256": "b078021c58126de985fed77b1807b9327b7641e9b27c2e57e489d11e0938e445",
+      "wheel_sha256": "a2ffeda3bbeb8519e053ed6367b8688fa394141f303ef64d466da2e9a89d0ecf",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.8029091358184814,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7958253622055054,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 116,
+      "body_sha256": "1666f7119a934566fa45b682bec267763401c6ebd816aa16c3a441bc6f5de157",
+      "wheel_sha256": "6fcf01e3b853b4c6d5e41c8a29560595cd1606ef1c238dac5e84bc5e8e784249",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.8029825687408447,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7924631834030151,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 117,
+      "body_sha256": "c80e29d921e09a994ad859ccd32faeea674322468c246cc29d2cbf63dca0a39d",
+      "wheel_sha256": "7362738b77d865d0bfaf851e649aa2bb567e5df4f82fd921082f05346c89cfe5",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.8036554455757141,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7909363508224487,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 118,
+      "body_sha256": "4b191a59cf79b6fa64c982e2d820e44bb17e660d21bb795c3b9fe24621d9b866",
+      "wheel_sha256": "543c9928a911a756232d469a7094d6bc47dd372a33d3b852380ea6972e0b0428",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.8045308589935303,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            504
+          ],
+          "score": 0.7899472713470459,
+          "offset": [
+            -5,
+            -3
+          ],
+          "paste": [
+            486,
+            436
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 119,
+      "body_sha256": "2daeb911d51188afd25224873643c79ad8cbbfa873799655600c85fd1ac552a4",
+      "wheel_sha256": "e7057b74221e5c6f054dad1b08510e2d4e8d618e4dcb7cb07d006467631e8ad3",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7852380871772766,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7835367918014526,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 120,
+      "body_sha256": "5b2f5ad04306a47d066922c9bd7b0d494a1c6b30a78e9e9f5d9af20e8eabc8b0",
+      "wheel_sha256": "782d80ff55bd0402499327ce4c12514125c0e8fa5a3e01247f56d7f3e52544b9",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7897418737411499,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7946153283119202,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 121,
+      "body_sha256": "a0b1ee8377a3635c2987493a8acee952e2390b68806bc11db59a8549e040926c",
+      "wheel_sha256": "62d17d4417cdaf472d50d7d2f84b71df04ca227198789940f059c0554d4f3c77",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7900830507278442,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7907378077507019,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 122,
+      "body_sha256": "f1b71d00b75890d1503b591c1dff3ee1117adb71924b28fc20b0d0f1da89cab7",
+      "wheel_sha256": "42e15f53c3c485e8a6f9a2bd7f21732dd5e25fa92168d10ffb448f8964695a87",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7928088903427124,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7877588868141174,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 123,
+      "body_sha256": "d84de02399ad6e2630a758eecd34fd2258e1873f36041a1fae728cee69a2925e",
+      "wheel_sha256": "132b53f281fb738b0a3badb0564459bdcb6acbcd3ed8812d1f8e1d174d5a8630",
+      "contacts": [
+        {
+          "wheel": "far",
+          "body_hub": [
+            400,
+            489
+          ],
+          "score": 0.7937014698982239,
+          "offset": [
+            -12,
+            -3
+          ],
+          "paste": [
+            340,
+            424
+          ]
+        },
+        {
+          "wheel": "near",
+          "body_hub": [
+            553,
+            505
+          ],
+          "score": 0.7882670760154724,
+          "offset": [
+            -5,
+            -2
+          ],
+          "paste": [
+            486,
+            437
+          ]
+        }
+      ]
+    }
+  ]
+}

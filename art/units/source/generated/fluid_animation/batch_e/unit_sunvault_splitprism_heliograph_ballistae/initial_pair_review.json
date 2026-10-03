@@ -1,0 +1,19 @@
+{
+  "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+  "reviewer": "coordinator personal original chronology and native inspection",
+  "move_h3_v1": {
+    "status": "rejected_for_movement",
+    "examined": "all 124 RGB, all 124 alpha, all 124 fixed-native128 poses in both facings on dark/light backgrounds",
+    "identity": "Two wheels, three folded star-foot supports, single operator, lens and both equipment tips remain coherent; alpha clean.",
+    "defect": "Operator arm/crank and cape move, but wheel spokes predominantly oscillate near their original orientation instead of sustained rolling. Crank articulation alone does not qualify a dedicated carriage movement clip.",
+    "selection": []
+  },
+  "ranged_h3_v1": {
+    "status": "rejected_at_original_RGB_review",
+    "examined": "all 124 original RGB frames in chronological order; original three guide canvases rechecked",
+    "defect": "Source frames 25-31, 34-41 and 46-55 introduce baked blue projectiles/flash. The original solid triangular blue launcher tip is lost through much of frames 28-73 and then reappears. An exact guide at45 does not fix intervening equipment loss or repeated shots.",
+    "selection": [],
+    "alpha_native_acceptance": "not performed or claimed for this already rejected take"
+  },
+  "preservation": "All source RGB videos, latents, full mattes, guides, prompts, model settings and hashes retained unchanged. No source pixels edited; no published animation or gameplay changed."
+}

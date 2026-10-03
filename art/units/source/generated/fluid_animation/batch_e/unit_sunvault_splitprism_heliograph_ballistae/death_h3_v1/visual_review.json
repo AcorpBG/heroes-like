@@ -1,0 +1,10 @@
+{
+  "status": "rejected_at_original_RGB_review",
+  "reviewer": "coordinator",
+  "examined": "All124 original RGB in chronological order.",
+  "defect": "Source26..27 abruptly substitutes the tilted carriage attitude at the interior guide. After a long operator hold under the tilted carriage,75..76 substitutes the final flat operator/corpse pose rather than continuously lowering the body. Intermediate wheel/strut proportions also change during the first forced tilt. Endpoint correctness does not repair these missing collapse transitions.",
+  "selection": [],
+  "alpha_native_acceptance": "Not performed or claimed after RGB rejection.",
+  "correction": "Remove all interior collapse guides. Retain initial ready and terminal wreck originals at their fixed scale/origin, giving the model the entire interval for a continuous physical loss of support, operator fall, carriage tilt and grounded settling.",
+  "preservation": "Original lossless video, latent, all124 original-frame hashes and semantic mattes, guides and prompt provenance retained."
+}

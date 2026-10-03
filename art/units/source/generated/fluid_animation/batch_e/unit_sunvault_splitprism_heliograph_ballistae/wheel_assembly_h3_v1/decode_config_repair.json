@@ -1,0 +1,13 @@
+{
+  "reason": "Completed sampler847 preserved; decode-only settings absent in new component configuration. No sampling input changed.",
+  "sampling_config_sha256": "67f53bcad64b41dd29882fb539f14cf5412ce599016e9b174ec76de6c671fe8b",
+  "config_sha256": "4512d5ad1d517291ad9a402ca4be21f498c4715abe5a3985d8f9369fdd827c02",
+  "latent_sha256": "a580d1f7775148be797b73727b97f84a0d5bc37a5bf2ebf5878112baf5ff8142",
+  "sampling_prompt_id": "121f6c23-cd6d-45a0-ac35-c2cd6141db33",
+  "decoder": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

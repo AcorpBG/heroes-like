@@ -1,0 +1,10 @@
+{
+  "status": "rejected_at_original_transition_review",
+  "reviewer": "coordinator",
+  "examined": "All124 original RGB chronologically, alpha0..63 on dark/light, original-size34..37 transition details.",
+  "defect": "Source35..36 abruptly changes the mirror attitude and operator position together. The supplied brace is reached as a pose jump, rather than a readable articulated transition; later small cape/operator settling does not repair the missing entrance.",
+  "selection": [],
+  "alpha_native_acceptance": "Alpha64..123 and whole native acceptance were not performed or claimed after rejection.",
+  "correction": "Use ready and terminal brace guides only, removing both interior guide constraints; request a continuous crank/torso/mirror brace transition and held finish. Same original body scale and ground origin retained.",
+  "preservation": "All originals, latents, guide pixels,124 full source mattes and provenance retained."
+}

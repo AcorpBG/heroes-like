@@ -1,0 +1,62 @@
+{
+  "source_frames": [
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    38,
+    40,
+    41,
+    42,
+    43,
+    44,
+    46,
+    48,
+    50,
+    52,
+    54,
+    56,
+    58,
+    60
+  ],
+  "frame_msec": 84,
+  "review_note": "37 consecutive original poses retain physical recoil and recovery. No baked shot. Source-qualified; actual runtime pending. Production sampling keeps original duration and all physical contact/collapse transitions; 12fps elsewhere, original24fps source retained. Retimed native runtime review remains pending.",
+  "frame_durations_msec": [
+    84,
+    84,
+    84,
+    84,
+    84,
+    84,
+    84,
+    84,
+    42,
+    42,
+    42,
+    42,
+    84,
+    84,
+    84,
+    84,
+    84,
+    84,
+    84,
+    84,
+    42
+  ],
+  "sampling": {
+    "full24fps_selection_sha256": "c7a09bc993e7fc4a3555a7ca2e70a11d5326321dd75864de9ddc359f93c49430",
+    "rule": "Observed originals only: every second24fps frame plus unchanged dense physical contact interval and final original.",
+    "dense_source_frames": [
+      40,
+      41,
+      42,
+      43,
+      44
+    ],
+    "original_duration_msec": 1554
+  }
+}

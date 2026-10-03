@@ -1,0 +1,22 @@
+{
+  "tool": "built-in image_gen.imagegen",
+  "original_tool_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-0ebadc61-9662-41e1-828f-6024db59a83a.png",
+  "original_sha256": "2e676daebf12ead332e795ac7fb575fe5c35e4d09d74f0aec885b47cfdca9028",
+  "prompt_path": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/rolling_rotation_keys_v1/prompt.txt",
+  "prompt_sha256": "fb9a707da77d8d1a9749418d691e43f10c60b6ed0bfc4698138890d1560632f8",
+  "referenced_image_paths": [
+    "D:\\Games\\godot\\heroes-like\\art\\units\\source\\generated\\fluid_animation\\batch_e\\unit_sunvault_splitprism_heliograph_ballistae\\move_h3_v2\\guide_0_rgba.png",
+    "D:\\Games\\godot\\heroes-like\\art\\units\\source\\curated\\unit_sunvault_splitprism_heliograph_ballistae.png"
+  ],
+  "references": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/move_h3_v2/guide_0_rgba.png",
+      "sha256": "32d0e6cc157808ee27d924de8da91c2252dbc749ee7151932f7f51e7f8943913"
+    },
+    {
+      "source": "art/units/source/curated/unit_sunvault_splitprism_heliograph_ballistae.png",
+      "sha256": "5171f21f0d616949c73c46a024ea77e9e4f2868865bf700f2a47a4835145cddb"
+    }
+  ],
+  "transparent_background": true
+}

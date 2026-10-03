@@ -1,0 +1,53 @@
+{
+  "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+  "action": "move",
+  "component": "two_wheel_axle",
+  "canvas": [
+    960,
+    704
+  ],
+  "scale": 0.15,
+  "anchor": [
+    480,
+    576
+  ],
+  "key_rgb": [
+    190,
+    206,
+    222
+  ],
+  "seed": 2026100392,
+  "references": [
+    {
+      "name": "original_isolated_two_wheel_axle",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/wheel_assembly_key_v1/assembly_alpha.png",
+      "source_sha256": "ea48f93448eb3ca5752d8dadb5a028380c8b22faf174f85986681900217a3e9b",
+      "rects": [
+        [
+          496,
+          279,
+          1256,
+          743
+        ]
+      ],
+      "anchor": [
+        874,
+        741
+      ],
+      "scale": 0.15,
+      "alpha_noise_cutoff": 0
+    }
+  ],
+  "guides": [],
+  "last": null,
+  "prompt": "Close-up of this ORIGINAL MECHANICAL TWO-WHEEL AXLE assembly. The TWO blue eight-spoked cart wheels ROTATE continuously COUNTERCLOCKWISE in their original wheel planes. Over five seconds every gold rim stud and blue spoke travels through FOUR full turns around its gold hub. The gold axle and both hub CENTERS remain fixed and horizontal relative to this image. Only the blue spoked wheels and their ivory-gold outer rims spin around the stationary axle. The near-right wheel and far-left wheel spin together at the same angular rate. Their circular geometry, diameter, eight solid spokes, visible rim thickness, existing inclined elliptical perspective and original blue/ivory/gold materials remain unchanged. The wheel planes stay PARALLEL and in their supplied three-quarter LEFT-facing view, with no steering, tipping or orbiting. Fixed camera, no pan, zoom, translation or viewpoint rotation. One coherent original physical wheel rotation for the whole clip. Plain pale blue-gray empty backdrop, no chassis, people, launcher, scenery, extra wheels, stand, particles, text or effects.",
+  "control_reassessment": "Isolate the mechanism so operator cranking cannot substitute for wheel rotation. First-frame only; no matching-endpoint freeze. Qualification requires chronological original spoke/stud rotation proof, stable wheel hubs and original rim geometry, then personal full-unit composite review.",
+  "visual_review": "pending original video",
+  "selection": "not_selected",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}
