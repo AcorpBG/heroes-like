@@ -1,0 +1,142 @@
+{
+  "url": "http://127.0.0.1:8189",
+  "system": {
+    "os": "win32",
+    "ram_total": 68625412096,
+    "ram_free": 8674754560,
+    "comfyui_version": "0.37.0",
+    "required_frontend_version": "1.53.6",
+    "installed_templates_version": "0.11.69",
+    "required_templates_version": "0.11.69",
+    "comfy_package_versions": [
+      {
+        "name": "comfyui-frontend-package",
+        "installed": "1.53.6",
+        "required": "1.53.6"
+      },
+      {
+        "name": "comfyui-workflow-templates",
+        "installed": "0.11.69",
+        "required": "0.11.69"
+      },
+      {
+        "name": "comfyui-embedded-docs",
+        "installed": "0.5.12",
+        "required": "0.5.12"
+      },
+      {
+        "name": "comfy-kitchen",
+        "installed": "0.2.35",
+        "required": "0.2.35"
+      },
+      {
+        "name": "comfy-aimdo",
+        "installed": "0.5.5",
+        "required": "0.5.5"
+      }
+    ],
+    "python_version": "3.12.14 | packaged by conda-forge | (main, Sep  2 2026, 23:18:20) [MSC v.1944 64 bit (AMD64)]",
+    "pytorch_version": "2.14.0+cu130",
+    "embedded_python": false,
+    "deploy_environment": "local-git",
+    "argv": [
+      "main.py",
+      "--listen",
+      "127.0.0.1",
+      "--port",
+      "8189",
+      "--reserve-vram",
+      "4",
+      "--disable-api-nodes",
+      "--disable-dynamic-vram"
+    ]
+  },
+  "devices": [
+    {
+      "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+      "type": "cuda",
+      "index": 0,
+      "vram_total": 34190458880,
+      "vram_free": 22558382300,
+      "torch_vram_total": 9797894144,
+      "torch_vram_free": 141924572
+    }
+  ],
+  "model_files": [
+    {
+      "kind": "diffusion_models",
+      "path": "H:\\ai\\minimax-h3\\ComfyUI\\models\\diffusion_models\\minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "bytes": 20970379616
+    },
+    {
+      "kind": "text_encoders",
+      "path": "H:\\ai\\minimax-h3\\ComfyUI\\models\\text_encoders\\qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "bytes": 15687142551
+    },
+    {
+      "kind": "vae",
+      "path": "H:\\ai\\minimax-h3\\ComfyUI\\models\\vae\\minimax_h3_video_vae_int8_convrot.safetensors",
+      "bytes": 2811065184
+    }
+  ],
+  "nodes": {
+    "MiniMaxH3ImageToVideo": {
+      "required_inputs": [
+        "clip",
+        "vae",
+        "prompt",
+        "width",
+        "height",
+        "length"
+      ],
+      "outputs": [
+        "CONDITIONING",
+        "LATENT"
+      ]
+    },
+    "MiniMaxH3AddGuide": {
+      "required_inputs": [
+        "positive",
+        "latent",
+        "frame_idx"
+      ],
+      "outputs": [
+        "CONDITIONING"
+      ]
+    },
+    "VAEDecodeTiled": {
+      "required_inputs": [
+        "samples",
+        "vae",
+        "tile_size",
+        "overlap",
+        "temporal_size",
+        "temporal_overlap"
+      ],
+      "outputs": [
+        "IMAGE"
+      ]
+    },
+    "LTXVSeparateAVLatent": {
+      "required_inputs": [
+        "av_latent"
+      ],
+      "outputs": [
+        "LATENT",
+        "LATENT"
+      ]
+    },
+    "SaveLatent": {
+      "required_inputs": [
+        "samples",
+        "filename_prefix"
+      ],
+      "outputs": [
+        "LATENT"
+      ]
+    }
+  },
+  "matting_manifest": "03f0257fbccbfec2fd9ffa4bb3d27398665ea9db710ce65920387148ab179922",
+  "unit_id": "unit_neutral_cindervane_censerwings",
+  "immutable_source_policy": "Original124-frame RGB/latent/video retained; bounded two-action shared leases. Full temporal and native acceptance required before publication."
+}

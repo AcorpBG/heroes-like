@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "f456b152c51e1201ea8a6097cc4d2b3deb0e1428b2df67bac1bf71ef37bebb9f",
+  "latent_sha256": "766daacb4ee7bee1336d81a5625bc1a8501d80df168d614f40322dd1aa4f65ac",
+  "decode_workflow_sha256": "e87a5562aa79d65439f15eeae1adfa156a34ecddf31f101aea662e26d9861817",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "cindervane_censerwing_h3\\ranged_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19382575936,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

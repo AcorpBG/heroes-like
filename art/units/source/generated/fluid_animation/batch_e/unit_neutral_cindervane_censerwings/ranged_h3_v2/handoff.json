@@ -1,0 +1,794 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_cindervane_censerwings",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "ranged_h3_000",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "ranged_h3_002",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.08333333333333333
+        },
+        {
+          "name": "ranged_h3_004",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "ranged_h3_006",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "ranged_h3_008",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "ranged_h3_010",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "ranged_h3_012",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "ranged_h3_014",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "ranged_h3_016",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "ranged_h3_020",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "ranged_h3_028",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "ranged_h3_036",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "ranged_h3_038",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "ranged_h3_040",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "ranged_h3_042",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "ranged_h3_044",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "ranged_h3_046",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "ranged_h3_048",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "ranged_h3_050",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "ranged_h3_052",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "ranged_h3_054",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "ranged_h3_056",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "ranged_h3_058",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "ranged_h3_060",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "ranged_h3_062",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "ranged_h3_064",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "ranged_h3_066",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "ranged_h3_068",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "ranged_h3_070",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "ranged_h3_072",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "ranged_h3_074",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "ranged_h3_076",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        }
+      ],
+      "clips": {
+        "ranged": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 11
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/config.json",
+          "sha256": "e57f6e9b6fc83533cd8218a194a416dad9a214fdd97969a3a98b6a5b20d8f6d0"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/selection.json",
+          "sha256": "62bd95709eaae419c24f965b845c4295206088342adb1b820064bb17f2c857de"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/original_lossless.mkv",
+          "sha256": "f8ffa9878a1b53ef2bc2e850d0ef617f28c8851122a4048c68da3c9a08d8631b"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/original.json",
+          "sha256": "66d5c655d4ee491ee735d9e1f7fa3021c526e5413175a213da994e3fad67247b"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/workflow_api.json",
+          "sha256": "e87a5562aa79d65439f15eeae1adfa156a34ecddf31f101aea662e26d9861817"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/prompt.txt",
+          "sha256": "c3154641759ccf9bff1b117fa2c9bf1ac35cafbf131fd536e3e9d4f365601218"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/reference.json",
+          "sha256": "b68286045ca90a932b7d537a88143868ffac5b13ccf46bfdd2b15e9d5e1d1431"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/matte.json",
+          "sha256": "477773708178385e00d9730828495e21ead83db412e6d43dc9e97a3b17019e6b"
+        },
+        "edge_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/edge_matte.json",
+          "sha256": "b96b17f6fcf3323f98daa8eadc48ad31b7b58f049b9d13a93bca6e7c601da26c"
+        },
+        "segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/segmentation_recipe.json",
+          "sha256": "1ae81cfbfbc0140ff2f906b939f9b16b6ee5873870e259b6d90530ff3e910294"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/staged_generation.json",
+          "sha256": "78a8e09448826a501b238e338c5203233a7bbf39e7f89133ef9024f015557434"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/sampling_workflow_api.json",
+          "sha256": "f456b152c51e1201ea8a6097cc4d2b3deb0e1428b2df67bac1bf71ef37bebb9f"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/sampling_submission.json",
+          "sha256": "7459b83ce12f63d55fc91a5383e4a7d294931d2bd64df159f46e3653e12a9b19"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/sampling_history.json",
+          "sha256": "17befea992308131b6141f254c0c4d8bc4e27d03a708d01cc5ca047c543376fc"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/ranged_h3_v2/original.latent",
+          "sha256": "766daacb4ee7bee1336d81a5625bc1a8501d80df168d614f40322dd1aa4f65ac"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 original RGB and all124 enlarged RGBA frames personally reviewed. Continuous original shoulder fan, upward release posture at36, quiet connected recoil and complete talon/wing recovery retain fixed original painted insets and censer. No added connected fire or detached source projectile. Shorten near-static aim and endpoint holds using chronological source indices only. Both-facing CPU and native Godot review still pending."
+      }
+    }
+  ]
+}

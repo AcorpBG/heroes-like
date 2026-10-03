@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "d04cdd652f19db449939524d6498ce6f779fb47d51d3aa8dd7701bccbe3f36cf",
+  "latent_sha256": "e3e13e9d730d1db5c514ac3affe01fd3c389eecd06cdf30f38c2052697a19030",
+  "decode_workflow_sha256": "b7f07d2db7b0042546f3b9693621f21c76a5c4e38d019a33fe0ee466489aac19",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "cindervane_censerwing_h3\\cast_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

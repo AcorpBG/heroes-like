@@ -1,0 +1,353 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_cindervane_censerwings",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_035",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/edge_matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/edge_matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_037",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/edge_matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/edge_matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_039",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/edge_matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/edge_matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_041",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/edge_matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/edge_matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_043",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/edge_matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/edge_matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_045",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/edge_matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/edge_matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            480,
+            640
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "frame_msec": 42,
+          "loop": true,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/config.json",
+          "sha256": "082c7622abdf20a16f6cd53c46bf99e4065635cb862e00b5a272037754c34fdd"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/selection.json",
+          "sha256": "dd92cdb7ece1683f4c4724f485788baf626e007a2d1f86ac835d0d012ebab1d5"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/original_lossless.mkv",
+          "sha256": "39fdddaa5a99d18ce9da7c2e0b4792dfb9eb8c07411440c31336fa7307111951"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/original.json",
+          "sha256": "646fe91c8f11be648524d439241396d4db38e13a0eb12acf9795d58298f9540c"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/workflow_api.json",
+          "sha256": "5a2cbb51071314100493cd257f2e2b8d8aeca44509564bef0e8b89c9cac32bee"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/prompt.txt",
+          "sha256": "d942af941d05e7a89126a5c3fe31bfc0ce461fc85abf2755aabe9aadc28ff6da"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/reference.json",
+          "sha256": "fcdf03e910ab008c9706bdf39559d5b73e43d3dc44fb1ac44a7b565ca908ca3e"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/matte.json",
+          "sha256": "b2ea0e12964533cd2198a8940b217f41af862c9b86a2eacc14e9cca4609c91e7"
+        },
+        "edge_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/edge_matte.json",
+          "sha256": "aedc32aa4df9d1e17a70fe859de6c182357aa3b4029d90bf39fbb646025638d6"
+        },
+        "segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/segmentation_recipe.json",
+          "sha256": "1ae81cfbfbc0140ff2f906b939f9b16b6ee5873870e259b6d90530ff3e910294"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/staged_generation.json",
+          "sha256": "822c3a12ebfd2f097bd37afa25cc98382e50718bc05e454bfcbc2a9a9a867fe9"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/sampling_workflow_api.json",
+          "sha256": "5ac5ec3bfd404e3dc8dabdb2624617522c6c51e10f3c9ade74e105345a99ab2e"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/sampling_submission.json",
+          "sha256": "20b70154bc2187066cfe81e19186be917b09cd517988941e3cd048ef43f0b9e7"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/sampling_history.json",
+          "sha256": "0dc3affea7f06ce21ed755876d4f25bd8b02f39aa224af448015f095ce20f81f"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/move_h3_v1/original.latent",
+          "sha256": "8ea25328380f9c1d21c9ef4f88453f0d3f0c756621040e7ccd80fc6919793aaf"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 original RGB and enlarged RGBA personally reviewed. Retain observed forward-flight wingbeat35through46: raised feathers sweep down, then curl upward to a matching cycle. Two taloned legs stay attached and tucked, chest censer and attached ember tail remain intact. Preserve original scale/anchor and source RGB, with no synthetic/reversed motion. Exact game-scale/reflected and Godot review pending."
+      }
+    }
+  ]
+}

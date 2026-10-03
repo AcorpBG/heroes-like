@@ -1,0 +1,166 @@
+{
+  "unit_id": "unit_neutral_cindervane_censerwings",
+  "clip": "move",
+  "canvas": [
+    960,
+    704
+  ],
+  "anchor": [
+    480,
+    640
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    255
+  ],
+  "seed": 2026109301,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          386,
+          512
+        ]
+      ],
+      "anchor": [
+        224,
+        465
+      ],
+      "scale": 0.54596,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "flight_up",
+      "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/alpha/poses.png",
+      "rects": [
+        [
+          610,
+          0,
+          985,
+          175
+        ],
+        [
+          610,
+          175,
+          900,
+          320
+        ]
+      ],
+      "anchor": [
+        836,
+        345
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        64,
+        16
+      ]
+    },
+    {
+      "name": "flight_pass",
+      "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          365,
+          375,
+          515
+        ],
+        [
+          0,
+          515,
+          330,
+          600
+        ]
+      ],
+      "anchor": [
+        210,
+        625
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        64,
+        16
+      ]
+    },
+    {
+      "name": "flight_down",
+      "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/alpha/poses.png",
+      "rects": [
+        [
+          985,
+          85,
+          1254,
+          175
+        ],
+        [
+          905,
+          175,
+          1254,
+          186
+        ],
+        [
+          900,
+          186,
+          1254,
+          345
+        ]
+      ],
+      "anchor": [
+        1149,
+        345
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8,
+      "crop_recipe": {
+        "kind": "reviewed_foreign_original_sheet_fragment",
+        "excluded_rectangle": [
+          899,
+          174,
+          905,
+          186
+        ],
+        "source_pixels": 26,
+        "complete_connected_original_bird_preserved": true
+      },
+      "guide_offset": [
+        64,
+        16
+      ]
+    }
+  ],
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      52,
+      2
+    ],
+    [
+      80,
+      3
+    ],
+    [
+      104,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "The original CINDERVANE CENSERWING bird in the supplied painted references, facing SCREEN RIGHT. Preserve the same narrow curved red beak, white sinuous throat, dark charcoal and red feathers with ivory stripes and oval amber ember markings, swept curling red crest, original brass cylindrical chest censer with glowing oval vents, exactly TWO dark thin legs ending in red hooked talons, and the same attached curled ember-feather tail. The original FOUR feathered wings are two larger upper wings and two smaller lower wings; folded far wings may be naturally occluded, never duplicate a visible wing. Preserve the supplied original feather contours and body proportions, same orthographic three-quarter side camera and surface detail. One complete wingbeat cycle in place: the original large and small feather wings hinge upward, sweep through level passing flight, lower, then recover to the initial ready fold. The original two talons tuck naturally during the flight phase and uncurl during return. Attached feather tail and crest respond to the physical stroke. Keep the original censer attached to the breast. Fixed camera and body reference, uniform flat cyan background RGB0,255,255. Keep the entire original bird, beak, talons, wing tips, crest and attached tail inside the canvas. Tail ember markings and chest vents are painted body details and remain attached. The shot contains only this bird against the plain plate. Living feet and flight clearance follow the supplied original guides; logical ground reference y640.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

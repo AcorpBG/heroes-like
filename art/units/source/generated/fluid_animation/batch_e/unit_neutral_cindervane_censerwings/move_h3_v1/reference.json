@@ -1,0 +1,158 @@
+{
+  "unit_id": "unit_neutral_cindervane_censerwings",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            386,
+            512
+          ]
+        ],
+        "anchor": [
+          224,
+          465
+        ],
+        "scale": 1.09192,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2ad2555b8fc390ed158f777c61f79ec55a52af23c1c752a46f2860e2c5d4fb29",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3fccde9433433cb3b4dd97a1167dd606e4820dfe39c65090dad10bc1e3114ce1",
+      "runtime_source_scale": 0.54596
+    },
+    {
+      "source_frame": {
+        "name": "flight_up",
+        "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/alpha/poses.png",
+        "rects": [
+          [
+            610,
+            0,
+            985,
+            175
+          ],
+          [
+            610,
+            175,
+            900,
+            320
+          ]
+        ],
+        "anchor": [
+          836,
+          345
+        ],
+        "scale": 1.4,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          64,
+          16
+        ]
+      },
+      "source_sha256": "ca02b1b0d48923a48a22436a5b56a3521a9be6cceb283e2ea479efee4b06851b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "305879f90a67eaa47e831ebacb5a26a3cdf962532661238a4b0bdea8d14b2e94",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "flight_pass",
+        "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            365,
+            375,
+            515
+          ],
+          [
+            0,
+            515,
+            330,
+            600
+          ]
+        ],
+        "anchor": [
+          210,
+          625
+        ],
+        "scale": 1.4,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          64,
+          16
+        ]
+      },
+      "source_sha256": "ca02b1b0d48923a48a22436a5b56a3521a9be6cceb283e2ea479efee4b06851b",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "2620c741b98a0c0b2542b238908bddf1ee0f2ab78e0520a7f3e6dd59712cffa4",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "flight_down",
+        "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/alpha/poses.png",
+        "rects": [
+          [
+            985,
+            85,
+            1254,
+            175
+          ],
+          [
+            905,
+            175,
+            1254,
+            186
+          ],
+          [
+            900,
+            186,
+            1254,
+            345
+          ]
+        ],
+        "anchor": [
+          1149,
+          345
+        ],
+        "scale": 1.4,
+        "alpha_noise_cutoff": 8,
+        "crop_recipe": {
+          "kind": "reviewed_foreign_original_sheet_fragment",
+          "excluded_rectangle": [
+            899,
+            174,
+            905,
+            186
+          ],
+          "source_pixels": 26,
+          "complete_connected_original_bird_preserved": true
+        },
+        "guide_offset": [
+          64,
+          16
+        ]
+      },
+      "source_sha256": "ca02b1b0d48923a48a22436a5b56a3521a9be6cceb283e2ea479efee4b06851b",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "76041f54c2cceacab2c013d4979a1beeadfe27c79f5ce79b4763063e23f14c6b",
+      "runtime_source_scale": 0.7
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    480,
+    640
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

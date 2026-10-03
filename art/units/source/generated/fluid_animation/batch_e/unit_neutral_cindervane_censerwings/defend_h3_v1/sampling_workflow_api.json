@@ -1,0 +1,163 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "The original CINDERVANE CENSERWING bird in the supplied painted references, facing SCREEN RIGHT. Preserve the same narrow curved red beak, white sinuous throat, dark charcoal and red feathers with ivory stripes and oval amber ember markings, swept curling red crest, original brass cylindrical chest censer with glowing oval vents, exactly TWO dark thin legs ending in red hooked talons, and the same attached curled ember-feather tail. The original FOUR feathered wings are two larger upper wings and two smaller lower wings; folded far wings may be naturally occluded, never duplicate a visible wing. Preserve the supplied original feather contours and body proportions, same orthographic three-quarter side camera and surface detail. One continuous feather-wing protective brace: the original wings progressively hinge and fold in front of the chest censer, head dips and both talons tense below the body. Finish holding the compact supplied original guard with folded wings. Keep the wings folded through the end. Fixed camera and body reference, uniform flat cyan background RGB0,255,255. Keep the entire original bird, beak, talons, wing tips, crest and attached tail inside the canvas. Tail ember markings and chest vents are painted body details and remain attached. The shot contains only this bird against the plain plate. Living feet and flight clearance follow the supplied original guides; logical ground reference y640.",
+      "width": 960,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "31",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026109305
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "cindervane_censerwing_defend_h3_v1_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "cindervane_censerwing_defend_h3_v1_guide_1.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 56,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "40",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "cindervane_censerwing_h3/defend_h3_v1/sampled"
+    }
+  }
+}

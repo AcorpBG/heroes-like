@@ -1,0 +1,146 @@
+{
+  "unit_id": "unit_neutral_cindervane_censerwings",
+  "clip": "death",
+  "canvas": [
+    960,
+    704
+  ],
+  "anchor": [
+    480,
+    640
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    255
+  ],
+  "seed": 2026109307,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          386,
+          512
+        ]
+      ],
+      "anchor": [
+        224,
+        465
+      ],
+      "scale": 0.54596,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_drop",
+      "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/alpha/poses.png",
+      "rects": [
+        [
+          305,
+          930,
+          620,
+          1042
+        ],
+        [
+          308,
+          1042,
+          620,
+          1050
+        ],
+        [
+          305,
+          1050,
+          620,
+          1230
+        ]
+      ],
+      "anchor": [
+        523,
+        1230
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8,
+      "crop_recipe": {
+        "kind": "reviewed_foreign_original_sheet_fragment",
+        "excluded_rectangle": [
+          304,
+          1042,
+          308,
+          1050
+        ],
+        "source_pixels": 8,
+        "complete_connected_original_bird_preserved": true
+      },
+      "guide_offset": [
+        64,
+        0
+      ]
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/alpha/poses.png",
+      "rects": [
+        [
+          620,
+          990,
+          915,
+          1230
+        ]
+      ],
+      "anchor": [
+        836,
+        1230
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        64,
+        0
+      ]
+    },
+    {
+      "name": "original_grounded_side_resting_censerwing",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/grounded_corpse_guide/corpse_original.png",
+      "rects": [
+        [
+          0,
+          0,
+          1465,
+          1073
+        ]
+      ],
+      "anchor": [
+        826,
+        875
+      ],
+      "scale": 0.2,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      28,
+      1
+    ],
+    [
+      56,
+      2
+    ],
+    [
+      88,
+      3
+    ]
+  ],
+  "last": 3,
+  "prompt": "The original CINDERVANE CENSERWING bird in the supplied painted references, facing SCREEN RIGHT. Preserve the same narrow curved red beak, white sinuous throat, dark charcoal and red feathers with ivory stripes and oval amber ember markings, swept curling red crest, original brass cylindrical chest censer with glowing oval vents, exactly TWO dark thin legs ending in red hooked talons, and the same attached curled ember-feather tail. The original FOUR feathered wings are two larger upper wings and two smaller lower wings; folded far wings may be naturally occluded, never duplicate a visible wing. Preserve the supplied original feather contours and body proportions, same orthographic three-quarter side camera and surface detail. One continuous exhausted collapse: wings sag, both original legs lose support, the breast and original brass censer lower, neck folds sideways and the body settles into the supplied original grounded side-resting bird. Fold all original wings beside the body and settle the attached tail and both talons. Hold the supplied corpse through the final second. Fixed camera and body reference, uniform flat cyan background RGB0,255,255. Keep the entire original bird, beak, talons, wing tips, crest and attached tail inside the canvas. Tail ember markings and chest vents are painted body details and remain attached. The shot contains only this bird against the plain plate. Living feet and flight clearance follow the supplied original guides; logical ground reference y640. Final body, breast, folded lower feathers and attached censer settle onto the same ground contact plane as the relaxed talons, head and beak, matching the supplied grounded side-resting endpoint. No suspended breast or dangling airborne corpse.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

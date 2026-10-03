@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_cindervane_censerwings",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            386,
+            512
+          ]
+        ],
+        "anchor": [
+          224,
+          465
+        ],
+        "scale": 1.09192,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2ad2555b8fc390ed158f777c61f79ec55a52af23c1c752a46f2860e2c5d4fb29",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3fccde9433433cb3b4dd97a1167dd606e4820dfe39c65090dad10bc1e3114ce1",
+      "runtime_source_scale": 0.54596
+    },
+    {
+      "source_frame": {
+        "name": "original_corrected_small_hit_recoil",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/hit_guide_v2/recoil_original.png",
+        "rects": [
+          [
+            0,
+            0,
+            1465,
+            1073
+          ]
+        ],
+        "anchor": [
+          737,
+          894
+        ],
+        "scale": 0.55,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ce7d2c9a6162475e596bcee047dad399da6054306a577ba627831ec622ebb52b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "69ff23e8d19e40884535a1e3923bdb3a6a06d978ffc281dba8c26e9f606a8329",
+      "runtime_source_scale": 0.275
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    480,
+    640
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

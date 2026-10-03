@@ -1,0 +1,38 @@
+{
+  "source_frame": {
+    "name": "original_grounded_side_resting_censerwing",
+    "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/grounded_corpse_guide/corpse_original.png",
+    "rects": [
+      [
+        0,
+        0,
+        1465,
+        1073
+      ]
+    ],
+    "anchor": [
+      826,
+      875
+    ],
+    "scale": 0.2,
+    "alpha_noise_cutoff": 8
+  },
+  "uniform_video_scale": 0.4,
+  "measured_opaque_bounds": [
+    176,
+    533,
+    1312,
+    875
+  ],
+  "registered_video_ground_y": 640,
+  "measured_original_video_horizontal_extent": [
+    220,
+    681
+  ],
+  "registered_new_video_horizontal_extent": [
+    220,
+    675
+  ],
+  "rule": "One fixed whole-reference anatomical scale .4 preserves original collar/body width. Original alpha and all body pixels retained. Source anatomical rest contact y875 maps to logical video ground640. No per-video-frame normalization, morphology or synthetic motion.",
+  "visual_review": "Personally inspected full original corpse: attached original breast censer, close layered wings, two relaxed attached legs/talons and original neck/beak/tail. Body is side-resting rather than suspended; final Godot proof pending."
+}

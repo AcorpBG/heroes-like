@@ -5600,29 +5600,29 @@
       "frame_msec": 200,
       "static_frame": 0,
       "ground_anchor": [
-        130.0,
+        130,
         211
       ],
       "painted_extent": 213,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_cindervane_censerwings.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_cindervane_censerwings.png",
       "source_indices": [
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        126,
-        37,
-        355,
-        259
+        46,
+        101,
+        275,
+        323
       ],
-      "source_sha256": "da21bd8d1dff5961b9e903c55fa1a77bda60858220d259f20b250788625baeb0",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_cindervane_censerwings/provenance.json",
+      "source_sha256": "0a0487c36147fdef37f9bb2f5fdd1085b7adc248aebb5dd5cdc4c020f99027ce",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_cindervane_censerwings/provenance.json",
       "sha256": "7a1fc9efa6f05cb9e024f563909dc5d522d8456975807affe37b404ab706267c"
     },
     "unit_neutral_fenmirror_gallowshells": {

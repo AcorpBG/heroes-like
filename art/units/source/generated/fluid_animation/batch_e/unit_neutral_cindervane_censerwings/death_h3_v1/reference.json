@@ -1,0 +1,142 @@
+{
+  "unit_id": "unit_neutral_cindervane_censerwings",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            386,
+            512
+          ]
+        ],
+        "anchor": [
+          224,
+          465
+        ],
+        "scale": 1.09192,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2ad2555b8fc390ed158f777c61f79ec55a52af23c1c752a46f2860e2c5d4fb29",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3fccde9433433cb3b4dd97a1167dd606e4820dfe39c65090dad10bc1e3114ce1",
+      "runtime_source_scale": 0.54596
+    },
+    {
+      "source_frame": {
+        "name": "death_drop",
+        "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/alpha/poses.png",
+        "rects": [
+          [
+            305,
+            930,
+            620,
+            1042
+          ],
+          [
+            308,
+            1042,
+            620,
+            1050
+          ],
+          [
+            305,
+            1050,
+            620,
+            1230
+          ]
+        ],
+        "anchor": [
+          523,
+          1230
+        ],
+        "scale": 1.4,
+        "alpha_noise_cutoff": 8,
+        "crop_recipe": {
+          "kind": "reviewed_foreign_original_sheet_fragment",
+          "excluded_rectangle": [
+            304,
+            1042,
+            308,
+            1050
+          ],
+          "source_pixels": 8,
+          "complete_connected_original_bird_preserved": true
+        },
+        "guide_offset": [
+          64,
+          0
+        ]
+      },
+      "source_sha256": "ca02b1b0d48923a48a22436a5b56a3521a9be6cceb283e2ea479efee4b06851b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "4ab7a208bd143d72121fb17814d891e5b54c1324bad92415dc92e18e7402fd2e",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "death_fall",
+        "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/alpha/poses.png",
+        "rects": [
+          [
+            620,
+            990,
+            915,
+            1230
+          ]
+        ],
+        "anchor": [
+          836,
+          1230
+        ],
+        "scale": 1.4,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          64,
+          0
+        ]
+      },
+      "source_sha256": "ca02b1b0d48923a48a22436a5b56a3521a9be6cceb283e2ea479efee4b06851b",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "49ffd0b3a174952274d7163bb2a2fe44e9d526477e851569d891024d35a0fd8f",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "original_grounded_side_resting_censerwing",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/grounded_corpse_guide/corpse_original.png",
+        "rects": [
+          [
+            0,
+            0,
+            1465,
+            1073
+          ]
+        ],
+        "anchor": [
+          826,
+          875
+        ],
+        "scale": 0.4,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1d08aa475fd3cf86bda3c2e705e0bf8926016d17856a292c82600f5f497660a4",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "1549f2c00c53833dabf6e22d80ef4d8bc162a0719476719cba203d4f1ded087c",
+      "runtime_source_scale": 0.2
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    480,
+    640
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

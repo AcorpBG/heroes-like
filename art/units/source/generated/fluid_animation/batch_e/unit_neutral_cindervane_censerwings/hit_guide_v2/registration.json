@@ -1,0 +1,31 @@
+{
+  "source_frame": {
+    "name": "original_corrected_small_hit_recoil",
+    "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/hit_guide_v2/recoil_original.png",
+    "rects": [
+      [
+        0,
+        0,
+        1465,
+        1073
+      ]
+    ],
+    "anchor": [
+      737,
+      894
+    ],
+    "scale": 0.275,
+    "alpha_noise_cutoff": 8
+  },
+  "measured_source_censer_center": [
+    950,
+    512
+  ],
+  "ready_video_censer_center": [
+    597,
+    430
+  ],
+  "uniform_video_scale": 0.55,
+  "rule": "One fixed whole-reference uniform downsample based on original brass censer and anatomical size. Source anchor737,894 rigidly aligns censer center597,430. Original RGBA master is unmodified. Original low-alpha generation dust<=8 excluded only in reference sampling. No per-video-frame stabilization, scaling, morphology or invented articulation.",
+  "native_Godot_review": "pending"
+}

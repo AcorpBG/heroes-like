@@ -1,0 +1,25 @@
+{
+  "tool": "builtin_imagegen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/grounded_corpse_guide/corpse_original.png",
+    "sha256": "1d08aa475fd3cf86bda3c2e705e0bf8926016d17856a292c82600f5f497660a4"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/grounded_corpse_guide/prompt.txt",
+    "sha256": "a905c0219ab4d0b159b415e7e5f73830af7c1514777c1d77a8925ec089771a8e"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/grounded_corpse_guide/previous_guide_3_chroma.png",
+      "sha256": "2b80bb98df26a895efd23d849908a26d16608331f4631e6b9bf034ab88ffa47e"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/grounded_corpse_guide/generation.json",
+      "sha256": "6da4af8a2f9491a1e44e05ba2ebb19ee52bd1a5510824ddb7ede6e202304424e"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/grounded_corpse_guide/registration.json",
+      "sha256": "f6ae3f741b04392598797b5714321add7c6530f96f58421832c043256a11772a"
+    }
+  ]
+}

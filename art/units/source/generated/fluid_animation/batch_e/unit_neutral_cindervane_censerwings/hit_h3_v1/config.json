@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_neutral_cindervane_censerwings",
+  "clip": "hit",
+  "canvas": [
+    960,
+    704
+  ],
+  "anchor": [
+    480,
+    640
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    255
+  ],
+  "seed": 2026109304,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          386,
+          512
+        ]
+      ],
+      "anchor": [
+        224,
+        465
+      ],
+      "scale": 0.54596,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "recoil",
+      "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          915,
+          305,
+          1230
+        ]
+      ],
+      "anchor": [
+        210,
+        1230
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        64,
+        16
+      ]
+    }
+  ],
+  "guides": [
+    [
+      42,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "The original CINDERVANE CENSERWING bird in the supplied painted references, facing SCREEN RIGHT. Preserve the same narrow curved red beak, white sinuous throat, dark charcoal and red feathers with ivory stripes and oval amber ember markings, swept curling red crest, original brass cylindrical chest censer with glowing oval vents, exactly TWO dark thin legs ending in red hooked talons, and the same attached curled ember-feather tail. The original FOUR feathered wings are two larger upper wings and two smaller lower wings; folded far wings may be naturally occluded, never duplicate a visible wing. Preserve the supplied original feather contours and body proportions, same orthographic three-quarter side camera and surface detail. One continuous physical recoil and recovery: neck curves backward through successive positions, shoulders flinch and original feather wings spread into the supplied recoil. Two original talons flex, then both legs, wings and head smoothly recover to exact original ready. Body remains intact and upright. Fixed camera and body reference, uniform flat cyan background RGB0,255,255. Keep the entire original bird, beak, talons, wing tips, crest and attached tail inside the canvas. Tail ember markings and chest vents are painted body details and remain attached. The shot contains only this bird against the plain plate. Living feet and flight clearance follow the supplied original guides; logical ground reference y640.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

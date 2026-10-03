@@ -1,0 +1,105 @@
+{
+  "original_guides": [
+    {
+      "take": "move_h3_v1",
+      "guide": 0,
+      "original_rgba_sha256": "068b97e6a7399fb37d8e36893f07f63c2697bba19a43fbca211810461cab5174",
+      "original_rgb_sha256": "3fccde9433433cb3b4dd97a1167dd606e4820dfe39c65090dad10bc1e3114ce1",
+      "opaque_retained_at128": 1.0,
+      "ember_retained_at128": 1.0,
+      "dark_feather_retained_at128": 1.0,
+      "background": {
+        "background_rgb": [
+          0.0,
+          255.0,
+          255.0
+        ],
+        "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+        "corner_median_spread": 0.0,
+        "excluded_background_corner_indices": [],
+        "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+      }
+    },
+    {
+      "take": "move_h3_v1",
+      "guide": 1,
+      "original_rgba_sha256": "73c5682119ffb36b658e62222c81fdc3674aebdf7cb5f75ea9590a0f92260205",
+      "original_rgb_sha256": "305879f90a67eaa47e831ebacb5a26a3cdf962532661238a4b0bdea8d14b2e94",
+      "opaque_retained_at128": 1.0,
+      "ember_retained_at128": 1.0,
+      "dark_feather_retained_at128": 1.0,
+      "background": {
+        "background_rgb": [
+          0.0,
+          255.0,
+          255.0
+        ],
+        "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+        "corner_median_spread": 0.0,
+        "excluded_background_corner_indices": [],
+        "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+      }
+    },
+    {
+      "take": "move_h3_v1",
+      "guide": 3,
+      "original_rgba_sha256": "0755161c33afe2d2a0988f4e39130ddf80fa6ec1610f71c41674fe9fccbe4fca",
+      "original_rgb_sha256": "76041f54c2cceacab2c013d4979a1beeadfe27c79f5ce79b4763063e23f14c6b",
+      "opaque_retained_at128": 1.0,
+      "ember_retained_at128": 1.0,
+      "dark_feather_retained_at128": 1.0,
+      "background": {
+        "background_rgb": [
+          0.0,
+          255.0,
+          255.0
+        ],
+        "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+        "corner_median_spread": 0.0,
+        "excluded_background_corner_indices": [],
+        "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+      }
+    },
+    {
+      "take": "attack_h3_v1",
+      "guide": 2,
+      "original_rgba_sha256": "ca0e0a17cb54ac6650cec8542e16b50f563a23f535328baaaf466108d5cf146b",
+      "original_rgb_sha256": "7f7fa6e711c946089a93cdb0fdd094860d0ccd58040975b0cd0fac54dc2a25d4",
+      "opaque_retained_at128": 1.0,
+      "ember_retained_at128": 1.0,
+      "dark_feather_retained_at128": 1.0,
+      "background": {
+        "background_rgb": [
+          0.0,
+          255.0,
+          255.0
+        ],
+        "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+        "corner_median_spread": 0.0,
+        "excluded_background_corner_indices": [],
+        "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+      }
+    },
+    {
+      "take": "death_h3_v1",
+      "guide": 3,
+      "original_rgba_sha256": "8ae7e801e31e6425bf22301f72e0097a67ddbeaa6018d550705087c908d29425",
+      "original_rgb_sha256": "2b80bb98df26a895efd23d849908a26d16608331f4631e6b9bf034ab88ffa47e",
+      "opaque_retained_at128": 1.0,
+      "ember_retained_at128": 1.0,
+      "dark_feather_retained_at128": 1.0,
+      "background": {
+        "background_rgb": [
+          0.0,
+          255.0,
+          255.0
+        ],
+        "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+        "corner_median_spread": 0.0,
+        "excluded_background_corner_indices": [],
+        "excluded_corner_semantic_alpha_max_below": 0.03137254901960784
+      }
+    }
+  ],
+  "rule": "Known original opaque feathers, ember marks and dark anatomy must survive pinned extraction. Generated video acceptance still requires all chronological RGB/alpha and native review."
+}

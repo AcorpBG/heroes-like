@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_neutral_cindervane_censerwings",
+  "canvas": [
+    960,
+    704
+  ],
+  "output_scale": 0.5,
+  "ground_anchor": [
+    480,
+    640
+  ],
+  "ready_reference": {
+    "name": "idle_hands_0",
+    "source": "art/animation/source/poses/unit_neutral_cindervane_censerwings/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        386,
+        512
+      ]
+    ],
+    "anchor": [
+      224,
+      465
+    ],
+    "scale": 0.54596,
+    "alpha_noise_cutoff": 8
+  },
+  "legacy_living_guide_offset": [
+    64,
+    16
+  ],
+  "legacy_grounded_guide_offset": [
+    64,
+    0
+  ],
+  "measurement": {
+    "original_idle_censer_reference": [
+      288,
+      136
+    ],
+    "accepted_idle_censer_reference": [
+      320,
+      144
+    ]
+  },
+  "rule": "A single rigid source-sheet translation aligns original brass breast censer with accepted idle16. Preserve all authored per-painting scales and original corpse ground clearance; no per-video-frame alignment, normalization, stabilization or generated motion."
+}

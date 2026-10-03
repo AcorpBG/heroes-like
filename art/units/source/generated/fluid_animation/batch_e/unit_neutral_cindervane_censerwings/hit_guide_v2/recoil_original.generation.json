@@ -1,0 +1,25 @@
+{
+  "tool": "builtin_imagegen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/hit_guide_v2/recoil_original.png",
+    "sha256": "ce7d2c9a6162475e596bcee047dad399da6054306a577ba627831ec622ebb52b"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/hit_guide_v2/prompt.txt",
+    "sha256": "e789907b8398a81e67f9a62e397e814b595aad1bbe55afe250bda757aae544ba"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/hit_h3_v1/guide_0_chroma.png",
+      "sha256": "3fccde9433433cb3b4dd97a1167dd606e4820dfe39c65090dad10bc1e3114ce1"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/hit_guide_v2/generation.json",
+      "sha256": "99f75ce42be8c69d86bae546e8ee6aede3db4bbbfd61b1725f5958f02a760bc0"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cindervane_censerwings/hit_guide_v2/registration.json",
+      "sha256": "b41e238df84c1f27a7ee427b73440c9241e2b81b0ddd5cd74e81b1b0200ae5c8"
+    }
+  ]
+}
