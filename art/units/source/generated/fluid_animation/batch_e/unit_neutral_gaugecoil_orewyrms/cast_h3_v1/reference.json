@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_gaugecoil_orewyrms",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          192,
+          454
+        ],
+        "scale": 1.24092,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "43415bf6f37657c6b1303c004454a12583dfbc392d94078b2a9fd17b903cac5d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "005ad008489a7e9b8bc6fdb7b4503e7ddf22c6ca99f37f19f7ae2602379fd2b3",
+      "runtime_source_scale": 0.62046
+    },
+    {
+      "source_frame": {
+        "name": "support_signal",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/support_original_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1666,
+            944
+          ]
+        ],
+        "anchor": [
+          890,
+          760
+        ],
+        "scale": 0.52,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6d418abe7259bd76739c287d54e9c609edcb0edebfa91edf8010384f7c34c22c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0ef4e733b8f5c8601250de5406daf3cf387229a898c69fde467eb4a4f510126a",
+      "runtime_source_scale": 0.26
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    500
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

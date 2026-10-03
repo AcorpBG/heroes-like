@@ -1,0 +1,72 @@
+{
+  "unit_id": "unit_neutral_gaugecoil_orewyrms",
+  "clip": "attack",
+  "source_facing": "right",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    500
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110420,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        192,
+        454
+      ],
+      "scale": 0.62046,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "closed_jaw_physical_contact",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/attack_key_original_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        790,
+        832
+      ],
+      "scale": 0.22,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      62,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original Gaugecoil Orewyrm physical CLOSED-JAW body thrust, fixed orthographic three-quarter view SCREEN RIGHT on uniform magenta plate. Exactly FOUR original short connected jointed rock legs with cleft wedge feet/brass ankle plates, cylindrical segmented charcoal mineral torso with weathered brass bands/orange seams, THREE differently sized original amber pressure pods with white dial gauges and attached copper/red tubes, one raised LEFT tail ending ONE red valve wheel. All same anatomical sizes, all permanent parts attached. Original overlapping brass tooth petals stay FULLY CLOSED into the same opaque compact pointed rosette for EVERY frame, as both references. No opening into a flower or barrel; dark closed jaw center, constant dim amber pressure bulbs. Begin grounded ready, flex rear knees and draw connected shoulders/head back slightly, then extend rear knees and push the actual shoulders/neck/closed pointed jaw forward and slightly down SCREEN RIGHT for one compact physical drill-jaw thrust. Foreknees absorb load, all wedge feet plant/support clearly. Pull connected head back and restore identical starting ready. Clearly articulated physical lunge and recovery, not rigid translation. Whole creature within960x544 generous margins, unchanged fixed root and ground anchor, static camera/scale. Flat magenta255,0,255 only. No mouth light, opening jaw, flash, sparks, beam, shot, projectile, particles, fire, smoke, magical effects, light streak, shadow, floor, scenery, text or extra anatomy. Nothing emerges from closed mouth.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

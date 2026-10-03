@@ -1,0 +1,101 @@
+{
+  "unit_id": "unit_neutral_gaugecoil_orewyrms",
+  "status": "complete_selected_unit",
+  "date": "2026-10-03",
+  "clips": {
+    "idle": 8,
+    "move": 28,
+    "attack": 39,
+    "hit": 24,
+    "defend": 17,
+    "cast": 39,
+    "death": 56
+  },
+  "held_corpse": "Dead uses the personally accepted final original death pose with all four original legs folded beneath the grounded cold mineral body and attached gauges/tail.",
+  "sources": {
+    "takes": 9,
+    "rgb_frames_per_take": 124,
+    "retained_original_rgb_frames": 1116,
+    "selected_take_rgb_frames": 744,
+    "selected_action_pose_pngs": 203,
+    "preserved_idle_poses": 8,
+    "rejected_takes": {
+      "attack_h3_v1": "Full124 original RGB/RGBA chronology and exact128px source poses in both facings personally inspected. Baked mouth flash/sparks46\u201357 turn physical melee into a shot. Reject complete take, retain originals/latent/guides/provenance; no cut-around, erasure or effect-removal.",
+      "attack_h3_v2": "All124 original RGB and original-alpha native poses in BOTH facings personally inspected, enlarged34/60/76. Baked mouth flash46\u201361 repeats despite literal physical-thrust wording. Actual conditioning gap: original open drill-rosette windup/contact guide reads as a muzzle. Reject whole take, preserve originals and provenance, no handoff/cutting/erasure. Replace both open-rosette guides with original closed-jaw physical contact key before any new submission.",
+      "defend_h3_v1": "Full124 original RGB/alpha chronology, enlarged0/26/48/72/96/123, every exact128px RIGHT/reflected pose personally inspected. Early tail swings then nearly idle stance; feet rise roughly26 original pixels above the fixed support plane while knees/forebody fail a clear deep grounded brace. Reject complete take; preserve source/latent/guides/recipe and no handoff. Replace legacy weak/floating guard guide with a new original grounded compressed four-leg key."
+    },
+    "all_original_ffv1_and_decoded_rgb_hashes_verified": true,
+    "selected_original_rgba_poses_byte_unique": true,
+    "failed_originals_and_provenance_retained": true,
+    "guide_repair": "Built-in imagegen created a closed-jaw physical-contact key replacing open-rosette conditioning after two rejected firing takes, an original low broad four-leg grounded brace replacing the rejected floating guard, a distinct connected raised-front-rock-leg support key, and a grounded cold endpoint retaining the red tail valve and three pressure pods/gauges. The first endpoint with a concealed third pod is rejected/preserved. Complete original images and exact prompt/reference hashes retained."
+  },
+  "visual_review": {
+    "accepted": true,
+    "remaining_defects": [],
+    "all_original_rgb_rgba_chronology": true,
+    "enlarged_original_alpha": true,
+    "all_native_reflected_poses": true,
+    "actual_melee_captures": true,
+    "live_map_phases": true,
+    "original_takes_reviewed": 9,
+    "original_rgb_frames_reviewed": 1116,
+    "original_frames_per_take": 124,
+    "selected_action_poses": 203,
+    "preserved_idle_poses": 8,
+    "godot_native_poses_reviewed": 211,
+    "godot_reflected_poses_reviewed": 211,
+    "godot_live_native_poses_reviewed": 211,
+    "actual_melee_capture_count": 24,
+    "actual_melee_capture_facing": "ordinary battle shell facing",
+    "live_map_phase_count": 8,
+    "notes": "Personally inspected every original RGB/RGBA chronology for all nine takes, enlarged original-alpha trouble phases, and every full source pose at native size in both facings. Accepted six distinct physical actions and preserved eight original idle poses. Two mouth-flash attack takes and the floating-foot defense take are rejected intact. All 211 normal, 211 reflected and 211 published live Godot overview poses were reviewed at original resolution. All 16 candidate and eight published live melee captures preserve the connected mineral anatomy, pressure hardware, tail valve and ground placement through contact and recovery; the blue/orange battle effects belong to the existing runtime. All eight published live map phases retain the original idle pixels, timing and anchor. No remaining visual defect was found.",
+    "continuous_video_player_review": false,
+    "manual_interactive_gameplay_review": false,
+    "full_suite_run": false,
+    "linux_run": false
+  },
+  "validation": {
+    "platform": "Windows Godot4.6.2 compatibility renderer on RTX5090",
+    "checks": {
+      "candidate": 282,
+      "mirrored": 282,
+      "live": 296
+    },
+    "total_focused_assertions": 860,
+    "failures": [],
+    "all_source_pixel_and_ground_anchor_matches": 203,
+    "other_battle_and_map_rows_preserved": 231,
+    "idle_battle_and_map_pixels_timing_exact": true,
+    "idle_frame_msec": 260,
+    "atlas_size": [
+      3840,
+      4032
+    ],
+    "atlas_rgba_bytes": 61931520,
+    "atlas_import_rgba_exact": "Godot lossless texture equals original PNG after documented fix_alpha_edges transparent-border processing.",
+    "original_curated_identity_sha256": "80896b86d6f369940c0a1f17280bd79c6e1d51bfe5053636021c4f3189083907",
+    "policies_checked": [
+      "Normal/Fast timing",
+      "reduced motion",
+      "static/dead presentation",
+      "authored contact/recovery",
+      "interruption/input lock",
+      "unchanged serialized simulation/session save"
+    ],
+    "full_suite_run": false,
+    "linux_run": false,
+    "recovered_git_index_lock_backup_preserved": ".git/index-lock-recovery-20261002-93ec4839806c4886abb594d1167e878d.bin"
+  },
+  "cleanup": {
+    "external_comfy_duplicates": {
+      "files": 1158,
+      "bytes_removed": 655057996,
+      "rebuildable": true
+    },
+    "temporary_reviews_profiles_and_unselected_mattes": {
+      "files": 2294,
+      "bytes_removed": 820669694,
+      "rebuildable": true
+    }
+  }
+}

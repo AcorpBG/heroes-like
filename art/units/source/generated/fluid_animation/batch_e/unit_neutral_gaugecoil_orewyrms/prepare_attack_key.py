@@ -1,0 +1,29 @@
+"""Preserve the original closed-jaw contact key and replace open-rosette conditioning."""
+import json
+import numpy as np
+from PIL import Image
+import produce as p
+O=p.SOURCE_DIR;R=p.ROOT
+master=O/'attack_key_original_v1.png';im=Image.open(master).convert('RGBA')
+assert im.getchannel('A').getextrema()==(0,255)
+def record(path):return dict(path=path.relative_to(R).as_posix(),sha256=p.sha(path))
+ref=dict(name='closed_jaw_physical_contact',source=master.relative_to(R).as_posix(),rects=[[0,0,*im.size]],anchor=[790,832],scale=.22,alpha_noise_cutoff=8)
+p.write(O/'attack_reference.json',ref)
+p.write(master.with_suffix('.generation.json'),dict(tool='built_in_imagegen',model='not exposed',date='2026-10-03',image=record(master),prompt=record(O/'attack_key_prompt_v1.txt'),references=[record(O/'move_h3_v1/guide_0_rgba.png')],review_status='Original full RGBA personally accepted: closed original jaw, four connected rock legs, original three pressure hardware positions and valve tail; prepared guide review pending.',reference_scale_reason='One whole original painting at0.22 runtime scale and original ground anchor. No warping, manual limb edits or per-frame normalization.'))
+c=json.loads((O/'attack_h3_v2/config.json').read_bytes());c['seed']=2026110420;c['references']=[c['references'][0],ref];c['guides']=[[62,1]];c['last']=0
+c['prompt']=('Original Gaugecoil Orewyrm physical CLOSED-JAW body thrust, fixed orthographic three-quarter view SCREEN RIGHT on uniform magenta plate. Exactly FOUR original short connected jointed rock legs with cleft wedge feet/brass ankle plates, cylindrical segmented charcoal mineral torso with weathered brass bands/orange seams, THREE differently sized original amber pressure pods with white dial gauges and attached copper/red tubes, one raised LEFT tail ending ONE red valve wheel. All same anatomical sizes, all permanent parts attached. '+
+'Original overlapping brass tooth petals stay FULLY CLOSED into the same opaque compact pointed rosette for EVERY frame, as both references. No opening into a flower or barrel; dark closed jaw center, constant dim amber pressure bulbs. Begin grounded ready, flex rear knees and draw connected shoulders/head back slightly, then extend rear knees and push the actual shoulders/neck/closed pointed jaw forward and slightly down SCREEN RIGHT for one compact physical drill-jaw thrust. Foreknees absorb load, all wedge feet plant/support clearly. Pull connected head back and restore identical starting ready. Clearly articulated physical lunge and recovery, not rigid translation. '+
+'Whole creature within960x544 generous margins, unchanged fixed root and ground anchor, static camera/scale. Flat magenta255,0,255 only. No mouth light, opening jaw, flash, sparks, beam, shot, projectile, particles, fire, smoke, magical effects, light streak, shadow, floor, scenery, text or extra anatomy. Nothing emerges from closed mouth.').strip()
+out=O/'attack_h3_v3';out.mkdir(exist_ok=True);assert not (out/'sampling_submission.json').exists();p.write(out/'config.json',c);p.prepare(out,c)
+measurement=json.loads((O/'foreground_measurement.json').read_bytes());yellow=[]
+for f in out.glob('guide_*_rgba.png'):
+ a=np.asarray(Image.open(f).convert('RGBA')).astype(np.int16);red,green,blue=a[:,:,:3][a[:,:,3]>=240].T
+ bands=dict(magenta=np.minimum(red,blue)-green,green=green-np.maximum(red,blue),blue=blue-np.maximum(red,green),cyan=np.minimum(green,blue)-red)
+ measurement['guides'].append(dict(path=f.relative_to(R).as_posix(),sha256=p.sha(f),opaque_pixels=len(red),maximum={k:int(v.max()) for k,v in bands.items()}));yellow.extend((np.minimum(red,green)-blue)[red-green<12].tolist())
+measurement['protected_bands']={k:max(r['maximum'][k] for r in measurement['guides'])+2 for k in bands};measurement['protected_neutral_yellow_band']=max(measurement['protected_neutral_yellow_band'],max(yellow)+2);p.write(O/'foreground_measurement.json',measurement)
+delivery=json.loads((O/'delivery.json').read_bytes());delivery['takes'][1]='attack_h3_v3';delivery['failed_takes']=['attack_h3_v1','attack_h3_v2'];p.write(O/'delivery.json',delivery)
+p.write(O/'attack_h3_v2/review.json',dict(status='rejected_original',review='All124 original RGB and original-alpha native poses in BOTH facings personally inspected, enlarged34/60/76. Baked mouth flash46–61 repeats despite literal physical-thrust wording. Actual conditioning gap: original open drill-rosette windup/contact guide reads as a muzzle. Reject whole take, preserve originals and provenance, no handoff/cutting/erasure. Replace both open-rosette guides with original closed-jaw physical contact key before any new submission.',reviewed_original_frames=124,reviewed_native_poses_per_facing=124))
+p.write(O/'hit_h3_v1/review.json',dict(status='provisionally_accepted_source',review='All124 original RGB/alpha chronology, enlarged0/24/46/62/88/123, every exact128px RIGHT/reflected pose personally reviewed. Closed-jaw connected head/neck recoil, four supporting rock legs flex, pressure hardware/valve tail sway while attached. No effect, clipping or invented anatomy; original16–62 complete recoil and recovery selected provisionally. Native/live acceptance remains required.',reviewed_original_frames=124,reviewed_native_poses_per_facing=124))
+p.write(O/'hit_h3_v1/selection.json',dict(source_frames=list(range(16,63,2)),frame_msec=83,matte_directory='matte_v3',review_note='Complete coherent original recoil16–62, source24fps sampled at12fps. Full original RGB/alpha/enlarged/both-facing exact128px source review passed provisionally. Physical recoil and recovery; no duplicated, synthesized or normalized poses.'))
+p.build(O/'hit_h3_v1',json.loads((O/'hit_h3_v1/config.json').read_bytes()))
+print('HIT24_PROVISIONAL_ATTACK_V2_REJECTED_NEW_CLOSED_JAW_KEY_PREPARED',im.size,im.getbbox(),flush=True)

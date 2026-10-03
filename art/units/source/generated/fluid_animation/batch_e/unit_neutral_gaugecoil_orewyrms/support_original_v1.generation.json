@@ -1,0 +1,21 @@
+{
+  "tool": "built_in_imagegen",
+  "model": "not exposed",
+  "date": "2026-10-03",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/support_original_v1.png",
+    "sha256": "6d418abe7259bd76739c287d54e9c609edcb0edebfa91edf8010384f7c34c22c"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/support_prompt_v1.txt",
+    "sha256": "995f7766f30426ffedbdd352c3397e2d44cd7b2c6389f74ffba3d387f0dc827e"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/move_h3_v1/guide_0_rgba.png",
+      "sha256": "810260aa864e92d6acd30929711883cc9a5b71825aec5150891b37b10fd9608b"
+    }
+  ],
+  "review_status": "accepted physical raised connected front-leg key; original full RGBA and fixed-size prepared guide personally reviewed, remaining three legs planted/occluded naturally, closed jaw and all pressure hardware preserved; original H3 motion pending",
+  "reference_scale_reason": "One entire painted key at0.26 runtime scale, fixed ground anchor; no aspect warping, manual limb edits or per-frame normalization."
+}

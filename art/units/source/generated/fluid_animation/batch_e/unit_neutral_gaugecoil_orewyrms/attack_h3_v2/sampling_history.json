@@ -1,0 +1,251 @@
+{
+  "prompt": [
+    765,
+    "5798e42c-a6e7-4b7f-ad22-b440cf9c3ad1",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Original Gaugecoil Orewyrm doing ONLY a quiet physical head-and-jaw movement on a flat magenta plate. Fixed camera SCREEN RIGHT, exactly FOUR connected short rock legs, original segmented charcoal mineral body/brass bands, THREE attached amber pressure pods and original dial gauges, LEFT tail with ONE red valve wheel. No new anatomy or hardware. Drill jaw tooth petals are ordinary SOLID opaque metal/rock: the inner throat stays DARK RED/BLACK throughout, with CONSTANT lighting. Four wedge feet brace and bend at joints. First pull forebody/head BACK and tilt closed drill jaw slightly down; then push the actual connected head/neck SCREEN RIGHT in a firm short bodily jab while opening the original tooth petals. Teeth make physical contact at the farthest head extension. Pull the SAME head back, close petals and restore ready feet. Exactly one thrust and return, not a shoot, roar or energy release. All original pressure bulbs keep their existing dim amber light. The head and body joints move clearly; no rigid translation. Entire creature inside960x544 with generous margins, fixed root/ground anchor. FLAT MAGENTA255,0,255 throughout. No mouth light, white/yellow flash, sparks, streaks, fire, particles, projectiles, beam, smoke, floor, shadows or scenery; nothing emerges from throat. Keep all original rock legs, gauges and tail attached and restore starting stance.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026110410
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "gaugecoil_orewyrm_attack_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "gaugecoil_orewyrm_attack_h3_v2_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "gaugecoil_orewyrm_attack_h3_v2_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 34,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 76,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "gaugecoil_orewyrm_h3/attack_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "gaugecoil_orewyrm_h3",
+      "create_time": 1791008698203
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "gaugecoil_orewyrm_h3\\attack_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "5798e42c-a6e7-4b7f-ad22-b440cf9c3ad1",
+          "timestamp": 1791008698204
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "5798e42c-a6e7-4b7f-ad22-b440cf9c3ad1",
+          "timestamp": 1791008698231
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "5798e42c-a6e7-4b7f-ad22-b440cf9c3ad1",
+          "timestamp": 1791008865810
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

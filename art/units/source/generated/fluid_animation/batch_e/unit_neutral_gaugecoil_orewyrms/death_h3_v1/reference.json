@@ -1,0 +1,112 @@
+{
+  "unit_id": "unit_neutral_gaugecoil_orewyrms",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          192,
+          454
+        ],
+        "scale": 1.24092,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "43415bf6f37657c6b1303c004454a12583dfbc392d94078b2a9fd17b903cac5d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "005ad008489a7e9b8bc6fdb7b4503e7ddf22c6ca99f37f19f7ae2602379fd2b3",
+      "runtime_source_scale": 0.62046
+    },
+    {
+      "source_frame": {
+        "name": "collapse",
+        "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+        "rects": [
+          [
+            378,
+            711,
+            724,
+            1040
+          ]
+        ],
+        "anchor": [
+          551,
+          1025
+        ],
+        "scale": 1.24,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a952211bf65c8695c4e42d50ad8f7596387349bcf4956391833a4f2ad9f497a1",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "97f45d62ac45e3b257a240e5003bfdec52b8b44e3501c94479792cbdb58b13f2",
+      "runtime_source_scale": 0.62
+    },
+    {
+      "source_frame": {
+        "name": "roll",
+        "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+        "rects": [
+          [
+            724,
+            775,
+            1084,
+            1030
+          ]
+        ],
+        "anchor": [
+          905,
+          1025
+        ],
+        "scale": 1.24,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a952211bf65c8695c4e42d50ad8f7596387349bcf4956391833a4f2ad9f497a1",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e9a4c14e0697a6f2cb13131a9524d8eb72bc670eadfdd47ce070409956abb7af",
+      "runtime_source_scale": 0.62
+    },
+    {
+      "source_frame": {
+        "name": "dead_repaired",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/death_key_original_v2.png",
+        "rects": [
+          [
+            0,
+            0,
+            1665,
+            944
+          ]
+        ],
+        "anchor": [
+          904,
+          793
+        ],
+        "scale": 0.54,
+        "alpha_noise_cutoff": 8,
+        "registration_reason": "One entire new original endpoint at0.27 runtime scale; match unchanged drill-jaw/body anatomical size and place lowest grounded folded-leg/jaw pixels at ground. No aspect warping or per-frame normalization."
+      },
+      "source_sha256": "33eb7c11716ab81819ee982e48d26f5803763564cafcc84ed451b6aa7ddeecf5",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "c6f2ccd98f448ef1c4ff06361f60f4880278ffa8afab6b0730463e92a1b12817",
+      "runtime_source_scale": 0.27
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    500
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

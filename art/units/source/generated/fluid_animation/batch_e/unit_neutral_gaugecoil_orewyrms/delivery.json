@@ -1,0 +1,22 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v3",
+    "hit_h3_v1",
+    "defend_h3_v2",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "failed_takes": [
+    "attack_h3_v1",
+    "attack_h3_v2",
+    "defend_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_unit",
+    "notes": "Personally accepted all nine124-frame original RGB/RGBA chronologies, enlarged original-alpha trouble phases and full exact128px both-facing source sequences; three failed whole takes retained/excluded. Every211 packed native pose personally reviewed in normal/reflected actual Godot overview captures and16 actual melee captures in ordinary shell facing. Six dedicated actions retain four original rock legs, three pressure hardware positions and attached red-valve tail. Closed-jaw original contact key repairs baked mouth flashes; grounded four-leg original brace key repairs floating guard. Clear physical support and cold held final123 corpse. Preserved original idle8 at260ms. Live imported pixels/map review remains separate final validation."
+  }
+}

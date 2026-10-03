@@ -1,0 +1,72 @@
+{
+  "unit_id": "unit_neutral_gaugecoil_orewyrms",
+  "clip": "cast",
+  "source_facing": "right",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    500
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026110405,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        192,
+        454
+      ],
+      "scale": 0.62046,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "support_signal",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/support_original_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        890,
+        760
+      ],
+      "scale": 0.26,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      54,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original Gaugecoil Orewyrm, fixed slightly elevated three-quarter orthographic camera facing SCREEN RIGHT. Exactly FOUR short articulated rock legs, two near and two far with natural body occlusion, cleft wedge feet and brass ankle plates; no human arms/hands, extra legs or wings. Retain original charcoal segmented mineral cylindrical body, weathered brass bands, orange rock seams. Exactly THREE original amber-glass pressure bulbs and THREE original white round gauge faces/red needles on brass brackets, connected copper/red tubes, same sizes and order. Original circular drill-flower jaw faces RIGHT with overlapping brass mineral tooth petals and dark red throat. One raised tapered tail LEFT ending ONE original red valve wheel. Keep every permanent mechanism attached, original head/body/leg proportions and painted details. One purposeful physical SUPPORT signal. Keep THREE feet planted and closed drill jaw level. Lift the SAME viewer-near FRONT wedge foot, bend its original connected leg at knee/ankle, raise it beside chest as a deliberate rally cue. Tail straightens slightly while its original red valve wheel turns at its own stem. Lower the SAME foot through connected joints to original floor position and restore original ready stance. Pressure bulbs remain attached; no idle-only bobbing, human hand, attack or spell. Complete feet, jaw, pressure bulbs and tail wheel remain inside canvas with generous margins. Flat magenta RGB255,0,255 backdrop only; no floor, shadow, scenery, horizon, text, cuts, camera movement or zoom. No sparks, smoke, magic, flashes, beams or projectiles. Physical joint articulation rather than whole-body rocking, rigid translation or prop duplication.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,479 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_gaugecoil_orewyrms",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_002",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.08333333333333333
+        },
+        {
+          "name": "defend_h3_004",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "defend_h3_006",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "defend_h3_008",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "defend_h3_010",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        }
+      ],
+      "clips": {
+        "defend": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "frame_msec": 83,
+          "loop": false,
+          "static_frame": 16
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/config.json",
+          "sha256": "8f985cb0338d967f5020bdb34a5bdd85079f16ce0300496d35f10764e0d9bff8"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/selection.json",
+          "sha256": "3c95e224c3f6237c3d819085c8f4d56e2d5ca41309771debfc566273d1337697"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/original_lossless.mkv",
+          "sha256": "8b82e42136f9eacf0f5c6f60d17eadcca2c31b6efe23a54e15c5568560093b1b"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/original.json",
+          "sha256": "b3103411918ee1bb405104acea5b12d40dfcdf2dececba680a381fe09d36d536"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/workflow_api.json",
+          "sha256": "a634bb1bbbd16e411f82319c955e8b78bd0ff650f80563716d8d6333739d0317"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/prompt.txt",
+          "sha256": "f662ce832d17c7e3b8bd2c58dbf9af373e18ff837279ed91a212050099d58ee0"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/reference.json",
+          "sha256": "b662424f12a6945b4bd9ff1244cd8bd332eda07cf5e99a21b1a3b30dc1486824"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte.json",
+          "sha256": "636ce7260c0c7155bdc6214fbea2b31035fc646f461c6e9cd8be035ca9f77b20"
+        },
+        "matte_v3.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/matte_v3.json",
+          "sha256": "457226ad9c77010236d18e624489b8da8fd7f2a139d5aa00d8d84194484f34d9"
+        },
+        "segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/segmentation_recipe.json",
+          "sha256": "8d717f437d2fd6ed245f41a269aaf9beb8d904a2bb55fac696f23ebf6a57bc0e"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/staged_generation.json",
+          "sha256": "37f76520bcb89e2a339953f79b6f175ac127707f9bb4fc64d78b5dc1d9d5dbda"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/sampling_workflow_api.json",
+          "sha256": "93290386e9f476b7eda8bc71363773eac95c019f4f74949feecccaa3957357f4"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/sampling_submission.json",
+          "sha256": "e1c58b7a6ffe14a29a6b5375385459b184e07304831627023c48172c673db9c7"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/sampling_history.json",
+          "sha256": "9820e0c884c5b54b75e56db7d3ff13e56db28887b90aa68c0f2f154ba53990a0"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_h3_v2/original.latent",
+          "sha256": "2674bb73e2da60be41015a2a8e5ebde2146dc9b12cae337534d3bb3aeca083f7"
+        },
+        "guide_image_defend_key_original_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_key_original_v1.png",
+          "sha256": "b5e9490f281d0d28e6e5551b00003e444cf2c958fa614110f93fd64e0e15f617"
+        },
+        "guide_prompt_defend_key_prompt_v1.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_key_prompt_v1.txt",
+          "sha256": "ab990703e88e62deac2e5bb8529a6e9b4800e44b29375dd037e4f5f8fdb06d97"
+        },
+        "guide_generation_defend_key_original_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_key_original_v1.generation.json",
+          "sha256": "6cfe0f897ed96a7c05d4bc97cac3600342c0d5b1da00b0908130d1864c7274f8"
+        },
+        "guide_reference_guide_0_rgba.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/move_h3_v1/guide_0_rgba.png",
+          "sha256": "810260aa864e92d6acd30929711883cc9a5b71825aec5150891b37b10fd9608b"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 original RGB/RGBA chronological frames, enlarged0/24/44/54/68/96/123 and all124 exact128px RIGHT/reflected poses personally inspected. Four attached rock legs bend/spread while body and closed jaw lower between planted feet onto the original support plane. Original three pressure hardware positions and attached valve tail remain intact. Deliberate low broad brace is reached by24 and held through123; no floating, extra anatomy, effects or clipping. Background cycles colors but independently reviewed semantic alpha cleanly preserves original silhouette. Complete ready-to-brace0\u201332 selected, final32 held. Actual Godot acceptance remains required. Original24fps sampled at12fps; no cut-around, duplicate padding, synthesis, normalization or warping."
+      }
+    }
+  ]
+}

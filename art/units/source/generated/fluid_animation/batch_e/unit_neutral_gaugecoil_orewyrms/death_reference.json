@@ -1,0 +1,19 @@
+{
+  "name": "dead_repaired",
+  "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/death_key_original_v2.png",
+  "rects": [
+    [
+      0,
+      0,
+      1665,
+      944
+    ]
+  ],
+  "anchor": [
+    904,
+    793
+  ],
+  "scale": 0.27,
+  "alpha_noise_cutoff": 8,
+  "registration_reason": "One entire new original endpoint at0.27 runtime scale; match unchanged drill-jaw/body anatomical size and place lowest grounded folded-leg/jaw pixels at ground. No aspect warping or per-frame normalization."
+}

@@ -1,0 +1,65 @@
+"""Palette-protected background despill on untouched RGB and semantic alpha.
+
+Protect this unit measured original-guide colors. No mask erosion, painted
+anatomy, stabilization, per-frame scale changes or motion synthesis.
+"""
+import argparse,hashlib,json
+from pathlib import Path
+import av,numpy as np
+from PIL import Image,ImageDraw
+from scipy.ndimage import distance_transform_edt
+import produce as p
+def read(f):return json.loads(f.read_bytes())
+def run(take):
+ measurement=json.loads((p.SOURCE_DIR/'foreground_measurement.json').read_bytes());bands=measurement['protected_bands'];yellow_band=measurement['protected_neutral_yellow_band']
+ out=p.SOURCE_DIR/take;original=read(out/'original.json');trial=read(out/'matte.json')
+ target=out/'matte_v3';target.mkdir(exist_ok=True);hashes=[];details=[]
+ with av.open(str(out/'original_lossless.mkv')) as video:
+  for i,f in enumerate(video.decode(video=0)):
+   rgb=np.asarray(f.to_image().convert('RGB')).astype(np.float32)
+   assert hashlib.sha256(rgb.astype('uint8').tobytes()).hexdigest()==original['decoded_rgb_sha256'][i]
+   old=out/'matte'/f'rgba_{i:03}.png';assert p.sha(old)==trial['rgba_sha256'][i]
+   alpha=np.asarray(Image.open(old).convert('RGBA'))[:,:,3]
+   bg=np.array(trial['background_frames'][i]['background_rgb'])
+   axes={'magenta':min(bg[0],bg[2])-bg[1],'yellow':min(bg[0],bg[1])-bg[2],'green':bg[1]-max(bg[0],bg[2]),'blue':bg[2]-max(bg[0],bg[1])}
+   axis=max(axes,key=axes.get) if max(axes.values())>=80 else 'mixed_or_neutral'
+   edge=(distance_transform_edt(alpha>=250)<=2)&(alpha>=8)
+   color=rgb.copy()
+   # These saturated hues are absent from every original identity/guide.
+   # Neutralize only excess beyond this unit measured original protected bands.
+   spill=np.maximum(np.minimum(color[:,:,0],color[:,:,2])-color[:,:,1]-bands['magenta'],0)
+   color[:,:,0]-=spill;color[:,:,2]-=spill
+   # Preserve the entire measured original-guide cyan range.
+   # Remove only higher background excess.
+   spill=np.maximum(np.minimum(color[:,:,1],color[:,:,2])-color[:,:,0]-bands['cyan'],0)
+   color[:,:,1]-=spill;color[:,:,2]-=spill
+   color[:,:,1]-=np.maximum(color[:,:,1]-np.maximum(color[:,:,0],color[:,:,2])-bands['green'],0)
+   color[:,:,2]-=np.maximum(color[:,:,2]-np.maximum(color[:,:,0],color[:,:,1])-bands['blue'],0)
+   if axis=='yellow':
+    strength=np.clip((12-(color[:,:,0]-color[:,:,1]))/12,0,1)
+    spill=np.maximum(np.minimum(color[:,:,0],color[:,:,1])-color[:,:,2]-yellow_band,0)*edge*strength
+    color[:,:,0]-=spill;color[:,:,1]-=spill
+   rgba=np.dstack([color,alpha]).astype('uint8');rgba[alpha<8]=0
+   path=target/f'rgba_{i:03}.png';Image.fromarray(rgba).save(path);hashes.append(p.sha(path))
+   assert np.array_equal(rgba[:,:,3],alpha)
+   opaque=(alpha==255)&~edge
+   protected=opaque&(np.minimum(rgb[:,:,0],rgb[:,:,2])-rgb[:,:,1]<=bands['magenta'])&(np.minimum(rgb[:,:,1],rgb[:,:,2])-rgb[:,:,0]<=bands['cyan'])&(rgb[:,:,1]-np.maximum(rgb[:,:,0],rgb[:,:,2])<=bands['green'])&(rgb[:,:,2]-np.maximum(rgb[:,:,0],rgb[:,:,1])<=bands['blue'])
+   assert np.array_equal(rgba[protected,:3],rgb.astype('uint8')[protected])
+   details.append(dict(background_rgb=bg.tolist(),plate_axis=axis,edge_pixels=int(edge.sum())))
+ recipe=dict(frames=124,fps=24,rgba_sha256=hashes,background_frames=details,semantic_trial_sha256=p.sha(out/'matte.json'),source_sha256=original['sha256'],tool_sha256=p.sha(Path(__file__)),recipe='Unchanged pinned semantic alpha and original RGB with excess background color neutralized only beyond this unit original-guide palette maxima plus2. Cyan, blue, green and magenta bands are measured independently. Yellow correction is limited to two-source-pixel edges, protects warm brass red-minus-green>=12 and preserves the measured neutral warm-ivory yellow band. No alpha geometry, coordinate or articulation changes.',protected_bands=bands,protected_neutral_yellow_band=yellow_band)
+ p.write(out/'matte_v3.json',recipe)
+ # Review all unchanged source-alpha frames after palette-protected despill.
+ directory=p.ROOT/'.artifacts/parallel_animation_20261002'/p.SOURCE_DIR.name/take;directory.mkdir(parents=True,exist_ok=True)
+ bounds=[Image.open(target/f'rgba_{i:03}.png').getbbox() for i in range(124)]
+ crop=(min(b[0] for b in bounds)-8,min(b[1] for b in bounds)-8,max(b[2] for b in bounds)+8,max(b[3] for b in bounds)+8)
+ for part in range(2):
+  sheet=Image.new('RGB',(1600,1760),(30,40,30));d=ImageDraw.Draw(sheet)
+  for j,i in enumerate(range(part*62,(part+1)*62)):
+   x,y=j%8*200,j//8*220
+   if j%2:sheet.paste((218,211,193),(x,y,x+200,y+220))
+   im=Image.open(target/f'rgba_{i:03}.png').crop(crop);im.thumbnail((196,195));sheet.paste(im,(x+(200-im.width)//2,y+22),im);d.text((x+5,y+4),str(i),fill=(160,110,65))
+  sheet.save(directory/f'chronological_v3_{part}.png')
+ print('REFINED_UNCHANGED_ALPHA',take,124,flush=True)
+if __name__=='__main__':
+ parser=argparse.ArgumentParser();parser.add_argument('takes',nargs='+');args=parser.parse_args()
+ for take in args.takes:run(take)

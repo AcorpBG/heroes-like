@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_neutral_gaugecoil_orewyrms",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          192,
+          454
+        ],
+        "scale": 1.24092,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "43415bf6f37657c6b1303c004454a12583dfbc392d94078b2a9fd17b903cac5d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "005ad008489a7e9b8bc6fdb7b4503e7ddf22c6ca99f37f19f7ae2602379fd2b3",
+      "runtime_source_scale": 0.62046
+    },
+    {
+      "source_frame": {
+        "name": "walk_contact_a",
+        "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+        "rects": [
+          [
+            735,
+            0,
+            1086,
+            375
+          ]
+        ],
+        "anchor": [
+          905,
+          361
+        ],
+        "scale": 1.24,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a952211bf65c8695c4e42d50ad8f7596387349bcf4956391833a4f2ad9f497a1",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "3c45a80ec0cf63ba96f4bda4b1630f7398adb34240882792423230ab9a0ce4a8",
+      "runtime_source_scale": 0.62
+    },
+    {
+      "source_frame": {
+        "name": "walk_pass",
+        "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            375,
+            378,
+            711
+          ]
+        ],
+        "anchor": [
+          189,
+          699
+        ],
+        "scale": 1.24,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a952211bf65c8695c4e42d50ad8f7596387349bcf4956391833a4f2ad9f497a1",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "fdae90089a8ee5c78114a279911528ce1680220b7480367525cd67535307bd11",
+      "runtime_source_scale": 0.62
+    },
+    {
+      "source_frame": {
+        "name": "walk_contact_b",
+        "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+        "rects": [
+          [
+            1086,
+            0,
+            1448,
+            375
+          ]
+        ],
+        "anchor": [
+          1267,
+          361
+        ],
+        "scale": 1.24,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a952211bf65c8695c4e42d50ad8f7596387349bcf4956391833a4f2ad9f497a1",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "95e12e6425c425b36a4a1de2cc0ee4f71060f850b08efea9e2f88c0f8b57a4d9",
+      "runtime_source_scale": 0.62
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    500
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

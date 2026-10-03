@@ -1,0 +1,10 @@
+"""Record complete source review without promoting failed guard footage."""
+import json
+import produce as p
+O=p.SOURCE_DIR
+p.write(O/'attack_h3_v3/review.json',dict(status='provisionally_accepted_source',review='All124 original RGB/alpha chronology, enlarged0/28/46/62/78/100/123, every exact128px RIGHT/reflected pose personally reviewed. Repaired closed-jaw original guide resolves baked flash: articulated compact drill-jaw forebody lunge, planted flexing rock legs and complete return to ready, three original pressure hardware positions/attached valve tail retained. Clean alpha through magenta-to-green plate change, no flash/effect/clip. Original24–100 complete action provisionally selected; actual Godot acceptance remains required.',reviewed_original_frames=124,reviewed_native_poses_per_facing=124))
+p.write(O/'attack_h3_v3/selection.json',dict(source_frames=list(range(24,101,2)),frame_msec=83,contact_frame=19,matte_directory='matte_v3',review_note='Complete coherent original closed-jaw physical lunge24–100; contact original62, recovered original100. Source24fps sampled at12fps, full original RGB/alpha/enlarged/both-facing exact128px review passed. No cut-around, duplicated, synthesized, normalized or warped poses.'))
+p.build(O/'attack_h3_v3',json.loads((O/'attack_h3_v3/config.json').read_bytes()))
+p.write(O/'defend_h3_v1/review.json',dict(status='rejected_original',review='Full124 original RGB/alpha chronology, enlarged0/26/48/72/96/123, every exact128px RIGHT/reflected pose personally inspected. Early tail swings then nearly idle stance; feet rise roughly26 original pixels above the fixed support plane while knees/forebody fail a clear deep grounded brace. Reject complete take; preserve source/latent/guides/recipe and no handoff. Replace legacy weak/floating guard guide with a new original grounded compressed four-leg key.',reviewed_original_frames=124,reviewed_native_poses_per_facing=124))
+d=json.loads((O/'delivery.json').read_bytes());d['takes'][3]='defend_h3_v2';d['failed_takes'].append('defend_h3_v1');p.write(O/'delivery.json',d)
+print('ATTACK39_PROVISIONAL_DEFEND_V1_REJECTED',flush=True)

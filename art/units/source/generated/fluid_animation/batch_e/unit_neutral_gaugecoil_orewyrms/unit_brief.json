@@ -1,0 +1,52 @@
+{
+  "identity": "ONE original Gaugecoil Orewyrm, fixed slightly elevated three-quarter orthographic camera facing SCREEN RIGHT. Exactly FOUR short articulated rock legs, two near and two far with natural body occlusion, cleft wedge feet and brass ankle plates; no human arms/hands, extra legs or wings. Retain original charcoal segmented mineral cylindrical body, weathered brass bands, orange rock seams. Exactly THREE original amber-glass pressure bulbs and THREE original white round gauge faces/red needles on brass brackets, connected copper/red tubes, same sizes and order. Original circular drill-flower jaw faces RIGHT with overlapping brass mineral tooth petals and dark red throat. One raised tapered tail LEFT ending ONE original red valve wheel. Keep every permanent mechanism attached, original head/body/leg proportions and painted details. ",
+  "source_facing": "right",
+  "source_scale": 0.5,
+  "video_anchor": [
+    480,
+    500
+  ],
+  "accepted_idle": "All8 chronological enlarged and exact128px RIGHT/reflected poses retain four articulated rock legs, three pressure bulbs/gauges, closed drill jaw and tail valve. Preserve exact battle/map pixels and260ms.",
+  "action_guides": {
+    "move": [
+      "idle_hands_0",
+      "walk_contact_a",
+      "walk_pass",
+      "walk_contact_b"
+    ],
+    "attack": [
+      "idle_hands_0",
+      "closed_jaw_physical_contact"
+    ],
+    "hit": [
+      "idle_hands_0",
+      "recoil"
+    ],
+    "defend": [
+      "idle_hands_0",
+      "grounded_four_leg_pressure_brace"
+    ],
+    "death": [
+      "idle_hands_0",
+      "collapse",
+      "roll",
+      "dead_repaired"
+    ],
+    "cast": [
+      "idle_hands_0",
+      "support_signal"
+    ]
+  },
+  "required_actions": [
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "support_key_status": "Full original/prepared guide and all124 source RGB/RGBA/enlarged/both-facing exact128px poses personally accepted provisionally; selected39 support poses return ready, native/reflected Godot review personally passed.",
+  "death_key_status": "Two original endpoint paintings retained: v1 rejected because third pressure bulb/gauge hidden; v2 full original/prepared guide personally accepted with exactly three cold attached bulbs/gauges, four folded original rock legs, resting closed jaw, visible single red tail valve on ground. Whole-original anatomical scale0.27, guide anchor904,793 places lowest jaw/folded-foot pixels at final floor without aspect changes. Full124 H3 RGB/RGBA/enlarged and every exact128px pose in both facings personally accepted provisionally; selected56 collapse poses end original123 cold grounded corpse, native/reflected Godot review personally passed.",
+  "attack_key_status": "Repaired original closed-jaw contact guide resolved baked flashes; full attack v3 source/both-facing review passed provisionally, native/reflected Godot review personally passed.",
+  "defend_key_status": "New original four-leg grounded guide and all124 source RGB/RGBA/enlarged/both-facing exact128px poses personally qualified provisionally; selected17 complete ready-to-low-brace poses, native/reflected Godot review personally passed."
+}

@@ -1,0 +1,24 @@
+{
+  "tool": "built_in_imagegen",
+  "model": "not exposed",
+  "date": "2026-10-03",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/death_key_original_v1.png",
+    "sha256": "b765850525f00e88a12b27b2bc2945c35d669f6bbf38cf226a3c77647515d3c9"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/death_key_prompt_v1.txt",
+    "sha256": "5783655e5b811b9278d685fd2459769e0a007207311b6bde519d0f23c56b89e8"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/death_legacy_endpoint_reference.png",
+      "sha256": "502b4c790466f879ebaa3ec2b8f6e8f55a8f04ba66f8153e02e5e9888221d2ce"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/move_h3_v1/guide_0_rgba.png",
+      "sha256": "810260aa864e92d6acd30929711883cc9a5b71825aec5150891b37b10fd9608b"
+    }
+  ],
+  "review_status": "rejected original endpoint: valve restored but third pressure bulb/gauge not visibly retained"
+}

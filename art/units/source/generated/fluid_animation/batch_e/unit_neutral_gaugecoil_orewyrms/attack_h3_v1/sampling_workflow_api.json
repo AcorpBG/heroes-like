@@ -1,0 +1,191 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "ONE original Gaugecoil Orewyrm, fixed slightly elevated three-quarter orthographic camera facing SCREEN RIGHT. Exactly FOUR short articulated rock legs, two near and two far with natural body occlusion, cleft wedge feet and brass ankle plates; no human arms/hands, extra legs or wings. Retain original charcoal segmented mineral cylindrical body, weathered brass bands, orange rock seams. Exactly THREE original amber-glass pressure bulbs and THREE original white round gauge faces/red needles on brass brackets, connected copper/red tubes, same sizes and order. Original circular drill-flower jaw faces RIGHT with overlapping brass mineral tooth petals and dark red throat. One raised tapered tail LEFT ending ONE original red valve wheel. Keep every permanent mechanism attached, original head/body/leg proportions and painted details. One physical Drill-Petal Lunge MELEE attack and complete recovery. Four wedge feet brace; front body draws back, drill jaw tooth petals open into original circular rosette, forebody thrusts SCREEN RIGHT to contact while rear legs support. Retract head, close same tooth petals and return all legs to original ready stance. No projectile, tongue, rotating new saw or effect. Complete feet, jaw, pressure bulbs and tail wheel remain inside canvas with generous margins. Flat magenta RGB255,0,255 backdrop only; no floor, shadow, scenery, horizon, text, cuts, camera movement or zoom. No sparks, smoke, magic, flashes, beams or projectiles. Physical joint articulation rather than whole-body rocking, rigid translation or prop duplication.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026110401
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "gaugecoil_orewyrm_attack_h3_v1_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "gaugecoil_orewyrm_attack_h3_v1_guide_1.png"
+    }
+  },
+  "32": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "gaugecoil_orewyrm_attack_h3_v1_guide_2.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 28,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 58,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "32",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "41",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "gaugecoil_orewyrm_h3/attack_h3_v1/sampled"
+    }
+  }
+}

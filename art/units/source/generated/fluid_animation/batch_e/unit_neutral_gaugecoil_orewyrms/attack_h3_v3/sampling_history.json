@@ -1,0 +1,223 @@
+{
+  "prompt": [
+    777,
+    "bd10e068-c718-478b-8e7a-413c604f9eae",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Original Gaugecoil Orewyrm physical CLOSED-JAW body thrust, fixed orthographic three-quarter view SCREEN RIGHT on uniform magenta plate. Exactly FOUR original short connected jointed rock legs with cleft wedge feet/brass ankle plates, cylindrical segmented charcoal mineral torso with weathered brass bands/orange seams, THREE differently sized original amber pressure pods with white dial gauges and attached copper/red tubes, one raised LEFT tail ending ONE red valve wheel. All same anatomical sizes, all permanent parts attached. Original overlapping brass tooth petals stay FULLY CLOSED into the same opaque compact pointed rosette for EVERY frame, as both references. No opening into a flower or barrel; dark closed jaw center, constant dim amber pressure bulbs. Begin grounded ready, flex rear knees and draw connected shoulders/head back slightly, then extend rear knees and push the actual shoulders/neck/closed pointed jaw forward and slightly down SCREEN RIGHT for one compact physical drill-jaw thrust. Foreknees absorb load, all wedge feet plant/support clearly. Pull connected head back and restore identical starting ready. Clearly articulated physical lunge and recovery, not rigid translation. Whole creature within960x544 generous margins, unchanged fixed root and ground anchor, static camera/scale. Flat magenta255,0,255 only. No mouth light, opening jaw, flash, sparks, beam, shot, projectile, particles, fire, smoke, magical effects, light streak, shadow, floor, scenery, text or extra anatomy. Nothing emerges from closed mouth.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026110420
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "gaugecoil_orewyrm_attack_h3_v3_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "gaugecoil_orewyrm_attack_h3_v3_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 62,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "gaugecoil_orewyrm_h3/attack_h3_v3/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "gaugecoil_orewyrm_h3",
+      "create_time": 1791010315762
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "gaugecoil_orewyrm_h3\\attack_h3_v3",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "bd10e068-c718-478b-8e7a-413c604f9eae",
+          "timestamp": 1791010315763
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "bd10e068-c718-478b-8e7a-413c604f9eae",
+          "timestamp": 1791010315785
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "bd10e068-c718-478b-8e7a-413c604f9eae",
+          "timestamp": 1791010487289
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "tool": "built_in_imagegen",
+  "model": "not exposed",
+  "date": "2026-10-03",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/death_key_original_v2.png",
+    "sha256": "33eb7c11716ab81819ee982e48d26f5803763564cafcc84ed451b6aa7ddeecf5"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/death_key_prompt_v2.txt",
+    "sha256": "0141ce03f17dd278d11e3c39a3aec60ea5a6630342b05902fb34dd2c75db0597"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/death_key_original_v1.png",
+      "sha256": "b765850525f00e88a12b27b2bc2945c35d669f6bbf38cf226a3c77647515d3c9"
+    },
+    {
+      "path": "art/units/source/curated/unit_neutral_gaugecoil_orewyrms.png",
+      "sha256": "80896b86d6f369940c0a1f17280bd79c6e1d51bfe5053636021c4f3189083907"
+    }
+  ],
+  "review_status": "accepted full original and prepared960x544 guide: three cold pressure bulbs and three attached gauges, four folded legs, closed grounded jaw and visible red tail valve; anatomy/scale fits original ready, fixed floor anchor, no missing hardware"
+}

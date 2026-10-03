@@ -1,0 +1,21 @@
+{
+  "tool": "built_in_imagegen",
+  "model": "not exposed",
+  "date": "2026-10-03",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_key_original_v1.png",
+    "sha256": "b5e9490f281d0d28e6e5551b00003e444cf2c958fa614110f93fd64e0e15f617"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/defend_key_prompt_v1.txt",
+    "sha256": "ab990703e88e62deac2e5bb8529a6e9b4800e44b29375dd037e4f5f8fdb06d97"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_gaugecoil_orewyrms/move_h3_v1/guide_0_rgba.png",
+      "sha256": "810260aa864e92d6acd30929711883cc9a5b71825aec5150891b37b10fd9608b"
+    }
+  ],
+  "review_status": "Accepted full original RGBA and prepared960x544 guide personally reviewed: distinctly lowered belly/closed jaw, deeply bent spread four connected legs, lowest near toes at fixed ground500, original three hardware positions and curled valve tail. No clip/effect/new anatomy; H3 motion pending.",
+  "reference_scale_reason": "One entire original painting at0.27 runtime anatomical scale, original lowest near-foot anchor790. No aspect changes, per-frame normalization, manual limb edits or transformed footage."
+}

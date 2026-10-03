@@ -1,0 +1,362 @@
+{
+  "idle": {
+    "name": "idle",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+    "rects": [
+      [
+        0,
+        0,
+        366,
+        375
+      ]
+    ],
+    "anchor": [
+      189,
+      361
+    ],
+    "scale": 0.62,
+    "alpha_noise_cutoff": 8
+  },
+  "idle_breath": {
+    "name": "idle_breath",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+    "rects": [
+      [
+        378,
+        0,
+        724,
+        375
+      ]
+    ],
+    "anchor": [
+      551,
+      361
+    ],
+    "scale": 0.62,
+    "alpha_noise_cutoff": 8
+  },
+  "walk_contact_a": {
+    "name": "walk_contact_a",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+    "rects": [
+      [
+        735,
+        0,
+        1086,
+        375
+      ]
+    ],
+    "anchor": [
+      905,
+      361
+    ],
+    "scale": 0.62,
+    "alpha_noise_cutoff": 8
+  },
+  "walk_contact_b": {
+    "name": "walk_contact_b",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+    "rects": [
+      [
+        1086,
+        0,
+        1448,
+        375
+      ]
+    ],
+    "anchor": [
+      1267,
+      361
+    ],
+    "scale": 0.62,
+    "alpha_noise_cutoff": 8
+  },
+  "walk_pass": {
+    "name": "walk_pass",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+    "rects": [
+      [
+        0,
+        375,
+        378,
+        711
+      ]
+    ],
+    "anchor": [
+      189,
+      699
+    ],
+    "scale": 0.62,
+    "alpha_noise_cutoff": 8
+  },
+  "windup": {
+    "name": "windup",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+    "rects": [
+      [
+        378,
+        375,
+        724,
+        711
+      ]
+    ],
+    "anchor": [
+      551,
+      699
+    ],
+    "scale": 0.62,
+    "alpha_noise_cutoff": 8
+  },
+  "bite": {
+    "name": "bite",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+    "rects": [
+      [
+        724,
+        375,
+        1106,
+        711
+      ]
+    ],
+    "anchor": [
+      905,
+      699
+    ],
+    "scale": 0.62,
+    "alpha_noise_cutoff": 8
+  },
+  "guard": {
+    "name": "guard",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+    "rects": [
+      [
+        1106,
+        375,
+        1448,
+        711
+      ]
+    ],
+    "anchor": [
+      1267,
+      699
+    ],
+    "scale": 0.62,
+    "alpha_noise_cutoff": 8
+  },
+  "recoil": {
+    "name": "recoil",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+    "rects": [
+      [
+        0,
+        711,
+        360,
+        1040
+      ]
+    ],
+    "anchor": [
+      189,
+      1025
+    ],
+    "scale": 0.62,
+    "alpha_noise_cutoff": 8
+  },
+  "collapse": {
+    "name": "collapse",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+    "rects": [
+      [
+        378,
+        711,
+        724,
+        1040
+      ]
+    ],
+    "anchor": [
+      551,
+      1025
+    ],
+    "scale": 0.62,
+    "alpha_noise_cutoff": 8
+  },
+  "roll": {
+    "name": "roll",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+    "rects": [
+      [
+        724,
+        775,
+        1084,
+        1030
+      ]
+    ],
+    "anchor": [
+      905,
+      1025
+    ],
+    "scale": 0.62,
+    "alpha_noise_cutoff": 8
+  },
+  "dead": {
+    "name": "dead",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/alpha/poses.png",
+    "rects": [
+      [
+        1084,
+        800,
+        1448,
+        1020
+      ]
+    ],
+    "anchor": [
+      1267,
+      1025
+    ],
+    "scale": 0.62,
+    "alpha_noise_cutoff": 8
+  },
+  "idle_hands_0": {
+    "name": "idle_hands_0",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        384,
+        512
+      ]
+    ],
+    "anchor": [
+      192,
+      454
+    ],
+    "scale": 0.62046,
+    "alpha_noise_cutoff": 8
+  },
+  "idle_hands_1": {
+    "name": "idle_hands_1",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        384,
+        0,
+        768,
+        512
+      ]
+    ],
+    "anchor": [
+      576,
+      454
+    ],
+    "scale": 0.62046,
+    "alpha_noise_cutoff": 8
+  },
+  "idle_hands_2": {
+    "name": "idle_hands_2",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        768,
+        0,
+        1152,
+        512
+      ]
+    ],
+    "anchor": [
+      960,
+      454
+    ],
+    "scale": 0.62046,
+    "alpha_noise_cutoff": 8
+  },
+  "idle_hands_3": {
+    "name": "idle_hands_3",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        1152,
+        0,
+        1536,
+        512
+      ]
+    ],
+    "anchor": [
+      1344,
+      454
+    ],
+    "scale": 0.62046,
+    "alpha_noise_cutoff": 8
+  },
+  "idle_hands_4": {
+    "name": "idle_hands_4",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        512,
+        384,
+        1024
+      ]
+    ],
+    "anchor": [
+      192,
+      934
+    ],
+    "scale": 0.62046,
+    "alpha_noise_cutoff": 8
+  },
+  "idle_hands_5": {
+    "name": "idle_hands_5",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        384,
+        512,
+        768,
+        1024
+      ]
+    ],
+    "anchor": [
+      576,
+      934
+    ],
+    "scale": 0.62046,
+    "alpha_noise_cutoff": 8
+  },
+  "idle_hands_6": {
+    "name": "idle_hands_6",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        768,
+        512,
+        1152,
+        1024
+      ]
+    ],
+    "anchor": [
+      960,
+      934
+    ],
+    "scale": 0.62046,
+    "alpha_noise_cutoff": 8
+  },
+  "idle_hands_7": {
+    "name": "idle_hands_7",
+    "source": "art/animation/source/poses/unit_neutral_gaugecoil_orewyrms/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        1152,
+        512,
+        1536,
+        1024
+      ]
+    ],
+    "anchor": [
+      1344,
+      934
+    ],
+    "scale": 0.62046,
+    "alpha_noise_cutoff": 8
+  }
+}

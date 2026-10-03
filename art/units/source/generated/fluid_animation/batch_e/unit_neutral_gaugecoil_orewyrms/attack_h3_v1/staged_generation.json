@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "211647dad952975fbde4d967ab2742a8475dc91ee416c9a4520a92c7ab3dc004",
+  "latent_sha256": "18b62c0a84e8a35390343228eebd033de0e750132b25fe4d7dfbc1d7a1079177",
+  "decode_workflow_sha256": "a0c02d5b27ca2e0e0bb9e8a1826a528ab0133e065c875f008c339861af0c7b1b",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "gaugecoil_orewyrm_h3\\attack_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
