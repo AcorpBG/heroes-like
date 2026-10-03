@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Recover the server RMG evidence
+
+`tooling-rmg-evidence-restore-20261003` (completed, evidence recovery only): restored 23,085 files (10.543 GiB) from root@pleyc.com, including the Ghidra project, decompiler exports and reference traces; 24,245 regular files pass SHA-256 read-back and all 330 checked ledger paths exist. Two local differences are preserved with separate server copies. Bulk evidence stays ignored; Linux symlink definitions and shared inputs are retained separately. No runtime/parity status change. See `docs/rmg-evidence-storage.md`.
+
 ### Source material storage inventory
 
 `tooling-source-material-history-migration-20261003` (completed): all nine GitHub branches migrated without a full Git backup. All 3,830 main commits and retained files are preserved; Git storage is 7.099 GiB. Uncommitted work, stash, private checkpoints, runtime/editor inputs and RMG material remain. Storage guard, art-reference checks, Windows startup and Git connectivity pass. Full packaging remains subject to existing content/source-audit requirements; Linux server unchanged. See `docs/source-material-storage-map.md`.

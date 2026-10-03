@@ -1,4 +1,6 @@
 .codex
+# RMG evidence here is retained separately; clones need an explicit restore.
+# See docs/rmg-evidence-storage.md before cleaning .artifacts/ or tmp/.
 .artifacts/
 tests/__pycache__/
 .godot/

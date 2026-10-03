@@ -22302,6 +22302,17 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "tooling-rmg-evidence-restore-20261003",
+      "title": "Restore ignored RMG reverse-engineering evidence from the Linux server",
+      "status": "completed",
+      "classification": "owner_requested_evidence_recovery",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-evidence-storage.md"
+      ],
+      "notes": "Restored 23085 files / 11320919416 bytes; 1160 existing files already identical. All 24245 selected regular files / 11323245417 bytes match server SHA-256 after local read-back. All 330 explicit references across six recovery ledgers now exist. Recovered all 19122 regular files in .artifacts/rmg_recovery and original tmp/rmg_recovery/ghidra_project database. Preserved two differing local inspection files; server versions stored separately. Retained 5748 Linux link definitions and five unique shared inputs without duplicating targets. Windows symlink privilege unavailable; Wine not provisioned. Historical maps kept in ignored snapshot. Rebuildable exports, Wine system files and Ghidra installation excluded; server untouched. No native behavior/parity claim."
+    },
+    {
       "id": "tooling-source-material-history-migration-20261003",
       "title": "Remove archived production media from Git history while preserving development history",
       "status": "completed",
