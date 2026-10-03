@@ -1,0 +1,147 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_votive_drummers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          209,
+          492
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c7f2bda578004a4eb82487cea2620fe0801c1c8bc0b2adab8fe17f0f2c1e24d0",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "011b93d6a25e9a7c0f7628c656a96ed195b3456b8c79333898314b4f3740f854",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "kneel",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+        "rects": [
+          [
+            14,
+            996,
+            271,
+            1261
+          ]
+        ],
+        "anchor": [
+          151,
+          1230
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a51523f7e1f64ede5837f6d1a4566c849b02c109e16b0cb77a472feab243d48b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "81c701a60162f690f88797b0f14739f5fd74528abac3a9e8ad985f7d799d1ed7",
+      "runtime_source_scale": 0.64
+    },
+    {
+      "source_frame": {
+        "name": "side_fall",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+        "rects": [
+          [
+            304,
+            1023,
+            605,
+            1272
+          ]
+        ],
+        "anchor": [
+          456,
+          1239
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a51523f7e1f64ede5837f6d1a4566c849b02c109e16b0cb77a472feab243d48b",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "a5ff3c53d6385a34d8dd8c2a3287f98aa7af2d3c77705ee613f11544cd14f9b2",
+      "runtime_source_scale": 0.64
+    },
+    {
+      "source_frame": {
+        "name": "prone_settle",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+        "rects": [
+          [
+            610,
+            1091,
+            910,
+            1189
+          ],
+          [
+            610,
+            1189,
+            934,
+            1271
+          ]
+        ],
+        "anchor": [
+          771,
+          1250
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a51523f7e1f64ede5837f6d1a4566c849b02c109e16b0cb77a472feab243d48b",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "282a86b8a8d6c3a562366c5b38b41b944091ad19be1e219e23534c6826c921cf",
+      "runtime_source_scale": 0.64
+    },
+    {
+      "source_frame": {
+        "name": "dead",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-state-corrections-green.png",
+        "rects": [
+          [
+            910,
+            1092,
+            1226,
+            1189
+          ],
+          [
+            934,
+            1189,
+            1226,
+            1271
+          ]
+        ],
+        "anchor": [
+          1072,
+          1250
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "28aa6bf32a1850925dabbf895db6408f12e457c2bae92d1d67c1d7ccc4912403",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "7ed35ebbd2947cf5c206901e76e83666385e38ba255e29fe0fa93bb00c0c2700",
+      "runtime_source_scale": 0.64
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,72 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_votive_drummers",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    528
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026109537,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        209,
+        492
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-state-corrections-green.png",
+      "rects": [
+        [
+          910,
+          1092,
+          1226,
+          1189
+        ],
+        [
+          934,
+          1189,
+          1226,
+          1271
+        ]
+      ],
+      "anchor": [
+        1072,
+        1250
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 1,
+  "prompt": "Original MOONBITE VOTIVE DRUMMER from the supplied painting, facing SCREEN RIGHT. One young human with the same original youthful unbearded face and long brown hair, a small branch/antler hair crest, dark green reed and leather clothes, wrapped leather shins and boots, and original amber lantern ornaments. Exactly TWO arms and TWO legs. Anatomical RIGHT arm is the near arm, visible on SCREEN LEFT at rest: that right hand continuously grips ONE short wooden mallet with a golden crescent-shaped head and green moss tassel. Anatomical LEFT arm is the far arm, visible on SCREEN RIGHT at rest: that left forearm and hand carry ONE small round woven wooden buckler with its dark central boss. Preserve its original attachment while allowing the original left-palm articulation above it. A SEPARATE round crescent-marked drum is strapped at the front of the waist; it is never the held buckler. Preserve all three original pieces of equipment and their grips, face, clothes, anatomical proportions and painted fantasy-game surface. A single uninterrupted animation of this equipped drummer slowly collapsing onto the ground. Start moving immediately: knees steadily bend, the torso leans sideways toward SCREEN RIGHT, the hips descend, and both knees settle onto the ground. Without pausing in a posed tableau, continue the same physical movement: the near right elbow bends to brace the descending body, hips and both folded legs roll gently onto the side, the head lowers, and the body comes to rest in the supplied equipped corpse position. Make the joint movement continuous across the entire take, with many clearly different intermediate body positions. Keep the near RIGHT fingers firmly wrapped around the same short wooden mallet shaft throughout; its solid brass crescent head and moss tassel follow the wrist outside the strapped waist drum. The far LEFT arm keeps its original round buckler attached, lowering it beside the head. The separate crescent-marked waist drum stays firmly strapped to the torso and turns with it. Exactly two human arms and two legs remain anatomically connected and opaque during the gradual supported fall. Original boots, youthful face, long brown hair, crest, costume and original painted materials remain consistent. Finish the collapse around four seconds and let the equipment and cloak settle naturally into the supplied final resting pose. Stationary orthographic camera, fixed body scale, unchanged ground support plane y528, generous empty margins, with the entire held mallet and its tassel always inside the frame, steady diffuse illumination, flat magenta background without a visible floor. No pauses between descent stages, cuts, pose replacement, extra limbs, transferred equipment, blur, ghosting, disintegration, flashes or resurrection.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

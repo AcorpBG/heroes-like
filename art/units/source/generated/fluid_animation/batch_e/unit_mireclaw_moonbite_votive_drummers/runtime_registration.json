@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_votive_drummers",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "ready_guide": {
+    "name": "idle_hands_0",
+    "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        384,
+        512
+      ]
+    ],
+    "anchor": [
+      209,
+      492
+    ],
+    "scale": 0.44,
+    "alpha_noise_cutoff": 8
+  },
+  "reason": "Original ready/action anatomical scales retained and divided by fixed extraction scale; one anatomical foot support plane, no frame normalization or stabilization."
+}

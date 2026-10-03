@@ -1,0 +1,563 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_mireclaw_moonbite_votive_drummers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_073",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "move_h3_074",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "move_h3_075",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "move_h3_076",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "move_h3_077",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083333333333335
+        },
+        {
+          "name": "move_h3_078",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "move_h3_079",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2916666666666665
+        },
+        {
+          "name": "move_h3_080",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "move_h3_081",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "move_h3_082",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "move_h3_083",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583333333333335
+        },
+        {
+          "name": "move_h3_084",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "move_h3_085",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5416666666666665
+        },
+        {
+          "name": "move_h3_086",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "move_h3_087",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "move_h3_088",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "move_h3_089",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083333333333335
+        },
+        {
+          "name": "move_h3_090",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "move_h3_091",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7916666666666665
+        },
+        {
+          "name": "move_h3_092",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "frame_msec": 42,
+          "loop": true,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/config.json",
+          "sha256": "09739982aba92b006fba938a1d9203f5cce15816247e0bb44235e9e742bd8bd2"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/selection.json",
+          "sha256": "d7817ef6ad1f2892e9153630c1e51eb22cd5c04749e4bf47e65f1a9c0a561355"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/original_lossless.mkv",
+          "sha256": "ba9fd3a0f20169b13e71bfc83e7383b26d3f682e40caf0ddb37e99943075bc2b"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/original.json",
+          "sha256": "71f184fb7a64c761f20243506732572b9f7f5cf3e035c3dd1b87ed5e557b9e9a"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/workflow_api.json",
+          "sha256": "69caebc036018a450c945e71cff329d218bc725580d0cdf4255a593b835247c5"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/prompt.txt",
+          "sha256": "9dfa2da0c8439afe6fb28b8ef7df6ffeec0bedb76f45d3d9a3e9372863d7119e"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/reference.json",
+          "sha256": "228a157613cbc28de78d8232e55e4222067a89da38ef896ba87ebce15c0bee99"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte.json",
+          "sha256": "db433e781b83d3399016d186218604ee34f4a2ec9a61ac6101d1a630438c00bb"
+        },
+        "segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/segmentation_recipe.json",
+          "sha256": "89d1e53d5d8bd6de1e6a33d669eb241d9e25011f15be8b328aa2159aaa96ed61"
+        },
+        "semantic_matte_initial.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/semantic_matte_initial.json",
+          "sha256": "9cf9316a8568d5f22610b42476b3810c1ac62a1c639a4900006882ab74ec1b03"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/staged_generation.json",
+          "sha256": "b6aedd6c59fd1966b3dd286d6133cd79ddf024f611bb24ac03af840316286b2b"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/sampling_workflow_api.json",
+          "sha256": "c57c798f22cf7fc74dfdc829397865e612076d3b3ae5eb5002b707421e305d23"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/sampling_submission.json",
+          "sha256": "0eff9d3aa664e9fa45a221f55f12765b5af92be2ba9005eecfe1dfa49cfb79bf"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/sampling_history.json",
+          "sha256": "5e5922386496a686c150994585fbd524439fd4d0e27b8420b7455f29a19e21ae"
+        },
+        "generation_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/generation_history.json",
+          "sha256": "9595cd0c5039acf62ab00f13bd04f81ea2bfad42af8191cda9a59f794a9330db"
+        },
+        "decode_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/decode_submission.json",
+          "sha256": "d32326ff238cbace868cae0e2f8a63e3954c4321d546e6e0bbb3375282cef549"
+        },
+        "original.mp4": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/original.mp4",
+          "sha256": "ebc9785115bc982b39a235acf4638be88d0bf3532b9f41c28200e2bcf6449e32"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/original.latent",
+          "sha256": "5936addfdc86c9c67ffce570acde44a195d906785737217c48c130876f68d01d"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 original frames and alpha frames in each native facing personally inspected; original/alpha anatomy and loop-seam enlargements inspected. One continuous observed reciprocal gait72-92 includes alternating boot contacts, passing legs, knee flex, body bob and cloak follow-through, with fixed original mallet/buckler/drum registration. Source92-to72 keeps the same physical support phase. No duplicated, reversed, interpolated or normalized poses. Actual Godot native/action and seam review pending."
+      }
+    }
+  ]
+}

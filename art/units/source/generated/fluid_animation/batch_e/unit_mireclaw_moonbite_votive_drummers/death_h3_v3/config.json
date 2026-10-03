@@ -1,0 +1,167 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_votive_drummers",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026109337,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        209,
+        492
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "kneel",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          14,
+          996,
+          271,
+          1261
+        ]
+      ],
+      "anchor": [
+        151,
+        1230
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "seated_closed_grip",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_guides_v3/seated_closed_grip_original.png",
+      "rects": [
+        [
+          0,
+          0,
+          1537,
+          1023
+        ]
+      ],
+      "anchor": [
+        768,
+        921
+      ],
+      "scale": 0.3125,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "supported_half_side_fall",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_guides_v3/half_side_fall_original.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        880
+      ],
+      "scale": 0.2,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "prone_settle",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          610,
+          1091,
+          910,
+          1189
+        ],
+        [
+          610,
+          1189,
+          934,
+          1271
+        ]
+      ],
+      "anchor": [
+        771,
+        1250
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-state-corrections-green.png",
+      "rects": [
+        [
+          910,
+          1092,
+          1226,
+          1189
+        ],
+        [
+          934,
+          1189,
+          1226,
+          1271
+        ]
+      ],
+      "anchor": [
+        1072,
+        1250
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      52,
+      2
+    ],
+    [
+      76,
+      3
+    ],
+    [
+      100,
+      4
+    ]
+  ],
+  "last": 5,
+  "prompt": "Original MOONBITE VOTIVE DRUMMER from the supplied painting, facing SCREEN RIGHT. One young human with the same original youthful unbearded face and long brown hair, a small branch/antler hair crest, dark green reed and leather clothes, wrapped leather shins and boots, and original amber lantern ornaments. Exactly TWO arms and TWO legs. Anatomical RIGHT arm is the near arm, visible on SCREEN LEFT at rest: that right hand continuously grips ONE short wooden mallet with a golden crescent-shaped head and green moss tassel. Anatomical LEFT arm is the far arm, visible on SCREEN RIGHT at rest: that left forearm and hand carry ONE small round woven wooden buckler with its dark central boss. Preserve its original attachment while allowing the original left-palm articulation above it. A SEPARATE round crescent-marked drum is strapped at the front of the waist; it is never the held buckler. Preserve all three original pieces of equipment and their grips, face, clothes, anatomical proportions and painted fantasy-game surface. One quiet continuous supported collapse with the original equipment. Slowly bend both knees and lower into the supplied equipped kneeling pose. Without opening the near RIGHT-hand grip, lower that same intact mallet and shift the hips onto the ground into the supplied seated pose with a solid closed right hand around the wooden handle outside the separate waist drum. Gradually turn the hips and fold both legs while lowering the torso toward SCREEN RIGHT onto the near right forearm, passing through the supplied halfway side-fall pose. The right wrist, fingers and wooden mallet shaft stay solid and visibly connected, and the brass crescent head remains intact beside the hand. Continue slowly lowering the torso and both folded legs onto the ground into the supplied prone and final corpse poses. The far LEFT arm lowers its attached buckler beside the head and the separate strapped waist drum remains at the waist. Every joint transition is gradual with clear opaque hands, arms, legs and equipment. No fast flailing or extra flourish. Hold the final intact equipped corpse still. Locked orthographic camera, fixed original anatomical scale and support plane y576, empty flat magenta studio background, generous margins and steady diffuse illumination. Only the original character, one gripped mallet, one attached buckler and one strapped drum are visible. No cuts, abrupt pose replacement, duplicated equipment, ghosting, leafy substitute limbs, disintegration, effects or resurrection.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

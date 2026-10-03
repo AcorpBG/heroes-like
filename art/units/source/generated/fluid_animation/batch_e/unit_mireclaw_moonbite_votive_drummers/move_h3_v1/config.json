@@ -1,0 +1,137 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_votive_drummers",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026109031,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        209,
+        492
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "walk_near_contact",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          619,
+          4,
+          879,
+          335
+        ]
+      ],
+      "anchor": [
+        753,
+        329
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "walk_far_contact",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-state-corrections-green.png",
+      "rects": [
+        [
+          929,
+          4,
+          1202,
+          335
+        ]
+      ],
+      "anchor": [
+        1082,
+        326
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "walk_near_passing",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          11,
+          337,
+          277,
+          660
+        ]
+      ],
+      "anchor": [
+        149,
+        650
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "walk_far_passing",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-state-corrections-green.png",
+      "rects": [
+        [
+          953,
+          650,
+          1208,
+          978
+        ]
+      ],
+      "anchor": [
+        1092,
+        970
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      26,
+      1
+    ],
+    [
+      46,
+      3
+    ],
+    [
+      70,
+      2
+    ],
+    [
+      90,
+      4
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original MOONBITE VOTIVE DRUMMER from the supplied painting, facing SCREEN RIGHT. One young human with the same original youthful unbearded face and long brown hair, a small branch/antler hair crest, dark green reed and leather clothes, wrapped leather shins and boots, and original amber lantern ornaments. Exactly TWO arms and TWO legs. Anatomical RIGHT arm is the near arm, visible on SCREEN LEFT at rest: that right hand continuously grips ONE short wooden mallet with a golden crescent-shaped head and green moss tassel. Anatomical LEFT arm is the far arm, visible on SCREEN RIGHT at rest: that left forearm and hand carry ONE small round woven wooden buckler with its dark central boss. Preserve its original attachment while allowing the original left-palm articulation above it. A SEPARATE round crescent-marked drum is strapped at the front of the waist; it is never the held buckler. Preserve all three original pieces of equipment and their grips, face, clothes, anatomical proportions and painted fantasy-game surface. One full reciprocal WALK IN PLACE cycle. Near RIGHT boot extends forward and plants while far LEFT boot trails, near knee loads, then far boot passes and extends forward while the near boot trails. Finish in the exact original ready stance. Do not hop on one leg, slide, change body size or translate across the canvas. Mallet stays in the RIGHT hand and buckler stays on the LEFT arm; waist drum follows the pelvis naturally, never becoming a third held object.  Locked orthographic studio camera. Entire backdrop remains flat magenta RGB255,0,255, no scenery, floor, cast shadow, text, edits, cuts, zoom or camera movement. Fixed boot support plane y576 and unchanged anatomical scale; keep crest, crescent mallet, shield, waist drum, tassels and boots inside generous canvas margins. Preserve the existing amber ornaments without inventing flashes, stars, rings, particles, beams or extra weapons.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

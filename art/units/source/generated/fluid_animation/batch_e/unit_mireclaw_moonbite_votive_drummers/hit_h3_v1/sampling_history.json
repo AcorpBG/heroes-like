@@ -1,0 +1,229 @@
+{
+  "prompt": [
+    606,
+    "f443ca85-69ca-4b5c-8de8-b69108c8584a",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Original MOONBITE VOTIVE DRUMMER from the supplied painting, facing SCREEN RIGHT. One young human with the same original youthful unbearded face and long brown hair, a small branch/antler hair crest, dark green reed and leather clothes, wrapped leather shins and boots, and original amber lantern ornaments. Exactly TWO arms and TWO legs. Anatomical RIGHT arm is the near arm, visible on SCREEN LEFT at rest: that right hand continuously grips ONE short wooden mallet with a golden crescent-shaped head and green moss tassel. Anatomical LEFT arm is the far arm, visible on SCREEN RIGHT at rest: that left forearm and hand carry ONE small round woven wooden buckler with its dark central boss. Preserve its original attachment while allowing the original left-palm articulation above it. A SEPARATE round crescent-marked drum is strapped at the front of the waist; it is never the held buckler. Preserve all three original pieces of equipment and their grips, face, clothes, anatomical proportions and painted fantasy-game surface. One clear impact recoil away from SCREEN RIGHT: torso leans backward, both knees flex and boots brace; RIGHT hand retains the crescent mallet, LEFT arm retains the buckler, strapped drum moves only with the torso. Recover once to the exact ready pose. No collapse, spinning, swapping hands, equipment loss or repeated impacts.  Locked orthographic studio camera. Entire backdrop remains flat magenta RGB255,0,255, no scenery, floor, cast shadow, text, edits, cuts, zoom or camera movement. Fixed boot support plane y576 and unchanged anatomical scale; keep crest, crescent mallet, shield, waist drum, tassels and boots inside generous canvas margins. Preserve the existing amber ornaments without inventing flashes, stars, rings, particles, beams or extra weapons.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026109033
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "moonbite_votive_hit_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "moonbite_votive_hit_h3_v1_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 44,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "moonbite_votive_h3/hit_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "moonbite_votive_h3",
+      "create_time": 1790985106657
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "moonbite_votive_h3\\hit_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "f443ca85-69ca-4b5c-8de8-b69108c8584a",
+          "timestamp": 1790985106658
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "f443ca85-69ca-4b5c-8de8-b69108c8584a",
+          "timestamp": 1790985106677
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "f443ca85-69ca-4b5c-8de8-b69108c8584a",
+          "timestamp": 1790985272387
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

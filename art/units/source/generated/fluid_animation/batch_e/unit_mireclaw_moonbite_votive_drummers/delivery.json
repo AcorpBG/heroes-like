@@ -1,0 +1,18 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v2",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "ranged_h3_v2",
+    "death_h3_v5"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_unit",
+    "notes": "Personally inspected all 1612 original RGB frames and alpha frames in each facing, anatomy/equipment enlargements, all 315 selected native Godot poses in each facing, 16 actual melee and 8 actual Shoot captures at native and enlarged scale. Seven original-source actions accepted; four tiny detached nonopaque collapse background marks excluded with exact no-body original-coordinate crop rectangles. Preserve exact eight original idle paintings and 240ms map/battle timing. Original equipment, coherent grips, two arms/legs, reciprocal gait, physical contacts, recoil, guard, support and continuous collapse retained. Reflected native gallery reviewed; actual battle captures use ordinary facing. Rejected originals and guide provenance retained."
+  }
+}

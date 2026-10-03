@@ -1,0 +1,490 @@
+{
+  "status": "accepted_selected_unit",
+  "unit_id": "unit_mireclaw_moonbite_votive_drummers",
+  "selected_source_pixel_check": {
+    "takes": [
+      "move_h3_v1",
+      "attack_h3_v2",
+      "hit_h3_v1",
+      "defend_h3_v1",
+      "cast_h3_v1",
+      "ranged_h3_v2",
+      "death_h3_v5"
+    ],
+    "selected_poses": 307,
+    "opaque_original_rgb_pixels_exact": 15061009,
+    "alpha_hashes_match": true,
+    "fixed_anchors_by_take": {
+      "move_h3_v1": [
+        480,
+        576
+      ],
+      "attack_h3_v2": [
+        480,
+        576
+      ],
+      "hit_h3_v1": [
+        480,
+        576
+      ],
+      "defend_h3_v1": [
+        480,
+        576
+      ],
+      "cast_h3_v1": [
+        480,
+        576
+      ],
+      "ranged_h3_v2": [
+        480,
+        576
+      ],
+      "death_h3_v5": [
+        480,
+        528
+      ]
+    },
+    "fixed_scale": 0.5,
+    "canvas_edge_clipping": false,
+    "reviewed_background_component_crops": 4,
+    "body_and_opaque_rgb_retained": true,
+    "runtime_acceptance": "accepted_candidate_native_normal_reflected_and_actual_actions"
+  },
+  "reviews": {
+    "defend_h3_v1": {
+      "status": "accepted_selected_frames",
+      "personally_viewed_original_frames": 124,
+      "personally_viewed_alpha_frames_per_facing": 124,
+      "native_facings": [
+        "right",
+        "reflected_left"
+      ],
+      "original_and_alpha_enlargements": [
+        20,
+        23,
+        24,
+        26,
+        28,
+        30,
+        58,
+        123
+      ],
+      "observations": "Original22-30 continuously raises the separate left-arm wooden buckler, flexes both knees and leans into a stable held brace. Right-hand crescent mallet stays low with its continuous grip; waist drum remains separately strapped. Both boots and legs remain coherent through the crouch. The guard is held through123 without recovery. Complete original/alpha/native/reflected and enlarged grips/crouch review found no contact effects, prop transfers, canvas clipping or foreground loss. Actual Godot gallery/action review remains pending."
+    },
+    "cast_h3_v1": {
+      "status": "accepted_selected_frames",
+      "personally_viewed_original_frames": 124,
+      "personally_viewed_alpha_frames_per_facing": 124,
+      "native_facings": [
+        "right",
+        "reflected_left"
+      ],
+      "original_and_alpha_enlargements": [
+        14,
+        17,
+        20,
+        24,
+        77,
+        80,
+        84,
+        90
+      ],
+      "observations": "A quiet physical rally salute raises the continuously gripped right-hand crescent mallet beside the shoulder13-24, holds it with a small wrist/tassel turn, then lowers through sternum77-87 and returns ready90-94. Left buckler stays attached throughout the original permitted left-palm articulation; separate waist drum and two boots remain intact. Complete original/alpha/native/reflected and enlarged grips/recovery inspection found no projected effects, extra weapons, lost equipment or canvas clipping. Trim only long held plateau using original chronological samples. Actual Godot gallery/action review remains pending."
+    },
+    "move_h3_v1": {
+      "status": "accepted_selected_frames",
+      "personally_viewed_original_frames": 124,
+      "personally_viewed_alpha_frames_per_facing": 124,
+      "native_facings": [
+        "right",
+        "reflected_left"
+      ],
+      "original_and_alpha_enlargements": [
+        12,
+        20,
+        27,
+        36,
+        44,
+        64,
+        82,
+        99
+      ],
+      "additional_original_seam_enlargements": [
+        90,
+        91,
+        92,
+        72,
+        73,
+        74
+      ],
+      "seam_observation": "Source92 returns to72 with the same reciprocal support/passing phase and coherent torso, drum, mallet and buckler placement. The small follow-through change is consistent with one next video sample. The 21-frame original cycle remains pending actual Godot gallery/action review.",
+      "observations": "Reciprocal boot contacts and passing phases are present, with torso bob, knee flex and cloak follow-through. Two arms/legs, original crescent mallet right-hand grip, separate left-arm buckler and strapped waist drum remain coherent in complete original/alpha/native/reflected review. The full source contains several observed cycles followed by a ready hold; choose one continuous real cycle, then review its seam at actual runtime scale. No source-frame duplication, reversal or interpolation.",
+      "candidate_cycle_source_frames": [
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92
+      ]
+    },
+    "attack_h3_v2": {
+      "status": "accepted_selected_frames",
+      "personally_viewed_original_frames": 124,
+      "personally_viewed_alpha_frames_per_facing": 124,
+      "native_facings": [
+        "right",
+        "reflected_left"
+      ],
+      "original_and_alpha_enlargements": [
+        22,
+        24,
+        26,
+        47,
+        49,
+        50,
+        51,
+        80
+      ],
+      "observations": "The corrected quiet physical reach retains one crescent mallet and its right-hand grip through windup, contact and recovery. The left-arm buckler and separate strapped waist drum remain coherent. No contact flash overlaps or hides equipment. Detached white background commas beyond the mallet in source50-55 are excluded by the unmodified ordinary neural matte; all detected white air pixels in the inspected x>=730,y250-389 region have alpha0. No manual foreground erasure or skipped contact is used. Source22-26 raises the mallet,44-49 swings and extends,49-71 holds contact,72-84 recovers. Runtime timing and actual combat review remain pending.",
+      "background_pixel_check": {
+        "source_frames": [
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56
+        ],
+        "white_air_pixel_counts": [
+          320,
+          313,
+          63,
+          0,
+          2,
+          11,
+          0
+        ],
+        "maximum_alpha": 0
+      }
+    },
+    "hit_h3_v1": {
+      "status": "accepted_selected_frames",
+      "personally_viewed_original_frames": 124,
+      "personally_viewed_alpha_frames_per_facing": 124,
+      "native_facings": [
+        "right",
+        "reflected_left"
+      ],
+      "original_and_alpha_enlargements": [
+        40,
+        41,
+        44,
+        48,
+        49,
+        50,
+        52,
+        54
+      ],
+      "observations": "One continuous recoil event at39-54 retains two arms and legs, right-hand mallet grip, left-arm buckler and attached waist drum. The sharp torso reaction40-41 is followed by a sustained backward brace41-48 and coherent shoulder/knee recovery49-54. Equipment follows the body without transfers or occlusion. Background plate hue changes are excluded by ordinary matting. This observed event remains pending actual Godot combat and native gallery review.",
+      "candidate_source_frames": [
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54
+      ]
+    },
+    "attack_h3_v1": {
+      "status": "rejected",
+      "personally_viewed_original_frames": 124,
+      "personally_viewed_alpha_frames_per_facing": 124,
+      "native_facings": [
+        "right",
+        "reflected_left"
+      ],
+      "original_and_alpha_enlargements": [
+        30,
+        36,
+        38,
+        39,
+        40,
+        44,
+        48,
+        63
+      ],
+      "observations": "White-yellow drawn flash begins on mallet at38, blooms over contact39-43 and leaves particles through49. In frame39 the matte loses the obscured mallet head; frame40 remains unnaturally luminous. Windup30 has an ambiguous stretched hand/handle silhouette. Do not erase the flash, skip contact or accept the extracted pointing-hand substitute. Preserve the complete original/latent/graphs/prompts/guides/recipes and generate attack_h3_v2."
+    },
+    "ranged_h3_v1": {
+      "status": "rejected",
+      "personally_viewed_original_frames": 124,
+      "personally_viewed_alpha_frames_per_facing": 124,
+      "native_facings": [
+        "right",
+        "reflected_left"
+      ],
+      "original_and_alpha_enlargements": [
+        19,
+        44,
+        47,
+        48,
+        50,
+        79,
+        81,
+        83,
+        87,
+        89,
+        103,
+        104,
+        105,
+        107,
+        109,
+        113
+      ],
+      "observations": "Two real waist drum contacts are present around48 and83. The recovery104-109 morphs the original crescent mallet and gripping wrist into purple/brown blurred blocks after an extra raised flourish. Complete original/alpha/native/reflected review and sixteen original/alpha enlargements confirm a source defect. Preserve this original and all latent, graphs, guides, prompts and extraction recipes. Generate ranged_h3_v2 with original chest and ready recovery guides; do not skip the required transition or paint anatomy."
+    },
+    "death_h3_v1": {
+      "status": "rejected",
+      "personally_viewed_original_frames": 124,
+      "personally_viewed_alpha_frames_per_facing": 124,
+      "native_facings": [
+        "right",
+        "reflected_left"
+      ],
+      "original_and_alpha_enlargements": [
+        23,
+        24,
+        26,
+        30,
+        57,
+        60,
+        62,
+        65,
+        61,
+        87,
+        90,
+        92,
+        94,
+        99,
+        112,
+        123
+      ],
+      "observations": "The kneeling, seated and final corpse positions are equipped and coherent, but the physical kneel-to-seat transition60-61 blurs the right forearm, wrist and mallet grip into a translucent claw-like smear beside the drum. Complete original/alpha/native/reflected review plus sixteen original/alpha enlargements confirms this source defect remains visible after ordinary matting. Preserve the full original and all provenance. Generate death_h3_v2 using repeated original kneel and seated support guides, without skipping this necessary physical transition or painting limbs."
+    },
+    "death_h3_v2": {
+      "status": "rejected",
+      "personally_viewed_original_frames": 124,
+      "personally_viewed_alpha_frames_per_facing": 124,
+      "native_facings": [
+        "right",
+        "reflected_left"
+      ],
+      "original_and_alpha_enlargements": [
+        24,
+        26,
+        28,
+        30,
+        54,
+        56,
+        57,
+        58,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        123
+      ],
+      "observations": "Full124 original and soft-alpha frames in each native facing plus sixteen original/alpha enlargements show right wrist ghosting at57 during the kneel-to-seat transition. Late side-fall98 replaces the near arm and mallet with a leaf-like smear;99-100 have malformed/doubled head silhouettes before an intact final corpse. These required physical transitions cannot be skipped or painted. Reject and preserve the entire original/latent/guides/graphs/prompts/recipes. New original-art guide derivatives will specify solid closed grip and intermediate supported side fall for death_h3_v3."
+    },
+    "ranged_h3_v2": {
+      "status": "accepted_selected_frames",
+      "personally_viewed_original_frames": 124,
+      "personally_viewed_alpha_frames_per_facing": 124,
+      "native_facings": [
+        "right",
+        "reflected_left"
+      ],
+      "original_and_alpha_enlargements": [
+        36,
+        38,
+        41,
+        54,
+        56,
+        67,
+        69,
+        70,
+        83,
+        87,
+        92,
+        100,
+        102,
+        104,
+        106,
+        108
+      ],
+      "observations": "Two controlled right-hand mallet taps on the separate strapped waist drum at41 and70, then an explicit chest recovery84-100 and gradual ready return101-108. Far left-arm buckler stays attached; both boots remain grounded and equipment does not transfer. The mallet head foreshortens as it rotates with the wrist; its opaque shaft/head/tassel remain with the right grip. The v1 purple recovery breakup is absent. Full original/alpha/native/reflected and sixteen grip/contact/recovery enlargements reviewed. Actual combat release-clock and gallery review remain pending."
+    },
+    "death_h3_v3": {
+      "status": "rejected",
+      "personally_viewed_original_frames": 124,
+      "personally_viewed_alpha_frames_per_facing": 124,
+      "native_facings": [
+        "right",
+        "reflected_left"
+      ],
+      "original_and_alpha_enlargements": [
+        21,
+        22,
+        23,
+        24,
+        33,
+        34,
+        35,
+        36,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        101,
+        102
+      ],
+      "observations": "Complete124 original and soft-alpha frames in each native facing plus sixteen original/alpha enlargements show prolonged nearly frozen stages followed by abrupt pose replacements23-to24,35-to36 and75-to76. The near right-hand grip also blurs at74-75 before the side fall. Preserved final corpse and intact guide positions do not establish continuous movement. Reject the complete take and preserve original RGB video, MP4, latent, prompts, graphs, guides and recipes. Generate death_h3_v4 from original ready/corpse endpoints without intermediate still-guide constraints, requesting one continuous physical collapse. Do not skip transitions, interpolate poses or paint anatomy."
+    },
+    "death_h3_v4": {
+      "status": "rejected",
+      "personally_viewed_original_frames": 124,
+      "personally_viewed_alpha_frames_per_facing": 124,
+      "native_facings": [
+        "right",
+        "reflected_left"
+      ],
+      "original_and_alpha_enlargements": [
+        24,
+        27,
+        31,
+        36,
+        42,
+        47,
+        53,
+        61,
+        70,
+        73,
+        76,
+        79,
+        83,
+        87,
+        90,
+        123
+      ],
+      "background_roi_enlargements": [
+        85,
+        88,
+        90,
+        100,
+        112,
+        123
+      ],
+      "observations": "All124 original and alpha frames in each native facing personally reviewed plus sixteen grip/brace/roll/corpse original/alpha enlargements. Endpoint-only source permits continuous knee flex, supported hip descent, near forearm brace and side roll. Right-hand mallet grip, left-arm buckler, separate waist drum and two legs remain coherent. Retain every transition8-91; shorten only final still hold with100,112,123. Eight tiny detached nonopaque background components beyond the boot are omitted using exact original-coordinate no-body crop rectangles; source video and matte remain unchanged. Actual Godot review pending. Independent source edge verification reveals real mallet tassel bottom clipping47-57, up to29 alpha>=8 border pixels. Reject complete take; no clipped transition omission."
+    },
+    "death_h3_v5": {
+      "status": "accepted_selected_frames",
+      "personally_viewed_original_frames": 124,
+      "personally_viewed_alpha_frames_per_facing": 124,
+      "native_facings": [
+        "right",
+        "reflected_left"
+      ],
+      "original_and_alpha_enlargements": [
+        21,
+        25,
+        31,
+        36,
+        41,
+        46,
+        50,
+        54,
+        57,
+        63,
+        69,
+        74,
+        80,
+        86,
+        92,
+        123
+      ],
+      "background_roi_enlargements": [
+        92,
+        93,
+        100,
+        112,
+        123
+      ],
+      "all124_source_canvas_edges_clear": true,
+      "observations": "All124 original RGB and alpha frames in each native facing personally inspected plus sixteen original/alpha knee, wrist, mallet-head, hip-roll and corpse enlargements. Continuous knee flex and equipped hip descent lower into a folded-leg side roll and final resting corpse. Near right hand retains the solid mallet shaft/head/tassel; far left buckler lowers beside the head and separate waist drum rotates with the torso. Source anchor[480,528] compensates the exact48px whole-guide upward translation, unchanged anatomy/output scale. Every selected edge is clear; retain all physical transitions8-93 and only shorten the final held corpse with100,112,123. Four tiny detached nonopaque background marks beyond the boot are omitted through exact no-body source crop rectangles, keeping original footage/mattes unchanged. All selected native Godot poses personally accepted in normal and reflected galleries.",
+      "tight_original_hand_mallet_2x_enlargements": [
+        21,
+        25,
+        31,
+        36,
+        41,
+        46,
+        50,
+        54,
+        57,
+        63,
+        69,
+        74,
+        80,
+        86,
+        92,
+        123
+      ]
+    }
+  },
+  "candidate_runtime_review": {
+    "normal_checks": 1021,
+    "reflected_gallery_checks": 1021,
+    "actual_ranged_checks": 1021,
+    "failures": [],
+    "personally_viewed_native_poses_per_facing": 315,
+    "actual_melee_captures": 16,
+    "actual_ranged_captures": 8,
+    "actual_captures_viewed_at_native_and_2x": true,
+    "all_ranged_poses_observed_after_draw": 64,
+    "ranged_overview_identical_to_reviewed_normal_overview": true,
+    "reflection_scope": "Native gallery only; actual battle actor remains ordinary-facing.",
+    "observations": "Reciprocal gait, direct mallet strike, recoil, held buckler, salute, two physical waist-drum contacts and continuous equipped collapse are coherent at native scale. Actual Shoot releases game-owned projectile at the second drum contact and returns to ready. No selected clipping, ghost limbs, missing equipment or original scale drift."
+  }
+}

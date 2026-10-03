@@ -1,0 +1,37 @@
+{
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_guides_v3/half_side_fall_original.png",
+    "sha256": "327d5da224eea6e96d2f44b09e85fd58ca96d38eda9dcea8ac2331813775d6da"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_guides_v3/half_side_fall.prompt.txt",
+    "sha256": "f593cf9e6a90fb0d99c7734cbfaaf480a416c3168e0d71a7e421c7d6546efb83"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_guides_v3/seated_closed_grip_original.png",
+      "sha256": "12aad753d8c08197c69b8005d87ed84733d006e99457b06142a693fed72022ef"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/guide_3_rgba.png",
+      "sha256": "a41c75c3c54b5841a6bcad0ad0823e2078eebeab4640573da8c5d628cac9f9df"
+    }
+  ],
+  "tool": "built_in_image_gen",
+  "transparent_background": true,
+  "guide_registration": {
+    "source_canvas": [
+      1536,
+      1024
+    ],
+    "source_anchor": [
+      768,
+      880
+    ],
+    "runtime_source_scale": 0.2,
+    "fixed_guide_sampling_scale": 0.4,
+    "reason": "One fixed whole-guide anatomical scale matches original seated/prone body width and head/hand dimensions; source support-plane anchor places the solid near forearm and hip at the original plane. No generated animation-frame normalization.",
+    "no_per_pose_normalization": true
+  },
+  "role": "immutable intermediate H3 guide only; no generated animation-frame edits"
+}

@@ -1,0 +1,115 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_votive_drummers",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026109132,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        209,
+        492
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          334,
+          333,
+          605,
+          652
+        ]
+      ],
+      "anchor": [
+        467,
+        643
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_contact",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          620,
+          341,
+          953,
+          650
+        ]
+      ],
+      "anchor": [
+        759,
+        643
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1357,
+        493
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      36,
+      1
+    ],
+    [
+      58,
+      2
+    ],
+    [
+      80,
+      3
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original MOONBITE VOTIVE DRUMMER from the supplied painting, facing SCREEN RIGHT. One young human with the same original youthful unbearded face and long brown hair, a small branch/antler hair crest, dark green reed and leather clothes, wrapped leather shins and boots, and original amber lantern ornaments. Exactly TWO arms and TWO legs. Anatomical RIGHT arm is the near arm, visible on SCREEN LEFT at rest: that right hand continuously grips ONE short wooden mallet with a golden crescent-shaped head and green moss tassel. Anatomical LEFT arm is the far arm, visible on SCREEN RIGHT at rest: that left forearm and hand carry ONE small round woven wooden buckler with its dark central boss. Preserve its original attachment while allowing the original left-palm articulation above it. A SEPARATE round crescent-marked drum is strapped at the front of the waist; it is never the held buckler. Preserve all three original pieces of equipment and their grips, face, clothes, anatomical proportions and painted fantasy-game surface. Quiet physical arm exercise in an empty studio. Slowly bend the knees and bend the near RIGHT elbow, with the right hand wrapped around the same short wooden mallet handle. Raise the intact crescent-headed mallet beside the right shoulder. Move the right elbow forward and extend that same arm and gripped mallet horizontally toward SCREEN RIGHT, stopping in empty air in the supplied forward pose. The mallet is a solid dull brass crescent on an ordinary wooden handle, continuously attached to that right-hand grip, with its original moss tassel. Briefly hold that extended pose, then bend the same elbow and lower the mallet back to the ready pose. Left elbow keeps its original buckler beside the chest; the separate waist drum stays attached. Both boots remain grounded while the torso leans into this one short reach and recovers. All surfaces remain solid painted leather, wood and dull brass under completely steady diffuse studio illumination. Empty space surrounds the mallet throughout the entire movement; only the original character and its three original pieces of equipment are visible. Locked orthographic camera, fixed original body scale and support plane y576, ample margins. Plain quiet studio backdrop, no floor or scenery. A single continuous take with steady illumination and one controlled arm movement.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

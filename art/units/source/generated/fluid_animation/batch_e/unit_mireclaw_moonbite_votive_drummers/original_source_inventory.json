@@ -1,0 +1,1801 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_votive_drummers",
+  "takes": {
+    "attack_h3_v1": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/accepted_baseline.json",
+        "bytes": 3016,
+        "sha256": "2925d703e8a3ec350d075f8eb5b8f217c142b8108e054434c781f2d44b461009"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/config.json",
+        "bytes": 3633,
+        "sha256": "d99c9036f4b0a1e2c8d8606e3ff63571942132a42ae56383a64aefe06a6ee3bd"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/decode_submission.json",
+        "bytes": 643,
+        "sha256": "0b37182eb934dabd77462f92d171c9b9f1b9bae32534800870d6b62281c6346d"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/generation_history.json",
+        "bytes": 23287,
+        "sha256": "6abbdd9ccd5850e43edd6976b150b3062a0d6f08738e54a29d4d9064ff1b45ff"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/guide_0_chroma.png",
+        "bytes": 152811,
+        "sha256": "011b93d6a25e9a7c0f7628c656a96ed195b3456b8c79333898314b4f3740f854"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/guide_0_rgba.png",
+        "bytes": 185866,
+        "sha256": "7ba21165e663f3626d05e10beb4fc9d6f709b6b47d269cd1c91f549a7145fda8"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/guide_1_chroma.png",
+        "bytes": 173768,
+        "sha256": "b6f8193afc94316dde3aee123ea3f20d18c05ea04e240670c8cfb05e8e217786"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/guide_1_rgba.png",
+        "bytes": 209657,
+        "sha256": "9105058ea5d6ae96528bf1c816c1705ca95a9f89821f3db5696a70a9df9941c2"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/guide_2_chroma.png",
+        "bytes": 174643,
+        "sha256": "30cfb3616923de6c2565eff24ea44db1bcfe020593724059b61ac3ab432e42a2"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/guide_2_rgba.png",
+        "bytes": 211512,
+        "sha256": "f3ab1858134e0cde5b2f15747ffb67fc3677e4bb6fc27c8ede5107709a202a81"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/matte.json",
+        "bytes": 51521,
+        "sha256": "9a43cf4be8be0d398d3aa6190ec1463e9129de9a87783948bbd6da337ff41ece"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/original.json",
+        "bytes": 9460,
+        "sha256": "ffdbad90503151a97d77c08fd1e0248db7ea16fce44c0aa926b845cab8e2baf7"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/original.latent",
+        "bytes": 8529440,
+        "sha256": "a49dc4157fe37198b2757d242630143f33519762088ca435a18d2481b6285072"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/original.mp4",
+        "bytes": 606490,
+        "sha256": "94f60a796cbc93853663b6810b83760980f01e642d1b11619cbb96c3d8f5d57c"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/original_lossless.mkv",
+        "bytes": 58073225,
+        "sha256": "4ab3a90850ec33a5cb02abed614ec31fffa628ec71b7d7af25d9559c52f9e132"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/prompt.txt",
+        "bytes": 1941,
+        "sha256": "d1118cba19dbb2366a982343d6266e3124bab77608899eff10482897afeb992b"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/reference.json",
+        "bytes": 2474,
+        "sha256": "f2cde1ca0014e0ad541dde7f40c4d16a08bc278a101d7ed31356393d1c43afb3"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/sampling_history.json",
+        "bytes": 7274,
+        "sha256": "40dd8d98831f7b5c90dd42128eddb7672009562cd245c2136b4afeba37fa1ec6"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/sampling_submission.json",
+        "bytes": 578,
+        "sha256": "c3eb2976c727771f4f12a416f65af9419b97b2fdb3debf160ca0a82b41eb9fd7"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/sampling_workflow_api.json",
+        "bytes": 5191,
+        "sha256": "8bd9f573093e02bed663e6d43b52030c2e3566d38c5496273f9a93dbe8053e65"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "89d1e53d5d8bd6de1e6a33d669eb241d9e25011f15be8b328aa2159aaa96ed61"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/semantic_matte_initial.json",
+        "bytes": 50927,
+        "sha256": "ea2e1fb1e09b6d40fdfd9074cf8e14912b928690b30c70930541b191be768c93"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/staged_generation.json",
+        "bytes": 782,
+        "sha256": "4dba339d8b0c0f834776e42ed44065931ccc3a4957e3ec5f19016a10ee9895a7"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/submission.json",
+        "bytes": 643,
+        "sha256": "0b37182eb934dabd77462f92d171c9b9f1b9bae32534800870d6b62281c6346d"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v1/workflow_api.json",
+        "bytes": 1213,
+        "sha256": "f0b63addf35d2277ac2f28ff9e0ec62b6062da46dc3950b5aa7fd57bff3d4e38"
+      }
+    },
+    "attack_h3_v2": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/accepted_baseline.json",
+        "bytes": 3016,
+        "sha256": "2925d703e8a3ec350d075f8eb5b8f217c142b8108e054434c781f2d44b461009"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/config.json",
+        "bytes": 4466,
+        "sha256": "3754a2baebb6ba3b002d7e34a881b24aedba6fa69a8d40ad55608f72e8ded2ad"
+      },
+      "correction.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/correction.json",
+        "bytes": 592,
+        "sha256": "079a7ab39fbff0e4050eef8cd2898a014864822ecd1f1292eaf823b58bf09a40"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/decode_submission.json",
+        "bytes": 770,
+        "sha256": "4b3edab0b2020728903216e26d2e9b4f9e35ccbc6e28951b43135f94cba72e0f"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/generation_history.json",
+        "bytes": 23258,
+        "sha256": "ff5805f7a87f0a4e2f0f4f980b79a492e1330a5fdf97f3cd10a4e14b38c0753f"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/guide_0_chroma.png",
+        "bytes": 152811,
+        "sha256": "011b93d6a25e9a7c0f7628c656a96ed195b3456b8c79333898314b4f3740f854"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/guide_0_rgba.png",
+        "bytes": 185866,
+        "sha256": "7ba21165e663f3626d05e10beb4fc9d6f709b6b47d269cd1c91f549a7145fda8"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/guide_1_chroma.png",
+        "bytes": 173768,
+        "sha256": "b6f8193afc94316dde3aee123ea3f20d18c05ea04e240670c8cfb05e8e217786"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/guide_1_rgba.png",
+        "bytes": 209657,
+        "sha256": "9105058ea5d6ae96528bf1c816c1705ca95a9f89821f3db5696a70a9df9941c2"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/guide_2_chroma.png",
+        "bytes": 174643,
+        "sha256": "30cfb3616923de6c2565eff24ea44db1bcfe020593724059b61ac3ab432e42a2"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/guide_2_rgba.png",
+        "bytes": 211512,
+        "sha256": "f3ab1858134e0cde5b2f15747ffb67fc3677e4bb6fc27c8ede5107709a202a81"
+      },
+      "guide_3_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/guide_3_chroma.png",
+        "bytes": 144295,
+        "sha256": "1247964e21cb14776599690a5a83560b164d4db62e43a36c262657b503e9571b"
+      },
+      "guide_3_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/guide_3_rgba.png",
+        "bytes": 175394,
+        "sha256": "3e07fc7f69d68eb9a97c93dd3e0ea88097f1d0b9b632b7788de41174ebbfca58"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/matte.json",
+        "bytes": 51317,
+        "sha256": "6f292eca7e9f7f931a2f15c1b825bdb28a2c40fa668f85072680d2ff06277415"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/original.json",
+        "bytes": 9460,
+        "sha256": "80c8c3800b14fb3e512a3b1ce62ccf60fe7d2998478a408ca8d60bc970631f67"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/original.latent",
+        "bytes": 8530232,
+        "sha256": "b7be58d545041e677fd4bbe820a2c4705c9f00911bd44cb394af853f90fa16c1"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/original.mp4",
+        "bytes": 627429,
+        "sha256": "2d760ec0cbff96817caf806c38090fb91e0a32efe2b8a46cae7c694b62ae721f"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/original_lossless.mkv",
+        "bytes": 58109500,
+        "sha256": "1bf3334a4dd4639141a84f946710902a901f08d2b6d7c9054bed8071ded1c104"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/prompt.txt",
+        "bytes": 2360,
+        "sha256": "c46918b28e85eca0130d6dad91dc81d2b198c668af5e906d4d14fd17937580ff"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/reference.json",
+        "bytes": 3182,
+        "sha256": "37b036be76d739d2f145b8871e6b2626d23f885e12f82afb3afc173a1c50831c"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/sampling_history.json",
+        "bytes": 8156,
+        "sha256": "88eff05f1f33737c7dad8a7bcb5b510a8a222df0c81e9635158e939893249e56"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/sampling_submission.json",
+        "bytes": 705,
+        "sha256": "e3a09cc3a2eabffbdbf9c2ccc9fe6b25c38f6a0ee490b59d9a32481612590ef7"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/sampling_workflow_api.json",
+        "bytes": 6062,
+        "sha256": "51f5df003530b35cc5838410def987ef9b4f1004f9d0a0cd439437784c3478f2"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "89d1e53d5d8bd6de1e6a33d669eb241d9e25011f15be8b328aa2159aaa96ed61"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/semantic_matte_initial.json",
+        "bytes": 50723,
+        "sha256": "dc5499b4ff29d1501afa755c46ae838b771266e9a7839b338ff28349e7f3b850"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/staged_generation.json",
+        "bytes": 729,
+        "sha256": "14ed290c8782601304f54644ed2cfd14078506f30bdd82b8992eb449732925ae"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/submission.json",
+        "bytes": 770,
+        "sha256": "4b3edab0b2020728903216e26d2e9b4f9e35ccbc6e28951b43135f94cba72e0f"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/attack_h3_v2/workflow_api.json",
+        "bytes": 1213,
+        "sha256": "672319e5deb587f24db9597c42801cf583ab7bafee5a2514da50a5f76345f09b"
+      }
+    },
+    "cast_h3_v1": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/accepted_baseline.json",
+        "bytes": 3016,
+        "sha256": "2925d703e8a3ec350d075f8eb5b8f217c142b8108e054434c781f2d44b461009"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/config.json",
+        "bytes": 3639,
+        "sha256": "4d5d8f4834191ae9caf2fe74e662da2c704e17ca078731882bd662fdc1cfd378"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/decode_submission.json",
+        "bytes": 637,
+        "sha256": "8bf81aced775bd0b702f622b877ffdf2c2429051051ac74a5cd2a1dad373365d"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/generation_history.json",
+        "bytes": 23031,
+        "sha256": "8d4db348e3e3ed3790f281f81f6f68596b6ce07011034d1b556f0a6e5364a39c"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/guide_0_chroma.png",
+        "bytes": 152811,
+        "sha256": "011b93d6a25e9a7c0f7628c656a96ed195b3456b8c79333898314b4f3740f854"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/guide_0_rgba.png",
+        "bytes": 185866,
+        "sha256": "7ba21165e663f3626d05e10beb4fc9d6f709b6b47d269cd1c91f549a7145fda8"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/guide_1_chroma.png",
+        "bytes": 158989,
+        "sha256": "19d50fe500e1b4dbaa6eff289156469020b9d21c1428aac4b7c51272eedeaf8b"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/guide_1_rgba.png",
+        "bytes": 192151,
+        "sha256": "eab1feaa05c4ddc7b950d2b544bb000fff2252eaf1924d4835ef25ece1018c30"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/guide_2_chroma.png",
+        "bytes": 144295,
+        "sha256": "1247964e21cb14776599690a5a83560b164d4db62e43a36c262657b503e9571b"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/guide_2_rgba.png",
+        "bytes": 175394,
+        "sha256": "3e07fc7f69d68eb9a97c93dd3e0ea88097f1d0b9b632b7788de41174ebbfca58"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/matte.json",
+        "bytes": 51705,
+        "sha256": "93fc59b36182995b6548f073a6c13da308385681326d3cbc15a1e0a4adf9c12f"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/original.json",
+        "bytes": 9460,
+        "sha256": "1ea2b92f4f7aa3d812b4f07d558af65b272ccefe833a97fd6a27eff02c131fc2"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/original.latent",
+        "bytes": 8529464,
+        "sha256": "f106ff6946561a78ae5b987b6cd654a936242800758c377527608d91005896b4"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/original.mp4",
+        "bytes": 778503,
+        "sha256": "7ddb26db4d014df3da3ceeedd1f199e8cb6b471a419c90787153597ffa50f00f"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/original_lossless.mkv",
+        "bytes": 56555322,
+        "sha256": "0088a4809c08cba403e0e3ec3f5f5cc080c915f048afd84435e604f74ea68120"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/prompt.txt",
+        "bytes": 1972,
+        "sha256": "9403e5e8388a19b4c42e762671dfa6b98b517d1e1b063e09e25812bb15373537"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/reference.json",
+        "bytes": 2451,
+        "sha256": "d2b6db6b7fb6e5236e9b849d4508f841df6193f770867cde7a2a31b59e4e235c"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/sampling_history.json",
+        "bytes": 7295,
+        "sha256": "bf582313e93c0df61450cded709dfc7bd941c6e9c29b173ff48da2f359e0985f"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/sampling_submission.json",
+        "bytes": 571,
+        "sha256": "7a1da44e07970ad9d0d2e07f444eb26b3c61a2341401c6e01e3047b03b81689b"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/sampling_workflow_api.json",
+        "bytes": 5214,
+        "sha256": "63a5419790cf1554f9601f820183c8a56de064191f3381386155e875afa82262"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "89d1e53d5d8bd6de1e6a33d669eb241d9e25011f15be8b328aa2159aaa96ed61"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/semantic_matte_initial.json",
+        "bytes": 51111,
+        "sha256": "837bec30678a685c96e9045fb9abaeefc1710ad2c34f8d2d0dee3541862824c5"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/staged_generation.json",
+        "bytes": 780,
+        "sha256": "ed7df2d3db5c811e61ec201c7d57988b7da4a4f41dca6f79cb5c8e99792d96fa"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/submission.json",
+        "bytes": 637,
+        "sha256": "8bf81aced775bd0b702f622b877ffdf2c2429051051ac74a5cd2a1dad373365d"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/cast_h3_v1/workflow_api.json",
+        "bytes": 1207,
+        "sha256": "52e09d0b1b2f22095ce790e1a1228695688f568e8e6a9764863fa06cbde302bb"
+      }
+    },
+    "death_h3_v1": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/accepted_baseline.json",
+        "bytes": 3016,
+        "sha256": "2925d703e8a3ec350d075f8eb5b8f217c142b8108e054434c781f2d44b461009"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/config.json",
+        "bytes": 4716,
+        "sha256": "fc6a18849361f95fc38e768222bcb87f9b509aa360c92bb8d51f01371fbfbbd5"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/decode_submission.json",
+        "bytes": 892,
+        "sha256": "88453a44c33c9797863e13e960ad8003f21719aef8ea1cbb16bf772945b8fbde"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/generation_history.json",
+        "bytes": 23159,
+        "sha256": "95760b9b5bc3ba893ac2616e203a27b4a5ef3697d8021cfc7bd95e441ae04f0a"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/guide_0_chroma.png",
+        "bytes": 152811,
+        "sha256": "011b93d6a25e9a7c0f7628c656a96ed195b3456b8c79333898314b4f3740f854"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/guide_0_rgba.png",
+        "bytes": 185866,
+        "sha256": "7ba21165e663f3626d05e10beb4fc9d6f709b6b47d269cd1c91f549a7145fda8"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/guide_1_chroma.png",
+        "bytes": 135478,
+        "sha256": "81c701a60162f690f88797b0f14739f5fd74528abac3a9e8ad985f7d799d1ed7"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/guide_1_rgba.png",
+        "bytes": 162028,
+        "sha256": "451f4cd4a24f88667c9f4fceb31b0658c9f7cbe89ca7b910d16ff177b9aa8a8b"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/guide_2_chroma.png",
+        "bytes": 134798,
+        "sha256": "a5ff3c53d6385a34d8dd8c2a3287f98aa7af2d3c77705ee613f11544cd14f9b2"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/guide_2_rgba.png",
+        "bytes": 161797,
+        "sha256": "191a1ed60c73e3a4f3aaff3b96802d475f526850a7ac6d84b71cb711287429a7"
+      },
+      "guide_3_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/guide_3_chroma.png",
+        "bytes": 107995,
+        "sha256": "282a86b8a8d6c3a562366c5b38b41b944091ad19be1e219e23534c6826c921cf"
+      },
+      "guide_3_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/guide_3_rgba.png",
+        "bytes": 128784,
+        "sha256": "a41c75c3c54b5841a6bcad0ad0823e2078eebeab4640573da8c5d628cac9f9df"
+      },
+      "guide_4_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/guide_4_chroma.png",
+        "bytes": 102967,
+        "sha256": "7ed35ebbd2947cf5c206901e76e83666385e38ba255e29fe0fa93bb00c0c2700"
+      },
+      "guide_4_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/guide_4_rgba.png",
+        "bytes": 122927,
+        "sha256": "e9e0ae5c48543c3a95af76667bce7cebe4aeaa87158c9e1bac43e3183706aa78"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/matte.json",
+        "bytes": 51745,
+        "sha256": "144fa025ba030dda354f7871736f5027c2c6bb1a807667409b8f0d242036039e"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/original.json",
+        "bytes": 9460,
+        "sha256": "88f4173492a97a5098c4112bceae6f999fa6a8087fbd7f179a8c46e3f21eb61e"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/original.latent",
+        "bytes": 8530088,
+        "sha256": "79cd85db79d7bbfa336582ba0dc1b7565ccc5c3caf40bb9dd2cf5dd210a8bfab"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/original.mp4",
+        "bytes": 671439,
+        "sha256": "a2d4caff8d79747f7b12c374f9694dffb20dd79b58d317a49c73edefc2a68fe9"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/original_lossless.mkv",
+        "bytes": 54707060,
+        "sha256": "3cdab6b5cacaaeff83fc44205c14bb933e7ab016ffac2851dd8964b4dafa8b95"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/prompt.txt",
+        "bytes": 2015,
+        "sha256": "577a3210037b5d9898724605020b86fdfd56907b9dba86eddbf12fdad7490ca0"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/reference.json",
+        "bytes": 4131,
+        "sha256": "4833e52a26cf6dfd35ee9c54359597cd9a89f7eb5eaff5f18d412d21f68fde54"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/sampling_history.json",
+        "bytes": 8061,
+        "sha256": "f440ccc375f92c98cacb8681ece6057b9b2045ca587a2c60512f7562e97c1e68"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/sampling_submission.json",
+        "bytes": 827,
+        "sha256": "482adb2b4904eaa3b080102bfc58d760bc3110e834114f287466ee32a77b4a84"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/sampling_workflow_api.json",
+        "bytes": 5843,
+        "sha256": "4cb743d5e29493db5a3f92cbe6a413c1ef63826cf1f21f79bb83c737261c42d4"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "89d1e53d5d8bd6de1e6a33d669eb241d9e25011f15be8b328aa2159aaa96ed61"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/semantic_matte_initial.json",
+        "bytes": 51151,
+        "sha256": "51a1afaea1e996e6d68819550fbcfd1864741711331a4f136854fcb943a013eb"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/staged_generation.json",
+        "bytes": 781,
+        "sha256": "c36903a13c88c2535899173a9a83f5e6bec0d63621dc36544a7b0dc1c20179a2"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/submission.json",
+        "bytes": 892,
+        "sha256": "88453a44c33c9797863e13e960ad8003f21719aef8ea1cbb16bf772945b8fbde"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v1/workflow_api.json",
+        "bytes": 1210,
+        "sha256": "c5a38f0f18c4f5a2212308554be29645e2c3a33b27a72421c2b09f50c8f3885f"
+      }
+    },
+    "death_h3_v2": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/accepted_baseline.json",
+        "bytes": 3016,
+        "sha256": "2925d703e8a3ec350d075f8eb5b8f217c142b8108e054434c781f2d44b461009"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/config.json",
+        "bytes": 5157,
+        "sha256": "e4872a58ce83c01ed3526a0a1b5bf0f6d731b239655731a4555825b5fe10cfa9"
+      },
+      "correction.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/correction.json",
+        "bytes": 496,
+        "sha256": "1d088546486b655f6953a50c9ade6eef83daa9eca85f7f25ce28deff045349c5"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/decode_submission.json",
+        "bytes": 892,
+        "sha256": "0df5279c559b32887d6fe113b482ca72c7968bd4ac371f820f0b9555b8d71828"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/generation_history.json",
+        "bytes": 23159,
+        "sha256": "f8aea03de4e0aae30a0f0a0ed272f01004527242abee3e60bbf9fd867d293eb1"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/guide_0_chroma.png",
+        "bytes": 152811,
+        "sha256": "011b93d6a25e9a7c0f7628c656a96ed195b3456b8c79333898314b4f3740f854"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/guide_0_rgba.png",
+        "bytes": 185866,
+        "sha256": "7ba21165e663f3626d05e10beb4fc9d6f709b6b47d269cd1c91f549a7145fda8"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/guide_1_chroma.png",
+        "bytes": 135478,
+        "sha256": "81c701a60162f690f88797b0f14739f5fd74528abac3a9e8ad985f7d799d1ed7"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/guide_1_rgba.png",
+        "bytes": 162028,
+        "sha256": "451f4cd4a24f88667c9f4fceb31b0658c9f7cbe89ca7b910d16ff177b9aa8a8b"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/guide_2_chroma.png",
+        "bytes": 134798,
+        "sha256": "a5ff3c53d6385a34d8dd8c2a3287f98aa7af2d3c77705ee613f11544cd14f9b2"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/guide_2_rgba.png",
+        "bytes": 161797,
+        "sha256": "191a1ed60c73e3a4f3aaff3b96802d475f526850a7ac6d84b71cb711287429a7"
+      },
+      "guide_3_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/guide_3_chroma.png",
+        "bytes": 107995,
+        "sha256": "282a86b8a8d6c3a562366c5b38b41b944091ad19be1e219e23534c6826c921cf"
+      },
+      "guide_3_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/guide_3_rgba.png",
+        "bytes": 128784,
+        "sha256": "a41c75c3c54b5841a6bcad0ad0823e2078eebeab4640573da8c5d628cac9f9df"
+      },
+      "guide_4_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/guide_4_chroma.png",
+        "bytes": 102967,
+        "sha256": "7ed35ebbd2947cf5c206901e76e83666385e38ba255e29fe0fa93bb00c0c2700"
+      },
+      "guide_4_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/guide_4_rgba.png",
+        "bytes": 122927,
+        "sha256": "e9e0ae5c48543c3a95af76667bce7cebe4aeaa87158c9e1bac43e3183706aa78"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/matte.json",
+        "bytes": 51854,
+        "sha256": "41a687bdb842c4f735c75d9312874a59bf24fafb5b7e449872a097199b59351f"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/original.json",
+        "bytes": 9460,
+        "sha256": "416baa6ff5b90a27e96172f966c75baa6fd6c14715a05fa841ff0b89b156d38d"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/original.latent",
+        "bytes": 8530808,
+        "sha256": "b2464309ccf22234191d7fe834d0290da1ca76f0cd6145ea1463167eaec45aa4"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/original.mp4",
+        "bytes": 538653,
+        "sha256": "a80b09a04f247b701b914d8c5b4b32e5ad9a08ac36f145db588096bb8c69e3af"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/original_lossless.mkv",
+        "bytes": 54780389,
+        "sha256": "1f04dfb6ad5091baa099f7869033649f429780f3d98de985c5926a85d67b81c7"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/prompt.txt",
+        "bytes": 2385,
+        "sha256": "68b40e64ecec80561249b0539cb13419b78bdc7ea1f0697cc9c89dc02cbc8013"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/reference.json",
+        "bytes": 4131,
+        "sha256": "4833e52a26cf6dfd35ee9c54359597cd9a89f7eb5eaff5f18d412d21f68fde54"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/sampling_history.json",
+        "bytes": 9248,
+        "sha256": "10e366bcaa0606b3002dd7527845fb5393ed82c657ad8f1ccd8e2f5856955345"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/sampling_submission.json",
+        "bytes": 827,
+        "sha256": "1d3b6d78f13178b7bf7e2e4e2af1051388db9a42b27be72ed1ff4c9856f170e7"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/sampling_workflow_api.json",
+        "bytes": 6854,
+        "sha256": "8f5fd6c40693a14502b3b4d8d28cfc646b3ca3ca7cd1c67b7fef40d138ba3547"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "89d1e53d5d8bd6de1e6a33d669eb241d9e25011f15be8b328aa2159aaa96ed61"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/semantic_matte_initial.json",
+        "bytes": 51260,
+        "sha256": "04d55bcf20c6e65e27fc8e57bcf0b96d4915c504bae62d2d332f2155d363954f"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/staged_generation.json",
+        "bytes": 781,
+        "sha256": "6c58ea0c47cc44d9f1f7ade5698ca2f9798fb92a2b715533dcca567daf6d6b16"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/submission.json",
+        "bytes": 892,
+        "sha256": "0df5279c559b32887d6fe113b482ca72c7968bd4ac371f820f0b9555b8d71828"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v2/workflow_api.json",
+        "bytes": 1210,
+        "sha256": "78236ee6ae4c47410f078945037b63ac00f2b6bade3dbb0db9a7c240d2f9dc5a"
+      }
+    },
+    "death_h3_v3": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/accepted_baseline.json",
+        "bytes": 3016,
+        "sha256": "2925d703e8a3ec350d075f8eb5b8f217c142b8108e054434c781f2d44b461009"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/config.json",
+        "bytes": 5729,
+        "sha256": "5c0ee0bf0c3a72a9ec9a922a67fe0de218cb1fefb4e38a146ec2c551b3612ee0"
+      },
+      "correction.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/correction.json",
+        "bytes": 697,
+        "sha256": "f617d1ad7c1df595b0e36400b4e01f958f17da30cbe0cd17f243e4dd267a9d59"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/decode_submission.json",
+        "bytes": 1017,
+        "sha256": "1418988d5bd5a956952449dfcd7626ffdce95256f8bc1b2a6f4c11989e3674ad"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/generation_history.json",
+        "bytes": 23130,
+        "sha256": "08101339a8c16289dcf3df4de95a025bfcf21d2c9da533e5764bc9e684c330f9"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/guide_0_chroma.png",
+        "bytes": 152811,
+        "sha256": "011b93d6a25e9a7c0f7628c656a96ed195b3456b8c79333898314b4f3740f854"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/guide_0_rgba.png",
+        "bytes": 185866,
+        "sha256": "7ba21165e663f3626d05e10beb4fc9d6f709b6b47d269cd1c91f549a7145fda8"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/guide_1_chroma.png",
+        "bytes": 135478,
+        "sha256": "81c701a60162f690f88797b0f14739f5fd74528abac3a9e8ad985f7d799d1ed7"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/guide_1_rgba.png",
+        "bytes": 162028,
+        "sha256": "451f4cd4a24f88667c9f4fceb31b0658c9f7cbe89ca7b910d16ff177b9aa8a8b"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/guide_2_chroma.png",
+        "bytes": 141112,
+        "sha256": "3513b0835eeb3aa95426fb8207ed5f16c8e348b0e4e6357f478f0a62ddfc6b09"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/guide_2_rgba.png",
+        "bytes": 168193,
+        "sha256": "4d41779362152ed92921ad54e7054049235239316923b03a4c9edd79f57f0285"
+      },
+      "guide_3_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/guide_3_chroma.png",
+        "bytes": 104880,
+        "sha256": "9e9df256104e81312f066ce4abe66c177301bf1394cd077095fd230102b30cde"
+      },
+      "guide_3_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/guide_3_rgba.png",
+        "bytes": 122769,
+        "sha256": "5559bbe614b6527de71d48289b5bcd9d1691e1cbfbc143bfbe0e459916ea06b0"
+      },
+      "guide_4_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/guide_4_chroma.png",
+        "bytes": 107995,
+        "sha256": "282a86b8a8d6c3a562366c5b38b41b944091ad19be1e219e23534c6826c921cf"
+      },
+      "guide_4_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/guide_4_rgba.png",
+        "bytes": 128784,
+        "sha256": "a41c75c3c54b5841a6bcad0ad0823e2078eebeab4640573da8c5d628cac9f9df"
+      },
+      "guide_5_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/guide_5_chroma.png",
+        "bytes": 102967,
+        "sha256": "7ed35ebbd2947cf5c206901e76e83666385e38ba255e29fe0fa93bb00c0c2700"
+      },
+      "guide_5_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/guide_5_rgba.png",
+        "bytes": 122927,
+        "sha256": "e9e0ae5c48543c3a95af76667bce7cebe4aeaa87158c9e1bac43e3183706aa78"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/matte.json",
+        "bytes": 51867,
+        "sha256": "f01e91d2e32126acaeefce557dc3d62ec7cce116be4244effb66cee514a22c3c"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/original.json",
+        "bytes": 9460,
+        "sha256": "7a41e2d0b6077660e5e02ea3b7bf81a380e69f6c9936029ee3e361dd14dffa25"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/original.latent",
+        "bytes": 8530976,
+        "sha256": "c221819d3dfe6dd4fc345c9bde019cc56417b9d0d176d9193105bdf2b1107aeb"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/original.mp4",
+        "bytes": 478062,
+        "sha256": "d7be7b64ce24cc3a36a67fcd6e6ee80fae968992682edee250ac9a85923cff8f"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/original_lossless.mkv",
+        "bytes": 55233208,
+        "sha256": "5aeaecfe3ffd3768c436c30d6317dbcf48e9f473a461eacc13a9b2dc35ecb0f2"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/prompt.txt",
+        "bytes": 2529,
+        "sha256": "47202ec33b075ce5e40c7bd75a6c2eeef0e1e8c3fab9038764883c7b8cdf08d3"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/reference.json",
+        "bytes": 4923,
+        "sha256": "f8721085147a45d2bf1aa41db1b330e68707ecf2e855b08626a56c544393e0c1"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/sampling_history.json",
+        "bytes": 9038,
+        "sha256": "30315601c928119959a9e7ad709ac27ae729219583d1ecba2490f238988df62e"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/sampling_submission.json",
+        "bytes": 952,
+        "sha256": "ae0b94452e6df249efbe7db330bffd5f4679c1764450df862a9843ea77f1e937"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/sampling_workflow_api.json",
+        "bytes": 6809,
+        "sha256": "5f040ffb7899f0fe073ed802bde7e5d040413be6b1b9c0d9e1406e35c9dbe2d2"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "89d1e53d5d8bd6de1e6a33d669eb241d9e25011f15be8b328aa2159aaa96ed61"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/semantic_matte_initial.json",
+        "bytes": 51273,
+        "sha256": "cd76d4628aa32ac61a0fb1311c572fd731d0eec2faff47fe2b753d4cff8b88dd"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/staged_generation.json",
+        "bytes": 728,
+        "sha256": "5bc88643573f0b41b98a2372bc7fdae6dcc25f5a5ffe1f2108435c62e69d701a"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/submission.json",
+        "bytes": 1017,
+        "sha256": "1418988d5bd5a956952449dfcd7626ffdce95256f8bc1b2a6f4c11989e3674ad"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v3/workflow_api.json",
+        "bytes": 1210,
+        "sha256": "ea2899b9bac7ec3a624aa9d84961c42b49ffb1b6de42a13c3dfa3e895a4723b2"
+      }
+    },
+    "death_h3_v4": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/accepted_baseline.json",
+        "bytes": 3016,
+        "sha256": "2925d703e8a3ec350d075f8eb5b8f217c142b8108e054434c781f2d44b461009"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/config.json",
+        "bytes": 4036,
+        "sha256": "aa2e8cca06cba13c19edda27039546125de06c41c85d96a42450e89ec64fb046"
+      },
+      "correction.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/correction.json",
+        "bytes": 625,
+        "sha256": "6cae05fe2818c58f25ccfe75db4e3445533e4de0060d7d6d26303884d5e1f4dd"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/decode_submission.json",
+        "bytes": 514,
+        "sha256": "2875b324db3d95b4f64a33e9169923831ea52a9c1608aa1d493258c3f6b910c7"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/generation_history.json",
+        "bytes": 23130,
+        "sha256": "f74f1fa4421fa9fb95ee3d302b75a70882cbd367743c7f4f83382055edfc0812"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/guide_0_chroma.png",
+        "bytes": 152811,
+        "sha256": "011b93d6a25e9a7c0f7628c656a96ed195b3456b8c79333898314b4f3740f854"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/guide_0_rgba.png",
+        "bytes": 185866,
+        "sha256": "7ba21165e663f3626d05e10beb4fc9d6f709b6b47d269cd1c91f549a7145fda8"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/guide_1_chroma.png",
+        "bytes": 102967,
+        "sha256": "7ed35ebbd2947cf5c206901e76e83666385e38ba255e29fe0fa93bb00c0c2700"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/guide_1_rgba.png",
+        "bytes": 122927,
+        "sha256": "e9e0ae5c48543c3a95af76667bce7cebe4aeaa87158c9e1bac43e3183706aa78"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/matte.json",
+        "bytes": 51722,
+        "sha256": "6d65507d5b660f2a983daafecad2e9704b015bfa49e07c86f71a64114ae0e854"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/original.json",
+        "bytes": 9460,
+        "sha256": "0d4145d7a7698646a0ce0631eb8d9ae64a1292c2da45f506411515619dd49e16"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/original.latent",
+        "bytes": 8529664,
+        "sha256": "02ea1ae1446606855cabe553aad55d93cefed73770c99ff1bf421ce71059d38f"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/original.mp4",
+        "bytes": 798794,
+        "sha256": "a15206c0a3f10e2c8aae053804f0bc36548052e38f363b2222cafbe1079fdd4e"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/original_lossless.mkv",
+        "bytes": 47521449,
+        "sha256": "1fff71b7daa866f202fa43d2e0b690d6ebcb5882c8d72c1b5f7ac313fb7d76d1"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/prompt.txt",
+        "bytes": 2728,
+        "sha256": "c35bfba19191bb828085ae12711f990d227e09fa91803cc38d4e6b9ca32a4cc6"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/reference.json",
+        "bytes": 1847,
+        "sha256": "1766b25c84f6139aa5c47c08c7cd328ec9ae8dda9754db7f35538a8d3f968746"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/sampling_history.json",
+        "bytes": 6984,
+        "sha256": "9da6d5d59f3f35cb5fa0b44c395e6c297e39ab61b1156970bedfbdb9593f730a"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/sampling_submission.json",
+        "bytes": 448,
+        "sha256": "a27f5b838e5d6651d316cdf592632523ef07868343432a5933e16951e20cff4b"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/sampling_workflow_api.json",
+        "bytes": 5203,
+        "sha256": "255e9efef119fe6c5306da3f60309e6e0d59e7bd19c8a57a70890fc0111bec16"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "89d1e53d5d8bd6de1e6a33d669eb241d9e25011f15be8b328aa2159aaa96ed61"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/semantic_matte_initial.json",
+        "bytes": 51128,
+        "sha256": "8aac9f693808b00d1f3b1c46735fd3bb8475fbbee3a6e07c2a327d5a50429ad4"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/staged_generation.json",
+        "bytes": 728,
+        "sha256": "569afdeceb1cd41393ffa05614b39dbfa81de13168afe7b55dac7d013b0cd45f"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/submission.json",
+        "bytes": 514,
+        "sha256": "2875b324db3d95b4f64a33e9169923831ea52a9c1608aa1d493258c3f6b910c7"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v4/workflow_api.json",
+        "bytes": 1210,
+        "sha256": "71ef07c9a504b4161a8b3107cb81e9dc95976694a8803b51cee9efc88184f73c"
+      }
+    },
+    "death_h3_v5": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/accepted_baseline.json",
+        "bytes": 3016,
+        "sha256": "2925d703e8a3ec350d075f8eb5b8f217c142b8108e054434c781f2d44b461009"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/config.json",
+        "bytes": 4104,
+        "sha256": "1887421cc1036c9a2b05ce83a51b8e216e9972fbb9904e45472e34d2eebba0b6"
+      },
+      "correction.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/correction.json",
+        "bytes": 765,
+        "sha256": "605fd152fdb264c4e0ac16781ec3fc38f153d881eb64949bbdc99d945e132962"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/decode_submission.json",
+        "bytes": 514,
+        "sha256": "32d4ba50a170d4245fd951428171d35e626c35a5e490afd54e333ba035685883"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/generation_history.json",
+        "bytes": 23130,
+        "sha256": "b5bd1352c242616a66301ca75e4e864bbb4c40e67b66cd1fe0b8bf822483ec3b"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/guide_0_chroma.png",
+        "bytes": 152735,
+        "sha256": "9033f84f05643546cce783718535efbb1c4ab8a25a5e2b292b67cf6ee79c247a"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/guide_0_rgba.png",
+        "bytes": 185727,
+        "sha256": "176b8db9b20b3e3c8b8cd5f8c965a720349b525462dd59fcf049e96d25bc0535"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/guide_1_chroma.png",
+        "bytes": 103009,
+        "sha256": "57277543a8100c02f04a5b6c99027734d865849e8d6b68da93b494325c893e99"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/guide_1_rgba.png",
+        "bytes": 123120,
+        "sha256": "1bc9b9c759ff821a9ee671bb3d82fecd7ac68e7a0efb124ec8143fad5af1493e"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/matte.json",
+        "bytes": 51503,
+        "sha256": "ac12b3766cc6961554babe8d8a9e8aa3223c64c66247f42dcf572d77fa0885ad"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/original.json",
+        "bytes": 9460,
+        "sha256": "409d75b1a0f3c862e0d572b1c3b37665226421cad263142007cdf95aa677acc1"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/original.latent",
+        "bytes": 8529736,
+        "sha256": "f84ef9d560a264cb2413ef481b5b2ae32e6e1b18b976d3088235cffbd001642e"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/original.mp4",
+        "bytes": 724571,
+        "sha256": "ddfd7568108cf6c6907d0925207b416b29649f6201ee63166192261ea7b957de"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/original_lossless.mkv",
+        "bytes": 46876908,
+        "sha256": "0fee43d4879eedc22445348b4385d02d111e09ae0f348e5a045c56b0e30763f6"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/prompt.txt",
+        "bytes": 2796,
+        "sha256": "b87e2d1764ef94bfba2bdd15b0fdf6c7bb4607253854123fee108ad9fea05831"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/reference.json",
+        "bytes": 1847,
+        "sha256": "b74b059c04209437cf2998f9a7be4810a8e5c8cac0a776f5356895af4a746b90"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/sampling_history.json",
+        "bytes": 7052,
+        "sha256": "9a8b232429c1894c9e48689d6c5d866c94d7e34f70e89fbd5ed4d1922d931537"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/sampling_submission.json",
+        "bytes": 449,
+        "sha256": "cf12563c5b4d4831b41441fcbd6a1ecca00078dc084090bfe88014ae46efad26"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/sampling_workflow_api.json",
+        "bytes": 5271,
+        "sha256": "00053d532416fe79cf2028b8e24d2ccf6b82eaac857987ca82d6420ad3d8a884"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "89d1e53d5d8bd6de1e6a33d669eb241d9e25011f15be8b328aa2159aaa96ed61"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/semantic_matte_initial.json",
+        "bytes": 50909,
+        "sha256": "7758fef52dd3cbd60b301aba1184cc5a1dc39f851a4d25f7a0243d9f5bc1b16c"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/staged_generation.json",
+        "bytes": 728,
+        "sha256": "7c21a413095c4f613f75bdd1e58d9e1306293b3739e1db9aa8a2ca8923358fee"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/submission.json",
+        "bytes": 514,
+        "sha256": "32d4ba50a170d4245fd951428171d35e626c35a5e490afd54e333ba035685883"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_h3_v5/workflow_api.json",
+        "bytes": 1210,
+        "sha256": "ad8b5d3fa3fd1eeef0496c51016e0d43457ab95aa633021c793b0113c417e81e"
+      }
+    },
+    "defend_h3_v1": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/accepted_baseline.json",
+        "bytes": 3016,
+        "sha256": "2925d703e8a3ec350d075f8eb5b8f217c142b8108e054434c781f2d44b461009"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/config.json",
+        "bytes": 3091,
+        "sha256": "f2caf4ca0f8cafb2815d41955f82a95f02f200848b01c0249c3efd20c936ecb1"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/decode_submission.json",
+        "bytes": 516,
+        "sha256": "04715f8ad51661c0194a50c78cce978f75be1df9d1ce06dabe99a5adad621f47"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/generation_history.json",
+        "bytes": 23258,
+        "sha256": "362a89be3b360a1df3a5335796488fd2893eeaf5eab46aa0a283068ad13ec183"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/guide_0_chroma.png",
+        "bytes": 152811,
+        "sha256": "011b93d6a25e9a7c0f7628c656a96ed195b3456b8c79333898314b4f3740f854"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/guide_0_rgba.png",
+        "bytes": 185866,
+        "sha256": "7ba21165e663f3626d05e10beb4fc9d6f709b6b47d269cd1c91f549a7145fda8"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/guide_1_chroma.png",
+        "bytes": 156182,
+        "sha256": "351adf21b61c1121ab30de952ce266bd21efff73fc7eeda3e9b2111a410988cb"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/guide_1_rgba.png",
+        "bytes": 187671,
+        "sha256": "30e172bcb8711b97ec805e32baf09c5380371c1007ae96f265cbff7f78419ded"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/matte.json",
+        "bytes": 51303,
+        "sha256": "94c6496ef843355ab39cca12e0927e09a6dee24d4c2a64b337150522e65fcaeb"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/original.json",
+        "bytes": 9460,
+        "sha256": "af4f515374a761840b6c93f317599838e543c727483dda8ff22a6691d2b7135f"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/original.latent",
+        "bytes": 8528960,
+        "sha256": "a11513b0ff104c9a1fca9333d17af8d58def646853e1a547febcc3c8ad045fb3"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/original.mp4",
+        "bytes": 613478,
+        "sha256": "cf35df3cc7ac9af9ffb7a79a40f1b6003ddbd430ddd79da12332762e04132aff"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/original_lossless.mkv",
+        "bytes": 61493458,
+        "sha256": "8df131d4140e86e52ceaf9b88d1000201d0088df52d1bd88be7afa7f2ce903a2"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/prompt.txt",
+        "bytes": 1840,
+        "sha256": "4aea2cb49626028647b3e04fcab6139871ed9a56cf0aa600bdda932506bdf0e9"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/reference.json",
+        "bytes": 1739,
+        "sha256": "6d548f64453eee98c3e3c5449f43751249e20a27535595186036e273e1a4bf0a"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/sampling_history.json",
+        "bytes": 6508,
+        "sha256": "f928904f9e14217df0f94ff47de67fd4469de62bfd2426f229c49011d75d6806"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/sampling_submission.json",
+        "bytes": 451,
+        "sha256": "485b65b2e6edec4f61ae757deec2b3149d3c02993eaed822da91c88f6078f577"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/sampling_workflow_api.json",
+        "bytes": 4638,
+        "sha256": "b579e911144c616c9e2012dd53112223d28ddb352d59c655d0794bca93af320d"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "89d1e53d5d8bd6de1e6a33d669eb241d9e25011f15be8b328aa2159aaa96ed61"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/semantic_matte_initial.json",
+        "bytes": 50709,
+        "sha256": "c6748f29d2542b331e301bb58e857528d43aa5a40774889b0dddac7389049602"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/staged_generation.json",
+        "bytes": 729,
+        "sha256": "1041c7fe824854f9402bab574300b4c85257aaf2e5896d768a295dcb60fb35ef"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/submission.json",
+        "bytes": 516,
+        "sha256": "04715f8ad51661c0194a50c78cce978f75be1df9d1ce06dabe99a5adad621f47"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/defend_h3_v1/workflow_api.json",
+        "bytes": 1213,
+        "sha256": "0b17fe78e587392c9d6baf2bed9f168e9afd00f39b99ec56609b28716b2e6e56"
+      }
+    },
+    "hit_h3_v1": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/accepted_baseline.json",
+        "bytes": 3016,
+        "sha256": "2925d703e8a3ec350d075f8eb5b8f217c142b8108e054434c781f2d44b461009"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/config.json",
+        "bytes": 3040,
+        "sha256": "e6e6b61538c8058a36d5ad172b5fe2eb409f1fe74d85d7a289f32445c2b724e7"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/decode_submission.json",
+        "bytes": 510,
+        "sha256": "6963b6768d930e623cb39e3cbbebaf936f38688f9f6dfc0b63ed486043c25d7a"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/generation_history.json",
+        "bytes": 22903,
+        "sha256": "607dd25574f7a902dc70b53792bae1c6932007331317e9cdf1aa1da42ae8aa76"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/guide_0_chroma.png",
+        "bytes": 152811,
+        "sha256": "011b93d6a25e9a7c0f7628c656a96ed195b3456b8c79333898314b4f3740f854"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/guide_0_rgba.png",
+        "bytes": 185866,
+        "sha256": "7ba21165e663f3626d05e10beb4fc9d6f709b6b47d269cd1c91f549a7145fda8"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/guide_1_chroma.png",
+        "bytes": 163300,
+        "sha256": "623f64bfa3010e4396727348e2e857f11b0b98dbc0303aafff5f1062db6515c8"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/guide_1_rgba.png",
+        "bytes": 197098,
+        "sha256": "4e66c23bcda998adbfb57c746196dcb3292874467792437b38004ae9c9c157b1"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/matte.json",
+        "bytes": 51459,
+        "sha256": "f420608ef090f1983f4cf23e764d18c90a9e2e520c7979c66c211ea79cec18a9"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/original.json",
+        "bytes": 9460,
+        "sha256": "e8b7ebf9dd1cea120b744cb1d14f46f32da7ef61c6441874ea90948dd854ed39"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/original.latent",
+        "bytes": 8528904,
+        "sha256": "3cec9c8895fa55a66d51a509a7eada8660b03c5cccc4aaad5aa7e6e113114bfa"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/original.mp4",
+        "bytes": 896746,
+        "sha256": "2cbf681dca3cc74720f04e2fdd715ee9c12fc0fb0862d677eb613afb689ee7a4"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/original_lossless.mkv",
+        "bytes": 64763964,
+        "sha256": "1685b0cb28d8b7f36b6302affad7425ff78761a970501c446e6eaa7f5fc1f5d8"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/prompt.txt",
+        "bytes": 1797,
+        "sha256": "b49d5e8a5eb54a59ccb721109d02b8ac074bc36b83f3551783faeee66427c5bb"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/reference.json",
+        "bytes": 1734,
+        "sha256": "d57d46554e231094761cfc58d9e5242782f0c33610c3ddcf0d8c406477c244bd"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/sampling_history.json",
+        "bytes": 6554,
+        "sha256": "38541c7b172ff68d47d2bc79f672d720fa6e9d9d5c4f647b72ff70ea0cb9f0a9"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/sampling_submission.json",
+        "bytes": 445,
+        "sha256": "07c63e50240e444ed5c969c6e2ff47a276a3c7f9035f26cc9856ae0b71fe1d09"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/sampling_workflow_api.json",
+        "bytes": 4586,
+        "sha256": "e859a210a698ba3a0e7450cf5c044a4752b05dc15d42117e9119f99a65159eb1"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "89d1e53d5d8bd6de1e6a33d669eb241d9e25011f15be8b328aa2159aaa96ed61"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/semantic_matte_initial.json",
+        "bytes": 50865,
+        "sha256": "ae48348f7d1e45a9eae4e28138dd733c8006d0e98bdbf42d8948666a222b022e"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/staged_generation.json",
+        "bytes": 779,
+        "sha256": "e6213d49438526574ef4df77e5353e76a52080cae4fc41744be84b61840701b9"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/submission.json",
+        "bytes": 510,
+        "sha256": "6963b6768d930e623cb39e3cbbebaf936f38688f9f6dfc0b63ed486043c25d7a"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/hit_h3_v1/workflow_api.json",
+        "bytes": 1204,
+        "sha256": "770e585b3ea2f4308f2788c8d1dace5b1ed7ccf41df1ea627aa1cae9abd263d8"
+      }
+    },
+    "move_h3_v1": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/accepted_baseline.json",
+        "bytes": 3016,
+        "sha256": "2925d703e8a3ec350d075f8eb5b8f217c142b8108e054434c781f2d44b461009"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/config.json",
+        "bytes": 4519,
+        "sha256": "09739982aba92b006fba938a1d9203f5cce15816247e0bb44235e9e742bd8bd2"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/decode_submission.json",
+        "bytes": 887,
+        "sha256": "d32326ff238cbace868cae0e2f8a63e3954c4321d546e6e0bbb3375282cef549"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/generation_history.json",
+        "bytes": 23002,
+        "sha256": "9595cd0c5039acf62ab00f13bd04f81ea2bfad42af8191cda9a59f794a9330db"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/guide_0_chroma.png",
+        "bytes": 152811,
+        "sha256": "011b93d6a25e9a7c0f7628c656a96ed195b3456b8c79333898314b4f3740f854"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/guide_0_rgba.png",
+        "bytes": 185866,
+        "sha256": "7ba21165e663f3626d05e10beb4fc9d6f709b6b47d269cd1c91f549a7145fda8"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/guide_1_chroma.png",
+        "bytes": 154697,
+        "sha256": "ccfdd2416ee53e44e421c3d9b845fcc61e905771b7e3a64302b40907ad4469a9"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/guide_1_rgba.png",
+        "bytes": 186630,
+        "sha256": "1f8966442d02f6023648150a2f33b25599836837e85b44d3e53bdf16687ff646"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/guide_2_chroma.png",
+        "bytes": 158747,
+        "sha256": "e2f0ec7901deadfadc16699ec241e712c0321e76ed68a2299499f160e07d9788"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/guide_2_rgba.png",
+        "bytes": 192364,
+        "sha256": "58109eddcf1ea9fdac0bbdd444aa4a38c9a943f75878cb2af51fa3682a6362b7"
+      },
+      "guide_3_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/guide_3_chroma.png",
+        "bytes": 159166,
+        "sha256": "a24db15b82c671964bebc85d97fd8fd21511e1a06b0c69328196fed80ae84a8b"
+      },
+      "guide_3_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/guide_3_rgba.png",
+        "bytes": 192600,
+        "sha256": "8d1d8c9b7b2538b136e63ec28aba554dbe762748a707e8b98f5524545da56dec"
+      },
+      "guide_4_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/guide_4_chroma.png",
+        "bytes": 152901,
+        "sha256": "f2893e609197c2afd21b7c4116e97d1081ffa57e77248eae82eadbe7a8fff5bb"
+      },
+      "guide_4_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/guide_4_rgba.png",
+        "bytes": 185106,
+        "sha256": "1019efc6cf07ddb5edd4dec357f347e66f37d587732b7f53fe5a7bf90f278ab5"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/matte.json",
+        "bytes": 51555,
+        "sha256": "db433e781b83d3399016d186218604ee34f4a2ec9a61ac6101d1a630438c00bb"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/original.json",
+        "bytes": 9460,
+        "sha256": "71f184fb7a64c761f20243506732572b9f7f5cf3e035c3dd1b87ed5e557b9e9a"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/original.latent",
+        "bytes": 8530176,
+        "sha256": "5936addfdc86c9c67ffce570acde44a195d906785737217c48c130876f68d01d"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/original.mp4",
+        "bytes": 1346181,
+        "sha256": "ebc9785115bc982b39a235acf4638be88d0bf3532b9f41c28200e2bcf6449e32"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/original_lossless.mkv",
+        "bytes": 63645893,
+        "sha256": "ba9fd3a0f20169b13e71bfc83e7383b26d3f682e40caf0ddb37e99943075bc2b"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/prompt.txt",
+        "bytes": 1933,
+        "sha256": "9dfa2da0c8439afe6fb28b8ef7df6ffeec0bedb76f45d3d9a3e9372863d7119e"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/reference.json",
+        "bytes": 3958,
+        "sha256": "228a157613cbc28de78d8232e55e4222067a89da38ef896ba87ebce15c0bee99"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/sampling_history.json",
+        "bytes": 8279,
+        "sha256": "5e5922386496a686c150994585fbd524439fd4d0e27b8420b7455f29a19e21ae"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/sampling_submission.json",
+        "bytes": 822,
+        "sha256": "0eff9d3aa664e9fa45a221f55f12765b5af92be2ba9005eecfe1dfa49cfb79bf"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/sampling_workflow_api.json",
+        "bytes": 6075,
+        "sha256": "c57c798f22cf7fc74dfdc829397865e612076d3b3ae5eb5002b707421e305d23"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "89d1e53d5d8bd6de1e6a33d669eb241d9e25011f15be8b328aa2159aaa96ed61"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/semantic_matte_initial.json",
+        "bytes": 50961,
+        "sha256": "9cf9316a8568d5f22610b42476b3810c1ac62a1c639a4900006882ab74ec1b03"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/staged_generation.json",
+        "bytes": 727,
+        "sha256": "b6aedd6c59fd1966b3dd286d6133cd79ddf024f611bb24ac03af840316286b2b"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/submission.json",
+        "bytes": 887,
+        "sha256": "d32326ff238cbace868cae0e2f8a63e3954c4321d546e6e0bbb3375282cef549"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/move_h3_v1/workflow_api.json",
+        "bytes": 1207,
+        "sha256": "69caebc036018a450c945e71cff329d218bc725580d0cdf4255a593b835247c5"
+      }
+    },
+    "ranged_h3_v1": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/accepted_baseline.json",
+        "bytes": 3016,
+        "sha256": "2925d703e8a3ec350d075f8eb5b8f217c142b8108e054434c781f2d44b461009"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/config.json",
+        "bytes": 3916,
+        "sha256": "d984f7bf0fbf70ae4792d5591ba6a3c3520501984e1a0b23cf79b7d5db94f9de"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/decode_submission.json",
+        "bytes": 643,
+        "sha256": "da71d26a2da05497cde07aec559c413d8f816fac7782d2ce6883d31c5525ab68"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/generation_history.json",
+        "bytes": 23258,
+        "sha256": "9100b9569c4c1adb400dccad91ac005634b85154cf186a2540588b1e104e451f"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/guide_0_chroma.png",
+        "bytes": 152811,
+        "sha256": "011b93d6a25e9a7c0f7628c656a96ed195b3456b8c79333898314b4f3740f854"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/guide_0_rgba.png",
+        "bytes": 185866,
+        "sha256": "7ba21165e663f3626d05e10beb4fc9d6f709b6b47d269cd1c91f549a7145fda8"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/guide_1_chroma.png",
+        "bytes": 158989,
+        "sha256": "19d50fe500e1b4dbaa6eff289156469020b9d21c1428aac4b7c51272eedeaf8b"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/guide_1_rgba.png",
+        "bytes": 192151,
+        "sha256": "eab1feaa05c4ddc7b950d2b544bb000fff2252eaf1924d4835ef25ece1018c30"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/guide_2_chroma.png",
+        "bytes": 156016,
+        "sha256": "7d377bdeab83ebb4b070315060892e66045fc2a8781d98e5dde662d0809ac4fc"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/guide_2_rgba.png",
+        "bytes": 188485,
+        "sha256": "ff44ad94d6fbdadff973d30b5f0b8c214e96f4ec5c6b7a566aedc93083fec3dd"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/matte.json",
+        "bytes": 51301,
+        "sha256": "138ed48053fb1c0ab8d7dd240085a40ab6bd9f9f27c397c13ffb642562e6f8cc"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/original.json",
+        "bytes": 9460,
+        "sha256": "7550859c9e1bfcfca4aebdf6fa7ae672a9c285b3f453d1961bd6219eb4147287"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/original.latent",
+        "bytes": 8530008,
+        "sha256": "b920fe091de3edaad2879f38551e7c1a7d9fd5d5a6e0b7b6b50fc36e2e61e2ba"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/original.mp4",
+        "bytes": 1090162,
+        "sha256": "ce0be6f59f77917fc1698e14621cb40761d393387ad0786ed30402b008ab4edf"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/original_lossless.mkv",
+        "bytes": 71598854,
+        "sha256": "1760d40e8d3d8d8cfcd871828a1e4a23678979dfacc57b6af69887b2e3f38160"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/prompt.txt",
+        "bytes": 2151,
+        "sha256": "7c41fc62bad76e587eacee9081e5e8f08166731a29374e7b5492b84f4a162047"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/reference.json",
+        "bytes": 2477,
+        "sha256": "7ee4b6de50546fab805639bcde3f2ee0b289812dd19fccf5b29e534301ca80f7"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/sampling_history.json",
+        "bytes": 8199,
+        "sha256": "384310dff63928e2e7500c1097e4504135ea077c88ad76accb85933ef7ceb808"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/sampling_submission.json",
+        "bytes": 578,
+        "sha256": "ef170ba7964994d47f1d5d29882667c9dfe6cff722739387adb6b9e1d9255899"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/sampling_workflow_api.json",
+        "bytes": 6041,
+        "sha256": "2a651c7ab01e6fcb229b0964ff6888494631acd1c41c989ed575f78b3c4113d6"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "89d1e53d5d8bd6de1e6a33d669eb241d9e25011f15be8b328aa2159aaa96ed61"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/semantic_matte_initial.json",
+        "bytes": 50707,
+        "sha256": "9e264f04cebfd783a00f484ddef80486f058affe2522e19a3c1dd348e8bf1370"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/staged_generation.json",
+        "bytes": 729,
+        "sha256": "d558edbb45a5eaff113fe77332110f8f78db56cef748e68477b124f8ec9fe18d"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/submission.json",
+        "bytes": 643,
+        "sha256": "da71d26a2da05497cde07aec559c413d8f816fac7782d2ce6883d31c5525ab68"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v1/workflow_api.json",
+        "bytes": 1213,
+        "sha256": "46ab6e7848cb931396c487edb8c0ab278fe3454cc495ae3cce136235f02d1882"
+      }
+    },
+    "ranged_h3_v2": {
+      "accepted_baseline.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/accepted_baseline.json",
+        "bytes": 3016,
+        "sha256": "2925d703e8a3ec350d075f8eb5b8f217c142b8108e054434c781f2d44b461009"
+      },
+      "config.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/config.json",
+        "bytes": 4591,
+        "sha256": "7836a42a36881763651f4651d27a5da34f7871c2faed3f28b9e6b66e35799551"
+      },
+      "correction.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/correction.json",
+        "bytes": 413,
+        "sha256": "8e4c6e36cbbc295807cec4d687b2b1af58978b4814d798c16f8e8688346dc0b5"
+      },
+      "decode_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/decode_submission.json",
+        "bytes": 770,
+        "sha256": "9250408f966fb6e1bbe100b9801d9c3ee762dad89f0d284e426ac87bf4cd332a"
+      },
+      "generation_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/generation_history.json",
+        "bytes": 23258,
+        "sha256": "c32b85426204fe764c52cf901229e1b2ac22560c1ff59bcd1370601bf84fc3b8"
+      },
+      "guide_0_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/guide_0_chroma.png",
+        "bytes": 152811,
+        "sha256": "011b93d6a25e9a7c0f7628c656a96ed195b3456b8c79333898314b4f3740f854"
+      },
+      "guide_0_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/guide_0_rgba.png",
+        "bytes": 185866,
+        "sha256": "7ba21165e663f3626d05e10beb4fc9d6f709b6b47d269cd1c91f549a7145fda8"
+      },
+      "guide_1_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/guide_1_chroma.png",
+        "bytes": 158989,
+        "sha256": "19d50fe500e1b4dbaa6eff289156469020b9d21c1428aac4b7c51272eedeaf8b"
+      },
+      "guide_1_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/guide_1_rgba.png",
+        "bytes": 192151,
+        "sha256": "eab1feaa05c4ddc7b950d2b544bb000fff2252eaf1924d4835ef25ece1018c30"
+      },
+      "guide_2_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/guide_2_chroma.png",
+        "bytes": 156016,
+        "sha256": "7d377bdeab83ebb4b070315060892e66045fc2a8781d98e5dde662d0809ac4fc"
+      },
+      "guide_2_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/guide_2_rgba.png",
+        "bytes": 188485,
+        "sha256": "ff44ad94d6fbdadff973d30b5f0b8c214e96f4ec5c6b7a566aedc93083fec3dd"
+      },
+      "guide_3_chroma.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/guide_3_chroma.png",
+        "bytes": 144295,
+        "sha256": "1247964e21cb14776599690a5a83560b164d4db62e43a36c262657b503e9571b"
+      },
+      "guide_3_rgba.png": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/guide_3_rgba.png",
+        "bytes": 175394,
+        "sha256": "3e07fc7f69d68eb9a97c93dd3e0ea88097f1d0b9b632b7788de41174ebbfca58"
+      },
+      "matte.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/matte.json",
+        "bytes": 51447,
+        "sha256": "976c92b8ff72f1bd66e3e8096f38965996bcc6dfa1646d7e50b7fb922316445d"
+      },
+      "original.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/original.json",
+        "bytes": 9460,
+        "sha256": "0282ca621d0ca43690cd222a53b01b339d7547d9728da562649b12ab13f1003d"
+      },
+      "original.latent": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/original.latent",
+        "bytes": 8530784,
+        "sha256": "1f19b371e562a0396816fae261cbaa3ce103b511630d06cf5d7498413ecbee9d"
+      },
+      "original.mp4": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/original.mp4",
+        "bytes": 583714,
+        "sha256": "c01a162ebe10374b3beb9c1424854b0a1ab0d7ed3484e1ba728581213d23f398"
+      },
+      "original_lossless.mkv": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/original_lossless.mkv",
+        "bytes": 56315816,
+        "sha256": "ece4475ecafdb9787d1fb7e5af64eaf599747c20e073fdc4b98ed3d21f4f85b2"
+      },
+      "prompt.txt": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/prompt.txt",
+        "bytes": 2376,
+        "sha256": "317894563e1127c2201a715ff78f78aaec7a6f1cf15eedf3d05e1eeecfbe669d"
+      },
+      "reference.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/reference.json",
+        "bytes": 3185,
+        "sha256": "a0eeb79e3cb6a03581064cdf854f384306053fdb668dbb1b05592715ee45f9f0"
+      },
+      "sampling_history.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/sampling_history.json",
+        "bytes": 9397,
+        "sha256": "44a7652e48f465e2e07fe6132d13e3eb9b02d747fc923860f28a2f6cbd0f0a2a"
+      },
+      "sampling_submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/sampling_submission.json",
+        "bytes": 705,
+        "sha256": "fcf57466096252c5b67c3abfe116cfa35c9afe505cd0b98e4df0dd3955889085"
+      },
+      "sampling_workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/sampling_workflow_api.json",
+        "bytes": 7039,
+        "sha256": "ea1b0b02c68ff10a7f5afd946d660aee9ee527a3f6c7b1cd040a2d26a2a85acb"
+      },
+      "segmentation_recipe.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/segmentation_recipe.json",
+        "bytes": 1688,
+        "sha256": "89d1e53d5d8bd6de1e6a33d669eb241d9e25011f15be8b328aa2159aaa96ed61"
+      },
+      "semantic_matte_initial.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/semantic_matte_initial.json",
+        "bytes": 50853,
+        "sha256": "a468a10155b61782911b7230ec8b15df0bba47e405a4b54ded62e33c7ad7bb0e"
+      },
+      "staged_generation.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/staged_generation.json",
+        "bytes": 729,
+        "sha256": "d5314d0490a4d3d3d5b4780ccb28e0aa5dc36c14e9eeadde61c303920276b4bc"
+      },
+      "submission.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/submission.json",
+        "bytes": 770,
+        "sha256": "9250408f966fb6e1bbe100b9801d9c3ee762dad89f0d284e426ac87bf4cd332a"
+      },
+      "workflow_api.json": {
+        "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/ranged_h3_v2/workflow_api.json",
+        "bytes": 1213,
+        "sha256": "3fccfde86593b69774f7156f00d789d4d33729a29b02ecc7e504b51487b936c2"
+      }
+    }
+  },
+  "guide_art": {
+    "death_guides_v3/half_side_fall.prompt.txt": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_guides_v3/half_side_fall.prompt.txt",
+      "bytes": 1889,
+      "sha256": "f593cf9e6a90fb0d99c7734cbfaaf480a416c3168e0d71a7e421c7d6546efb83"
+    },
+    "death_guides_v3/half_side_fall.request.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_guides_v3/half_side_fall.request.json",
+      "bytes": 741,
+      "sha256": "e93dd1ac0e8e620a2cf98c440c3319c0cb051ad69528ac4d0d4ac1a47773be4d"
+    },
+    "death_guides_v3/half_side_fall_original.generation.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_guides_v3/half_side_fall_original.generation.json",
+      "bytes": 1693,
+      "sha256": "c2f0bf0ef5cbbe3cbc98d2c323d9aa06245d861dfa2a16fcd944078a87a1b0ab"
+    },
+    "death_guides_v3/half_side_fall_original.png": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_guides_v3/half_side_fall_original.png",
+      "bytes": 1247601,
+      "sha256": "327d5da224eea6e96d2f44b09e85fd58ca96d38eda9dcea8ac2331813775d6da"
+    },
+    "death_guides_v3/seated_closed_grip.prompt.txt": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_guides_v3/seated_closed_grip.prompt.txt",
+      "bytes": 1381,
+      "sha256": "651155db0e6353b65f917823d1d1b201d8c102932a897a4b48072b582c0e459d"
+    },
+    "death_guides_v3/seated_closed_grip.request.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_guides_v3/seated_closed_grip.request.json",
+      "bytes": 490,
+      "sha256": "443169d49ee44c70669d4d29c2c1a81dc62f5467514f133e64d6ba2f3531adf0"
+    },
+    "death_guides_v3/seated_closed_grip_original.generation.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_guides_v3/seated_closed_grip_original.generation.json",
+      "bytes": 1181,
+      "sha256": "cd5a73f7a611d39a042655f38ac477938fdf9fc3a5c7db0902533d793f042643"
+    },
+    "death_guides_v3/seated_closed_grip_original.png": {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_mireclaw_moonbite_votive_drummers/death_guides_v3/seated_closed_grip_original.png",
+      "bytes": 409582,
+      "sha256": "12aad753d8c08197c69b8005d87ed84733d006e99457b06142a693fed72022ef"
+    }
+  },
+  "original_rgb_frames": 1612,
+  "status": "complete",
+  "rule": "Retain all immutable original takes including rejected art and original generated guide images, exact requests, prompts and provenance. Rebuildable extraction files are governed by their exact matte hashes."
+}

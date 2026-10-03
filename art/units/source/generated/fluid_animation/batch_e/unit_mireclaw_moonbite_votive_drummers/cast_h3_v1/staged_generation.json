@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "63a5419790cf1554f9601f820183c8a56de064191f3381386155e875afa82262",
+  "latent_sha256": "f106ff6946561a78ae5b987b6cd654a936242800758c377527608d91005896b4",
+  "decode_workflow_sha256": "52e09d0b1b2f22095ce790e1a1228695688f568e8e6a9764863fa06cbde302bb",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "moonbite_votive_h3\\cast_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

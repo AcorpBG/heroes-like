@@ -5215,29 +5215,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        81.0,
+        81,
         218
       ],
       "painted_extent": 213,
-      "source_sheet": "res://art/animation/runtime/poses/unit_mireclaw_moonbite_votive_drummers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_mireclaw_moonbite_votive_drummers.png",
       "source_indices": [
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        175,
-        18,
-        325,
-        247
+        67,
+        10,
+        217,
+        239
       ],
-      "source_sha256": "7cc9c8127d29c8485dba68d24030af1f1937a93b263f8b844b99543bf24a1e68",
-      "source_provenance": "res://art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/provenance.json",
+      "source_sha256": "896b28fcd73154d0f4c9676ec6aec1619a4fa67ac45d3a715e40cd97d2c524bc",
+      "source_provenance": "res://art/animation/source/fluid/unit_mireclaw_moonbite_votive_drummers/provenance.json",
       "sha256": "5d518761db78279faf0de9cc4bf46f8a0fd46dc71cc70d24a9d8158e375713b5"
     },
     "unit_sunvault_splitprism_parallax_fencers": {

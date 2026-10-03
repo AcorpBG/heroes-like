@@ -1,0 +1,16 @@
+{
+  "previous_take": "death_h3_v4",
+  "observed_defects": [
+    "Mallet tassel reaches source bottom edge during the supported descent47-57; up to29 alpha>=8 border pixels."
+  ],
+  "method": "Translate both original ready/corpse guides upward48 pixels together and adjust the fixed source anchor by the same48 pixels. Same anatomy scale, canvas, model, sampling and matting settings. Endpoint-only continuous physical collapse retained; no animation-frame repositioning or transition omission. Preserve all prior source originals.",
+  "guide_pixel_registration_proof": {
+    "translation": [
+      0,
+      -48
+    ],
+    "original_rgba_pixels_exact": true,
+    "anatomical_scale_unchanged": true,
+    "source_anchor_equally_translated": true
+  }
+}

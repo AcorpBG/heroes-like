@@ -1,0 +1,146 @@
+{
+  "source_frames": [
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    100,
+    112,
+    123
+  ],
+  "frame_msec": 42,
+  "review_note": "All124 original RGB and alpha frames in each native facing personally inspected plus sixteen original/alpha knee, wrist, mallet-head, hip-roll and corpse enlargements. Continuous knee flex and equipped hip descent lower into a folded-leg side roll and final resting corpse. Near right hand retains the solid mallet shaft/head/tassel; far left buckler lowers beside the head and separate waist drum rotates with the torso. Source anchor[480,528] compensates the exact48px whole-guide upward translation, unchanged anatomy/output scale. Every selected edge is clear; retain all physical transitions8-93 and only shorten the final held corpse with100,112,123. Four tiny detached nonopaque background marks beyond the boot are omitted through exact no-body source crop rectangles, keeping original footage/mattes unchanged. Actual Godot review pending.",
+  "original_pixel_exclusions": {
+    "92": {
+      "kind": "reviewed_detached_background_component",
+      "background_rects": [
+        [
+          269,
+          444,
+          282,
+          454
+        ]
+      ],
+      "reason": "Personally enlarged original RGB and alpha show an isolated nonopaque tiny background mark beyond the boot, separated by at least10 original pixels. Preserve all body/gear pixels and complete original matte."
+    },
+    "93": {
+      "kind": "reviewed_detached_background_component",
+      "background_rects": [
+        [
+          269,
+          443,
+          282,
+          454
+        ]
+      ],
+      "reason": "Personally enlarged original RGB and alpha show an isolated nonopaque tiny background mark beyond the boot, separated by at least10 original pixels. Preserve all body/gear pixels and complete original matte."
+    },
+    "100": {
+      "kind": "reviewed_detached_background_component",
+      "background_rects": [
+        [
+          269,
+          442,
+          282,
+          455
+        ]
+      ],
+      "reason": "Personally enlarged original RGB and alpha show an isolated nonopaque tiny background mark beyond the boot, separated by at least10 original pixels. Preserve all body/gear pixels and complete original matte."
+    },
+    "112": {
+      "kind": "reviewed_detached_background_component",
+      "background_rects": [
+        [
+          268,
+          442,
+          282,
+          455
+        ]
+      ],
+      "reason": "Personally enlarged original RGB and alpha show an isolated nonopaque tiny background mark beyond the boot, separated by at least10 original pixels. Preserve all body/gear pixels and complete original matte."
+    }
+  }
+}

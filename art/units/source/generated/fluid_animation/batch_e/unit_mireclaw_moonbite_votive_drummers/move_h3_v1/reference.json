@@ -1,0 +1,135 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_votive_drummers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          209,
+          492
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c7f2bda578004a4eb82487cea2620fe0801c1c8bc0b2adab8fe17f0f2c1e24d0",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "011b93d6a25e9a7c0f7628c656a96ed195b3456b8c79333898314b4f3740f854",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "walk_near_contact",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+        "rects": [
+          [
+            619,
+            4,
+            879,
+            335
+          ]
+        ],
+        "anchor": [
+          753,
+          329
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a51523f7e1f64ede5837f6d1a4566c849b02c109e16b0cb77a472feab243d48b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ccfdd2416ee53e44e421c3d9b845fcc61e905771b7e3a64302b40907ad4469a9",
+      "runtime_source_scale": 0.64
+    },
+    {
+      "source_frame": {
+        "name": "walk_far_contact",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-state-corrections-green.png",
+        "rects": [
+          [
+            929,
+            4,
+            1202,
+            335
+          ]
+        ],
+        "anchor": [
+          1082,
+          326
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "28aa6bf32a1850925dabbf895db6408f12e457c2bae92d1d67c1d7ccc4912403",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e2f0ec7901deadfadc16699ec241e712c0321e76ed68a2299499f160e07d9788",
+      "runtime_source_scale": 0.64
+    },
+    {
+      "source_frame": {
+        "name": "walk_near_passing",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+        "rects": [
+          [
+            11,
+            337,
+            277,
+            660
+          ]
+        ],
+        "anchor": [
+          149,
+          650
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a51523f7e1f64ede5837f6d1a4566c849b02c109e16b0cb77a472feab243d48b",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "a24db15b82c671964bebc85d97fd8fd21511e1a06b0c69328196fed80ae84a8b",
+      "runtime_source_scale": 0.64
+    },
+    {
+      "source_frame": {
+        "name": "walk_far_passing",
+        "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-state-corrections-green.png",
+        "rects": [
+          [
+            953,
+            650,
+            1208,
+            978
+          ]
+        ],
+        "anchor": [
+          1092,
+          970
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "28aa6bf32a1850925dabbf895db6408f12e457c2bae92d1d67c1d7ccc4912403",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "f2893e609197c2afd21b7c4116e97d1081ffa57e77248eae82eadbe7a8fff5bb",
+      "runtime_source_scale": 0.64
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
