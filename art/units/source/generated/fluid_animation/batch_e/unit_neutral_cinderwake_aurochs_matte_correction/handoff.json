@@ -1,0 +1,1518 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_cinderwake_aurochs",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "death_h3_000",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "death_h3_012",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "death_h3_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "death_h3_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_058.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_060.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_062.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_064.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_065",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_065.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_066.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_067",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_067.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_068.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_069",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_069.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_070.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_071",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_071.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_072.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_073",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_073.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_074",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_074.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_075",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_075.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_076.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_077",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083333333333335,
+          "original_source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_077.png",
+          "derived_alpha_recipe": "derive.py explicit disconnected foreign component whitelist; RGB and all connected body RGBA untouched"
+        },
+        {
+          "name": "death_h3_078",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "death_h3_082",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "death_h3_086",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "death_h3_094",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "death_h3_098",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "death_h3_110",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.583333333333333
+        },
+        {
+          "name": "death_h3_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "death": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 42
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Unchanged anatomical registration; derived alpha removes only explicitly reviewed disconnected foreign fragments.",
+      "provenance": {
+        "move_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/move_h3_v1/original_lossless.mkv",
+          "sha256": "548226e20e3a44ca532f554ea969954ef22be36f3a93585b86466d67dbb41d33"
+        },
+        "move_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/move_h3_v1/original.json",
+          "sha256": "adedc99578f017cb7ea5bca529492b8092b7e0fc418eb942e7fab763321d6b27"
+        },
+        "move_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/move_h3_v1/workflow_api.json",
+          "sha256": "52d2393c70f5d588f1b5c9837d7a72ccf400e8d718a6ae5a9af39e0bc4b830f3"
+        },
+        "move_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/move_h3_v1/prompt.txt",
+          "sha256": "ff3462dfab823d161aebaa84f9d26862bcd759505aca2994d028023399fadf82"
+        },
+        "move_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/move_h3_v1/reference.json",
+          "sha256": "d5cccf2c7493e8478bcd33141db9e1864c265a7c517cba45f3ea3030578c86ea"
+        },
+        "move_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/move_h3_v1/matte.json",
+          "sha256": "033b7dcc5291766714ba21ee52925c65e8dcda8b8f41af8c58b6c854b8267516"
+        },
+        "move_h3_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/move_h3_v1/runtime_profile.json",
+          "sha256": "b84a063fa57b0d36693c241ed21761373830c6c90760c5c9b2474500271a19b9"
+        },
+        "move_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/move_h3_v1/staged_generation.json",
+          "sha256": "a0b5a22eb983c292c452927db92fee5209d6eae1b53ee1a9ff805196b4747020"
+        },
+        "move_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/move_h3_v1/sampling_workflow_api.json",
+          "sha256": "1f59a9ebf0905533a0ae45fdec9779102fdfaaa2a3f3b8c9c6d2a4acb5db1c8e"
+        },
+        "move_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/move_h3_v1/sampling_submission.json",
+          "sha256": "35c661dbe633dd3948149c1446c6b954c525c69e3670c829317dc703ea89e3e2"
+        },
+        "move_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/move_h3_v1/sampling_history.json",
+          "sha256": "6a469002751f18b21191fdf6e8c377d7078c20e2355c0567ac2d574fe132a9e2"
+        },
+        "move_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/move_h3_v1/original.latent",
+          "sha256": "e9760c4608b479e95c186881f4cbe30c892e02996692d52b130609cf0ceb2d07"
+        },
+        "attack_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/original_lossless.mkv",
+          "sha256": "38f73d2e7d2b6c5ef5ce7510bcd0c1448f339b6676186b1bf1e5f042a2e3641d"
+        },
+        "attack_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/original.json",
+          "sha256": "87518ce9f5f1a2713ba37720f824c4ad091666e4f5807ba5c1bc43540a65bfe9"
+        },
+        "attack_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/workflow_api.json",
+          "sha256": "ef8d691688aa04e9f09690fb28924e2488fcebbbd1d2c75a14a4c1c178f70cac"
+        },
+        "attack_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/prompt.txt",
+          "sha256": "5f7410814578ee973acd2900e227d556ae12d9e10d5847a2dc4256063b4aa06f"
+        },
+        "attack_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/reference.json",
+          "sha256": "e63490c257ac0e4b9347bd7353c8a8f57d6cfa34dae6d45a7b8b1db3f7a38799"
+        },
+        "attack_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/matte.json",
+          "sha256": "2cbde0b2d84c6b91249934a98df6db26872af140f185d998298e43a3571dd4e8"
+        },
+        "attack_h3_v2_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/runtime_profile.json",
+          "sha256": "a13a042340826690045847321c2be4482a420b1fd3076bf0b85790bb21ea7859"
+        },
+        "attack_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/staged_generation.json",
+          "sha256": "0ad732c0386d218125a28f33f0faa015baa9bb9033537c4b5b98c728b5abdf71"
+        },
+        "attack_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/sampling_workflow_api.json",
+          "sha256": "1035ed7e16760290d6e2afc51cb667c19ac034e66ac353413c7cc1b26cdc192f"
+        },
+        "attack_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/sampling_submission.json",
+          "sha256": "53fb585a28f2a08c4cfe9b6dc6646d7ed1a891929f99846899c53f8bc9607dc9"
+        },
+        "attack_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/sampling_history.json",
+          "sha256": "25b61361e2a3bfe391617a7f145509fe140ef8e283c55e7c63cb64562dc1b76e"
+        },
+        "attack_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/original.latent",
+          "sha256": "06e95fcc82808978a41b91016ad30fb5d3288154e3d458190774022b6be6aa00"
+        },
+        "attack_h3_v2_timing.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/timing.json",
+          "sha256": "2e283915ee7a19f0e97688d0b3cf8726f8c8dad4d90d6e1a1430d46007213184"
+        },
+        "attack_h3_v2_sampling_observations.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/sampling_observations.json",
+          "sha256": "6ae7d50a700a78a7626162b9e0d91ff2366d527a895737beda51ee1cf3a139f0"
+        },
+        "attack_h3_v2_decode_observations.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/decode_observations.json",
+          "sha256": "4a7ddc52e96b57931821f06632bde405eb71f1a1f94528b7875d5f1edda6a0aa"
+        },
+        "attack_h3_v2_sampling_residency.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/sampling_residency.json",
+          "sha256": "2bbad466c8f7da2989b10c83b0dc36043592d9fe188ab05af6bfa0656b318cc3"
+        },
+        "attack_h3_v2_decode_residency.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/decode_residency.json",
+          "sha256": "0a6566e8bfe8bd5e45147c927dba711bd0fc5d42f09dd3c45c96199f59096e5e"
+        },
+        "attack_h3_v2_shared_queue_scheduling.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/shared_queue_scheduling.json",
+          "sha256": "ac8124d298a48f31f667533d0397d836f033ad10db3753a783dd0b004cb57da2"
+        },
+        "attack_h3_v2_queue_at_decode_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v2/queue_at_decode_submission.json",
+          "sha256": "5acbeaceb127aed8e747f91ac56e76b90345cfd43d932c1f3657633f369822d0"
+        },
+        "attack_h3_v2_guide_image_horn_contact_closedjaw_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/horn_contact_closedjaw_v1.png",
+          "sha256": "4d7d55d4354bcd61f064a0af447d25af46aae5bf6453165de90493c33a699dfc"
+        },
+        "attack_h3_v2_guide_prompt_horn_contact_closedjaw_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/horn_contact_closedjaw_v1.prompt.txt",
+          "sha256": "67d89c373e139f0d91b5043fbae79af831c200fe10a416d0fe5856f5d493be34"
+        },
+        "attack_h3_v2_guide_generation_horn_contact_closedjaw_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/horn_contact_closedjaw_v1.generation.json",
+          "sha256": "cd4ed75d5b78650e3e18e75e6b0b53a810ab99f2cd12681098a0e365173ae040"
+        },
+        "hit_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/original_lossless.mkv",
+          "sha256": "4fef03dafe6a4f1d2c58f3f975f72fcda4dc912024e46d293cb695c78febe866"
+        },
+        "hit_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/original.json",
+          "sha256": "bb6979d94ffadef1f17e205a370a35fd4854be08c1c1b1a092c0b3286f45c7e8"
+        },
+        "hit_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/workflow_api.json",
+          "sha256": "192b90350de8dde81858b5fa9f4de90343b9d19f3f82d2a5fbafb111c5cb1861"
+        },
+        "hit_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/prompt.txt",
+          "sha256": "7b4c4c2eddea121c3c7523bc1c66d0affff6f9571ac92139f32053c2280a9d3e"
+        },
+        "hit_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/reference.json",
+          "sha256": "53ba5a5fcde1e506962dec0e9716901135b2f0bdac857b582efdca8ebd447b9e"
+        },
+        "hit_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/matte.json",
+          "sha256": "dae1d251ba51c79908d8d3f20f520ba49dd7b18e82c80bff1e315e567d0c9c8f"
+        },
+        "hit_h3_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/runtime_profile.json",
+          "sha256": "218313bb4ede82c72ebf46a8a60a3281c87ca7b55a860523866139f32a769c52"
+        },
+        "hit_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/staged_generation.json",
+          "sha256": "3db7ae69cbd5b3b61e77838a4f7baa5cb6849dff981a651ae694fe8d809dcfda"
+        },
+        "hit_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/sampling_workflow_api.json",
+          "sha256": "14fcfb72eca179a3ab4b0ccae693cce4e0726b9226f34d41ce18b880fa54fe13"
+        },
+        "hit_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/sampling_submission.json",
+          "sha256": "032294888d75b4046e006f66993903895df45a0aa9df131f285571991274f8d2"
+        },
+        "hit_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/sampling_history.json",
+          "sha256": "fc89d7ba2afa6f8bd180e9ff579b49bc33be88b4c5518dc692bac171a7630821"
+        },
+        "hit_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/original.latent",
+          "sha256": "a275ea7bece5a406e8846775f4276f242d5bcf58f5b7f8db2851bb4446ce28c9"
+        },
+        "hit_h3_v1_timing.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/timing.json",
+          "sha256": "864766f465e37df7498e02ee4a84add313688bc1e012f5ea728707b8f5f01c8c"
+        },
+        "hit_h3_v1_sampling_observations.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/sampling_observations.json",
+          "sha256": "766fe6cf6fa67015902153f86c45962a046f039a2cc26baf069673e5c2ea0a7c"
+        },
+        "hit_h3_v1_decode_observations.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/decode_observations.json",
+          "sha256": "c2f1cb4ffd0545552b7a12212265f167ed7359f4de938f93ae3769e910a5e254"
+        },
+        "hit_h3_v1_sampling_residency.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/sampling_residency.json",
+          "sha256": "84194427acfdb5f23b86e383684e40e948544423e906f577d0ea65a15ecc7093"
+        },
+        "hit_h3_v1_decode_residency.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/hit_h3_v1/decode_residency.json",
+          "sha256": "3e8d4e61dcd13c851b77c6ca3fab57fa7241c375a97747b5c1bde676384eae80"
+        },
+        "defend_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/original_lossless.mkv",
+          "sha256": "cbf7128ddf5b46ba996a1b778b7a78dd87d6795d88f0e9a3660b897ecc1bfcbb"
+        },
+        "defend_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/original.json",
+          "sha256": "3c8796aeaad2a83ffe8c3a430da10073e29ffd15e2421fcd9e81015974f13b93"
+        },
+        "defend_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/workflow_api.json",
+          "sha256": "179669a7365687b04c798a74acf006c77728eb73298df3f153717124a0362e2a"
+        },
+        "defend_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/prompt.txt",
+          "sha256": "1283a0452e12ce5bd7707061d2bd30316445f40ceb808808ea8e7d9d919cf1d0"
+        },
+        "defend_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/reference.json",
+          "sha256": "dea0f256c9e422655c5e8bbd14e512eb186470d9b487b19720167eea30577e1d"
+        },
+        "defend_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/matte.json",
+          "sha256": "6a3a596311c33c12ee28c34680fdb5fd545c279953129bf53335b4d299869027"
+        },
+        "defend_h3_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/runtime_profile.json",
+          "sha256": "a9d9b1543f1fb96557ce87c69af0657f59d1ff79ef4aba99943aee98f75cab60"
+        },
+        "defend_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/staged_generation.json",
+          "sha256": "c4f7610939d8a0fae549da34aceed4d166b27bcc51e3c36360bb52ee5257dc98"
+        },
+        "defend_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/sampling_workflow_api.json",
+          "sha256": "be7f1f122de664f92878a4c615bdde208c348b72a71fd7319a6b9b7f32cfca16"
+        },
+        "defend_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/sampling_submission.json",
+          "sha256": "17e310419cc494b459f8948cf087004f7d3c3ef5312536d84434890a802cf079"
+        },
+        "defend_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/sampling_history.json",
+          "sha256": "278d2ae2f283352445382cac9df08ec70c5a37bf39ea6828a96e61bb5f22fe6d"
+        },
+        "defend_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/original.latent",
+          "sha256": "bdba28fa63071eba3afe4cabf4c43912219f4dfc5a4f64cf4ca5b245f172c79f"
+        },
+        "defend_h3_v1_timing.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/timing.json",
+          "sha256": "e86bfdc00ccca0c79eb19033ea018a465a42a146b6f12fc69c55a5327d813f17"
+        },
+        "defend_h3_v1_sampling_observations.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/sampling_observations.json",
+          "sha256": "e2e620b42d9cb2ba7cfefa453e6cfcae4e8aba1620640492936d5f59016c5490"
+        },
+        "defend_h3_v1_decode_observations.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/decode_observations.json",
+          "sha256": "3ce8211ea523cfecb06dbb98bab1a61d27e26f286cd93577776eb20d59da7593"
+        },
+        "defend_h3_v1_sampling_residency.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/sampling_residency.json",
+          "sha256": "b6b98023326e256c42f3ceeb47652f8a840434533c53de8e8899b863f4355a4f"
+        },
+        "defend_h3_v1_decode_residency.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/decode_residency.json",
+          "sha256": "32ddf3c830b260aa1b3b4525790737a70b3565db815409ec4560639e65bcdd75"
+        },
+        "defend_h3_v1_shared_queue_scheduling.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/shared_queue_scheduling.json",
+          "sha256": "97ce200ee793c1e1a2c25ba857364b8e57ffa88242acc417e03bba41d1f0dd80"
+        },
+        "defend_h3_v1_queue_at_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/queue_at_submission.json",
+          "sha256": "93d216f24de13c355115dc29c6ac36cec0a9ab1f0e3f423a3a93e24ded42f0ec"
+        },
+        "defend_h3_v1_queue_at_decode_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/defend_h3_v1/queue_at_decode_submission.json",
+          "sha256": "d0a40037c497edaa0d817b15b7dfabcc56f35a1ef1650cae3266531d7947ac25"
+        },
+        "cast_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/original_lossless.mkv",
+          "sha256": "90b6787fca274756287ccf54d27122ae27bddf39489f2362a91cbd1eb8b18560"
+        },
+        "cast_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/original.json",
+          "sha256": "9decc51ad19e5ede6587eadc1ff2efc0283a9f346c739db9de5e521a7a363363"
+        },
+        "cast_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/workflow_api.json",
+          "sha256": "8fad6b574b401073114fbc2f6ec5859ca05272536b5fe54ec3dafff05a35c355"
+        },
+        "cast_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/prompt.txt",
+          "sha256": "c49235e2c7a32c0b84a97988a15e6d2d9b784e3b661de8ce49b7a5862830349e"
+        },
+        "cast_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/reference.json",
+          "sha256": "53ba5a5fcde1e506962dec0e9716901135b2f0bdac857b582efdca8ebd447b9e"
+        },
+        "cast_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/matte.json",
+          "sha256": "1baf70938532f1a797173bab8f7079039129fce708699ff02a8c51e50b35b3ba"
+        },
+        "cast_h3_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/runtime_profile.json",
+          "sha256": "aee6b9fc6db03dc20fa628af8f82442c15441cfb3937b9a033e8d34f344af9f7"
+        },
+        "cast_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/staged_generation.json",
+          "sha256": "0a5bf1022c51bac412b5832154d5632e5b1de3f859e58fbfbf015e81891fad2b"
+        },
+        "cast_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/sampling_workflow_api.json",
+          "sha256": "26f1ad924ae27456e9181571ddc29451f05301b101c9cee0b3ab39f9b78cd707"
+        },
+        "cast_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/sampling_submission.json",
+          "sha256": "3fccc2b6cb1dba6650b9b7d474540c54c4e6b72f01011f952be2560a4e3e0f66"
+        },
+        "cast_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/sampling_history.json",
+          "sha256": "aca1f6c13a843e6bebfda89f4efd540562003cd228e57f3a2c66c2e9be5d2496"
+        },
+        "cast_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/original.latent",
+          "sha256": "6760ed1aa2a51c6113feb6f2fb45c25a2411adcc233bba2679848a6b6f7a6a83"
+        },
+        "cast_h3_v1_timing.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/timing.json",
+          "sha256": "cedcf5f84e928b97860477cf6a60dfc8f76cbc5079c9979b2be2529b1c6e6184"
+        },
+        "cast_h3_v1_sampling_observations.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/sampling_observations.json",
+          "sha256": "d4c42612c81c23a5cc14497827132b89821c6f4921c497e5ee4e6787f9a8da4b"
+        },
+        "cast_h3_v1_decode_observations.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/decode_observations.json",
+          "sha256": "b5ce4b33207bd53de2d255d58d52748e1b97e6acf2363022ac4197dd5d16b7e1"
+        },
+        "cast_h3_v1_sampling_residency.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/sampling_residency.json",
+          "sha256": "853eaf26fd5ddbc08b446983903db09b994edab72839f86a835767da4ebfac4a"
+        },
+        "cast_h3_v1_decode_residency.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/decode_residency.json",
+          "sha256": "48f0bf7235f0d9a1f8b810a2caed15290dab37be98216a15c368586757fa29e5"
+        },
+        "cast_h3_v1_shared_queue_scheduling.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/shared_queue_scheduling.json",
+          "sha256": "97ce200ee793c1e1a2c25ba857364b8e57ffa88242acc417e03bba41d1f0dd80"
+        },
+        "cast_h3_v1_queue_at_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/queue_at_submission.json",
+          "sha256": "93d216f24de13c355115dc29c6ac36cec0a9ab1f0e3f423a3a93e24ded42f0ec"
+        },
+        "cast_h3_v1_queue_at_decode_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/cast_h3_v1/queue_at_decode_submission.json",
+          "sha256": "4f7a8fae4b84d165412ea701de59e9d89e710746c0ce1fd203c82521869d7eb1"
+        },
+        "death_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/original_lossless.mkv",
+          "sha256": "a552e1da396e5897265e2a0ece4b17e06a343afde33bedfc5b62edb6db8f9529"
+        },
+        "death_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/original.json",
+          "sha256": "0e4658b89eea28636366aa08c0d16a80970e3c92c8ddc93d012f0d59cb402909"
+        },
+        "death_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/workflow_api.json",
+          "sha256": "9d83c6ba4cc974b906daaa6849c545c0e4a47ad21f4b04c9810d41a02cc54af0"
+        },
+        "death_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/prompt.txt",
+          "sha256": "2840ccb1f9578f14b24e7b9ddf3ce530f621009663daa465f14fa3c63a1f13cb"
+        },
+        "death_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/reference.json",
+          "sha256": "bdc24c2ac7adf458391e27c9b71a8f715e176fd66882df8f4e4207fa5c7f2738"
+        },
+        "death_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte.json",
+          "sha256": "dcb34724ae678b185f31821c86447792ad514a13731c3edde72f4067b6cb2fde"
+        },
+        "death_h3_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/runtime_profile.json",
+          "sha256": "86b961e43fbf5e435731ae28353a90353fc979c29b8233bc93e0597ffe7d7199"
+        },
+        "death_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/staged_generation.json",
+          "sha256": "2f14e3ac468f6e929e556744d38f579e34cf339c0a99112367614472f31025e2"
+        },
+        "death_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "70f29fff992fc5c7921378dab8e9079dccd843de9aa2968b3dbd251fb82f8dfd"
+        },
+        "death_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/sampling_submission.json",
+          "sha256": "da381e8c822912453859e17765ed295d7bfcbc18278f1b074ea415ae7162e659"
+        },
+        "death_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/sampling_history.json",
+          "sha256": "7fbf6b0bcbb820de0f258541a5e63889131fa1464e74687e16b0a0eb48f09cdb"
+        },
+        "death_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/original.latent",
+          "sha256": "f43d5c2d358cfc0a9a6a0cf4f87a4bb1a260b22aa29b01073aa39fd1f4fea1ad"
+        },
+        "death_h3_v1_timing.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/timing.json",
+          "sha256": "e261cebfe54573e7a338aaf80d6fcc9d7c7b304b653bac049bd2742449a7f6f5"
+        },
+        "death_h3_v1_sampling_observations.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/sampling_observations.json",
+          "sha256": "fd09b9c416c93aefc05eb396db476f46f3676868876e44ed53cc954b801938d7"
+        },
+        "death_h3_v1_decode_observations.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/decode_observations.json",
+          "sha256": "ff392614c1b02e72d1e19bd4431dadf521c123ed458963ca5c9316f432a534c0"
+        },
+        "death_h3_v1_sampling_residency.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/sampling_residency.json",
+          "sha256": "7ab001bb2e6a112ddd1b0e5a320d9bfe2bf58e2e793494aa5188ad32790121bc"
+        },
+        "death_h3_v1_decode_residency.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/decode_residency.json",
+          "sha256": "1392b5590e396075e43b68864c9bacf21b06e3c417c3b8536f869c74e07dbfb7"
+        },
+        "death_h3_v1_shared_queue_scheduling.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/shared_queue_scheduling.json",
+          "sha256": "97ce200ee793c1e1a2c25ba857364b8e57ffa88242acc417e03bba41d1f0dd80"
+        },
+        "death_h3_v1_queue_at_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/queue_at_submission.json",
+          "sha256": "93d216f24de13c355115dc29c6ac36cec0a9ab1f0e3f423a3a93e24ded42f0ec"
+        },
+        "death_h3_v1_queue_at_decode_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/queue_at_decode_submission.json",
+          "sha256": "4f7a8fae4b84d165412ea701de59e9d89e710746c0ce1fd203c82521869d7eb1"
+        },
+        "runtime_profile": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/runtime_profile.json",
+          "sha256": "6d54ea4a6547f74cb938cc1528b60d1a66f1dc406e6d9be5db4e558fb845a8f8"
+        },
+        "narrow_derived_extraction": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/extraction_recipe.json",
+          "sha256": "592c5abca61074207b3a2516b36c9af469a51afa20dd782f19927922ffa27b5b"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Personally reviewed every changed enlarged horn alpha before/after and reflected, all43 chronological death phases at actual native128 in both facings including the original final grounded corpse; detached foreign fragments gone, complete horn/body/plate/feet preserved. Original124 RGB hashes and derived alpha/body pixel proofs pass. Candidate normal/reflected focused fixtures270+270 pass, three actual normal melee captures viewed; unchanged other actions and all eight map idle phases were personally reviewed in current-live audit. No manual game or actual reflected melee claim."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_065.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_067.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_069.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_071.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_073.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_075.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_cinderwake_aurochs_matte_correction/derived_alpha/rgba_077.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_098.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_110.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/death_h3_v1/matte/rgba_123.png": 0.5
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ],
+      "accepted_clips": [
+        "move",
+        "attack",
+        "hit",
+        "defend",
+        "cast",
+        "death",
+        "idle"
+      ]
+    }
+  ]
+}

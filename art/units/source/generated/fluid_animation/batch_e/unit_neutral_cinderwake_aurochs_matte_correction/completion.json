@@ -1,0 +1,48 @@
+{
+  "status": "complete_selected_unit",
+  "personal_review": "Personally reviewed every changed enlarged horn alpha before/after and reflected, all43 chronological death phases at actual native128 in both facings including the original final grounded corpse; detached foreign fragments gone, complete horn/body/plate/feet preserved. Original124 RGB hashes and derived alpha/body pixel proofs pass. Candidate normal/reflected focused fixtures270+270 pass, three actual normal melee captures viewed; unchanged other actions and all eight map idle phases were personally reviewed in current-live audit. No manual game or actual reflected melee claim. Published live all43 chronological death phases and terminal corpse personally viewed at exact native128 in both facings: no detached foreign remnants; horn/body/plate/feet and complete collapse intact. Three actual live normal BattleShell melee captures and two current map phases personally viewed clean. All eight map idle phases and reduced map capture previously personally viewed in current-live audit, with exact unchanged map publication/import pixels. No actual reflected melee or manual game claim.",
+  "validation": {
+    "candidate_normal": 270,
+    "candidate_reflected": 270,
+    "live_normal": 284,
+    "live_reflected": 284,
+    "source_checks": 654,
+    "total_checks": 1762,
+    "exact_imported_textures": 2,
+    "failures": []
+  },
+  "failures": [],
+  "publication": {
+    "unchanged_non_death_poses": 162,
+    "selected_original_or_derived_poses": 197,
+    "preserved_other_rows": 231,
+    "preserved_idle_map_exact": true,
+    "atlas_sha256": "76adc56422f804b42e0624408a3f958386288f938e91a6a3b6f0a45f178ae93f",
+    "recovery": "First publication passed other231 row/source/pose/map pixel checks, then rejected expected full-atlas source_sha256 update. Read-only exact original atlas reconstruction and all pose/map proofs now close verification without republishing."
+  },
+  "repair": {
+    "derived_frames": 17,
+    "foreign_components": 23,
+    "alpha_pixels_removed": 2893,
+    "original_rgb_and_all_other_rgba_exact": true,
+    "original_rgb_frames_preserved": 124
+  },
+  "cleanup": {
+    "records": [
+      {
+        "path": ".artifacts/parallel_animation_20261002/middle53_completion_audit/cinderwake-correction",
+        "files": 63,
+        "bytes": 74678525
+      },
+      {
+        "path": ".artifacts/parallel_animation_20261002/middle53_completion_audit/cinderwake-diagnosis",
+        "files": 5,
+        "bytes": 245661
+      }
+    ],
+    "files": 68,
+    "bytes": 74924186,
+    "rebuildable": true,
+    "preserved": "All original RGB videos/mattes/provenance, exact derived alpha, source/tools, game import caches, saves, other audit evidence and unrelated work retained."
+  }
+}
