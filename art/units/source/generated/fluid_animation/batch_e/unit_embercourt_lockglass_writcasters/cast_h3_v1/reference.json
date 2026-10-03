@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_embercourt_lockglass_writcasters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          194,
+          480
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ae6657563dfdb24671b061ff10080eadb3f1526bc1f07bb9056627ed51b8b6e7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "41f3680ce3082f726184382440e30b72496f1366f1590d07c8863176442df530",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "near_hand_chest_salute",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/salute_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          768,
+          934
+        ],
+        "scale": 0.458,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "07483c7beba8b3d40e98d709c42df527a6c967f336d4e8ca4e7559fa8ea515da",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "176e3520d952a5573ef161d006570fd55b9cd784547c63bda62520af67ee76fb",
+      "runtime_source_scale": 0.229
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

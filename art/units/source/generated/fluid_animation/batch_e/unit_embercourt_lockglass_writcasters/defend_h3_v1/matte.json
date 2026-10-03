@@ -1,0 +1,2402 @@
+{
+  "frames": 124,
+  "fps": 24,
+  "rgba_sha256": [
+    "36f6a500f551825a112aac93f52a36cf88ae91b5b1ff058a0ff2016688a71efa",
+    "127ab1662c9586978e84bc43308da1f896b534f62937325c181c97d40f3779ff",
+    "dd6970c1f4b8c9b4dfd4d90b4ce00f9889a6fd236a73a485d12b8d08f16187d7",
+    "7f9b5b5c9cf66d4494395a8aeff3fcdd836cfb5a8c635436a4f9ba62563f66e6",
+    "86b665c306aa072f75eb5702552f09f0766a23c4eb09de31775ddde8a6e9e9dd",
+    "52d675865582eb9d94bdf9235690776c42661f6002f03c9c9df316539fa47b11",
+    "a581b6aae329b7a869df7cf6311851da40b85d54aaacc802fcd5739e661a694f",
+    "c640c702dd295833a9b2182508e999c80e5bbcf398d3f277e8f2720caf63f5ec",
+    "cf10914f3f119fc06450058a67be7865c6218075ba33da6f641480fe8285e831",
+    "a73639c4fa93081bd5aac76c3b4b0ad80084ec70856f34412611af3eec1e2ada",
+    "4b4ee282ce366b428dbfce6407d4e4bdf8fad30586d05daaa538baefc8cf84a9",
+    "fe9f390efa8b8e196575a0b753860b90b3247fb91f7081bb154af27be7834e9f",
+    "0e85e88a9580b26aa30cd54c0535aba394b13d6c43c31a6e91b5fe4092e58546",
+    "c247e8318d9adc28af140d76e33fd6a0cbfe0b77842c1717bedd295acc1f4a53",
+    "412b3d08a7f9cf2115f9c28ce27b4347a98a4aaedb52aec07989c9ff88165b05",
+    "e933b9573f1ab1be3177907766a8a59eb9b7059ea48fefa967d158f7b4f881ea",
+    "63e338366d47f2f57d61874fd9c28f84b3dc45a5ece9c6a99fd76d57c14ae7b8",
+    "4a11ea922d842d51d53194fda70f11a49789f66c50a2bf72833a72515f782341",
+    "e45cd963fd4de8363630317c8ac3db8f04df63ee08582a7c65abdbf637279fe2",
+    "0d8fdb10078a996a0c82ae0862bc2373a81a223fd41316c19e65dc47e22120c4",
+    "338aa9e64e12852834b1be89197a0cc8d00a586a2fc7f25e69531fd411326c3f",
+    "43f20707696738cbdea100fed7541c7ae6fc956b0e1e2fd393aa7d6e926fe1ef",
+    "f7dd97df51e6f7a102f8803ee1a286affe429e24b67bab7ade152799c75d7e2a",
+    "c67c62bdf604713088b96205a892224e4424028547be18133bd3e1b5978a86a9",
+    "92ecb2199dc87c6d849ece6f0cb6e2b99acf7f861c35ea0be7365d57e841f050",
+    "f4bf3a1db18663343a88a3dee22f484c7fd1d8cce4c740230259d707bcd2a25c",
+    "1222e8a8cb9f5904639553b1d8b263a281b4f9929f5d2fda0982a8d1d830a0a7",
+    "58a4c9bd26fa3e0d25d172c4b90cd1e2d426bf65cac867dd7de0497168fbb62d",
+    "a2ef3c05ad7fd8aeb95ae71bbc4444a14c49f0726e2eb2b03fb2bb1cc7a4086f",
+    "a74ff2f7fff1fbba7b9bba6ec6143d3a586958d793106a6fc472c7913d07a579",
+    "3136cede284d9556e638b08d65c1fc293d061e93cdfdee169ecb12657b51dd8a",
+    "3823e6686da8dde5b450407504d75959b00b3792e5f1ff57228e7746d9870b22",
+    "aacce72cdd0c8f708b0b0aaf61d5ecf809268a61bb24d88a210e4c39c3ef6f93",
+    "ba2090659fdb45f9f9e842ef3a4490c180a7b53504a9229cc918b664b83d7440",
+    "744c36696ffab1e3ed0273ef5aa5cbaf88a7a59f016492d648bdf08489dc79ff",
+    "2189eb9ddb75dc1694a85a96f0c30511de85d5d398201fb2f9ecbd17beb7bc84",
+    "ab789a9acbcfee89b20d43e881d74c34e0503c6edb1d41a29874e486da87ce2a",
+    "fcbf4ab2b17c4994a9297594c49ac12f2bddd1c24bdc2bf4493bc3eb3e3b5bc3",
+    "2a543d3d8d8178c68db500a154f0d0111ea3f9190a3e43bbf6c8128dd1877d6a",
+    "f73764b182fd3c745e49be3f28d20867b55156c49f546c885092f14eb7e9917e",
+    "d1c131bd77e5edfecb2ade198f00e2d7be14a14747342e2da868b5cc60d5be83",
+    "75e60fb3e65f0e2874968262a64bfad58e1796369d3cec589164c066cb2ef1b3",
+    "040a4f278dc190264e5e2fc830f31361e5097d7ab121c8505252783bdc63742d",
+    "aa52c3f0e8a8cb8d234f58e2470db308567784cce5a9c0b2d65a0bc30fe85b31",
+    "213f5ea57e70320274ebc5671ea76f59aaec7cfb2ac6edb8691a19c4621d21c4",
+    "11dd90020cb2cfddfd112fbcc44dcc8d2fc0cfa6be8183242c3b5d6e9f2c414d",
+    "a7107b6580ee39818731c7ee291c4b1c1e7aef2eb096feb71d4cb399d3b57bec",
+    "2981de701d7145d2c5a8e3c9792ee3ca554a5026957a92e08c91caf80733e091",
+    "c5bd9efee22899ff7ad10a7cd971fd473c110acc01403da8e3d961cc34ee3c57",
+    "9b3c1a63aa1ac318dcee2f14cf0c991b494cb28c980dac370afce4339ca3f2ca",
+    "10aefa0cd91510aa548c5e50ff2a6cdada9c94e83ce06c134051c28687ea6653",
+    "8dec2e00bdf51edc4f8140e9913bcc1aa98726eaedd4923c77812fd4a06dc70d",
+    "18de433c5beb77698c188e475afa1565a9082003e4672f4e1e022e7efafd05dc",
+    "5d09a4c01652fae2abb1a3f4e40565267f1c1c18ebcfb6693a5f0cbef6c4935b",
+    "e3b7d272afb4e6c24be97345bc0e9447002e4d028d8fd8410b3a37a6db00b8fa",
+    "87cd51cefd7fbd1c06945adc6e3c1e079db2958e9e03aa848256481fe10fd408",
+    "ee0304b23f4bcca1a354c248f0f6b219b2911a55c66f1235524b6d8febdd33d5",
+    "1682efaddfc348007dc52ee31304f72a5aa4db843481d6f9cfe6658ab02ca517",
+    "e860a5f4a17ca08976785c0fb74c67632d0b070756b85db0d6cefd09f429d8c2",
+    "506b7d85227f9d8ac8fa82c98e6f439a6bdaecae2156b604d2a05d0bd96cf349",
+    "0ef734a74f69a8f37b55ce124adaea6f7ed0c0efc46f1b21c45c7430d6d1a0b5",
+    "7c69259e8ecc4bf917d74a15365c9b3b17081c7d450cc4385e16e0aebd73ded6",
+    "c3c3e999b8dde26fa65f4c8aed0c5e265a3e07c8d22fa11476f98b874e1273cf",
+    "4af5ba5ce4cc84f494098fa12a745e52272cc24aa99c2a7b4c8fbbbc52524342",
+    "f94284050611063445d4d60a32de519143208674385519ca8b4f014dce617212",
+    "4008f32685fc34c85290ec78b9c2475abc243df5758d7351ab2c380c2c535b7d",
+    "edff4033ce3a6a5d6266e32cd76bc08108f9289ed140e815021b7fb7322f9547",
+    "c9c2c8b732683568e7d2cbd997cb7d71ec9f59f20015e2443dfb51493c8b50f9",
+    "bc69ed09022e42a320c97ace9b77674a424975d2b65aebf31304e41590275fe7",
+    "64b82afe6ae32b298c54acd01b1c78f147291ef05a254a4f9791f9449b51dfc7",
+    "4be3f7ac43d5b180429596f05d016c709d1582d7242c2b494f305ec7376d1ca2",
+    "c8ca5e923d66a550426cb69218c041f553533f4b0accd8e21f2956caa1600d5a",
+    "04d41f54a416165a23fd9a4999a84984db778a3faf766b5a79d037f9b4984792",
+    "d055c8fba34bd0cc6f61d7e5a67424d979ac96dcba9ce614094e5efa62d7fedc",
+    "61637f2a8f24a11041918118e70c97ea82f3f5aeedf047c602a8e8ae7c6863f6",
+    "dd84bcf41e67c042f8342e59190ce7bee6dd9136216cafdf774df89f6d013663",
+    "399952671bb833d7f2b58234923a162e37e5959a5d2643449ee1a77bdf092bd2",
+    "bbec6c7779e5089c955d843988a517f23fe2ad28cbe53997985c3e1d01c4ec29",
+    "10b664f54daf057881fa35206e25ace66a301922845eb549b67d93429ed0a96a",
+    "ee2921c6fee416ba7743300b227b505c70d9d4dee33026611ea0fa50255f70cd",
+    "d628ca24c738b8aae1d9d62f84be1c216d3418d49e568f9effaf1af60cf483bb",
+    "17e91f31199f1c7533551f5fff82d5c1b5d92bc60d23681c40b3843116ec6b93",
+    "49a66f8ab92870346047c7757b039a5dc777df8aee51e2401898213c7863cc24",
+    "5e1bcedd186959feb305bb15565a998012010b9723ded603ed4d3ddc432bc94e",
+    "6b29467c50c63234cb6b22d77e35d22bb0d09633c07d740ff41617be384d6667",
+    "ac98532b82830e88aa57b288d1cc1d89623fc4bfb641f7ee8778c67c4f9d1d35",
+    "d98959be7d63f3fcbe36c17194540d461d7fb8b1a27d2ef272bcf502483ae22f",
+    "38ee8ee0a5b13ba0ec285c278212dbc73211bf87bab2e14e5ea904dcf024401a",
+    "24c3fb8eacb29582e3008cf5bdaa0b15b4ebadaeade0e5ce30b7dde13906e0bf",
+    "2c02159a2c3cbed64ef8e1ce89d000069d2b97e59dc56bdeccdb8214265da888",
+    "c3e7025b9ecd3e26d491c0699c2636f8c01d5f8f292a20ad424d729d5b13aaff",
+    "9fe6cb9185fb8d5e0d6616fdc4ef996760638e3e07f075490a1ff7be2ddf53a6",
+    "db37226c9fa80c9a25aeed2c9e14e93538b191a3546b5636e3f2564c8fb1a368",
+    "b81136171190fb0ddb45ecc71bb74fa41f102911d8cf8bb5733b12a7ba0c4477",
+    "a615a9e3acf4d20780f25ed5347773403a28f6a0dcf049016b916ee7cff6e99d",
+    "d45fa50d32fde3a944202af9b8362e6346c5e49fdb57e7f2518f84784f6d14a4",
+    "3d6da8776c717cbcb26d038a63b4d47629c87765f72122cdc78fcdc55efe5aff",
+    "d7bf004059e6488ca34d46b5dd0e53ea3f3c14b7e71163868d5067fcbcbf9143",
+    "f3e422ef717dea366b8c4a961ce55d2f84a16f0c33c946dbea60521f12d51651",
+    "1e410fac81cd580dd721fbc9da67c45f64cdd9f2e181c090e69a630e14aa4109",
+    "0a8382b2d76645a7506ef75e62f433a859b14a8861a4d5c8f47fd51f6f1fb95a",
+    "fe9c4043d5e4fe67103fc92fca30c7e1002b4d2d0e6ecbfe5a8a94f43f4c9513",
+    "d765c123671e7489570694d1a091938436419885c8e051c3d8346da16e9879dd",
+    "34dadc0509f5031e27c7b98e0307010aea3d0a417dccb1ce73cb108dbf7bcf1d",
+    "aa2766da951238e1d81899ab3b4ba086cafe333303b1bd5617629d1c0d7ce86f",
+    "2d58d873bc773be1bcb65b77342d3face5dd43e825822596e7914eb3bded0490",
+    "6b78c43ead2deb142489e10da365820b6c1e98e7ef02052ac1ff5590f0039c5c",
+    "d8e6095f0aa1ce32884305404313e89e5cb8fc56b5e0f52bfd0798d24f8fa52d",
+    "a89ad78306428aadbbec41118d15c851686c0410800bd55ef571a2f8f2f40460",
+    "59bc712fa636ee544bf1cc19a32dbba002acdf5770428226e359e925c99e42c1",
+    "1d9320b78a5a7a6c851fe61ccf566924b0423bbe65148d8214220a9e1b1f20f6",
+    "745841a4de5106293b7e7f3a421236832e452852117c7b337b1327fad74fe5d7",
+    "3664ead25e7d77e5705abf9bfcf5aba2d105605082d0a2e0827045594466cbdf",
+    "8fc77b9c4862bd14f91cd35b2f07e444143cff3a018df93b0286e04360c255df",
+    "6f5379c47e588a5278413b1f61cbecc9554d281eaedb8194300c62ebb387db6a",
+    "424654dc1e1e7c5069cc96ce4bce50232aa487957858e53f5243f09f76fd60e2",
+    "b99eb58d10ec00c096f1c88fb3f29e8abe7ba3d0818be25fdb21f366d5d96567",
+    "54172719cdb00dfb336b6b4486424f5127d1ac3c4c1bd7aaa376879e185c8afd",
+    "5b2b85380631c3c70f71bf3e6ddf89975acca737fc82c7003b3e50fac8a3ba41",
+    "3cd602f0e7a1c62c12af463ce28fb4d950a75213bbe74e8e5d20605c203eace1",
+    "b16f8c4806b0600a33e4f3e3a309d1a6d8e4e7c67cd8989983ef15ab29ebe7e0",
+    "1aa4d7393a4a50ffd0495ea1515a289e45a00e15b913951fbdeac0e19fcaf953",
+    "6267bc271ec4be93aaff1214f34d7a1a57d19486846fa36d751e5fe11db42016",
+    "96d0486239a00d5ab1574c2d04cbaa343fcb7a8e0f0d0020ca09a4d546014c22"
+  ],
+  "background_frames": [
+    {
+      "background_rgb": [
+        255.0,
+        9.5,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2729,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2692,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        254.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2724,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2655,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2633,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2582,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2637,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2591,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2557,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2584,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2590,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2572,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2554,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        7.5,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2532,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        8.0,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2557,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        7.5,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2542,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        8.0,
+        255.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2456,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        225.5,
+        36.0,
+        246.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.692582368850708,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2769,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        215.0,
+        50.0,
+        246.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 8.200610160827637,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2658,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        165.0,
+        100.0,
+        243.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        124.0,
+        137.0,
+        240.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        117.0,
+        145.0,
+        241.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        98.0,
+        161.5,
+        253.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 5.590169906616211,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        6.0,
+        237.0,
+        246.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.8284270763397217,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.5,
+        239.0,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        240.5,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        243.0,
+        247.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        243.0,
+        247.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        242.5,
+        247.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.0,
+        242.5,
+        247.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        244.0,
+        247.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        243.5,
+        247.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        243.5,
+        247.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.0,
+        243.5,
+        247.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.5,
+        243.5,
+        247.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.0,
+        244.0,
+        247.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.0,
+        244.5,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.0,
+        244.5,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.0,
+        245.0,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        246.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        246.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        246.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        246.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        246.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        246.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        246.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        246.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        246.5,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        246.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        246.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.0,
+        246.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        245.0,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        246.0,
+        248.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        245.5,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        245.5,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.0,
+        245.5,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        246.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.2247449159622192,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        246.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        246.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.0,
+        246.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        246.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8708287477493286,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.5,
+        246.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8708287477493286,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.0,
+        246.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.0,
+        246.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.0,
+        246.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.0,
+        246.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.0,
+        246.0,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.5,
+        246.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        4.0,
+        244.5,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        245.5,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        246.5,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.1213202476501465,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        246.5,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 0.7071067690849304,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        3.0,
+        247.5,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5811388492584229,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        1.5,
+        248.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        1.0,
+        248.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.7320507764816284,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        1.5,
+        248.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        2.0,
+        248.0,
+        249.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        6.5,
+        239.0,
+        245.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        50.0,
+        204.5,
+        248.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 7.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        80.0,
+        181.0,
+        246.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 5.0,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        97.0,
+        164.5,
+        241.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 3.2015621662139893,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        122.5,
+        144.5,
+        239.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 5.361902713775635,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        152.5,
+        122.0,
+        237.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 7.77817440032959,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "blue",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        185.5,
+        85.5,
+        241.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 8.746427536010742,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 0,
+        "rule": "Semantic mask only: plate axis insufficiently separated from protected foreground"
+      }
+    },
+    {
+      "background_rgb": [
+        215.0,
+        53.0,
+        242.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 4.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1229,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        237.5,
+        28.0,
+        247.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 6.041522979736328,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1483,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        248.5,
+        11.5,
+        249.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.598076105117798,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1664,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        251.5,
+        8.5,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.1213202476501465,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1810,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        253.5,
+        6.0,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8708287477493286,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1828,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        254.5,
+        6.0,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8708287477493286,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1899,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.7320507764816284,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1813,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        254.5,
+        6.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1918,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.7320507764816284,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1779,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1792,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        254.5,
+        5.0,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8708287477493286,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1721,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        254.5,
+        6.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1442,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        254.5,
+        5.0,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8708287477493286,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1281,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1004,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        254.5,
+        5.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1004,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        254.0,
+        6.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1076,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        254.5,
+        5.0,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8708287477493286,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1038,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1063,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        253.5,
+        7.0,
+        251.75
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.4109127521514893,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1196,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        254.5,
+        5.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.291287899017334,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1177,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        254.5,
+        5.0,
+        250.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.291287899017334,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1249,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.291287899017334,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1208,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1228,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        4.5,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1471,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.291287899017334,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1608,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1816,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1839,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1919,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.5,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1950,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2071,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.1180340051651,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 1960,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2116,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2280,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.8027756214141846,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2159,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.4142135381698608,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2063,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 1.7320507764816284,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2230,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.4494898319244385,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2177,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        251.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.4494898319244385,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2238,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        251.5
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.0615527629852295,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2215,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.0
+      ],
+      "mode": "birefnet_semantic_soft_alpha_plate_unmix",
+      "corner_median_spread": 2.2360680103302,
+      "excluded_background_corner_indices": [],
+      "excluded_corner_semantic_alpha_max_below": 0.03137254901960784,
+      "edge_plate_refinement": {
+        "boundary_source_pixels": 2,
+        "plate_axis": "magenta",
+        "protected_foreground_chroma": 32.0,
+        "changed_alpha_pixels": 2206,
+        "rule": "Minimum of canonical semantic alpha and measured plate mixture, two-pixel contour only"
+      }
+    }
+  ],
+  "recipe": "Pinned BiRefNet-matting: 1024 mask inference resized to unchanged RGB dimensions; canonical eight-bit semantic alpha. Uniform plates retain two-pixel measured chroma refinement (magenta32/green16/blue32 foreground band) with unchanged spread assertion. Reviewed spatial plates require excluded corners and nearest alpha<.002 background at least three pixels from alpha>=.01, semantic contour only. Opaque output retains original RGB; soft edges unmix measured plate. Alpha<8 removed; connected regions retained when containing alpha>=128. Fixed anatomical scale/anchor, no stabilization or interpolation.",
+  "model_manifest": {
+    "repository": "ZhengPeng7/BiRefNet-matting",
+    "revision": "eccde0a8cbdce7ac5fecfeb06340fe7b949e85d9",
+    "model_directory": "H:\\ai\\minimax-h3\\matting\\BiRefNet-matting",
+    "dependency_directory": "H:\\ai\\minimax-h3\\matting\\dependencies",
+    "files": {
+      "config.json": {
+        "bytes": 413,
+        "sha256": "b2b235983b80fbff325976ca517bb7eda25e915b84a97b150eca41266cf8a13b"
+      },
+      "BiRefNet_config.py": {
+        "bytes": 298,
+        "sha256": "e7b8c2a74f6cea6a59553d517f71d47f2c1d90e670a13416af17c25fe2f3dc52"
+      },
+      "birefnet.py": {
+        "bytes": 92134,
+        "sha256": "2a45b4e0ece72d7c4212bca1a988e7d7e52bfe9f98ec59c58b8809c8a8b7a831"
+      },
+      "model.safetensors": {
+        "bytes": 884878856,
+        "sha256": "a9875de5b1e6c8eb5fdaa8c727a82927ce442cdc87ba3abee6a77e6fa46c25bb"
+      },
+      "README.md": {
+        "bytes": 4724,
+        "sha256": "e43576e298fcfd143239f7c1dc080e1d03f4eef5e78156da4f0466d93f2c45a1"
+      },
+      "timm-1.0.30-py3-none-any.whl": {
+        "bytes": 2668917,
+        "sha256": "c8e27adf6801a2fdfb570dbbdd171f2f084756eefc673df8cfaab06bd14864f3"
+      }
+    }
+  },
+  "inference_precision": "float16",
+  "torch_version": "2.14.0+cu130",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "elapsed_seconds": 24.904,
+  "tool_sha256": "a83e9a6ba77d40439e6b6a852ed4a14e297baa82b0367a0ae6dd6e76ded128c4"
+}

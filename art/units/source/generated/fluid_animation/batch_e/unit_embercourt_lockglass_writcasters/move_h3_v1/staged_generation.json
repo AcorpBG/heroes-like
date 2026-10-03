@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "d0bf67556f5182df9dbe39e5ced64c0471923aff9d3c94e0fbb6854fcd41ebbd",
+  "latent_sha256": "cc8062fca3ff0b8d433832200f6b8c27e6b641cb1bda72e0944d31b9ea42588d",
+  "decode_workflow_sha256": "d8458191818731ab94899b595b1859b4daef8968a1473e2519d33509e6a91e6c",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "lockglass_writcaster_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 32193380352,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

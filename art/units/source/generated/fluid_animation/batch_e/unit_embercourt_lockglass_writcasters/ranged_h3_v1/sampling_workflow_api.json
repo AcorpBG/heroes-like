@@ -1,0 +1,219 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Original LOCKGLASS WRITCASTER from supplied original painting. One human woman facing SCREEN RIGHT, exactly TWO arms and TWO legs. Original dark brown tied hair, red ribbons, pale face, red and ivory split court coat with gold trim, dark leggings, knee guards and brown boots. ONE original long bronze-and-darkwood lockglass rifle with SINGLE orange heated glass muzzle at the forward SCREEN RIGHT end and original red hanging writ tag. Near right hand keeps stock/trigger grip; far left hand supports forward barrel. Preserve original rifle length, glass chamber, wood stock, exact two grips, belt canister, coat, anatomy and painted fantasy style. No extra hands, rifles, muzzle tips or new weapons. One aimed rifle discharge gesture. Raise rifle, seat stock against shoulder with near trigger hand and far supporting hand, aim right. A single brief recoil drives rifle and shoulder backward together, elbows absorb recoil and then recover to lowered ready. Orange muzzle remains SINGLE fixed glass muzzle; no rendered shot or smoke.  Locked original three-quarter side camera, no cuts, turning, zoom or root travel. Flat magenta RGB255,0,255 background, no floor, scenery or cast shadow. Fixed boot contact plane y576. Planted boots stay grounded; all legitimate rifle, cloth and hair tips remain within generous margins. No projectiles, muzzle flash, beams, particles or rings; game renders projectile/effects separately.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026108703
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "lockglass_writcaster_ranged_h3_v1_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "lockglass_writcaster_ranged_h3_v1_guide_1.png"
+    }
+  },
+  "32": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "lockglass_writcaster_ranged_h3_v1_guide_2.png"
+    }
+  },
+  "33": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "lockglass_writcaster_ranged_h3_v1_guide_3.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 32,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 60,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "32",
+        0
+      ]
+    }
+  },
+  "42": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "41",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 88,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "33",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "42",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "lockglass_writcaster_h3/ranged_h3_v1/sampled"
+    }
+  }
+}

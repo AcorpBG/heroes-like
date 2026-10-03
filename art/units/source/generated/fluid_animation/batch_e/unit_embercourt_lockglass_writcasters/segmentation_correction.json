@@ -1,0 +1,10 @@
+{
+  "take": "attack_h3_v2",
+  "original_frame": 11,
+  "stopped_recipe": "segment_uniform.py",
+  "stopped_tool_sha256": "5ce22fd6633573a3b0288805e98b161cb9535ccb5892709998325a4fc6b3ae84",
+  "failure": "No reliable uniform plate samples",
+  "corner_median_rgb": [[140,103,245],[127,114,245],[157,93,247],[141,105,245]],
+  "personal_original_review": "Empty corners and spatial blue/magenta plate gradient; intact original woman, two hands and single rifle. Uniform color is not valid for this transition.",
+  "correction": "Require semantic exclusion at every corner. For spatial plates only, unmix soft edges with nearest original background having alpha below .002 and at least three pixels from alpha .01 or above. Canonical semantic contour and opaque RGB coordinates remain unchanged. Existing uniform plate assertion and two-pixel contour refinement remain intact."
+}

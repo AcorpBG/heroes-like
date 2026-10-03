@@ -1,0 +1,371 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_lockglass_writcasters",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "hit_h3_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_043",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "hit_h3_046",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "hit_h3_049",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0416666666666665
+        },
+        {
+          "name": "hit_h3_050",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "hit_h3_051",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "hit_h3_052",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "hit_h3_053",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083333333333335
+        },
+        {
+          "name": "hit_h3_054",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "hit_h3_055",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "hit_h3_056",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "hit_h3_058",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "hit_h3_123",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "hit": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "frame_msec": 34,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/config.json",
+          "sha256": "e84fe12dcc55232be73a1584c13035ae1281c884b24cebbbc298e4355ccbd629"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/selection.json",
+          "sha256": "1f2456abfeda6f96c65127cc646fc88bb31d042d655c455a64abc9d5e1648e26"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/original_lossless.mkv",
+          "sha256": "66ad8d1d4da4af720f730dde20c7f4673d10aec0ebe2c07fac93e2efffadfc55"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/original.json",
+          "sha256": "c95330ab07b11e6964dda481bb539f3ff44c966f61453c0773ae9bb6e6c89de9"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/workflow_api.json",
+          "sha256": "446283b225e089b87a8dd0b99a47d723faf74e972f7995d1b6d92340e5c77956"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/prompt.txt",
+          "sha256": "17b4e9ba057bd99cd648ff2be2c3bb359edc9cc64cafb747f1b205115c8b4543"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/reference.json",
+          "sha256": "b6c7b874a40e59d74f43a0fdcc315404a7ae9390212828d496e7f914058c602c"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/matte.json",
+          "sha256": "274e8326e95c1335270286ada2d56e7be99452d73359384a0c822608e23d838d"
+        },
+        "segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/segmentation_recipe.json",
+          "sha256": "d8983b40b3f18725a7c91ca0096bf5750f5392bf67eee23059786b0a4b4553a0"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/staged_generation.json",
+          "sha256": "a3c488f9b8682e09cfd3b81badaf13a4b300e15838548cd539eac4b478c93727"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/sampling_workflow_api.json",
+          "sha256": "bc61f9bc7cac93ee26bbba31e9974e0e1a0eb7b35103cec3700a054964975a9b"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/sampling_submission.json",
+          "sha256": "794da371c74c3239367b246f200d61b41cab74e12aba36d99fcc786d05c49b83"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/sampling_history.json",
+          "sha256": "16427c69ad6172a0c533ba578560e1be640cc669c4af53484e24dfb905b325c9"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/hit_h3_v1/original.latent",
+          "sha256": "ac7471e94e4cca57d5219c67e275b7671f0c9e787194483c19b81daff3f7c0bb"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Personally accepted all 124 original RGB/RGBA poses chronologically, critical enlarged transitions and every selected pose at native scale on light/dark backgrounds in both directions. Final Godot native normal/reflected atlas pages, actual Strike and Shoot phase captures and preserved map motion/reduced-motion views accepted. All published live assertions passed; exact original pixels, anatomical registration and authored timing preserved. Action-specific selection rationale remains in source_review_history."
+      }
+    }
+  ]
+}

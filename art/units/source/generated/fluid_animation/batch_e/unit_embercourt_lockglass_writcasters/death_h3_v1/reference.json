@@ -1,0 +1,141 @@
+{
+  "unit_id": "unit_embercourt_lockglass_writcasters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          194,
+          480
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ae6657563dfdb24671b061ff10080eadb3f1526bc1f07bb9056627ed51b8b6e7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "41f3680ce3082f726184382440e30b72496f1366f1590d07c8863176442df530",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_buckle",
+        "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-alpha/poses.png",
+        "rects": [
+          [
+            14,
+            969,
+            284,
+            1130
+          ],
+          [
+            14,
+            1130,
+            299,
+            1174
+          ],
+          [
+            14,
+            1174,
+            272,
+            1218
+          ]
+        ],
+        "anchor": [
+          167,
+          1200
+        ],
+        "scale": 1.3,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "4ad18b151213e2372401026f0ffeaa4deb1d4ea3e4fe036eebe1b6aba834fa45",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5aa0f3f0dfedef8b9e4ef05190b74816392c0daa64f920479a29592845244dfc",
+      "runtime_source_scale": 0.65
+    },
+    {
+      "source_frame": {
+        "name": "death_fall",
+        "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-alpha/poses.png",
+        "rects": [
+          [
+            290,
+            1000,
+            624,
+            1080
+          ],
+          [
+            290,
+            1080,
+            624,
+            1110
+          ],
+          [
+            310,
+            1110,
+            617,
+            1170
+          ],
+          [
+            290,
+            1170,
+            634,
+            1234
+          ]
+        ],
+        "anchor": [
+          453,
+          1215
+        ],
+        "scale": 1.3,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "4ad18b151213e2372401026f0ffeaa4deb1d4ea3e4fe036eebe1b6aba834fa45",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "44a281ef675b1525b8e30db664139ea88d097e5be869e0422d5ab9f615f2c373",
+      "runtime_source_scale": 0.65
+    },
+    {
+      "source_frame": {
+        "name": "dead",
+        "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-alpha/poses.png",
+        "rects": [
+          [
+            950,
+            1084,
+            1263,
+            1246
+          ]
+        ],
+        "anchor": [
+          1110,
+          1206
+        ],
+        "scale": 1.3,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "4ad18b151213e2372401026f0ffeaa4deb1d4ea3e4fe036eebe1b6aba834fa45",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "0f8365274d1b40dc62ea71aaadd78cc61f3bfa0a3aa794d32c36b2cd37f25e47",
+      "runtime_source_scale": 0.65
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

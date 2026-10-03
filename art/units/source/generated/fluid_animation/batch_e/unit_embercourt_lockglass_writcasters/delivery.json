@@ -1,0 +1,18 @@
+{
+  "takes": [
+    "move_h3_v3",
+    "attack_h3_v2",
+    "ranged_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Personally reviewed all124 original RGB/RGBA poses per accepted action, critical enlarged transitions and every selected pose at native scale on both light/dark backgrounds in both directions. Complete actual Godot native normal/reflected atlas pages and sixteen actual strike captures accepted. Actual Shoot candidate passed664 assertions and eight personally reviewed aim/contact/recoil/recovery captures. Move34/attack34/ranged30/hit13/defend19/cast24/death34; defend ends at matching source36 guard and death123 is held original corpse. Gray guide conditioning and image-tool far-step spill repair correct inherited opaque magenta movement rim at source; no opaque artwork recoloring or contour widening. Three rejected complete sources retained. Preserve original eight-pose articulated idle and map pixels/timing. Focused Windows fixture acceptance; final live imported-atlas/map checks recorded separately in completion.json. Final imported atlas matches exact RGBA pixels. Live normal retry passed 678 checks with all 34 strike poses; live Shoot passed all assertions with all 30 shot poses. Map motion and held reduced-motion views personally accepted. Initial live strike observer missed one contact pose; unchanged warm retry passed without changing artwork, timing, fixture assertions or playback."
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "provider": "built-in imagegen",
+  "intent": "transparent original guide repair",
+  "master_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0fd4e-7754-7a91-8e06-2b328cba8526\\exec-d31011ff-0aa5-4878-8d34-86cb652721b6.png",
+  "master_sha256": "6d930f9c4cbc2237435171039cfdfe24c1e1297c9cb909be196c9a4898071dfe",
+  "retained_copy": "far_step_clean_v1.png",
+  "retained_copy_sha256": "6d930f9c4cbc2237435171039cfdfe24c1e1297c9cb909be196c9a4898071dfe",
+  "edit_target": "art\\animation\\source\\poses\\unit_embercourt_lockglass_writcasters\\continuity-alpha\\walk-near-lift-green.png",
+  "edit_target_sha256": "2b18594199829b097e2949a48c55464369e7a430fce14add5b02a49224f2ce0d",
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/far_step_clean_v1_prompt.txt",
+    "sha256": "62f8ea415e5110ff66ad13a13a8de927d9ff46af077edd4f0639b1f81fa88e11"
+  },
+  "prompt_sha256": "62f8ea415e5110ff66ad13a13a8de927d9ff46af077edd4f0639b1f81fa88e11",
+  "rgba_size": [
+    1069,
+    1472
+  ],
+  "anchor": [
+    540,
+    1400
+  ],
+  "source_scale": 0.15,
+  "alpha_noise_cutoff": 8,
+  "personal_review": "Same two-arm/two-leg far-leg forward pose, face/clothes, single rifle and two attached stock/barrel grips. Retains original dimensions and ground registration. Clean hair/weapon contour with no opaque green>16 or magenta>32 in prepared RGBA. Transparent margins, preserved orange muzzle and red writ tag. Ready/nearstep original guide RGBA unchanged. Not H3 frame repair.",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/far_step_clean_v1.png",
+    "sha256": "6d930f9c4cbc2237435171039cfdfe24c1e1297c9cb909be196c9a4898071dfe"
+  },
+  "prompt_text": "Use case: background-extraction / precise-object-edit. Edit the supplied original fantasy strategy game Lockglass Writcaster walking key pose. Preserve the same woman, face, brown tied hair, red ribbons, exact red/ivory/gold coat, TWO attached human arms and TWO legs, exactly this reciprocal far-leg forward walking pose and camera. Preserve ONE long bronze/darkwood rifle with SINGLE orange heated-glass muzzle and hanging sealed writ; near hand grips stock/trigger and far hand supports barrel, exactly as in target. Change ONLY the residual neon GREEN chroma spill along hair silhouette, sleeve edges, and tiny barrel/weapon contour lines into clean natural brown/red/bronze painted edges. No green/magenta/blue rim light or colored outline. Preserve all legitimate orange glow and gold trim. Keep full body and whole rifle, every toe and ribbon in frame with transparent margins. Actual transparent RGBA background, no backdrop, floor, shadow, new effects or new equipment. Keep original pose and proportions as closely as possible; this is a clean original H3 guide repair, not a new action.",
+  "references": [
+    {
+      "path": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-alpha/walk-near-lift-green.png",
+      "sha256": "2b18594199829b097e2949a48c55464369e7a430fce14add5b02a49224f2ce0d"
+    }
+  ]
+}

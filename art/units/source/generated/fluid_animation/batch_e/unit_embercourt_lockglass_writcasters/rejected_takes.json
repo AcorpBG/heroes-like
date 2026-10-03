@@ -1,0 +1,19 @@
+{
+  "takes": [
+    {
+      "take": "move_h3_v1",
+      "reason": "Original guides2/3 cycle the same far leg. Full124 chronological originals and enlarged leg transitions show near leg mostly straight/supporting. Does not satisfy reciprocal gait; preserved original video/latent and source pixels.",
+      "correction": "near_step_v1.png original imagegen near-leg forward guide and movement v2 guide schedule34/78"
+    },
+    {
+      "take": "attack_h3_v1",
+      "reason": "Personally inspected all124 RGB and124RGBA chronologically plus enlarged rotation/contact/recovery. Frame22 duplicates orange muzzle;72-83 invent firing effects during a stock shove. Recovery110-113 raises rifle behind head while hands settle early, breaking grip continuity. Reject full action rather than conceal its recovery with a frame jump; preserve originals/latent/matte recipe.",
+      "correction": "attack_return_v1.png original two-grip forward-held recovery guide and full attack_h3_v2 with34windup/60contact/94return"
+    },
+    {
+      "take": "move_h3_v2",
+      "reason": "Reciprocal gait passes, but actual Godot native/mirrored full-strip review reveals opaque magenta hair/boot rim inherited from guide plate. The affected original video frames have green/yellow backgrounds; opaque artwork cannot be repaired by chroma extraction.",
+      "correction": "move_h3_v3: original ready/near-step RGBA plus image-tool far_step_clean_v1.png, all re-composited on neutral gray; complete movement regenerated"
+    }
+  ]
+}

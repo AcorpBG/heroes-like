@@ -1,0 +1,45 @@
+{
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/attack_return_v1.png",
+    "sha256": "9d8649d227a688ebf00b42b6129aa26b6bc938101f21cbb6e424d00758bb1fc2"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/attack_return_v1.prompt.txt",
+    "sha256": "45fb7377efa4d3585732e8c890e2b9dafc6dd8e72e34caed4b5ba29aced7055d"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/attack_h3_v1/guide_0_rgba.png",
+      "sha256": "f049d8cf8a8841663e6d8f63920b165ac5a204c40b40181ee407a71ac032734d"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/attack_h3_v1/guide_1_rgba.png",
+      "sha256": "da0d5bac7e20817123047a2e90bbdd0d5e8ba3faafab914d879f6dfc9d87027f"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/attack_h3_v1/guide_2_rgba.png",
+      "sha256": "19b44e54ae6da55d8466692f648a43ea13529c572a508c36a380ceef3f95431d"
+    }
+  ],
+  "tool": "built-in image_gen",
+  "original_tool_path": "C:/Users/acorp/.codex/generated_images/01a0fd4e-7754-7a91-8e06-2b328cba8526/exec-d715c462-1745-4598-9a4f-22929d97b668.png",
+  "registration": {
+    "name": "forward_held_rifle_recovery",
+    "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/attack_return_v1.png",
+    "rects": [
+      [
+        0,
+        0,
+        1536,
+        1024
+      ]
+    ],
+    "anchor": [
+      772,
+      929
+    ],
+    "scale": 0.238,
+    "alpha_noise_cutoff": 8
+  },
+  "review": "Personally inspected full original master: exactly two gloves attached at stock/trigger and forward barrel, one rifle in front of chest pointing up/right, original two planted legs/face/court coat/hair/knee guards/boots. Alpha noise below8 excluded only by source extraction; intact master retained. One .238 whole-source anatomical scale with[772,929] original near-boot ground, never frame normalization."
+}

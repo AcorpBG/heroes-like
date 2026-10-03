@@ -1,0 +1,37 @@
+{
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/near_step_v1.png",
+    "sha256": "58a0b64f0c34f006586aed2eae677cec2f1c8144f34ff09816ca017fbcdf84b6"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/near_step_v1.prompt.txt",
+    "sha256": "26f953980d3433101ed3e74d952e20e674ef3b2cab39be1e6ae512832497cb12"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/move_h3_v1/guide_0_rgba.png",
+      "sha256": "f049d8cf8a8841663e6d8f63920b165ac5a204c40b40181ee407a71ac032734d"
+    }
+  ],
+  "tool": "built-in image_gen",
+  "original_tool_path": "C:/Users/acorp/.codex/generated_images/01a0fd4e-7754-7a91-8e06-2b328cba8526/exec-63484dd1-a16b-4440-91c3-29cf1ad4d49d.png",
+  "registration": {
+    "name": "near_leg_extension",
+    "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/near_step_v1.png",
+    "rects": [
+      [
+        0,
+        0,
+        1537,
+        1023
+      ]
+    ],
+    "anchor": [
+      770,
+      900
+    ],
+    "scale": 0.3,
+    "alpha_noise_cutoff": 8
+  },
+  "review": "Near bronze-knee leg now extends in front while the opposite boot carries support. Face/coat/rifle and two grips remain coherent. Fixed scale .30 follows unchanged head-to-ground body extent, not normalization per pose."
+}

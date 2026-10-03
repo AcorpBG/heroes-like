@@ -1,0 +1,123 @@
+{
+  "unit_id": "unit_embercourt_lockglass_writcasters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          194,
+          480
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ae6657563dfdb24671b061ff10080eadb3f1526bc1f07bb9056627ed51b8b6e7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "41f3680ce3082f726184382440e30b72496f1366f1590d07c8863176442df530",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "ranged_aim",
+        "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-alpha/poses.png",
+        "rects": [
+          [
+            340,
+            644,
+            606,
+            962
+          ]
+        ],
+        "anchor": [
+          475,
+          945
+        ],
+        "scale": 1.3,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "4ad18b151213e2372401026f0ffeaa4deb1d4ea3e4fe036eebe1b6aba834fa45",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f78d4759690b3c4f7257baf5f9216e23e727d08e5b3c68162baade87c6df5f98",
+      "runtime_source_scale": 0.65
+    },
+    {
+      "source_frame": {
+        "name": "ranged_recoil",
+        "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-alpha/ranged-recoil-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1151,
+            1367
+          ]
+        ],
+        "anchor": [
+          565,
+          1305
+        ],
+        "scale": 0.32,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9642f6ce490a75d43a8cf475910b935e560b6b97092ec790189bea6cad21d206",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e99684831575d70e040c2630233e9695a0bc3f9cb6075435ac8665dfd6a99ca5",
+      "runtime_source_scale": 0.16
+    },
+    {
+      "source_frame": {
+        "name": "ranged_recover",
+        "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-alpha/poses.png",
+        "rects": [
+          [
+            1006,
+            642,
+            1257,
+            670
+          ],
+          [
+            1023,
+            670,
+            1257,
+            707
+          ],
+          [
+            1006,
+            707,
+            1257,
+            962
+          ]
+        ],
+        "anchor": [
+          1130,
+          945
+        ],
+        "scale": 1.3,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "4ad18b151213e2372401026f0ffeaa4deb1d4ea3e4fe036eebe1b6aba834fa45",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "d830193020bd581e744f86bd53f9efc654f55da72ead90ed0cb8a90a28c407cd",
+      "runtime_source_scale": 0.65
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

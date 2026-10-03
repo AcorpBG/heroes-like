@@ -1,0 +1,219 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Original LOCKGLASS WRITCASTER from supplied original painting. One human woman facing SCREEN RIGHT, exactly TWO arms and TWO legs. Original dark brown tied hair, red ribbons, pale face, red and ivory split court coat with gold trim, dark leggings, knee guards and brown boots. ONE original long bronze-and-darkwood lockglass rifle with SINGLE orange heated glass muzzle at the barrel end, initially SCREEN RIGHT, rotating as one rigid object for the stock strike and original red hanging writ tag. Two visible gloves remain attached to the single rifle throughout; at ready/recovery the near hand grips stock/trigger and the far hand supports the forward barrel. Both hands turn and, where necessary, make a short controlled regrip along this same rifle through the original windup/contact poses. Preserve original rifle length, glass chamber, wood stock, two visible attached hands and original endpoint grips, belt canister, coat, anatomy and painted fantasy style. No extra hands, rifles, muzzle tips or new weapons. One physical close-range rifle-stock strike. Turn the ONE rifle at chest height directly into the original windup, with both gloves visibly attached. Keep its entire rotation in front of the torso, never above or behind the head. Rotate the single rifle coherently until its orange muzzle is at SCREEN LEFT and wooden stock at SCREEN RIGHT as shown by the original windup/contact guides. Extend arms and lunge slightly SCREEN RIGHT through the original contact pose for one wooden rifle-stock shove, then immediately retract the same rifle while both hands visibly hold it. Turn into the forward-held diagonal-up-right recovery guide and lower smoothly to exact ready. The near trigger glove and far barrel-support glove remain visibly connected to the rifle, including the entire recovery. Never raise it behind the head or leave hands settled while the rifle floats. The wooden stock delivers only one blunt physical shove; no trigger pull, firing gesture, flash, projectile, sparks, impact star, blast ring or illuminated costume. No repeated strike.  Locked original three-quarter side camera, no cuts, turning, zoom or root travel. Flat magenta RGB255,0,255 background, no floor, scenery or cast shadow. Fixed boot contact plane y576. Planted boots stay grounded; all legitimate rifle, cloth and hair tips remain within generous margins. No projectiles, muzzle flash, beams, particles or rings; game renders projectile/effects separately.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026108712
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "lockglass_writcaster_attack_h3_v2_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "lockglass_writcaster_attack_h3_v2_guide_1.png"
+    }
+  },
+  "32": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "lockglass_writcaster_attack_h3_v2_guide_2.png"
+    }
+  },
+  "33": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "lockglass_writcaster_attack_h3_v2_guide_3.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 34,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 60,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "32",
+        0
+      ]
+    }
+  },
+  "42": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "41",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 94,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "33",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "42",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "lockglass_writcaster_h3/attack_h3_v2/sampled"
+    }
+  }
+}

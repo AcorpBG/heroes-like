@@ -1,0 +1,18 @@
+{
+  "reference": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/move_h3_v2/guide_0_rgba.png",
+    "sha256": "f049d8cf8a8841663e6d8f63920b165ac5a204c40b40181ee407a71ac032734d"
+  },
+  "opaque_alpha_min": 250,
+  "observed_chroma": {
+    "magenta_max": 11.0,
+    "green_max": 2.0
+  },
+  "protected_chroma": {
+    "magenta": 32,
+    "green": 16,
+    "blue": 32
+  },
+  "boundary_source_pixels": 2,
+  "review": "Full124 semantic mattes and enlarged8 leg/grip poses exposed plate-colored soft fringes. Original ready wardrobe has no saturated magenta/green material; boundary-only mixture correction preserves every opaque output RGB and all coordinates."
+}

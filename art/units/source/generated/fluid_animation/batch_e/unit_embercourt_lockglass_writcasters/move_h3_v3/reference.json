@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_embercourt_lockglass_writcasters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          194,
+          480
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ae6657563dfdb24671b061ff10080eadb3f1526bc1f07bb9056627ed51b8b6e7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "98a93ce0f0bde1199b7fd3dd09193dedadf189e0ab1d33b7c7831d06d187a550",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "near_leg_extension",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/near_step_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1537,
+            1023
+          ]
+        ],
+        "anchor": [
+          770,
+          900
+        ],
+        "scale": 0.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "58a0b64f0c34f006586aed2eae677cec2f1c8144f34ff09816ca017fbcdf84b6",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a47d819a3733ade303f5dddeb3e6df6af46ed56fe6cee67fb1c88f97a63c7b98",
+      "runtime_source_scale": 0.3
+    },
+    {
+      "source_frame": {
+        "name": "far_leg_extension_clean",
+        "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/far_step_clean_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1069,
+            1472
+          ]
+        ],
+        "anchor": [
+          540,
+          1400
+        ],
+        "scale": 0.3,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6d930f9c4cbc2237435171039cfdfe24c1e1297c9cb909be196c9a4898071dfe",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "2d25f642a251ff3a5001f36a1e7097fb4d12231ef7566d6bf4c28b7fedb8fa69",
+      "runtime_source_scale": 0.15
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

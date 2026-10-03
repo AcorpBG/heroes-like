@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "8f5075c04df8c3a30b2807041b6a2db4b32219649dd36819856f85fb2e573b16",
+  "latent_sha256": "a93cc00663b9519cf25fb0c7995987937f452277e08a7230e2bc81d24624b4c4",
+  "decode_workflow_sha256": "d106fafffaa223c11c4e88bfadc3e0bc3853dc421f4d9ad9bddaa6e32dee294b",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "lockglass_writcaster_h3\\death_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19001508160,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

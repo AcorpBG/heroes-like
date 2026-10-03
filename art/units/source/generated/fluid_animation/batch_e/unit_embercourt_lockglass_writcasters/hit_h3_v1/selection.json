@@ -1,0 +1,21 @@
+{
+  "source_frames": [
+    0,
+    43,
+    46,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    58,
+    123
+  ],
+  "frame_msec": 34,
+  "review_note": "Personally accepted all 124 original RGB/RGBA poses chronologically, critical enlarged transitions and every selected pose at native scale on light/dark backgrounds in both directions. Final Godot native normal/reflected atlas pages, actual Strike and Shoot phase captures and preserved map motion/reduced-motion views accepted. All published live assertions passed; exact original pixels, anatomical registration and authored timing preserved. Action-specific selection rationale remains in source_review_history.",
+  "source_review_history": "Personally reviewed all124 original RGB and extracted mattes chronologically, plus enlarged original and extracted flinch/recovery43-58. Exclude unwanted firing/light23-42. Clean abrupt impact flinch43 keeps both hands holding lowered rifle, head recoils upward and knees bend; unique articulated recovery50-56 returns to ready58/123. Original two arms/two legs, single muzzle/tag, same source registration. Native/mirrored action review still required. All selected original poses personally inspected at128-reference native scale on light/dark backgrounds in both right and mirrored CPU pages; complete rifle/two grips/boots retained, clean edges and coherent fast contact/flinch recovery. Actual Godot acceptance pending. All selected original poses personally accepted at native scale on both light and dark backgrounds in both directions.",
+  "review_status": "accepted_selected_clips"
+}

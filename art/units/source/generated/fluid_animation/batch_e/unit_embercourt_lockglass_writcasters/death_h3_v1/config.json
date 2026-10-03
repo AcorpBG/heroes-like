@@ -1,0 +1,141 @@
+{
+  "unit_id": "unit_embercourt_lockglass_writcasters",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026108707,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        194,
+        480
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_buckle",
+      "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-alpha/poses.png",
+      "rects": [
+        [
+          14,
+          969,
+          284,
+          1130
+        ],
+        [
+          14,
+          1130,
+          299,
+          1174
+        ],
+        [
+          14,
+          1174,
+          272,
+          1218
+        ]
+      ],
+      "anchor": [
+        167,
+        1200
+      ],
+      "scale": 0.65,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-alpha/poses.png",
+      "rects": [
+        [
+          290,
+          1000,
+          624,
+          1080
+        ],
+        [
+          290,
+          1080,
+          624,
+          1110
+        ],
+        [
+          310,
+          1110,
+          617,
+          1170
+        ],
+        [
+          290,
+          1170,
+          634,
+          1234
+        ]
+      ],
+      "anchor": [
+        453,
+        1215
+      ],
+      "scale": 0.65,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-alpha/poses.png",
+      "rects": [
+        [
+          950,
+          1084,
+          1263,
+          1246
+        ]
+      ],
+      "anchor": [
+        1110,
+        1206
+      ],
+      "scale": 0.65,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ],
+    [
+      70,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "Original LOCKGLASS WRITCASTER from supplied original painting. One human woman facing SCREEN RIGHT, exactly TWO arms and TWO legs. Original dark brown tied hair, red ribbons, pale face, red and ivory split court coat with gold trim, dark leggings, knee guards and brown boots. ONE original long bronze-and-darkwood lockglass rifle with SINGLE orange heated glass muzzle at the forward SCREEN RIGHT end and original red hanging writ tag. At initial ready, near hand grips stock/trigger and far hand supports barrel. Both hands naturally release the same rifle during the original falling guide; it settles intact in front of the corpse. Preserve original rifle length, glass chamber, wood stock, original two hands and initial grips, belt canister, coat, anatomy and painted fantasy style. No extra hands, rifles, muzzle tips or new weapons. One continuous grounded collapse. Knees buckle into original kneeling pose, torso loses support and leans forward, hand releases rifle onto ground as body rolls onto original side-rest corpse. TWO arms and TWO legs stay attached. Rifle rests flat in front, coat and ribbons settle. Hold exact original corpse for last second. No stand-up, shrinking or disintegration.  Locked original three-quarter side camera, no cuts, turning, zoom or root travel. Flat magenta RGB255,0,255 background, no floor, scenery or cast shadow. Fixed anatomical ground reference y576. Initial boots planted; fallen body and dropped rifle settle into the original projected corpse footprint with near forearm/body contact grounded. Fallen boots and foreground rifle/tag need not share one image y; all legitimate rifle, cloth and hair tips remain within generous margins. No projectiles, muzzle flash, beams, particles or rings; game renders projectile/effects separately.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

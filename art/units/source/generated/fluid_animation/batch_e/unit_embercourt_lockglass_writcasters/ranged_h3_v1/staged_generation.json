@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "4788035237f0d12e89aed4e74efa4485a9507895c0d117081b23d6ccf496335b",
+  "latent_sha256": "82e0ec7d9d487610c87d486bb4f3cdfeb6d3649356008c54b7462608087c3328",
+  "decode_workflow_sha256": "b05ba90a2c2d28cf4a62188fc7ca2be045e37ae114229995c3edf3265405b166",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "lockglass_writcaster_h3\\ranged_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

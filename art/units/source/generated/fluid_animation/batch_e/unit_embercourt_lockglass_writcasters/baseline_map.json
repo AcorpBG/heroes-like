@@ -1,0 +1,35 @@
+{
+  "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_lockglass_writcasters.png",
+  "frame_size": [
+    183,
+    220
+  ],
+  "frames": 8,
+  "frame_msec": 240,
+  "static_frame": 0,
+  "ground_anchor": [
+    78.0,
+    209
+  ],
+  "painted_extent": 204,
+  "source_sheet": "res://art/animation/runtime/poses/unit_embercourt_lockglass_writcasters.png",
+  "source_indices": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ],
+  "source_crop": [
+    178,
+    27,
+    361,
+    247
+  ],
+  "source_sha256": "8a74c0e3ff33f192a26b0291579e00edce9eec6177f4b5cf839015c68cd74b6a",
+  "source_provenance": "res://art/animation/source/poses/unit_embercourt_lockglass_writcasters/provenance.json",
+  "sha256": "ce288c4c6a0e0d7873bd803fca6645d0873faae31cecd16f448066a25fd12233"
+}

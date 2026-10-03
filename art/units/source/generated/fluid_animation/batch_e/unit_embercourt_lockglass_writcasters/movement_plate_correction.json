@@ -1,0 +1,58 @@
+{
+  "rejected_take": "move_h3_v2",
+  "replacement_take": "move_h3_v3",
+  "evidence": [
+    {
+      "index": 0,
+      "original_source_sha256": "ae6657563dfdb24671b061ff10080eadb3f1526bc1f07bb9056627ed51b8b6e7",
+      "original_rgba_sha256": "f049d8cf8a8841663e6d8f63920b165ac5a204c40b40181ee407a71ac032734d",
+      "opaque_magenta_pixels": 0,
+      "soft_edge_pixels": 6880
+    },
+    {
+      "index": 1,
+      "original_source_sha256": "58a0b64f0c34f006586aed2eae677cec2f1c8144f34ff09816ca017fbcdf84b6",
+      "original_rgba_sha256": "69bc13e648a590e1abe96ebee37214f63a3caebf5a57320883e5bde13023b9a4",
+      "opaque_magenta_pixels": 0,
+      "soft_edge_pixels": 4566
+    },
+    {
+      "index": 2,
+      "original_source_sha256": "2b18594199829b097e2949a48c55464369e7a430fce14add5b02a49224f2ce0d",
+      "original_rgba_sha256": "2ffe13af4d9f80ad7279506c4813b234914a16a7bbbd9dd4945dc957a3aa43b3",
+      "opaque_magenta_pixels": 0,
+      "soft_edge_pixels": 2861
+    }
+  ],
+  "old_plate_rgb": [
+    255,
+    0,
+    255
+  ],
+  "corrected_plate_rgb": [
+    128,
+    128,
+    128
+  ],
+  "far_step_repair": {
+    "original_prepared_opaque_green_pixels_above32": 18,
+    "original_green_max": 114,
+    "corrected_source_sha256": "6d930f9c4cbc2237435171039cfdfe24c1e1297c9cb909be196c9a4898071dfe",
+    "corrected_prepared_opaque_green_pixels_above16": 0,
+    "imagegen_provenance": "far_step_clean_v1.generation.json"
+  },
+  "reason": "Actual native movement review shows opaque magenta rim on hair/boots despite green/yellow video plates. Prepared original RGBA has no opaque magenta; magenta compositing colors its soft edges and H3 inherits that rim as subject. Original far-step guide additionally has18 opaque green pixels and visible green hair/weapon spill; use a retained image-tool guide repair. Recompose ready/nearstep unchanged RGBA and repaired far-step over neutral gray, then regenerate only movement. Preserve original v2; never threshold/recolor its opaque subject.",
+  "unchanged": [
+    "ready and near-step source RGBA pixels",
+    "anchors",
+    "anatomical scale",
+    "guide schedule",
+    "seed",
+    "sampler",
+    "steps",
+    "models",
+    "resolution",
+    "decode settings",
+    "matting tool"
+  ]
+}

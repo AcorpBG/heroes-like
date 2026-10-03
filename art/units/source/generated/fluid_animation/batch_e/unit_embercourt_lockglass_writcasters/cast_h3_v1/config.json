@@ -1,0 +1,71 @@
+{
+  "unit_id": "unit_embercourt_lockglass_writcasters",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026108706,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        194,
+        480
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "near_hand_chest_salute",
+      "source": "art/units/source/generated/fluid_animation/batch_e/unit_embercourt_lockglass_writcasters/salute_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        934
+      ],
+      "scale": 0.229,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      52,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original LOCKGLASS WRITCASTER from supplied original painting. One human woman facing SCREEN RIGHT, exactly TWO arms and TWO legs. Original dark brown tied hair, red ribbons, pale face, red and ivory split court coat with gold trim, dark leggings, knee guards and brown boots. ONE original long bronze-and-darkwood lockglass rifle with SINGLE orange heated glass muzzle at the forward SCREEN RIGHT end and original red hanging writ tag. At the ready endpoints the near right hand grips stock/trigger and the far left hand supports the barrel. During this physical acknowledgement only, the near hand releases stock and rises to the chest-salute guide; the far hand keeps supporting the same rigid rifle. Preserve original rifle length, glass chamber, wood stock, the original two hands and endpoint grips, belt canister, coat, anatomy and painted fantasy style. No extra hands, rifles, muzzle tips or new weapons. One physical non-magical allied acknowledgement. Left far hand stays supporting rifle barrel at low ready; near trigger hand releases stock briefly and raises open palm beside chest in a measured salute, elbow clearly bends, then returns to SAME stock grip. Maintain two arms, both feet grounded. No magic, spellcasting or new equipment. Return to exact initial ready.  Locked original three-quarter side camera, no cuts, turning, zoom or root travel. Flat magenta RGB255,0,255 background, no floor, scenery or cast shadow. Fixed boot contact plane y576. Planted boots stay grounded; all legitimate rifle, cloth and hair tips remain within generous margins. No projectiles, muzzle flash, beams, particles or rings; game renders projectile/effects separately.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

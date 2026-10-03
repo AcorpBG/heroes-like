@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_embercourt_lockglass_writcasters",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "ready_guide": {
+    "name": "idle_hands_0",
+    "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        384,
+        512
+      ]
+    ],
+    "anchor": [
+      194,
+      480
+    ],
+    "scale": 0.44,
+    "alpha_noise_cutoff": 8
+  },
+  "corpse_guide": {
+    "name": "dead",
+    "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-alpha/poses.png",
+    "rects": [
+      [
+        950,
+        1084,
+        1263,
+        1246
+      ]
+    ],
+    "anchor": [
+      1110,
+      1206
+    ],
+    "scale": 0.65,
+    "alpha_noise_cutoff": 8
+  },
+  "reason": "Original per-source scale retained and fixed .5 extraction scale. Corpse contact adjusted once from original-pixel ground, never per-frame normalization.",
+  "corpse_reference_review": "Original fall guide explicitly releases the rifle. Lying-body/near-forearm contact is grounded; the dropped rifle/tag projects26 reference pixels in front/below, instead of using lowest tag as body ground. Whole original reference adjusted once before sampling; unchanged960x640 canvas, .5 extraction and480,576 video ground. Complete tag remains inside source margin."
+}
