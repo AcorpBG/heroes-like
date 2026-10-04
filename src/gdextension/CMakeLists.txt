@@ -113,6 +113,16 @@ if(WIN32)
 			target_compile_options(${AURELION_NATIVE_TARGET} PRIVATE /bigobj)
 		endforeach()
 	endif()
+	# The generator core overflows the default 1 MiB Windows main-thread stack
+	# (the self-test stops with 0xC00000FD), so the standalone tools reserve the
+	# 8 MiB Linux gives every process. The extension runs on Godot's threads.
+	foreach(AURELION_NATIVE_TOOL rmg_native_batch_export_cli h3maped_rmg_core_selftest)
+		if(MSVC)
+			target_link_options(${AURELION_NATIVE_TOOL} PRIVATE /STACK:8388608)
+		elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+			target_link_options(${AURELION_NATIVE_TOOL} PRIVATE -Wl,--stack,8388608)
+		endif()
+	endforeach()
 endif()
 
 set(AURELION_OUTPUT_PREFIX "")

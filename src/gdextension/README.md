@@ -102,6 +102,14 @@ Windows editor/headless smokes load the `windows.editor.x86_64` manifest entry,
 which points at the Debug DLL. A `--debug-only` build is sufficient for the
 focused Godot smokes; Release remains needed for export/template validation.
 
+Known gap: only `map_package_api_skeleton_report` still matches the current
+native API. The eight `native_random_map_*` smokes in the helper's list check
+capability names that `d866370d9` retired in June 2026 (for example
+`native_random_map_foundation_stub`), so they fail on any current build and
+`--require-test` cannot pass until that list is replaced. Validate a rebuild
+with the skeleton smoke, `bin/h3maped_rmg_core_selftest`, and a byte-identical
+regeneration of a known generated map on both platforms.
+
 Use the corrected Godot 4.6.2 Windows executable explicitly when it is not the
 default `godot` on `PATH`:
 

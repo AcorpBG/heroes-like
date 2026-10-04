@@ -53,23 +53,25 @@ if /I "%~1"=="--allow-other-godot-version" (
 	shift
 	goto parse_args
 )
+rem %%~1 and %%~2 expand when each block is parsed, before any shift inside it
+rem runs, so option values are read from %%~2 and both arguments are shifted.
 if /I "%~1"=="--parallel" (
-	shift
-	if "%~1"=="" (
+	if "%~2"=="" (
 		echo Missing value for --parallel.
 		goto usage_error
 	)
-	set "PARALLEL=%~1"
+	set "PARALLEL=%~2"
+	shift
 	shift
 	goto parse_args
 )
 if /I "%~1"=="--godot" (
-	shift
-	if "%~1"=="" (
+	if "%~2"=="" (
 		echo Missing value for --godot.
 		goto usage_error
 	)
-	set "GODOT_EXE=%~1"
+	set "GODOT_EXE=%~2"
+	shift
 	shift
 	goto parse_args
 )
