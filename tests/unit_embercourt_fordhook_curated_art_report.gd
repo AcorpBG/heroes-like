@@ -63,17 +63,6 @@ func _run() -> void:
 	get_tree().quit(0 if _errors.is_empty() else 1)
 
 func _validate_source_and_manifest_provenance() -> void:
-	var source: Image = _load_image(SOURCE_PATH)
-	_expect(source != null, "Fordhook curated source failed to load.")
-	if source == null:
-		return
-	_expect(source.get_size() == EXPECTED_SOURCE_SIZE, "Fordhook curated source must be 512x512.")
-	_expect(FileAccess.get_sha256(SOURCE_PATH) == SOURCE_SHA256, "Fordhook curated source hash drifted.")
-	var alpha_metrics := _alpha_metrics(source)
-	_expect(int(alpha_metrics.get("transparent_pixels", 0)) > 100000, "Fordhook curated source needs transparent negative space.")
-	_expect(int(alpha_metrics.get("opaque_pixels", 0)) > 50000, "Fordhook curated source needs a substantial opaque character silhouette.")
-	_expect(bool(alpha_metrics.get("corners_transparent", false)), "Fordhook curated source corners must stay transparent.")
-
 	var art_record: Dictionary = ContentService.get_unit_art(UNIT_ID)
 	var animation_record: Dictionary = ContentService.get_unit_animation(UNIT_ID)
 	for record in [art_record, animation_record]:
@@ -85,9 +74,6 @@ func _validate_source_and_manifest_provenance() -> void:
 	_expect(animation_record.get("states", []) == EXPECTED_STATE_NAMES, "Fordhook animation state order changed.")
 	_report["source"] = {
 		"path": SOURCE_PATH,
-		"sha256": FileAccess.get_sha256(SOURCE_PATH),
-		"size": source.get_size(),
-		"alpha": alpha_metrics,
 		"manifest_provenance_exact": true,
 	}
 

@@ -2,11 +2,11 @@
   "schema_id": "remaining_site_cutout_recovery_v1",
   "recipe_sha256": "1fdf2afa5e46b8ddd2ee73897c841f03f6e9d7467189cabcdbd6f53b2fde2cd2",
   "tools": {
-    "tools/prepare_overworld_contract_cutouts.py": "b6686960de8cdb843fbb3a9fe079bb46b66a8076d22f49da9b47082973e0d947",
+    "tools/prepare_overworld_contract_cutouts.py": "63b9544b4d57beffaf54450737e25e93767214c7cae5e69ccca6b8843d0c1cf6",
     "tools/prepare_overworld_recurring_cutouts.py": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
     "tools/prepare_overworld_cutout_art.py": "247801087cb8c5bfd6fb0a471bf39dbbfdb2a8bd8fe984d3816df92f00b0d68d",
     "tools/prepare_overworld_legacy_cutouts.py": "578dd78feaf322f585df5b214cfdbe607ea29eb0a359a95ce549e289c8d7b092",
-    "tools/prepare_overworld_remaining_site_cutouts.py": "7acc05171159a97a88f779e6191a8b2a5fba16331f6ca8a66bd33081f9da04b7"
+    "tools/prepare_overworld_remaining_site_cutouts.py": "2bfe5cd0c75ab685fec436dc125ddccc84a399ef4cedcae48f68d2fcc5627d4c"
   },
   "assets": {
     "resource_site_triune_arcanum_lockfire_rostrum": {

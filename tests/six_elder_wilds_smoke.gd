@@ -171,13 +171,14 @@ func _write_contact_sheet(path: String) -> bool:
 	sheet.fill(Color(0.035, 0.045, 0.06, 1.0))
 	for index in range(CASES.size()):
 		var unit_id := String(CASES[index].get("unit_id", ""))
-		var source_path := String(ContentService.get_unit_art(unit_id).get("curated_source", ""))
-		var source := Image.load_from_file(ProjectSettings.globalize_path(source_path))
-		if source.is_empty():
+		# Shipped portraits; the curated source paintings are archived.
+		var portrait_path := String(ContentService.get_unit_art(unit_id).get("portrait", ""))
+		var portrait := Image.load_from_file(ProjectSettings.globalize_path(portrait_path))
+		if portrait.is_empty():
 			return false
-		source.resize(cell_size.x, cell_size.y, Image.INTERPOLATE_LANCZOS)
+		portrait.resize(cell_size.x, cell_size.y, Image.INTERPOLATE_LANCZOS)
 		var target := Vector2i((index % 3) * cell_size.x, (index / 3) * cell_size.y)
-		sheet.blend_rect(source, Rect2i(Vector2i.ZERO, cell_size), target)
+		sheet.blend_rect(portrait, Rect2i(Vector2i.ZERO, cell_size), target)
 	return sheet.save_png(path) == OK
 
 func _write_json(path: String, payload: Dictionary) -> void:

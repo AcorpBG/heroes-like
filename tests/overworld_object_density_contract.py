@@ -45,7 +45,4 @@ def validate(config=None):
                     require(hashlib.sha256(cell.tobytes()).hexdigest() == proof['assets'][key]['rgba_sha256'], 'wrong asset pixels/region: ' + key)
     for path, row in proof['runtime'].items():
         require(sha(ROOT / path.removeprefix('res://')) == row['sha256'], 'runtime hash changed: ' + path)
-    for row in proof['assets'].values():
-        require(sha(ROOT / row['source'].removeprefix('res://')) == row['source_sha256'], 'original painting changed')
-        require(sha(ROOT / row['trimmed_path'].removeprefix('res://')) == row['trimmed_sha256'], 'trim/provenance mismatch')
     return errors

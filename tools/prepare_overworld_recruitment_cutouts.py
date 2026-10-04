@@ -259,7 +259,7 @@ def inputs():
 
 
 def tool_hashes():
-    return {str(p.relative_to(ROOT)): base.digest(p) for p in [Path(__file__),SHARED,STATE_TOOL,ROOT/'tools/prepare_overworld_cutout_art.py',ROOT/'tools/prepare_overworld_legacy_cutouts.py',PACKET/'generation.json']}
+    return {p.relative_to(ROOT).as_posix(): base.digest(p) for p in [Path(__file__),SHARED,STATE_TOOL,ROOT/'tools/prepare_overworld_cutout_art.py',ROOT/'tools/prepare_overworld_legacy_cutouts.py',PACKET/'generation.json']}
 
 
 def prepare(output, install=False):

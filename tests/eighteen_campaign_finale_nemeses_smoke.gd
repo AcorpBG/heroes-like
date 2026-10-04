@@ -84,7 +84,6 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 	_expect(army_exact, "%s lost its exact three-stack production faction army." % encounter_id)
 	_expect(String(encounter.get("enemy_commander", {}).get("roster_hero_id", "")) == hero_id and String(objective.get("type", "")) == String(case.get("field_objective_type", "")), "%s lost its roster hero or tactical objective." % encounter_id)
 	var source_path := "res://art/overworld/source/generated/encounters/campaign_finale_nemeses/%s" % String(case.get("source_name", ""))
-	_expect(FileAccess.get_sha256(source_path) == String(case.get("source_sha256", "")), "%s source provenance changed." % encounter_id)
 	_set_active_hero_position(session, Vector2i(int(placement.get("x", 0)), int(placement.get("y", 0))))
 	view.set_map_state(session, session.overworld.get("map", []), OverworldRules.derive_map_size(session), Vector2i(int(placement.get("x", 0)), int(placement.get("y", 0))))
 	await get_tree().process_frame

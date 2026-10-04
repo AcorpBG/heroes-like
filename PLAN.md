@@ -28,7 +28,9 @@ Rules:
 
 `tooling-native-smoke-list-refresh-20261004` (pending): the build helper's eight `native_random_map_*` smokes check capabilities retired in June 2026; replace them with checks of current native behavior. See `src/gdextension/README.md`.
 
-`tooling-validate-repo-archived-sources-20261004` (pending): `tests/validate_repo.py` stops at the first archived original and, with those reads tolerated, still reports 9,764 pre-existing errors. Choose a restore-gated source mode or updated expectations. See `docs/source-material-storage-map.md`.
+`tooling-validate-repo-archived-sources-20261004` (completed, test tooling): tests never open archived source material. `tests/validate_repo.py`, the Python tests and the GDScript reports check only what a clone contains; source-rebuild tests of the one-time art-recovery tools were retired (the tools remain for deliberate rebuilds). Validators were updated where the game legitimately moved on: shared town template, unified mines, five-by-three towns, one town design per faction, veteran creatures and raw resource piles. Fresh-clone procedure: `docs/source-material-storage-map.md`.
+
+`content-validator-findings-20261004` (pending): real defects the updated tests report. Six twin-command scenarios lost the starting Wayfarers Hall their second commander needs; `object_claimed_quarry_head` (2x2) no longer matches `object_ridge_quarry` (3x2); 306 overhaul town scene layers import without mipmaps and their `.import` files are untracked; the 72 veteran pose sheets have no visual-acceptance record, and `test_registered_clips_resolve_real_frames` reports ground-line anchor mismatches (not yet investigated; `tests/test_pack_unit_pose_art.py`).
 
 ### Keep the retired audio workflow disabled
 

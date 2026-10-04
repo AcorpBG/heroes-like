@@ -184,7 +184,6 @@ func _fallback_cue_id(event_id: String) -> String:
 func _asset_contract() -> Dictionary:
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(MANIFEST_PATH))
 	var cues: Dictionary = parsed.get("cues", {}) if parsed is Dictionary and parsed.get("cues", {}) is Dictionary else {}
-	var source := _load_png_image(SOURCE_PATH)
 	var hashes := []
 	var rows := []
 	for event_id_value in EXPECTED_ASSETS:
@@ -205,9 +204,7 @@ func _asset_contract() -> Dictionary:
 		})
 	var rows_exact := rows.all(func(row): return bool(row.get("ok", false)))
 	return {
-		"ok": source != null and source.get_size() == Vector2i(1536, 1024) and source.detect_alpha() != Image.ALPHA_NONE and rows_exact and hashes.size() == 4 and hashes.duplicate().reduce(func(unique, hash): return unique + ([] if hash in unique else [hash]), []).size() == 4,
-		"source_size": source.get_size() if source != null else Vector2i.ZERO,
-		"source_alpha": source.detect_alpha() if source != null else Image.ALPHA_NONE,
+		"ok": rows_exact and hashes.size() == 4 and hashes.duplicate().reduce(func(unique, hash): return unique + ([] if hash in unique else [hash]), []).size() == 4,
 		"rows": rows,
 		"distinct_hash_count": hashes.duplicate().reduce(func(unique, hash): return unique + ([] if hash in unique else [hash]), []).size(),
 	}

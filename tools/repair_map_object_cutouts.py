@@ -156,9 +156,9 @@ def prepare(assets=None):
         files = paths(asset_id)
         row = manifest['object_assets'][asset_id]
         for field, expected in [('assigned_map_object_id', asset_id.replace('mapobj_', 'object_', 1)),
-                                ('path', 'res://' + str(files['runtime'].relative_to(ROOT))),
-                                ('source_trimmed', 'res://' + str(files['trimmed'].relative_to(ROOT))),
-                                ('source_generated_atlas', 'res://' + str(files['atlas'].relative_to(ROOT)))]:
+                                ('path', 'res://' + files['runtime'].relative_to(ROOT).as_posix()),
+                                ('source_trimmed', 'res://' + files['trimmed'].relative_to(ROOT).as_posix()),
+                                ('source_generated_atlas', 'res://' + files['atlas'].relative_to(ROOT).as_posix())]:
             if row.get(field) != expected:
                 raise ValueError('Identity/provenance mismatch: ' + asset_id + '/' + field)
         with Image.open(files['input']) as source:
@@ -172,19 +172,19 @@ def prepare(assets=None):
         if not proof['ok']:
             raise ValueError('Prepared image failed validation: ' + asset_id)
         rows[asset_id] = dict(
-            input='res://' + str(files['input'].relative_to(ROOT)),
+            input='res://' + files['input'].relative_to(ROOT).as_posix(),
             input_sha256=SPECS[asset_id]['input_sha256'],
-            original_generated_atlas='res://' + str(files['atlas'].relative_to(ROOT)),
+            original_generated_atlas='res://' + files['atlas'].relative_to(ROOT).as_posix(),
             original_generated_atlas_sha256=digest(files['atlas']),
-            runtime='res://' + str(files['runtime'].relative_to(ROOT)),
-            trimmed='res://' + str(files['trimmed'].relative_to(ROOT)),
+            runtime='res://' + files['runtime'].relative_to(ROOT).as_posix(),
+            trimmed='res://' + files['trimmed'].relative_to(ROOT).as_posix(),
             runtime_sha256=digest(files['runtime']),
             body_window=SPECS[asset_id]['body_window'],
             inspected_boundary=SPECS[asset_id]['reason'],
             before=inspect_image(asset_id, files['input']), after=proof,
         )
         manifest['object_assets'][asset_id].update(
-            source_processing_manifest='res://' + str(files['provenance'].relative_to(ROOT)),
+            source_processing_manifest='res://' + files['provenance'].relative_to(ROOT).as_posix(),
             runtime_sha256=rows[asset_id]['runtime_sha256'],
         )
     provenance_template = dict(
@@ -237,7 +237,7 @@ def validate_asset(asset_id, entry):
             'source_generated_atlas': files['atlas'], 'source_processing_manifest': files['provenance'],
         }
         for key, path in expected_paths.items():
-            if entry.get(key) != 'res://' + str(path.relative_to(ROOT)):
+            if entry.get(key) != 'res://' + path.relative_to(ROOT).as_posix():
                 errors.append('manifest path mismatch: ' + key)
         if entry.get('assigned_map_object_id') != asset_id.replace('mapobj_', 'object_', 1):
             errors.append('assigned map-object identity mismatch')
@@ -250,7 +250,7 @@ def validate_asset(asset_id, entry):
                 errors.append('provenance hash mismatch: ' + key)
         for key, path in [('input',files['input']), ('runtime',files['runtime']),
                           ('trimmed',files['trimmed']), ('original_generated_atlas',files['atlas'])]:
-            if row.get(key) != 'res://' + str(path.relative_to(ROOT)):
+            if row.get(key) != 'res://' + path.relative_to(ROOT).as_posix():
                 errors.append('processing path mismatch: ' + key)
         if row.get('body_window') != list(spec['body_window']):
             errors.append('processing body bounds mismatch')

@@ -65,10 +65,6 @@ func _run_case(view: Control, case: Dictionary) -> void:
 	var stem := site_id.trim_prefix("site_")
 	var unclaimed_source := source_base + stem + "_unclaimed.png"
 	var controlled_source := source_base + stem + "_controlled.png"
-	var unclaimed_image := Image.load_from_file(ProjectSettings.globalize_path(unclaimed_source))
-	var controlled_image := Image.load_from_file(ProjectSettings.globalize_path(controlled_source))
-	_expect(not unclaimed_image.is_empty() and unclaimed_image.get_size() == Vector2i(887, 887) and unclaimed_image.detect_alpha() and FileAccess.get_sha256(unclaimed_source) == String(case.get("unclaimed_sha", "")), "%s unclaimed generated master changed." % site_id)
-	_expect(not controlled_image.is_empty() and controlled_image.get_size() == Vector2i(887, 887) and controlled_image.detect_alpha() and FileAccess.get_sha256(controlled_source) == String(case.get("controlled_sha", "")), "%s controlled generated master changed." % site_id)
 
 	var session = ScenarioFactory.create_session(SCENARIO_ID, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	OverworldRules.normalize_overworld_state(session)

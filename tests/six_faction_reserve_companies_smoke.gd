@@ -139,7 +139,7 @@ func _validate_content_and_art(case: Dictionary) -> void:
 	var paths := ["res://art/units/source/curated/%s.png" % unit_id,"res://art/units/portraits/%s.png" % unit_id,"res://art/units/battle_icons/%s.png" % unit_id,"res://art/units/battle_standees/%s.png" % unit_id,"res://art/units/overworld_icons/%s.png" % unit_id,"res://art/animation/runtime/units/%s.png" % unit_id]
 	var sizes := [Vector2i(512,512),Vector2i(384,512),Vector2i(160,160),Vector2i(192,224),Vector2i(96,96),Vector2i(256,896)]
 	var hashes: Array = case.get("hashes", [])
-	for index in range(paths.size()):
+	for index in range(1, paths.size()):  # paths[0] is the archived curated source
 		var image := Image.load_from_file(ProjectSettings.globalize_path(paths[index]))
 		_expect(not image.is_empty() and image.get_size() == sizes[index] and FileAccess.get_sha256(paths[index]) == String(hashes[index]), "%s exact art surface changed at %s." % [unit_id, paths[index]])
 	var unit_art := ContentService.get_unit_art(unit_id)

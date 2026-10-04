@@ -2,11 +2,11 @@
   "schema_id": "artifact_cutout_recovery_v1",
   "recipe_sha256": "5cfddbd8c068e9ee0ce6d09eb1a9b4f9ccc0695250d3c0f8dd722948c3ffc8c9",
   "tools": {
-    "tools/prepare_overworld_contract_cutouts.py": "b6686960de8cdb843fbb3a9fe079bb46b66a8076d22f49da9b47082973e0d947",
+    "tools/prepare_overworld_contract_cutouts.py": "63b9544b4d57beffaf54450737e25e93767214c7cae5e69ccca6b8843d0c1cf6",
     "tools/prepare_overworld_recurring_cutouts.py": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
     "tools/prepare_overworld_cutout_art.py": "247801087cb8c5bfd6fb0a471bf39dbbfdb2a8bd8fe984d3816df92f00b0d68d",
     "tools/prepare_overworld_legacy_cutouts.py": "578dd78feaf322f585df5b214cfdbe607ea29eb0a359a95ce549e289c8d7b092",
-    "tools/prepare_overworld_artifact_cutouts.py": "d1aeeed22ae9a06200ded1c5f39cc82273ea576e6cbb969dc70443677e6c96f1"
+    "tools/prepare_overworld_artifact_cutouts.py": "663dbdb0e1135588a238223315033c5a619e5517bbfa75d7bec4e69751d975de"
   },
   "assets": {
     "artifact_field_trailsinger_boots": {

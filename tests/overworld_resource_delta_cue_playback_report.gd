@@ -272,7 +272,6 @@ func _resource_registry_contract() -> Dictionary:
 			and unique_icon_ids.size() == RESOURCE_IDS.size()
 			and unique_icon_paths.size() == RESOURCE_IDS.size()
 			and OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS == RESOURCE_IDS
-			and FileAccess.file_exists("res://art/economy/source/resource_icon_atlas.png")
 		),
 		"resource_ids": ordered_ids,
 		"resource_count": ordered_ids.size(),

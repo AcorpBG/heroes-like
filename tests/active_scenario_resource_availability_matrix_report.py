@@ -119,6 +119,10 @@ def town_required_resources(town: dict[str, Any], buildings: dict[str, dict[str,
 def build_report(root: Path) -> dict[str, Any]:
     scenarios = load_items(root, "content/scenarios.json")
     towns = load_items(root, "content/towns.json")
+    # Retired town IDs resolve to their faction template, like ContentService.canonical_town_id.
+    for alias, target in json.loads((root / "content/towns.json").read_text(encoding="utf-8")).get("legacy_aliases", {}).items():
+        if target in towns:
+            towns.setdefault(alias, towns[target])
     buildings = load_items(root, "content/buildings.json")
     resource_sites = load_items(root, "content/resource_sites.json")
 

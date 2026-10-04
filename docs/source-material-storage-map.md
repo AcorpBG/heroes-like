@@ -52,21 +52,22 @@ python archive_source_material.py --destination <archive-directory> --verify-onl
 
 The snapshot includes current uncommitted/untracked sources; it is not an archive of every historical Git revision. The copy of this map inside the archive directory is the planning map used when the snapshot was created.
 
-## Restore sources for tests
+## Tests never need archived sources
 
-The game itself needs no archived source. These checks assert source provenance and fail until the named originals are restored:
+The game and its tests need no archived source. Source paintings, trims and generation masters were used once to make the shipped art; since 2026-10-04 no test opens them. Tests check what a clone contains: content, scripts, shipped runtime art, tracked import settings and manifest metadata (recorded paths, hashes and prompts stay as provenance text).
 
-| Check | Archived originals it opens |
-|---|---|
-| `tests/six_elder_wilds_smoke.gd` (contact sheet) | `art/units/source/curated/<unit>.png` |
-| `tests/six_faction_field_muster_captains_smoke.gd` | `art/heroes/source/curated/<hero>.png` |
-| `tests/six_horizon_company_field_musters_smoke.gd` | `art/overworld/source/generated/resource_sites/horizon_company_field_musters/` |
-| `tests/six_horizon_relic_commissions_smoke.gd` | `art/artifacts/source/generated/horizon_relic_commissions/` |
-| `tests/overworld_resource_delta_cue_playback_report.gd` | `art/economy/source/resource_icon_atlas.png` |
-| `tests/test_overworld_*_cutouts.py`, `tests/town_biome_art_regression.py`, `tests/test_pack_unit_pose_art.py` | Generated, trimmed and recovered masters named in their manifests |
-| `tests/validate_repo.py` | Stops at the first missing original (`tests/overworld_object_density_contract.py`); 49 of its validators read archived sources |
+On a fresh clone, Windows or Linux:
 
-Restore exactly what a check needs (dry-run without `--apply`). Every payload is verified against the archive SHA-256 and a differing local file is never overwritten:
+```text
+git submodule update --init --recursive
+godot --headless --path . --import
+python tests/validate_repo.py
+python -m unittest discover -s tests -p "test_*.py"
+```
+
+The Godot import step regenerates the `.import` files that `.gitignore` keeps out of Git (`*.import` with exceptions); the validator checks that runtime textures have them. The extracted HoMM3 prototype tiles are a local-only reference and are checked only on a machine that has them.
+
+The art-regeneration tools (`tools/prepare_overworld_*_cutouts.py`, `tools/prepare_spell_variety_assets.py` and similar) still need their sources when someone deliberately rebuilds art. Restore exactly what a rebuild needs (dry-run without `--apply`). Every payload is verified against the archive SHA-256 and a differing local file is never overwritten:
 
 ```text
 python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-10-03-ccc0d334 --prefix art/units/source/curated/ --apply

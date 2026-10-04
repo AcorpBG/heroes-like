@@ -96,9 +96,13 @@ def initialize():
 def inputs():
     recipe=json.loads(RECIPE.read_text());manifest=json.loads(MANIFEST.read_text())
     proof=json.loads((PACKET/'manifest.json').read_text()) if (PACKET/'manifest.json').exists() else {}
-    selected=members(manifest)
+    # Since 2026-09-20 live towns use one design per faction (town_art_policy);
+    # the cohort's records stay as historical reference art and remain checked.
+    one_design=manifest.get('town_art_policy',{}).get('model')=='one_overworld_design_per_faction'
+    selected={k:v for k,v in manifest['object_assets'].items() if k in recipe['assets']} if one_design else members(manifest)
     if recipe['schema_id']!='town_cutout_recipe_v1' or len(selected)!=39 or set(selected)!=set(recipe['assets']):raise ValueError('Town cohort changed')
-    if recipe['mappings']!={k:manifest[k] for k in MAPPING_KEYS}:raise ValueError('Town identity/faction/default routes changed')
+    if recipe['mappings']!={k:manifest[k] for k in MAPPING_KEYS} and not (one_design and recipe['mappings']['town_default_sprite']==manifest['town_default_sprite']):raise ValueError('Town identity/faction/default routes changed')
+    redesigned=set(manifest['town_faction_sprites'].values())|set(manifest['town_art_policy']['selected_designs'].values()) if one_design else set()
     for path,info in recipe['files'].items():
         prior=before_path(path) if before_path(path).exists() else base.local(path)
         if base.digest(prior)!=info['before_sha256'] or list(original(path).size)!=info['before_size']:raise ValueError('Historical Town atlas changed')
@@ -112,6 +116,7 @@ def inputs():
             if base.digest(ROOT/path.removeprefix('res://'))!=sha:raise ValueError('Original Town painting/provenance changed')
         if row['runtime_path']!=old['path']:raise ValueError('Town path changed')
         if row['mode']=='preserved_town':
+            if key in redesigned and entry!=old:continue  # replaced by its faction's new design
             if entry!=old or base.digest(base.local(old['path']))!=row['before_sha256']:raise ValueError('Preserved Town changed')
             continue
         if row['mode']!='town_atlas' or old['path'] not in recipe['files']:raise ValueError('Unscoped Town repair')
@@ -128,7 +133,7 @@ def inputs():
     return recipe,manifest,sources
 
 
-def tool_hashes():return dict(shared.tool_hashes(),**{str(Path(__file__).relative_to(ROOT)):base.digest(Path(__file__))})
+def tool_hashes():return dict(shared.tool_hashes(),**{Path(__file__).relative_to(ROOT).as_posix():base.digest(Path(__file__))})
 
 
 def prepare(output,install=False):

@@ -155,7 +155,7 @@ def inputs():
     return recipe,manifest,images
 
 
-def tool_hashes():return dict(shared.tool_hashes(),**{str(Path(__file__).relative_to(ROOT)):base.digest(Path(__file__))})
+def tool_hashes():return dict(shared.tool_hashes(),**{Path(__file__).relative_to(ROOT).as_posix():base.digest(Path(__file__))})
 
 
 def prepare(output,install=False):

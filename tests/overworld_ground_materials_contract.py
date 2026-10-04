@@ -28,16 +28,15 @@ def validate(root=ROOT, config=None, source=None):
     require(source.get('generation_mode') == 'built_in_image_gen', 'original generation provenance absent')
     require(len(source.get('sources', [])) == 4, 'four original sheets required')
     require(source.get('runtime', {}).get('path') == config.get('atlas'), 'runtime/source manifest path mismatch')
-    for entry in source.get('sources', []) + [source.get('runtime', {})]:
-        path = root / entry.get('path', '').removeprefix('res://')
-        require(path.is_file(), f'missing original/runtime raster: {path}')
-        if not path.is_file():
-            continue
-        require(hashlib.sha256(path.read_bytes()).hexdigest() == entry.get('sha256'), f'provenance hash mismatch: {path.name}')
+    for entry in source.get('sources', []):
+        require(len(entry.get('prompt', '')) > 200, f"original prompt missing: {entry.get('path', '')}")
+    runtime = source.get('runtime', {})
+    path = root / runtime.get('path', '').removeprefix('res://')
+    require(path.is_file(), f'missing runtime raster: {path}')
+    if path.is_file():
+        require(hashlib.sha256(path.read_bytes()).hexdigest() == runtime.get('sha256'), f'provenance hash mismatch: {path.name}')
         with Image.open(path) as painting:
-            require(list(painting.size) == entry.get('size'), f'canvas differs from provenance: {path.name}')
-        if entry in source['sources']:
-            require(len(entry.get('prompt', '')) > 200, f'original prompt missing: {path.name}')
+            require(list(painting.size) == runtime.get('size'), f'canvas differs from provenance: {path.name}')
     require(source.get('runtime', {}).get('size') == [2048, 2048], 'runtime atlas must match shader layout')
     shader = (root / 'scenes/overworld/overworld_ground_surface.gdshader').read_text()
     owner = (root / 'scenes/overworld/OverworldGroundSurface.gd').read_text()

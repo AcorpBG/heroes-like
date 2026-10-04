@@ -2,7 +2,7 @@
   "schema_id": "training_site_cutout_recovery_v1",
   "recipe_sha256": "29b0e82ab95698129e8297e995125af2feb49ca6b596cb051a32716ad6ab5593",
   "tools": {
-    "tools/prepare_overworld_training_cutouts.py": "0f99c24a862a4c971853d174296c0e8dba0b9c08217f8a053046399cbb68a4da",
+    "tools/prepare_overworld_training_cutouts.py": "eee0035193379711e78afe253ec5265b2e2584b0101b0b18ac3ecec4df678c7d",
     "tools/prepare_overworld_recurring_cutouts.py": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
     "tools/prepare_overworld_cutout_art.py": "247801087cb8c5bfd6fb0a471bf39dbbfdb2a8bd8fe984d3816df92f00b0d68d",
     "tools/prepare_overworld_legacy_cutouts.py": "578dd78feaf322f585df5b214cfdbe607ea29eb0a359a95ce549e289c8d7b092"

@@ -69,11 +69,8 @@ func _run_case(baseline_payload: Dictionary, case: Dictionary) -> void:
 	_expect(String(action.get("building_id", "")) == building_id and String(action.get("artifact_id", "")) == artifact_id and String(action.get("artifact_reward_table_id", "")) == TABLE_ID, "%s exposed the wrong relic action: %s" % [town_id, JSON.stringify(action)])
 	_expect(_cost_matches(action.get("cost", {}), case.get("cost", {})) and not bool(action.get("disabled", true)), "%s commission cost or affordability changed." % artifact_id)
 	var icon = load(String(case.get("icon_path", "")))
-	var source_image := Image.load_from_file(ProjectSettings.globalize_path(String(case.get("source_path", ""))))
 	var art_exact: bool = (
 		icon is Texture2D and icon.get_size() == Vector2(128, 128)
-		and not source_image.is_empty() and source_image.detect_alpha() != Image.ALPHA_NONE
-		and FileAccess.get_sha256(String(case.get("source_path", ""))) == String(case.get("source_sha256", ""))
 		and FileAccess.get_sha256(String(case.get("icon_path", ""))) == String(case.get("runtime_sha256", ""))
 	)
 	_expect(art_exact, "%s did not load its exact transparent generated art." % artifact_id)

@@ -70,22 +70,17 @@ func _validate_assets_and_provenance() -> void:
 	for spec_variant in UNITS:
 		var spec: Dictionary = spec_variant
 		var label := String(spec["label"])
-		var source: Image = _load_image(String(spec["source_path"]))
 		var portrait: Image = _load_image(String(spec["portrait_path"]))
 		var icon: Image = _load_image(String(spec["icon_path"]))
 		var overworld_icon: Image = _load_image(String(spec["overworld_icon_path"]))
 		var sheet: Image = _load_image(String(spec["sheet_path"]))
-		_expect(source != null and source.get_size() == Vector2i(512, 512), "%s curated source must load at 512x512." % label)
 		_expect(portrait != null and portrait.get_size() == Vector2i(384, 512), "%s portrait must load at 384x512." % label)
 		_expect(icon != null and icon.get_size() == Vector2i(160, 160), "%s battle icon must load at 160x160." % label)
 		_expect(overworld_icon != null and overworld_icon.get_size() == Vector2i(96, 96), "%s overworld icon must load at 96x96." % label)
 		_expect(sheet != null and sheet.get_size() == Vector2i(256, 896), "%s sheet must load at 256x896." % label)
-		if source == null or portrait == null or icon == null or overworld_icon == null or sheet == null:
+		if portrait == null or icon == null or overworld_icon == null or sheet == null:
 			continue
-		var source_alpha := _alpha_metrics(source)
-		_expect(int(source_alpha.get("transparent", 0)) > 50000 and int(source_alpha.get("visible", 0)) > 30000 and int(source_alpha.get("opaque", 0)) > 10000, "%s source must retain transparent negative space and a materially opaque silhouette." % label)
-		_expect(bool(source_alpha.get("corners_transparent", false)), "%s source corners must remain transparent." % label)
-		for key in ["source", "portrait", "icon", "overworld_icon", "sheet"]:
+		for key in ["portrait", "icon", "overworld_icon", "sheet"]:
 			var hash_key := "%s_sha256" % key
 			_expect(FileAccess.get_sha256(String(spec["%s_path" % key])) == String(spec[hash_key]), "%s %s hash drifted." % [label, key])
 			if key != "source":
@@ -109,7 +104,7 @@ func _validate_assets_and_provenance() -> void:
 				signatures[hash(frame.get_data())] = true
 			_expect(visible == FRAMES_PER_STATE and signatures.size() >= 2, "%s state %s lost visible frame variation." % [label, STATES[state_index]])
 			state_rows.append({"state": STATES[state_index], "visible_frames": visible, "unique_frames": signatures.size()})
-		rows.append({"unit_id": spec["unit_id"], "source_sha256": spec["source_sha256"], "source_alpha": source_alpha, "states": state_rows})
+		rows.append({"unit_id": spec["unit_id"], "source_sha256": spec["source_sha256"], "states": state_rows})
 	for preserved_variant in PRESERVED_EARLY_LADDER:
 		var preserved: Dictionary = preserved_variant
 		var unit_id := String(preserved["unit_id"])

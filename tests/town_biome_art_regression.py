@@ -30,9 +30,14 @@ def validate_assets(art=None, skins=None):
     if '!art/overworld/runtime/objects/towns/biome_fit/*.png.import' not in (ROOT/'.gitignore').read_text().splitlines():
         errors.append('bounded town import settings are not retained for clean checkouts')
     skins = json.loads((ROOT/'art/overworld/town_biome_sprites.json').read_text()) if skins is None else skins
-    frozen = json.loads((ROOT/'art/overworld/source/generated/cutout_recovery_20260909/final_families/recipe.json').read_text())['mapping_tables']
-    if {key:value for key,value in art.items() if key != 'object_assets'} != frozen:
-        errors.append('historical gameplay identity tables changed')
+    # Since 2026-09-20 every live town uses its faction's single design on all
+    # biomes (town_art_policy). The biome-fit variants stay as verified historical
+    # reference art; the cutout recovery tools guard their own cohorts' routes.
+    one_design = art.get('town_art_policy', {}).get('model') == 'one_overworld_design_per_faction'
+    if not one_design:
+        frozen = json.loads((ROOT/'art/overworld/source/generated/cutout_recovery_20260909/final_families/recipe.json').read_text())['mapping_tables']
+        if {key:value for key,value in art.items() if key != 'object_assets'} != frozen:
+            errors.append('historical gameplay identity tables changed')
     known = set(art['town_identity_sprites'].values()) | set(art['town_faction_sprites'].values()) | {art['town_default_sprite']['asset_id']}
     biomes = set(skins.get('terrain_aliases', {}).values())
     terrain_names = set(art['terrain_rendering']['raster_base_v2']['terrain_assets']) | {'subterranean'}
@@ -59,14 +64,18 @@ def validate_assets(art=None, skins=None):
                 errors.append('missing manifest-backed variant: '+asset_id)
             elif asset_id != base and art['object_assets'][asset_id].get('base_asset_id') != architecture:
                 errors.append('variant substitutes a different town: '+asset_id)
-    if variants != set(proof['assets']):
+    if variants != (set() if one_design else set(proof['assets'])):
         errors.append('provenance and live variant membership differ')
     declared = {key for key, entry in art['object_assets'].items() if entry.get('source_model') == 'built_in_image_gen_original_biome_town_variant'}
-    if declared != set(proof['assets']):
+    if not (declared <= set(proof['assets']) if one_design else declared == set(proof['assets'])):
         errors.append('town biome canvas family has unproven or missing members')
     for asset_id, row in proof['assets'].items():
         entry = art['object_assets'].get(asset_id, {})
-        for field in ('input', 'draft', 'source', 'trimmed', 'runtime'):
+        if one_design and asset_id not in declared:
+            entry = dict(entry, path=row['runtime'], source_generated=row['source'], source_trimmed=row['trimmed'], runtime_sha256=row['sha256']['runtime'])  # id repointed to the faction design
+        # Generated inputs, drafts, sources and trims are archived; the shipped
+        # runtime raster is the only file checked.
+        for field in ('runtime',):
             path = ROOT / row[field].removeprefix('res://')
             if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != row['sha256'][field]:
                 errors.append(asset_id+': missing or modified '+field)
@@ -98,34 +107,6 @@ def validate_assets(art=None, skins=None):
             job = recipe['jobs'].get(row.get('recipe_job'), {})
             if job.get('draft_sha256') != row['sha256']['draft'] or job.get('base_asset_id') != row['base_asset_id'] or row['canvas'] != [512,512]:
                 errors.append(asset_id+': offline recipe/provenance mismatch')
-            if 'intermediate' in job:
-                intermediate = job['intermediate']
-                p = ROOT/intermediate['path'].removeprefix('res://')
-                if not p.is_file() or hashlib.sha256(p.read_bytes()).hexdigest() != intermediate['sha256']:
-                    errors.append(asset_id+': missing intermediate edit provenance')
-    return errors
-
-
-def validate_processing():
-    """Reproduce alpha and packing from immutable generated masters."""
-    spec = importlib.util.spec_from_file_location('town_matte', ROOT/'tools/prepare_town_biome_art.py')
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    recipe = json.loads((PACKET.parent/'offline_recipe.json').read_text())
-    proof = json.loads(PACKET.read_text())
-    errors = []
-    for name, job in recipe['jobs'].items():
-        row = proof['assets']['town_biome_'+name]
-        white = job.get('flat_white',False)
-        with Image.open(ROOT/job['draft'].removeprefix('res://')) as image:
-            cutout,matte = module.extract(image,job.get('seeds',()),minimum=230 if white else 155,tolerance=20 if white else 35,flat_white=white)
-            runtime,transform = module.fit(cutout)
-        with Image.open(ROOT/row['source'].removeprefix('res://')) as image:
-            if cutout.tobytes() != image.tobytes(): errors.append(name+': source alpha is not reproducible')
-        with Image.open(ROOT/row['runtime'].removeprefix('res://')) as image:
-            if runtime.tobytes() != image.tobytes(): errors.append(name+': runtime fit is not reproducible')
-        if matte != row['matte'] or transform != row['transform']:
-            errors.append(name+': recorded processing differs')
     return errors
 
 
@@ -237,14 +218,12 @@ func _capture_town_biome_review(shell, session) -> void:
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--assets-only', action='store_true')
-    parser.add_argument('--reproduce-processing', action='store_true')
     parser.add_argument('--clean-import', action='store_true')
     parser.add_argument('--proportion', action='store_true', help='Run the existing town proportion/environs probe with isolated evidence/profile')
     parser.add_argument('--godot', default=shutil.which('godot4') or shutil.which('godot'))
     parser.add_argument('--output', type=Path, default=ROOT/'.artifacts/town-biome-fit-20260913')
     args = parser.parse_args()
     failures = validate_assets()
-    if args.reproduce_processing: failures += validate_processing()
     if args.clean_import:
         if not args.godot: parser.error('Godot is required for clean import')
         failures += validate_clean_import(args.godot,args.output.resolve())

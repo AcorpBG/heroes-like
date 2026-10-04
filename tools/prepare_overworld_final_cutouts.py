@@ -48,7 +48,7 @@ def prior_assets():
         recipe = json.loads(path.read_text())
         accepted.update(recipe.get('assets', {}))
         accepted.update(recipe.get('preserved_controls', {}))
-        hashes[str(path.relative_to(ROOT))] = base.digest(path)
+        hashes[path.relative_to(ROOT).as_posix()] = base.digest(path)
     if len(accepted) != 1143:
         raise ValueError('Earlier accepted membership changed')
     return accepted, hashes
@@ -140,6 +140,15 @@ def initialize():
 def protected_source_digest(path):
     data = local(path).read_bytes()
     if path == 'res://content/unit_art_manifest.json':
+        # Owner-approved creature upgrades, 2026-09-23 (content/unit_upgrade_designs)
+        # append their own rows. Drop ONLY those rows, and only while the file
+        # keeps its canonical generator form, before checking the frozen bytes.
+        rows = json.loads(data)
+        if (json.dumps(rows, separators=(',', ':'), ensure_ascii=False) + '\n').encode() == data:
+            upgrades = {item['upgrade_id'] for design in sorted((ROOT / 'content/unit_upgrade_designs').glob('*.json'))
+                        for item in json.loads(design.read_text(encoding='utf-8')).get('items', [])}
+            rows['items'] = [row for row in rows['items'] if row.get('unit_id') not in upgrades]
+            data = (json.dumps(rows, separators=(',', ':'), ensure_ascii=False) + '\n').encode()
         # Owner-approved recruitment identity clarification, 2026-09-12.
         # Restore ONLY the three exact row labels before checking the frozen
         # historical bytes. All asset paths, provenance and other bytes remain
@@ -155,6 +164,21 @@ def protected_source_digest(path):
     return hashlib.sha256(data).hexdigest()
 
 
+def cohort_routes(tables, cohort):
+    """The cohort assets each mapping-table route selects."""
+    def strings(value):
+        if isinstance(value, str):
+            yield value
+        elif isinstance(value, dict):
+            for item in value.values():
+                yield from strings(item)
+        elif isinstance(value, list):
+            for item in value:
+                yield from strings(item)
+    return {(table, route): set(strings(value)) & set(cohort) for table, rows in tables.items() if isinstance(rows, dict)
+            for route, value in rows.items() if not set(strings(value)).isdisjoint(cohort)}
+
+
 def inputs():
     recipe = json.loads(RECIPE.read_text())
     manifest = json.loads(MANIFEST.read_text())
@@ -165,7 +189,11 @@ def inputs():
     # additions do not belong to that cohort and have their own validators.
     if not (accepted | recipe['assets'].keys()) <= manifest['object_assets'].keys() or len(recipe['assets']) != 71:
         raise ValueError('Final-pool membership changed')
-    if recipe['mapping_tables'] != {k: v for k, v in manifest.items() if k != 'object_assets'}:
+    # Later owner-directed remaps (unified mines, one town design per faction)
+    # may move a route off this cohort, but no route may gain or swap a cohort asset.
+    current_tables = {k: v for k, v in manifest.items() if k != 'object_assets'}
+    accepted_routes = cohort_routes(recipe['mapping_tables'], recipe['assets'])
+    if any(accepted_routes.get(route) != assets for route, assets in cohort_routes(current_tables, recipe['assets']).items()):
         raise ValueError('Gameplay identity mapping tables changed')
     if base.digest(AUTHOR) != recipe['authoring_tool_sha256']:
         raise ValueError('Historical figure registration owner changed')
@@ -179,7 +207,12 @@ def inputs():
             if protected_source_digest(path) != sha:
                 raise ValueError('Original painting/provenance/UI surface changed: ' + path)
         if row['mode'] == 'preserved_final':
-            if entry != old:
+            # A later owner-directed batch may replace a control's live art under
+            # its own provenance; the historical control file stays checked above.
+            replacement = str(entry.get('source_processing_manifest', ''))
+            superseded = (entry.get('path') != old['path'] and replacement.startswith('res://art/overworld/source/generated/')
+                          and 'cutout_recovery_20260909' not in replacement and local(replacement).is_file())
+            if entry != old and not superseded:
                 raise ValueError('Preserved control metadata changed: ' + key)
             continue
         if row['mode'] != 'creature_silhouette':

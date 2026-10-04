@@ -140,7 +140,7 @@ func _validate_art_contract(unit_id: String, building_id: String) -> void:
 		"res://art/towns/runtime/buildings/%s.png" % building_id,
 	]
 	var sizes := [Vector2i(512,512),Vector2i(384,512),Vector2i(160,160),Vector2i(192,224),Vector2i(96,96),Vector2i(256,896),Vector2i(1254,1254),Vector2i(256,256)]
-	for index in range(paths.size()):
+	for index in range(1, paths.size()):  # paths[0] is the archived curated source
 		var image := _load_image(paths[index])
 		_expect(image != null and image.get_size() == sizes[index], "%s art surface is missing or changed size." % paths[index])
 	var unit_art := ContentService.get_unit_art(unit_id)

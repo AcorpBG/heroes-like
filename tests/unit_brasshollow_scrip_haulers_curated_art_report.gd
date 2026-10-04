@@ -37,18 +37,12 @@ func _run() -> void:
 	get_tree().quit(0 if _errors.is_empty() else 1)
 
 func _validate_assets_and_provenance() -> void:
-	var source: Image = _load_image(SOURCE_PATH)
 	var icon: Image = _load_image(ICON_PATH)
 	var sheet: Image = _load_image(SHEET_PATH)
-	_expect(source != null and source.get_size() == Vector2i(512, 512), "Scrip Haulers curated source must load at 512x512.")
 	_expect(icon != null and icon.get_size() == Vector2i(160, 160), "Scrip Haulers icon must load at 160x160.")
 	_expect(sheet != null and sheet.get_size() == Vector2i(256, 896), "Scrip Haulers sheet must load at 256x896.")
-	if source == null or icon == null or sheet == null:
+	if icon == null or sheet == null:
 		return
-	var source_alpha := _alpha_metrics(source)
-	_expect(int(source_alpha.get("transparent", 0)) > 100000 and int(source_alpha.get("opaque", 0)) > 50000, "Scrip Haulers source must retain transparent negative space and an opaque character silhouette.")
-	_expect(bool(source_alpha.get("corners_transparent", false)), "Scrip Haulers source corners must remain transparent.")
-	_expect(FileAccess.get_sha256(SOURCE_PATH) == SOURCE_SHA256, "Scrip Haulers source hash drifted.")
 	_expect(FileAccess.get_sha256(ICON_PATH) == ICON_SHA256 and ICON_SHA256 != OLD_ICON_SHA256, "Scrip Haulers curated icon is not the exact replacement payload.")
 	_expect(FileAccess.get_sha256(SHEET_PATH) == SHEET_SHA256 and SHEET_SHA256 != OLD_SHEET_SHA256, "Scrip Haulers curated sheet is not the exact replacement payload.")
 	var art: Dictionary = ContentService.get_unit_art(UNIT_ID)
@@ -70,7 +64,7 @@ func _validate_assets_and_provenance() -> void:
 			signatures[hash(frame.get_data())] = true
 		_expect(visible == FRAMES_PER_STATE and signatures.size() >= 2, "Scrip Haulers state %s lost visible frame variation." % STATES[state_index])
 		state_rows.append({"state": STATES[state_index], "visible_frames": visible, "unique_frames": signatures.size()})
-	_report["assets"] = {"source_sha256": SOURCE_SHA256, "icon_sha256": ICON_SHA256, "sheet_sha256": SHEET_SHA256, "source_alpha": source_alpha, "states": state_rows}
+	_report["assets"] = {"source_sha256": SOURCE_SHA256, "icon_sha256": ICON_SHA256, "sheet_sha256": SHEET_SHA256, "states": state_rows}
 
 func _validate_battle_board_runtime() -> void:
 	var session := _session()

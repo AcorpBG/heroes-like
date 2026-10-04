@@ -2,7 +2,7 @@
   "schema_id": "hero_cutout_recovery_v1",
   "recipe_sha256": "48efb6f05296ad0f0205dff7a1f4b3a4ed6d31bdeb2dfdc425bfe46acb1dd4e3",
   "processing_tool": "tools/prepare_overworld_hero_cutouts.py",
-  "processing_tool_sha256": "e03a027e4e0340540ac5fb6954e5e8de0ad60f07852f325e5f9e4bd67d4e1275",
+  "processing_tool_sha256": "aae4ce63e34e04824889bb1319b8a29c5d0df376360d055769de721fb0c4efce",
   "processing": "Explicit retained-source neutral backing components; bounded three-pixel source composite recovery. Historical registered projection patches only changed runtime support; every other runtime pixel and 57 clean controls remain exact.",
   "assets": {
     "hero_strategic_thalen": {

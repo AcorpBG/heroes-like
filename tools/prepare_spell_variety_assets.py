@@ -26,6 +26,12 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def same_pixels(path, data):
+    """PNG encoders differ between Pillow/zlib builds; the check compares pixels."""
+    with Image.open(path) as shipped, Image.open(io.BytesIO(data)) as derived:
+        return shipped.mode == derived.mode and shipped.size == derived.size and shipped.tobytes() == derived.tobytes()
+
+
 def runtime_bytes(path):
     with Image.open(path) as source:
         if source.mode != 'RGBA':
@@ -47,12 +53,12 @@ def runtime_bytes(path):
 
 
 def prepare(check=False):
-    briefs = json.loads((SOURCE / 'briefs.json').read_text())
+    briefs = json.loads((SOURCE / 'briefs.json').read_text(encoding='utf-8'))
     if briefs.get('generation_mode') != 'built_in_image_gen':
         raise ValueError('Expected approved built-in original raster generation')
-    origins = json.loads((SOURCE / 'origins.json').read_text())
-    spells = {s['id']: s for s in json.loads((ROOT / 'content/spells.json').read_text())['items']}
-    manifest = json.loads(MANIFEST.read_text())
+    origins = json.loads((SOURCE / 'origins.json').read_text(encoding='utf-8'))
+    spells = {s['id']: s for s in json.loads((ROOT / 'content/spells.json').read_text(encoding='utf-8'))['items']}
+    manifest = json.loads(MANIFEST.read_text(encoding='utf-8'))
     families = briefs['families']
     if len(families) != 21 or len({f['id'] for f in families}) != 21:
         raise ValueError('Expected the 21 owner-directed effect families')
@@ -65,16 +71,17 @@ def prepare(check=False):
         source = SOURCE / f'{identity}_source.png'
         runtime = RUNTIME / f'family_{identity}.png'
         data, bounds, size = runtime_bytes(source)
+        if check:
+            if not runtime.is_file() or not same_pixels(runtime, data):
+                raise ValueError(f'{identity}: runtime does not match retained source')
+            data = runtime.read_bytes()
+        else:
+            runtime.write_bytes(data)
         source_hash, runtime_hash = digest(source.read_bytes()), digest(data)
         if source_hash in source_hashes or runtime_hash in runtime_hashes:
             raise ValueError(f'{identity}: duplicate effect artwork')
         source_hashes.add(source_hash)
         runtime_hashes.add(runtime_hash)
-        if check:
-            if not runtime.is_file() or runtime.read_bytes() != data:
-                raise ValueError(f'{identity}: runtime does not match retained source')
-        else:
-            runtime.write_bytes(data)
         for index, spell_id in enumerate(family['spell_ids']):
             spell = spells[spell_id]
             if spell_id in seen or spell['context'] != 'battle' or spell['school_id'] != family['school_id'] or spell['effect']['type'] != family['effect_type']:
@@ -111,11 +118,11 @@ def prepare(check=False):
                   'items': items}
     provenance_path = SOURCE / 'manifest.json'
     if check:
-        if json.loads(provenance_path.read_text()) != provenance:
+        if json.loads(provenance_path.read_text(encoding='utf-8')) != provenance:
             raise ValueError('Source provenance does not match the reproducible derivation')
     else:
-        MANIFEST.write_text(json.dumps(manifest, indent=2) + '\n')
-        provenance_path.write_text(json.dumps(provenance, indent=2) + '\n')
+        MANIFEST.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
+        provenance_path.write_text(json.dumps(provenance, indent=2) + '\n', encoding='utf-8')
     return {'families': len(items), 'former_shared_spells': len(seen),
             'explicit_battle_spells': len(expected), 'check_only': check}
 

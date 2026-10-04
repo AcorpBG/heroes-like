@@ -143,9 +143,7 @@ func _validate_content_and_art(case: Dictionary) -> void:
 	_expect(hero_id in faction.get("hero_ids", []) and hero_id in faction.get("bible_hero_ids", []), "%s is missing from its live faction roster." % hero_id)
 	var source_path := "res://art/heroes/source/curated/%s.png" % hero_id
 	var portrait_path := "res://art/heroes/portraits/%s.png" % hero_id
-	var source := Image.load_from_file(ProjectSettings.globalize_path(source_path))
 	var portrait := Image.load_from_file(ProjectSettings.globalize_path(portrait_path))
-	_expect(not source.is_empty() and source.get_size() == Vector2i(1254, 1254) and FileAccess.get_sha256(source_path) == String(case.get("source_sha", "")), "%s curated portrait master changed." % hero_id)
 	_expect(not portrait.is_empty() and portrait.get_size() == Vector2i(384, 512) and FileAccess.get_sha256(portrait_path) == String(case.get("portrait_sha", "")), "%s runtime portrait changed." % hero_id)
 	_expect(String(art.get("source_kind", "")) == "curated_original_character" and String(art.get("source_path", "")) == source_path and String(art.get("source_sha256", "")) == String(case.get("source_sha", "")) and String(art.get("portrait", "")) == portrait_path, "%s portrait manifest provenance changed." % hero_id)
 

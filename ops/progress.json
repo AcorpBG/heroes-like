@@ -22327,13 +22327,24 @@
     {
       "id": "tooling-validate-repo-archived-sources-20261004",
       "title": "Make the repository validator usable with archived sources",
-      "status": "pending",
+      "status": "completed",
       "classification": "tooling_follow_up",
       "source": "PLAN.md",
       "sourceDocs": [
         "docs/source-material-storage-map.md"
       ],
-      "notes": "tests/validate_repo.py raises FileNotFoundError at the first archived original (tests/overworld_object_density_contract.py reads art/overworld/source/generated/resource_sites/land_transit_active_wave1/repaired_ferry_stage_active_source.png). With missing-file reads tolerated per validator, 49 validators stop on archived sources and 9,764 errors remain, mostly missing archived source/trimmed scene rasters plus stale expectations (scene building lists, 288 canvas size, scenery motion profiles). The error set was identical before and after tooling-repo-hygiene-20261004. Decide between a restore-gated source mode and updated expectations; do not mark the validator green until it runs end to end."
+      "notes": "COMPLETED 2026-10-04. Owner direction: tests must never use archived source material. tests/validate_repo.py, the Python tests and the GDScript reports now check only what a clone contains: content, scripts, shipped runtime art, Godot import presence and manifest provenance text. Removed every source-painting read from validate_repo.py (curated, generated, trimmed and historical before-atlas checks, the 22 cutout-recovery tool calls and source-distinctness counts) and the 143 report tokens that pinned source checks; deleted 20 source-rebuild test modules and the source-dependent tests in 8 more; stripped source checks from 83 GDScript reports. Validators updated where the game legitimately moved on (shared town template, unified mines, 5x3 towns, one town design per faction, 72 veteran creatures, raw resource piles). Fresh-clone procedure in docs/source-material-storage-map.md. Validation: validate_repo.py reports only the real findings tracked in content-validator-findings-20261004 (306 mipmaps, 6 twin-command halls, 1 quarry footprint)."
+    },
+    {
+      "id": "content-validator-findings-20261004",
+      "title": "Fix the real defects the updated tests report",
+      "status": "pending",
+      "classification": "content_follow_up",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/source-material-storage-map.md"
+      ],
+      "notes": "1) Six twin-command scenarios (e.g. pikeward-cinderquill-twin-beacon-council) lost the starting Wayfarers Hall their second commander needs: shared town templates start with only building_town_hall and the placements author no built_buildings. 2) object_claimed_quarry_head is 2x2 but object_ridge_quarry is 3x2 (accordfall-fourteen-marks). 3) 306 overhaul town scene layers import without mipmaps; their .import files are untracked, so fresh clones get default settings. 4) tests/test_pack_unit_pose_art.py: the 72 veteran pose sheets have no visual-acceptance record, and test_registered_clips_resolve_real_frames reports ground-line anchor mismatches (not yet investigated)."
     },
     {
       "id": "tooling-audio-ci-disable-20261003",

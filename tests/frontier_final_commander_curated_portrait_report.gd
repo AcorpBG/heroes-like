@@ -93,11 +93,8 @@ func _validate_curated_provenance() -> bool:
 			return false
 		var source_path := String(case.get("source_path", ""))
 		var portrait_path := String(case.get("portrait_path", ""))
-		var source_image := _load_png(source_path)
 		var portrait_image := _load_png(portrait_path)
-		if source_image == null or source_image.get_size() != Vector2i(1254, 1254) \
-				or portrait_image == null or portrait_image.get_size() != Vector2i(384, 512) \
-				or FileAccess.get_sha256(source_path) != String(case.get("source_sha256", "")) \
+		if portrait_image == null or portrait_image.get_size() != Vector2i(384, 512) \
 				or FileAccess.get_sha256(portrait_path) != String(case.get("portrait_sha256", "")):
 			_fail("Curated source/runtime bytes changed for %s." % hero_id)
 			return false

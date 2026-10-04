@@ -2,7 +2,7 @@
   "schema_id": "command_site_cutout_recovery_v1",
   "recipe_sha256": "d7da83aef67e4f7fe63f2f43a60bb2d21a7509d8f7cb697aafdc21bc21410a90",
   "tools": {
-    "tools/prepare_overworld_command_cutouts.py": "7b92676f2ba14c77d1305293f4e58a215b730f7f4c53360f42feeb0a172b5557",
+    "tools/prepare_overworld_command_cutouts.py": "e762eb64ffa35201c31a5956d7086c7fe2b06ee1f7e3a98f038aa423e02d66c4",
     "tools/prepare_overworld_recurring_cutouts.py": "246fa2b76b94676efe6e836a1937ea7a0e064fe9f001cabea263a18e4ce9cb77",
     "tools/prepare_overworld_cutout_art.py": "247801087cb8c5bfd6fb0a471bf39dbbfdb2a8bd8fe984d3816df92f00b0d68d",
     "tools/prepare_overworld_legacy_cutouts.py": "578dd78feaf322f585df5b214cfdbe607ea29eb0a359a95ce549e289c8d7b092"

@@ -117,15 +117,13 @@ func _validate_content_and_art() -> void:
 		_expect(String(art.get("portrait", "")) == portrait_path and String(art.get("battle_icon", "")) == icon_path and String(art.get("battle_standee", "")) == standee_path and String(art.get("overworld_icon", "")) == overworld_path and String(animation.get("sprite_sheet", "")) == sheet_path, "%s runtime art paths changed." % unit_id)
 		var paths := [source_path, portrait_path, icon_path, standee_path, overworld_path, sheet_path]
 		var hashes := [case.get("source_sha256", ""), case.get("portrait_sha256", ""), case.get("icon_sha256", ""), case.get("standee_sha256", ""), case.get("overworld_sha256", ""), case.get("sheet_sha256", "")]
-		for index in range(paths.size()):
+		for index in range(1, paths.size()):  # paths[0] is the archived curated source
 			_expect(FileAccess.get_sha256(paths[index]) == String(hashes[index]), "%s art hash drifted at %s." % [unit_id, paths[index]])
-		var source := _load_image(source_path)
 		var portrait := _load_image(portrait_path)
 		var icon := _load_image(icon_path)
 		var standee := _load_image(standee_path)
 		var overworld := _load_image(overworld_path)
 		var sheet := _load_image(sheet_path)
-		_expect(source != null and source.get_size() == Vector2i(512, 512) and _transparent_corners(source), "%s source must remain a transparent 512x512 character master." % unit_id)
 		_expect(portrait != null and portrait.get_size() == Vector2i(384, 512), "%s portrait dimensions changed." % unit_id)
 		_expect(icon != null and icon.get_size() == Vector2i(160, 160), "%s battle icon dimensions changed." % unit_id)
 		_expect(standee != null and standee.get_size() == Vector2i(192, 224), "%s battle standee dimensions changed." % unit_id)

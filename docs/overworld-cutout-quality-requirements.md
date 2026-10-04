@@ -6,6 +6,14 @@ Phase 6 parent: `art-overworld-cutout-quality-20260909`. This is new work after
 the bounded full-match quality goal, not a claim that its four earlier cutout
 repairs covered all assets.
 
+2026-10-04: the source paintings these recoveries used are archived and tests no
+longer open them. The per-batch `tests/test_overworld_*_cutouts.py` modules named
+below rebuilt runtime art from those sources and were retired; their synthetic
+matte tests remain in `test_overworld_cutout_art.py` and
+`test_overworld_cutout_pool.py`. The `tools/prepare_overworld_*_cutouts.py`
+tools still rebuild a cohort after its sources are restored (see
+`docs/source-material-storage-map.md`).
+
 ## Scope and diagnosis
 
 Inventory all authoritative `art/overworld/manifest.json` object assets and their

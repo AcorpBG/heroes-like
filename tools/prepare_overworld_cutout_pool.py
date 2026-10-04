@@ -81,15 +81,22 @@ def load_inputs(recipe_path=RECIPE):
     if recipe.get('schema_id')!='original_sheet_pool_recipe_v1':
         raise ValueError('Unknown original-sheet recipe schema')
     all_members = set()
+    # Owner-directed replacements may re-source a member from a later batch; the
+    # recovery then no longer owns that member's live art.
+    superseded = set()
     for key,spec in recipe['sources'].items():
         path = base.local(spec['path'])
         if base.digest(path)!=spec['sha256']:raise ValueError('Original sheet hash changed: '+key)
         sheets[key] = Image.open(path).convert('RGB')
         members = {k for k,v in manifest['object_assets'].items() if v.get('source_generated_atlas')==spec['path']}
-        if members!=set(spec['members']):raise ValueError('Exact source-sheet membership changed: '+key)
+        if not members<=set(spec['members']):raise ValueError('Exact source-sheet membership changed: '+key)
+        superseded.update(set(spec['members'])-members)
         all_members.update(members)
-    if all_members != set(recipe['assets']) | set(recipe['preserved_controls']):
+    if all_members|superseded != set(recipe['assets']) | set(recipe['preserved_controls']):
         raise ValueError('Incomplete source-sheet dispositions')
+    recipe['superseded'] = sorted(superseded)
+    for group in ('assets','preserved_controls'):
+        recipe[group] = {k:v for k,v in recipe[group].items() if k not in superseded}
     for key,spec in recipe['assets'].items():
         entry = manifest['object_assets'][key]
         stripped = {k:v for k,v in entry.items() if k not in ('runtime_sha256','source_processing_manifest')}
@@ -189,7 +196,7 @@ def validate_pool_assets():
     proof = json.loads((PACKET/'manifest.json').read_text())
     for field,path in [('recipe_sha256',RECIPE),('processing_tool_sha256',Path(__file__)),('matte_engine_sha256',ENGINE)]:
         if proof.get(field)!=base.digest(path):raise ValueError('Source recovery provenance changed: '+field)
-    if proof.get('sources')!=recipe['sources'] or set(proof.get('assets',{}))!=set(recipe['assets']):
+    if proof.get('sources')!=recipe['sources'] or set(proof.get('assets',{}))!=set(recipe['assets'])|set(recipe['superseded']):
         raise ValueError('Source recovery membership/provenance changed')
     reports = {}
     for key,spec in recipe['assets'].items():

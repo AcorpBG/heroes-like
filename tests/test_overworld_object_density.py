@@ -1,6 +1,5 @@
 import copy
 import json
-import sys
 import unittest
 
 import overworld_object_density_contract as contract
@@ -31,13 +30,6 @@ class ObjectDensityTests(unittest.TestCase):
         data = copy.deepcopy(self.config)
         data['assets']['mapobj_ashcrown_cinderfold']['atlas_region'][0] = 192
         self.assertTrue(any('wrong asset pixels' in error for error in contract.validate(data)))
-
-    def test_reproducible_original_painting_pack(self):
-        sys.path.insert(0, str(contract.ROOT / 'tools'))
-        import prepare_overworld_object_density as packer
-        for path, data in packer.build().items():
-            self.assertEqual(path.read_bytes(), data, str(path))
-
 
 if __name__ == '__main__':
     unittest.main()

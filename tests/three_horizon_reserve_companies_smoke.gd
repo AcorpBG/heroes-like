@@ -152,7 +152,7 @@ func _validate_content_and_art(case: Dictionary) -> void:
 	]
 	var hashes := [case.get("source_sha256", ""), case.get("portrait_sha256", ""), case.get("icon_sha256", ""), case.get("standee_sha256", ""), case.get("overworld_sha256", ""), case.get("sheet_sha256", "")]
 	var sizes := [Vector2i(512, 512), Vector2i(384, 512), Vector2i(160, 160), Vector2i(192, 224), Vector2i(96, 96), Vector2i(256, 896)]
-	for index in range(paths.size()):
+	for index in range(1, paths.size()):  # paths[0] is the archived curated source
 		var image := _load_image(paths[index])
 		_expect(FileAccess.get_sha256(paths[index]) == String(hashes[index]) and image != null and image.get_size() == sizes[index], "%s art surface changed at %s." % [unit_id, paths[index]])
 	_expect(String(unit_art.get("curated_source_sha256", "")) == String(case.get("source_sha256", "")) and String(animation.get("curated_source_sha256", "")) == String(case.get("source_sha256", "")), "%s curated provenance changed." % unit_id)

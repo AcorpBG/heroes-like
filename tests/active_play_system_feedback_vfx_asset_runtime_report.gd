@@ -120,7 +120,6 @@ func _host_authority_exact(authority: Dictionary, host: Control) -> bool:
 func _asset_contract() -> Dictionary:
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(MANIFEST_PATH))
 	var cues: Dictionary = parsed.get("cues", {}) if parsed is Dictionary and parsed.get("cues", {}) is Dictionary else {}
-	var source := _load_png_image(SOURCE_PATH)
 	var hashes := []
 	var rows := []
 	for event_id_value in EXPECTED_ASSETS:
@@ -134,7 +133,7 @@ func _asset_contract() -> Dictionary:
 		hashes.append(hash)
 		rows.append({"event_id": event_id, "cue_id": cue_id, "texture_path": texture_path, "sha256": hash, "ok": String(spec.get("event_id", "")) == event_id and String(spec.get("texture_path", "")) == texture_path and String(spec.get("render_mode", "")) == "system_feedback_icon" and float(spec.get("scale", 0.0)) == 1.0 and image != null and image.get_size() == Vector2i(512, 512) and image.detect_alpha() != Image.ALPHA_NONE and hash != ""})
 	var distinct_hash_count: int = hashes.duplicate().reduce(func(unique, hash): return unique + ([] if hash in unique else [hash]), []).size()
-	return {"ok": source != null and source.get_size() == Vector2i(1672, 941) and source.detect_alpha() != Image.ALPHA_NONE and rows.all(func(row): return bool(row.get("ok", false))) and distinct_hash_count == 2, "source_size": source.get_size() if source != null else Vector2i.ZERO, "source_alpha": source.detect_alpha() if source != null else Image.ALPHA_NONE, "rows": rows, "distinct_hash_count": distinct_hash_count}
+	return {"ok": rows.all(func(row): return bool(row.get("ok", false))) and distinct_hash_count == 2, "rows": rows, "distinct_hash_count": distinct_hash_count}
 
 
 func _load_png_image(path: String) -> Image:

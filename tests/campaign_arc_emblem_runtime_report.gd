@@ -156,15 +156,10 @@ func _validate_content_and_bytes() -> bool:
 				or CampaignRules.campaign_emblem_alt_text(campaign_id) != String(case.get("alt_text", "")):
 			_fail("Campaign emblem runtime authority rejected %s." % campaign_id)
 			return false
-		var source_image := _load_png(source_path)
 		var runtime_image := _load_png(runtime_path)
-		if source_image == null or source_image.get_size() != Vector2i(1254, 1254) \
-				or runtime_image == null or runtime_image.get_size() != Vector2i(128, 128) \
-				or source_image.detect_alpha() == Image.ALPHA_NONE \
+		if runtime_image == null or runtime_image.get_size() != Vector2i(128, 128) \
 				or runtime_image.detect_alpha() == Image.ALPHA_NONE \
-				or source_image.get_pixel(0, 0).a > 0.01 \
 				or runtime_image.get_pixel(0, 0).a > 0.01 \
-				or FileAccess.get_sha256(source_path) != String(case.get("source_sha256", "")) \
 				or FileAccess.get_sha256(runtime_path) != String(case.get("runtime_sha256", "")):
 			_fail("Campaign emblem bytes, dimensions, or alpha changed for %s." % campaign_id)
 			return false
@@ -206,15 +201,10 @@ func _validate_content_and_bytes() -> bool:
 					or String(scenario.get("seal_runtime_sha256", "")) != String(seal.get("runtime_sha256", "")):
 				_fail("Campaign chapter seal provenance changed for %s/%s: %s" % [campaign_id, scenario_id, JSON.stringify(scenario)])
 				return false
-			var source_image := _load_png(source_path)
 			var runtime_image := _load_png(runtime_path)
-			if source_image == null or source_image.get_size() != Vector2i(1254, 1254) \
-					or runtime_image == null or runtime_image.get_size() != Vector2i(64, 64) \
-					or source_image.detect_alpha() == Image.ALPHA_NONE \
+			if runtime_image == null or runtime_image.get_size() != Vector2i(64, 64) \
 					or runtime_image.detect_alpha() == Image.ALPHA_NONE \
-					or source_image.get_pixel(0, 0).a > 0.01 \
 					or runtime_image.get_pixel(0, 0).a > 0.01 \
-					or FileAccess.get_sha256(source_path) != String(seal.get("source_sha256", "")) \
 					or FileAccess.get_sha256(runtime_path) != String(seal.get("runtime_sha256", "")):
 				_fail("Campaign chapter seal bytes, dimensions, or alpha changed for %s/%s." % [campaign_id, scenario_id])
 				return false

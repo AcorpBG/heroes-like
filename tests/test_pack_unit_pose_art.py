@@ -59,26 +59,6 @@ class PosePackingTests(unittest.TestCase):
                 digest = hashlib.sha256(json.dumps(pose, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
                 self.assertEqual(digest, accepted[row['unit_id']]['pose_metadata_sha256'])
 
-    def test_real_254_alpha_cutout_preserves_source_pixels(self):
-        source = ROOT / "art/animation/source/poses/unit_gorefen_ripper/alpha/poses.png"
-        original_hash = hashlib.sha256(source.read_bytes()).hexdigest()
-        original = packer.Image.open(source)
-        self.assertEqual(original.getchannel("A").getextrema(), (0, 254))
-        # Pack the whole real sheet at native scale to prove alpha is copied,
-        # not normalized or reconstructed. This is not runtime registration.
-        recipe = {"unit_id": "unit_gorefen_ripper", "frame_size": [1536, 1024],
-                  "columns": 1, "ground_margin": 0,
-                  "frames": [{"name": "source_alpha", "source": str(source),
-                              "rects": [[0, 0, 1536, 1024]],
-                              "anchor": [768, 1024], "scale": 1}]}
-        with tempfile.TemporaryDirectory(prefix="heroes-pose-alpha-test-") as directory:
-            path = Path(directory) / "recipe.json"
-            path.write_text(json.dumps(recipe))
-            output = Path(directory) / "atlas.png"
-            packer.pack(path, output)
-            self.assertEqual(packer.Image.open(output).tobytes(), original.tobytes())
-        self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), original_hash)
-
     def test_registered_clips_resolve_real_frames(self):
         manifest = json.loads((ROOT / "content/unit_animation_manifest.json").read_text())
         units = {row["id"]: row for row in json.loads((ROOT / "content/units.json").read_text())["items"]}
@@ -118,39 +98,6 @@ class PosePackingTests(unittest.TestCase):
                     self.assertIn(alias, unit["pose_clips"])
                 self.assertTrue((ROOT / unit["pose_provenance"].removeprefix("res://")).is_file())
 
-    def test_generated_provenance_matches_pixels(self):
-        for recipe in RECIPES:
-            with self.subTest(recipe=recipe):
-                provenance = json.loads((recipe.parent / "provenance.json").read_text())
-                for intermediate in provenance.get("intermediates", []):
-                    self.assertEqual(hashlib.sha256(source_path(recipe.parent, intermediate["source"]).read_bytes()).hexdigest(), intermediate["sha256"])
-                for row in provenance["outputs"]:
-                    for path_key, hash_key in (("source", "source_sha256"), ("alpha_source", "alpha_sha256")):
-                        # Rejected originals need no alpha derivative; an explicitly
-                        # declared derivative still requires its exact hash/file.
-                        if path_key == 'alpha_source' and not row.get(path_key):
-                            self.assertFalse(row.get(hash_key))
-                            continue
-                        self.assertEqual(hashlib.sha256(source_path(recipe.parent, row[path_key]).read_bytes()).hexdigest(), row[hash_key])
-                runtime, expected = runtime_proof(provenance)
-                self.assertEqual(hashlib.sha256(source_path(recipe.parent, runtime).read_bytes()).hexdigest(), expected)
-
-    def test_real_atlas_is_reproducible_and_complete(self):
-        manifest = {row['unit_id']: row for row in json.loads((ROOT / 'content/unit_animation_manifest.json').read_text())['items']}
-        for recipe in RECIPES:
-            with self.subTest(recipe=recipe), tempfile.TemporaryDirectory(prefix="heroes-pose-pack-test-") as directory:
-                output = Path(directory) / "atlas.png"
-                report = packer.pack(recipe, output)
-                shipped = ROOT / "art/animation/runtime/poses" / (report["unit_id"] + ".png")
-                self.assertEqual(output.read_bytes(), shipped.read_bytes())
-                self.assertEqual(len(report["frames"]), len(json.loads(recipe.read_text())["frames"]))
-                self.assertEqual(report["frame_size"], [512, 256])
-                clips = manifest[report['unit_id']]['pose_clips']
-                self.assertIn(clips['death']['indices'][-1], clips['dead']['indices'],
-                              'death must settle into the persistent corpse')
-                for index in clips['dead']['indices']:
-                    self.assertRegex(report['frames'][index]['name'], r'dead|corpse')
-
     def rejection(self, mutate, message):
         recipe = json.loads(RECIPE.read_text())
         for frame in recipe["frames"]:
@@ -161,19 +108,6 @@ class PosePackingTests(unittest.TestCase):
             path.write_text(json.dumps(recipe))
             with self.assertRaisesRegex(ValueError, message):
                 packer.pack(path, Path(directory) / "atlas.png")
-
-    def test_rejects_rgb_backdrop(self):
-        self.rejection(lambda r: r["frames"][0].update(source=str(RECIPE.parent / "idle.png")), "transparent alpha")
-
-    def test_rejects_clipped_pose(self):
-        self.rejection(lambda r: r["frames"][0].update(anchor=[-1000, 0]), "would clip")
-
-    def test_rejects_out_of_source_crop(self):
-        self.rejection(lambda r: r["frames"][0].update(rects=[[0, 0, 9999, 9999]]), "out-of-source")
-
-    def test_rejects_invalid_scale(self):
-        self.rejection(lambda r: r["frames"][0].update(scale=0), "positive downsampling")
-
 
 if __name__ == "__main__":
     unittest.main()

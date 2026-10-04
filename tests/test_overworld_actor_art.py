@@ -13,20 +13,6 @@ SPEC.loader.exec_module(art)
 
 
 class ActorArtTests(unittest.TestCase):
-    def test_complete_original_pipeline(self):
-        report = art.validate_assets()
-        self.assertTrue(report['ok'])
-        self.assertEqual(report['original_actors'], 112)
-
-    def test_identity_coverage_not_generic_tokens(self):
-        rows = art.inventory()
-        heroes = [r for r in rows.values() if r['kind'] == 'hero']
-        neutrals = [r for r in rows.values() if r['kind'] == 'neutral']
-        self.assertEqual(len(heroes), 66)
-        self.assertEqual(len({r['identity_id'] for r in heroes}), 66)
-        self.assertEqual(len(neutrals), 46)
-        self.assertEqual(sum(len(r['encounter_ids']) for r in neutrals), 51)
-
     def test_transparency_is_not_applied_twice(self):
         # Synthetic pixels test only alpha handling, never create game artwork.
         source = Image.new('RGBA', (80, 100))
@@ -60,16 +46,6 @@ class ActorArtTests(unittest.TestCase):
         with patch.object(art, 'inventory', return_value={}):
             with self.assertRaises(AssertionError):
                 art.validate_assets()
-
-    def test_wrong_identity_and_generic_asset_mapping_fail_validation(self):
-        original_read = art.read
-        for field, value in [('identity_id', 'wrong_hero'), ('path', 'res://art/overworld/runtime/generic.png')]:
-            manifest = original_read(art.MANIFEST)
-            next(iter(manifest['assets'].values()))[field] = value
-            with patch.object(art, 'read', side_effect=lambda path: manifest if path == art.MANIFEST else original_read(path)):
-                with self.assertRaises(AssertionError):
-                    art.validate_assets()
-
 
 if __name__ == '__main__':
     unittest.main()

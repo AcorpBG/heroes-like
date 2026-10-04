@@ -6,6 +6,25 @@
 *.tres text eol=lf
 *.godot text eol=lf
 
+# Provenance checks hash text such as tools, recipes and manifests byte-for-byte,
+# and Git stores it with LF. Check it out with LF everywhere so Windows and Linux
+# hash identical bytes. Later -text rules keep files committed with other endings.
+*.py text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.gd text eol=lf
+*.gdshader text eol=lf
+*.txt text eol=lf
+*.cfg text eol=lf
+*.csv text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+*.sh text eol=lf
+*.js text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+
 # Generated source prompts are provenance records with byte-level hashes.
 # Preserve their original line endings on Windows and Linux.
 art/units/source/generated/town_upgrades/**/*.prompt.txt -text
@@ -461,3 +480,7 @@ art/units/source/generated/fluid_animation/batch_e/unit_neutral_cliffhawk_warden
 # Preserve original Heliograph action pixels and hash-bound production recipes.
 art/units/source/generated/fluid_animation/batch_e/unit_sunvault_splitprism_heliograph_ballistae/** -text
 art/animation/source/fluid/unit_sunvault_splitprism_heliograph_ballistae/*.json -text
+
+# Prism Adept and Shard Guard reviewed handoffs were committed with CRLF; keep their bytes.
+art/animation/source/fluid/unit_prism_adept/*.json -text
+art/animation/source/fluid/unit_shard_guard/*.json -text

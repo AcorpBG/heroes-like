@@ -191,9 +191,7 @@ func _validate_content_and_art(case: Dictionary) -> void:
 	_expect(String(unit_art.get("curated_source_sha256", "")) == String(case.get("source_sha256", "")) and String(animation.get("curated_source_sha256", "")) == String(case.get("source_sha256", "")), "%s curated unit provenance changed." % unit_id)
 	var building_source := "res://art/towns/source/buildings/curated/%s.png" % building_id
 	var building_icon := "res://art/towns/runtime/buildings/%s.png" % building_id
-	var source_image := _load_image(building_source)
 	var icon_image := _load_image(building_icon)
-	_expect(FileAccess.get_sha256(building_source) == String(case.get("building_source_sha256", "")) and source_image != null and source_image.get_size() == Vector2i(1254, 1254), "%s source art changed." % building_id)
 	_expect(FileAccess.get_sha256(building_icon) == String(case.get("building_icon_sha256", "")) and icon_image != null and icon_image.get_size() == Vector2i(256, 256), "%s runtime icon changed." % building_id)
 	_expect(String(building_art.get("source_sha256", "")) == String(case.get("building_source_sha256", "")) and String(building_art.get("icon_sha256", "")) == String(case.get("building_icon_sha256", "")), "%s curated building provenance changed." % building_id)
 

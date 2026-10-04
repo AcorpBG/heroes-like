@@ -39,7 +39,7 @@ tests; inspect generated paintings and actual combat frames.
 - `python3 -B tests/spell_effect_variety_regression.py --label source --render`
 - `python3 -B tests/combat_vfx_regression.py --label spell-variety --render`
 - `python3 -B tools/prepare_spell_variety_assets.py --check`
-- `python3 -B tests/test_spell_variety_assets.py`
+- `python3 -B tests/test_spell_variety_assets.py` (retired 2026-10-04 with the archived generation masters; the shipped textures and cue mapping are checked by `tests/validate_repo.py`)
 - Existing battle readability, spell behavior and targeting regressions.
 - `python3 -B tests/validate_repo.py`; `git diff --check`.
 - `python3 -B tests/packaging_linux_export_smoke.py` and

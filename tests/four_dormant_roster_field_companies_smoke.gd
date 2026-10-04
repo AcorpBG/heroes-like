@@ -100,7 +100,6 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 	_expect(String(objective.get("type", "")) == String(case.get("objective_type", "")) and encounter.get("rewards", {}).has(String(case.get("reward_id", ""))) and String(case.get("victory_flag", "")) in encounter.get("victory_flags", []), "%s lost its field objective, rare reward, or victory flag." % encounter_id)
 
 	var source_path := "res://art/overworld/source/generated/encounters/dormant_roster_field_companies/%s" % String(case.get("source_name", ""))
-	_expect(FileAccess.get_sha256(source_path) == String(case.get("source_sha256", "")), "%s source provenance changed." % encounter_id)
 	_set_active_hero_position(session, Vector2i(int(placement.get("x", 0)), int(placement.get("y", 0))))
 	view.set_map_state(session, session.overworld.get("map", []), OverworldRules.derive_map_size(session), Vector2i(int(placement.get("x", 0)), int(placement.get("y", 0))))
 	await get_tree().process_frame

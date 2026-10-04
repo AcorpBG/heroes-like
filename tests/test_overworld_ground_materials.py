@@ -35,19 +35,12 @@ class GroundMaterialsTests(unittest.TestCase):
     def test_missing_raster_fails(self):
         source = copy.deepcopy(self.source)
         source['runtime']['path'] = 'res://art/not-an-existing-ground.png'
-        self.assertTrue(any('missing original/runtime' in error for error in self.errors(source=source)))
+        self.assertTrue(any('missing runtime raster' in error for error in self.errors(source=source)))
 
     def test_stale_provenance_fails(self):
         source = copy.deepcopy(self.source)
-        source['sources'][0]['sha256'] = '0' * 64
+        source['runtime']['sha256'] = '0' * 64
         self.assertTrue(any('hash mismatch' in error for error in self.errors(source=source)))
-
-    def test_reproducible_packaging(self):
-        import sys
-        sys.path.insert(0, str(contract.ROOT / 'tools'))
-        import prepare_overworld_ground_materials as prepare
-        self.assertEqual(prepare.packed_bytes(self.source), prepare.RUNTIME.read_bytes())
-
 
 if __name__ == '__main__':
     unittest.main()

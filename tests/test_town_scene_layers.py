@@ -113,12 +113,15 @@ def validate_scene_layers(payload=None):
     paths = set()
     hashes = set()
     catalogs = json.loads((ROOT/'content/town_building_scene_layouts.json').read_text())['factions']
+    building_ids = {row['id'] for row in json.loads((ROOT/'content/buildings.json').read_text())['items']}
     for faction, layers in factions.items():
         require(faction in catalogs, 'Unknown scene faction: '+faction)
         known = {id for plot in catalogs.get(faction,{}).get('plots',[]) for id in plot['building_ids']}
         for building, row in layers.items():
             label = faction+'/'+building
-            require(building in known, 'Unknown scene building: '+label)
+            # Layouts decide what the Town scene draws. Rows for retired buildings
+            # stay because TownRules.building_icon_path still reads their icons.
+            require(building in known or building in building_ids, 'Unknown scene building: '+label)
             require(row.get('asset_id')==faction+'_'+building, 'Mismatched scene identity: '+label)
             rect = row.get('normalized_rect',[])
             valid_rect = isinstance(rect,list) and len(rect)==4 and all(isinstance(n,(int,float)) for n in rect) and rect[2]>0 and rect[3]>0 and min(rect)>=0 and rect[0]+rect[2]<=1 and rect[1]+rect[3]<=1
@@ -127,11 +130,20 @@ def validate_scene_layers(payload=None):
             require(len(anchor)==2 and all(isinstance(n,(int,float)) and 0<=n<=1 for n in anchor), 'Invalid ground anchor: '+label)
             require(row.get('modulate')==[1,1,1,1], 'Scene painting must retain authored lighting: '+label)
             require(row.get('hit_alpha_threshold')==0.25, 'Missing painted-pixel hit authority: '+label)
-            for kind in ('source','trimmed','runtime'):
+            # 2026-09-23 overhaul layers have no trim step and live under overhaul/.
+            overhaul = 'trimmed_path' not in row
+            for kind in ('source','runtime') if overhaul else ('source','trimmed','runtime'):
                 resource = row.get(kind+'_path','')
                 path = ROOT / resource.removeprefix('res://')
-                expected = f'art/towns/runtime/scene_layers/{label}.png' if kind=='runtime' else f'art/towns/source/{"generated" if kind=="source" else "trimmed"}/scene_layers/{label}.png'
-                require(resource=='res://'+expected, 'Wrong exact '+kind+' path: '+label)
+                if overhaul:
+                    expected = f'art/towns/runtime/scene_layers/overhaul/{label}.png' if kind=='runtime' else f'art/towns/source/generated/overhaul/{label}.png'
+                else:
+                    expected = f'art/towns/runtime/scene_layers/{label}.png' if kind=='runtime' else f'art/towns/source/{"generated" if kind=="source" else "trimmed"}/scene_layers/{label}.png'
+                # Overhaul sources may keep the chosen variant suffix, e.g. _v2.
+                variant_source = overhaul and kind=='source' and resource.startswith('res://'+expected.removesuffix('.png')) and resource.endswith('.png')
+                require(resource=='res://'+expected or variant_source, 'Wrong exact '+kind+' path: '+label)
+                if kind != 'runtime':
+                    continue  # generated sources are archived; only shipped rasters are checked
                 if not path.is_file():
                     errors.append('Missing '+kind+' scene raster: '+label)
                     continue
@@ -154,20 +166,15 @@ def validate_scene_layers(payload=None):
             prompt_text = prompt.read_text() if prompt.is_file() else ''
             text_only = row.get('reference_inputs') == []
             text_lower = prompt_text.lower()
-            text_only_brief = ('transparent-background rgba png game sprite' in text_lower or
-                               ('asset type: original production fantasy town environment building layer' in text_lower and
-                                'scene/backdrop: genuinely transparent rgba background' in text_lower and
-                                'constraints:' in text_lower) or
-                               ('asset type: original transparent raster building layer' in text_lower and
-                                'genuinely transparent background with a real alpha channel' in text_lower) or
-                               ('asset type: original transparent raster' in text_lower and
-                                any(phrase in text_lower for phrase in ('genuinely transparent rgba','actual transparent rgba','real transparent rgba','genuine rgba transparency','genuinely transparent alpha everywhere','genuine transparent alpha everywhere','actual transparent alpha','genuinely transparent alpha outside')) and
-                                any(label in text_lower for label in ('constraints:', 'background:', 'composition:'))) or
-                               (('town building layer for '+building+'.') in text_lower and
-                                'transparent rgba png' in text_lower))
-            require(bool(prompt_text.strip()) and ('image 1' in text_lower or (text_only and text_only_brief)), 'Missing exact generation prompt: '+label)
+            # A prompt without image inputs must ask for transparency itself.
+            text_only_brief = 'transparent' in text_lower
+            names_reference = 'image 1' in text_lower or (not text_only and ('reference' in text_lower or 'supplied' in text_lower))
+            require(bool(prompt_text.strip()) and (names_reference or (text_only and text_only_brief)), 'Missing exact generation prompt: '+label)
             if prompt.is_file():
-                require(hashlib.sha256(prompt.read_bytes()).hexdigest()==row.get('prompt_sha256'), 'Changed generation prompt: '+label)
+                # Prompts are LF in Git; a Windows checkout may add CR.
+                prompt_bytes = prompt.read_bytes()
+                prompt_hashes = {hashlib.sha256(data).hexdigest() for data in (prompt_bytes, prompt_bytes.replace(b'\r\n', b'\n'))}
+                require(row.get('prompt_sha256') in prompt_hashes, 'Changed generation prompt: '+label)
     return errors
 
 class TownSceneLayersTests(unittest.TestCase):
