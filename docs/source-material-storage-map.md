@@ -52,6 +52,28 @@ python archive_source_material.py --destination <archive-directory> --verify-onl
 
 The snapshot includes current uncommitted/untracked sources; it is not an archive of every historical Git revision. The copy of this map inside the archive directory is the planning map used when the snapshot was created.
 
+## Restore sources for tests
+
+The game itself needs no archived source. These checks assert source provenance and fail until the named originals are restored:
+
+| Check | Archived originals it opens |
+|---|---|
+| `tests/six_elder_wilds_smoke.gd` (contact sheet) | `art/units/source/curated/<unit>.png` |
+| `tests/six_faction_field_muster_captains_smoke.gd` | `art/heroes/source/curated/<hero>.png` |
+| `tests/six_horizon_company_field_musters_smoke.gd` | `art/overworld/source/generated/resource_sites/horizon_company_field_musters/` |
+| `tests/six_horizon_relic_commissions_smoke.gd` | `art/artifacts/source/generated/horizon_relic_commissions/` |
+| `tests/overworld_resource_delta_cue_playback_report.gd` | `art/economy/source/resource_icon_atlas.png` |
+| `tests/test_overworld_*_cutouts.py`, `tests/town_biome_art_regression.py`, `tests/test_pack_unit_pose_art.py` | Generated, trimmed and recovered masters named in their manifests |
+| `tests/validate_repo.py` | Stops at the first missing original (`tests/overworld_object_density_contract.py`); 49 of its validators read archived sources |
+
+Restore exactly what a check needs (dry-run without `--apply`). Every payload is verified against the archive SHA-256 and a differing local file is never overwritten:
+
+```text
+python tools/restore_archived_source_material.py --archive-dir N:/heroes-like-archives/source-art/2026-10-03-ccc0d334 --prefix art/units/source/curated/ --apply
+```
+
+Restored media stays ignored by Git. Remove it again with `tools/remove_archived_source_material.py`.
+
 ## Decision summary
 
 - Source trees contain **86.267 GiB** across **86,342 files**.
@@ -150,27 +172,25 @@ The excluded terrain/fog/detail assets have replacement paths and/or old generat
 | `bin/` | Preserve required native libraries. Generated helper executables, linker outputs and debug symbols need separate tracking/rebuild review. |
 | `.godot/`, native build directories under `.artifacts/`, Python caches | Local reproducible caches, already largely ignored; preserve under current policy. |
 | `.artifacts/audio-production/export-tools/` | Export templates/toolchain cache, not art sources; packaging depends on tool availability. |
-| `.artifacts/audio-production/packages/` and validation ZIPs/logs | Generated delivery/validation copies, already ignored; review ownership/active use before later cleanup. |
+| `.artifacts/audio-production/` validation outputs | Packages, validation ZIPs, logs and review captures were removed on 2026-10-04 under the owner retention direction. The live-review and test profiles stay because they hold saves. |
 | `.artifacts/town_match_east_20260923/`, `.artifacts/town_match_west_20260923/` | Mixed profiles, validation outputs and saved state. Saves/maps/backups are protected; do not sweep these folders. |
 | Other `.artifacts/` art/review folders | Mixed previews, evidence and possible originals. Not automatically disposable or source-archive candidates. |
 | Native RMG / H3MapEd / HoMM3 recovery/reference files anywhere | Explicitly preserve, regardless of Git tracking or package exclusion. Name-based inventory protection is conservative, not a complete provenance detector. |
 | `maps/`, save and backup directories, `.amap` / `.ascenario` / `.save` / `.bak` | Preserve owner/runtime state and map assets. |
-| Root `townscreen-suggestions..png` | Untracked owner/reference material; retain pending ownership review. |
+| Root `townscreen-suggestions..png` | Owner's annotated town-screen feedback. Kept locally outside Git through `.git/info/exclude`; a verified copy is in `uncommitted-work.zip`. |
 | `.git/` | Separate history/object migration; not part of source ZIPs or runtime assets. |
 
 Largest local support directories (mixed contents; sizes overlap the protected/cache categories above):
 
 | Directory | GiB |
 |---|---:|
-| `.artifacts/audio-production` | 2.766 |
+| `.artifacts/audio-production` (export-tools cache and save-bearing profiles after 2026-10-04) | 1.339 |
 | `.artifacts/map_persistence_native_build_windows_msvc` | 2.344 |
 | `.artifacts/town_match_east_20260923` | 0.611 |
 | `.artifacts/town_match_west_20260923` | 0.530 |
 | `.artifacts/map_persistence_native_build_windows_msvc_release` | 0.417 |
 | `.artifacts/fluid_runtime_20260923` | 0.252 |
 | `.artifacts/repo_update_20261001` | 0.060 |
-| `.artifacts/thornwake_finish_20260923` | 0.023 |
-| `.artifacts/town_dwellings_20260922` | 0.021 |
 | `.artifacts/biome-blocker-library-20260913` | 0.021 |
 
 ## Build and packaging evidence

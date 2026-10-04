@@ -22,6 +22,14 @@ Rules:
 
 ## Current Tactical State
 
+### Repository hygiene after the source cleanup
+
+`tooling-repo-hygiene-20261004` (completed, repository/tooling/native rebuild): restored the corrupted plan/tracker copies, `project.godot` and six RMG inspection packages; Godot-written files check out LF and generated maps, bytecode and MSVC byproducts are ignored. All eight native binaries were rebuilt from unchanged source; Windows and Linux libraries regenerate a known map byte-identically and both self-tests pass. `tools/restore_archived_source_material.py` restores the archived sources that the listed checks need. 1.55 GiB of non-RMG validation output was removed. See `docs/source-material-storage-map.md`.
+
+`tooling-native-smoke-list-refresh-20261004` (pending): the build helper's eight `native_random_map_*` smokes check capabilities retired in June 2026; replace them with checks of current native behavior. See `src/gdextension/README.md`.
+
+`tooling-validate-repo-archived-sources-20261004` (pending): `tests/validate_repo.py` stops at the first archived original and, with those reads tolerated, still reports 9,764 pre-existing errors. Choose a restore-gated source mode or updated expectations. See `docs/source-material-storage-map.md`.
+
 ### Keep the retired audio workflow disabled
 
 `tooling-audio-ci-disable-20261003` (completed, repository automation only): GitHub workflow 356845337 is `disabled_manually`; `main` still has no audio workflow file. Historical migration-branch push run 37141621884 hit the retired source-audio validator after source media had been archived. The temporary branch is gone. Release Candidate, Release Promotion and Source storage remain active; deliberate local audio validation is unchanged.
@@ -38,7 +46,7 @@ Rules:
 
 `tooling-source-material-history-migration-20261003` (completed): all nine GitHub branches migrated without a full Git backup. All 3,830 main commits and retained files are preserved; Git storage is 7.099 GiB. Uncommitted work, stash, private checkpoints, runtime/editor inputs and RMG material remain. Storage guard, art-reference checks, Windows startup and Git connectivity pass. Full packaging remains subject to existing content/source-audit requirements; Linux server unchanged. See `docs/source-material-storage-map.md`.
 
-`tooling-source-material-local-cleanup-20261003` (completed): removed 51,214 archived binary sources and 4,275 paired sidecars (85.304 GiB) after fresh ZIP/SHA-256 verification and exclusive local-file checks; removed 57 old Git-reported temporary garbage files (3.926 GiB). All 17,817 non-source art hashes, retained source metadata and 7,334 export PNG paths are unchanged. Windows headless startup and Git connectivity checks pass; task profiles/logs were removed. Project is about 108.084 GiB, including 89.241 GiB of valid Git storage. Runtime/editor art, recipes, caches, saves and RMG material remain. Tracked source removals are local changes; shared-history migration/publication remain separate work.
+`tooling-source-material-local-cleanup-20261003` (completed): removed 51,214 archived binary sources and 4,275 paired sidecars (85.304 GiB) after fresh ZIP/SHA-256 verification and exclusive local-file checks; removed 57 old Git-reported temporary garbage files (3.926 GiB). All 17,817 non-source art hashes, retained source metadata and 7,334 export PNG paths are unchanged. Windows headless startup and Git connectivity checks pass; task profiles/logs were removed. Runtime/editor art, recipes, caches, saves and RMG material remain. The history migration above published the tracked removals and reduced Git storage from 89.241 GiB to about 7.1 GiB.
 
 `tooling-source-material-archive-20261003` (completed, archive operation only): 23 ZIP64 archives on N: preserve all 86,342 source files from the snapshot (86.267 GiB), including provenance and editor-source backup copies. Every payload passed SHA-256/CRC read-back verification. ZIPs occupy 85.909 GiB. See the archive location and restore instructions in `docs/source-material-storage-map.md`. Originals were retained until the separately verified local cleanup above. No publication in this slice.
 

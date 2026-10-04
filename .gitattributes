@@ -1,3 +1,11 @@
+# Godot writes these with LF on every platform. Check them out with LF too so
+# editor re-saves and re-imports on Windows do not appear as modified files.
+# Later path-specific -text rules still win for hash-bound provenance.
+*.import text eol=lf
+*.tscn text eol=lf
+*.tres text eol=lf
+*.godot text eol=lf
+
 # Generated source prompts are provenance records with byte-level hashes.
 # Preserve their original line endings on Windows and Linux.
 art/units/source/generated/town_upgrades/**/*.prompt.txt -text

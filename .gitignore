@@ -2,7 +2,6 @@
 # RMG evidence here is retained separately; clones need an explicit restore.
 # See docs/rmg-evidence-storage.md before cleaning .artifacts/ or tmp/.
 .artifacts/
-tests/__pycache__/
 .godot/
 *.uid
 *.import
@@ -16,6 +15,10 @@ tests/__pycache__/
 !art/overworld/runtime/objects/towns/biome_fit/*.png.import
 bin/*.so
 bin/*.dll.a
+# MSVC link and debug byproducts of the Windows native build.
+bin/*.pdb
+bin/*.exp
+bin/*.lib
 tmp/
 src/gdextension/build/
 art/overworld/runtime/homm3_local_prototype/
@@ -57,4 +60,14 @@ art/overworld/runtime/homm3_local_prototype/
 !/art/towns/source/buildings/curated/**/*.png
 !/art/campaigns/source/generated/emblems/**/*.png
 !/art/campaigns/source/generated/chapter_seals/**/*.png
-tools/__pycache__/
+
+# Python bytecode from tools, tests and per-unit recipe scripts.
+__pycache__/
+*.pyc
+
+# Editor/dev runs write generated skirmish packages to res://maps; owner saves
+# reference them, so they stay on disk but out of Git. Tracked RMG manual
+# inspection fixtures remain versioned.
+/maps/*.amap
+/maps/*.ascenario
+!/maps/manual-strict_*

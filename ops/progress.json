@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-overworld-actor-readability-20260918",
-  "currentSliceId": "art-overworld-actor-readability-20260918",
-  "currentSliceNotes": "Integrated 112 built-in original sprites: 66 hero appearances and 46 neutral appearances covering 51 profiles. Painted-bound full-size town visitors and cached dual alpha edges preserve identities, fog, movement, save and native generation. Eight art tests, rendered source/Linux/Windows roster checks, Large travel/AI/fog, existing actor/scale reports, full repository and official exports/parity pass. Removed 3.255 GB disposable outputs; original art/provenance, caches/saves, RMG and unrelated files preserved. Results: docs/overworld-actor-readability.md.",
+  "currentSlice": "tooling-repo-hygiene-20261004",
+  "currentSliceId": "tooling-repo-hygiene-20261004",
+  "currentSliceNotes": "COMPLETED 2026-10-04. Discarded a stale, double-mojibake working copy of PLAN.md/ops/progress.json, an editor re-save of project.godot that dropped validated tokens, and a reordered .gitattributes; repaired 11 committed mojibake sequences; restored six deleted manual-strict RMG inspection packages. Godot-written .import/.tscn/.tres/.godot files now check out LF (612 converted, blobs unchanged), clearing 510 phantom changes. Ignored Python bytecode repo-wide (28 committed .pyc untracked), MSVC .pdb/.exp/.lib and dev-generated maps/*.amap|.ascenario (fixtures kept). Removed 60 abandoned untracked recipe/review files after byte-identical verification in N: uncommitted-work.zip; owner townscreen feedback PNG and windows-import.bat kept via .git/info/exclude. Rebuilt all eight native binaries from source unchanged since 40174ece1: Windows clean MSVC builds, Linux GCC 13.3 on the owner server from git-archived HEAD and godot-cpp 58d1de7. Fixed build_map_persistence_windows.bat --godot/--parallel parsing and gave the Windows native tools an 8 MiB stack (self-test overflowed 1 MiB). Validation: Windows and Linux debug libraries in Godot 4.6.2 regenerate seed 200970581 byte-identically (73a9abe3..., fnv1a32:43c8bc76); self-tests ok on both; skeleton smoke ok; Windows headless boot clean; tests/validate_repo.py reports the same 9,764 pre-existing errors with and without these changes (tracked as tooling-validate-repo-archived-sources-20261004). Added tools/restore_archived_source_material.py with unit coverage and documented the five GDScript and Python checks that need restored sources. Removed 1.55 GiB of non-RMG audio validation packages/logs and validation import stages; save-bearing profiles, caches, backups and RMG evidence kept. Not done: one restricted-ACL probe folder .artifacts/thornwake_finish_20260923/dwellings/1/mine-probe-nu9mn2ez needs owner removal; stale native smoke list tracked as tooling-native-smoke-list-refresh-20261004.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Hero and Creature Readability",
-  "currentSliceUpdatedAt": "2026-09-18T19:37:00Z",
+  "currentSliceTitle": "Repair post-cleanup working tree, native binaries and source-test workflow",
+  "currentSliceUpdatedAt": "2026-10-04T09:00:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22301,6 +22301,40 @@
   "nextActionGuardrailNote": "Owner selected all five town-overhaul passes. AI services and faction mechanics completed. Next create original building artwork with distinct upgrade stages, then individual creature upgrade names/gameplay/animated art and full-match balance. Do not expand into native generation or unrelated systems.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "tooling-repo-hygiene-20261004",
+      "title": "Repair post-cleanup working tree, native binaries and source-test workflow",
+      "status": "completed",
+      "classification": "owner_requested_repository_hygiene",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/source-material-storage-map.md",
+        "src/gdextension/README.md"
+      ],
+      "notes": "COMPLETED 2026-10-04. Discarded a stale, double-mojibake working copy of PLAN.md/ops/progress.json, an editor re-save of project.godot that dropped validated tokens, and a reordered .gitattributes; repaired 11 committed mojibake sequences; restored six deleted manual-strict RMG inspection packages. Godot-written .import/.tscn/.tres/.godot files now check out LF (612 converted, blobs unchanged), clearing 510 phantom changes. Ignored Python bytecode repo-wide (28 committed .pyc untracked), MSVC .pdb/.exp/.lib and dev-generated maps/*.amap|.ascenario (fixtures kept). Removed 60 abandoned untracked recipe/review files after byte-identical verification in N: uncommitted-work.zip; owner townscreen feedback PNG and windows-import.bat kept via .git/info/exclude. Rebuilt all eight native binaries from source unchanged since 40174ece1: Windows clean MSVC builds, Linux GCC 13.3 on the owner server from git-archived HEAD and godot-cpp 58d1de7. Fixed build_map_persistence_windows.bat --godot/--parallel parsing and gave the Windows native tools an 8 MiB stack (self-test overflowed 1 MiB). Validation: Windows and Linux debug libraries in Godot 4.6.2 regenerate seed 200970581 byte-identically (73a9abe3..., fnv1a32:43c8bc76); self-tests ok on both; skeleton smoke ok; Windows headless boot clean; tests/validate_repo.py reports the same 9,764 pre-existing errors with and without these changes (tracked as tooling-validate-repo-archived-sources-20261004). Added tools/restore_archived_source_material.py with unit coverage and documented the five GDScript and Python checks that need restored sources. Removed 1.55 GiB of non-RMG audio validation packages/logs and validation import stages; save-bearing profiles, caches, backups and RMG evidence kept. Not done: one restricted-ACL probe folder .artifacts/thornwake_finish_20260923/dwellings/1/mine-probe-nu9mn2ez needs owner removal; stale native smoke list tracked as tooling-native-smoke-list-refresh-20261004."
+    },
+    {
+      "id": "tooling-native-smoke-list-refresh-20261004",
+      "title": "Replace the stale native smoke list in the Windows build helper",
+      "status": "pending",
+      "classification": "tooling_follow_up",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "src/gdextension/README.md"
+      ],
+      "notes": "The eight native_random_map_* smokes run by scripts/build_map_persistence_windows.bat --require-test check capability names retired in d866370d9 (2026-06-19), e.g. native_random_map_foundation_stub, so they fail on every current build. Only tests/map_package_api_skeleton_report.tscn matches the current API. Replace the list with checks of current native behavior; follow docs/lessons-learned.md for any RMG-facing assertions."
+    },
+    {
+      "id": "tooling-validate-repo-archived-sources-20261004",
+      "title": "Make the repository validator usable with archived sources",
+      "status": "pending",
+      "classification": "tooling_follow_up",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/source-material-storage-map.md"
+      ],
+      "notes": "tests/validate_repo.py raises FileNotFoundError at the first archived original (tests/overworld_object_density_contract.py reads art/overworld/source/generated/resource_sites/land_transit_active_wave1/repaired_ferry_stage_active_source.png). With missing-file reads tolerated per validator, 49 validators stop on archived sources and 9,764 errors remain, mostly missing archived source/trimmed scene rasters plus stale expectations (scene building lists, 288 canvas size, scenery motion profiles). The error set was identical before and after tooling-repo-hygiene-20261004. Decide between a restore-gated source mode and updated expectations; do not mark the validator green until it runs end to end."
+    },
     {
       "id": "tooling-audio-ci-disable-20261003",
       "title": "Disable the retired audio workflow across historical GitHub refs",
@@ -37486,17 +37520,17 @@
         "artifact": ".artifacts/ui_runtime_skin_visual_report/battle_1280x720.png",
         "artifactSha256": "7860c25c10b6cedf4da280b38d6e2b7f42f9a189a30ef808e92fd89f936e2fc4",
         "observedLabels": [
-          "River GвЂ¦ x10",
-          "BlackbraвЂ¦ x8",
-          "MudglasвЂ¦ x1",
-          "Ember AвЂ¦ x5"
+          "River G… x10",
+          "Blackbra… x8",
+          "Mudglas… x1",
+          "Ember A… x5"
         ]
       },
       "createdAt": "2026-08-20T09:24:19Z",
       "startedAt": "2026-08-20T09:24:19Z",
       "updatedAt": "2026-08-20T09:40:25Z",
       "completedAt": "2026-08-20T09:40:25Z",
-      "notes": "Completed the chip-only fitting policy. The focused Board owner passes at 1280 and 1920 with an independent themed-font control requiring full, complete-word, and unbreakable-word paths plus exact tooltip/count/geometry/order/session-save-settings authority. Fresh Xvfb pixels show `RiverвЂ¦ x10`, full `Bog Brute x2`, and bounded single-word fallbacks. Town/Battle visual, accessibility, animation, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. These platform results do not claim packaged Battle interaction or broader release readiness.",
+      "notes": "Completed the chip-only fitting policy. The focused Board owner passes at 1280 and 1920 with an independent themed-font control requiring full, complete-word, and unbreakable-word paths plus exact tooltip/count/geometry/order/session-save-settings authority. Fresh Xvfb pixels show `River… x10`, full `Bog Brute x2`, and bounded single-word fallbacks. Town/Battle visual, accessibility, animation, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. These platform results do not claim packaged Battle interaction or broader release readiness.",
       "remainingWork": "None for this chip-label-only slice. Select the next tracker-approved source-backed release-readiness implementation slice.",
       "blockedReason": null
     },
@@ -107823,7 +107857,7 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "purpose": "Keep the shipped full-text Battle Status overflow at a complete word instead of Bramble ScreвЂ¦ without changing its tooltip, geometry, or semantics.",
+      "purpose": "Keep the shipped full-text Battle Status overflow at a complete word instead of Bramble Scre… without changing its tooltip, geometry, or semantics.",
       "implementationTargets": [
         "scenes/battle/BattleShell.gd",
         "tests/battle_controller_board_navigation_smoke.gd",
@@ -107854,7 +107888,7 @@
       "baseline": {
         "head": "c8f29051",
         "capture": ".artifacts/battle_controller_board_navigation_smoke/current_head_event_word_final.png",
-        "visibleCut": "Bramble ScreвЂ¦",
+        "visibleCut": "Bramble Scre…",
         "priorOwner": "ux-battle-status-native-pixel-ellipsis-10184"
       },
       "createdAt": "2026-08-18T05:12:29Z",
@@ -108389,7 +108423,7 @@
       "startedAt": "2026-08-18T10:57:00Z",
       "updatedAt": "2026-08-18T11:29:57Z",
       "completedAt": "2026-08-18T11:29:57Z",
-      "notes": "Completed with live UI behavior, not documentation alone. BattleShell now refits each exact ActionGuide source line through the established Battle-local whole-word Unicode-ellipsis helper, retaining two compact lines and three wide. A fresh 1280x720/130% painted capture ends the Position check after the complete `(1 step)вЂ¦` phrase while the board, spells, actions, and complete system-command row remain contained. The focused owner independently compares visible lines to the unabridged source and rejects ASCII ellipses and mid-token cuts while preserving enriched tooltip/system semantics and battle authority. Board navigation, shared focus, accessibility, core, authoritative 1280/1920 routed layout, static/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged Battle interaction or broader release claim is made.",
+      "notes": "Completed with live UI behavior, not documentation alone. BattleShell now refits each exact ActionGuide source line through the established Battle-local whole-word Unicode-ellipsis helper, retaining two compact lines and three wide. A fresh 1280x720/130% painted capture ends the Position check after the complete `(1 step)…` phrase while the board, spells, actions, and complete system-command row remain contained. The focused owner independently compares visible lines to the unabridged source and rejects ASCII ellipses and mid-token cuts while preserving enriched tooltip/system semantics and battle authority. Board navigation, shared focus, accessibility, core, authoritative 1280/1920 routed layout, static/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged Battle interaction or broader release claim is made.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release-readiness gaps remain.",
       "blockedReason": null
     },
@@ -110033,7 +110067,7 @@
         "tests/random_map_live_overworld_render_move_report.gd",
         "tests/validate_repo.py"
       ],
-      "notes": "Completed from direct generated-map evidence. Existing terrain-biome blocker art is selected in deterministic 16x16 spatial clusters with bounded per-cell scale, offset, and grounding inside each exact body tile. Small and Medium 1280x720 and 1920x1080 captures pass with 15вЂ“22 distinct assets, repeated-definition variation, exact rebuild/movement/save authority, and the unchanged Medium 1920 performance floor. Authored-map scale/assets, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Native generation, placement, density, body/visit masks, passability/pathfinding, content, packaged generated-map interaction, certification, Native-RMG parity, whole-game validation, and release readiness remain unclaimed.",
+      "notes": "Completed from direct generated-map evidence. Existing terrain-biome blocker art is selected in deterministic 16x16 spatial clusters with bounded per-cell scale, offset, and grounding inside each exact body tile. Small and Medium 1280x720 and 1920x1080 captures pass with 15–22 distinct assets, repeated-definition variation, exact rebuild/movement/save authority, and the unchanged Medium 1920 performance floor. Authored-map scale/assets, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Native generation, placement, density, body/visit masks, passability/pathfinding, content, packaged generated-map interaction, certification, Native-RMG parity, whole-game validation, and release readiness remain unclaimed.",
       "completedAt": "2026-08-25T02:31:16Z"
     },
     {
@@ -110052,7 +110086,7 @@
         "tests/random_map_live_overworld_render_move_report.gd",
         "tests/validate_repo.py"
       ],
-      "notes": "Completed from direct Small/Medium generated-map captures and source inspection. The original quiet-tile renderer now suppresses generic edge/corner overlays only for an enabled and loaded HoMM3 tile; disabled metadata renders the fast generic fallback. Four 1280/1920 captures render 119вЂ“291 exact boundary tiles, a controlled Small capture changes 7,934 pixels, and the Medium 1920 performance floor remains 9.57/9.45 FPS. Authored enabled/disabled ownership, generated redraw/movement/save authority, terrain assets, Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Terrain topology/ids/priorities, native generation, passability/pathfinding, roads/fog, content, Native-RMG parity, packaged interaction, certification, whole-game validation, and release readiness remain unchanged or unclaimed.",
+      "notes": "Completed from direct Small/Medium generated-map captures and source inspection. The original quiet-tile renderer now suppresses generic edge/corner overlays only for an enabled and loaded HoMM3 tile; disabled metadata renders the fast generic fallback. Four 1280/1920 captures render 119–291 exact boundary tiles, a controlled Small capture changes 7,934 pixels, and the Medium 1920 performance floor remains 9.57/9.45 FPS. Authored enabled/disabled ownership, generated redraw/movement/save authority, terrain assets, Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Terrain topology/ids/priorities, native generation, passability/pathfinding, roads/fog, content, Native-RMG parity, packaged interaction, certification, whole-game validation, and release readiness remain unchanged or unclaimed.",
       "completedAt": "2026-08-25T03:04:34Z"
     },
     {
@@ -114533,7 +114567,7 @@
   ],
   "summary": "Owner-directed overworld actor readability completed: 112 original generated hero/creature sprites, full-size town visitors, painted-bound scale and cached alpha-edge contrast. Source/Linux/Windows visual/runtime acceptance, Large travel/AI/fog, existing reports, full repository and official exports/parity pass; 3.255 GB disposable outputs cleaned. Prior generated-world quality work remains completed; gameplay/native generation and save schema are unchanged. Broader production/release limits remain in project.md.",
   "taskId": "10236",
-  "updatedAt": "2026-09-18T19:37:00Z",
+  "updatedAt": "2026-10-04T09:00:00Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",

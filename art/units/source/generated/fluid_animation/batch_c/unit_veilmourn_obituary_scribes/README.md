@@ -18,7 +18,7 @@ Original rejected videos and latent tensors remain preserved. Retained guide pix
 
 | Action | Source | Frames | Timing | Contact |
 |---|---|---:|---:|---:|
-| Move | move_v1 | 31 | 65ms | вЂ” |
+| Move | move_v1 | 31 | 65ms | — |
 | Melee | attack_v1 | 29 | 45ms | 13 |
 | Ranged | ranged_v2, first complete gesture only | 27 | 55ms | 13 |
 | Guard | defend_v1 | 22 | 45ms | held final |
