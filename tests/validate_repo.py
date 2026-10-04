@@ -7077,7 +7077,9 @@ def build_overworld_object_content_batch_007_section(
                 ready = False
             tile_key = f"{x},{y}"
             seen_visit_offsets.add(tile_key)
-        if seen_body_tiles and seen_visit_offsets and not seen_body_tiles.intersection(seen_visit_offsets):
+        # A mine's state variant keeps the unified mine's walkable entrance cell.
+        mine_entrance = isinstance(obj.get("state_variant_contract"), dict) and obj["state_variant_contract"].get("base_object_family") == "mine"
+        if seen_body_tiles and seen_visit_offsets and not seen_body_tiles.intersection(seen_visit_offsets) and not mine_entrance:
             add_error(f"{object_id}: approach.visit_offsets must overlap body_tiles for inside-footprint interaction")
             ready = False
         if str(approach.get("mode", "")) != "adjacent":
@@ -44123,7 +44125,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             unified_mine_asset_ids = {asset_id for asset_id in mapped_asset_ids if isinstance(object_assets.get(asset_id), dict) and (object_assets[asset_id].get("common_mine_resource") or object_assets[asset_id].get("rare_mine_resource"))}
             identity_asset_ids = [asset_id for asset_id in mapped_asset_ids if asset_id not in unified_mine_asset_ids]
             ensure(len(mapped_asset_ids) == len(non_decorative_object_ids) and len(set(identity_asset_ids)) == len(identity_asset_ids), errors, "Map object sprite mappings must assign one unique asset id per authored non-decoration object")
-            ensure(all(str(mappings.get(object_id, {}).get("family", "")) in ("mine", "staged_resource_front") for object_id in mappings if str(mappings[object_id].get("asset_id", "")) in unified_mine_asset_ids), errors, "Only mines and rare-resource fronts may share a unified mine asset")
+            mine_state_variant_ids = {object_id for object_id, obj in map_objects.items() if isinstance(obj, dict) and isinstance(obj.get("state_variant_contract"), dict) and obj["state_variant_contract"].get("base_object_family") == "mine"}
+            ensure(all(str(mappings.get(object_id, {}).get("family", "")) in ("mine", "staged_resource_front") or object_id in mine_state_variant_ids for object_id in mappings if str(mappings[object_id].get("asset_id", "")) in unified_mine_asset_ids), errors, "Only mines, rare-resource fronts and mine state variants may share a unified mine asset")
             if isinstance(distinct_asset_ids, list):
                 superseded_asset_ids = set(map(str, distinct_asset_ids)) - set(mapped_asset_ids)
                 ensure(set(mapped_asset_ids) <= set(map(str, distinct_asset_ids)) and all(str(mappings.get(str(object_assets.get(asset_id, {}).get("assigned_map_object_id", "")), {}).get("asset_id", "")) in unified_mine_asset_ids for asset_id in superseded_asset_ids), errors, "Map object sprite mappings must match the manifest distinct_asset_ids set")
@@ -75072,7 +75075,12 @@ def validate_fourteen_marks_accordfall(errors: list[str]) -> None:
         asset = object_assets.get(asset_id, {})
         sprite = site_sprites.get(site_id, {})
         ensure(asset.get("path") == "res://art/overworld/runtime/objects/resource_sites/fourteen_marks_state_atlas.png" and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [2688,192] and asset.get("assigned_resource_site_id") == site_id and len(str(asset.get("accessible_description", ""))) >= 72, errors, f"{site_id} state atlas entry changed")
-        ensure(sprite.get("asset_id") == asset_id and sprite.get("unclaimed_asset_id") == f"mapobj_{stem}", errors, f"{site_id} pre/post state sprite mapping changed")
+        if stem == "claimed_quarry_head":
+            # A state of the unified ore mine since 2026-10-04: same art, 3x2 shape and entrance.
+            ore_mine = map_objects.get("object_ridge_quarry", {})
+            ensure(sprite.get("asset_id") == sprite.get("unclaimed_asset_id") == "mapobj_common_ore_mine" and all(obj.get(key) == ore_mine.get(key) for key in ("footprint", "body_tiles", "approach")), errors, f"{site_id} must render and occupy as the unified ore mine")
+        else:
+            ensure(sprite.get("asset_id") == asset_id and sprite.get("unclaimed_asset_id") == f"mapobj_{stem}", errors, f"{site_id} pre/post state sprite mapping changed")
     report_path = ROOT / "tests/fourteen_marks_accordfall_report.gd"
     scene_path = ROOT / "tests/fourteen_marks_accordfall_report.tscn"
     ensure(report_path.exists() and scene_path.exists(), errors, "Fourteen-marks consolidated report or scene is missing")

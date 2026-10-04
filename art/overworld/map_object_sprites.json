@@ -1640,9 +1640,9 @@
       "source_batch": 11
     },
     "object_claimed_quarry_head": {
-      "asset_id": "mapobj_claimed_quarry_head",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Claimed Quarry Head' (scenario_objective).",
-      "assignment_source": "new_distinct_map_object_sprite",
+      "asset_id": "mapobj_common_ore_mine",
+      "fit": "Claimed state of the unified ore mine: same 3x2 stonework mine, entrance and machinery animation.",
+      "assignment_source": "unified_common_mines_20260920",
       "family": "scenario_objective",
       "source_batch": 12
     },

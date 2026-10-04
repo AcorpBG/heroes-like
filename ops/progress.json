@@ -22338,13 +22338,13 @@
     {
       "id": "content-validator-findings-20261004",
       "title": "Fix the real defects the updated tests report",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "content_follow_up",
       "source": "PLAN.md",
       "sourceDocs": [
         "docs/source-material-storage-map.md"
       ],
-      "notes": "1) Six twin-command scenarios (e.g. pikeward-cinderquill-twin-beacon-council) lost the starting Wayfarers Hall their second commander needs: shared town templates start with only building_town_hall and the placements author no built_buildings. 2) object_claimed_quarry_head is 2x2 but object_ridge_quarry is 3x2 (accordfall-fourteen-marks). 3) 306 overhaul town scene layers import without mipmaps; their .import files are untracked, so fresh clones get default settings. 4) tests/test_pack_unit_pose_art.py: the 72 veteran pose sheets have no visual-acceptance record, and test_registered_clips_resolve_real_frames reports ground-line anchor mismatches (not yet investigated)."
+      "notes": "FIXED 2026-10-04: (a) 306 overhaul town scene layers now import with mipmaps (115 MiB imported, was 87 MiB) and .gitignore tracks art/towns/runtime/scene_layers/**/*.png.import; (b) object_claimed_quarry_head takes the 3x2 footprint, solid cells, entrance and animated art of the unified ore mine: CommonMineRules.resource resolves a mine state variant to its base mine; verified in Godot (fourteen_marks report quarry case, unified_mines_regression 183 checks, Accordfall render); (c) docs/battle-unit-animation-acceptance.json rebuilt on owner direction for all 232 creatures (current atlas and pose metadata hashes, per-unit provenance review); the Sep 16/19 roster review is recorded as superseded. OPEN: 1) six twin-command scenarios (e.g. pikeward-cinderquill-twin-beacon-council) lost the starting Wayfarers Hall; shared town templates start with only building_town_hall and the placements author no built_buildings. 2) tests/test_pack_unit_pose_art.py test_registered_clips_resolve_real_frames reports ground-line anchor mismatches for all 232 creatures (not yet investigated)."
     },
     {
       "id": "tooling-audio-ci-disable-20261003",

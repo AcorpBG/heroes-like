@@ -5,7 +5,15 @@ extends RefCounted
 static func resource(node: Dictionary) -> String:
 	if String(node.get("kind", "")) == "reward_reference": return ""
 	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-	return String(site.get("common_mine_resource", ""))
+	var common := String(site.get("common_mine_resource", ""))
+	if common.is_empty():
+		# A mine's state variant (the claimed quarry head) keeps its base mine's
+		# shape and art; its own site still owns rewards and objectives.
+		var contract: Dictionary = site.get("state_variant_contract", {}) if site.get("state_variant_contract", {}) is Dictionary else {}
+		if String(contract.get("base_object_family", "")) == "mine":
+			var base := ContentService.get_map_object(String(contract.get("base_object_id", "")))
+			common = String(ContentService.get_resource_site(String(base.get("resource_site_id", ""))).get("common_mine_resource", ""))
+	return common
 
 static func entry_tile(node: Dictionary) -> Vector2i:
 	var visit: Dictionary = node.get("visit_tile", {}) if node.get("visit_tile", {}) is Dictionary else {}

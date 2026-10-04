@@ -42433,8 +42433,9 @@
       "unclaimed_asset_id": "mapobj_repaired_ferry_stage_claimed"
     },
     "site_claimed_quarry_head": {
-      "asset_id": "resource_site_fourteen_marks_claimed_quarry_head_state",
-      "unclaimed_asset_id": "mapobj_claimed_quarry_head"
+      "asset_id": "mapobj_common_ore_mine",
+      "unclaimed_asset_id": "mapobj_common_ore_mine",
+      "fit": "Claimed state of the unified animated ore mine; ownership shows on its control flag."
     },
     "site_withered_rootgate_marker": {
       "asset_id": "resource_site_fourteen_marks_withered_rootgate_marker_state",

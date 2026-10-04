@@ -21,7 +21,7 @@ const CASES := [
 	{"site_id":"site_brass_oath_wheel","placement_id":"accordfall_oath_wheel","role":"objective","active":"resource_site_fourteen_marks_brass_oath_wheel_state","cost":{},"rewards":{"gold":200,"ore":1},"flag":"accordfall_brass_oath_wheel_turned","objective":"turn_brass_oath_wheel","region":Rect2(432,0,48,48)},
 	{"site_id":"site_burned_signal_brazier","placement_id":"accordfall_signal_brazier","role":"variant","active":"resource_site_fourteen_marks_burned_signal_brazier_state","cost":{"gold":100,"wood":2},"rewards":{},"flag":"accordfall_signal_brazier_restored","objective":"restore_signal_brazier","region":Rect2(480,0,48,48)},
 	{"site_id":"site_repaired_ferry_stage_claimed","placement_id":"accordfall_ferry_stage","role":"variant","active":"resource_site_fourteen_marks_repaired_ferry_stage_claimed_state","cost":{"gold":120,"wood":3},"rewards":{"gold":60},"flag":"accordfall_ferry_stage_claimed","objective":"claim_repaired_ferry","region":Rect2(528,0,48,48)},
-	{"site_id":"site_claimed_quarry_head","placement_id":"accordfall_quarry_head","role":"variant","active":"resource_site_fourteen_marks_claimed_quarry_head_state","cost":{"gold":130,"ore":3},"rewards":{"gold":80},"flag":"accordfall_quarry_head_restarted","objective":"restart_quarry_head","region":Rect2(576,0,48,48)},
+	{"site_id":"site_claimed_quarry_head","placement_id":"accordfall_quarry_head","role":"variant","active":"mapobj_common_ore_mine","mine":true,"cost":{"gold":130,"ore":3},"rewards":{"gold":80},"flag":"accordfall_quarry_head_restarted","objective":"restart_quarry_head","region":Rect2(576,0,48,48)},
 	{"site_id":"site_withered_rootgate_marker","placement_id":"accordfall_rootgate","role":"variant","active":"resource_site_fourteen_marks_withered_rootgate_marker_state","cost":{"gold":90,"wood":3},"rewards":{},"flag":"accordfall_rootgate_restored","objective":"restore_rootgate_marker","region":Rect2(624,0,48,48)},
 ]
 
@@ -101,7 +101,11 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 	var active_id := String(view.call("_resource_asset_id", claimed))
 	var texture = view.call("_object_texture_for_asset", active_id)
 	_expect(active_id == String(case.get("active", "")), "%s did not switch to its authored state art." % site_id)
-	_expect(texture is AtlasTexture and texture.region == case.get("region") and texture.get_size() == Vector2(48,48), "%s atlas region changed." % site_id)
+	if bool(case.get("mine", false)):
+		# The claimed quarry head is a state of the unified 3x2 animated ore mine.
+		_expect(texture is Texture2D and not (texture is AtlasTexture) and OverworldRules._map_object_footprint_origin(ContentService.get_map_object("object_claimed_quarry_head"), claimed) == Vector2i(int(claimed.get("x", 0)) - 1, int(claimed.get("y", 0)) - 1), "%s lost its unified ore mine art or 3x2 placement." % site_id)
+	else:
+		_expect(texture is AtlasTexture and texture.region == case.get("region") and texture.get_size() == Vector2(48,48), "%s atlas region changed." % site_id)
 	var authority_after: Dictionary = session.to_dict()
 	var repeat := OverworldRules._collect_resource_node_result(session, _node_result(session, placement_id), true)
 	_expect(not bool(repeat.get("ok", true)) and session.to_dict() == authority_after, "%s repeat interaction mutated authority." % site_id)

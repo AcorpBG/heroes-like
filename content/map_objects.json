@@ -40383,10 +40383,10 @@
         "biome_subterranean_underways"
       ],
       "footprint": {
-        "width": 2,
+        "width": 3,
         "height": 2,
         "anchor": "bottom_center",
-        "tier": "medium"
+        "tier": "large"
       },
       "body_tiles": [
         {
@@ -40400,12 +40400,17 @@
           "role": "body"
         },
         {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
           "x": 0,
           "y": 1,
           "role": "body"
         },
         {
-          "x": 1,
+          "x": 2,
           "y": 1,
           "role": "body"
         }
