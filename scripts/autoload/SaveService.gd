@@ -258,10 +258,17 @@ func save_autosave_session(payload: Dictionary) -> String:
 
 func load_session(slot: int = 1) -> Dictionary:
 	# Callers own the returned payload; the summary's copy stays with the cache.
-	return _load_summary_payload_for_restore(inspect_manual_slot(slot)).duplicate(true)
+	return _loaded_session_payload(_load_summary_payload_for_restore(inspect_manual_slot(slot)).duplicate(true))
 
 func load_autosave() -> Dictionary:
-	return _load_summary_payload_for_restore(inspect_autosave()).duplicate(true)
+	return _loaded_session_payload(_load_summary_payload_for_restore(inspect_autosave()).duplicate(true))
+
+# Stored payloads hold a native runtime scenario record once; return it under
+# flags too, as restoring a session does.
+func _loaded_session_payload(payload: Dictionary) -> Dictionary:
+	if payload.get("overworld", {}) is Dictionary and payload.get("flags", {}) is Dictionary:
+		SessionStateStoreScript.SessionData.share_runtime_scenario_record(payload["overworld"], payload["flags"])
+	return payload
 
 func restore_manual_session(slot: int = 1):
 	return restore_session_from_summary(inspect_manual_slot(slot))
@@ -873,6 +880,7 @@ func _session_from_owned_detached_payload(payload: Dictionary) -> SessionStateSt
 	session.overworld = payload.get("overworld", {}) if payload.get("overworld", {}) is Dictionary else {}
 	session.battle = payload.get("battle", {}) if payload.get("battle", {}) is Dictionary else {}
 	session.flags = payload.get("flags", {}) if payload.get("flags", {}) is Dictionary else {}
+	SessionStateStoreScript.SessionData.share_runtime_scenario_record(session.overworld, session.flags)
 	return session
 
 func _summaries_share_storage_identity(first: Dictionary, second: Dictionary) -> bool:
@@ -1749,7 +1757,7 @@ func _save_payload(
 	saved_payload_out.clear()
 	for key in normalized.keys():
 		saved_payload_out[key] = normalized[key]
-	return _save_raw_dictionary(normalized, file_path, profile, recovery)
+	return _save_raw_dictionary(SessionStateStoreScript.SessionData.payload_for_storage(normalized), file_path, profile, recovery)
 
 func _verified_cached_manual_save_recovery(file_path: String, slot_type: String) -> Dictionary:
 	if slot_type != SLOT_TYPE_MANUAL or file_path == "":

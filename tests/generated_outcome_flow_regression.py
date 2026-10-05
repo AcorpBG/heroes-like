@@ -104,6 +104,8 @@ func run() -> void:
 		push_error("production terminal restore failed");get_tree().quit(1);return
 	session=SessionState.set_active_session(session)
 	for key in ["saved_at_unix","save_slot_type","saved_from_game_state","saved_from_scenario_status","saved_from_launch_mode"]:payload.erase(key)
+	# A save stores an equal native runtime scenario record once; loading restores the flags copy.
+	Store.SessionData.share_runtime_scenario_record(payload.overworld,payload.flags)
 	check(normalized(session.to_dict())==payload,"production load changed terminal gameplay state")
 	AppRouter.resume_active_session()
 	await settle()

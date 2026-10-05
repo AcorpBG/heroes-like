@@ -21,6 +21,8 @@ class SessionData:
 	const SUPPORTED_LAUNCH_MODES := [LAUNCH_MODE_CAMPAIGN, LAUNCH_MODE_SKIRMISH, LAUNCH_MODE_GENERATED_DRAFT]
 	const GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG := "generated_random_map_materialization"
 	const GENERATED_MAP_RUNTIME_MATERIALIZATION_KEY := "generated_map_runtime_materialization"
+	const NATIVE_PACKAGE_SESSION_FLAG := "native_random_map_package_session_adoption"
+	const NATIVE_RUNTIME_SCENARIO_RECORD_KEY := "native_random_map_runtime_scenario_record"
 
 	var save_version: int = SAVE_VERSION
 	var session_id: String = ""
@@ -88,6 +90,38 @@ class SessionData:
 		overworld = _dict_or_empty(normalized.get("overworld", {}))
 		battle = _dict_or_empty(normalized.get("battle", {}))
 		flags = _dict_or_empty(normalized.get("flags", {}))
+		share_runtime_scenario_record(overworld, flags)
+
+	# Native package sessions hold their runtime scenario record in both flags and
+	# overworld. A save stores it once, in overworld, when the copies are equal;
+	# loading puts it back into flags as the same Dictionary, so every reader of
+	# either key sees what it saw before the save.
+	static func payload_for_storage(payload: Dictionary) -> Dictionary:
+		var flags_value: Variant = payload.get("flags", {})
+		var overworld_value: Variant = payload.get("overworld", {})
+		if not (flags_value is Dictionary) or not (overworld_value is Dictionary):
+			return payload
+		var payload_flags: Dictionary = flags_value
+		if not bool(payload_flags.get(NATIVE_PACKAGE_SESSION_FLAG, false)):
+			return payload
+		var flags_record: Variant = payload_flags.get(NATIVE_RUNTIME_SCENARIO_RECORD_KEY)
+		var overworld_record: Variant = (overworld_value as Dictionary).get(NATIVE_RUNTIME_SCENARIO_RECORD_KEY)
+		if not (flags_record is Dictionary) or not (overworld_record is Dictionary):
+			return payload
+		if not is_same(flags_record, overworld_record) and flags_record != overworld_record:
+			return payload
+		var stored_flags := payload_flags.duplicate(false)
+		stored_flags.erase(NATIVE_RUNTIME_SCENARIO_RECORD_KEY)
+		var stored := payload.duplicate(false)
+		stored["flags"] = stored_flags
+		return stored
+
+	static func share_runtime_scenario_record(overworld_state: Dictionary, session_flags: Dictionary) -> void:
+		if not bool(session_flags.get(NATIVE_PACKAGE_SESSION_FLAG, false)) or session_flags.has(NATIVE_RUNTIME_SCENARIO_RECORD_KEY):
+			return
+		var record: Variant = overworld_state.get(NATIVE_RUNTIME_SCENARIO_RECORD_KEY)
+		if record is Dictionary:
+			session_flags[NATIVE_RUNTIME_SCENARIO_RECORD_KEY] = record
 
 	static func _normalize_payload(value: Variant) -> Dictionary:
 		var payload: Dictionary = value if value is Dictionary else {}
@@ -124,7 +158,7 @@ class SessionData:
 
 static func normalize_payload(value: Variant) -> Dictionary:
 	var payload: Dictionary = value if value is Dictionary else {}
-	return {
+	var normalized := {
 		"save_version": max(0, int(payload.get("save_version", SAVE_VERSION))),
 		"session_id": String(payload.get("session_id", str(Time.get_ticks_msec()))),
 		"scenario_id": String(payload.get("scenario_id", "")),
@@ -139,6 +173,8 @@ static func normalize_payload(value: Variant) -> Dictionary:
 		"battle": _dict_or_empty_value(payload.get("battle", {})),
 		"flags": _dict_or_empty_value(payload.get("flags", {})),
 	}
+	SessionData.share_runtime_scenario_record(normalized["overworld"], normalized["flags"])
+	return normalized
 
 static func _normalize_game_state(value: Variant) -> String:
 	var game_state := String(value)
