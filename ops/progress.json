@@ -22344,7 +22344,7 @@
       "sourceDocs": [
         "docs/source-material-storage-map.md"
       ],
-      "notes": "FIXED 2026-10-04: (a) 306 overhaul town scene layers now import with mipmaps (115 MiB imported, was 87 MiB) and .gitignore tracks art/towns/runtime/scene_layers/**/*.png.import; (b) object_claimed_quarry_head takes the 3x2 footprint, solid cells, entrance and animated art of the unified ore mine: CommonMineRules.resource resolves a mine state variant to its base mine; verified in Godot (fourteen_marks report quarry case, unified_mines_regression 183 checks, Accordfall render); (c) docs/battle-unit-animation-acceptance.json rebuilt on owner direction for all 232 creatures (current atlas and pose metadata hashes, per-unit provenance review); the Sep 16/19 roster review is recorded as superseded. OPEN: 1) six twin-command scenarios (e.g. pikeward-cinderquill-twin-beacon-council) lost the starting Wayfarers Hall; shared town templates start with only building_town_hall and the placements author no built_buildings. 2) tests/test_pack_unit_pose_art.py test_registered_clips_resolve_real_frames reports ground-line anchor mismatches for all 232 creatures (not yet investigated)."
+      "notes": "FIXED 2026-10-04: (a) 306 overhaul town scene layers now import with mipmaps (115 MiB imported, was 87 MiB) and .gitignore tracks art/towns/runtime/scene_layers/**/*.png.import; (b) object_claimed_quarry_head takes the 3x2 footprint, solid cells, entrance and animated art of the unified ore mine: CommonMineRules.resource resolves a mine state variant to its base mine; verified in Godot (fourteen_marks report quarry case, unified_mines_regression 183 checks, Accordfall render); (c) docs/battle-unit-animation-acceptance.json rebuilt on owner direction for all 232 creatures (current atlas and pose metadata hashes, per-unit provenance review); the Sep 16/19 roster review is recorded as superseded. OPEN: 1) six twin-command scenarios (e.g. pikeward-cinderquill-twin-beacon-council) lost the starting Wayfarers Hall; shared town templates start with only building_town_hall and the placements author no built_buildings. 2) tests/test_pack_unit_pose_art.py test_registered_clips_resolve_real_frames reports ground-line anchor mismatches for all 232 creatures (not yet investigated). DROPPED 2026-10-05: open item 1 (twin-command Wayfarers Hall) falls under content-authored-scenarios-obsolete-20261005; authored scenarios are obsolete pending the owner's full rework, so it is not fixed."
     },
     {
       "id": "tooling-audio-ci-disable-20261003",
@@ -71563,7 +71563,7 @@
         "save/load and outcome loops",
         "AI pressure and economy viability"
       ],
-      "notes": "No alpha claim based on content breadth alone. This umbrella remains paused while bounded tracker-selected production slices are completed.",
+      "notes": "No alpha claim based on content breadth alone. This umbrella remains paused while bounded tracker-selected production slices are completed. The existing authored scenarios and campaigns are obsolete pending a full rework (content-authored-scenarios-obsolete-20261005, owner decision 2026-10-05).",
       "pausedReason": "Future-phase umbrella only; not blocked by Native RMG and not part of the current active queue.",
       "phase": "phase-5-playable-alpha-baseline",
       "sourceDocs": [
@@ -113940,6 +113940,22 @@
         "docs/town-construction-board.md"
       ],
       "notes": "Full-screen 23-slot construction board for every faction town (Town, Army, Growth/Hero training, faction signature rows) replaces the Construction Ledger popout; exclusive tier I-V comparison, stage strips, unit upgrades, need/have cost, requirement jumps, Trade and View in town. Rules, costs, daily limit, saves and AI unchanged. New tests/town_construction_screen_report passes all six templates headless and windowed on Windows; graphical_usability_regression 1600 checks and usability_expansion_regression 1027 checks pass on Windows; validate_repo shows only the six known twin-command findings. Unrelated stale suite failures are listed in docs/town-construction-board.md. No Linux run (GDScript/content only)."
+    },
+    {
+      "id": "content-authored-scenarios-obsolete-20261005",
+      "title": "Authored maps, scenarios and campaigns are obsolete pending a full rework",
+      "status": "paused",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "owner_directed_content_hold",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/authored-scenarios-obsolete.md"
+      ],
+      "createdAt": "2026-10-05T19:15:00Z",
+      "updatedAt": "2026-10-05T19:15:00Z",
+      "purpose": "Owner decision 2026-10-05: every authored map and scenario is obsolete and needs revisiting; the owner will redo them completely. No effort goes into the existing authored roster before that rework.",
+      "notes": "PAUSED until the owner selects the full rework. Covers all 299 authored scenarios in content/scenarios.json (maps, starts, objectives, scripts, encounter balance), all 25 campaigns in content/campaigns.json with their campaign-only art, the 20 tools/author_*.py scripts, and the authored-scenario/campaign sections of PLAN.md and rows here, which are history. Do not add, fix, retune, rebalance, re-art or re-validate them; do not chase failures in the 131 test files and 85 tests/validate_repo.py functions listed as obsolete in docs/authored-scenarios-obsolete.md (26 tests and 22 validator functions are mixed: shared definitions stay valid, authored-placement assertions are obsolete). Do not delete or skip those checks and do not change the data or domain_status to hide it; the game still loads it. Not covered: generated maps and RMG, shared content definitions (factions, heroes, units, towns, buildings, artifacts, spells, encounters, sites, dwellings, art, audio) and the scenario/campaign runtime code. System tests that only use an authored scenario as a harness still test their system. The six twin-command Wayfarers Hall findings in content-validator-findings-20261004 are dropped under this hold; they were the only tests/validate_repo.py errors when it started. Marker only: no game data, behavior or tests changed."
     }
   ],
   "project": "heroes-like",
@@ -114537,6 +114553,14 @@
       "source": "archive/document-reset-2026-04-27/progress.json, archive/document-reset-2026-04-27/PLAN.md, docs/progress-implementation-audit-2026-04-27.md",
       "status": "superseded",
       "title": "HoMM3 Editor Terrain Restamp Behavior"
+    },
+    {
+      "classification": "owner_directed_content_hold",
+      "id": "content-authored-scenarios-obsolete-20261005",
+      "notes": "Authored maps, scenarios and campaigns are obsolete until the owner selects their full rework. Put no effort into them and do not chase their obsolete checks; see docs/authored-scenarios-obsolete.md.",
+      "source": "PLAN.md, docs/authored-scenarios-obsolete.md",
+      "status": "paused",
+      "title": "Authored maps, scenarios and campaigns"
     }
   ],
   "stoppedWorkerEvidence": [
