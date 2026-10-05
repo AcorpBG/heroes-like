@@ -92,7 +92,9 @@ func _validate_case(view: Control, case: Dictionary) -> void:
 	var special := String(case.get("special", ""))
 	match special:
 		"scouting":
-			_expect(int(claim.get("site_vision_radius", 0)) == 4 and int(claim.get("site_reveal_tiles", 0)) > 0, "%s scouting reveal did not execute." % placement_id)
+			# The hero's own sight may already cover the ring, so check the
+			# revealed area rather than a count of newly explored tiles.
+			_expect(int(claim.get("site_vision_radius", 0)) == 4 and _ring_explored(session, focus, 4), "%s scouting reveal did not execute." % placement_id)
 		"artifact":
 			var owned_after := _artifact_ids(session)
 			_expect(_artifact_ids(session).size() == artifacts_before.size() + 1 and String(claimed_node.get("artifact_reward_table_id", "")) == "artifact_source_guarded_sites_standard" and String(claimed_node.get("artifact_reward_id", "")) in owned_after, "%s artifact reward did not execute once with provenance." % placement_id)
@@ -198,6 +200,14 @@ func _resource_delta_exact(before: Dictionary, after: Dictionary, expected: Dict
 			return false
 	return true
 
+
+func _ring_explored(session: SessionStateStoreScript.SessionData, center: Vector2i, radius: int) -> bool:
+	var map_size := OverworldRules.derive_map_size(session)
+	for y in range(maxi(0, center.y - radius), mini(map_size.y - 1, center.y + radius) + 1):
+		for x in range(maxi(0, center.x - radius), mini(map_size.x - 1, center.x + radius) + 1):
+			if absi(x - center.x) + absi(y - center.y) <= radius and not OverworldRules.is_tile_explored(session, x, y):
+				return false
+	return true
 
 func _set_active_hero_position(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> void:
 	var position := {"x":tile.x,"y":tile.y}

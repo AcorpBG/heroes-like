@@ -88,9 +88,6 @@ const PATH_MOVEMENT_DELTAS := [
 ]
 const AI_HERO_SIGHTING_MEMORY_DAYS := 3
 const AI_HERO_SIGHTING_MAX_RECORDS := 16
-const AI_HERO_TOWN_SIGHT_RADIUS := 7
-const AI_HERO_RAID_SIGHT_RADIUS := 5
-const AI_HERO_RESOURCE_SITE_MIN_SIGHT_RADIUS := 3
 const AI_EXPLORATION_MIN_ROUTE_DISTANCE := 3
 const AI_EXPLORATION_MAX_ROUTE_DISTANCE := 14
 # Enemy-state fields that commander, hero-task and memory helpers persist
@@ -3839,29 +3836,30 @@ static func _enemy_hero_sighting_sources(
 		var town: Dictionary = town_value
 		if String(town.get("owner", "neutral")) != "enemy" or _town_controller_faction_id(town) != faction_id:
 			continue
-		var radius := AI_HERO_TOWN_SIGHT_RADIUS
-		if OverworldRulesScript.town_strategic_role(town) in ["capital", "stronghold"]:
-			radius += 1
+		# AI sight uses the player's rules: towns see from their entrance,
+		# commanders as far as a hero with the same artifacts and specialties.
+		var entrance := LevelRules.town_entrance(town)
 		sources.append({
 			"kind": "town",
 			"id": String(town.get("placement_id", "")),
-			"x": int(town.get("x", 0)),
-			"y": int(town.get("y", 0)),
+			"x": int(entrance.get("x", 0)),
+			"y": int(entrance.get("y", 0)),
 			"level": LevelRules.level_of(town),
-			"radius": radius,
+			"radius": OverworldRulesScript.town_vision_radius(),
 		})
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	for encounter_value in session.overworld.get("encounters", []):
 		if not _is_active_raid(encounter_value, faction_id, resolved_encounters):
 			continue
 		var encounter: Dictionary = encounter_value
+		var commander_state: Dictionary = encounter.get("enemy_commander_state", {}) if encounter.get("enemy_commander_state", {}) is Dictionary else {}
 		sources.append({
 			"kind": "commander",
 			"id": String(encounter.get("placement_id", "")),
 			"x": int(encounter.get("x", 0)),
 			"y": int(encounter.get("y", 0)),
 			"level": LevelRules.level_of(encounter),
-			"radius": AI_HERO_RAID_SIGHT_RADIUS,
+			"radius": HeroCommandRulesScript.scouting_radius_for_hero(commander_state),
 		})
 	for node_value in session.overworld.get("resource_nodes", []):
 		if not (node_value is Dictionary):
@@ -3870,7 +3868,7 @@ static func _enemy_hero_sighting_sources(
 		if PlayerRules.resource_controller_id(node) != faction_id:
 			continue
 		var site: Dictionary = ContentService.get_resource_site(String(node.get("site_id", "")))
-		var site_radius: int = max(0, int(site.get("vision_radius", 0)))
+		var site_radius: int = OverworldRulesScript.held_site_vision_radius(site)
 		if site_radius <= 0:
 			continue
 		sources.append({
@@ -3879,7 +3877,7 @@ static func _enemy_hero_sighting_sources(
 			"x": int(node.get("x", 0)),
 			"y": int(node.get("y", 0)),
 			"level": LevelRules.level_of(node),
-			"radius": max(AI_HERO_RESOURCE_SITE_MIN_SIGHT_RADIUS, site_radius),
+			"radius": site_radius,
 		})
 	return LevelRules.canonical_spatial_records(sources)
 

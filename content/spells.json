@@ -194,7 +194,7 @@
       "description": "Old boundary math snaps into a measured ring and exposes nearby routes before the army commits.",
       "effect": {
         "type": "reveal_radius",
-        "amount": 4
+        "amount": 7
       }
     },
     {
@@ -981,7 +981,7 @@
       "description": "Flood Fenlight floods low ground with cold fenlight, exposing tracks, crossings, and watchers around the marching host.",
       "effect": {
         "type": "reveal_radius",
-        "amount": 6
+        "amount": 9
       }
     },
     {
@@ -1135,7 +1135,7 @@
       "description": "Brine Fenlight floods low ground with cold fenlight, exposing tracks, crossings, and watchers around the marching host.",
       "effect": {
         "type": "reveal_radius",
-        "amount": 11
+        "amount": 14
       }
     },
     {
@@ -1325,7 +1325,7 @@
       "description": "Starlens Survey lifts a survey star above the column, refracting hidden roads and distant threats into visible bearings.",
       "effect": {
         "type": "reveal_radius",
-        "amount": 6
+        "amount": 9
       }
     },
     {
@@ -1483,7 +1483,7 @@
       "description": "Glass Survey lifts a survey star above the column, refracting hidden roads and distant threats into visible bearings.",
       "effect": {
         "type": "reveal_radius",
-        "amount": 11
+        "amount": 14
       }
     },
     {
@@ -2542,7 +2542,7 @@
       "description": "Survey Ring lays a survey ring across the country, making hidden routes and nearby hazards answer to the count.",
       "effect": {
         "type": "reveal_radius",
-        "amount": 6
+        "amount": 9
       }
     },
     {
@@ -2699,7 +2699,7 @@
       "description": "Count Survey lays a survey ring across the country, making hidden routes and nearby hazards answer to the count.",
       "effect": {
         "type": "reveal_radius",
-        "amount": 11
+        "amount": 14
       }
     },
     {
@@ -2858,7 +2858,7 @@
       "description": "Index Survey lays a survey ring across the country, making hidden routes and nearby hazards answer to the count.",
       "effect": {
         "type": "reveal_radius",
-        "amount": 4
+        "amount": 7
       }
     },
     {

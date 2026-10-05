@@ -923,7 +923,7 @@ SUPPORTED_SPELL_PRIMARY_ROLES = {
 SPELL_TIER_MANA = {1: 3, 2: 5, 3: 7, 4: 9, 5: 12}
 SPELL_TIER_COST_BONUS_EFFECTS = {"control_enemy", "recover_ally", "cleanse_ally"}
 SPELL_TIER_MOVEMENT_AMOUNT = {1: 3, 2: 5, 3: 7, 4: 10, 5: 14}
-SPELL_TIER_REVEAL_AMOUNT = {1: 4, 2: 6, 3: 8, 4: 11, 5: 15}
+SPELL_TIER_REVEAL_AMOUNT = {1: 7, 2: 9, 3: 11, 4: 14, 5: 18}
 SPELL_TIER_DAMAGE_BASE_BANDS = {1: (14, 18), 2: (24, 30), 3: (36, 44), 4: (50, 60), 5: (68, 82)}
 SPELL_TIER_DAMAGE_POWER_BANDS = {1: (4, 5), 2: (6, 7), 3: (8, 9), 4: (10, 12), 5: (13, 15)}
 SPELL_TIER_WOUNDED_BONUS = {1: 4, 2: 8, 3: 12, 4: 16, 5: 22}
@@ -26875,7 +26875,7 @@ def validate_overworld_fog(errors: list[str]) -> None:
     hero_command_text = HERO_COMMAND_RULES_PATH.read_text(encoding="utf-8")
     for required_token in ("const BASE_SCOUT_RADIUS", "func scouting_radius_for_hero", 'Scout %d | %s'):
         ensure(required_token in hero_command_text, errors, f"HeroCommandRules.gd is missing required fog/scouting token: {required_token}")
-    ensure("const BASE_SCOUT_RADIUS := 3" in hero_command_text, errors, "HeroCommandRules.gd must keep the raised base scout radius at 3")
+    ensure("const BASE_SCOUT_RADIUS := 6" in hero_command_text, errors, "HeroCommandRules.gd must keep the raised base scout radius at 6")
 
     scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
     ensure('"fog"' in scenario_factory_text, errors, "ScenarioFactory.gd must seed fog state in new overworld sessions")
@@ -47027,7 +47027,7 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         ensure(not any("another tactical choice without changing the army roster" in description for description in descriptions), errors, "Production spell descriptions must not retain the catalog placeholder sentence")
         legacy_mechanics = [{key: value for key, value in spell.items() if key != "description"} for spell in spells[:112] if isinstance(spell, dict)]
         legacy_mechanics_hash = hashlib.sha256(json.dumps(legacy_mechanics, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
-        ensure(legacy_mechanics_hash == "7777f38f449bfc92465d95d1cbc554db9c331cb45d1bcd45e5b4dff69ed29182", errors, "The established 112-spell mechanics payload must remain unchanged while its copy is rewritten")
+        ensure(legacy_mechanics_hash == "8e146e0135f7efbdd371679a176bb2fe0695f768637ac0ff4ed0344bcd3cb0cc", errors, "The established 112-spell mechanics payload must remain unchanged while its copy is rewritten")
 
     signature_spell_contract = {
         "spell_beacon_lockfire_muster": ("beacon", "attack_buff", "town_rainwrit_bastion", "building_embercourt_beacon_court"),
@@ -51654,11 +51654,11 @@ def validate_six_progression_shrines(errors: list[str]) -> None:
 
 def validate_five_scouting_structures(errors: list[str]) -> None:
     expected = {
-        "site_hilltop_signal_nest": ("object_hilltop_signal_nest", "ninefold-confluence", "ninefold_hilltop_signal_nest", (13,12), 4, "resource_site_scouting_hilltop_signal_nest_controlled", [0,0,48,48], "1ea9a6becbbd34ff1f5eadb1d04d94c79a08c270091f8d4af5e787345ffa0a58"),
-        "site_marsh_listener_post": ("object_marsh_listener_post", "mudkeel-hive-foreclosure", "mudkeel_dormant_b", (2,5), 3, "resource_site_scouting_marsh_listener_post_controlled", [48,0,48,48], "e179a31058ba88e6a26950ab5785e092e591b77d6ad36004675aaff78cb71c9b"),
-        "site_prism_survey_frame": ("object_prism_survey_frame", "lenscaptain-greenline-survey", "lenscaptain_dormant_a", (1,0), 5, "resource_site_scouting_prism_survey_frame_controlled", [96,0,48,48], "0df5d4316814c140c8a38ff39f0ade26c83c4a99fd6e937e6e78b7d1e3eda310"),
-        "site_underway_echo_well": ("object_underway_echo_well", "ninefold-confluence", "ninefold_underway_echo_well", (32,44), 3, "resource_site_scouting_underway_echo_well_controlled", [144,0,48,48], "870a784fa8578a39b11b4127fbde37e77f7492546ad7e694ef707fb25d0759c6"),
-        "site_coast_bell_watch": ("object_coast_bell_watch", "keelwarden-lockfire-run", "keelwarden_dormant_a", (1,0), 5, "resource_site_scouting_coast_bell_watch_controlled", [192,0,48,48], "e4a04f912ec75d91d39286b7a56a2d774e3aff1c7f7b1beb7fafcf620d3ad079"),
+        "site_hilltop_signal_nest": ("object_hilltop_signal_nest", "ninefold-confluence", "ninefold_hilltop_signal_nest", (13,12), 7, "resource_site_scouting_hilltop_signal_nest_controlled", [0,0,48,48], "1ea9a6becbbd34ff1f5eadb1d04d94c79a08c270091f8d4af5e787345ffa0a58"),
+        "site_marsh_listener_post": ("object_marsh_listener_post", "mudkeel-hive-foreclosure", "mudkeel_dormant_b", (2,5), 6, "resource_site_scouting_marsh_listener_post_controlled", [48,0,48,48], "e179a31058ba88e6a26950ab5785e092e591b77d6ad36004675aaff78cb71c9b"),
+        "site_prism_survey_frame": ("object_prism_survey_frame", "lenscaptain-greenline-survey", "lenscaptain_dormant_a", (1,0), 8, "resource_site_scouting_prism_survey_frame_controlled", [96,0,48,48], "0df5d4316814c140c8a38ff39f0ade26c83c4a99fd6e937e6e78b7d1e3eda310"),
+        "site_underway_echo_well": ("object_underway_echo_well", "ninefold-confluence", "ninefold_underway_echo_well", (32,44), 6, "resource_site_scouting_underway_echo_well_controlled", [144,0,48,48], "870a784fa8578a39b11b4127fbde37e77f7492546ad7e694ef707fb25d0759c6"),
+        "site_coast_bell_watch": ("object_coast_bell_watch", "keelwarden-lockfire-run", "keelwarden_dormant_a", (1,0), 8, "resource_site_scouting_coast_bell_watch_controlled", [192,0,48,48], "e4a04f912ec75d91d39286b7a56a2d774e3aff1c7f7b1beb7fafcf620d3ad079"),
     }
     # Historical generated-source proof; current derivatives are reconstructed above.
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "scouting_structure_controlled_wave1"
@@ -81075,14 +81075,14 @@ def validate_six_fogbreak_survey_expeditions(errors: list[str]) -> None:
         ensure(scenario.get("player_faction_id") == faction_id and scenario.get("hero_id") == hero_id and scenario.get("player_army_id") == group_id and [row.get("owner") for row in scenario.get("towns", [])] == ["player","enemy"], errors, f"{scenario_id} lost its commander, survey company, or two-town frontier")
         ensure(group.get("content_batch_id") == slice_id and group.get("content_status") == "fogbreak_survey_company_live" and group.get("faction_id") == faction_id and [row.get("count") for row in group.get("stacks", [])] == [30,18,11,6,3], errors, f"{scenario_id} lost its five-stack survey company")
         ensure(len(nodes) == 9 and len(guards) == 3 and len(scenario.get("script_hooks", [])) == 5 and len(victory) == 5 and len(defeat) == 3, errors, f"{scenario_id} lost its survey economy, three fronts, hooks, or objective boundaries")
-        ensure(survey.get("type") == "map_explored_at_least" and survey.get("minimum_percent") == 80 and survey.get("id") == f"{prefix}_chart_eighty_percent", errors, f"{scenario_id} lost its exact eighty-percent exploration objective")
+        ensure(survey.get("type") == "map_explored_at_least" and survey.get("minimum_percent") == 90 and survey.get("id") == f"{prefix}_chart_eighty_percent", errors, f"{scenario_id} lost its exact ninety-percent exploration objective")
         expected_site_placements = {f"{prefix}_survey_west",f"{prefix}_survey_south",f"{prefix}_survey_east"}
         survey_nodes = [row for row in nodes if row.get("site_id") == site_id]
         ensure(len(survey_nodes) == 3 and {row.get("placement_id") for row in survey_nodes} == expected_site_placements, errors, f"{scenario_id} lost its three exact survey instruments")
         expected_guard_placements = [f"{prefix}_west_guard",f"{prefix}_south_guard",f"{prefix}_east_guard"]
         ensure([row.get("placement_id") for row in guards] == expected_guard_placements and [row.get("encounter_id") for row in guards] == encounter_ids and all(row.get("prefer_identity_landmark") is True for row in guards), errors, f"{scenario_id} lost its exact three guarded encounter placements")
         directly_placed_encounters.update(str(row.get("encounter_id", "")) for row in guards)
-        ensure(site.get("content_batch_id") == slice_id and site.get("content_status") == "fogbreak_survey_instrument_live" and site.get("family") == "scouting_structure" and site.get("persistent_control") is True and site.get("vision_radius") == 5 and site.get("runtime_boundary", {}).get("status") == "fogbreak_survey_instrument_live", errors, f"{site_id} lost its live persistent five-tile scouting boundary")
+        ensure(site.get("content_batch_id") == slice_id and site.get("content_status") == "fogbreak_survey_instrument_live" and site.get("family") == "scouting_structure" and site.get("persistent_control") is True and site.get("vision_radius") == 8 and site.get("runtime_boundary", {}).get("status") == "fogbreak_survey_instrument_live", errors, f"{site_id} lost its live persistent eight-tile scouting boundary")
         asset = assets.get(asset_id, {})
         ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [1152,192] and asset.get("assigned_resource_site_id") == site_id and asset.get("source_model") == "built_in_image_gen_original_fogbreak_survey_instruments_atlas" and len(str(asset.get("accessible_description", ""))) >= 100, errors, f"{site_id} lost its exact accessible survey art")
         source = source_rows.get(site_id, {})
@@ -82599,11 +82599,11 @@ def validate_overworld_town_vision_command_roster(errors: list[str]) -> None:
 
     rules_text = rules_path.read_text(encoding="utf-8")
     for token in (
-        "const PLAYER_TOWN_VISION_RADIUS := 5",
-        "static func player_town_vision_radius() -> int:",
+        "const TOWN_VISION_RADIUS := 8",
+        "static func town_vision_radius() -> int:",
         'for town_value in session.overworld.get("towns", []):',
         'String(town.get("owner", "neutral")) != "player"',
-        "_apply_site_reveal(explored_tiles, OverworldLevelRulesScript.town_entrance(town), PLAYER_TOWN_VISION_RADIUS, map_size)",
+        "_apply_site_reveal(explored_tiles, OverworldLevelRulesScript.town_entrance(town), TOWN_VISION_RADIUS, map_size)",
     ):
         ensure(token in rules_text, errors, f"#10234 owned-town exploration lost required authority: {token}")
 
@@ -82632,9 +82632,9 @@ def validate_overworld_town_vision_command_roster(errors: list[str]) -> None:
     report_text = report_path.read_text(encoding="utf-8")
     for token in (
         "const VIEWPORTS := [Vector2i(1920, 1080), Vector2i(1280, 720)]",
-        "OverworldRules.player_town_vision_radius()",
+        "OverworldRules.town_vision_radius()",
         "enemy town revealed its center for the player",
-        "captured town did not add exactly one new radius-five permanent source",
+        "captured town did not add exactly one new radius-eight permanent source",
         "SessionStateStoreScript.SessionData.new()",
         'shell.validation_command_roster_snapshot()',
         'target_hero_button.emit_signal("pressed")',

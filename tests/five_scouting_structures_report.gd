@@ -7,11 +7,11 @@ const REPORT_ID := "FIVE_SCOUTING_STRUCTURES_REPORT"
 const OUTPUT_DIR := "res://.artifacts/five_scouting_structures_report"
 const ATLAS_PATH := "res://art/overworld/runtime/objects/resource_sites/scouting_structure_controlled_atlas.png"
 const CASES := [
-	{"scenario_id":"ninefold-confluence","site_id":"site_hilltop_signal_nest","placement_id":"ninefold_hilltop_signal_nest","ready":"mapobj_hilltop_signal_nest","controlled":"resource_site_scouting_hilltop_signal_nest_controlled","radius":4,"region":Rect2(0,0,48,48)},
-	{"scenario_id":"mudkeel-hive-foreclosure","site_id":"site_marsh_listener_post","placement_id":"mudkeel_dormant_b","ready":"mapobj_marsh_listener_post","controlled":"resource_site_scouting_marsh_listener_post_controlled","radius":3,"region":Rect2(48,0,48,48)},
-	{"scenario_id":"lenscaptain-greenline-survey","site_id":"site_prism_survey_frame","placement_id":"lenscaptain_dormant_a","ready":"mapobj_prism_survey_frame","controlled":"resource_site_scouting_prism_survey_frame_controlled","radius":5,"region":Rect2(96,0,48,48)},
-	{"scenario_id":"ninefold-confluence","site_id":"site_underway_echo_well","placement_id":"ninefold_underway_echo_well","ready":"mapobj_underway_echo_well","controlled":"resource_site_scouting_underway_echo_well_controlled","radius":3,"region":Rect2(144,0,48,48)},
-	{"scenario_id":"keelwarden-lockfire-run","site_id":"site_coast_bell_watch","placement_id":"keelwarden_dormant_a","ready":"mapobj_coast_bell_watch","controlled":"resource_site_scouting_coast_bell_watch_controlled","radius":5,"region":Rect2(192,0,48,48)},
+	{"scenario_id":"ninefold-confluence","site_id":"site_hilltop_signal_nest","placement_id":"ninefold_hilltop_signal_nest","ready":"mapobj_hilltop_signal_nest","controlled":"resource_site_scouting_hilltop_signal_nest_controlled","radius":7,"region":Rect2(0,0,48,48)},
+	{"scenario_id":"mudkeel-hive-foreclosure","site_id":"site_marsh_listener_post","placement_id":"mudkeel_dormant_b","ready":"mapobj_marsh_listener_post","controlled":"resource_site_scouting_marsh_listener_post_controlled","radius":6,"region":Rect2(48,0,48,48)},
+	{"scenario_id":"lenscaptain-greenline-survey","site_id":"site_prism_survey_frame","placement_id":"lenscaptain_dormant_a","ready":"mapobj_prism_survey_frame","controlled":"resource_site_scouting_prism_survey_frame_controlled","radius":8,"region":Rect2(96,0,48,48)},
+	{"scenario_id":"ninefold-confluence","site_id":"site_underway_echo_well","placement_id":"ninefold_underway_echo_well","ready":"mapobj_underway_echo_well","controlled":"resource_site_scouting_underway_echo_well_controlled","radius":6,"region":Rect2(144,0,48,48)},
+	{"scenario_id":"keelwarden-lockfire-run","site_id":"site_coast_bell_watch","placement_id":"keelwarden_dormant_a","ready":"mapobj_coast_bell_watch","controlled":"resource_site_scouting_coast_bell_watch_controlled","radius":8,"region":Rect2(192,0,48,48)},
 ]
 
 var _errors: Array[String] = []

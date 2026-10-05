@@ -108,7 +108,7 @@ SCRIPT=SCRIPT.replace(needle,r'''
             check(bool(scout.get("ok",false)),str(seal_case[0])+" ordinary scouting: "+JSON.stringify(scout))
             check(OverworldRules.hero_position(session)==seal_case[3],str(seal_case[0])+" complete legal scouting route")
             if seal_case[2]==Vector2i(10,4):
-                # Manhattan vision radius is three. This original artifact
+                # Manhattan vision radius is six. This original artifact
                 # tile is the safe approach; use its ordinary pickup, not a
                 # fog grant or bypass of the adjacent site guard.
                 var pickup_found := false

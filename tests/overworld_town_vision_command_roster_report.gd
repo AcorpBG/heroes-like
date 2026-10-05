@@ -38,13 +38,13 @@ func _validate_town_vision() -> Dictionary:
 	session.overworld["towns"] = [PLAYER_TOWN.duplicate(true), ENEMY_TOWN.duplicate(true), NEUTRAL_TOWN.duplicate(true)]
 	session.overworld["fog"] = {}
 	OverworldRules.refresh_fog_of_war(session)
-	var radius := OverworldRules.player_town_vision_radius()
+	var radius := OverworldRules.town_vision_radius()
 	var expected_initial := _expected_town_tiles([PLAYER_TOWN], radius, MAP_SIZE)
 	var initial := _fog_exact_summary(session, expected_initial)
-	if radius != 5:
-		_failures.append("player town vision radius is not the documented radius five")
-	if not bool(initial.get("exact", false)) or int(initial.get("explored_count", 0)) != 61:
-		_failures.append("initial player-town vision is not the exact centered radius-five diamond")
+	if radius != 8:
+		_failures.append("player town vision radius is not the documented radius eight")
+	if not bool(initial.get("exact", false)) or int(initial.get("explored_count", 0)) != 127:
+		_failures.append("initial player-town vision is not the exact centered radius-eight diamond")
 	if OverworldRules.is_tile_explored(session, int(ENEMY_TOWN.x), int(ENEMY_TOWN.y)):
 		_failures.append("enemy town revealed its center for the player")
 	if OverworldRules.is_tile_explored(session, int(NEUTRAL_TOWN.x), int(NEUTRAL_TOWN.y)):
@@ -63,8 +63,8 @@ func _validate_town_vision() -> Dictionary:
 	for key in _expected_town_tiles([captured], radius, MAP_SIZE).keys():
 		expected_after_capture[key] = true
 	var after_capture := _fog_exact_summary(session, expected_after_capture)
-	if not bool(after_capture.get("exact", false)) or int(after_capture.get("explored_count", 0)) != 122:
-		_failures.append("captured town did not add exactly one new radius-five permanent source")
+	if not bool(after_capture.get("exact", false)) or int(after_capture.get("explored_count", 0)) != 254:
+		_failures.append("captured town did not add exactly one new radius-eight permanent source")
 	if not OverworldRules.is_tile_explored(session, int(PLAYER_TOWN.x), int(PLAYER_TOWN.y)):
 		_failures.append("losing a former source erased permanent exploration")
 

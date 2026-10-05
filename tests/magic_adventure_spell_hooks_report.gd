@@ -52,7 +52,7 @@ func _run() -> void:
 		return
 	var survey_chain := ContentService.get_spell("spell_survey_chain")
 	var survey_consequence := SpellRules.adventure_spell_consequence_preview(hero, movement, survey_chain)
-	if not bool(survey_consequence.get("ok", false)) or int(survey_consequence.get("reveal_radius", 0)) != 4:
+	if not bool(survey_consequence.get("ok", false)) or int(survey_consequence.get("reveal_radius", 0)) != 7:
 		_fail("Survey Chain did not expose a valid reveal-radius consequence: %s" % survey_consequence)
 		return
 	if not bool(survey_consequence.get("changes_fog", false)) or bool(survey_consequence.get("changes_site_state", true)) or bool(survey_consequence.get("changes_resources", true)):

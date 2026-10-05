@@ -115,8 +115,8 @@ func _run_case(view: Control, case: Dictionary) -> void:
 		production_claim_count += 1
 	_expect(production_battle_count == 3 and production_claim_count == 3, "%s did not clear and claim all three production survey fronts." % scenario_id)
 	var explored_after_three := int(session.overworld.get("fog", {}).get("explored_count", 0))
-	var exploration_threshold := ScenarioRulesScript.is_objective_met(session, objective_id, "victory") and explored_after_three >= 108
-	_expect(exploration_threshold, "%s did not reach its exact 80%% chart after three instruments (%d tiles)." % [scenario_id, explored_after_three])
+	var exploration_threshold := ScenarioRulesScript.is_objective_met(session, objective_id, "victory") and explored_after_three >= 122
+	_expect(exploration_threshold, "%s did not reach its exact 90%% chart after three instruments (%d tiles)." % [scenario_id, explored_after_three])
 	var victory_result: Dictionary = ScenarioRulesScript.evaluate_session(session)
 	var scenario_victory: bool = String(victory_result.get("status", "")) == "victory" and session.day < 15
 	_expect(scenario_victory, "%s did not win after the complete production survey: %s" % [scenario_id, JSON.stringify(victory_result)])

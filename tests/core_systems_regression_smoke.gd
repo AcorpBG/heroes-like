@@ -129,19 +129,20 @@ func _run_overworld_memory_fog_regression() -> bool:
 	)
 	OverworldRules.normalize_overworld_state(session)
 	var hero = session.overworld.get("hero", {})
-	if HeroCommandRules.scouting_radius_for_hero(hero) != 3:
-		push_error("Core systems smoke: base hero scouting radius did not include the requested +1 increase.")
+	if HeroCommandRules.scouting_radius_for_hero(hero) != 6:
+		push_error("Core systems smoke: base hero scouting radius is not the doubled radius of 6.")
 		get_tree().quit(1)
 		return false
 
 	var start := OverworldRules.hero_position(session)
-	var radius_edge := Vector2i(start.x + 3, start.y)
+	var radius_edge := Vector2i(start.x + 6, start.y)
 	if not OverworldRules.is_tile_visible(session, radius_edge.x, radius_edge.y):
-		push_error("Core systems smoke: +1 scout radius did not reveal the distance-3 edge tile.")
+		push_error("Core systems smoke: base scout radius did not reveal the distance-6 edge tile.")
 		get_tree().quit(1)
 		return false
 
-	var never_seen := Vector2i(4, 0)
+	# River Pass is 9x5, so only the far corner lies outside the town and hero rings.
+	var never_seen := Vector2i(8, 0)
 	if OverworldRules.is_tile_explored(session, never_seen.x, never_seen.y) or OverworldRules.is_tile_visible(session, never_seen.x, never_seen.y):
 		push_error("Core systems smoke: initial fog did not hide an unscouted tile.")
 		get_tree().quit(1)
@@ -155,7 +156,7 @@ func _run_overworld_memory_fog_regression() -> bool:
 		get_tree().quit(1)
 		return false
 
-	_set_active_hero_position(session, Vector2i(8, 2))
+	_set_active_hero_position(session, Vector2i(0, 4))
 	OverworldRules.refresh_fog_of_war(session)
 	var moved_fog: Dictionary = session.overworld.get("fog", {})
 	if int(moved_fog.get("explored_count", 0)) < initial_explored_count or int(moved_fog.get("visible_count", 0)) < initial_visible_count:

@@ -15,7 +15,7 @@ const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const FOG_KEY := "fog"
 const VISIBLE_TILES_KEY := "visible_tiles"
 const EXPLORED_TILES_KEY := "explored_tiles"
-const PLAYER_TOWN_VISION_RADIUS := 5
+const TOWN_VISION_RADIUS := 8
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const ACTIVE_TOWN_PLACEMENT_KEY := "active_town_placement_id"
 const COMMAND_BRIEFING_KEY := "command_briefing"
@@ -487,8 +487,16 @@ static func refresh_fog_of_war(session: SessionStateStoreScript.SessionData) -> 
 		return
 	_normalize_fog_of_war(session)
 
-static func player_town_vision_radius() -> int:
-	return PLAYER_TOWN_VISION_RADIUS
+# Every owned town, player or AI, sees this far from its entrance.
+static func town_vision_radius() -> int:
+	return TOWN_VISION_RADIUS
+
+# Only a held persistent site keeps watching; a one-shot site's radius is
+# spent on the reveal when it is claimed.
+static func held_site_vision_radius(site: Dictionary) -> int:
+	if not _resource_site_is_persistent(site):
+		return 0
+	return max(0, int(site.get("vision_radius", 0)))
 
 static func is_tile_visible(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	if session == null:
@@ -13265,7 +13273,7 @@ static func _reveal_all_current_fog_sources(session: SessionStateStoreScript.Ses
 		if String(town.get("owner", "neutral")) != "player" or not OverworldLevelRulesScript.on_level(town, level):
 			continue
 		source_count += 1
-		_apply_site_reveal(explored_tiles, OverworldLevelRulesScript.town_entrance(town), PLAYER_TOWN_VISION_RADIUS, map_size)
+		_apply_site_reveal(explored_tiles, OverworldLevelRulesScript.town_entrance(town), TOWN_VISION_RADIUS, map_size)
 	for node in session.overworld.get("resource_nodes", []):
 		if not (node is Dictionary) or not OverworldLevelRulesScript.on_level(node, level):
 			continue
@@ -13275,7 +13283,7 @@ static func _reveal_all_current_fog_sources(session: SessionStateStoreScript.Ses
 		if String(node.get("collected_by_faction_id", "")) != "player":
 			continue
 		source_count += 1
-		_apply_site_reveal(explored_tiles, node, max(0, int(site.get("vision_radius", 0))), map_size)
+		_apply_site_reveal(explored_tiles, node, held_site_vision_radius(site), map_size)
 	_rules_profile_set("fog", "source_count", source_count)
 
 static func _fog_state_ready(session: SessionStateStoreScript.SessionData) -> bool:

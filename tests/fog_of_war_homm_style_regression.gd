@@ -27,7 +27,7 @@ func _run() -> void:
 		_fail("Unexplored tile was not hidden initially: tile=%s fog=%s" % [unexplored, before_fog])
 		return
 
-	_set_active_hero_position(session, _remote_tile_from(session, start))
+	_set_active_hero_position(session, _remote_tile_from(session, start, unexplored))
 	OverworldRules.refresh_fog_of_war(session)
 	var after_remote_fog := _fog_counts(session)
 	if not _assert_visible_aliases_explored(session, after_remote_fog, "after_remote_refresh"):
@@ -114,13 +114,18 @@ func _try_one_step_move(session) -> Dictionary:
 			return result
 	return {"ok": false, "message": "No adjacent passable target."}
 
-func _remote_tile_from(session, source: Vector2i) -> Vector2i:
+# The farthest passable tile from source whose scout ring still misses the
+# guarded unexplored tile, so the guard stays outside every reveal source.
+func _remote_tile_from(session, source: Vector2i, guarded: Vector2i) -> Vector2i:
 	var map_size := OverworldRules.derive_map_size(session)
+	var scout_radius := HeroCommandRules.scouting_radius_for_hero(session.overworld.get("hero", {}))
 	var best := source
 	var best_distance := -1
 	for y in range(map_size.y):
 		for x in range(map_size.x):
 			if OverworldRules.tile_is_blocked(session, x, y):
+				continue
+			if abs(guarded.x - x) + abs(guarded.y - y) <= scout_radius:
 				continue
 			var distance: int = abs(source.x - x) + abs(source.y - y)
 			if distance > best_distance:

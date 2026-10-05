@@ -1,5 +1,7 @@
 extends Node
 
+const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRules.gd")
+
 const REPORT_ID := "AI_KNOWN_WORLD_MEMORY_REPORT"
 const RIVER_PASS := "river-pass"
 const MIRECLAW := "faction_mireclaw"
@@ -1926,27 +1928,26 @@ func _legacy_known_world_sight_sources_control(session, config: Dictionary, fact
 		var town: Dictionary = town_value
 		if String(town.get("owner", "neutral")) != "enemy" or EnemyAdventureRules._town_controller_faction_id(town) != faction_id:
 			continue
-		var radius := EnemyAdventureRules.AI_HERO_TOWN_SIGHT_RADIUS
-		if OverworldRules.town_strategic_role(town) in ["capital", "stronghold"]:
-			radius += 1
+		var entrance := OverworldLevelRulesScript.town_entrance(town)
 		sources.append({
 			"kind": "town",
 			"id": String(town.get("placement_id", "")),
-			"x": int(town.get("x", 0)),
-			"y": int(town.get("y", 0)),
-			"radius": radius,
+			"x": int(entrance.get("x", 0)),
+			"y": int(entrance.get("y", 0)),
+			"radius": OverworldRules.town_vision_radius(),
 		})
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	for encounter_value in session.overworld.get("encounters", []):
 		if not _legacy_known_world_active_raid_control(encounter_value, faction_id, resolved_encounters):
 			continue
 		var encounter: Dictionary = encounter_value
+		var commander_state: Dictionary = encounter.get("enemy_commander_state", {}) if encounter.get("enemy_commander_state", {}) is Dictionary else {}
 		sources.append({
 			"kind": "commander",
 			"id": String(encounter.get("placement_id", "")),
 			"x": int(encounter.get("x", 0)),
 			"y": int(encounter.get("y", 0)),
-			"radius": EnemyAdventureRules.AI_HERO_RAID_SIGHT_RADIUS,
+			"radius": HeroCommandRules.scouting_radius_for_hero(commander_state),
 		})
 	for node_value in session.overworld.get("resource_nodes", []):
 		if not (node_value is Dictionary):
@@ -1955,7 +1956,7 @@ func _legacy_known_world_sight_sources_control(session, config: Dictionary, fact
 		if String(node.get("collected_by_faction_id", "")) != faction_id:
 			continue
 		var site: Dictionary = ContentService.get_resource_site(String(node.get("site_id", "")))
-		var site_radius: int = max(0, int(site.get("vision_radius", 0)))
+		var site_radius: int = OverworldRules.held_site_vision_radius(site)
 		if site_radius <= 0:
 			continue
 		sources.append({
@@ -1963,7 +1964,7 @@ func _legacy_known_world_sight_sources_control(session, config: Dictionary, fact
 			"id": String(node.get("placement_id", "")),
 			"x": int(node.get("x", 0)),
 			"y": int(node.get("y", 0)),
-			"radius": max(EnemyAdventureRules.AI_HERO_RESOURCE_SITE_MIN_SIGHT_RADIUS, site_radius),
+			"radius": site_radius,
 		})
 	return sources
 

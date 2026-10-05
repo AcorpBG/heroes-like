@@ -14,7 +14,7 @@ const HERO_LIMIT := 4
 const ARMY_SLOT_COUNT := 7
 const ARMY_SLOT_INDEX_KEY := "slot_index"
 const DEFAULT_RECRUIT_COST := {"gold": 1200}
-const BASE_SCOUT_RADIUS := 3
+const BASE_SCOUT_RADIUS := 6
 
 static func normalize_session(
 	session: SessionStateStoreScript.SessionData,
