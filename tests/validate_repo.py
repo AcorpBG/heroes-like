@@ -14743,19 +14743,51 @@ def validate_skirmish_setup(errors: list[str]) -> None:
             'cache["inspection_payload_hash"] = "fnv1a32:" + hash32_hex(canonical_variant(stable_payload))',
         ):
             ensure(required_token in cache_write_native, errors, f"Native browser-manifest cache writer is missing detached integrity field: {required_token}")
-        ensure('file->close();' in package_write_native and 'const String source_sha256 = FileAccess::get_sha256(path);' in package_write_native and 'write_browser_manifest_cache(path, source_sha256, package_inspection_payload(package));' in package_write_native, errors, "Successful native package save must prepopulate the exact-hash bounded manifest cache only after closing the package file")
+        ensure('file->close();' in package_write_native and 'const String source_sha256 = FileAccess::get_sha256(path);' in package_write_native and 'write_browser_manifest_cache(path, source_sha256, source_stamp, package_inspection_payload(package));' in package_write_native, errors, "Successful native package save must prepopulate the exact-hash bounded manifest cache only after closing the package file")
+        save_stamp_offset = package_write_native.find("const BrowserManifestSourceStamp source_stamp = browser_manifest_source_stamp(path);")
+        ensure(package_write_native.find("file->close();") < save_stamp_offset < package_write_native.find("const String source_sha256 = FileAccess::get_sha256(path);"), errors, "Native package save must record the source stamp after closing the package and before hashing it")
         for required_token in (
             'const bool bypass_cache = String(options.get("browser_manifest_cache_mode", "default")) == "bypass_read"',
             'const String source_sha256 = FileAccess::file_exists(path) ? FileAccess::get_sha256(path) : String()',
-            'Dictionary cached_payload = read_browser_manifest_cache(path, source_sha256)',
+            'Dictionary cached_payload = read_browser_manifest_cache_payload(cache, source_sha256)',
             'Dictionary read_result = read_package_dictionary("inspect_package", path)',
-            'const bool cache_written = write_browser_manifest_cache(path, source_sha256, payload)',
+            'const bool cache_written = write_browser_manifest_cache(path, source_sha256, source_stamp, payload)',
             'profile["status"] = "hit"',
             'bypass_cache ? "bypass_written" : "miss_written"',
         ):
             ensure(required_token in inspect_native, errors, f"Native inspect cache lifecycle is missing required fail-closed token: {required_token}")
-        ensure(inspect_native.find("read_browser_manifest_cache(path, source_sha256)") < inspect_native.find('read_package_dictionary("inspect_package", path)'), errors, "Native inspect must try only the exact-hash cache before retaining the full package parser fallback")
-        ensure('FileAccess::get_modified_time' not in inspect_native and 'FileAccess::get_size' not in inspect_native, errors, "Native manifest cache must not trust timestamps or file size in place of exact content hashing")
+        ensure(inspect_native.find("read_browser_manifest_cache_payload(cache, source_sha256)") < inspect_native.find('read_package_dictionary("inspect_package", path)'), errors, "Native inspect must try only the exact-hash cache before retaining the full package parser fallback")
+
+        # Size and modification time may stand in for the content hash only
+        # through the settled-stamp guard; every other path hashes in full.
+        source_stamp_native = native_map_service_text.split("BrowserManifestSourceStamp browser_manifest_source_stamp(const String &source_path)", 1)[-1].split("bool browser_manifest_source_stamp_is_complete", 1)[0]
+        stamped_sha_native = native_map_service_text.split("String browser_manifest_cache_stamped_sha256(", 1)[-1].split("Dictionary read_browser_manifest_cache_payload(", 1)[0]
+        ensure("constexpr int64_t BROWSER_MANIFEST_CACHE_SETTLED_SECONDS = 2;" in native_map_service_text, errors, "Native manifest cache must keep the two-second settled-stamp window")
+        ensure("stamp.checked_at - stamp.modified_time >= BROWSER_MANIFEST_CACHE_SETTLED_SECONDS" in native_map_service_text, errors, "Native manifest cache must trust a stamp only when it was checked at least two seconds after the package changed")
+        stamp_time_offset = source_stamp_native.find("stamp.checked_at = int64_t(std::floor(Time::get_singleton()->get_unix_time_from_system()));")
+        ensure(source_stamp_native.count("stamp.checked_at = ") == 1 and 0 <= stamp_time_offset < source_stamp_native.find("FileAccess::get_size(source_path)") and stamp_time_offset < source_stamp_native.find("FileAccess::get_modified_time(source_path)"), errors, "Native source stamp must take the check time once, before reading size and modification time")
+        ensure("stamp.modified_time = modified_time > 0 ? modified_time : -1;" in source_stamp_native, errors, "Native source stamp must never trust a missing modification time")
+        for required_token in (
+            "cached_stamp.size != source_stamp.size",
+            "cached_stamp.modified_time != source_stamp.modified_time",
+            "!browser_manifest_source_stamp_is_settled(cached_stamp)",
+            "return String();",
+        ):
+            ensure(required_token in stamped_sha_native, errors, f"Native manifest cache stamp shortcut is missing its size, time and settle guard: {required_token}")
+        for required_token in (
+            'cache["source_size"] = source_stamp.size',
+            'cache["source_modified_time"] = source_stamp.modified_time',
+            'cache["source_checked_at"] = source_stamp.checked_at',
+        ):
+            ensure(required_token in cache_write_native, errors, f"Native browser-manifest cache writer is missing source stamp field: {required_token}")
+        inspect_stamp_offset = inspect_native.find("const BrowserManifestSourceStamp source_stamp = browser_manifest_source_stamp(path);")
+        inspect_bypass_offset = inspect_native.find("if (!bypass_cache) {")
+        inspect_stamped_offset = inspect_native.find("browser_manifest_cache_stamped_sha256(cache, source_stamp)")
+        inspect_hash_offset = inspect_native.find("const String source_sha256 = FileAccess::file_exists(path) ? FileAccess::get_sha256(path) : String()")
+        ensure(0 <= inspect_stamp_offset < inspect_bypass_offset < inspect_stamped_offset < inspect_hash_offset, errors, "Native inspect must stamp the source first and try the stamp shortcut only outside bypass_read, before hashing")
+        ensure(inspect_native.count("browser_manifest_cache_stamped_sha256(") == 1 and inspect_native.count("FileAccess::get_sha256(path)") == 1, errors, "Native inspect must fall back to exactly one full content hash whenever the stamp shortcut does not apply")
+        ensure('return cache_hit(stamped_payload, stamped_sha256, "size_and_modified_time");' in inspect_native and 'return cache_hit(cached_payload, source_sha256, "sha256");' in inspect_native, errors, "Native inspect cache profile must report whether a hit was trusted on its stamp or its content hash")
+        ensure('FileAccess::get_modified_time' not in inspect_native and 'FileAccess::get_size' not in inspect_native, errors, "Native inspect must read size and modification time only through the guarded source stamp")
 
     main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
     selected_setup = function_block(main_menu_script_text, "_selected_skirmish_setup")
@@ -14835,6 +14867,10 @@ def validate_skirmish_setup(errors: list[str]) -> None:
             '"native_browser_manifest_cache_save_prepopulated"',
             '"native_browser_manifest_cache_changed_content_rebuilt"',
             '"native_browser_manifest_cache_corruption_rebuilt"',
+            "_validate_native_browser_manifest_cache_stamp(package_service, scenario_path)",
+            '"native_browser_manifest_cache_racy_same_size_rewrite_rebuilt"',
+            '"native_browser_manifest_cache_settled_stamp_hit"',
+            '"native_browser_manifest_cache_settled_same_size_rewrite_rebuilt"',
         ):
             ensure(required_token in integration_text, errors, f"Maps-folder package integration is missing selected-entry reuse proof token: {required_token}")
         cache_case = function_block(integration_text, "_validate_native_browser_manifest_cache")
@@ -14854,6 +14890,23 @@ def validate_skirmish_setup(errors: list[str]) -> None:
             ensure(required_token in cache_case, errors, f"Focused native browser-manifest cache lifecycle is missing exact parity/fallback token: {required_token}")
         for forbidden_token in ("get_modified_time", 'erase("browser_manifest")', 'erase("source_sha256")'):
             ensure(forbidden_token not in cache_case, errors, f"Focused native browser-manifest cache proof must not weaken exact authority: {forbidden_token}")
+        stamp_case = function_block(integration_text, "_validate_native_browser_manifest_cache_stamp")
+        for required_token in (
+            'probe_texts["Cache Stamp Probe A"].to_utf8_buffer().size() != probe_texts["Cache Stamp Probe B"].to_utf8_buffer().size()',
+            '_wait_until_unix_second(int(Time.get_unix_time_from_system()) + 1)',
+            '"same_size_and_modified_time": probe_a_size == probe_b_size and probe_a_modified == probe_b_modified',
+            'String(probe_b_profile.get("status", "")) == "miss_written"',
+            'String(probe_b_profile.get("source_sha256", "")) == FileAccess.get_sha256(scenario_path)',
+            'bool(racy.get("same_size_and_modified_time", false)) and bool(racy.get("rebuilt", false))',
+            '_wait_until_unix_second(int(racy["modified_time"]) + 2)',
+            'String(settled_stamped_profile.get("source_check", "")) == "size_and_modified_time"',
+            '_inspection_without_cache_profile(settled_stamped) == settled_bypass',
+            'String(rewritten_profile.get("status", "")) == "miss_written"',
+            '_write_fixture_text(scenario_path, original_scenario_text)',
+        ):
+            ensure(required_token in stamp_case, errors, f"Focused native browser-manifest cache stamp proof is missing same-size rewrite or settled-stamp token: {required_token}")
+        for forbidden_token in ('erase("browser_manifest")', 'erase("source_sha256")'):
+            ensure(forbidden_token not in stamp_case, errors, f"Focused native browser-manifest cache stamp proof must not weaken exact authority: {forbidden_token}")
 
     scenario_rules_text = SCENARIO_RULES_PATH.read_text(encoding="utf-8")
     ensure_script_functions(

@@ -7,12 +7,14 @@
 #include <godot_cpp/classes/dir_access.hpp>
 #include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/json.hpp>
+#include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
 
 #include <algorithm>
 #include <chrono>
+#include <cmath>
 #include <cstdint>
 #include <memory>
 #include <mutex>
@@ -34,6 +36,12 @@ constexpr const char *MAP_PACKAGE_SCHEMA_ID = "aurelion_map_package";
 constexpr const char *SCENARIO_PACKAGE_SCHEMA_ID = "aurelion_scenario_package";
 constexpr const char *BROWSER_MANIFEST_CACHE_SCHEMA_ID = "aurelion_package_browser_manifest_cache_v1";
 constexpr const char *BROWSER_MANIFEST_CACHE_DIR = "user://package_browser_manifest_cache_v1";
+// A cache entry may stand in for hashing its package only when the package was
+// last modified at least this long before the entry checked it. A same-size
+// rewrite within the second of the hashed write keeps both size and
+// modification time, so an entry checked that soon is never trusted on them
+// (git's racy-clean rule). Two seconds also covers FAT's 2-second timestamps.
+constexpr int64_t BROWSER_MANIFEST_CACHE_SETTLED_SECONDS = 2;
 constexpr const char *NATIVE_RMG_SCHEMA_ID = "aurelion_native_random_map_config_normalization";
 constexpr const char *NATIVE_RMG_VERSION = "native_rmg_exact_h3maped_state_chain_v1";
 constexpr const char *HOMM3_RE_PROXY_CATALOG_PATH = "res://content/homm3_re_reward_object_proxy_catalog.json";
@@ -1811,10 +1819,60 @@ bool browser_manifest_cache_payload_is_valid(const Dictionary &payload) {
 			(package_schema == SCENARIO_PACKAGE_SCHEMA_ID && document_kind == "scenario");
 }
 
-Dictionary read_browser_manifest_cache(const String &source_path, const String &source_sha256) {
-	if (source_sha256.is_empty()) {
-		return Dictionary();
+// Size and modification time of a package file, read before its content is
+// hashed, and the clock time taken just before that read. Taking the time
+// first means any edit that lands while the file is being hashed gets a later
+// modification time than the one recorded here.
+struct BrowserManifestSourceStamp {
+	int64_t size = -1;
+	int64_t modified_time = -1;
+	int64_t checked_at = -1;
+};
+
+BrowserManifestSourceStamp browser_manifest_source_stamp(const String &source_path) {
+	BrowserManifestSourceStamp stamp;
+	stamp.checked_at = int64_t(std::floor(Time::get_singleton()->get_unix_time_from_system()));
+	if (!FileAccess::file_exists(source_path)) {
+		return stamp;
 	}
+	stamp.size = FileAccess::get_size(source_path);
+	// Files inside an exported pack report 0, which never matches below.
+	const int64_t modified_time = int64_t(FileAccess::get_modified_time(source_path));
+	stamp.modified_time = modified_time > 0 ? modified_time : -1;
+	return stamp;
+}
+
+bool browser_manifest_source_stamp_is_complete(const BrowserManifestSourceStamp &stamp) {
+	return stamp.size >= 0 && stamp.modified_time > 0 && stamp.checked_at > 0;
+}
+
+bool browser_manifest_source_stamp_is_settled(const BrowserManifestSourceStamp &stamp) {
+	return browser_manifest_source_stamp_is_complete(stamp) &&
+			stamp.checked_at - stamp.modified_time >= BROWSER_MANIFEST_CACHE_SETTLED_SECONDS;
+}
+
+// A whole, non-negative number stored in the cache entry, or -1 when the field
+// is missing or anything else. JSON reads numbers back as floats.
+int64_t browser_manifest_cache_whole_number(const Dictionary &cache, const char *key) {
+	const Variant value = cache.get(key, Variant());
+	if (value.get_type() == Variant::INT) {
+		const int64_t number = int64_t(value);
+		return number >= 0 ? number : -1;
+	}
+	if (value.get_type() != Variant::FLOAT) {
+		return -1;
+	}
+	const double number = double(value);
+	if (!(number >= 0.0) || number > 9007199254740992.0 || number != std::floor(number)) {
+		return -1;
+	}
+	return int64_t(number);
+}
+
+// The cache entry for source_path when it is well formed, records a source
+// hash and its payload still matches its own integrity hash; empty otherwise.
+// Whether that hash describes the file on disk is decided by the callers.
+Dictionary read_browser_manifest_cache_entry(const String &source_path) {
 	const String cache_path = browser_manifest_cache_path(source_path);
 	if (!FileAccess::file_exists(cache_path)) {
 		return Dictionary();
@@ -1827,14 +1885,14 @@ Dictionary read_browser_manifest_cache(const String &source_path, const String &
 	if (String(cache.get("schema_id", "")) != BROWSER_MANIFEST_CACHE_SCHEMA_ID ||
 			int32_t(cache.get("schema_version", 0)) != 1 ||
 			String(cache.get("source_path", "")) != source_path ||
-			String(cache.get("source_sha256", "")) != source_sha256) {
+			String(cache.get("source_sha256", "")).is_empty()) {
 		return Dictionary();
 	}
 	Variant payload_value = cache.get("inspection_payload", Variant());
 	if (payload_value.get_type() != Variant::DICTIONARY) {
 		return Dictionary();
 	}
-	Dictionary payload = Dictionary(payload_value).duplicate(true);
+	Dictionary payload = payload_value;
 	if (!browser_manifest_cache_payload_is_valid(payload)) {
 		return Dictionary();
 	}
@@ -1842,6 +1900,37 @@ Dictionary read_browser_manifest_cache(const String &source_path, const String &
 	if (String(cache.get("inspection_payload_hash", "")) != expected_hash) {
 		return Dictionary();
 	}
+	return cache;
+}
+
+// The entry's recorded hash when the package still has the size and
+// modification time the entry recorded, and the entry checked it at least
+// BROWSER_MANIFEST_CACHE_SETTLED_SECONDS after it was last modified. Empty
+// otherwise, and then the caller hashes the package in full.
+String browser_manifest_cache_stamped_sha256(const Dictionary &cache, const BrowserManifestSourceStamp &source_stamp) {
+	if (cache.is_empty() || !browser_manifest_source_stamp_is_complete(source_stamp)) {
+		return String();
+	}
+	BrowserManifestSourceStamp cached_stamp;
+	cached_stamp.size = browser_manifest_cache_whole_number(cache, "source_size");
+	cached_stamp.modified_time = browser_manifest_cache_whole_number(cache, "source_modified_time");
+	cached_stamp.checked_at = browser_manifest_cache_whole_number(cache, "source_checked_at");
+	if (cached_stamp.size != source_stamp.size ||
+			cached_stamp.modified_time != source_stamp.modified_time ||
+			!browser_manifest_source_stamp_is_settled(cached_stamp)) {
+		return String();
+	}
+	return String(cache.get("source_sha256", ""));
+}
+
+// A detached copy of the entry's payload when the entry was recorded for
+// source_sha256; empty otherwise.
+Dictionary read_browser_manifest_cache_payload(const Dictionary &cache, const String &source_sha256) {
+	if (cache.is_empty() || source_sha256.is_empty() ||
+			String(cache.get("source_sha256", "")) != source_sha256) {
+		return Dictionary();
+	}
+	Dictionary payload = Dictionary(cache.get("inspection_payload", Dictionary())).duplicate(true);
 	Dictionary cached_manifest = payload.get("browser_manifest", Dictionary());
 	if (String(cached_manifest.get("document_kind", "")) == "map") {
 		Dictionary cached_metadata = cached_manifest.get("metadata", Dictionary());
@@ -1882,7 +1971,7 @@ Error replace_file_with_text(const String &path, const String &text) {
 	return OK;
 }
 
-bool write_browser_manifest_cache(const String &source_path, const String &source_sha256, const Dictionary &payload) {
+bool write_browser_manifest_cache(const String &source_path, const String &source_sha256, const BrowserManifestSourceStamp &source_stamp, const Dictionary &payload) {
 	if (source_sha256.is_empty() || !browser_manifest_cache_payload_is_valid(payload)) {
 		return false;
 	}
@@ -1922,6 +2011,11 @@ bool write_browser_manifest_cache(const String &source_path, const String &sourc
 	cache["schema_version"] = 1;
 	cache["source_path"] = source_path;
 	cache["source_sha256"] = source_sha256;
+	if (browser_manifest_source_stamp_is_complete(source_stamp)) {
+		cache["source_size"] = source_stamp.size;
+		cache["source_modified_time"] = source_stamp.modified_time;
+		cache["source_checked_at"] = source_stamp.checked_at;
+	}
 	cache["inspection_payload"] = stable_payload.duplicate(true);
 	cache["inspection_payload_hash"] = "fnv1a32:" + hash32_hex(canonical_variant(stable_payload));
 	return replace_file_with_text(cache_path, JSON::stringify(cache, "\t", true, false)) == OK;
@@ -1951,8 +2045,9 @@ Dictionary write_package_dictionary(const String &operation, const String &path,
 		DirAccess::remove_absolute(temporary_path);
 		return package_failure(operation, path, "replace_failed", "Written package could not replace the previous file.");
 	}
+	const BrowserManifestSourceStamp source_stamp = browser_manifest_source_stamp(path);
 	const String source_sha256 = FileAccess::get_sha256(path);
-	const bool cache_written = write_browser_manifest_cache(path, source_sha256, package_inspection_payload(package));
+	const bool cache_written = write_browser_manifest_cache(path, source_sha256, source_stamp, package_inspection_payload(package));
 	Dictionary payload;
 	if (return_package) {
 		payload["package"] = package.duplicate(true);
@@ -1962,6 +2057,7 @@ Dictionary write_package_dictionary(const String &operation, const String &path,
 		Dictionary profile;
 		profile["schema_id"] = BROWSER_MANIFEST_CACHE_SCHEMA_ID;
 		profile["status"] = cache_written ? "prepopulated" : "not_cacheable";
+		profile["source_check"] = "sha256";
 		profile["source_sha256"] = source_sha256;
 		profile["cache_path"] = browser_manifest_cache_path(path);
 		payload["browser_manifest_cache_profile"] = profile;
@@ -2937,21 +3033,44 @@ Dictionary MapPackageService::compute_document_hash(Variant document, Dictionary
 Dictionary MapPackageService::inspect_package(String path, Dictionary options) const {
 	const bool bypass_cache = String(options.get("browser_manifest_cache_mode", "default")) == "bypass_read";
 	const bool include_cache_profile = bool(options.get("include_browser_manifest_cache_profile", false));
-	const String source_sha256 = FileAccess::file_exists(path) ? FileAccess::get_sha256(path) : String();
 	const String cache_path = browser_manifest_cache_path(path);
+	const auto cache_hit = [&](const Dictionary &cached_payload, const String &cached_sha256, const char *source_check) {
+		Dictionary cached_result = package_success("inspect_package", path, cached_payload);
+		if (include_cache_profile) {
+			Dictionary profile;
+			profile["schema_id"] = BROWSER_MANIFEST_CACHE_SCHEMA_ID;
+			profile["status"] = "hit";
+			profile["source_check"] = source_check;
+			profile["source_sha256"] = cached_sha256;
+			profile["cache_path"] = cache_path;
+			cached_result["browser_manifest_cache_profile"] = profile;
+		}
+		return cached_result;
+	};
+	// Read before hashing, so an edit made while hashing changes the stamp the
+	// next listing compares against.
+	const BrowserManifestSourceStamp source_stamp = browser_manifest_source_stamp(path);
+	Dictionary cache;
 	if (!bypass_cache) {
-		Dictionary cached_payload = read_browser_manifest_cache(path, source_sha256);
+		cache = read_browser_manifest_cache_entry(path);
+		// Unchanged size and modification time, recorded settled, stand in for
+		// the content hash. Anything else hashes the package in full below.
+		const String stamped_sha256 = browser_manifest_cache_stamped_sha256(cache, source_stamp);
+		Dictionary stamped_payload = read_browser_manifest_cache_payload(cache, stamped_sha256);
+		if (!stamped_payload.is_empty()) {
+			return cache_hit(stamped_payload, stamped_sha256, "size_and_modified_time");
+		}
+	}
+	const String source_sha256 = FileAccess::file_exists(path) ? FileAccess::get_sha256(path) : String();
+	if (!bypass_cache) {
+		Dictionary cached_payload = read_browser_manifest_cache_payload(cache, source_sha256);
 		if (!cached_payload.is_empty()) {
-			Dictionary cached_result = package_success("inspect_package", path, cached_payload);
-			if (include_cache_profile) {
-				Dictionary profile;
-				profile["schema_id"] = BROWSER_MANIFEST_CACHE_SCHEMA_ID;
-				profile["status"] = "hit";
-				profile["source_sha256"] = source_sha256;
-				profile["cache_path"] = cache_path;
-				cached_result["browser_manifest_cache_profile"] = profile;
+			// The content still matches. Record the current stamp once it is
+			// settled, so later listings can skip the hash.
+			if (browser_manifest_source_stamp_is_settled(source_stamp)) {
+				write_browser_manifest_cache(path, source_sha256, source_stamp, cached_payload);
 			}
-			return cached_result;
+			return cache_hit(cached_payload, source_sha256, "sha256");
 		}
 	}
 	Dictionary read_result = read_package_dictionary("inspect_package", path);
@@ -2960,12 +3079,13 @@ Dictionary MapPackageService::inspect_package(String path, Dictionary options) c
 	}
 	Dictionary package = read_result.get("package", Dictionary());
 	Dictionary payload = package_inspection_payload(package);
-	const bool cache_written = write_browser_manifest_cache(path, source_sha256, payload);
+	const bool cache_written = write_browser_manifest_cache(path, source_sha256, source_stamp, payload);
 	Dictionary result = package_success("inspect_package", path, payload);
 	if (include_cache_profile) {
 		Dictionary profile;
 		profile["schema_id"] = BROWSER_MANIFEST_CACHE_SCHEMA_ID;
 		profile["status"] = cache_written ? (bypass_cache ? "bypass_written" : "miss_written") : "not_cacheable";
+		profile["source_check"] = "sha256";
 		profile["source_sha256"] = source_sha256;
 		profile["cache_path"] = cache_path;
 		result["browser_manifest_cache_profile"] = profile;

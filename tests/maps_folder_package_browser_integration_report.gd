@@ -55,6 +55,11 @@ func _run() -> void:
 		_cleanup_many([[map_path, scenario_path]])
 		_fail("Native browser manifest cache lifecycle changed package authority: %s" % JSON.stringify(cache_lifecycle))
 		return
+	var stamp_lifecycle: Dictionary = _validate_native_browser_manifest_cache_stamp(package_service, scenario_path)
+	if not bool(stamp_lifecycle.get("ok", false)):
+		_cleanup_many([[map_path, scenario_path]])
+		_fail("Native browser manifest cache trusted a size and modification-time stamp it must not: %s" % JSON.stringify(stamp_lifecycle))
+		return
 	var compact_artifacts := _generate_compact_package_artifact()
 	var compact_map_path := String(compact_artifacts.get("map_path", ""))
 	var compact_scenario_path := String(compact_artifacts.get("scenario_path", ""))
@@ -263,6 +268,9 @@ func _run() -> void:
 		"native_browser_manifest_cache_save_prepopulated": bool(cache_lifecycle.get("save_prepopulated", false)),
 		"native_browser_manifest_cache_changed_content_rebuilt": bool(cache_lifecycle.get("changed_content_rebuilt", false)),
 		"native_browser_manifest_cache_corruption_rebuilt": bool(cache_lifecycle.get("corruption_rebuilt", false)),
+		"native_browser_manifest_cache_racy_same_size_rewrite_rebuilt": bool(stamp_lifecycle.get("racy_same_size_rewrite_rebuilt", false)),
+		"native_browser_manifest_cache_settled_stamp_hit": bool(stamp_lifecycle.get("settled_stamp_hit", false)),
+		"native_browser_manifest_cache_settled_same_size_rewrite_rebuilt": bool(stamp_lifecycle.get("settled_same_size_rewrite_rebuilt", false)),
 		"authored_json_scenarios_used": false,
 		"generated_draft_registry_used": false,
 	})])
@@ -355,6 +363,116 @@ func _validate_native_browser_manifest_cache(package_service: Variant, map_path:
 		"changed_content_rebuilt": changed_content_rebuilt,
 		"restored_exact": restored_exact,
 	}
+
+# The cache may skip hashing a package whose size and modification time are
+# unchanged, but only when its entry was checked at least two seconds after the
+# package was last written. A same-size rewrite within the second of the hashed
+# write keeps both, so it must still be found by hashing.
+func _validate_native_browser_manifest_cache_stamp(package_service: Variant, scenario_path: String) -> Dictionary:
+	var original_scenario_text := FileAccess.get_file_as_string(scenario_path)
+	var probe_scenario = JSON.parse_string(original_scenario_text)
+	if not (probe_scenario is Dictionary):
+		return {"ok": false, "error": "scenario_source_parse_failed"}
+	var probe_texts := {}
+	for display_name in ["Cache Stamp Probe A", "Cache Stamp Probe B"]:
+		var probe: Dictionary = probe_scenario.duplicate(true)
+		probe["document"]["selection"]["display_name"] = display_name
+		probe_texts[display_name] = JSON.stringify(probe, "\t")
+	if probe_texts["Cache Stamp Probe A"].to_utf8_buffer().size() != probe_texts["Cache Stamp Probe B"].to_utf8_buffer().size():
+		return {"ok": false, "error": "probe_sizes_differ"}
+	var profile_options := {"include_browser_manifest_cache_profile": true}
+
+	# Write A, inspect it, then rewrite it as B with the same size inside the
+	# same second. Start each attempt on a fresh second so all of it fits.
+	var racy := {}
+	for attempt in 3:
+		_wait_until_unix_second(int(Time.get_unix_time_from_system()) + 1)
+		if not _write_fixture_text(scenario_path, probe_texts["Cache Stamp Probe A"]):
+			return {"ok": false, "error": "racy_probe_a_write_failed"}
+		var probe_a_profiled: Dictionary = package_service.inspect_package(scenario_path, profile_options)
+		var probe_a_size := FileAccess.get_size(scenario_path)
+		var probe_a_modified := FileAccess.get_modified_time(scenario_path)
+		if not _write_fixture_text(scenario_path, probe_texts["Cache Stamp Probe B"]):
+			return {"ok": false, "error": "racy_probe_b_write_failed"}
+		var probe_b_size := FileAccess.get_size(scenario_path)
+		var probe_b_modified := FileAccess.get_modified_time(scenario_path)
+		var probe_b_profiled: Dictionary = package_service.inspect_package(scenario_path, profile_options)
+		var probe_a_profile: Dictionary = probe_a_profiled.get("browser_manifest_cache_profile", {})
+		var probe_b_profile: Dictionary = probe_b_profiled.get("browser_manifest_cache_profile", {})
+		racy = {
+			"attempt": attempt,
+			"same_size_and_modified_time": probe_a_size == probe_b_size and probe_a_modified == probe_b_modified,
+			"modified_time": probe_b_modified,
+			"probe_a_profile": probe_a_profile,
+			"probe_b_profile": probe_b_profile,
+			"rebuilt": (
+				String(probe_a_profile.get("status", "")) == "miss_written"
+				and String(probe_b_profile.get("status", "")) == "miss_written"
+				and String(probe_b_profile.get("source_check", "")) == "sha256"
+				and String(probe_b_profile.get("source_sha256", "")) == FileAccess.get_sha256(scenario_path)
+				and String(probe_b_profile.get("source_sha256", "")) != String(probe_a_profile.get("source_sha256", ""))
+				and String(probe_b_profiled.get("browser_manifest", {}).get("selection", {}).get("display_name", "")) == "Cache Stamp Probe B"
+			),
+		}
+		if bool(racy["same_size_and_modified_time"]):
+			break
+	var racy_same_size_rewrite_rebuilt: bool = bool(racy.get("same_size_and_modified_time", false)) and bool(racy.get("rebuilt", false))
+	if not racy_same_size_rewrite_rebuilt:
+		_write_fixture_text(scenario_path, original_scenario_text)
+		return {"ok": false, "error": "racy_same_size_rewrite_trusted_or_not_exercised", "racy": racy}
+
+	# Once B has settled, one listing hashes it and records a settled stamp;
+	# the next one trusts that stamp and returns the same inspection.
+	_wait_until_unix_second(int(racy["modified_time"]) + 2)
+	var settled_hashed: Dictionary = package_service.inspect_package(scenario_path, profile_options)
+	var settled_stamped: Dictionary = package_service.inspect_package(scenario_path, profile_options)
+	var settled_bypass: Dictionary = package_service.inspect_package(scenario_path, {"browser_manifest_cache_mode": "bypass_read"})
+	var settled_hashed_profile: Dictionary = settled_hashed.get("browser_manifest_cache_profile", {})
+	var settled_stamped_profile: Dictionary = settled_stamped.get("browser_manifest_cache_profile", {})
+	var settled_stamp_hit: bool = (
+		String(settled_hashed_profile.get("status", "")) == "hit"
+		and String(settled_hashed_profile.get("source_check", "")) == "sha256"
+		and String(settled_stamped_profile.get("status", "")) == "hit"
+		and String(settled_stamped_profile.get("source_check", "")) == "size_and_modified_time"
+		and String(settled_stamped_profile.get("source_sha256", "")) == String(settled_hashed_profile.get("source_sha256", ""))
+		and _inspection_without_cache_profile(settled_stamped) == settled_bypass
+	)
+
+	# A same-size rewrite in a later second changes the modification time, so
+	# the settled stamp no longer matches and the package is hashed again.
+	if not _write_fixture_text(scenario_path, probe_texts["Cache Stamp Probe A"]):
+		return {"ok": false, "error": "settled_probe_a_write_failed"}
+	var rewritten_profiled: Dictionary = package_service.inspect_package(scenario_path, profile_options)
+	var rewritten_profile: Dictionary = rewritten_profiled.get("browser_manifest_cache_profile", {})
+	var settled_same_size_rewrite_rebuilt: bool = (
+		String(rewritten_profile.get("status", "")) == "miss_written"
+		and String(rewritten_profile.get("source_check", "")) == "sha256"
+		and String(rewritten_profile.get("source_sha256", "")) == FileAccess.get_sha256(scenario_path)
+		and String(rewritten_profiled.get("browser_manifest", {}).get("selection", {}).get("display_name", "")) == "Cache Stamp Probe A"
+	)
+
+	if not _write_fixture_text(scenario_path, original_scenario_text):
+		return {"ok": false, "error": "scenario_restore_write_failed"}
+	var restored: Dictionary = package_service.inspect_package(scenario_path, profile_options)
+	var restored_exact: bool = (
+		String(restored.get("browser_manifest_cache_profile", {}).get("status", "")) == "miss_written"
+		and _inspection_without_cache_profile(restored) == package_service.inspect_package(scenario_path, {"browser_manifest_cache_mode": "bypass_read"})
+	)
+	return {
+		"ok": racy_same_size_rewrite_rebuilt and settled_stamp_hit and settled_same_size_rewrite_rebuilt and restored_exact,
+		"racy_same_size_rewrite_rebuilt": racy_same_size_rewrite_rebuilt,
+		"racy_attempts": int(racy.get("attempt", 0)) + 1,
+		"settled_stamp_hit": settled_stamp_hit,
+		"settled_same_size_rewrite_rebuilt": settled_same_size_rewrite_rebuilt,
+		"restored_exact": restored_exact,
+		"settled_hashed_profile": settled_hashed_profile,
+		"settled_stamped_profile": settled_stamped_profile,
+		"rewritten_profile": rewritten_profile,
+	}
+
+func _wait_until_unix_second(target_second: int) -> void:
+	while int(Time.get_unix_time_from_system()) < target_second:
+		OS.delay_msec(10)
 
 func _inspection_without_cache_profile(value: Dictionary) -> Dictionary:
 	var result: Dictionary = value.duplicate(true)
