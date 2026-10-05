@@ -693,9 +693,9 @@ func _create_main_building_hotspot() -> void:
 	_main_building_hotspot.focus_mode = Control.FOCUS_ALL
 	_main_building_hotspot.mouse_filter = Control.MOUSE_FILTER_STOP
 	_main_building_hotspot.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	_main_building_hotspot.tooltip_text = "Open the construction ledger for this town."
+	_main_building_hotspot.tooltip_text = "Open construction for this town."
 	_main_building_hotspot.accessibility_name = "Main town building"
-	_main_building_hotspot.accessibility_description = "Open the same construction ledger as the Build command."
+	_main_building_hotspot.accessibility_description = "Open the same construction screen as the Build command."
 	_main_building_hotspot.z_index = 20
 	var normal_style := StyleBoxEmpty.new()
 	_main_building_hotspot.add_theme_stylebox_override("normal", normal_style)

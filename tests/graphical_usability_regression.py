@@ -13,6 +13,7 @@ COMPILED_OWNERS = (
     'scenes/shared/ArmySlotButton.gdc', 'scenes/shared/ScoutInspectionDialog.gdc',
     'scenes/overworld/OverworldMapView.gdc', 'scenes/overworld/OverworldShell.gdc',
     'scenes/town/TownStageView.gdc', 'scenes/town/TownShell.gdc',
+    'scenes/town/TownConstructionScreen.gdc', 'scripts/core/TownConstructionBoard.gdc',
     'scripts/ui/OverworldInspection.gdc', 'scripts/ui/FrontierVisualKit.gdc')
 SCRIPT = runner.SCRIPT.split('func _ready()')[0] + r'''
 const Inspection = preload("res://scripts/ui/OverworldInspection.gd")
@@ -36,7 +37,7 @@ func click(control: Control) -> void:
 	if DisplayServer.get_name()=="headless":
 		if control is Button: control.pressed.emit()
 		return
-	var point := control.get_global_rect().get_center()
+	var point := control.get_global_transform()*(control.size*0.5)
 	for pressed in [true,false]:
 		var event := InputEventMouseButton.new()
 		event.position=get_viewport().get_final_transform()*point
@@ -293,37 +294,40 @@ func towns() -> void:
 	shell._on_open_build_catalog_pressed()
 	await settle()
 	var before:Dictionary=session.to_dict().duplicate(true)
-	var cards:Array=shell._build_actions.get_children()
-	for card in cards:
-		var button=card.get_child(0).get_child(0)
-		var id:String=String(button.get_meta("catalog_entry_id","")).trim_prefix("build:")
-		if id in TownRules.get_active_town(session).built_buildings: continue
-		button.focus_entered.emit()
-		check(shell._town_stage_view._construction_preview_id==id,"catalog focus did not preview actual building")
-		break
-	check(Rect2(Vector2.ZERO,Vector2(requested)).encloses(shell._town_catalog_panel.get_global_rect()),"construction ledger clips")
-	await capture("town-construction-ledger")
-	await click(shell._construction_peek_button)
+	var screen=shell._construction_screen
+	check(screen.visible and screen.board().slot_count==23,"construction board did not open with its fixed slots")
+	check(Rect2(Vector2.ZERO,Vector2(requested)).encloses(screen.get_global_rect()),"construction board clips")
+	await capture("town-construction-board")
+	var slot_id:=""
+	for row in screen.board().rows:
+		for slot in row.slots:
+			if slot_id=="" and slot.status=="ready" and slot.kind!="choice": slot_id=slot.id
+	check(slot_id!="","no ready construction slot to preview")
+	screen.select_slot(slot_id)
 	await settle()
-	check(shell._construction_scene_only and not shell._town_catalog_scroll.visible,"scenic placement view did not fold ledger")
-	check(Rect2(Vector2.ZERO,Vector2(requested)).encloses(shell._town_catalog_panel.get_global_rect()),"folded construction controls clip")
-	await capture("town-placement-preview")
-	check(session.to_dict()==before,"catalog preview mutates session")
 	var selected_id:String=shell._selected_build_action_id.trim_prefix("build:")
+	await click(screen.find_child("ConstructionViewInTown",true,false))
+	await settle()
+	check(screen.is_peeking() and shell._town_stage_view._construction_preview_id==selected_id,"scenic placement view did not show the selected building")
+	check(Rect2(Vector2.ZERO,Vector2(requested)).encloses(screen._peek_bar.get_global_rect()),"folded construction controls clip")
+	await capture("town-placement-preview")
+	check(session.to_dict()==before,"construction preview mutates session")
 	var preview:Dictionary=shell._town_stage_view.construction_preview_snapshot()
 	var direct=Store.new_session_data()
 	direct.from_dict(session.to_dict().duplicate(true))
 	var result:Dictionary=TownRules.build_active_town(direct,selected_id)
 	check(result.ok,"selected real construction is not affordable")
-	await click(shell._confirm_build_button)
+	await click(screen._peek_back_button)
 	await settle()
-	check(selected_id in TownRules.get_active_town(session).built_buildings,"scenic preview Build did not commit selected building")
-	check(TownRules.get_active_town(session).built_buildings==TownRules.get_active_town(direct).built_buildings and session.overworld.resources==direct.overworld.resources,"preview build differs from authoritative cost/progression")
+	check(not screen.is_peeking() and screen.visible,"back from scenic preview did not restore the board")
+	await click(screen.find_child("ConstructionBuild",true,false))
+	await settle()
+	check(selected_id in TownRules.get_active_town(session).built_buildings,"construction Build did not commit selected building")
+	check(TownRules.get_active_town(session).built_buildings==TownRules.get_active_town(direct).built_buildings and session.overworld.resources==direct.overworld.resources,"board build differs from authoritative cost/progression")
 	var built:Array=shell._town_stage_view._town_building_scene_entries(shell._town_stage_view._town_scene_rect()).filter(func(entry):return entry.visible_building_id==selected_id)
 	check(built.size()==1 and built[0].destination_rect==preview.get("destination_rect",Rect2()),"actual built art differs from preview position")
 	await capture("town-constructed")
-	shell._close_town_catalog()
-	check(shell._town_stage_view._construction_preview_id.is_empty(),"catalog close retains ghost")
+	check(not screen.visible and shell._town_stage_view._construction_preview_id.is_empty(),"construction close retains ghost")
 	shell.queue_free()
 	await settle()
 func run() -> void:

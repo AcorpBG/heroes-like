@@ -267,6 +267,7 @@ TERRAIN_GRAMMAR_PATH = CONTENT_DIR / "terrain_grammar.json"
 TERRAIN_LAYERS_PATH = CONTENT_DIR / "terrain_layers.json"
 TOWN_SCENE_PATH = ROOT / "scenes" / "town" / "TownShell.tscn"
 TOWN_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownShell.gd"
+TOWN_CONSTRUCTION_SCREEN_PATH = ROOT / "scenes" / "town" / "TownConstructionScreen.gd"
 TOWN_STAGE_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownStageView.gd"
 TOWN_VFX_MANIFEST_PATH = CONTENT_DIR / "town_vfx_manifest.json"
 TOWN_DEVELOPMENT_SCENE_MANIFEST_PATH = CONTENT_DIR / "town_development_scene_manifest.json"
@@ -35813,8 +35814,9 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
     ):
         ensure(token in script_text, errors, f"TownShell owner-directed layout contract is missing: {token}")
     open_catalog = gd_function_block(script_text, "_open_town_catalog")
-    for mode, title in (("build", "Construction Ledger"), ("muster", "Muster Hall"), ("spells", "Spellbook · Town Archives"), ("trade", "Town Market"), ("log", "Town Log & Logistics")):
+    for mode, title in (("muster", "Muster Hall"), ("spells", "Spellbook · Town Archives"), ("trade", "Town Market"), ("log", "Town Log & Logistics")):
         ensure(f'"{mode}"' in open_catalog and f'"{title}"' in open_catalog, errors, f"Town direct {mode} dialog must retain its authored title and route")
+    ensure('if mode == "build":' in open_catalog and "_open_construction_screen()" in open_catalog, errors, "Town direct build route must open the full-screen construction board")
 
     ensure(stage_text.count("const MAIN_BUILDING_HOTSPOTS := {") == 1, errors, "TownStageView must own one explicit normalized main-building hotspot map")
     for faction_id in ("faction_embercourt", "faction_mireclaw", "faction_sunvault", "faction_thornwake", "faction_brasshollow", "faction_veilmourn"):
@@ -47657,15 +47659,12 @@ def validate_town_building_category_icon_runtime(errors: list[str]) -> None:
         ensure(token in resolver_block, errors, f"Building category icon resolver is missing: {token}")
     ensure("load(" not in resolver_block and "preload(" not in resolver_block, errors, "TownRules must not load category presentation textures")
 
-    shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
-    rebuild = function_block(shell_text, "_rebuild_build_actions")
-    helper = function_block(shell_text, "_apply_build_action_icon")
-    order = [rebuild.find("_style_action_button"), rebuild.find("_apply_build_action_icon(button, action)"), rebuild.find("button.pressed.connect"), rebuild.find("add_child(button)")]
-    ensure(all(index >= 0 for index in order) and order == sorted(order), errors, "Town Build category icon must apply after styling and before unchanged binding/order")
-    for token in ("TownRules.building_id_for_action", "TownRules.building_icon_path", "load(icon_path) as Texture2D", "button.icon = texture", "button.expand_icon = true", 'button.add_theme_constant_override("icon_max_width", 46)'):
-        ensure(token in helper, errors, f"Town Build category icon helper is missing: {token}")
-    for forbidden in ("button.text =", "button.tooltip_text =", "button.disabled =", "await ", "create_timer", "create_tween"):
-        ensure(forbidden not in helper, errors, f"Town Build category icon helper must not alter action/timing authority: {forbidden}")
+    screen_text = TOWN_CONSTRUCTION_SCREEN_PATH.read_text(encoding="utf-8")
+    helper = function_block(screen_text, "_art_rect")
+    for token in ("TownRulesScript.building_icon_path(building_id, _faction_id)", "art.texture = _texture(", "TextureRect.STRETCH_KEEP_ASPECT_CENTERED", "Control.MOUSE_FILTER_IGNORE"):
+        ensure(token in helper, errors, f"Town construction tile art helper is missing: {token}")
+    for forbidden in ("build_requested", "await ", "create_timer", "create_tween"):
+        ensure(forbidden not in helper, errors, f"Town construction tile art helper must not alter action/timing authority: {forbidden}")
 
     report_text = TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     scene_text = TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCENE_PATH.read_text(encoding="utf-8")
@@ -47673,8 +47672,8 @@ def validate_town_building_category_icon_runtime(errors: list[str]) -> None:
     for token in (
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
         "building_count == 160", "category_counts.size() == 5", "asset_paths.size() == 5",
-        'shell.get_node_or_null("%BuildActions")', 'shell.validation_select_build_plan(action_id)',
-        'shell._apply_build_action_icon(invalid_button, {"id": "build:missing_building"})',
+        'var construction = shell.get("_construction_screen")', 'shell.validation_select_build_plan(action_id)',
+        'construction.call("_art_rect", "missing_building", false)',
         "confirm.emit_signal(\"pressed\")", "TownRules.build_active_town(control, building_id)",
         "TownRules.town_action_consequence_signature(control)", "TownRules.build_town_action_recap(control, \"build\", action_id, enabled_action, control_result, control_before)",
         'control.flags["last_town_action_recap"] = control_recap.duplicate(true)',
@@ -47953,11 +47952,11 @@ def validate_town_embercourt_production_dwelling_icons(errors: list[str]) -> Non
         ensure(token in resolver, errors, f"Building-specific resolver is missing: {token}")
     ensure("load(" not in resolver and "preload(" not in resolver, errors, "TownRules building resolver must not load textures")
     shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
-    ensure("var icon_path := TownRules.building_icon_path(building_id, _active_town_faction_id())" in shell_text, errors, "Town Build must use the building-specific resolver")
+    ensure("TownRulesScript.building_icon_path(building_id, _faction_id)" in TOWN_CONSTRUCTION_SCREEN_PATH.read_text(encoding="utf-8"), errors, "Town construction tiles must use the building-specific resolver")
     report_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     scene_text = TOWN_EMBERCOURT_DWELLING_ICON_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure_scene_nodes(scene_text, errors, "town_embercourt_production_dwelling_icon_report.tscn", [("TownEmbercourtProductionDwellingIconReport", "Node")])
-    for token in ("target_count == _target_building_ids().size()", "specific_count == 160", "fallback_count == 0", "source_hashes.size() == _target_building_ids().size()", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", "all_production_specific = all_production_specific and not art.is_empty()", 'TownRules.building_icon_path(building_id) != TownRules.building_category_icon_path(building_id)', "FileAccess.get_sha256(icon_path)", "shell._apply_build_action_icon", 'shell.get_node_or_null("%BuildActions")', "session.to_dict() == before", 'return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"'):
+    for token in ("target_count == _target_building_ids().size()", "specific_count == 160", "fallback_count == 0", "source_hashes.size() == _target_building_ids().size()", "TownRules.building_icon_path(building_id) == TownRules.building_category_icon_path(building_id)", "all_production_specific = all_production_specific and not art.is_empty()", 'TownRules.building_icon_path(building_id) != TownRules.building_category_icon_path(building_id)', "FileAccess.get_sha256(icon_path)", 'construction.call("_art_rect", building_id, false)', 'var construction = shell.get("_construction_screen")', "session.to_dict() == before", 'return "TOWN_EMBERCOURT_PRODUCTION_DWELLING_ICON_REPORT"'):
         ensure(token in report_text, errors, f"Focused building icon report is missing: {token}")
     ensure('var fallback_id := "building_embercourt_granary_lock_exchange"' not in report_text, errors, "Focused building icon report must not treat Embercourt's now-specific Granary Lock Exchange as a category fallback")
     ensure('var fallback_id := "building_brasshollow_clause_court"' not in report_text, errors, "Focused building icon report must not treat Brasshollow's now-specific Clause Court as a category fallback")

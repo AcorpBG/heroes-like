@@ -186,12 +186,13 @@ func _expect_town_build_plan(shell: Node, session, initial_built_buildings: Arra
 	var selected_id := String(snapshot.get("selected_build_action_id", ""))
 	if not selected_id.begins_with("build:"):
 		return _fail("town build planner has no selected construction at %s" % viewport_size)
-	if String(snapshot.get("build_plan_visible_text", "")).find("Cost ") < 0:
-		return _fail("town build planner omits selected cost at %s: %s" % [viewport_size, snapshot.get("build_plan_visible_text", "")])
-	if String(snapshot.get("build_plan_tooltip_text", "")).find("Selection does not spend resources") < 0:
-		return _fail("town build planner omits its non-mutating selection guarantee at %s" % viewport_size)
-	if bool(snapshot.get("confirm_build_button_disabled", true)):
-		return _fail("town build planner has no ready confirm command at %s: %s" % [viewport_size, snapshot.get("confirm_build_button_text", "")])
+	var construction: Dictionary = snapshot.get("construction_screen", {})
+	if not bool(construction.get("open", false)) or int(construction.get("slot_count", 0)) != 23:
+		return _fail("town construction board did not open with its fixed slots at %s: %s" % [viewport_size, construction.get("slot_count", 0)])
+	if String(construction.get("selected_building_id", "")) != selected_id.trim_prefix("build:"):
+		return _fail("town construction board does not show the selected construction at %s: %s" % [viewport_size, construction.get("selected_building_id", "")])
+	if bool(construction.get("primary_disabled", true)):
+		return _fail("town construction board has no ready build command at %s: %s" % [viewport_size, construction.get("primary_text", "")])
 	if session.overworld.get("resources", {}) != initial_resources:
 		return _fail("town build planner spent resources during initial selection at %s" % viewport_size)
 	if _first_player_town(session).get("built_buildings", []) != initial_built_buildings:

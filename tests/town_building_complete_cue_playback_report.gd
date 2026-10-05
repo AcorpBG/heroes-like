@@ -65,7 +65,13 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	var live_town: Dictionary = TownRules.get_active_town(live_session)
 	var stage = shell.get_node_or_null("%TownStage")
 	var blocker := shell.get_node_or_null("%TownActionInputBlocker") as Control
-	var confirm := shell.get_node_or_null("%ConfirmBuild") as Button
+	# Builds are confirmed from the full-screen construction board.
+	shell.call("validation_open_town_catalog", "build")
+	await get_tree().process_frame
+	var construction = shell.get("_construction_screen")
+	var confirm: Button = null
+	if construction != null:
+		confirm = construction.find_child("ConstructionBuild", true, false) as Button
 	var menu := shell.get_node_or_null("%Menu") as Button
 	if stage == null or blocker == null or confirm == null or menu == null:
 		return await _finish_case(shell, {"ok": false, "failure": "live_surface_missing"})

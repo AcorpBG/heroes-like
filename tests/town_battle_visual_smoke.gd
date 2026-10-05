@@ -143,9 +143,9 @@ func _run_town_smoke() -> bool:
 		return false
 	shell.call("validation_open_town_catalog", "build")
 	await get_tree().process_frame
-	var build_actions = shell.get_node_or_null("%BuildActions")
-	if build_actions == null or build_actions.get_child_count() <= 0:
-		push_error("Town smoke: construction popup catalog did not populate.")
+	var construction = shell.get("_construction_screen")
+	if construction == null or not bool(construction.visible) or int(construction.board().get("slot_count", 0)) != 23:
+		push_error("Town smoke: construction board did not populate.")
 		get_tree().quit(1)
 		return false
 	shell.call("validation_close_town_catalog")
@@ -1857,7 +1857,7 @@ func _assert_town_management_card_contract(shell: Node, session) -> bool:
 			window.size = original_window_size
 			shell_control.size = original_shell_size
 			return false
-	var expected_titles := {"build": "Construction Ledger", "muster": "Muster Hall", "spells": "Spell Study", "trade": "Town Market", "log": "Town Log & Logistics"}
+	var expected_titles := {"build": "Construction", "muster": "Muster Hall", "spells": "Spell Study", "trade": "Town Market", "log": "Town Log & Logistics"}
 	for mode_value in expected_titles:
 		var mode := String(mode_value)
 		var result: Dictionary = shell.call("validation_activate_direct_action", mode)
@@ -1870,7 +1870,7 @@ func _assert_town_management_card_contract(shell: Node, session) -> bool:
 		await get_tree().process_frame
 	var hotspot_result: Dictionary = shell.call("validation_activate_main_building_hotspot")
 	if not bool(hotspot_result.get("same_authoritative_build_route", false)):
-		push_error("Town smoke: painted main building did not route through the Build construction ledger: %s." % hotspot_result)
+		push_error("Town smoke: painted main building did not route through the Build construction board: %s." % hotspot_result)
 		return false
 	shell.call("validation_close_town_catalog")
 	window.size = original_window_size
@@ -1938,7 +1938,7 @@ func _assert_town_action_button_command_cues(shell: Node) -> bool:
 			if tooltip.contains("Command cue:") and tooltip.contains("Next:"):
 				lanes_with_cues.append(String(lane))
 	var all_text := "\n".join(all_text_lines)
-	for token in ["Command cue:", "Next:", "Construction Ledger", "Muster Hall"]:
+	for token in ["Command cue:", "Next:", "Construction", "Muster Hall"]:
 		if not all_text.contains(token):
 			push_error("Town smoke: action-button command cues lost %s clarity: %s." % [token, all_text])
 			return false
@@ -3698,7 +3698,7 @@ func _assert_town_build_readiness_cue(shell: Node) -> bool:
 		String(readiness.get("why_it_matters", "")),
 		String(readiness.get("next_step", "")),
 	])
-	for token in ["Build check:", "Build Readiness", "Town works:", "Best order:", "Readiness:", "Why it matters:", "Next practical action:", "Construction Ledger"]:
+	for token in ["Build check:", "Build Readiness", "Town works:", "Best order:", "Readiness:", "Why it matters:", "Next practical action:", "Construction"]:
 		if not text.contains(token):
 			push_error("Town smoke: build readiness cue lost %s clarity: %s." % [token, text])
 			return false

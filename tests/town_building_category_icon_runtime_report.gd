@@ -1,5 +1,7 @@
 extends Node
 
+const TownConstructionBoardScript = preload("res://scripts/core/TownConstructionBoard.gd")
+
 const SessionDataScript = preload("res://scripts/core/SessionStateStore.gd")
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const CATEGORY_IDS := ["civic", "dwelling", "economy", "support", "magic"]
@@ -76,41 +78,36 @@ func _run_live_case(viewport_size: Vector2i) -> Dictionary:
 	await get_tree().process_frame
 	var live_session = SessionState.ensure_active_session()
 	var actions: Array = TownRules.get_build_catalog(live_session)
-	var container := shell.get_node_or_null("%BuildActions") as Control
-	var confirm := shell.get_node_or_null("%ConfirmBuild") as Button
-	if container == null or confirm == null or actions.is_empty():
+	var construction = shell.get("_construction_screen")
+	var confirm: Button = construction.find_child("ConstructionBuild", true, false) as Button if construction != null else null
+	if construction == null or confirm == null or actions.is_empty():
 		return await _finish_case(shell, {"ok": false, "failure": "build_surface_missing"})
-	var buttons := _buttons_in(container)
-	if buttons.size() != actions.size():
-		return await _finish_case(shell, {"ok": false, "failure": "button_count", "buttons": buttons.size(), "actions": actions.size()})
-	var presentation_exact := true
-	var contained := true
+	var board: Dictionary = construction.board()
+	var faction_id := String(board.get("faction_id", ""))
+	var screen_rect: Rect2 = construction.get_global_rect()
+	var presentation_exact: bool = int(board.get("slot_count", 0)) == 23 and board.get("unassigned_building_ids", ["missing"]).is_empty()
+	var contained: bool = true
 	var enabled_action := {}
-	var enabled_index := -1
-	for index in range(actions.size()):
-		var action: Dictionary = actions[index]
-		var button: Button = buttons[index]
-		var building_id := TownRules.building_id_for_action(String(action.get("id", "")))
-		var expected_path := TownRules.building_icon_path(building_id)
-		presentation_exact = presentation_exact and button.icon != null and button.icon.resource_path == expected_path and button.expand_icon and button.get_theme_constant("icon_max_width") == 46
-		presentation_exact = presentation_exact and button.text.find(String(action.get("name", ""))) >= 0 and button.text.find(String(action.get("catalog_status", ""))) >= 0 and button.tooltip_text == shell._catalog_build_tooltip(action)
-		contained = contained and container.get_global_rect().encloses(button.get_global_rect())
-		if enabled_action.is_empty() and bool(action.get("direct_affordable", false)) and not bool(action.get("disabled", true)):
-			enabled_action = action.duplicate(true)
-			enabled_index = index
-	var invalid_button := Button.new()
-	shell._apply_build_action_icon(invalid_button, {"id": "build:missing_building"})
-	var invalid_fail_closed := invalid_button.icon == null
-	invalid_button.free()
+	for slot in TownConstructionBoardScript.ordered_slots(board):
+		var tile := construction.find_child("Slot_%s" % String(slot.get("id", "")), true, false) as Button
+		var art: TextureRect = tile.find_child("Art", true, false) as TextureRect if tile != null else null
+		var expected_path := TownRules.building_icon_path(String(slot.get("art_building_id", "")), faction_id)
+		presentation_exact = presentation_exact and art != null and art.texture != null and art.texture.resource_path == expected_path
+		contained = contained and tile != null and screen_rect.encloses(tile.get_global_rect())
+		if enabled_action.is_empty() and String(slot.get("status", "")) == TownConstructionBoardScript.STATUS_READY and String(slot.get("kind", "")) != "choice":
+			for action in actions:
+				if String(action.get("building_id", "")) == String(slot.get("next_id", "")) and bool(action.get("direct_affordable", false)) and not bool(action.get("disabled", true)):
+					enabled_action = action.duplicate(true)
+	var invalid_art: TextureRect = construction.call("_art_rect", "missing_building", false)
+	var invalid_fail_closed: bool = invalid_art.texture == null
+	invalid_art.free()
 	if enabled_action.is_empty():
 		return await _finish_case(shell, {"ok": false, "failure": "enabled_build_missing"})
 	var action_id := String(enabled_action.get("id", ""))
 	var building_id := action_id.trim_prefix("build:")
 	var selection: Dictionary = shell.validation_select_build_plan(action_id)
 	await get_tree().process_frame
-	var refreshed_buttons := _buttons_in(container)
-	var selected_button: Button = refreshed_buttons[enabled_index] if enabled_index >= 0 and enabled_index < refreshed_buttons.size() else null
-	var selection_exact := bool(selection.get("ok", false)) and selected_button != null and selected_button.button_pressed and not confirm.disabled
+	var selection_exact: bool = bool(selection.get("ok", false)) and String(construction.selected_building_id()) == building_id and not confirm.disabled
 	var before: Dictionary = live_session.to_dict()
 	var control = SessionDataScript.SessionData.new()
 	control.from_dict(before.duplicate(true))

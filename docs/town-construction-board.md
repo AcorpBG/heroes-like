@@ -1,0 +1,31 @@
+# Full-screen Town construction board
+
+Phase 6 owner-directed slice `ux-town-construction-board-20261005`, derived from project.md and PLAN.md. Owner-approved mockup: the "Town Build Menu" design canvas (Prismhearth, Town row first, Army row second).
+
+## Requirement
+
+Replace the Construction Ledger popout (scrolling card grid, search, status filter, plan label and separate confirm button) with one full-screen construction board that works for every faction town template. The town painting stays the place: the board opens from the painted main building or the Build command, sits over a blurred, darkened copy of the town backdrop, and Esc returns to the town.
+
+- One fixed 23-slot board per town, identical positions in every faction, no scrolling or search. Rows, top to bottom: **Town** (Hall, Fortification, Magic guild, Tavern, Market, Storehouse, Artifact Exchange), **Army** (dwelling tiers I–VII), **Growth** (3) beside **Hero training** (3), **faction signature** (3 wide tiles).
+- A slot is one upgrade line, one dwelling tier (both exclusive branches and their Lodges) or one standalone building. Every starting/buildable building of a template resolves to exactly one slot; `content/town_construction_layout.json` declares the slots.
+- Each tile shows the faction painting of its current stage (dimmed until built), stage diamonds, the tier numeral for dwellings and a status strip with icon and text: build/upgrade/choose with gold cost, market can cover it, short of a named resource, needs a named prerequisite, built/complete, or tomorrow after today's construction. Colour-assist mode swaps green/red for blue/orange.
+- Tiers I–V show both branches with an "or" badge until one is built. Selecting the tier compares both units side by side (portrait, role, stats with the better value highlighted, abilities, upgrade name), warns that the choice is permanent, and builds only after the player picks one line and confirms.
+- The detail panel shows upgrade lines as a stage strip with a Now → Next effect, chosen dwellings as base unit → Lodge unit with a stat comparison, and standalone buildings as a large painting. The decision footer lists cost as need/have, requirement chips (selecting one jumps to its slot), and Build, Trade (when the market can cover the shortfall) and View in town. View in town folds the board away and shows the candidate in its authored town plot; Esc or Back returns.
+- Keyboard/controller: arrows follow the visual grid, Tab/shoulder buttons cycle tiles → decision controls → Close inside the board, Enter selects, B builds, V views in town, 1/2 picks a branch, Esc closes.
+
+Rules authority is unchanged: TownRules build catalog/actions, `_prepare_build_read_context` preflight, `_commit_build_action`, one construction per town per day, exclusive choices, costs, prerequisites, save version and AI construction. The board is a read model (`scripts/core/TownConstructionBoard.gd`) plus a scene control (`scenes/town/TownConstructionScreen.gd`) that only emits intents to TownShell.
+
+Non-goals: no balance, content, art generation, save-schema, AI, Overworld or native RMG changes; muster, spells, trade and log dialogs keep the shared catalog overlay.
+
+## Implementation
+
+- `TownConstructionBoard.build()` groups template buildings by layout slot (line id, building id, dwelling tier with choice branches, Nth faction special), derives each slot's done/next stage from the build catalog and active-stage ancestry, and its status from prerequisites, `last_build_day`, direct affordability, market coverage and resource shortfall.
+- `TownShell` creates the screen once; `_open_town_catalog("build")` (direct Build button, dock launcher and main-building hotspot) now opens it. The old BuildActions/BuildPlan/ConfirmBuild nodes, search/filter/peek helpers and ledger wording were removed. `_select_build_action`, `_on_confirm_build_pressed`, `_commit_build_action`, `validation_select_build_plan` and `validation_confirm_build_plan` keep their contracts and drive the board selection. Building closes the board so the town plays the existing construction presentation.
+- Validation snapshots expose `construction_screen` (rows, slot statuses, tile rects/art, selection, primary command, focus) and the catalog snapshot reports the board for build mode.
+
+## Validation
+
+- New focused live report `tests/town_construction_screen_report.tscn` runs all six faction templates (1920x1080 and 1280x720): main-building route, row order, 23 slots covering every template building once, art on every tile, no tile/detail overlap, exclusive branch build and forgone branch removal, daily limit, legacy select/confirm, scenic preview, Esc behaviour, market hand-off. Passed headless and windowed on Windows (Godot 4.6.2); captures of every faction were inspected at both sizes. Below 1600x900 logical pixels the board keeps its proportions and scales as a whole.
+- Updated runtime reports/regressions that drove the removed ledger nodes to use the board. On Windows: `graphical_usability_regression.py` 1,600 checks (306 previews, six factions) and `usability_expansion_regression.py` 1,027 checks (20/20) pass headless; `manual_save_overwrite_regression` passes; the construction controller flow of `active_play_keyboard_focus_smoke` passes in isolation.
+- Unrelated stale failures remain in the full suites and fail before or outside construction: 160-building/capstone catalog expectations (category/dwelling icon reports, six-horizon smoke), retired alias backdrops, the hidden rectangular main-building hotspot, the replaced placeholder build sound, weekly muster forecast text, overworld save-dialog and tab/narrow focus expectations. `python tests/validate_repo.py` reports only the six known twin-command scenario findings.
+- Linux was not run separately; the change is GDScript and content only, with no native or platform-specific code.

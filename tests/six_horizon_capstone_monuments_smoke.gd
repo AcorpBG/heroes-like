@@ -1,5 +1,7 @@
 extends Node
 
+const TownConstructionBoardScript = preload("res://scripts/core/TownConstructionBoard.gd")
+
 const SessionDataScript = preload("res://scripts/core/SessionStateStore.gd")
 const TownShellScene = preload("res://scenes/town/TownShell.tscn")
 
@@ -203,20 +205,13 @@ func _validate_live_popup(session: SessionDataScript.SessionData, case: Dictiona
 	await get_tree().process_frame
 	var snapshot: Dictionary = shell.call("validation_town_catalog_snapshot")
 	var actions: Array = TownRules.get_build_catalog(SessionState.ensure_active_session())
-	var buttons := _buttons_in(shell.get_node_or_null("%BuildActions"))
 	var building_id := String(case.get("building_id", ""))
-	var action_index := -1
-	for index in range(actions.size()):
-		if TownRules.building_id_for_action(String(actions[index].get("id", ""))) == building_id:
-			action_index = index
-			break
-	var button: Button = buttons[action_index] if action_index >= 0 and action_index < buttons.size() else null
-	var popup_exact: bool = bool(snapshot.get("open", false)) and String(snapshot.get("mode", "")) == "build" and building_id in snapshot.get("build_ids", []) and button != null and button.icon != null and button.icon.resource_path == TownRules.building_icon_path(building_id) and button.expand_icon and button.get_theme_constant("icon_max_width") == 46
-	var catalog_scroll := shell.get_node_or_null("%TownCatalogScroll") as ScrollContainer
-	if popup_exact and catalog_scroll != null:
-		catalog_scroll.ensure_control_visible(button)
-		await get_tree().process_frame
-		await get_tree().process_frame
+	var construction = shell.get("_construction_screen")
+	var board: Dictionary = construction.board() if construction != null else {}
+	var slot: Dictionary = TownConstructionBoardScript.slot_for_building(board, building_id)
+	var tile: Button = construction.find_child("Slot_%s" % String(slot.get("id", "")), true, false) as Button if construction != null and not slot.is_empty() else null
+	var art: TextureRect = tile.find_child("Art", true, false) as TextureRect if tile != null else null
+	var popup_exact: bool = bool(snapshot.get("open", false)) and String(snapshot.get("mode", "")) == "build" and building_id in snapshot.get("build_ids", []) and art != null and art.texture != null and art.texture.resource_path == TownRules.building_icon_path(String(slot.get("art_building_id", "")), String(board.get("faction_id", "")))
 	var capture := get_viewport().get_texture().get_image()
 	var capture_path := "%s/%s_build_popup.png" % [OUTPUT_DIR, building_id]
 	popup_exact = popup_exact and not capture.is_empty() and capture.save_png(capture_path) == OK

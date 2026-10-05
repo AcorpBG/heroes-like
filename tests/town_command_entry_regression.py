@@ -120,7 +120,7 @@ func run() -> void:
 	check(Progression.pending_choices_remaining(session.overworld.hero)>0 and TownRules.get_hero_actions(session).size()>1,"populated fixture did not establish earned choices and alternate command")
 	await enter()
 	check(get_tree().current_scene._last_refresh_minimal,"populated case did not exercise minimal first entry")
-	check(get_tree().current_scene.get_node("%BuildActions").get_child_count()==0 and get_tree().current_scene.get_node("%RecruitActions").get_child_count()==0,"entry eagerly populated closed construction/recruitment dialogs")
+	check(get_tree().current_scene._construction_screen.board().is_empty() and get_tree().current_scene.get_node("%RecruitActions").get_child_count()==0,"entry eagerly populated closed construction/recruitment dialogs")
 	await inspect("pending_entry")
 	var choices: Array=buttons("SpecialtyActions").filter(func(b):return not b.disabled)
 	if not choices.is_empty():

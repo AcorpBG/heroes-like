@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Full-screen Town construction board
+
+`ux-town-construction-board-20261005` (completed, owner-directed UI): the Construction Ledger popout is replaced by one full-screen 23-slot board shared by every faction town (rows Town, Army, Growth/Hero training, faction signature), opened from the main building or Build command. Tiles show stage art, stage and status; tiers I–V compare both exclusive branches before a confirmed build; the detail panel shows stage strips, unit upgrades, cost need/have, requirement jumps, Trade and View in town. Rules, costs, daily limit, saves and AI are unchanged. See `docs/town-construction-board.md`.
+
 ### Repository hygiene after the source cleanup
 
 `tooling-repo-hygiene-20261004` (completed, repository/tooling/native rebuild): restored the corrupted plan/tracker copies, `project.godot` and six RMG inspection packages; Godot-written files check out LF and generated maps, bytecode and MSVC byproducts are ignored. All eight native binaries were rebuilt from unchanged source; Windows and Linux libraries regenerate a known map byte-identically and both self-tests pass. `tools/restore_archived_source_material.py` restores the archived sources that the listed checks need. 1.55 GiB of non-RMG validation output was removed. See `docs/source-material-storage-map.md`.

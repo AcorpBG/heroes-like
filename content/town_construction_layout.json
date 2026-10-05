@@ -1,0 +1,64 @@
+{
+  "schema": "town_construction_layout_v1",
+  "description": "Fixed full-screen construction board shared by every town template. Each slot groups one upgrade line, one dwelling tier (including both exclusive branches) or one standalone building. Every starting or buildable building of a town must resolve to exactly one slot.",
+  "rows": [
+    {
+      "id": "town",
+      "title": "Town",
+      "subtitle": "Hall, defenses, magic, trade and services · diamonds show upgrade stage",
+      "slots": [
+        {"id": "hall", "line_id": "hall", "title": "Hall"},
+        {"id": "fort", "line_id": "fort", "title": "Fortification"},
+        {"id": "guild", "line_id": "guild", "title": "Magic guild"},
+        {"id": "tavern", "building_id": "building_wayfarers_hall"},
+        {"id": "market", "line_id": "market", "title": "Market"},
+        {"id": "storehouse", "line_id": "storehouse", "title": "Storehouse"},
+        {"id": "artifact_exchange", "building_id": "building_dev_artifact_exchange"}
+      ]
+    },
+    {
+      "id": "army",
+      "title": "Army",
+      "subtitle": "Dwellings · tiers I–V each offer two lines, choose one",
+      "slots": [
+        {"id": "dwelling_1", "dwelling_tier": 1},
+        {"id": "dwelling_2", "dwelling_tier": 2},
+        {"id": "dwelling_3", "dwelling_tier": 3},
+        {"id": "dwelling_4", "dwelling_tier": 4},
+        {"id": "dwelling_5", "dwelling_tier": 5},
+        {"id": "dwelling_6", "dwelling_tier": 6},
+        {"id": "dwelling_7", "dwelling_tier": 7}
+      ]
+    },
+    {
+      "id": "growth",
+      "title": "Growth",
+      "subtitle": "Extra weekly recruits",
+      "slots": [
+        {"id": "growth_1", "building_id": "building_dev_growth_1", "blurb": "+4 tier-I recruits / week"},
+        {"id": "growth_2", "building_id": "building_dev_growth_2", "blurb": "+3 tier-II recruits / week"},
+        {"id": "growth_3", "building_id": "building_dev_growth_3", "blurb": "+2 tier-III recruits / week"}
+      ]
+    },
+    {
+      "id": "training",
+      "title": "Hero training",
+      "subtitle": "Once per hero, across all towns",
+      "slots": [
+        {"id": "training_attack", "building_id": "building_dev_training_attack", "blurb": "+1 attack"},
+        {"id": "training_defense", "building_id": "building_dev_training_defense", "blurb": "+1 defense"},
+        {"id": "training_experience", "building_id": "building_dev_training_experience", "blurb": "+1,000 experience"}
+      ]
+    },
+    {
+      "id": "signature",
+      "title": "{faction} signature",
+      "subtitle": "{faction}-only works · need Council Hall",
+      "slots": [
+        {"id": "signature_1", "faction_special": 1},
+        {"id": "signature_2", "faction_special": 2},
+        {"id": "signature_3", "faction_special": 3}
+      ]
+    }
+  ]
+}

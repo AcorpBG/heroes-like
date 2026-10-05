@@ -5,6 +5,7 @@ const EnemyTurnRulesScript = preload("res://scripts/core/EnemyTurnRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const CAPTURE_DIR := "res://.artifacts/town_build_muster_popup_catalog"
+const CONSTRUCTION_SLOT_COUNT := 23
 const AUXILIARY_CASES := [
 	{"faction_id": "faction_embercourt", "scenario_id": "three-hearth-auxiliary-charter", "town_id": "town_cinderlock_bastion", "building_id": "building_embercourt_beaconline_charter_house", "unit_id": "unit_embercourt_beaconline_writguard"},
 	{"faction_id": "faction_mireclaw", "scenario_id": "bogbound-oath", "town_id": "town_duskfen", "building_id": "building_mireclaw_fenbell_hunt_lodge", "unit_id": "unit_mireclaw_fenbell_chainstalkers"},
@@ -83,7 +84,12 @@ func _run_case(viewport_size: Vector2i) -> Dictionary:
 	await get_tree().process_frame
 	var build_snapshot: Dictionary = shell.call("validation_town_catalog_snapshot")
 	var build_catalog: Array = TownRules.get_build_catalog(SessionState.ensure_active_session())
-	var build_icons := _catalog_button_icon_count(shell.get_node("%BuildActions"))
+	var construction_snapshot: Dictionary = shell.get("_construction_screen").validation_snapshot()
+	var build_icons := 0
+	for construction_row in construction_snapshot.get("rows", []):
+		for slot in construction_row.get("slots", []):
+			if bool(slot.get("tile_has_art", false)):
+				build_icons += 1
 	var build_contained := _rect_contains(build_snapshot.get("overlay_rect", Rect2()), build_snapshot.get("panel_rect", Rect2()))
 	_capture("build", viewport_size)
 
@@ -127,8 +133,9 @@ func _run_case(viewport_size: Vector2i) -> Dictionary:
 		and bool(build_snapshot.get("focus_inside", false))
 		and bool(build_snapshot.get("build_grid_visible", false))
 		and not bool(build_snapshot.get("muster_grid_visible", true))
-		and int(build_snapshot.get("build_card_count", 0)) == expected_build_ids.size()
-		and build_icons == expected_build_ids.size()
+		and int(build_snapshot.get("build_card_count", 0)) == CONSTRUCTION_SLOT_COUNT
+		and build_icons == CONSTRUCTION_SLOT_COUNT
+		and construction_snapshot.get("unassigned_building_ids", ["missing"]).is_empty()
 		and build_contained
 		and build_focus_returned
 		and bool(muster_snapshot.get("open", false))
@@ -212,10 +219,8 @@ func _run_auxiliary_case(case: Dictionary) -> Dictionary:
 	add_child(shell)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	var icon_button := Button.new()
-	shell._apply_build_action_icon(icon_button, {"id": "build:%s" % building_id})
-	var popup_icon_exact := icon_button.icon != null and icon_button.icon.resource_path == icon_path
-	icon_button.free()
+	# Construction tiles resolve art through the same building icon resolver.
+	var popup_icon_exact := icon != null and TownRules.building_icon_path(building_id) == icon_path
 	shell.call("validation_open_town_catalog", "build")
 	await get_tree().process_frame
 	_capture("auxiliary_build_%s" % String(case.get("faction_id", "")).trim_prefix("faction_"), Vector2i(1280, 720))

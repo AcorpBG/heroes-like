@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "tooling-repo-hygiene-20261004",
-  "currentSliceId": "tooling-repo-hygiene-20261004",
-  "currentSliceNotes": "COMPLETED 2026-10-04. Discarded a stale, double-mojibake working copy of PLAN.md/ops/progress.json, an editor re-save of project.godot that dropped validated tokens, and a reordered .gitattributes; repaired 11 committed mojibake sequences; restored six deleted manual-strict RMG inspection packages. Godot-written .import/.tscn/.tres/.godot files now check out LF (612 converted, blobs unchanged), clearing 510 phantom changes. Ignored Python bytecode repo-wide (28 committed .pyc untracked), MSVC .pdb/.exp/.lib and dev-generated maps/*.amap|.ascenario (fixtures kept). Removed 60 abandoned untracked recipe/review files after byte-identical verification in N: uncommitted-work.zip; owner townscreen feedback PNG and windows-import.bat kept via .git/info/exclude. Rebuilt all eight native binaries from source unchanged since 40174ece1: Windows clean MSVC builds, Linux GCC 13.3 on the owner server from git-archived HEAD and godot-cpp 58d1de7. Fixed build_map_persistence_windows.bat --godot/--parallel parsing and gave the Windows native tools an 8 MiB stack (self-test overflowed 1 MiB). Validation: Windows and Linux debug libraries in Godot 4.6.2 regenerate seed 200970581 byte-identically (73a9abe3..., fnv1a32:43c8bc76); self-tests ok on both; skeleton smoke ok; Windows headless boot clean; tests/validate_repo.py reports the same 9,764 pre-existing errors with and without these changes (tracked as tooling-validate-repo-archived-sources-20261004). Added tools/restore_archived_source_material.py with unit coverage and documented the five GDScript and Python checks that need restored sources. Removed 1.55 GiB of non-RMG audio validation packages/logs and validation import stages; save-bearing profiles, caches, backups and RMG evidence kept. Not done: one restricted-ACL probe folder .artifacts/thornwake_finish_20260923/dwellings/1/mine-probe-nu9mn2ez needs owner removal; stale native smoke list tracked as tooling-native-smoke-list-refresh-20261004.",
+  "currentSlice": "ux-town-construction-board-20261005",
+  "currentSliceId": "ux-town-construction-board-20261005",
+  "currentSliceNotes": "COMPLETED 2026-10-05. Full-screen 23-slot construction board for every faction town (Town, Army, Growth/Hero training, faction signature rows) replaces the Construction Ledger popout; exclusive tier I-V comparison, stage strips, unit upgrades, need/have cost, requirement jumps, Trade and View in town. Rules, costs, daily limit, saves and AI unchanged. New tests/town_construction_screen_report passes all six templates headless and windowed on Windows; graphical_usability_regression 1600 checks and usability_expansion_regression 1027 checks pass on Windows; validate_repo shows only the six known twin-command findings. Unrelated stale suite failures are listed in docs/town-construction-board.md. No Linux run (GDScript/content only).",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Repair post-cleanup working tree, native binaries and source-test workflow",
-  "currentSliceUpdatedAt": "2026-10-04T09:00:00Z",
+  "currentSliceTitle": "Full-screen Town construction board",
+  "currentSliceUpdatedAt": "2026-10-05T18:00:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -113927,6 +113927,19 @@
         "PLAN.md"
       ],
       "notes": "Selected A transparent raw gold/ore/wood piles integrated through stable asset IDs. Gold has travelling reflections and sparkles; ore has subtler sheen; wood stays matte. Focused raw_pickup_shine_regression.py passed 31 live-render/GPU/fog/collection/reduced-motion checks at full, 42px and 24px sizes. Cached rendering and 1000/10/10 one-time rewards preserved. Original art and prompts retained; no full suite."
+    },
+    {
+      "id": "ux-town-construction-board-20261005",
+      "title": "Full-screen Town construction board",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/town-construction-board.md"
+      ],
+      "notes": "Full-screen 23-slot construction board for every faction town (Town, Army, Growth/Hero training, faction signature rows) replaces the Construction Ledger popout; exclusive tier I-V comparison, stage strips, unit upgrades, need/have cost, requirement jumps, Trade and View in town. Rules, costs, daily limit, saves and AI unchanged. New tests/town_construction_screen_report passes all six templates headless and windowed on Windows; graphical_usability_regression 1600 checks and usability_expansion_regression 1027 checks pass on Windows; validate_repo shows only the six known twin-command findings. Unrelated stale suite failures are listed in docs/town-construction-board.md. No Linux run (GDScript/content only)."
     }
   ],
   "project": "heroes-like",
@@ -114578,7 +114591,7 @@
   ],
   "summary": "Owner-directed overworld actor readability completed: 112 original generated hero/creature sprites, full-size town visitors, painted-bound scale and cached alpha-edge contrast. Source/Linux/Windows visual/runtime acceptance, Large travel/AI/fog, existing reports, full repository and official exports/parity pass; 3.255 GB disposable outputs cleaned. Prior generated-world quality work remains completed; gameplay/native generation and save schema are unchanged. Broader production/release limits remain in project.md.",
   "taskId": "10236",
-  "updatedAt": "2026-10-04T09:00:00Z",
+  "updatedAt": "2026-10-05T18:00:00Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",

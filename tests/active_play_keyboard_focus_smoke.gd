@@ -90,38 +90,39 @@ func _check_town_keyboard_build() -> bool:
 		return false
 
 	var focus_owner := get_viewport().gui_get_focus_owner()
-	var build_launcher: Button = shell.get_node("%OpenBuildCatalog")
-	if focus_owner != build_launcher:
-		return _fail("Town entry focus did not land on the construction catalog launcher: %s." % _focus_name())
+	# The Build dock icon and the sidebar launcher open the same construction board.
+	if focus_owner != shell.get_node("%BuildAction") and focus_owner != shell.get_node("%OpenBuildCatalog"):
+		return _fail("Town entry focus did not land on a construction launcher: %s." % _focus_name())
 	await _press_joypad_button(JOY_BUTTON_A)
 	await _settle()
-	if not bool(shell.call("validation_town_catalog_snapshot").get("open", false)) or _focus_name() != "TownCatalogClose":
-		return _fail("Town construction launcher did not open a focus-trapped catalog: %s." % shell.call("validation_town_catalog_snapshot"))
+	var construction = shell.get("_construction_screen")
+	if construction == null or not bool(construction.visible) or not bool(construction.validation_snapshot().get("focus_inside", false)) or not _focus_name().begins_with("Slot_"):
+		return _fail("Town construction launcher did not open the focus-trapped construction board on a slot: %s." % _focus_name())
 	for _step in range(32):
 		var candidate := get_viewport().gui_get_focus_owner()
-		if candidate is Button and String(candidate.get_meta("catalog_status", "")) == "Ready":
+		if _is_ready_construction_tile(construction, candidate):
 			break
 		await _press_joypad_button(JOY_BUTTON_RIGHT_SHOULDER)
 	focus_owner = get_viewport().gui_get_focus_owner()
-	if not (focus_owner is Button) or String(focus_owner.get_meta("catalog_status", "")) != "Ready":
-		return _fail("Town catalog focus cycle did not reach a ready construction card: %s." % _focus_name())
+	if not _is_ready_construction_tile(construction, focus_owner):
+		return _fail("Town construction focus cycle did not reach a ready building slot: %s." % _focus_name())
 	var first_build_focus := focus_owner
 	await _press_joypad_button(JOY_BUTTON_RIGHT_SHOULDER)
 	var next_town_focus := get_viewport().gui_get_focus_owner()
-	if next_town_focus == null or next_town_focus == first_build_focus or not shell.is_ancestor_of(next_town_focus):
-		return _fail("Town right shoulder did not advance the active-play focus cycle: before=%s after=%s." % [first_build_focus, next_town_focus])
+	if next_town_focus == null or next_town_focus == first_build_focus or not construction.is_ancestor_of(next_town_focus):
+		return _fail("Town right shoulder did not advance inside the construction board: before=%s after=%s." % [first_build_focus, next_town_focus])
 	await _press_joypad_button(JOY_BUTTON_LEFT_SHOULDER)
 	if get_viewport().gui_get_focus_owner() != first_build_focus:
-		return _fail("Town left shoulder did not return to the original construction order: expected=%s got=%s." % [first_build_focus, get_viewport().gui_get_focus_owner()])
+		return _fail("Town left shoulder did not return to the original construction slot: expected=%s got=%s." % [first_build_focus, get_viewport().gui_get_focus_owner()])
 	await _capture_if_requested("town_build_order_focus")
 	await _press_joypad_button(JOY_BUTTON_A)
 	await _settle()
 	if town.get("built_buildings", []) != built_before or session.overworld.get("resources", {}) != resources_before:
-		return _fail("Selecting a focused town order spent resources before confirmation.")
+		return _fail("Selecting a focused construction slot spent resources before confirmation.")
 
-	var confirm: Button = shell.get_node("%ConfirmBuild")
+	var confirm: Button = construction.find_child("ConstructionBuild", true, false)
 	if confirm.disabled:
-		return _fail("Focused town order did not enable its confirmation command.")
+		return _fail("Focused construction slot did not enable its build command.")
 	confirm.grab_focus()
 	await get_tree().process_frame
 	await _capture_if_requested("town_build_confirmation_focus")
@@ -2233,4 +2234,14 @@ func _fail(message: String) -> bool:
 	_failed = true
 	push_error("%s failed: %s" % [REPORT_ID, message])
 	get_tree().quit(1)
+	return false
+
+func _is_ready_construction_tile(construction: Node, control: Control) -> bool:
+	if construction == null or not (control is Button) or not control.has_meta("slot_id"):
+		return false
+	var board: Dictionary = construction.call("board")
+	for row in board.get("rows", []):
+		for slot in row.get("slots", []):
+			if String(slot.get("id", "")) == String(control.get_meta("slot_id")):
+				return String(slot.get("status", "")) == "ready" and String(slot.get("kind", "")) != "choice"
 	return false

@@ -15,6 +15,7 @@ COMPILED_OWNERS = previous.COMPILED_OWNERS + (
     'scripts/ui/DecisionDetails.gdc', 'scripts/ui/ReadinessWidgets.gdc')
 SCRIPT = previous.SCRIPT.split('func battle()')[0] + r'''
 const Details = preload("res://scripts/ui/DecisionDetails.gd")
+const TownConstructionBoard = preload("res://scripts/core/TownConstructionBoard.gd")
 var completed := []
 func bounded(control: Control, message: String) -> void:
 	check(Rect2(Vector2.ZERO,Vector2(requested)).encloses(control.get_global_rect()),message+" "+str(control.get_global_rect()))
@@ -96,46 +97,42 @@ func construction() -> void:
 	add_child(shell);await settle()
 	shell._on_open_build_catalog_pressed();await settle()
 	var before:Dictionary=session.to_dict().duplicate(true)
-	var rows:Array=shell._construction_catalog_rows
-	var first:String=rows[0].name
-	await search_text(shell._construction_search,first.to_upper())
-	for card in shell._build_actions.get_children():
-		if card.visible: check(first.to_lower() in String(ContentService.get_building(String(card.get_meta("construction_id")).trim_prefix("build:")).name).to_lower(),"construction search wrong card")
-	await search_text(shell._construction_search,"no_such_building_123")
-	check(shell._confirm_build_button.disabled and shell._selected_build_action_id=="","empty filter leaves committable selection")
-	await search_text(shell._construction_search,"")
+	var screen=shell._construction_screen
+	var board:Dictionary=screen.board()
+	var template_ids:Array=TownConstructionBoard.town_building_ids(ContentService.get_town(String(TownRules.get_active_town(session).town_id)))
+	var covered:=[]
+	for row in board.rows:
+		for slot in row.slots: covered.append_array(slot.building_ids)
+	check(board.slot_count==23 and covered.size()==template_ids.size() and board.unassigned_building_ids.is_empty(),"construction board does not cover every town building once")
 	completed.append(5)
-	for index in range(1,5):
-		shell._construction_status.select(index);shell._construction_status.item_selected.emit(index)
-		var status:String=shell._construction_status.get_item_text(index)
-		for card in shell._build_actions.get_children():
-			if card.visible: check(String(card.get_child(0).get_child(0).get_meta("catalog_status"))==status,"construction status mismatch")
-			check(card.get_child(0).get_child(0).button_pressed==(String(card.get_meta("construction_id"))==shell._selected_build_action_id),"filtered plan highlight disagrees with confirmation")
-	shell._construction_status.select(0);shell._filter_construction_cards()
+	for row in board.rows:
+		for slot in row.slots:
+			var tile=screen.find_child("Slot_"+String(slot.id),true,false)
+			check(tile!=null and String(tile.find_child("StatusText",true,false).text)==String(slot.status_text),"construction tile status disagrees with its slot: "+String(slot.id))
 	completed.append(6)
 	check(Details.resource_shortfall({"gold":100,"wood":5},{"gold":23,"wood":8})=={"gold":77},"shortfall is not exact")
-	for action in rows:
-		shell._refresh_construction_decision(action)
-		var missing:=Details.resource_shortfall(action.get("cost",{}),session.overworld.resources)
-		if not missing.is_empty() and not action.get("built",false): check(shell._construction_shortfall.text=="Missing: "+TownRules._describe_resources(missing),"selected shortfall wrong")
+	for slot in TownConstructionBoard.ordered_slots(board):
+		if String(slot.next_id)=="": continue
+		check(slot.shortfall==Details.resource_shortfall(slot.cost,session.overworld.resources),"slot shortfall wrong: "+String(slot.id))
 	completed.append(7)
 	var jumped:=false
-	for action in rows:
-		shell._refresh_construction_decision(action)
-		if shell._construction_requirements.get_child_count()==0:continue
-		var requirement:String=ContentService.get_building(String(action.building_id)).requires[0]
-		await click(shell._construction_requirements.get_child(0));await settle()
-		check(shell._selected_build_action_id=="build:"+requirement,"prerequisite did not select its real plan")
-		check(shell._construction_search.text=="" and shell._construction_status.selected==0,"prerequisite retained hiding filters")
+	for slot in TownConstructionBoard.ordered_slots(board):
+		if slot.missing_requirements.is_empty() or String(slot.kind)=="choice": continue
+		screen.select_slot(String(slot.id));await settle()
+		var requirement:String=ContentService.get_building(String(slot.next_id)).requires[0]
+		var chip=screen.find_child("Requirement_"+requirement,true,false)
+		if chip==null: continue
+		await click(chip);await settle()
+		check(TownConstructionBoard.slot_for_building(board,requirement).id==screen.selected_slot_id(),"prerequisite did not select its real slot")
 		jumped=true
 		break
 	check(jumped,"no real prerequisite click tested")
 	check(session.to_dict()==before,"construction inspection spent resources/changed save")
-	bounded(shell._town_catalog_panel,"construction ledger exceeds viewport")
+	bounded(screen,"construction board exceeds viewport")
 	await capture("construction-discovery")
-	await click(shell._construction_peek_button);await settle()
-	check(not shell._construction_filters.visible and not shell._construction_requirements.visible,"folded view retains extra controls")
-	bounded(shell._town_catalog_panel,"folded construction clips")
+	await click(screen.find_child("ConstructionViewInTown",true,false));await settle()
+	check(screen.is_peeking() and not screen.find_child("ConstructionFrame",true,false).visible,"folded view retains board controls")
+	bounded(screen._peek_bar,"folded construction clips")
 	await capture("construction-folded")
 	completed.append(8)
 	shell.queue_free();await settle()

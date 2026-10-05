@@ -448,9 +448,9 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(44, 44)
 layout_mode = 2
 focus_mode = 2
-tooltip_text = "Open the construction ledger."
+tooltip_text = "Open construction."
 accessibility_name = "Build"
-accessibility_description = "Open the construction ledger for this town."
+accessibility_description = "Open the full-screen construction board for this town."
 text = "B"
 
 [node name="MusterAction" type="Button" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ActionDock/ActionDockPad/ActionButtons"]
@@ -546,12 +546,12 @@ text = "Buildings"
 [node name="BuildLauncherDescription" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox"]
 layout_mode = 2
 autowrap_mode = 3
-text = "Open the construction ledger to inspect every standing, available, and locked town building."
+text = "Open construction to see every town building slot, its stage and what it needs."
 
 [node name="OpenBuildCatalog" type="Button" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Open Construction Ledger"
+text = "Open Construction"
 
 [node name="BuildFactionWatermark" type="TextureRect" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad/BuildBox"]
 unique_name_in_owner = true
@@ -917,14 +917,6 @@ follow_focus = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="BuildActions" type="GridContainer" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox/TownCatalogScroll/CatalogContent"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
-columns = 4
-
 [node name="RecruitActions" type="GridContainer" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox/TownCatalogScroll/CatalogContent"]
 unique_name_in_owner = true
 visible = false
@@ -940,19 +932,6 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
-
-[node name="BuildPlan" type="Label" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Select a construction plan"
-
-[node name="ConfirmBuild" type="Button" parent="TownCatalogOverlay/CatalogCenter/TownCatalogPanel/CatalogMargin/CatalogBox"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 8
-disabled = true
-text = "Select Construction"
 
 [node name="TownGuideOverlay" type="Control" parent="."]
 unique_name_in_owner = true

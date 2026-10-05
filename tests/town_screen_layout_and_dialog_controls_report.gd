@@ -14,7 +14,7 @@ const FACTION_IDS := [
 const STAGE_IDS := ["village", "developing", "fully_built"]
 const DIRECT_MODES := ["build", "muster", "spells", "trade", "log"]
 const EXPECTED_TITLES := {
-	"build": "Construction Ledger",
+	"build": "Construction",
 	"muster": "Muster Hall",
 	"spells": "Spellbook · Town Archives",
 	"trade": "Town Market",
