@@ -225,6 +225,8 @@ The strategic focus is now to turn the validated systems foundation into a coher
 
 Near-term work should prioritize coherent complete matches: reliable exploration, development, battles and outcomes; responsive full actions; clear scenery-first UI; save/resume; and platform validation. Additional breadth is subordinate to demonstrated end-to-end play quality. Each selected slice needs live behavior and progression proof rather than a content-count or tracker-completion claim.
 
+Authored maps, scenarios and campaigns are obsolete (owner decision, 2026-10-05) and will be redone completely in a later rework. Until the owner selects it, no effort goes into the existing authored roster or its checks; match work uses generated maps. Shared content definitions and the scenario/campaign runtime stay live. See `docs/authored-scenarios-obsolete.md`.
+
 Random map generation remains strategically important. The exposed native scope spans Small through Extra Large, land/normal-water/Islands, and one/two levels, but generation parity and playable package/session adoption are separate release requirements. The source-backed audit/corrections (`docs/rmg-audit-integrated-correction-report.md`) establish bounded entrance, level, player-identity, transit and normal-water behavior; they do not certify full matches, arbitrary seeds, all allocator/private-state histories or whole-H3MapEd parity. Unsupported configurations must continue to fail closed.
 
 ## Non-Goals

@@ -13,6 +13,11 @@ For native RMG work, read that file before editing code, tools, validators, repo
 
 Do not load all of `ops/progress.json` by default. It is an operations tracker, not onboarding context. Use the heroes-progress workflow/helper to query the current implementation status and selected next slice when needed. If available, run: `python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like`.
 
+## Authored maps, scenarios and campaigns are obsolete
+- Owner decision, 2026-10-05: every authored map, scenario and campaign (`content/scenarios.json`, `content/campaigns.json`, `tools/author_*.py`) is obsolete and will be redone completely. Until the owner selects that rework, put no effort into them: do not add, fix, retune, rebalance or re-validate them, and do not select them as a slice.
+- Do not chase failures in the authored-scenario tests and `tests/validate_repo.py` checks listed in `docs/authored-scenarios-obsolete.md`. Do not delete or skip those checks either, and do not change the scenario data to hide it.
+- Generated maps, shared content definitions and the scenario/campaign runtime code are not covered and stay live. Plan id: `content-authored-scenarios-obsolete-20261005`.
+
 ## Planning document roles
 - `project.md` is the strategic project document. It defines the game, phases, engine/script/content rules, architecture principles, and durable implementation constraints. Keep it concise and stable. Do not use it as a progress log, implementation diary, or place for near-term note piles.
 - `PLAN.md` is the tactical execution plan derived from `project.md`. It breaks phases into concrete implementation slices and references the relevant requirement docs under `docs/`. Keep it executable and compact enough for coding-agent context. Do not append verbose history, worker logs, or progress-tracker prose.

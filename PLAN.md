@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Authored maps, scenarios and campaigns are obsolete
+
+`content-authored-scenarios-obsolete-20261005` (paused, owner decision 2026-10-05): every authored map, scenario and campaign (`content/scenarios.json`, `content/campaigns.json`, `tools/author_*.py`) is obsolete and will be redone completely once the owner selects that rework. Until then put no effort into them: no new authored scenarios or campaigns, fixes, retuning, art or validation work, and no chasing failures in the authored-scenario checks listed in `docs/authored-scenarios-obsolete.md`. Every authored-scenario and campaign section below is history, not work to continue. Generated maps, shared content definitions and the scenario/campaign runtime are not covered.
+
 ### Full-screen Town construction board
 
 `ux-town-construction-board-20261005` (completed, owner-directed UI): the Construction Ledger popout is replaced by one full-screen 23-slot board shared by every faction town (rows Town, Army, Growth/Hero training, faction signature), opened from the main building or Build command. Tiles show stage art, stage and status; tiers I–V compare both exclusive branches before a confirmed build; the detail panel shows stage strips, unit upgrades, cost need/have, requirement jumps, Trade and View in town. Rules, costs, daily limit, saves and AI are unchanged. See `docs/town-construction-board.md`.
@@ -34,7 +38,7 @@ Rules:
 
 `tooling-validate-repo-archived-sources-20261004` (completed, test tooling): tests never open archived source material. `tests/validate_repo.py`, the Python tests and the GDScript reports check only what a clone contains; source-rebuild tests of the one-time art-recovery tools were retired (the tools remain for deliberate rebuilds). Validators were updated where the game legitimately moved on: shared town template, unified mines, five-by-three towns, one town design per faction, veteran creatures and raw resource piles. Fresh-clone procedure: `docs/source-material-storage-map.md`.
 
-`content-validator-findings-20261004` (in progress): real defects the updated tests report. Fixed 2026-10-04: the 306 overhaul town scene layers import with mipmaps and their `.import` files are tracked; `object_claimed_quarry_head` is a 3x2 state of the unified animated ore mine (shape, entrance and art follow its base mine); `docs/battle-unit-animation-acceptance.json` registers the current animations of all 232 creatures, including the 72 upgrades, as owner-accepted. Open: six twin-command scenarios lost the starting Wayfarers Hall their second commander needs; `test_registered_clips_resolve_real_frames` reports ground-line anchor mismatches for all 232 creatures (not yet investigated).
+`content-validator-findings-20261004` (in progress): real defects the updated tests report. Fixed 2026-10-04: the 306 overhaul town scene layers import with mipmaps and their `.import` files are tracked; `object_claimed_quarry_head` is a 3x2 state of the unified animated ore mine (shape, entrance and art follow its base mine); `docs/battle-unit-animation-acceptance.json` registers the current animations of all 232 creatures, including the 72 upgrades, as owner-accepted. Open: six twin-command scenarios lost the starting Wayfarers Hall their second commander needs (dropped 2026-10-05: authored scenarios are obsolete, see `content-authored-scenarios-obsolete-20261005`); `test_registered_clips_resolve_real_frames` reports ground-line anchor mismatches for all 232 creatures (not yet investigated).
 
 ### Keep the retired audio workflow disabled
 
@@ -8550,7 +8554,7 @@ Recommended next slices:
 - `headless-balance-harness-next-10184`: expand automated balance harness depth before scaling content.
 
 Do not select:
-- campaign/scenario breadth that only adds data or reports without a playable flow; owner direction now permits bounded campaign/content implementation with live validation;
+- any authored scenario or campaign work: the authored roster is obsolete until the owner selects its full rework (`content-authored-scenarios-obsolete-20261005`, `docs/authored-scenarios-obsolete.md`);
 - broad RMG parity claims from strict Small evidence;
 - final art direction, final audio, or release packaging claims from generated/runtime placeholder layers;
 - new validation gates that merely make reports pass without improving player-readable game behavior.
