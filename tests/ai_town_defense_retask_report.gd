@@ -837,7 +837,8 @@ func _derived_resource_defense_requires_known_hero_pressure() -> Dictionary:
 	state["pressure"] = 0
 	_update_enemy_state(session, state)
 	var hero_id := String(session.overworld.get("active_hero_id", "hero_lyra"))
-	_set_player_position(session, {"x": 0, "y": 4})
+	_extend_map_south(session, 8)
+	_set_player_position(session, {"x": 0, "y": 6})
 	_set_resource_controller(session, "river_free_company", MIRECLAW)
 	_clear_resource_front(session, "river_free_company")
 	_set_resource_controller(session, "river_signal_post", "player")
@@ -937,6 +938,20 @@ func _defense_retask_raid(session) -> Dictionary:
 		EnemyAdventureRules.commander_roster_for_faction(session, MIRECLAW)
 	)
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
+
+# River Pass (9x5) lies wholly inside the AI town's round sight, so hidden-hero
+# fixtures extend it south with open grass to reach tiles no AI source sees.
+func _extend_map_south(session, height: int) -> void:
+	var rows: Array = session.overworld.get("map", [])
+	var width: int = rows[0].size() if not rows.is_empty() and rows[0] is Array else 0
+	while rows.size() < height:
+		var row := []
+		for _x in range(width):
+			row.append("grass")
+		rows.append(row)
+	session.overworld["map"] = rows
+	session.overworld["map_size"] = {"width": width, "height": rows.size()}
+	OverworldRules.refresh_fog_of_war(session)
 
 func _base_session():
 	var session = ScenarioFactory.create_session(

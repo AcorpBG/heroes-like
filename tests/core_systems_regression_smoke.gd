@@ -2,6 +2,9 @@ extends Node
 
 const SCENARIO_ID := "river-pass"
 const DIFFICULTY_ID := "normal"
+# River Pass (9x5) lies wholly inside its town and hero sight, so the fog
+# memory checks use a 30x18 map.
+const FOG_SCENARIO_ID := "eightfold-reliquary-march"
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -123,7 +126,7 @@ func _run_auto_interaction_regressions() -> bool:
 
 func _run_overworld_memory_fog_regression() -> bool:
 	var session = ScenarioFactory.create_session(
-		SCENARIO_ID,
+		FOG_SCENARIO_ID,
 		DIFFICULTY_ID,
 		SessionState.LAUNCH_MODE_SKIRMISH
 	)
@@ -141,8 +144,7 @@ func _run_overworld_memory_fog_regression() -> bool:
 		get_tree().quit(1)
 		return false
 
-	# River Pass is 9x5, so only the far corner lies outside the town and hero rings.
-	var never_seen := Vector2i(8, 0)
+	var never_seen := Vector2i(29, 0)
 	if OverworldRules.is_tile_explored(session, never_seen.x, never_seen.y) or OverworldRules.is_tile_visible(session, never_seen.x, never_seen.y):
 		push_error("Core systems smoke: initial fog did not hide an unscouted tile.")
 		get_tree().quit(1)
@@ -156,7 +158,7 @@ func _run_overworld_memory_fog_regression() -> bool:
 		get_tree().quit(1)
 		return false
 
-	_set_active_hero_position(session, Vector2i(0, 4))
+	_set_active_hero_position(session, Vector2i(1, 17))
 	OverworldRules.refresh_fog_of_war(session)
 	var moved_fog: Dictionary = session.overworld.get("fog", {})
 	if int(moved_fog.get("explored_count", 0)) < initial_explored_count or int(moved_fog.get("visible_count", 0)) < initial_visible_count:
@@ -181,7 +183,7 @@ func _run_overworld_memory_fog_regression() -> bool:
 		return false
 
 	var missing_fog_session = ScenarioFactory.create_session(
-		SCENARIO_ID,
+		FOG_SCENARIO_ID,
 		DIFFICULTY_ID,
 		SessionState.LAUNCH_MODE_SKIRMISH
 	)

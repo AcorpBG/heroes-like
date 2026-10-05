@@ -1,6 +1,7 @@
 extends Node
 
-const SCENARIO_ID := "river-pass"
+# A 30x18 map; River Pass (9x5) is fully inside its town and hero sight.
+const SCENARIO_ID := "eightfold-reliquary-march"
 const DIFFICULTY_ID := "normal"
 const REPORT_ID := "FOG_OF_WAR_HOMM_STYLE_REGRESSION"
 
@@ -125,7 +126,7 @@ func _remote_tile_from(session, source: Vector2i, guarded: Vector2i) -> Vector2i
 		for x in range(map_size.x):
 			if OverworldRules.tile_is_blocked(session, x, y):
 				continue
-			if abs(guarded.x - x) + abs(guarded.y - y) <= scout_radius:
+			if (guarded.x - x) * (guarded.x - x) + (guarded.y - y) * (guarded.y - y) <= scout_radius * (scout_radius + 1):
 				continue
 			var distance: int = abs(source.x - x) + abs(source.y - y)
 			if distance > best_distance:

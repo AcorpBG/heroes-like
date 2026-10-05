@@ -12,7 +12,7 @@ Owned towns are strategic holdings but do not currently contribute to the perman
 
 ## Required behavior
 
-- Every player-owned town contributes a Manhattan-radius-eight permanent exploration source centered on its authoritative town entry coordinate (raised from five on 2026-10-05; see `docs/fog-of-war-homm-style-decision.md`).
+- Every player-owned town contributes a round radius-eight permanent exploration source centered on its authoritative town entry coordinate (raised from a Manhattan radius of five on 2026-10-05; see `docs/fog-of-war-homm-style-decision.md`).
 - Neutral and enemy towns do not reveal terrain for the player. Capturing a town adds its vision on the same authoritative action completion; losing ownership stops future source refreshes without erasing tiles already explored.
 - Normalization, movement refresh, capture refresh, save/load, the main map, and minimap continue to share `session.overworld.fog.explored_tiles`; no second fog authority is introduced.
 - The persistent right rail displays all player heroes and all player-owned towns as two compact labeled icon columns below the minimap. Larger rosters remain fully reachable through a bounded scroll region.

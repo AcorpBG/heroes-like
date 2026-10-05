@@ -71,7 +71,14 @@ func _run() -> void:
 			"layout": layout,
 		})
 
-	var move_result := _try_one_step_move(session)
+	# The hero starts on the town gate, inside the town's wider sight, so the
+	# first steps can stay within already explored ground; walk until the
+	# hero's own ring reaches past it.
+	var move_result := {}
+	for _step in range(6):
+		move_result = _try_one_step_move(session)
+		if not bool(move_result.get("ok", false)) or int(OverworldRules.fog_for_level(session).get("explored_count", 0)) > int(fog_before.get("explored_count", 0)):
+			break
 	if not bool(move_result.get("ok", false)):
 		_failures.append("deterministic fog movement step failed: %s" % JSON.stringify(move_result))
 	else:

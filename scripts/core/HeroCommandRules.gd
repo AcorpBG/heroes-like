@@ -171,6 +171,24 @@ static func scouting_radius_for_hero(hero_state: Dictionary) -> int:
 		+ int(specialty_bonuses.get("scouting_radius", 0))
 	)
 
+# Sight covers a round area: a tile is in range when its centre lies within
+# radius + 1/2 tiles of the source, which keeps the rim free of one-tile nubs.
+static func within_scout_radius(dx: int, dy: int, radius: int) -> bool:
+	return dx * dx + dy * dy <= radius * (radius + 1)
+
+# Half-width of the round sight area on the row dy tiles from its centre, or
+# -1 when the row lies outside it.
+static func scout_row_half_width(dy: int, radius: int) -> int:
+	var remaining := radius * (radius + 1) - dy * dy
+	if remaining < 0:
+		return -1
+	var half_width := int(sqrt(float(remaining)))
+	while (half_width + 1) * (half_width + 1) <= remaining:
+		half_width += 1
+	while half_width * half_width > remaining:
+		half_width -= 1
+	return half_width
+
 static func active_hero(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null:
 		return {}

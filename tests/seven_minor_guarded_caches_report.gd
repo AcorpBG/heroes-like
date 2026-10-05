@@ -205,7 +205,8 @@ func _ring_explored(session: SessionStateStoreScript.SessionData, center: Vector
 	var map_size := OverworldRules.derive_map_size(session)
 	for y in range(maxi(0, center.y - radius), mini(map_size.y - 1, center.y + radius) + 1):
 		for x in range(maxi(0, center.x - radius), mini(map_size.x - 1, center.x + radius) + 1):
-			if absi(x - center.x) + absi(y - center.y) <= radius and not OverworldRules.is_tile_explored(session, x, y):
+			var inside := (x - center.x) * (x - center.x) + (y - center.y) * (y - center.y) <= radius * (radius + 1)
+			if inside and not OverworldRules.is_tile_explored(session, x, y):
 				return false
 	return true
 

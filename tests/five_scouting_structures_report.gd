@@ -114,7 +114,7 @@ func _expected_ring_tiles(node: Dictionary, radius: int, map_size: Vector2i) -> 
 	var origin := Vector2i(int(node.get("x",0)), int(node.get("y",0)))
 	for y in range(maxi(0,origin.y-radius), mini(map_size.y-1,origin.y+radius)+1):
 		for x in range(maxi(0,origin.x-radius), mini(map_size.x-1,origin.x+radius)+1):
-			if absi(x-origin.x)+absi(y-origin.y) <= radius:
+			if (x-origin.x)*(x-origin.x)+(y-origin.y)*(y-origin.y) <= radius*(radius+1):
 				count += 1
 	return count
 

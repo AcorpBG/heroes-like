@@ -647,6 +647,7 @@ func _stale_hero_hunt_arrival_clears_lost_trail_case() -> Dictionary:
 	if hero_id == "":
 		_fail("River Pass has no active hero id for stale-position fixture.")
 		return {}
+	_extend_map_south(session, 8)
 	var remembered_tile := _nearest_open_non_town_tile(session, Vector2i(8, 4))
 	var actual_tile := _nearest_open_non_town_tile_excluding(session, Vector2i(0, 12), remembered_tile)
 	_move_player_hero(session, hero_id, actual_tile)
@@ -1194,6 +1195,20 @@ func _set_raid_bog_brutes(raid: Dictionary, count: int) -> Dictionary:
 		)
 	return updated
 
+# River Pass (9x5) lies wholly inside the AI town's round sight, so hidden-hero
+# fixtures extend it south with open grass to reach tiles no AI source sees.
+func _extend_map_south(session, height: int) -> void:
+	var rows: Array = session.overworld.get("map", [])
+	var width: int = rows[0].size() if not rows.is_empty() and rows[0] is Array else 0
+	while rows.size() < height:
+		var row := []
+		for _x in range(width):
+			row.append("grass")
+		rows.append(row)
+	session.overworld["map"] = rows
+	session.overworld["map_size"] = {"width": width, "height": rows.size()}
+	OverworldRules.refresh_fog_of_war(session)
+
 func _base_session():
 	var session = ScenarioFactory.create_session(RIVER_PASS, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	OverworldRules.normalize_overworld_state(session)
@@ -1383,6 +1398,7 @@ func _nearby_open_non_town_tile_at_distance(session, center: Vector2i, min_dista
 	return center
 
 func _hidden_player_hero_tile_for_enemy(session, hero_id: String) -> Vector2i:
+	_extend_map_south(session, 8)
 	var map_size: Vector2i = OverworldRules.derive_map_size(session)
 	for y in range(map_size.y - 1, -1, -1):
 		for x in range(map_size.x - 1, -1, -1):

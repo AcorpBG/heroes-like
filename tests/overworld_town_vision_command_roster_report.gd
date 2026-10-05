@@ -43,8 +43,8 @@ func _validate_town_vision() -> Dictionary:
 	var initial := _fog_exact_summary(session, expected_initial)
 	if radius != 8:
 		_failures.append("player town vision radius is not the documented radius eight")
-	if not bool(initial.get("exact", false)) or int(initial.get("explored_count", 0)) != 127:
-		_failures.append("initial player-town vision is not the exact centered radius-eight diamond")
+	if not bool(initial.get("exact", false)) or int(initial.get("explored_count", 0)) != 172:
+		_failures.append("initial player-town vision is not the exact centered radius-eight circle")
 	if OverworldRules.is_tile_explored(session, int(ENEMY_TOWN.x), int(ENEMY_TOWN.y)):
 		_failures.append("enemy town revealed its center for the player")
 	if OverworldRules.is_tile_explored(session, int(NEUTRAL_TOWN.x), int(NEUTRAL_TOWN.y)):
@@ -63,7 +63,7 @@ func _validate_town_vision() -> Dictionary:
 	for key in _expected_town_tiles([captured], radius, MAP_SIZE).keys():
 		expected_after_capture[key] = true
 	var after_capture := _fog_exact_summary(session, expected_after_capture)
-	if not bool(after_capture.get("exact", false)) or int(after_capture.get("explored_count", 0)) != 254:
+	if not bool(after_capture.get("exact", false)) or int(after_capture.get("explored_count", 0)) != 312:
 		_failures.append("captured town did not add exactly one new radius-eight permanent source")
 	if not OverworldRules.is_tile_explored(session, int(PLAYER_TOWN.x), int(PLAYER_TOWN.y)):
 		_failures.append("losing a former source erased permanent exploration")
@@ -336,7 +336,7 @@ func _expected_town_tiles(towns: Array, radius: int, map_size: Vector2i) -> Dict
 		var origin := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
 		for y in range(maxi(0, origin.y - radius), mini(map_size.y - 1, origin.y + radius) + 1):
 			for x in range(maxi(0, origin.x - radius), mini(map_size.x - 1, origin.x + radius) + 1):
-				if abs(x - origin.x) + abs(y - origin.y) <= radius:
+				if (x - origin.x) * (x - origin.x) + (y - origin.y) * (y - origin.y) <= radius * (radius + 1):
 					expected["%d,%d" % [x, y]] = true
 	return expected
 

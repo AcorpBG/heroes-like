@@ -13379,9 +13379,8 @@ static func _apply_site_reveal(explored_tiles: Array, site_state: Dictionary, ra
 		return
 	var origin := Vector2i(int(site_state.get("x", 0)), int(site_state.get("y", 0)))
 	for y in range(max(0, origin.y - radius), min(map_size.y - 1, origin.y + radius) + 1):
-		for x in range(max(0, origin.x - radius), min(map_size.x - 1, origin.x + radius) + 1):
-			if abs(x - origin.x) + abs(y - origin.y) > radius:
-				continue
+		var half_width := HeroCommandRulesScript.scout_row_half_width(y - origin.y, radius)
+		for x in range(max(0, origin.x - half_width), min(map_size.x - 1, origin.x + half_width) + 1):
 			_set_grid_cell(explored_tiles, x, y, true)
 
 static func _grid_cell(grid: Variant, x: int, y: int) -> bool:

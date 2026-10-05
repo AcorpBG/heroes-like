@@ -375,7 +375,8 @@ func _known_world_target_catalog_projection_parity() -> Dictionary:
 func _hero_targets_require_ai_sighting() -> Dictionary:
 	var session = _base_session()
 	var config := _enemy_config()
-	_set_primary_hero_position(session, 0, 4)
+	_extend_map_south(session, 8)
+	_set_primary_hero_position(session, 0, 6)
 	var hidden_candidates: Array = _hero_target_candidates_for_origin(session, Vector2i(7, 2), config)
 	if not hidden_candidates.is_empty():
 		_fail("Hidden player hero should not become a hero target without AI sighting memory: %s" % JSON.stringify(hidden_candidates))
@@ -387,7 +388,7 @@ func _hero_targets_require_ai_sighting() -> Dictionary:
 	if visible_candidates.is_empty():
 		_fail("Currently sighted player hero did not become eligible for hero pressure.")
 		return {}
-	_set_primary_hero_position(session, 0, 4)
+	_set_primary_hero_position(session, 0, 6)
 	var remembered_candidates: Array = _hero_target_candidates_for_origin(session, Vector2i(7, 2), config)
 	if remembered_candidates.is_empty():
 		_fail("Recent remembered player hero sighting did not remain eligible for hero pressure.")
@@ -504,7 +505,8 @@ func _convoy_interception_requires_known_route_and_hero() -> Dictionary:
 	var session = _base_session()
 	var config := _ordinary_target_config()
 	var hero_id := String(session.overworld.get("active_hero_id", "hero_lyra"))
-	_set_primary_hero_position(session, 0, 4)
+	_extend_map_south(session, 8)
+	_set_primary_hero_position(session, 0, 6)
 	_make_hidden_hero_delivery_session(session, hero_id)
 	var origin := Vector2i(7, 2)
 	var hidden_candidates := EnemyAdventureRules._target_candidates(session, config, origin)
@@ -1027,6 +1029,20 @@ func _target_assignment_respects_faction_scoped_route_occupancy() -> Dictionary:
 		"mireclaw_goal_distance": int(mire_plan.get("goal_distance", -1)),
 		"embercourt_goal_distance": int(ember_plan.get("goal_distance", -1)),
 	}
+
+# River Pass (9x5) lies wholly inside the AI town's round sight, so hidden-hero
+# fixtures extend it south with open grass to reach tiles no AI source sees.
+func _extend_map_south(session, height: int) -> void:
+	var rows: Array = session.overworld.get("map", [])
+	var width: int = rows[0].size() if not rows.is_empty() and rows[0] is Array else 0
+	while rows.size() < height:
+		var row := []
+		for _x in range(width):
+			row.append("grass")
+		rows.append(row)
+	session.overworld["map"] = rows
+	session.overworld["map_size"] = {"width": width, "height": rows.size()}
+	OverworldRules.refresh_fog_of_war(session)
 
 func _base_session():
 	var session = ScenarioFactory.create_session(
@@ -2073,9 +2089,9 @@ func _legacy_known_world_visible_records_for_source_control(session, config: Dic
 func _legacy_known_world_append_visible_record_control(records: Array, source: Dictionary, target_kind: String, target_id: String, target_label: String, target_tile: Vector2i, priority: int, origin: Vector2i, radius: int, current_day: int) -> void:
 	if target_kind == "" or target_id == "":
 		return
-	var distance: int = abs(origin.x - target_tile.x) + abs(origin.y - target_tile.y)
-	if distance > radius:
+	if not HeroCommandRules.within_scout_radius(target_tile.x - origin.x, target_tile.y - origin.y, radius):
 		return
+	var distance: int = abs(origin.x - target_tile.x) + abs(origin.y - target_tile.y)
 	records.append({
 		"target_kind": target_kind,
 		"target_id": target_id,
@@ -2137,9 +2153,10 @@ func _legacy_known_world_hero_records_control(session, sources: Array) -> Array:
 			if not (source_value is Dictionary):
 				continue
 			var source: Dictionary = source_value
-			var distance: int = abs(hero_tile.x - int(source.get("x", 0))) + abs(hero_tile.y - int(source.get("y", 0)))
-			if distance > int(source.get("radius", 0)):
+			var offset := hero_tile - Vector2i(int(source.get("x", 0)), int(source.get("y", 0)))
+			if not HeroCommandRules.within_scout_radius(offset.x, offset.y, int(source.get("radius", 0))):
 				continue
+			var distance: int = abs(offset.x) + abs(offset.y)
 			if best_source.is_empty() or distance < best_distance:
 				best_source = source
 				best_distance = distance

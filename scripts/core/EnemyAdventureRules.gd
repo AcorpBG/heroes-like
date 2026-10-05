@@ -3472,7 +3472,7 @@ static func _scoutable_target_candidates(
 		if _enemy_target_scouted(session, faction_id, target_kind, target_id):
 			continue
 		var target := Vector2i(int(candidate.get("target_x", origin.x)), int(candidate.get("target_y", origin.y)))
-		if abs(origin.x - target.x) + abs(origin.y - target.y) > radius:
+		if not HeroCommandRulesScript.within_scout_radius(target.x - origin.x, target.y - origin.y, radius):
 			continue
 		output.append(candidate)
 	output.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
@@ -3796,9 +3796,10 @@ static func _current_enemy_player_hero_sighting_records(
 				continue
 			profile["hero_source_comparison_count"] = int(profile.get("hero_source_comparison_count", 0)) + 1
 			var source: Dictionary = source_value
-			var distance: int = abs(hero_tile.x - int(source.get("x", 0))) + abs(hero_tile.y - int(source.get("y", 0)))
-			if distance > int(source.get("radius", 0)):
+			var offset := hero_tile - Vector2i(int(source.get("x", 0)), int(source.get("y", 0)))
+			if not HeroCommandRulesScript.within_scout_radius(offset.x, offset.y, int(source.get("radius", 0))):
 				continue
+			var distance: int = abs(offset.x) + abs(offset.y)
 			if best_source.is_empty() or distance < best_distance:
 				best_source = source
 				best_distance = distance
@@ -4050,9 +4051,9 @@ static func _append_visible_scout_record(
 ) -> void:
 	if target_kind == "" or target_id == "":
 		return
-	var distance: int = abs(origin.x - target_tile.x) + abs(origin.y - target_tile.y)
-	if distance > radius:
+	if not HeroCommandRulesScript.within_scout_radius(target_tile.x - origin.x, target_tile.y - origin.y, radius):
 		return
+	var distance: int = abs(origin.x - target_tile.x) + abs(origin.y - target_tile.y)
 	records.append({
 		"target_kind": target_kind,
 		"target_id": target_id,
