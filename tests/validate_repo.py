@@ -51654,11 +51654,11 @@ def validate_six_progression_shrines(errors: list[str]) -> None:
 
 def validate_five_scouting_structures(errors: list[str]) -> None:
     expected = {
-        "site_hilltop_signal_nest": ("object_hilltop_signal_nest", "ninefold-confluence", "ninefold_hilltop_signal_nest", (13,12), 7, "resource_site_scouting_hilltop_signal_nest_controlled", [0,0,48,48], "1ea9a6becbbd34ff1f5eadb1d04d94c79a08c270091f8d4af5e787345ffa0a58"),
-        "site_marsh_listener_post": ("object_marsh_listener_post", "mudkeel-hive-foreclosure", "mudkeel_dormant_b", (2,5), 6, "resource_site_scouting_marsh_listener_post_controlled", [48,0,48,48], "e179a31058ba88e6a26950ab5785e092e591b77d6ad36004675aaff78cb71c9b"),
-        "site_prism_survey_frame": ("object_prism_survey_frame", "lenscaptain-greenline-survey", "lenscaptain_dormant_a", (1,0), 8, "resource_site_scouting_prism_survey_frame_controlled", [96,0,48,48], "0df5d4316814c140c8a38ff39f0ade26c83c4a99fd6e937e6e78b7d1e3eda310"),
-        "site_underway_echo_well": ("object_underway_echo_well", "ninefold-confluence", "ninefold_underway_echo_well", (32,44), 6, "resource_site_scouting_underway_echo_well_controlled", [144,0,48,48], "870a784fa8578a39b11b4127fbde37e77f7492546ad7e694ef707fb25d0759c6"),
-        "site_coast_bell_watch": ("object_coast_bell_watch", "keelwarden-lockfire-run", "keelwarden_dormant_a", (1,0), 8, "resource_site_scouting_coast_bell_watch_controlled", [192,0,48,48], "e4a04f912ec75d91d39286b7a56a2d774e3aff1c7f7b1beb7fafcf620d3ad079"),
+        "site_hilltop_signal_nest": ("object_hilltop_signal_nest", "ninefold-confluence", "ninefold_hilltop_signal_nest", (13,12), 10, "resource_site_scouting_hilltop_signal_nest_controlled", [0,0,48,48], "1ea9a6becbbd34ff1f5eadb1d04d94c79a08c270091f8d4af5e787345ffa0a58"),
+        "site_marsh_listener_post": ("object_marsh_listener_post", "mudkeel-hive-foreclosure", "mudkeel_dormant_b", (2,5), 10, "resource_site_scouting_marsh_listener_post_controlled", [48,0,48,48], "e179a31058ba88e6a26950ab5785e092e591b77d6ad36004675aaff78cb71c9b"),
+        "site_prism_survey_frame": ("object_prism_survey_frame", "lenscaptain-greenline-survey", "lenscaptain_dormant_a", (1,0), 10, "resource_site_scouting_prism_survey_frame_controlled", [96,0,48,48], "0df5d4316814c140c8a38ff39f0ade26c83c4a99fd6e937e6e78b7d1e3eda310"),
+        "site_underway_echo_well": ("object_underway_echo_well", "ninefold-confluence", "ninefold_underway_echo_well", (32,44), 10, "resource_site_scouting_underway_echo_well_controlled", [144,0,48,48], "870a784fa8578a39b11b4127fbde37e77f7492546ad7e694ef707fb25d0759c6"),
+        "site_coast_bell_watch": ("object_coast_bell_watch", "keelwarden-lockfire-run", "keelwarden_dormant_a", (1,0), 10, "resource_site_scouting_coast_bell_watch_controlled", [192,0,48,48], "e4a04f912ec75d91d39286b7a56a2d774e3aff1c7f7b1beb7fafcf620d3ad079"),
     }
     # Historical generated-source proof; current derivatives are reconstructed above.
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "scouting_structure_controlled_wave1"
@@ -81082,7 +81082,7 @@ def validate_six_fogbreak_survey_expeditions(errors: list[str]) -> None:
         expected_guard_placements = [f"{prefix}_west_guard",f"{prefix}_south_guard",f"{prefix}_east_guard"]
         ensure([row.get("placement_id") for row in guards] == expected_guard_placements and [row.get("encounter_id") for row in guards] == encounter_ids and all(row.get("prefer_identity_landmark") is True for row in guards), errors, f"{scenario_id} lost its exact three guarded encounter placements")
         directly_placed_encounters.update(str(row.get("encounter_id", "")) for row in guards)
-        ensure(site.get("content_batch_id") == slice_id and site.get("content_status") == "fogbreak_survey_instrument_live" and site.get("family") == "scouting_structure" and site.get("persistent_control") is True and site.get("vision_radius") == 8 and site.get("runtime_boundary", {}).get("status") == "fogbreak_survey_instrument_live", errors, f"{site_id} lost its live persistent eight-tile scouting boundary")
+        ensure(site.get("content_batch_id") == slice_id and site.get("content_status") == "fogbreak_survey_instrument_live" and site.get("family") == "scouting_structure" and site.get("persistent_control") is True and site.get("vision_radius") == 10 and site.get("runtime_boundary", {}).get("status") == "fogbreak_survey_instrument_live", errors, f"{site_id} lost its live persistent ten-tile scouting boundary")
         asset = assets.get(asset_id, {})
         ensure(site_sprites.get(site_id, {}).get("asset_id") == asset_id and asset.get("path") == atlas_res and asset.get("atlas_region") == [v * 4 for v in region] and asset.get("atlas_size") == [1152,192] and asset.get("assigned_resource_site_id") == site_id and asset.get("source_model") == "built_in_image_gen_original_fogbreak_survey_instruments_atlas" and len(str(asset.get("accessible_description", ""))) >= 100, errors, f"{site_id} lost its exact accessible survey art")
         source = source_rows.get(site_id, {})

@@ -227,7 +227,7 @@ func _assignment_path_context_equivalence_case(failures: Array) -> Dictionary:
 	}
 
 func _observer_visibility_surface_fingerprint_case(failures: Array) -> Dictionary:
-	var surface_map := _filled_map(10, 5, "water")
+	var surface_map := _filled_map(14, 5, "water")
 	for x in range(1, 6):
 		surface_map[1][x] = "grass"
 		surface_map[3][x] = "grass"
@@ -237,13 +237,13 @@ func _observer_visibility_surface_fingerprint_case(failures: Array) -> Dictionar
 	session.day = 4
 	var start := Vector2i(1, 1)
 	var goals := [Vector2i(5, 1)]
-	var map_size := Vector2i(10, 5)
+	var map_size := Vector2i(14, 5)
 	var visible_hero_index := EnemyAdventureRules._tile_index(Vector2i(2, 1), map_size)
-	var hidden_hero_index := EnemyAdventureRules._tile_index(Vector2i(9, 4), map_size)
+	var hidden_hero_index := EnemyAdventureRules._tile_index(Vector2i(13, 4), map_size)
 	var sheltered_hero_index := EnemyAdventureRules._tile_index(Vector2i(6, 3), map_size)
 	session.overworld["player_heroes"] = [
 		{"id": "surface_visible_hero", "name": "Visible Route Hero", "position": {"x": 2, "y": 1}},
-		{"id": "surface_hidden_hero", "name": "Hidden Route Hero", "position": {"x": 9, "y": 4}},
+		{"id": "surface_hidden_hero", "name": "Hidden Route Hero", "position": {"x": 13, "y": 4}},
 		{"id": "surface_sheltered_hero", "name": "Sheltered Route Hero", "position": {"x": 6, "y": 3}},
 	]
 	session.overworld["resource_nodes"] = [{
