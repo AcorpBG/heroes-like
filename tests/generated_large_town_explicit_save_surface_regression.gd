@@ -473,6 +473,10 @@ func _assert_summary_recovery_controls() -> Dictionary:
 		return {}
 	if FileAccess.file_exists(backup_path):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(backup_path))
+	# Earlier renames retained a previous generation; this control has no valid recovery source.
+	var previous_path := "%s.previous" % path
+	if FileAccess.file_exists(previous_path):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(previous_path))
 	SaveService.validation_clear_summary_cache()
 	var replacement_session = _small_context_session("overworld")
 	if replacement_session == null:

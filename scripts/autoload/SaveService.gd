@@ -46,6 +46,10 @@ const GENERATED_OPENING_AUTOSAVE_COMPLETED_FLAG := "generated_overworld_initial_
 const SAVE_TRANSACTION_FAILURE_ENV := "HEROES_LIKE_SAVE_FAIL_PHASE"
 const SAVE_TRANSACTION_CANDIDATE_SUFFIX := ".candidate"
 const SAVE_TRANSACTION_BACKUP_SUFFIX := ".backup"
+# One retained generation: the save a verified commit replaced. FileAccess.flush()
+# does not reach the disk, so a power cut right after a save can leave a broken
+# live file after its backup is gone.
+const SAVE_TRANSACTION_PREVIOUS_SUFFIX := ".previous"
 const PROGRESSION_STORAGE_STATUS_MISSING := "missing"
 const PROGRESSION_STORAGE_STATUS_CURRENT_VALID := "current_valid"
 const PROGRESSION_STORAGE_STATUS_RECOVERED := "recovered"
@@ -98,7 +102,7 @@ func _save_file_identity_in_directory(validated_name: String, directory: DirAcce
 				filename = base
 				name = filename.trim_suffix(NAMED_SAVE_SUFFIX)
 				break
-		for suffix in ["", SAVE_TRANSACTION_CANDIDATE_SUFFIX, SAVE_TRANSACTION_BACKUP_SUFFIX]:
+		for suffix in ["", SAVE_TRANSACTION_CANDIDATE_SUFFIX, SAVE_TRANSACTION_BACKUP_SUFFIX, SAVE_TRANSACTION_PREVIOUS_SUFFIX]:
 			if directory.is_link(filename + String(suffix)):
 				return {"ok": false, "message": "Linked save files are not supported."}
 	return {"ok": true, "slot_type": SLOT_TYPE_FILE, "slot_id": name, "name": name, "path": SAVE_DIR.path_join(filename)}
@@ -187,6 +191,7 @@ func validation_transaction_artifact_paths(file_path: String) -> Dictionary:
 	return {
 		"candidate": _save_transaction_candidate_path(file_path),
 		"backup": _save_transaction_backup_path(file_path),
+		"previous": _save_transaction_previous_path(file_path),
 	}
 
 func validation_clear_general_profile_log() -> Dictionary:
@@ -482,7 +487,10 @@ func delete_session_from_summary(summary: Dictionary) -> Dictionary:
 		}
 
 	var path := String(identity.get("path", ""))
-	var remove_error := DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	# A deleted save must not come back from its retained previous generation.
+	var remove_error := OK if _remove_save_transaction_artifact(_save_transaction_previous_path(path)) else FAILED
+	if remove_error == OK:
+		remove_error = DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 	if remove_error != OK:
 		return {
 			"ok": false,
@@ -555,7 +563,12 @@ func inspect_progression_storage() -> Dictionary:
 	if not bool(live.get("exists", false)):
 		var missing_status := PROGRESSION_STORAGE_STATUS_MISSING
 		var missing_reason := String(recovery.get("reason", "missing"))
-		if missing_reason in ["backup_restore_failed", "backup_restore_verification_failed"]:
+		if missing_reason in [
+			"backup_restore_failed",
+			"backup_restore_verification_failed",
+			"previous_restore_failed",
+			"previous_restore_verification_failed",
+		]:
 			missing_status = PROGRESSION_STORAGE_STATUS_INVALID
 		return _progression_storage_result(
 			missing_status,
@@ -2211,6 +2224,8 @@ func _save_raw_dictionary(
 		"invalid_live_remove_failed",
 		"backup_restore_failed",
 		"backup_restore_verification_failed",
+		"previous_restore_failed",
+		"previous_restore_verification_failed",
 		"future_version",
 	]:
 		push_error("Save transaction recovery could not establish a safe commit base for %s: %s" % [file_path, recovery])
@@ -2289,7 +2304,8 @@ func _save_raw_dictionary(
 		push_error("Committed save verification failed: %s" % file_path)
 		_rollback_save_transaction(file_path, candidate_path, backup_path, had_live)
 		return ""
-	_remove_save_transaction_artifact(backup_path)
+	if had_live:
+		_retain_previous_save_generation(file_path, backup_path)
 	_runtime_save_profile_bucket(profile, "write", ProfileLogScript.elapsed_ms(write_started))
 	_invalidate_summary_cache_for_path(file_path)
 	return file_path
@@ -2299,6 +2315,17 @@ func _save_transaction_candidate_path(file_path: String) -> String:
 
 func _save_transaction_backup_path(file_path: String) -> String:
 	return "%s%s" % [file_path, SAVE_TRANSACTION_BACKUP_SUFFIX]
+
+func _save_transaction_previous_path(file_path: String) -> String:
+	return "%s%s" % [file_path, SAVE_TRANSACTION_PREVIOUS_SUFFIX]
+
+# The commit is verified, so the backup becomes the previous generation. A
+# backup must never outlive its commit: if the rotation fails, drop it.
+func _retain_previous_save_generation(file_path: String, backup_path: String) -> void:
+	var previous_path := _save_transaction_previous_path(file_path)
+	if _remove_save_transaction_artifact(previous_path) and _rename_save_transaction_path(backup_path, previous_path) == OK:
+		return
+	_remove_save_transaction_artifact(backup_path)
 
 func _read_json_dictionary_unrecovered(file_path: String, include_payload: bool = true) -> Dictionary:
 	var result := {
@@ -2408,8 +2435,17 @@ func _recover_save_transaction(file_path: String, include_live_read: bool = fals
 			),
 		}, restored, include_live_read)
 
-	# A candidate is never recovery authority. Without a valid backup, retain any
-	# malformed live/backup bytes for diagnostics and discard staging only.
+	# Without a valid backup, a broken live file falls back to the previous
+	# generation. A missing live file never does: that is how saves are deleted.
+	if bool(live.get("exists", false)):
+		var previous_recovery := _recover_previous_save_generation(file_path, include_live_read)
+		if not previous_recovery.is_empty():
+			_remove_save_transaction_artifact(candidate_path)
+			return previous_recovery
+
+	# A candidate is never recovery authority. Without a valid backup or previous
+	# generation, retain any malformed live/backup bytes for diagnostics and
+	# discard staging only.
 	_remove_save_transaction_artifact(candidate_path)
 	return _with_live_read({
 		"ok": not bool(live.get("exists", false)),
@@ -2417,6 +2453,46 @@ func _recover_save_transaction(file_path: String, include_live_read: bool = fals
 		"live_valid": false,
 		"reason": "no_valid_backup" if bool(live.get("exists", false)) else "live_missing",
 	}, live, include_live_read)
+
+# Empty when there is no valid previous generation to restore.
+func _recover_previous_save_generation(file_path: String, include_live_read: bool) -> Dictionary:
+	var previous_path := _save_transaction_previous_path(file_path)
+	var previous := _read_json_dictionary_unrecovered(previous_path)
+	if not _save_transaction_payload_valid(file_path, previous):
+		return {}
+	if not _remove_save_transaction_artifact(file_path):
+		return {
+			"ok": false,
+			"recovered": false,
+			"live_valid": false,
+			"reason": "invalid_live_remove_failed",
+		}
+	var restore_error := _rename_save_transaction_path(previous_path, file_path)
+	if restore_error != OK:
+		return {
+			"ok": false,
+			"recovered": false,
+			"live_valid": false,
+			"reason": "previous_restore_failed",
+			"error": restore_error,
+		}
+	var restored := _read_json_dictionary_unrecovered(file_path)
+	if not _save_transaction_payload_valid(file_path, restored) or String(restored.get("text", "")) != String(previous.get("text", "")):
+		return {
+			"ok": false,
+			"recovered": false,
+			"live_valid": false,
+			"reason": "previous_restore_verification_failed",
+		}
+	_invalidate_summary_cache_for_path(file_path)
+	return _with_live_read({
+		"ok": true,
+		"recovered": true,
+		"live_valid": true,
+		"retained_manual_name": _manual_slot_name_from_payload(
+			restored.get("payload", {}) if restored.get("payload", {}) is Dictionary else {}
+		),
+	}, restored, include_live_read)
 
 func _with_live_read(recovery: Dictionary, live_read: Dictionary, include_live_read: bool) -> Dictionary:
 	if include_live_read:

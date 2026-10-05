@@ -157,6 +157,7 @@ func _exercise_route(
 	var route_id := String(route.get("id", ""))
 	var corrupt := bool(route.get("corrupt", false))
 	if corrupt:
+		_remove_manual_slot_previous_generation(2)
 		var corrupt_file := FileAccess.open(_manual_slot_path(2), FileAccess.WRITE)
 		if corrupt_file == null:
 			return _fail_bool("Could not seed unreadable Manual Slot 2 for %s." % route_id)
@@ -759,6 +760,7 @@ func _exercise_town_cancel_case(
 	var old_fixture = ScenarioFactory.create_session("river-pass", "hard", SessionState.LAUNCH_MODE_SKIRMISH)
 	old_fixture.day = 3
 	if bool(case.get("corrupt", false)):
+		_remove_manual_slot_previous_generation(2)
 		var corrupt_file := FileAccess.open(_manual_slot_path(2), FileAccess.WRITE)
 		if corrupt_file == null:
 			return _fail_bool("Could not create Town unreadable Manual Slot 2 fixture.")
@@ -1500,6 +1502,7 @@ func _exercise_corrupt_slot(
 	campaign_before: Dictionary,
 	settings_before: Dictionary
 ) -> bool:
+	_remove_manual_slot_previous_generation(2)
 	var corrupt_file := FileAccess.open(_manual_slot_path(2), FileAccess.WRITE)
 	if corrupt_file == null:
 		return _fail_bool("Could not create corrupt Manual Slot 2 fixture.")
@@ -1630,6 +1633,13 @@ func _tracked_paths() -> Array:
 
 func _autosave_path() -> String:
 	return "%s/%s" % [SaveService.SAVE_DIR, SaveService.AUTOSAVE_FILE]
+
+# An unreadable slot fixture must have nothing to recover from, including the
+# previous generation an earlier save of the slot retained.
+func _remove_manual_slot_previous_generation(slot: int) -> void:
+	var previous_path := String(SaveService.validation_transaction_artifact_paths(_manual_slot_path(slot)).get("previous", ""))
+	if previous_path != "" and FileAccess.file_exists(previous_path):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(previous_path))
 
 func _manual_slot_path(slot: int) -> String:
 	return "%s/%s%d.json" % [SaveService.SAVE_DIR, SaveService.SAVE_PREFIX, slot]

@@ -6,6 +6,7 @@ const REPORT_ID := "CAMPAIGN_PROGRESSION_SEMANTIC_STORAGE_FAIL_CLOSED_REGRESSION
 const PROGRESSION_PATH := "user://saves/campaign_progression.json"
 const CANDIDATE_PATH := "user://saves/campaign_progression.json.candidate"
 const BACKUP_PATH := "user://saves/campaign_progression.json.backup"
+const PREVIOUS_PATH := "user://saves/campaign_progression.json.previous"
 const CAMPAIGN_ID := "campaign_reedfall"
 const SCENARIO_ID := "river-pass"
 const BLOCKED_MESSAGE_FRAGMENT := "Existing data was preserved and cannot be overwritten."
@@ -518,7 +519,7 @@ func _canonical_dictionary(value: Dictionary) -> Dictionary:
 
 
 func _capture_original_state() -> void:
-	for path in [PROGRESSION_PATH, CANDIDATE_PATH, BACKUP_PATH]:
+	for path in [PROGRESSION_PATH, CANDIDATE_PATH, BACKUP_PATH, PREVIOUS_PATH]:
 		_original_files[path] = _file_state(path)
 	_original_active_session = SessionState.active_session
 	_original_profile = CampaignProgression.profile.duplicate(true)
@@ -529,7 +530,7 @@ func _capture_original_state() -> void:
 
 
 func _clear_progression_files() -> void:
-	for path in [PROGRESSION_PATH, CANDIDATE_PATH, BACKUP_PATH]:
+	for path in [PROGRESSION_PATH, CANDIDATE_PATH, BACKUP_PATH, PREVIOUS_PATH]:
 		_remove_path(path)
 
 

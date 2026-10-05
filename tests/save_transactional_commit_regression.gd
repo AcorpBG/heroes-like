@@ -8,6 +8,8 @@ const SAVE_DIR := "user://saves"
 const MANUAL_PATH := "user://saves/slot1.json"
 const AUTOSAVE_PATH := "user://saves/autosave.json"
 const PROGRESSION_PATH := "user://saves/campaign_progression.json"
+const NAMED_SAVE_NAME := "Transaction Previous Probe"
+const NAMED_SAVE_PATH := "user://saves/Transaction Previous Probe.save.json"
 
 var _original_states := {}
 var _original_failure_env := ""
@@ -40,6 +42,9 @@ func _run() -> void:
 	var recovery_cases := _validate_recovery_boundaries()
 	if recovery_cases.is_empty():
 		return
+	var previous_generation := _validate_previous_generation()
+	if previous_generation.is_empty():
+		return
 	_cleanup()
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
@@ -48,6 +53,7 @@ func _run() -> void:
 		"progression_failure": progression_failure,
 		"successful_commit": success_case,
 		"recovery": recovery_cases,
+		"previous_generation": previous_generation,
 		"save_version": SessionState.SAVE_VERSION,
 	})])
 	get_tree().quit(0)
@@ -385,6 +391,214 @@ func _validate_progression_backup_recovery() -> Dictionary:
 	return {"dictionary_exact": true, "bytes_exact": true, "artifacts_cleaned": true}
 
 
+func _validate_previous_generation() -> Dictionary:
+	var retained := _validate_commit_retains_previous_bytes()
+	if retained.is_empty():
+		return {}
+	var corrupt_live := _validate_corrupt_live_recovers_previous()
+	if corrupt_live.is_empty():
+		return {}
+	var missing_live := _validate_missing_live_ignores_previous()
+	if missing_live.is_empty():
+		return {}
+	var slot_delete := _validate_slot_delete_removes_previous()
+	if slot_delete.is_empty():
+		return {}
+	var named_file := _validate_named_save_previous()
+	if named_file.is_empty():
+		return {}
+	var progression := _validate_progression_previous_boundaries()
+	if progression.is_empty():
+		return {}
+	return {
+		"commit_retains_previous": retained,
+		"corrupt_live_without_backup": corrupt_live,
+		"missing_live": missing_live,
+		"slot_delete": slot_delete,
+		"named_file": named_file,
+		"progression": progression,
+	}
+
+
+func _validate_commit_retains_previous_bytes() -> Dictionary:
+	_clear_paths([MANUAL_PATH])
+	SaveService.validation_clear_summary_cache()
+	var previous_path := String(SaveService.validation_transaction_artifact_paths(MANUAL_PATH).get("previous", ""))
+	if previous_path == "":
+		_fail("SaveService does not report the previous-generation artifact path.")
+		return {}
+	if SaveService.save_runtime_manual_session(_session_fixture(50, "previous_first"), 1).get("ok", false) != true:
+		_fail("Could not seed the first previous-generation commit.")
+		return {}
+	if FileAccess.file_exists(previous_path):
+		_fail("A first save into an empty slot created a previous generation.")
+		return {}
+	var first_state := _file_state(MANUAL_PATH)
+	if SaveService.save_runtime_manual_session(_session_fixture(51, "previous_second"), 1).get("ok", false) != true:
+		_fail("Could not commit the second previous-generation save.")
+		return {}
+	if _file_state(previous_path) != first_state or not _artifacts_absent(MANUAL_PATH):
+		_fail("A verified commit did not retain the exact prior bytes as the previous generation, or left a backup.")
+		return {}
+	var second_state := _file_state(MANUAL_PATH)
+	if SaveService.save_runtime_manual_session(_session_fixture(52, "previous_third"), 1).get("ok", false) != true:
+		_fail("Could not commit the third previous-generation save.")
+		return {}
+	if _file_state(previous_path) != second_state or not _artifacts_absent(MANUAL_PATH):
+		_fail("A later commit did not replace the previous generation with the bytes it replaced.")
+		return {}
+	var restored = SaveService.restore_manual_session(1)
+	if restored == null or restored.day != 52:
+		_fail("Retaining a previous generation changed what the live slot loads.")
+		return {}
+	return {"previous_bytes_exact": true, "rotates_one_generation": true, "backup_absent": true}
+
+
+func _validate_corrupt_live_recovers_previous() -> Dictionary:
+	_clear_paths([MANUAL_PATH])
+	SaveService.validation_clear_summary_cache()
+	var artifacts: Dictionary = SaveService.validation_transaction_artifact_paths(MANUAL_PATH)
+	var previous_path := String(artifacts.get("previous", ""))
+	if SaveService.save_runtime_manual_session(_session_fixture(53, "previous_recovery_old"), 1).get("ok", false) != true:
+		_fail("Could not seed the previous-generation recovery fixture.")
+		return {}
+	var prior_state := _file_state(MANUAL_PATH)
+	if SaveService.save_runtime_manual_session(_session_fixture(54, "previous_recovery_new"), 1).get("ok", false) != true:
+		_fail("Could not commit the save that a power cut corrupts.")
+		return {}
+	# A torn write after the backup was retired: broken live, no backup, staging left behind.
+	_write_text(MANUAL_PATH, "{corrupt live")
+	_write_text(String(artifacts.get("candidate", "")), JSON.stringify(_session_fixture(55, "candidate_must_not_promote").to_dict(), "\t"))
+	SaveService.validation_clear_summary_cache()
+	var summary: Dictionary = SaveService.inspect_manual_slot(1)
+	if not SaveService.can_load_summary(summary) or _file_state(MANUAL_PATH) != prior_state:
+		_fail("A corrupt live save without a backup did not recover the exact previous generation: %s" % JSON.stringify(_compact_summary(summary)))
+		return {}
+	if not _artifacts_absent(MANUAL_PATH) or FileAccess.file_exists(previous_path):
+		_fail("Previous-generation recovery left staging, a backup, or a duplicate previous generation.")
+		return {}
+	var restored = SaveService.restore_manual_session(1)
+	if restored == null or restored.day != 53 or String(restored.flags.get("transaction_marker", "")) != "previous_recovery_old":
+		_fail("Previous-generation recovery did not restore the prior session.")
+		return {}
+	return {"recovered": true, "bytes_exact": true, "candidate_not_promoted": true, "artifacts_cleaned": true}
+
+
+func _validate_missing_live_ignores_previous() -> Dictionary:
+	_clear_paths([MANUAL_PATH])
+	SaveService.validation_clear_summary_cache()
+	var previous_path := String(SaveService.validation_transaction_artifact_paths(MANUAL_PATH).get("previous", ""))
+	if SaveService.save_runtime_manual_session(_session_fixture(56, "missing_live_previous"), 1).get("ok", false) != true:
+		_fail("Could not seed the missing-live previous-generation fixture.")
+		return {}
+	var previous_state := _file_state(MANUAL_PATH)
+	_write_bytes(previous_path, previous_state.get("bytes", PackedByteArray()))
+	_remove_path(MANUAL_PATH)
+	SaveService.validation_clear_summary_cache()
+	var summary: Dictionary = SaveService.inspect_manual_slot(1)
+	if SaveService.can_load_summary(summary) or FileAccess.file_exists(MANUAL_PATH):
+		_fail("A missing live save was resurrected from its previous generation.")
+		return {}
+	if _file_state(previous_path) != previous_state:
+		_fail("Inspecting an empty slot changed its previous generation.")
+		return {}
+	return {"loadable": false, "previous_not_promoted": true}
+
+
+func _validate_slot_delete_removes_previous() -> Dictionary:
+	_clear_paths([MANUAL_PATH])
+	SaveService.validation_clear_summary_cache()
+	var previous_path := String(SaveService.validation_transaction_artifact_paths(MANUAL_PATH).get("previous", ""))
+	for day in [57, 58]:
+		if SaveService.save_runtime_manual_session(_session_fixture(day, "delete_previous_%d" % day), 1).get("ok", false) != true:
+			_fail("Could not seed the slot-delete previous-generation fixture.")
+			return {}
+	if not FileAccess.file_exists(previous_path):
+		_fail("The slot-delete fixture has no previous generation.")
+		return {}
+	var result: Dictionary = SaveService.delete_session_from_summary(SaveService.inspect_manual_slot(1))
+	if not bool(result.get("ok", false)) or FileAccess.file_exists(MANUAL_PATH) or FileAccess.file_exists(previous_path):
+		_fail("Deleting a manual slot kept its live file or previous generation: %s" % JSON.stringify(result))
+		return {}
+	SaveService.validation_clear_summary_cache()
+	if SaveService.can_load_summary(SaveService.inspect_manual_slot(1)) or FileAccess.file_exists(MANUAL_PATH):
+		_fail("A deleted manual slot came back after deletion.")
+		return {}
+	return {"live_removed": true, "previous_removed": true, "stays_deleted": true}
+
+
+func _validate_named_save_previous() -> Dictionary:
+	_clear_paths([NAMED_SAVE_PATH])
+	SaveService.validation_clear_summary_cache()
+	var previous_path := String(SaveService.validation_transaction_artifact_paths(NAMED_SAVE_PATH).get("previous", ""))
+	if SaveService.save_runtime_file_session(_session_fixture(59, "named_previous_old"), NAMED_SAVE_NAME).get("ok", false) != true:
+		_fail("Could not seed the named-save previous-generation fixture.")
+		return {}
+	var prior_state := _file_state(NAMED_SAVE_PATH)
+	var overwrite: Dictionary = SaveService.save_runtime_file_session(_session_fixture(60, "named_previous_new"), NAMED_SAVE_NAME, true, FileAccess.get_sha256(NAMED_SAVE_PATH))
+	if not bool(overwrite.get("ok", false)) or _file_state(previous_path) != prior_state or not _artifacts_absent(NAMED_SAVE_PATH):
+		_fail("Overwriting a named save did not retain its exact previous generation: %s" % JSON.stringify(_compact_result(overwrite)))
+		return {}
+	var listed := 0
+	for summary in SaveService.list_save_files():
+		var path := String(summary.get("path", ""))
+		if path.ends_with(".previous") or String(summary.get("slot_id", "")).ends_with(".previous"):
+			_fail("The named save library listed a previous generation: %s" % path)
+			return {}
+		if path == NAMED_SAVE_PATH:
+			listed += 1
+	if listed != 1:
+		_fail("The named save library listed the probe %d times instead of once." % listed)
+		return {}
+	var result: Dictionary = SaveService.delete_session_from_summary(SaveService.inspect_save_file(NAMED_SAVE_NAME))
+	if not bool(result.get("ok", false)) or FileAccess.file_exists(NAMED_SAVE_PATH) or FileAccess.file_exists(previous_path):
+		_fail("Deleting a named save kept its live file or previous generation: %s" % JSON.stringify(result))
+		return {}
+	for summary in SaveService.list_save_files():
+		if String(summary.get("path", "")) == NAMED_SAVE_PATH:
+			_fail("A deleted named save is still listed.")
+			return {}
+	return {"previous_bytes_exact": true, "listed_once": true, "delete_removes_previous": true}
+
+
+func _validate_progression_previous_boundaries() -> Dictionary:
+	_clear_paths([PROGRESSION_PATH])
+	var previous_path := String(SaveService.validation_transaction_artifact_paths(PROGRESSION_PATH).get("previous", ""))
+	var old_profile := {
+		"version": 1,
+		"last_campaign_id": "campaign_reedfall",
+		"last_scenario_id": "river-pass",
+		"campaign_states": {},
+	}
+	var new_profile := old_profile.duplicate(true)
+	new_profile["last_scenario_id"] = "causeway-stand"
+	if SaveService.save_progression(old_profile) == "" or SaveService.save_progression(new_profile) == "":
+		_fail("Could not seed the progression previous-generation fixture.")
+		return {}
+	var previous_state := _file_state(previous_path)
+	_write_text(PROGRESSION_PATH, "{corrupt progression")
+	var storage: Dictionary = SaveService.inspect_progression_storage()
+	if String(storage.get("status", "")) != "recovered" or SaveService.load_progression() != _canonical_dictionary(old_profile) or _file_state(PROGRESSION_PATH) != previous_state:
+		_fail("Corrupt progression without a backup did not recover the previous generation: %s" % JSON.stringify(storage))
+		return {}
+	if not _artifacts_absent(PROGRESSION_PATH) or FileAccess.file_exists(previous_path):
+		_fail("Progression previous-generation recovery left transaction artifacts.")
+		return {}
+	var future_profile := old_profile.duplicate(true)
+	future_profile["version"] = int(CampaignRules.PROFILE_VERSION) + 1
+	_write_text(PROGRESSION_PATH, JSON.stringify(future_profile))
+	_write_bytes(previous_path, previous_state.get("bytes", PackedByteArray()))
+	var future_state := _file_state(PROGRESSION_PATH)
+	storage = SaveService.inspect_progression_storage()
+	if String(storage.get("status", "")) != "future_version" or not SaveService.load_progression().is_empty() or _file_state(PROGRESSION_PATH) != future_state:
+		_fail("A valid previous generation replaced a future-version progression file: %s" % JSON.stringify(storage))
+		return {}
+	if _file_state(previous_path) != previous_state:
+		_fail("Future-version progression inspection consumed the previous generation.")
+		return {}
+	return {"corrupt_live_recovered": true, "future_live_wins": true}
+
+
 func _session_fixture(day: int, marker: String) -> SessionStateStoreScript.SessionData:
 	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	session.day = day
@@ -403,10 +617,11 @@ func _add_transition_intent(session, label: String) -> void:
 
 func _tracked_paths() -> Array:
 	var paths := []
-	for live_path in [MANUAL_PATH, AUTOSAVE_PATH, PROGRESSION_PATH]:
+	for live_path in [MANUAL_PATH, AUTOSAVE_PATH, PROGRESSION_PATH, NAMED_SAVE_PATH]:
 		paths.append(live_path)
 		paths.append("%s.candidate" % live_path)
 		paths.append("%s.backup" % live_path)
+		paths.append("%s.previous" % live_path)
 	return paths
 
 
@@ -431,6 +646,7 @@ func _clear_paths(live_paths: Array) -> void:
 		var artifacts: Dictionary = SaveService.validation_transaction_artifact_paths(live_path)
 		_remove_path(String(artifacts.get("candidate", "")))
 		_remove_path(String(artifacts.get("backup", "")))
+		_remove_path(String(artifacts.get("previous", "")))
 
 
 func _artifacts_absent(live_path: String) -> bool:
