@@ -13,6 +13,7 @@ const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRu
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 const VisitBuildings = preload("res://scripts/core/VisitBuildingRules.gd")
+const CreatureDwellings = preload("res://scripts/core/CreatureDwellingRules.gd")
 
 const FOG_KEY := "fog"
 const VISIBLE_TILES_KEY := "visible_tiles"
@@ -24,7 +25,7 @@ const COMMAND_BRIEFING_KEY := "command_briefing"
 const COMMAND_RISK_FORECAST_KEY := "command_risk_forecast"
 const WEEKLY_GROWTH_INTERVAL := 7
 const BUILDING_CATEGORIES := ["civic", "dwelling", "economy", "support", "magic"]
-const LOGISTICS_SITE_FAMILIES := ["neutral_dwelling", "faction_outpost", "frontier_shrine"]
+const LOGISTICS_SITE_FAMILIES := ["faction_outpost", "frontier_shrine"]
 const LIVE_STOCKPILE_RESOURCE_KEYS := [
 	"gold",
 	"wood",
@@ -1479,6 +1480,15 @@ static func _collect_resource_node_result(
 		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
 		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
 		return _visit_building_result(session, node_result, site, refresh_fog_after_action, reward_choice_id)
+	if CreatureDwellings.is_dwelling(site):
+		if CreatureDwellings.guard_blocks(node, site, "player", session.day):
+			_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
+			_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
+			return _dwelling_guard_battle_result(session, node, site)
+		if PlayerRules.resource_controller_id(node) == "player":
+			_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
+			_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
+			return _dwelling_recruit_result(session, node, site, "")
 	if not _resource_node_claimable_by_player(node, site, session):
 		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
 		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
@@ -1657,8 +1667,225 @@ static func _collect_resource_node_result(
 			"mutation_facts": mutation_facts,
 		}
 	)
+	if CreatureDwellings.is_dwelling(site):
+		recapped = _attach_dwelling_recruit_offer(session, recapped, node, site)
 	_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
 	return recapped
+
+static func _dwelling_guard_battle_result(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> Dictionary:
+	var site_name := String(site.get("name", "the dwelling"))
+	var payload: Dictionary = _battle_rules().create_dwelling_guard_payload(session, String(node.get("placement_id", "")))
+	if payload.is_empty():
+		return {"ok": false, "message": "The guards of %s cannot be engaged." % site_name}
+	session.battle = payload
+	return {"ok": true, "message": "The guards of %s stand against you." % site_name, "route": "battle"}
+
+## What the visiting hero may hire here this week, for the hire window.
+static func dwelling_recruit_offer(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> Dictionary:
+	var available := CreatureDwellings.population(node, site, session.day)
+	var rows := []
+	for unit_id in CreatureDwellings.creatures(node, site, session.day):
+		var unit := ContentService.get_unit(unit_id)
+		var cost := CreatureDwellings.unit_cost(unit_id)
+		rows.append({
+			"unit_id": unit_id,
+			"name": String(unit.get("name", unit_id)),
+			"tier": int(unit.get("tier", 1)),
+			"available": int(available.get(unit_id, 0)),
+			"cost": cost,
+			"free": cost.is_empty(),
+		})
+	return {
+		"title": String(site.get("name", "Creature Dwelling")),
+		"site_id": String(node.get("site_id", "")),
+		"node": {
+			"placement_id": String(node.get("placement_id", "")),
+			"site_id": String(node.get("site_id", "")),
+			"collected": bool(node.get("collected", false)),
+			"collected_by_faction_id": String(node.get("collected_by_faction_id", "")),
+		},
+		"context": _resource_reward_choice_context(session, node),
+		"creatures": rows,
+		"summary": CreatureDwellings.summary(node, site, session.day),
+	}
+
+static func _dwelling_has_creatures_for_hire(offer: Dictionary) -> bool:
+	for row in offer.get("creatures", []):
+		if row is Dictionary and int(row.get("available", 0)) > 0:
+			return true
+	return false
+
+static func _dwelling_recruit_result(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary,
+	prefix: String
+) -> Dictionary:
+	var offer := dwelling_recruit_offer(session, node, site)
+	var site_name := String(site.get("name", "The dwelling"))
+	if not _dwelling_has_creatures_for_hire(offer):
+		var empty_message := "%s has no creatures left this week; more muster at the start of next week." % site_name
+		return {"ok": prefix != "", "message": ("%s %s" % [prefix, empty_message]).strip_edges()}
+	return {
+		"ok": true,
+		"route": "dwelling_recruit",
+		"message": ("%s %s: %s." % [prefix, site_name, String(offer.get("summary", ""))]).strip_edges(),
+		"dwelling_recruit": offer,
+	}
+
+static func _attach_dwelling_recruit_offer(
+	session: SessionStateStoreScript.SessionData,
+	result: Dictionary,
+	node: Dictionary,
+	site: Dictionary
+) -> Dictionary:
+	if not bool(result.get("ok", false)) or PlayerRules.resource_controller_id(node) != "player":
+		return result
+	var offer := dwelling_recruit_offer(session, node, site)
+	if _dwelling_has_creatures_for_hire(offer):
+		result["route"] = "dwelling_recruit"
+		result["dwelling_recruit"] = offer
+	return result
+
+## Hires creatures at the dwelling the active hero is visiting. hires maps
+## unit ids to counts; tier 1 creatures are free.
+static func hire_from_dwelling(
+	session: SessionStateStoreScript.SessionData,
+	hires: Dictionary,
+	expected_context: Dictionary
+) -> Dictionary:
+	normalize_overworld_state_for_runtime(session)
+	var node_result := _find_context_resource_node(session)
+	var index := int(node_result.get("index", -1))
+	if index < 0:
+		return {"ok": false, "message": "No dwelling is being visited."}
+	var node: Dictionary = node_result.get("node", {})
+	var site := NodePayload.site_for_node(node)
+	if not CreatureDwellings.is_dwelling(site) or _resource_reward_choice_context(session, node) != expected_context:
+		return {"ok": false, "message": "This dwelling is no longer being visited by that hero."}
+	if PlayerRules.resource_controller_id(node) != "player":
+		return {"ok": false, "message": "Flag %s before hiring there." % String(site.get("name", "the dwelling"))}
+	var available := CreatureDwellings.population(node, site, session.day)
+	var chosen := {}
+	for unit_id_value in hires.keys():
+		var unit_id := String(unit_id_value)
+		var count := mini(max(0, int(hires[unit_id_value])), int(available.get(unit_id, 0)))
+		if count > 0:
+			chosen[unit_id] = count
+	if chosen.is_empty():
+		return {"ok": false, "message": "Choose how many creatures to hire."}
+	var admission := HeroCommandRulesScript.army_addition_plan(session.overworld.get("army", {}).get("stacks", []), chosen)
+	if not bool(admission.get("ok", false)):
+		return admission
+	var price := CreatureDwellings.hire_cost(chosen)
+	if not price.is_empty() and not _can_afford(session, price):
+		return {"ok": false, "message": "You cannot afford %s." % _describe_resource_delta(price)}
+	if not price.is_empty():
+		_spend_resources(session, price)
+	for unit_id in chosen.keys():
+		CreatureDwellings.take(node, site, unit_id, int(chosen[unit_id]), session.day)
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	nodes[index] = node
+	session.overworld["resource_nodes"] = nodes
+	var hero = session.overworld.get("hero", {})
+	var army: Dictionary = hero.get("army", {}).duplicate(true)
+	army["stacks"] = admission.get("stacks", [])
+	hero["army"] = army
+	session.overworld["hero"] = hero
+	session.overworld["army"] = army
+	HeroCommandRulesScript.commit_active_hero(session)
+	var message := "%s hires %s at %s" % [String(hero.get("name", "The hero")), _describe_recruit_delta(chosen), String(site.get("name", "the dwelling"))]
+	message += " for %s." % _describe_resource_delta(price) if not price.is_empty() else " for free."
+	return _finalize_action_result(session, true, message, false, false, {"recruits": chosen.duplicate(true)})
+
+## Battle outcome against a dwelling guard. A win marks the guard beaten for
+## the player for good and flags the dwelling; otherwise the survivors hold
+## the dwelling against the player until the guard returns next week.
+static func update_dwelling_guard_after_battle(
+	session: SessionStateStoreScript.SessionData,
+	placement_id: String,
+	survivor_stacks: Array,
+	won: bool
+) -> String:
+	var node_result := _find_resource_node_by_placement(session, placement_id)
+	var index := int(node_result.get("index", -1))
+	if index < 0:
+		return ""
+	var node: Dictionary = node_result.get("node", {})
+	var site := NodePayload.site_for_node(node)
+	CreatureDwellings.record_guard_result(node, "player", survivor_stacks, won or survivor_stacks.is_empty(), session.day)
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	nodes[index] = node
+	session.overworld["resource_nodes"] = nodes
+	if won or survivor_stacks.is_empty():
+		return ""
+	return "%s guards still hold %s." % [_describe_recruit_delta(_stacks_to_recruits(survivor_stacks)), String(site.get("name", "the dwelling"))]
+
+static func capture_dwelling_after_guard_victory(
+	session: SessionStateStoreScript.SessionData,
+	placement_id: String
+) -> String:
+	var node_result := _find_resource_node_by_placement(session, placement_id)
+	if int(node_result.get("index", -1)) < 0:
+		return ""
+	var node: Dictionary = node_result.get("node", {})
+	var site := NodePayload.site_for_node(node)
+	CreatureDwellings.record_guard_result(node, "player", [], true, session.day)
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	nodes[int(node_result.get("index", -1))] = node
+	session.overworld["resource_nodes"] = nodes
+	var site_name := String(site.get("name", "the dwelling"))
+	if PlayerRules.resource_controller_id(node) == "player":
+		return "The guards of %s are beaten." % site_name
+	var claimed := _collect_resource_node_result(session, _find_resource_node_by_placement(session, placement_id), false)
+	if bool(claimed.get("ok", false)) and PlayerRules.resource_controller_id(_find_resource_node_by_placement(session, placement_id).get("node", {})) == "player":
+		return "The guards of %s are beaten and it flies your flag. Visit it to hire." % site_name
+	return "The guards of %s are beaten." % site_name
+
+static func _stacks_to_recruits(stacks: Array) -> Dictionary:
+	var recruits := {}
+	for stack in stacks:
+		if stack is Dictionary:
+			var unit_id := String(stack.get("unit_id", ""))
+			recruits[unit_id] = int(recruits.get(unit_id, 0)) + int(stack.get("count", 0))
+	return recruits
+
+## Each flagged dwelling adds +1 weekly growth for its creature in every town
+## of the same owner that recruits it.
+static func _add_dwelling_town_growth(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	growth: Dictionary
+) -> Dictionary:
+	var controller := _town_controller_id(town)
+	if session == null or controller == "" or growth.is_empty():
+		return growth
+	var held := {}
+	for node in session.overworld.get("resource_nodes", []):
+		if not (node is Dictionary) or PlayerRules.resource_controller_id(node) != controller:
+			continue
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		if not CreatureDwellings.is_dwelling(site) or CreatureDwellings.is_refugee_camp(site):
+			continue
+		for unit_id in CreatureDwellings.creatures(node, site, session.day):
+			var base := CreatureDwellings.base_unit_id(String(unit_id))
+			held[base] = int(held.get(base, 0)) + 1
+	if held.is_empty():
+		return growth
+	var result := growth.duplicate(true)
+	for unit_id in result.keys():
+		var base := CreatureDwellings.base_unit_id(String(unit_id))
+		if held.has(base):
+			result[unit_id] = int(result[unit_id]) + int(held[base])
+	return result
 
 static func _apply_resource_site_strategic_effects(
 	session: SessionStateStoreScript.SessionData,
@@ -6015,7 +6242,7 @@ static func controlled_resource_site_pressure_bonus(session: SessionStateStoreSc
 			continue
 		total += max(0, int(site.get("pressure_bonus", 0)))
 		var weekly_recruits = _resource_site_weekly_recruits(site)
-		if controller_id != "player" and weekly_recruits is Dictionary and not weekly_recruits.is_empty():
+		if controller_id != "player" and weekly_recruits is Dictionary and not weekly_recruits.is_empty() and not CreatureDwellings.is_dwelling(site):
 			total += 1
 	return total
 
@@ -6042,6 +6269,9 @@ static func apply_controlled_resource_site_musters(session: SessionStateStoreScr
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		var weekly_recruits = _resource_site_weekly_recruits(site)
 		if not _resource_site_is_persistent(site) or not _resource_node_matches_controller(node, controller_id):
+			continue
+		# Dwellings are hired at the dwelling; they never feed a town.
+		if CreatureDwellings.is_dwelling(site):
 			continue
 		if not (weekly_recruits is Dictionary) or weekly_recruits.is_empty():
 			continue
@@ -6922,6 +7152,10 @@ static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictiona
 		NodePayload.PAYLOAD_VISIT,
 		VisitBuildings.HERO_VISITS,
 		VisitBuildings.SIDE_VISITS,
+		CreatureDwellings.POPULATION,
+		CreatureDwellings.POPULATION_WEEK,
+		CreatureDwellings.GUARD_BEATEN,
+		CreatureDwellings.GUARD_SURVIVORS,
 		VisitBuildings.SITE_LAST_VISIT_DAY,
 		"generated_reward_translation",
 	]:
@@ -7130,6 +7364,8 @@ static func _resource_node_claimable_by_player(
 			return false
 	if VisitBuildings.is_visit_building(site):
 		return session != null and bool(VisitBuildings.readiness(node, site, String(session.overworld.get("active_hero_id", "")), session.day, VisitBuildings.side_key(session)).get("ok", false))
+	if CreatureDwellings.is_dwelling(site):
+		return session != null
 	if _resource_site_is_repeatable(site) and not _resource_site_is_persistent(site):
 		return _resource_site_repeat_ready(session, node, site)
 	if _resource_site_is_persistent(site):
@@ -7302,7 +7538,7 @@ static func describe_recruit_source_compact(
 	var claim_line := _recruit_source_roster_line("Ready", _resource_site_claim_recruits(site), 2)
 	if claim_line != "":
 		parts.append(claim_line)
-	var weekly_line := _recruit_source_roster_line("Weekly", _resource_site_weekly_recruits(site), 1)
+	var weekly_line := _recruit_source_roster_line("Weekly", _resource_site_weekly_recruits(site), 1, CreatureDwellings.is_dwelling(site))
 	if weekly_line != "":
 		parts.append(weekly_line)
 	var guard_line := _resource_site_guard_or_contest_line(session, node, site)
@@ -7335,9 +7571,13 @@ static func describe_recruit_source_inspection(
 	var claim_line := _recruit_source_roster_line("Ready", _resource_site_claim_recruits(site), 4)
 	if claim_line != "":
 		lines.append(claim_line)
-	var weekly_line := _recruit_source_roster_line("Weekly", _resource_site_weekly_recruits(site), 4)
+	var weekly_line := _recruit_source_roster_line("Weekly", _resource_site_weekly_recruits(site), 4, CreatureDwellings.is_dwelling(site))
 	if weekly_line != "":
-		lines.append("%s to nearest held town" % weekly_line)
+		lines.append("%s hired here" % weekly_line if CreatureDwellings.is_dwelling(site) else "%s to nearest held town" % weekly_line)
+	if CreatureDwellings.is_dwelling(site):
+		var dwelling_guard := CreatureDwellings.full_guard(node, site, session.day if session != null else 1)
+		if not dwelling_guard.is_empty():
+			lines.append("Guard: %s, which every side must beat once" % _describe_recruit_delta(_stacks_to_recruits(dwelling_guard)))
 	lines.append("Cadence: %s | %s" % [
 		_interaction_cadence_label(_resource_site_interaction_cadence(site, ContentService.get_map_object_for_resource_site(String(node.get("site_id", site.get("id", "")))))).trim_prefix("Cadence: "),
 		_resource_site_control_brief(node, site),
@@ -7392,6 +7632,12 @@ static func describe_resource_site_surface(
 	site = NodePayload.site_for_node(node, site)
 	if VisitBuildings.is_visit_building(site):
 		return " | ".join(_non_empty_strings([String(site.get("name", "Visit building")), VisitBuildings.summary(site)]))
+	if CreatureDwellings.is_dwelling(site):
+		return " | ".join(_non_empty_strings([
+			String(site.get("name", "Creature dwelling")),
+			_resource_site_control_label(node, site),
+			CreatureDwellings.summary(node, site, session.day if session != null else 1),
+		]))
 	var parts := [_resource_site_role_label(node, site), _resource_site_family_label(site)]
 	var control_label := _resource_site_control_label(node, site)
 	if control_label != "":
@@ -7517,7 +7763,7 @@ static func _resource_site_claim_message(site: Dictionary, previous_controller: 
 		return "%s already answers your banners." % String(site.get("name", "The site"))
 	return "Retook %s from hostile control." % String(site.get("name", "the site"))
 
-static func _recruit_source_roster_line(label: String, recruits: Variant, limit: int) -> String:
+static func _recruit_source_roster_line(label: String, recruits: Variant, limit: int, dwelling_prices: bool = false) -> String:
 	if not (recruits is Dictionary) or recruits.is_empty():
 		return ""
 	var unit_ids := []
@@ -7535,6 +7781,8 @@ static func _recruit_source_roster_line(label: String, recruits: Variant, limit:
 		var unit_name := String(unit.get("name", unit_id))
 		var role_label := _unit_role_tier_label(unit)
 		var cost_label := _describe_resource_delta(unit.get("cost", {}))
+		if dwelling_prices and CreatureDwellings.unit_cost(unit_id).is_empty():
+			cost_label = "free"
 		var detail_parts := _non_empty_strings([role_label, cost_label])
 		parts.append("+%d %s%s" % [
 			count,
@@ -7586,6 +7834,8 @@ static func _recruit_source_support_readiness_line(
 	return "Support: %s" % " | ".join(_non_empty_strings(parts))
 
 static func _recruit_source_why_line(site: Dictionary) -> String:
+	if CreatureDwellings.is_dwelling(site):
+		return "Why: Hire here each week; holding it adds +1 weekly growth for its creature in your towns."
 	var reasons := []
 	if not _resource_site_claim_recruits(site).is_empty():
 		reasons.append("adds field recruits")
@@ -7609,6 +7859,10 @@ static func _resource_site_action_label(node: Dictionary, site: Dictionary) -> S
 		return authored_label
 	if VisitBuildings.is_visit_building(site):
 		return "Visit %s" % String(site.get("name", "Site"))
+	if CreatureDwellings.is_dwelling(site):
+		if CreatureDwellings.is_guarded(node, site, 1) and not CreatureDwellings.guard_beaten(node, "player"):
+			return "Fight the Guards"
+		return "Hire Creatures" if String(node.get("collected_by_faction_id", "")) == "player" else "Visit Dwelling"
 	if _resource_site_is_persistent(site) and String(node.get("collected_by_faction_id", "")) not in ["", "player"]:
 		return "Reclaim Site"
 	match String(site.get("family", "")):
@@ -7712,6 +7966,12 @@ static func _resource_site_yield_line(
 		if session != null:
 			visit_parts.append(VisitBuildings.status_line(node, site, String(session.overworld.get("active_hero_id", "")), session.day, VisitBuildings.side_key(session)))
 		return " | ".join(_non_empty_strings(visit_parts))
+	if CreatureDwellings.is_dwelling(site):
+		var day := session.day if session != null else 1
+		var dwelling_parts := [CreatureDwellings.summary(node, site, day)]
+		if session != null and PlayerRules.resource_controller_id(node) == "player":
+			dwelling_parts.append("%s left this week" % _describe_recruit_delta(CreatureDwellings.population(node, site, day)))
+		return " | ".join(_non_empty_strings(dwelling_parts))
 	var parts := []
 	var claim_summary := _resource_site_reward_summary(site)
 	var income_summary := _describe_resource_delta(site.get("control_income", {}))
@@ -10129,7 +10389,7 @@ static func _town_weekly_growth(
 	if occupation.is_empty():
 		occupation = _town_occupation_state(session, town)
 	growth_percent -= int(occupation.get("growth_penalty_percent", 0))
-	return _apply_recruit_percent(growth, growth_percent)
+	return _add_dwelling_town_growth(session, town, _apply_recruit_percent(growth, growth_percent))
 
 static func _town_reinforcement_quality(
 	town: Dictionary,
@@ -10726,7 +10986,7 @@ static func _default_logistics_support_radius(role: String) -> int:
 static func _default_logistics_requirements_for_role(role: String) -> Dictionary:
 	match role:
 		"capital":
-			return {"neutral_dwelling": 1, "faction_outpost": 1, "frontier_shrine": 1}
+			return {"faction_outpost": 1, "frontier_shrine": 1}
 		"stronghold":
 			return {"faction_outpost": 1, "frontier_shrine": 1}
 		_:
@@ -11415,10 +11675,9 @@ static func _resource_site_town_support(site: Dictionary) -> Dictionary:
 			support["recovery_relief"] = 1
 			support["disruption_pressure"] = 1
 		"neutral_dwelling":
-			support["quality_bonus"] = max(2, int(round(float(_weighted_recruit_value(_resource_site_weekly_recruits(site))) / 28.0)))
-			support["growth_bonus_percent"] = 12
-			support["recovery_relief"] = 1
-			support["disruption_pressure"] = 1
+			# Dwellings grow towns by +1 per creature instead (see
+			# _add_dwelling_town_growth), not through logistics support.
+			pass
 		"faction_outpost":
 			support["readiness_bonus"] = max(2, max(0, int(site.get("vision_radius", 0))) * 2)
 			support["pressure_bonus"] = max(0, int(site.get("pressure_bonus", 0)))

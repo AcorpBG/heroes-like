@@ -25,6 +25,11 @@ const UI_ART_OVERWORLD_RESOURCE_BAR := "res://art/ui/runtime/overworld/resource_
 var _native_destination_dialog: ConfirmationDialog
 var _resource_reward_dialog: ConfirmationDialog
 var _resource_reward_context: Dictionary = {}
+var _dwelling_recruit_dialog: ConfirmationDialog
+var _dwelling_recruit_context: Dictionary = {}
+var _dwelling_recruit_rows: Array = []
+var _dwelling_recruit_spinners: Dictionary = {}
+var _dwelling_recruit_total_label: Label
 var _native_destination_picker: OptionButton
 var _native_destination_actions: Array = []
 const UI_ART_OVERWORLD_SIDEBAR_FRAME := "res://art/ui/runtime/overworld/sidebar_frame.png"
@@ -3010,6 +3015,116 @@ func _resolve_level_up_dialog(specialty_id: String) -> void:
 func _sync_resource_reward_presentation(result: Dictionary) -> void:
 	if result.has("reward_choice"):
 		call_deferred("_open_resource_reward_dialog", result["reward_choice"].duplicate(true))
+	if result.has("dwelling_recruit"):
+		call_deferred("_open_dwelling_recruit_dialog", result["dwelling_recruit"].duplicate(true))
+
+## Hire window for a creature dwelling: one row per creature with a count,
+## a Max button and the running price. Tier 1 creatures are free.
+func _open_dwelling_recruit_dialog(offer: Dictionary) -> void:
+	if _session == null or not is_inside_tree():
+		return
+	if is_instance_valid(_dwelling_recruit_dialog):
+		FrontierVisualKit.hide_exclusive_dialog(_dwelling_recruit_dialog)
+		_dwelling_recruit_dialog.queue_free()
+	_dwelling_recruit_context = offer.get("context", {}).duplicate(true)
+	_dwelling_recruit_rows = offer.get("creatures", []).duplicate(true)
+	_dwelling_recruit_spinners.clear()
+	_dwelling_recruit_dialog = ConfirmationDialog.new()
+	_dwelling_recruit_dialog.name = "DwellingRecruit"
+	_dwelling_recruit_dialog.title = String(offer.get("title", "Creature Dwelling"))
+	_dwelling_recruit_dialog.ok_button_text = "Hire"
+	_dwelling_recruit_dialog.cancel_button_text = "Leave"
+	add_child(_dwelling_recruit_dialog)
+	FrontierVisualKit.apply_confirmation_dialog(_dwelling_recruit_dialog)
+	var content := VBoxContainer.new()
+	content.custom_minimum_size = Vector2(520, 240)
+	content.add_theme_constant_override("separation", 10)
+	var picture := TextureRect.new()
+	picture.texture = _map_view.call("_object_texture_for_asset", String(_map_view.call("_resource_asset_id", offer.get("node", {}))))
+	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	picture.custom_minimum_size = Vector2(160, 140)
+	content.add_child(picture)
+	var first_spin: SpinBox
+	for row in _dwelling_recruit_rows:
+		if not (row is Dictionary):
+			continue
+		var line := HBoxContainer.new()
+		line.add_theme_constant_override("separation", 10)
+		var label := Label.new()
+		var price := "free" if bool(row.get("free", false)) else "%s each" % OverworldRules._describe_resource_delta(row.get("cost", {}))
+		label.text = "%s (tier %d): %d available, %s" % [String(row.get("name", "")), int(row.get("tier", 1)), int(row.get("available", 0)), price]
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		FrontierVisualKit.apply_label(label, "body", 15)
+		line.add_child(label)
+		var spin := SpinBox.new()
+		spin.min_value = 0
+		spin.max_value = max(0, int(row.get("available", 0)))
+		spin.value = spin.max_value
+		spin.custom_minimum_size = Vector2(96, 32)
+		spin.value_changed.connect(_on_dwelling_recruit_count_changed)
+		line.add_child(spin)
+		var max_button := Button.new()
+		max_button.text = "Max"
+		FrontierVisualKit.apply_button(max_button, "secondary", 64, 32, 14)
+		max_button.pressed.connect(func(): spin.value = spin.max_value)
+		line.add_child(max_button)
+		content.add_child(line)
+		_dwelling_recruit_spinners[String(row.get("unit_id", ""))] = spin
+		if first_spin == null:
+			first_spin = spin
+	_dwelling_recruit_total_label = Label.new()
+	_dwelling_recruit_total_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	FrontierVisualKit.apply_label(_dwelling_recruit_total_label, "body", 15)
+	content.add_child(_dwelling_recruit_total_label)
+	_dwelling_recruit_dialog.add_child(content)
+	_on_dwelling_recruit_count_changed(0.0)
+	_dwelling_recruit_dialog.confirmed.connect(_on_dwelling_recruit_confirmed)
+	_dwelling_recruit_dialog.canceled.connect(_on_dwelling_recruit_canceled)
+	_dwelling_recruit_dialog.exclusive = true
+	_on_overworld_interaction_owner_opened()
+	_dwelling_recruit_dialog.popup_centered(Vector2i(680, 420))
+	if first_spin != null:
+		first_spin.get_line_edit().grab_focus()
+
+func _dwelling_recruit_selection() -> Dictionary:
+	var hires := {}
+	for unit_id in _dwelling_recruit_spinners.keys():
+		var spin: SpinBox = _dwelling_recruit_spinners[unit_id]
+		if is_instance_valid(spin) and int(spin.value) > 0:
+			hires[unit_id] = int(spin.value)
+	return hires
+
+func _on_dwelling_recruit_count_changed(_value: float) -> void:
+	if not is_instance_valid(_dwelling_recruit_total_label):
+		return
+	var total := {}
+	var hires := _dwelling_recruit_selection()
+	for row in _dwelling_recruit_rows:
+		if not (row is Dictionary):
+			continue
+		var count := int(hires.get(String(row.get("unit_id", "")), 0))
+		var cost: Dictionary = row.get("cost", {})
+		for key in cost.keys():
+			total[key] = int(total.get(key, 0)) + int(cost[key]) * count
+	var price := OverworldRules._describe_resource_delta(total)
+	_dwelling_recruit_total_label.text = "Total: %s" % (price if price != "" else "free")
+
+func _on_dwelling_recruit_canceled() -> void:
+	FrontierVisualKit.hide_exclusive_dialog(_dwelling_recruit_dialog)
+	_dwelling_recruit_context.clear()
+	call_deferred("_configure_overworld_keyboard_focus", true)
+
+func _on_dwelling_recruit_confirmed() -> void:
+	var hires := _dwelling_recruit_selection()
+	var context := _dwelling_recruit_context.duplicate(true)
+	_on_dwelling_recruit_canceled()
+	var result := OverworldRules.hire_from_dwelling(_session, hires, context)
+	_last_message = String(result.get("message", ""))
+	_record_result_feedback("resource", result, "Creatures hired.")
+	if bool(_handle_session_resolution().get("handled", false)):
+		return
+	_refresh()
 
 func _open_resource_reward_dialog(prompt: Dictionary) -> void:
 	if _session == null or not is_inside_tree():

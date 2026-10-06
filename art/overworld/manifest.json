@@ -3987,7 +3987,11 @@
       "path": "res://art/overworld/runtime/objects/dwellings/guarded_farmhouse.png",
       "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/guarded_farmhouse.png",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
-      "runtime_sha256": "f19580963515a5382385450ffff8e93afc99255c877dec96e919270e76b807ae"
+      "runtime_sha256": "f19580963515a5382385450ffff8e93afc99255c877dec96e919270e76b807ae",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_riverwatch_free_company_yard",
+      "assigned_map_object_family": "neutral_dwelling",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import"
     },
     "kennel": {
       "path": "res://art/overworld/runtime/objects/dwellings/kennel.png",
@@ -41826,6 +41830,270 @@
       "distinct_sprite_assignment": true,
       "assigned_map_object_id": "object_visit_moonspring",
       "assigned_map_object_family": "shrine"
+    },
+    "mapobj_scrip_haulers_tally_barn": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_scrip_haulers_tally_barn.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/scrip_haulers_tally_barn-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "c7284c6cd7a0cac75feccf3aec6e889a5801371821f09d7b17e2c547b7a24a7b",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_scrip_haulers_tally_barn",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_exactor_debt_works": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_exactor_debt_works.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/exactor_debt_works-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "cfc577718b3f48fab5d6c44d3aa03fa04e05123e22989f220554e98b3331ba30",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_exactor_debt_works",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_crucible_crawler_pit": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_crucible_crawler_pit.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/crucible_crawler_pit-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "c22fcf0c3887937e339dc65a17afb2e0af50b19fdfb8f79a3c67e835caeeae70",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_crucible_crawler_pit",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_lantern_sapper_lodge": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_lantern_sapper_lodge.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/lantern_sapper_lodge-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "fb18b40d8f38cfe027be83c315dd4a96a77efffe2b219fc505d155b9d53e7197",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_lantern_sapper_lodge",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_bargebow_slipway": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_bargebow_slipway.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/bargebow_slipway-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "a7505e5ef2a0df89da00a6c7878701f237f94f473c2be4f75381f459cc41a842",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_bargebow_slipway",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_writcaster_lockhouse": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_writcaster_lockhouse.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/writcaster_lockhouse-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "adad7ba68883cd5d2a9b859bafe3426f91bf2a146c1685c0c59d85763f4e6fbd",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_writcaster_lockhouse",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_beacon_lectory": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_beacon_lectory.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/beacon_lectory-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "16aa3563ffd89d164fe4bca20bf876d20d5958719ac1a9a12f0578bb4d4507de",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_beacon_lectory",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_reedsnare_warren": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_reedsnare_warren.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/reedsnare_warren-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "f0dbaaa75de8be5298eb72480a9a8a483e0fdedae750c064f8700757265153bb",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_reedsnare_warren",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_mudglass_sling_pits": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_mudglass_sling_pits.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/mudglass_sling_pits-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "949840fb8fee6769f574ecdaf6e79e4ead309fce9c26270e64666268f2c1cc14",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_mudglass_sling_pits",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_bogplate_wallow": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_bogplate_wallow.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/bogplate_wallow-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "b34cc0d56ea429603197a0e80f45238a5737963a8172788a9dde78d9f74c4743",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_bogplate_wallow",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_fenbell_stalking_ground": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_fenbell_stalking_ground.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/fenbell_stalking_ground-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "b7de5932fd5267c8286fd2f211db6b85a4e8ef6aa436442403f5c764eb9bc9c9",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_fenbell_stalking_ground",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_drowned_antler_throne": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_drowned_antler_throne.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/drowned_antler_throne-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "5f19dd4dea49ea2a3342a8da369b50361e1c5171ef243c33ffc24075cf1ab4f0",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_drowned_antler_throne",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_prism_adept_cloister": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_prism_adept_cloister.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/prism_adept_cloister-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "bdd3ed6bc878a4c04711dccbbee5ac8722a411c6735d4f23645d990d77f744a3",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_prism_adept_cloister",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_mirror_duelist_salle": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_mirror_duelist_salle.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/mirror_duelist_salle-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "a7ac996b230c0c314adff72ff02886a68aa5758416fe08c252b4673855937587",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_mirror_duelist_salle",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_zenith_lens_gallery": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_zenith_lens_gallery.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/zenith_lens_gallery-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "d0e7314d07dc4586d7b00c9f502f27b4fcb190e0186b5711affed47014c67dfd",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_zenith_lens_gallery",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_aurora_bastion_yard": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_aurora_bastion_yard.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/aurora_bastion_yard-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "3e397a1e0fc1f388ced1dd71f008523cf9606a8c8259c06f700d9f246eb5ba1a",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_aurora_bastion_yard",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_stagknot_thicket": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_stagknot_thicket.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/stagknot_thicket-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "6e035402090a1076324943edd80392d904907bc1912643ff126b02710b20a5df",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_stagknot_thicket",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_bellwake_oar_shed": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_bellwake_oar_shed.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/bellwake_oar_shed-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "0d27393b2e1899bf8b87ad6939a8457d78a2f9ac046d3b0ad83b3900edfa6744",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_bellwake_oar_shed",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_maskglass_corsair_den": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_maskglass_corsair_den.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/maskglass_corsair_den-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "ecca42b72d930b85b7b1bc2369c6540f44660bc369a0c44bac6c9b9a404e9ff8",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_maskglass_corsair_den",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_undertow_harpoon_jetty": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_undertow_harpoon_jetty.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/undertow_harpoon_jetty-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "162b60be1c9387280603daf114710f1cbe668716f0d240be3e37f90c81805e16",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_undertow_harpoon_jetty",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_obituary_scriptorium": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_obituary_scriptorium.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/obituary_scriptorium-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "6336ee1264374ba56e5cd90f0f7171ad9520dd99b227d67bbfada2b82c1c46d0",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_obituary_scriptorium",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_mirrorkeel_drydock": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_mirrorkeel_drydock.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/mirrorkeel_drydock-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "0846ebd24dba7d90e46e9463ccbe8529c2b9d07b613d904b56e03d51f5141b7b",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_mirrorkeel_drydock",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_drifters_camp": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_drifters_camp.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/drifters_camp-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "35ff3e110779b9f7554dfba649d2bd123e854a8d587f746d3d47346ed5ff89ff",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_drifters_camp",
+      "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_shard_warden_bastide": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_shard_warden_bastide.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/shard_warden_bastide-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_dwellings_20261006/provenance.json",
+      "runtime_sha256": "35e33dedfd2c68360fd0734adbb6c79ba04f2382c6aaac15cc08818e3537fc7c",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_dwelling_shard_warden_bastide",
+      "assigned_map_object_family": "neutral_dwelling"
     }
   },
   "resource_site_sprites": {
@@ -43593,6 +43861,102 @@
     "site_visit_moonspring": {
       "asset_id": "mapobj_moonspring",
       "fit": "Moonspring visit building sprite."
+    },
+    "site_dwelling_scrip_haulers_tally_barn": {
+      "asset_id": "mapobj_scrip_haulers_tally_barn",
+      "fit": "Scrip Hauler Tally Barn creature dwelling sprite."
+    },
+    "site_dwelling_exactor_debt_works": {
+      "asset_id": "mapobj_exactor_debt_works",
+      "fit": "Exactor Debt Works creature dwelling sprite."
+    },
+    "site_dwelling_crucible_crawler_pit": {
+      "asset_id": "mapobj_crucible_crawler_pit",
+      "fit": "Crucible Crawler Pit creature dwelling sprite."
+    },
+    "site_dwelling_lantern_sapper_lodge": {
+      "asset_id": "mapobj_lantern_sapper_lodge",
+      "fit": "Lantern Sapper Lodge creature dwelling sprite."
+    },
+    "site_dwelling_bargebow_slipway": {
+      "asset_id": "mapobj_bargebow_slipway",
+      "fit": "Bargebow Slipway creature dwelling sprite."
+    },
+    "site_dwelling_writcaster_lockhouse": {
+      "asset_id": "mapobj_writcaster_lockhouse",
+      "fit": "Writcaster Lockhouse creature dwelling sprite."
+    },
+    "site_dwelling_beacon_lectory": {
+      "asset_id": "mapobj_beacon_lectory",
+      "fit": "Beacon Lectory creature dwelling sprite."
+    },
+    "site_dwelling_reedsnare_warren": {
+      "asset_id": "mapobj_reedsnare_warren",
+      "fit": "Reedsnare Warren creature dwelling sprite."
+    },
+    "site_dwelling_mudglass_sling_pits": {
+      "asset_id": "mapobj_mudglass_sling_pits",
+      "fit": "Mudglass Sling Pits creature dwelling sprite."
+    },
+    "site_dwelling_bogplate_wallow": {
+      "asset_id": "mapobj_bogplate_wallow",
+      "fit": "Bogplate Wallow creature dwelling sprite."
+    },
+    "site_dwelling_fenbell_stalking_ground": {
+      "asset_id": "mapobj_fenbell_stalking_ground",
+      "fit": "Fenbell Stalking Ground creature dwelling sprite."
+    },
+    "site_dwelling_drowned_antler_throne": {
+      "asset_id": "mapobj_drowned_antler_throne",
+      "fit": "Drowned Antler Throne creature dwelling sprite."
+    },
+    "site_dwelling_prism_adept_cloister": {
+      "asset_id": "mapobj_prism_adept_cloister",
+      "fit": "Prism Adept Cloister creature dwelling sprite."
+    },
+    "site_dwelling_mirror_duelist_salle": {
+      "asset_id": "mapobj_mirror_duelist_salle",
+      "fit": "Mirror Duelist Salle creature dwelling sprite."
+    },
+    "site_dwelling_zenith_lens_gallery": {
+      "asset_id": "mapobj_zenith_lens_gallery",
+      "fit": "Zenith Lens Gallery creature dwelling sprite."
+    },
+    "site_dwelling_aurora_bastion_yard": {
+      "asset_id": "mapobj_aurora_bastion_yard",
+      "fit": "Aurora Bastion Yard creature dwelling sprite."
+    },
+    "site_dwelling_stagknot_thicket": {
+      "asset_id": "mapobj_stagknot_thicket",
+      "fit": "Stag-Knot Thicket creature dwelling sprite."
+    },
+    "site_dwelling_bellwake_oar_shed": {
+      "asset_id": "mapobj_bellwake_oar_shed",
+      "fit": "Bellwake Oar Shed creature dwelling sprite."
+    },
+    "site_dwelling_maskglass_corsair_den": {
+      "asset_id": "mapobj_maskglass_corsair_den",
+      "fit": "Maskglass Corsair Den creature dwelling sprite."
+    },
+    "site_dwelling_undertow_harpoon_jetty": {
+      "asset_id": "mapobj_undertow_harpoon_jetty",
+      "fit": "Undertow Harpoon Jetty creature dwelling sprite."
+    },
+    "site_dwelling_obituary_scriptorium": {
+      "asset_id": "mapobj_obituary_scriptorium",
+      "fit": "Obituary Scriptorium creature dwelling sprite."
+    },
+    "site_dwelling_mirrorkeel_drydock": {
+      "asset_id": "mapobj_mirrorkeel_drydock",
+      "fit": "Mirror-Keel Drydock creature dwelling sprite."
+    },
+    "site_dwelling_drifters_camp": {
+      "asset_id": "mapobj_drifters_camp",
+      "fit": "Drifters' Camp creature dwelling sprite."
+    },
+    "site_dwelling_shard_warden_bastide": {
+      "asset_id": "mapobj_shard_warden_bastide",
+      "fit": "Shard Warden Bastide creature dwelling sprite."
     }
   },
   "artifact_default_sprite": {
@@ -44006,7 +44370,8 @@
     "encounter_prismwake_refraction_shelf_watch": "encounter_frontier_mythic_prismwake_refraction_shelf_watch",
     "encounter_knotstag_root_court_watch": "encounter_frontier_mythic_knotstag_root_court_watch",
     "encounter_gaugecoil_pressure_burrow_watch": "encounter_frontier_mythic_gaugecoil_pressure_burrow_watch",
-    "encounter_gloambell_sounding_deep_watch": "encounter_frontier_mythic_gloambell_sounding_deep_watch"
+    "encounter_gloambell_sounding_deep_watch": "encounter_frontier_mythic_gloambell_sounding_deep_watch",
+    "encounter_dwelling_guard": "encounter_systemic_resource_defense"
   },
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_and_exact_original_raster_coverage_for_every_generated_package_body_cell",

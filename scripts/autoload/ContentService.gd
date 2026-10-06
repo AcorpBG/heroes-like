@@ -540,6 +540,15 @@ func _validate_resources(resource_index: Dictionary) -> void:
 		else:
 			_validate_art_path(icon_path, "Production resource %s icon" % resource_id)
 
+## A visit-building spell shrine teaches any spell of its tier
+## (docs/visit-buildings.md).
+func _visit_shrine_teaches_spell_tier(site: Dictionary, spell: Dictionary) -> bool:
+	var visit = site.get("visit", {})
+	if String(site.get("family", "")) != "visit_building" or not (visit is Dictionary):
+		return false
+	var effects = visit.get("effects", {})
+	return effects is Dictionary and int(effects.get("spell_tier", 0)) > 0 and int(effects.get("spell_tier", 0)) == int(spell.get("tier", -1))
+
 func _supported_resource_site_families() -> Array:
 	return [
 		"one_shot_pickup",
@@ -963,7 +972,8 @@ func _validate_resource_site(
 		if not spell_index.has(spell_id):
 			push_warning("Resource site %s references missing lesson spell %s." % [site_id, spell_id])
 		elif String(spell_index.get(spell_id, {}).get("context", "")) != "overworld" \
-				and lesson_status not in ["high_arcanum_live", "triune_arcanum_live"]:
+				and lesson_status not in ["high_arcanum_live", "triune_arcanum_live"] \
+				and not _visit_shrine_teaches_spell_tier(site, spell_index.get(spell_id, {})):
 			push_warning("Resource site %s lesson spell %s must be an overworld spell." % [site_id, spell_id])
 
 	match family:
@@ -979,8 +989,12 @@ func _validate_resource_site(
 			var scope := String(site.get("dwelling_scope", ""))
 			if scope != "" and scope not in ["neutral", "faction_linked", "biome_linked"]:
 				push_warning("Neutral dwelling site %s uses unsupported dwelling_scope %s." % [site_id, scope])
-			if scope == "neutral" and not (neutral_roster is Dictionary and not neutral_roster.is_empty()):
-				push_warning("Neutral dwelling site %s must define neutral_roster when dwelling_scope is neutral." % site_id)
+			var dwelling_recruits = site.get("weekly_recruits", {})
+			var refugee_camp := String(site.get("dwelling_kind", "")) == "refugee_camp"
+			if not refugee_camp and not (dwelling_recruits is Dictionary and not dwelling_recruits.is_empty()):
+				push_warning("Neutral dwelling site %s must define the creatures it musters in weekly_recruits." % site_id)
+			if site.has("claim_recruits"):
+				push_warning("Neutral dwelling site %s must not grant claim_recruits; creatures are hired at the dwelling." % site_id)
 		"scouting_structure":
 			if not bool(site.get("persistent_control", false)):
 				push_warning("Scouting site %s must be persistent-control content." % site_id)

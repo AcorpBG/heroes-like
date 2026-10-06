@@ -5,6 +5,7 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
+const CreatureDwellings = preload("res://scripts/core/CreatureDwellingRules.gd")
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
@@ -180,6 +181,42 @@ static func create_resource_defense_payload(
 			"resource_site_name": String(site.get("name", resource_placement_id)),
 			"trigger_faction_id": faction_id,
 			"trigger_player_id": String(node.get("ai_defended_by_player_id", node.get("collected_by_player_id", ""))),
+		},
+	}
+	return create_battle_payload(session, placement)
+
+## A hero attacks the guard of a tier 5+ creature dwelling. The guard is a
+## plain neutral encounter keyed "dwelling_guard:<placement>", so the battle
+## resolves through the normal encounter flow; only its outcome is written back
+## to the dwelling (see OverworldRules.update_dwelling_guard_after_battle).
+static func create_dwelling_guard_payload(
+	session: SessionStateStoreScript.SessionData,
+	resource_placement_id: String
+) -> Dictionary:
+	OverworldRulesScript.normalize_overworld_state(session)
+	var node_result = OverworldRulesScript._find_resource_node_by_placement(session, resource_placement_id)
+	if int(node_result.get("index", -1)) < 0:
+		return {}
+	var node: Dictionary = node_result.get("node", {})
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	var stacks := CreatureDwellings.guard_stacks(node, site, "player", session.day)
+	if stacks.is_empty():
+		return {}
+	var placement := {
+		"placement_id": CreatureDwellings.guard_key(resource_placement_id),
+		"encounter_id": CreatureDwellings.GUARD_ENCOUNTER_ID,
+		"x": int(node.get("x", 0)),
+		"y": int(node.get("y", 0)),
+		"level": LevelRules.level_of(node),
+		"combat_seed": hash(
+			"%s:%s:%d:dwelling_guard:%s"
+			% [session.scenario_id, session.launch_mode, session.day, resource_placement_id]
+		),
+		"enemy_army": {
+			"id": "dwelling_guard_%s" % resource_placement_id,
+			"name": "%s Guards" % String(site.get("name", "Dwelling")),
+			"affiliation": "neutral",
+			"stacks": stacks,
 		},
 	}
 	return create_battle_payload(session, placement)
@@ -11326,6 +11363,17 @@ static func _sync_enemy_force_from_battle(session: SessionStateStoreScript.Sessi
 		if summary != "":
 			session.flags["last_resource_defender_sync_summary"] = summary
 		return
+	var dwelling_placement := CreatureDwellings.placement_from_guard_key(String(session.battle.get("resolved_key", "")))
+	if dwelling_placement != "":
+		var guard_summary := OverworldRulesScript.update_dwelling_guard_after_battle(
+			session,
+			dwelling_placement,
+			_battle_survivor_stacks(session, "enemy"),
+			encounter_resolved
+		)
+		if guard_summary != "":
+			session.flags["last_dwelling_guard_summary"] = guard_summary
+		return
 	var encounter_result = _find_encounter_by_key(session, String(session.battle.get("resolved_key", "")))
 	if int(encounter_result.get("index", -1)) < 0:
 		return
@@ -11408,6 +11456,9 @@ static func _award_commander_experience(session: SessionStateStoreScript.Session
 	return result.get("messages", [])
 
 static func _apply_battle_context_victory(session: SessionStateStoreScript.SessionData) -> String:
+	var dwelling_placement := CreatureDwellings.placement_from_guard_key(String(session.battle.get("resolved_key", "")))
+	if dwelling_placement != "":
+		return OverworldRulesScript.capture_dwelling_after_guard_victory(session, dwelling_placement)
 	var context = session.battle.get("context", {})
 	if _is_town_assault_context(context):
 		var town_name = _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
@@ -11808,7 +11859,7 @@ static func _remove_hero_by_id_after_defeat(session: SessionStateStoreScript.Ses
 	}
 
 static func _mark_resolved_encounter(session: SessionStateStoreScript.SessionData, resolved_key: String) -> void:
-	if session == null or resolved_key == "":
+	if session == null or resolved_key == "" or resolved_key.begins_with(CreatureDwellings.GUARD_KEY_PREFIX):
 		return
 	var resolved = session.overworld.get("resolved_encounters", [])
 	if not (resolved is Array):

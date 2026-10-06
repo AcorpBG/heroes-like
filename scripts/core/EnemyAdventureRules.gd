@@ -15,6 +15,7 @@ const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 const VisitBuildings = preload("res://scripts/core/VisitBuildingRules.gd")
+const CreatureDwellings = preload("res://scripts/core/CreatureDwellingRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 static var _path_distance_surface_cache: Dictionary = {}
 static var _native_navigation_surface_cache: Dictionary = {}
@@ -96,7 +97,9 @@ const AI_EXPLORATION_MAX_ROUTE_DISTANCE := 14
 # directly on the session entry during a turn. Everything else in an enemy
 # state (pressure, raid_counter, treasury, posture) belongs to the empire cycle.
 const SESSION_OWNED_ENEMY_STATE_KEYS := ["commander_roster", "known_world_memory", "hero_task_state", "rebuild_pressure_request"]
-const LOGISTICS_SITE_FAMILIES := ["neutral_dwelling", "faction_outpost", "frontier_shrine"]
+const LOGISTICS_SITE_FAMILIES := ["faction_outpost", "frontier_shrine"]
+const DWELLING_HIRE_MIN_VALUE := 300
+const DWELLING_GUARD_TARGET_COST := 30
 const AI_RESOURCE_VALUE_BY_ID := {
 	"gold": 1,
 	"wood": 350,
@@ -5126,6 +5129,7 @@ static func resource_arrival_ready_report(
 	var desired_strength := desired_raid_strength(raid)
 	var guard := _resource_guard_encounter_for_node(session, node, site)
 	var guard_strength := _encounter_guard_strength(guard) if not guard.is_empty() else 0
+	guard_strength += _dwelling_guard_strength(session, node, site, faction_id)
 	var current_tile := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	var target_tile := _resource_interaction_tile(node)
 	var target_distance := _path_distance(session, current_tile, [target_tile], String(raid.get("placement_id", "")), faction_id, LevelRules.level_of(raid))
@@ -12326,6 +12330,8 @@ static func resource_target_score_breakdown(
 		faction_bias = priority_target_bonus(config, placement_id) + int(round(max(0.0, target_weight - 1.0) * 50.0))
 		travel_cost = max(0, goal_distance - 1) * 3
 		guard_cost = _resource_guard_cost(site)
+		if CreatureDwellings.is_dwelling(site) and CreatureDwellings.guard_blocks(node, site, resolved_faction_id, session.day):
+			guard_cost += DWELLING_GUARD_TARGET_COST
 		assignment_penalty = _assignment_penalty(session, "resource", placement_id)
 		final_priority = max(
 			0,
@@ -17378,6 +17384,8 @@ static func _secure_opportunistic_route_resource(
 	var nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
 	if node_index < 0 or node_index >= nodes.size() or VisitBuildings.is_visit_building(site):
 		return {"resolved": false, "encounter": raid, "state": state, "event_message": "", "ai_events": []}
+	if CreatureDwellings.is_dwelling(site) and CreatureDwellings.guard_blocks(node, site, faction_id, session.day):
+		return {"resolved": false, "encounter": raid, "state": state, "event_message": "", "ai_events": []}
 	if not bool(_raid_site_recruit_admission(raid, site).get("ok", false)):
 		return {"resolved": false, "encounter": raid, "state": state, "event_message": "", "ai_events": [], "capacity_blocked": true}
 	var previous_node: Dictionary = node.duplicate(true)
@@ -17429,6 +17437,8 @@ static func _secure_opportunistic_route_resource(
 		site
 	)
 	updated_raid = recruit_reward.get("raid", updated_raid)
+	if CreatureDwellings.is_dwelling(site):
+		updated_raid = _hire_dwelling_creatures_into_raid(session, faction_id, updated_raid, node_index, site, state).get("raid", updated_raid)
 	var spell_reward := _apply_resource_site_spell_reward_to_commander(
 		session,
 		faction_id,
@@ -17979,6 +17989,13 @@ static func _secure_resource_target(
 		return {"encounter": raid, "state": state, "event_message": ""}
 	if VisitBuildings.is_visit_building(site):
 		return _visit_building_by_raid(session, raid, state, faction_id, node_result, site, config)
+	if CreatureDwellings.is_dwelling(site):
+		if not _break_dwelling_guard_by_raid(session, raid, faction_id, int(node_result.get("index", -1)), site):
+			_ai_hero_task_finish_live_assignment(session, faction_id, raid, "failed", "invalid_dwelling_guard")
+			return {"encounter": raid, "state": state, "event_message": ""}
+		node = session.overworld.get("resource_nodes", [])[int(node_result.get("index", -1))]
+		if PlayerRules.resource_controller_id(node) == faction_id:
+			return _hire_at_own_dwelling_by_raid(session, raid, state, faction_id, int(node_result.get("index", -1)), site, config)
 	if not bool(_raid_site_recruit_admission(raid, site).get("ok", false)):
 		return {"encounter": raid, "state": state, "event_message": "", "capacity_blocked": true}
 	var nodes = session.overworld.get("resource_nodes", [])
@@ -18030,6 +18047,8 @@ static func _secure_resource_target(
 		site
 	)
 	updated_raid = recruit_reward.get("raid", updated_raid)
+	if CreatureDwellings.is_dwelling(site):
+		updated_raid = _hire_dwelling_creatures_into_raid(session, faction_id, updated_raid, int(node_result.get("index", -1)), site, state).get("raid", updated_raid)
 	var spell_reward := _apply_resource_site_spell_reward_to_commander(
 		session,
 		faction_id,
@@ -18271,6 +18290,139 @@ static func _visit_building_by_raid(
 	if not continuation.get("ai_event", {}).is_empty():
 		events.append(continuation.get("ai_event", {}))
 	return {"encounter": final_raid, "state": state, "event_message": message, "ai_events": events}
+
+static func _dwelling_guard_strength(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary,
+	faction_id: String
+) -> int:
+	if session == null or not CreatureDwellings.is_dwelling(site):
+		return 0
+	return _army_strength(CreatureDwellings.guard_stacks(node, site, faction_id, session.day))
+
+## A computer side fights the dwelling guard it has not yet beaten, settled the
+## same way as its other neutral fights: a host at 90% of the guard's strength
+## wins. Returns false when the guard still stands.
+static func _break_dwelling_guard_by_raid(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String,
+	index: int,
+	site: Dictionary
+) -> bool:
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	if index < 0 or index >= nodes.size():
+		return false
+	var node: Dictionary = nodes[index]
+	if not CreatureDwellings.guard_blocks(node, site, faction_id, session.day):
+		return true
+	var guard_strength := _dwelling_guard_strength(session, node, site, faction_id)
+	if raid_strength(raid) < max(60, int(ceili(float(guard_strength) * 0.90))):
+		return false
+	CreatureDwellings.record_guard_result(node, faction_id, [], true, session.day)
+	nodes[index] = node
+	session.overworld["resource_nodes"] = nodes
+	return true
+
+## Hires as much of the dwelling's week as the faction can pay for and the
+## raid can carry, strongest creatures first. Tier 1 is free.
+static func _hire_dwelling_creatures_into_raid(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	raid: Dictionary,
+	index: int,
+	site: Dictionary,
+	state: Dictionary
+) -> Dictionary:
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	if session == null or index < 0 or index >= nodes.size() or raid.is_empty():
+		return {"raid": raid, "hired": {}}
+	var node: Dictionary = nodes[index]
+	var available := CreatureDwellings.population(node, site, session.day)
+	var treasury: Dictionary = state.get("treasury", {}) if state.get("treasury", {}) is Dictionary else {}
+	var army := _raid_reinforcement_army(raid)
+	if army.is_empty():
+		army = {"id": String(raid.get("encounter_id", raid.get("id", "raid"))), "name": "Raid Host", "stacks": []}
+	var stacks: Array = army.get("stacks", [])
+	var unit_ids := available.keys()
+	unit_ids.sort_custom(func(a, b): return CreatureDwellings.unit_tier(String(a)) > CreatureDwellings.unit_tier(String(b)))
+	var hired := {}
+	for unit_id_value in unit_ids:
+		var unit_id := String(unit_id_value)
+		var count := int(available.get(unit_id_value, 0))
+		var cost := CreatureDwellings.unit_cost(unit_id)
+		for key in cost.keys():
+			if int(cost[key]) > 0:
+				count = mini(count, int(treasury.get(key, 0)) / int(cost[key]))
+		if count <= 0:
+			continue
+		var plan := HeroCommandRulesScript.army_addition_plan(stacks, {unit_id: count})
+		if not bool(plan.get("ok", false)):
+			continue
+		stacks = plan.get("stacks", stacks)
+		for key in cost.keys():
+			treasury[key] = int(treasury.get(key, 0)) - int(cost[key]) * count
+		hired[unit_id] = count
+		CreatureDwellings.take(node, site, unit_id, count, session.day)
+	if hired.is_empty():
+		return {"raid": raid, "hired": {}}
+	state["treasury"] = treasury
+	nodes[index] = node
+	session.overworld["resource_nodes"] = nodes
+	var updated_raid := raid.duplicate(true)
+	army["stacks"] = stacks
+	updated_raid["enemy_army"] = army
+	updated_raid["last_dwelling_hires"] = hired.duplicate(true)
+	updated_raid["last_dwelling_hires_day"] = int(session.day)
+	var commander_state = updated_raid.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		var synced_commander := sync_commander_army_continuity(
+			commander_state,
+			army,
+			String(updated_raid.get("encounter_id", updated_raid.get("id", "")))
+		)
+		updated_raid["enemy_commander_state"] = synced_commander
+		sync_commander_state_to_roster(
+			session,
+			faction_id,
+			synced_commander,
+			COMMANDER_STATUS_ACTIVE,
+			String(updated_raid.get("placement_id", "")),
+			-1,
+			String(synced_commander.get("last_outcome", COMMANDER_OUTCOME_RESOURCE_SECURED))
+		)
+	return {"raid": updated_raid, "hired": hired}
+
+## A raid at its own dwelling hires the week's creatures and moves on.
+static func _hire_at_own_dwelling_by_raid(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	state: Dictionary,
+	faction_id: String,
+	index: int,
+	site: Dictionary,
+	config: Dictionary
+) -> Dictionary:
+	var hire := _hire_dwelling_creatures_into_raid(session, faction_id, raid, index, site, state)
+	var updated_raid: Dictionary = hire.get("raid", raid)
+	var hired: Dictionary = hire.get("hired", {})
+	_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
+	var message := ""
+	if not hired.is_empty():
+		message = "%s hires %s at %s." % [_raid_name(updated_raid), _describe_recruit_set(hired), String(site.get("name", "a dwelling"))]
+		TurnPlayback.action(session, updated_raid, "hires at a dwelling")
+	var continuation := _continue_mobile_raid_after_field_objective(
+		session,
+		config if not config.is_empty() else PlayerRules.config_for_controller(session, faction_id),
+		updated_raid,
+		state,
+		faction_id
+	)
+	var events := []
+	if not continuation.get("ai_event", {}).is_empty():
+		events.append(continuation.get("ai_event", {}))
+	return {"encounter": continuation.get("encounter", updated_raid), "state": state, "event_message": message, "ai_events": events}
 
 static func _apply_resource_site_artifact_reward_to_raid(
 	session: SessionStateStoreScript.SessionData,
@@ -21382,6 +21534,8 @@ static func _resource_node_contestable_by_faction(node: Dictionary, site: Dictio
 			and VisitBuildings.ai_value(site) > 0
 			and bool(VisitBuildings.readiness(node, site, _visit_key(faction_id), session.day).get("ok", false))
 		)
+	if CreatureDwellings.is_dwelling(site) and session != null and PlayerRules.resource_controller_id(node) == faction_id:
+		return CreatureDwellings.week_value(node, site, session.day, true) >= DWELLING_HIRE_MIN_VALUE
 	if _resource_site_is_persistent(site):
 		return not PlayerRules.allied(session, PlayerRules.resource_controller_id(node), faction_id)
 	return not bool(node.get("collected", false))

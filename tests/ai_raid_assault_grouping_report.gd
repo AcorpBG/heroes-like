@@ -175,6 +175,9 @@ func _near_field_objective_commitment_survives_battle_pressure() -> Dictionary:
 	var invalid_resource := refreshed.duplicate(true)
 	var invalid_nodes: Array = session.overworld.get("resource_nodes", []).duplicate(true)
 	invalid_nodes[0]["collected_by_faction_id"] = MIRECLAW
+	# A held dwelling only draws its owner back while it has creatures to hire.
+	invalid_nodes[0]["dwelling_population"] = {}
+	invalid_nodes[0]["dwelling_week"] = int(floor(float(max(1, session.day) - 1) / 7.0))
 	session.overworld["resource_nodes"] = invalid_nodes
 	if EnemyAdventureRules._raid_has_immediate_field_objective_commitment(session, invalid_resource):
 		_fail("Invalid already-owned resource incorrectly retained near-objective commitment.")

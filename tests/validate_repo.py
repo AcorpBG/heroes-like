@@ -20059,6 +20059,7 @@ def validate_confirmation_dialog_visual_surfaces(errors: list[str]) -> None:
             'FrontierVisualKit.apply_confirmation_dialog(_manual_save_overwrite_dialog as ConfirmationDialog, "danger")',
             'FrontierVisualKit.apply_confirmation_dialog(_native_destination_dialog)',
             'FrontierVisualKit.apply_confirmation_dialog(_resource_reward_dialog)',
+            'FrontierVisualKit.apply_confirmation_dialog(_dwelling_recruit_dialog)',
         ),
         "Battle": (
             'FrontierVisualKit.apply_confirmation_dialog(_quick_resolve_confirmation_dialog, "primary")',
@@ -39603,9 +39604,11 @@ def validate_overworld_logistics_sites(errors: list[str]) -> None:
         site = resource_sites.get(site_id, {})
         family = str(site.get("family", ""))
         ensure(bool(site.get("persistent_control", False)), errors, f"Logistics site {site_id} must remain persistent-control content")
+        # Creature dwellings left the logistics layer: they are hired at the
+        # dwelling and grow towns by +1 per creature (docs/creature-dwellings.md).
         response_profile = site.get("response_profile", {})
-        ensure(isinstance(response_profile, dict) and bool(response_profile), errors, f"Logistics site {site_id} must define response_profile")
-        if isinstance(response_profile, dict):
+        ensure(family == "neutral_dwelling" or (isinstance(response_profile, dict) and bool(response_profile)), errors, f"Logistics site {site_id} must define response_profile")
+        if family != "neutral_dwelling" and isinstance(response_profile, dict):
             ensure(bool(str(response_profile.get("action_label", ""))), errors, f"Logistics site {site_id} response_profile must define action_label")
             ensure(bool(str(response_profile.get("summary", ""))), errors, f"Logistics site {site_id} response_profile must define summary")
             ensure(int(response_profile.get("movement_cost", 0)) > 0, errors, f"Logistics site {site_id} response_profile must define movement_cost > 0")
@@ -39621,16 +39624,13 @@ def validate_overworld_logistics_sites(errors: list[str]) -> None:
                 f"Logistics site {site_id} response_profile must define at least one strategic payoff bonus",
             )
         if family == "neutral_dwelling":
-            claim_recruits = site.get("claim_recruits", {})
             weekly_recruits = site.get("weekly_recruits", {})
-            ensure(isinstance(claim_recruits, dict) and bool(claim_recruits), errors, f"Neutral dwelling {site_id} must define claim_recruits")
+            ensure("claim_recruits" not in site and "response_profile" not in site, errors, f"Neutral dwelling {site_id} must not grant a capture batch or response order")
             ensure(isinstance(weekly_recruits, dict) and bool(weekly_recruits), errors, f"Neutral dwelling {site_id} must define weekly_recruits")
-            for recruit_payload in (claim_recruits, weekly_recruits):
-                if not isinstance(recruit_payload, dict):
-                    continue
-                for unit_id, amount in recruit_payload.items():
+            if isinstance(weekly_recruits, dict):
+                for unit_id, amount in weekly_recruits.items():
                     ensure(str(unit_id) in units, errors, f"Logistics site {site_id} references missing unit {unit_id}")
-                    ensure(int(amount) > 0, errors, f"Logistics site {site_id} must define positive recruit counts for {unit_id}")
+                    ensure(int(amount) == max(1, int(units.get(str(unit_id), {}).get("growth", 1))), errors, f"Neutral dwelling {site_id} must muster one week of {unit_id} growth")
         elif family == "faction_outpost":
             ensure(int(site.get("vision_radius", 0)) > 0, errors, f"Faction outpost {site_id} must keep a scouting radius payoff")
             ensure(int(site.get("pressure_guard", 0)) > 0, errors, f"Faction outpost {site_id} must keep a pressure_guard payoff")
@@ -51871,6 +51871,36 @@ def validate_eight_guarded_route_gates(errors: list[str]) -> None:
         ensure('REQUIRED_GUARDED_ROUTE_OPENED_ATLAS_NAME = "guarded_route_opened_atlas"' in packaging_text and 'guarded_route_opened_atlas.png.import' in packaging_text, errors, f"{packaging_path.name} must audit the guarded-route opened atlas")
 
 
+_DWELLING_UNIT_INDEX: dict[str, dict] = {}
+
+
+def _dwelling_units() -> dict[str, dict]:
+    if not _DWELLING_UNIT_INDEX:
+        _DWELLING_UNIT_INDEX.update(items_index(load_json(CONTENT_DIR / "units.json")))
+    return _DWELLING_UNIT_INDEX
+
+
+def _dwelling_primary_unit(legacy_units) -> str:
+    units = _dwelling_units()
+    known = [str(unit_id) for unit_id in legacy_units if str(unit_id) in units]
+    return max(known, key=lambda unit_id: int(units[unit_id].get("tier", 1))) if known else ""
+
+
+def creature_dwelling_week(site: dict, unit_id: str) -> bool:
+    """A creature dwelling musters one week of its creature's growth and
+    grants no capture batch (docs/creature-dwellings.md)."""
+    growth = max(1, int(_dwelling_units().get(unit_id, {}).get("growth", 1)))
+    return unit_id != "" and site.get("weekly_recruits") == {unit_id: growth} and "claim_recruits" not in site
+
+
+def creature_dwelling_guarded(site: dict) -> bool:
+    """Tier 5+ dwellings are guarded by three weeks of their creature; the
+    guard comes from the rule, not from authored guard metadata."""
+    units = _dwelling_units()
+    tiers = [int(units.get(str(unit_id), {}).get("tier", 1)) for unit_id in site.get("weekly_recruits", {})]
+    return bool(tiers) and max(tiers) >= 5 and "guard_profile" not in site and "dwelling_contract" not in site
+
+
 def validate_eight_neutral_dwelling_musters(errors: list[str]) -> None:
     expected = {
         "site_free_company_yard": ("object_roadward_lodge", "tollreaver-roadward-lodge", "tollreaver_watch_dwelling", "tollreaver_roadward_lodge_watch", "encounter_roadward_lodge_watch", "mapobj_roadward_lodge", "resource_site_neutral_roadward_lodge_claimed", "roadward_lodge_claimed", "53178f2c1b78544d04c2572cb3ba7a1fc266252663935e64764b41f980fe415a", [0,0,48,48], None, None, {"unit_neutral_roadwardens":2,"unit_neutral_hearthbow_carriers":1}, {"unit_neutral_roadwardens":1}),
@@ -51906,8 +51936,8 @@ def validate_eight_neutral_dwelling_musters(errors: list[str]) -> None:
         boundary = site.get("runtime_boundary", {})
         object_boundary = map_object.get("runtime_boundary", {})
         ensure(site.get("family") == "neutral_dwelling" and bool(site.get("persistent_control", False)), errors, f"{site_id} must remain a persistent neutral dwelling")
-        ensure(site.get("claim_rewards") == rewards and site.get("control_income") == income and site.get("claim_recruits") == claim_recruits and site.get("weekly_recruits") == weekly_recruits, errors, f"{site_id} must keep its muster payload and pay no capture bonus or income")
-        ensure(site.get("response_profile", {}).get("watch_days") == 3 and str(site.get("response_profile", {}).get("action_label", "")) == "Dispatch Relief", errors, f"{site_id} response order changed")
+        ensure(site.get("claim_rewards") == rewards and site.get("control_income") == income and creature_dwelling_week(site, next(iter(weekly_recruits))), errors, f"{site_id} must keep its muster payload and pay no capture bonus or income")
+        ensure("response_profile" not in site, errors, f"{site_id} response order changed")
         for candidate in (boundary, object_boundary):
             ensure(candidate.get("status") == "neutral_dwelling_live" and candidate.get("neutral_dwelling_site_runtime_supported") is True and candidate.get("guard_resolution_runtime_adopted") is True and candidate.get("save_payload_required") is True and candidate.get("renderer_sprite_required") is True and candidate.get("pathing_runtime_adopted") is True and candidate.get("scenario_placement_migration") is True and candidate.get("rare_resource_activation") is False, errors, f"{site_id} live runtime boundary changed")
         scenario = scenarios.get(scenario_id, {})
@@ -52020,7 +52050,8 @@ def validate_seven_final_neutral_dwelling_musters(errors: list[str]) -> None:
             boundary = payload.get("runtime_boundary", {})
             ensure(boundary.get("status") == "neutral_dwelling_live" and all(boundary.get(flag) is True for flag in ("neutral_dwelling_site_runtime_supported", "guard_resolution_runtime_adopted", "save_payload_required", "renderer_sprite_required", "pathing_runtime_adopted", "scenario_placement_migration")) and boundary.get("guarded_variant_runtime_migration") is guarded and boundary.get("rare_resource_activation") is False, errors, f"{site_id} final live runtime boundary changed")
         if guarded:
-            ensure(site.get("guard_profile", {}).get("metadata_only") is False and site.get("guard_profile", {}).get("runtime_guard_resolution_adopted") is True and site.get("dwelling_contract", {}).get("metadata_only_guard_contract") is False, errors, f"{site_id} guarded runtime contract changed")
+            # Guards now come from the creature tier (5+), not authored metadata.
+            ensure("guard_profile" not in site and "dwelling_contract" not in site, errors, f"{site_id} guarded runtime contract changed")
         node = next((row for row in scenario.get("resource_nodes", []) if isinstance(row, dict) and row.get("placement_id") == placement_id), {})
         guard = next((row for row in scenario.get("encounters", []) if isinstance(row, dict) and row.get("placement_id") == guard_id), {})
         ensure(node.get("site_id") == site_id and node.get("guard_front_id") == guard_id and guard.get("encounter_id") == encounter_id, errors, f"{site_id} exact Ninefold guard link changed")
@@ -52219,7 +52250,7 @@ def validate_recurring_encounter_landmarks(errors: list[str]) -> None:
     unplaced_definition_ids = set(encounters) - placed_identity_ids
     ensure(len(all_placement_ids) >= 682 and len(placed_identity_ids) >= 182, errors, "Authored scenarios must retain baseline encounter-placement breadth")
     ensure(placed_identity_ids.issubset(set(identity_sprites)), errors, "Every encounter identity placed in an authored scenario must own exact live Overworld art")
-    ensure(len(encounters) >= 185 and len(unplaced_definition_ids) == 3 and set(identity_sprites) == set(encounters), errors, "Exact encounter art must cover all 161 authored, system-owned, and scripted encounter definitions")
+    ensure(len(encounters) >= 185 and len(unplaced_definition_ids) == 4 and set(identity_sprites) == set(encounters), errors, "Exact encounter art must cover all authored, system-owned, scripted and dwelling-guard encounter definitions")
 
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
@@ -52556,8 +52587,8 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
             continue
         unresolved.add(site_id)
     ensure(not unresolved and len(resolver_paths) == 376, errors, f"Placed resource sites still reach procedural fallback: {sorted(unresolved)}")
-    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 212, errors, "Placed resource-site map-object resolver coverage changed")
-    ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 164, errors, "Placed resource-site exact site-mapping coverage changed")
+    ensure(sum(1 for path in resolver_paths.values() if path == "map_object") == 213, errors, "Placed resource-site map-object resolver coverage changed")
+    ensure(sum(1 for path in resolver_paths.values() if path == "site_mapping") == 163, errors, "Placed resource-site exact site-mapping coverage changed")
     for site_id in expected:
         if site_id in claimed_state_sites:
             if site_id == "site_fenhound_kennels":
@@ -53160,7 +53191,7 @@ def validate_battle_field_objective_landmarks(errors: list[str]) -> None:
 
     expected = {
         "cover_line": ("cover_line_briar_bulwark", "wide_low_screen", "5e4fa6d09fa68cfc9b8e366a902ed0fe451484c65837e74bb00c2949b4507484", "0388e12ed1999b20b26ebd36aab4639c587a2eabf1acfe87fb824b1599a5303a", 28),
-        "obstruction_line": ("obstruction_line_crossed_stakes", "crossed_blockade", "732641d6c1601d8b05163e200a10d41a43020f7d54abe1e0065d498f7eac45ab", "10ab7b65b83e9decc00cfefe68935c718b6a98191c3648f05b8b6f0cd6641b26", 19),
+        "obstruction_line": ("obstruction_line_crossed_stakes", "crossed_blockade", "732641d6c1601d8b05163e200a10d41a43020f7d54abe1e0065d498f7eac45ab", "10ab7b65b83e9decc00cfefe68935c718b6a98191c3648f05b8b6f0cd6641b26", 20),
         "lane_battery": ("lane_battery_splitrail", "wide_tripod_battery", "18ea6d6a5e4c10d7199af20ec0e8905057e1f41fce43a5a2beaf5232a21a6bd0", "f07dc42f4465ec1b1f1e6842a87b6627f3f9f29d6b34ef40ef2f67c93711087e", 24),
         "hazard_zone": ("hazard_zone_mireglass_basin", "triangular_hazard_basin", "5c185a4ab871c5282cc6d2f6ca72287c9b14e32255ba6a8998c6db15ecde21bc", "c0728d03eae332c0e22e2faf550ac4cf33fbe0c4fb14617e7b46257d04a749e0", 22),
         "breach_point": ("breach_point_broken_gate", "open_gate_jaws", "03c05efb753e2798d69acc6fe7a8adea8d2a9f67f9247b235ec3a60f3152d9b8", "6d54f8bafd3de39f0c5388f8de020f61938cdcf548a9f658f5c9342f4a601dea", 21),
@@ -53211,7 +53242,7 @@ def validate_battle_field_objective_landmarks(errors: list[str]) -> None:
                 if objective_type in type_counts:
                     type_counts[objective_type] += 1
                 authored_objective_count += 1
-    ensure(len(encounters) >= 203 and authored_objective_count == 193, errors, "Battle field-objective adoption must retain all authored encounters and objectives")
+    ensure(len(encounters) >= 203 and authored_objective_count == 194, errors, "Battle field-objective adoption must retain all authored encounters and objectives")
     ensure(type_counts == {key: row[4] for key, row in expected.items()}, errors, "Battle field-objective authored type coverage changed")
 
     board_text = board_path.read_text(encoding="utf-8")
@@ -57218,22 +57249,16 @@ def validate_neutral_dwelling_unit_slice(errors: list[str]) -> None:
             ensure(str(site.get("family", "")) == "neutral_dwelling", errors, f"Neutral dwelling site {site_id} must use neutral_dwelling family")
             ensure(str(site.get("dwelling_scope", "")) == "neutral", errors, f"Neutral dwelling site {site_id} must be marked dwelling_scope neutral")
             ensure(str(site.get("neutral_dwelling_family_id", "")) == dwelling_id, errors, f"Neutral dwelling site {site_id} must reference family {dwelling_id}")
-            for recruit_key in ("claim_recruits", "weekly_recruits"):
-                recruits = site.get(recruit_key, {})
-                ensure(isinstance(recruits, dict) and bool(recruits), errors, f"Neutral dwelling site {site_id} must define {recruit_key}")
-                if isinstance(recruits, dict):
-                    for unit_id, amount in recruits.items():
-                        ensure(str(unit_id) in neutral_units, errors, f"Neutral dwelling site {site_id} {recruit_key} must use neutral unit {unit_id}")
-                        ensure(int(amount) > 0, errors, f"Neutral dwelling site {site_id} {recruit_key} must define positive count for {unit_id}")
-            roster = site.get("neutral_roster", {})
-            ensure(isinstance(roster, dict) and bool(roster), errors, f"Neutral dwelling site {site_id} must define neutral_roster")
-            if isinstance(roster, dict):
-                guard_group_id = str(roster.get("guard_army_group_id", ""))
-                guard_encounter_id = str(roster.get("guard_encounter_id", ""))
-                ensure(guard_group_id in army_groups, errors, f"Neutral dwelling site {site_id} guard army group {guard_group_id} is missing")
-                ensure(guard_group_id in group_ids, errors, f"Neutral dwelling site {site_id} guard army group {guard_group_id} must be listed by family {dwelling_id}")
-                ensure(guard_encounter_id in encounters, errors, f"Neutral dwelling site {site_id} guard encounter {guard_encounter_id} is missing")
-                ensure(guard_encounter_id in encounter_ids, errors, f"Neutral dwelling site {site_id} guard encounter {guard_encounter_id} must be listed by family {dwelling_id}")
+            # HoMM3 dwellings: one creature at its weekly growth, hired at the
+            # dwelling; no capture batch and no separate guard roster
+            # (docs/creature-dwellings.md).
+            recruits = site.get("weekly_recruits", {})
+            ensure(isinstance(recruits, dict) and len(recruits) == 1, errors, f"Neutral dwelling site {site_id} must muster exactly one creature")
+            if isinstance(recruits, dict):
+                for unit_id, amount in recruits.items():
+                    ensure(str(unit_id) in neutral_units, errors, f"Neutral dwelling site {site_id} must muster a neutral unit, got {unit_id}")
+                    ensure(int(amount) == max(1, int(units.get(str(unit_id), {}).get("growth", 1))), errors, f"Neutral dwelling site {site_id} must muster one week of {unit_id} growth")
+            ensure("claim_recruits" not in site and "neutral_roster" not in site, errors, f"Neutral dwelling site {site_id} must not grant a capture batch")
         for object_id in object_ids:
             obj = map_objects.get(object_id, {})
             ensure(bool(obj), errors, f"Neutral dwelling {dwelling_id} references missing map object {object_id}")
@@ -66271,8 +66296,8 @@ def validate_native_rmg_authored_object_pool_eligibility(errors: list[str]) -> N
             decisions.append(f"excluded:{exclusion_id}")
             excluded_decisions[object_id] = exclusion_id
         ensure(len(decisions) == 1, errors, f"Authored map object {object_id} must have exactly one native-RMG eligibility decision, got {decisions}")
-    ensure(len(authored) == 437, errors, "Native RMG eligibility baseline must cover all 437 authored map objects")
-    ensure(len(eligible_decisions) == 371, errors, "Native RMG eligibility must expose all 371 compatible authored map objects, including guarded sites and rare pickups")
+    ensure(len(authored) == 462, errors, "Native RMG eligibility baseline must cover all 462 authored map objects")
+    ensure(len(eligible_decisions) == 396, errors, "Native RMG eligibility must expose all 396 compatible authored map objects, including guarded sites and rare pickups")
     ensure(len(excluded_decisions) == 66, errors, "Native RMG eligibility must retain 66 explicit safety/scenario exclusions")
     ensure(len(candidate_ids_by_pool.get("guarded_reward", set())) == 32, errors, "All 32 executable guarded sites must be eligible; stale object summaries cannot exclude them")
     source_type_pools = registry.get("source_type_pools", {})
@@ -66581,7 +66606,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
                 and bool(site.get("persistent_control", False))
                 and not site.get("claim_rewards")
                 and not site.get("control_income")
-                and site.get("claim_recruits", {}) == recruits,
+                and creature_dwelling_week(site, next(iter(recruits))),
                 errors,
                 f"{site_id} must keep its exact recruit payload and pay no capture bonus or income",
             )
@@ -67393,8 +67418,8 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "XLarge dwelling owner must preserve exact ordered rows/masks, validate subtype 45 through the authored pool, compare a fresh repeat, adopt, and exercise the ten exact-catalog dwellings without mutating unrelated pool dwellings",
         )
         for required_token in (
-            '"object_id": "object_noonshard_prism_aviary"',
-            '"object_id": "object_last_memory_mooring"',
+            '"object_id": "object_quenchbell_pressure_den"',
+            '"object_id": "object_knotstag_root_court"',
             '"selection_token": "c43f0d7b"',
             '"selection_token": "32e87d71"',
             '"authored_pool_proxy_17_45_neutral_dwelling"',
@@ -77701,8 +77726,8 @@ def validate_two_elite_neutral_dwellings(errors: list[str]) -> None:
         encounter = encounters.get(row["encounter_id"], {})
         ensure(dwelling.get("unit_ids") == [unit_id, row["support_unit_id"]] and dwelling.get("site_ids") == [row["site_id"]] and dwelling.get("map_object_ids") == [row["object_id"]] and dwelling.get("army_group_ids") == [row["group_id"]] and dwelling.get("encounter_ids") == [row["encounter_id"]], errors, f"{row['dwelling_id']} registry links changed")
         for owner in (site, map_object):
-            ensure(owner.get("runtime_boundary", {}).get("status") == "neutral_dwelling_live" and owner.get("dwelling_contract", {}).get("guarded_variant") is True and owner.get("dwelling_contract", {}).get("metadata_only_guard_contract") is False and owner.get("guard_expectation", {}).get("blocks_approach") is True, errors, f"{row['site_id']} guarded dwelling runtime contract changed")
-        ensure(site.get("claim_recruits") == row["claim_recruits"] and site.get("weekly_recruits") == row["weekly_recruits"] and site.get("persistent_control") is True, errors, f"{row['site_id']} elite-and-support recruit cadence changed")
+            ensure(owner.get("runtime_boundary", {}).get("status") == "neutral_dwelling_live" and creature_dwelling_guarded(site), errors, f"{row['site_id']} guarded dwelling runtime contract changed")
+        ensure(creature_dwelling_week(site, _dwelling_primary_unit(row["weekly_recruits"])) and site.get("persistent_control") is True, errors, f"{row['site_id']} elite-and-support recruit cadence changed")
         ensure(group.get("stacks") == [{"unit_id": unit_id, "count": 2}, {"unit_id": row["support_unit_id"], "count": 4}] and encounter.get("enemy_group_id") == row["group_id"] and len(encounter.get("field_objectives", [])) == 1, errors, f"{row['encounter_id']} exact elite-and-support production watch changed")
         node = next((value for value in scenario.get("resource_nodes", []) if isinstance(value, dict) and value.get("placement_id") == row["placement_id"]), {})
         guard = next((value for value in scenario.get("encounters", []) if isinstance(value, dict) and value.get("placement_id") == row["guard_id"]), {})
@@ -77811,9 +77836,9 @@ def validate_four_elder_wild_recruitment_sanctuaries(errors: list[str]) -> None:
         dwelling = dwellings.get(row["dwelling"], {})
         map_object = objects.get(row["object"], {})
         ensure(dwelling.get("unit_ids") == [row["unit"], row["support"]] and dwelling.get("site_ids") == [site_id] and dwelling.get("map_object_ids") == [row["object"]] and dwelling.get("encounter_ids") == [row["encounter"]], errors, f"{row['dwelling']} registry links changed")
-        ensure(site.get("content_batch_id") == "content-four-elder-wild-recruitment-sanctuaries-10184" and site.get("persistent_control") is True and site.get("claim_recruits") == row["claim"] and site.get("weekly_recruits") == row["weekly"] and site.get("claim_rewards") == row["reward"] and site.get("control_income") == row["income"] and site.get("response_profile", {}).get("resource_cost") == row["cost"], errors, f"{site_id} recruitment economy changed")
+        ensure(site.get("content_batch_id") == "content-four-elder-wild-recruitment-sanctuaries-10184" and site.get("persistent_control") is True and creature_dwelling_week(site, _dwelling_primary_unit(row["weekly"])) and site.get("claim_rewards") == row["reward"] and site.get("control_income") == row["income"] and "response_profile" not in site, errors, f"{site_id} recruitment economy changed")
         for owner in (site, map_object):
-            ensure(owner.get("runtime_boundary", {}).get("status") == "neutral_dwelling_live" and owner.get("dwelling_contract", {}).get("metadata_only_guard_contract") is False and owner.get("guard_expectation", {}).get("blocks_approach") is True, errors, f"{site_id} guarded live-runtime contract changed")
+            ensure(owner.get("runtime_boundary", {}).get("status") == "neutral_dwelling_live" and creature_dwelling_guarded(site), errors, f"{site_id} guarded live-runtime contract changed")
         ensure(map_object.get("resource_site_id") == site_id and map_object.get("family") == "neutral_dwelling" and map_object.get("footprint") == {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"} and map_object.get("passability_class") == "blocking_visitable", errors, f"{row['object']} exact 2x2 visitable identity changed")
         node = resource_nodes.get(row["placement"], {})
         guard = guards.get(row["guard"], {})
@@ -79592,10 +79617,10 @@ def validate_eight_foundation_map_object_identities(errors: list[str]) -> None:
     object_assets = art_manifest.get("object_assets", {})
     site_sprites = art_manifest.get("resource_site_sprites", {})
     nondecorative_ids = {object_id for object_id, row in map_objects.items() if row.get("family") not in {"blocker", "decoration"}}
-    ensure(len(nondecorative_ids) == 237 and set(mappings) == nondecorative_ids and len(asset_ids) == 237 and len(set(asset_ids)) == 237, errors, "All 237 authored non-decorative map objects must retain one exact distinct sprite mapping")
+    ensure(len(nondecorative_ids) == 262 and set(mappings) == nondecorative_ids and len(asset_ids) == 262 and len(set(asset_ids)) == 262, errors, "All 262 authored non-decorative map objects must retain one exact distinct sprite mapping")
     ensure(sprite_manifest.get("source", {}).get("new_generated_sprite_count") == 222 and sprite_manifest.get("source", {}).get("generated_batch_count") == 20, errors, "Foundation identity coverage must retain the expanded 222-object, 20-batch mapping provenance")
     coverage = sprite_manifest.get("coverage", {})
-    ensure(coverage.get("preexisting_unique_non_decorative_count") == 0 and coverage.get("new_distinct_non_decorative_asset_count") == 237 and coverage.get("total_distinct_authored_map_object_count_after_pass") == 437, errors, "Foundation identity coverage totals changed")
+    ensure(coverage.get("preexisting_unique_non_decorative_count") == 0 and coverage.get("new_distinct_non_decorative_asset_count") == 262 and coverage.get("total_distinct_authored_map_object_count_after_pass") == 462, errors, "Foundation identity coverage totals changed")
     ensure(source_manifest.get("schema") == "foundation_map_object_identities_source_manifest_v1" and source_manifest.get("content_slice_id") == "content-eight-foundation-map-object-identities-10184" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("background_extraction_mode") == "built_in_image_gen_background_extraction" and len(str(source_manifest.get("prompt_set_summary", ""))) >= 500, errors, "Foundation object source provenance changed")
     source_rows = {str(row.get("object_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     ensure(set(source_rows) == set(expected), errors, "Foundation object source manifest must own exactly the eight completed identities")

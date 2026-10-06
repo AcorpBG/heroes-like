@@ -113,15 +113,59 @@ const GROWTH_SITES := ["site_visit_bell_spire", "site_visit_drum_cairn", "site_v
 const FORTUNE_TYPE := 30
 const ELDER_TREE_TYPE := 102
 
+# HoMM3 creature dwellings become one of our dwellings of the same tier
+# (docs/creature-dwellings.md). A dwelling of a town creature belongs to the
+# faction of the nearest town; a neutral creature's dwelling stays neutral.
+const TYPE_CREATURE_GENERATOR := 17
+const TYPE_MULTI_GENERATOR := 20
+const TYPE_REFUGEE_CAMP := 78
+const TYPE_RANDOM_DWELLING := 216
+const TYPE_RANDOM_DWELLING_BY_LEVEL := 217
+const TYPE_RANDOM_DWELLING_BY_FACTION := 218
+# Creature level of each HoMM3 Creature Generator 1 subtype (by its .def).
+const H3M_DWELLING_LEVEL := {
+	0: 4, 1: 7, 2: 3, 3: 6, 4: 7, 5: 6, 6: 1, 7: 2, 8: 7, 9: 6,
+	10: 7, 11: 3, 12: 2, 13: 5, 14: 6, 15: 3, 16: 4, 17: 2, 18: 5, 19: 2,
+	20: 1, 21: 1, 22: 2, 23: 5, 24: 7, 25: 3, 26: 2, 27: 3, 28: 7, 29: 1,
+	30: 2, 31: 4, 32: 6, 33: 4, 34: 5, 35: 5, 36: 6, 37: 4, 38: 4, 39: 3,
+	40: 5, 41: 7, 42: 5, 43: 1, 44: 7, 45: 5, 46: 1, 47: 3, 48: 3, 49: 6,
+	50: 4, 51: 6, 52: 5, 53: 4, 54: 1, 55: 2, 56: 1, 57: 2, 58: 4, 59: 1,
+	60: 6, 61: 7, 62: 7, 63: 7, 64: 7, 65: 7, 66: 6, 67: 4, 68: 6, 69: 2,
+	70: 5, 71: 4, 72: 3, 73: 1, 74: 1, 75: 2, 76: 3, 77: 3, 78: 2, 79: 5,
+}
+# Dragons, Enchanters, Sharpshooters, Halflings, Peasants, Boars, Mummies,
+# Nomads, Rogues and Trolls have no town.
+const H3M_NEUTRAL_DWELLING_SUBTYPES := [62, 63, 64, 65, 66, 67, 73, 74, 75, 76, 77, 78, 79]
+# Elemental Conflux and Golem Factory.
+const MULTI_DWELLING_BY_SUBTYPE := {0: "site_five_bough_veteran_grove", 1: "site_three_gauge_chapter_foundry"}
+const REFUGEE_CAMP_SITE := "site_dwelling_drifters_camp"
+const RANDOM_DWELLING_TIER_WEIGHTS := {1: 25, 2: 20, 3: 18, 4: 15, 5: 10, 6: 7, 7: 5}
+
+static var _dwelling_pool_cache: Dictionary = {}
+
 ## Returns the node the session should hold for a generated object, or an empty
 ## dictionary when this object type is not one of the translated reward types.
-static func resolve(object: Dictionary) -> Dictionary:
+static func resolve(object: Dictionary, towns: Array = []) -> Dictionary:
 	var type_id := int(object.get("h3m_type_id", -1))
 	var subtype := int(object.get("h3m_subtype", -1))
 	var key := String(object.get("placement_id", "")).strip_edges()
 	if type_id < 0 or key == "":
 		return {}
 	match type_id:
+		TYPE_CREATURE_GENERATOR:
+			var level := int(H3M_DWELLING_LEVEL.get(subtype, 0))
+			if level <= 0:
+				return {}
+			var neutral := subtype in H3M_NEUTRAL_DWELLING_SUBTYPES
+			return _dwelling(object, key, level, "" if neutral else _nearest_town_faction(object, towns))
+		TYPE_MULTI_GENERATOR:
+			return _node(object, String(MULTI_DWELLING_BY_SUBTYPE.get(subtype, MULTI_DWELLING_BY_SUBTYPE[0])), String(object.get("kind", "neutral_dwelling")), {})
+		TYPE_REFUGEE_CAMP:
+			return _node(object, REFUGEE_CAMP_SITE, String(object.get("kind", "neutral_dwelling")), {})
+		TYPE_RANDOM_DWELLING, TYPE_RANDOM_DWELLING_BY_FACTION:
+			return _dwelling(object, key, _weighted_tier(key), _nearest_town_faction(object, towns))
+		TYPE_RANDOM_DWELLING_BY_LEVEL:
+			return _dwelling(object, key, clampi(subtype + 1, 1, 7), _nearest_town_faction(object, towns))
 		TYPE_RESOURCE:
 			var resource_id := String(H3M_COMMON_RESOURCE_BY_SUBTYPE.get(subtype, ""))
 			if resource_id == "" and subtype in H3M_RARE_SUBTYPES:
@@ -203,6 +247,71 @@ static func _visit_building(object: Dictionary, key: String, type_id: int) -> Di
 	if String(object.get("native_authored_pool_id", "")) == "interactable_site":
 		return _node(object, _pick(_visit_fallback_sites(), key, "visit_fallback"), "resource_site", {})
 	return {}
+
+## Our dwelling of this tier: the faction's when the faction has one, a
+## neutral one otherwise, then the nearest tier that has one.
+static func _dwelling(object: Dictionary, key: String, tier: int, faction_id: String) -> Dictionary:
+	var pools := _dwelling_pools()
+	var site_id := ""
+	for distance in range(0, 7):
+		for candidate_tier in [tier - distance, tier + distance]:
+			if candidate_tier < 1 or candidate_tier > 7 or site_id != "":
+				continue
+			var faction_pool: Array = pools.get("%s|%d" % [faction_id, candidate_tier], []) if faction_id != "" else []
+			var pool: Array = faction_pool if not faction_pool.is_empty() else pools.get("|%d" % candidate_tier, [])
+			if not pool.is_empty():
+				site_id = _pick(pool, key, "dwelling")
+		if site_id != "":
+			break
+	return _node(object, site_id, String(object.get("kind", "neutral_dwelling")), {}) if site_id != "" else {}
+
+## Single-creature dwellings with a map object, keyed "faction|tier" (the
+## faction is empty for neutral creatures).
+static func _dwelling_pools() -> Dictionary:
+	if not _dwelling_pool_cache.is_empty():
+		return _dwelling_pool_cache
+	for site in ContentService.load_json("res://content/resource_sites.json").get("items", []):
+		if not (site is Dictionary) or String(site.get("family", "")) != "neutral_dwelling" or String(site.get("dwelling_kind", "single")) != "single":
+			continue
+		var site_id := String(site.get("id", ""))
+		var recruits = site.get("weekly_recruits", {})
+		if ContentService.get_map_object_for_resource_site(site_id).is_empty() or not (recruits is Dictionary) or recruits.size() != 1:
+			continue
+		var unit := ContentService.get_unit(String(recruits.keys()[0]))
+		var pool_key := "%s|%d" % [String(unit.get("faction_id", "")), int(unit.get("tier", 1))]
+		var pool: Array = _dwelling_pool_cache.get(pool_key, [])
+		pool.append(site_id)
+		_dwelling_pool_cache[pool_key] = pool
+	for pool_key in _dwelling_pool_cache.keys():
+		_dwelling_pool_cache[pool_key].sort()
+	return _dwelling_pool_cache
+
+static func _nearest_town_faction(object: Dictionary, towns: Array) -> String:
+	var best := ""
+	var best_distance := 1 << 30
+	var level := int(object.get("level", 0))
+	for town in towns:
+		if not (town is Dictionary) or int(town.get("level", 0)) != level:
+			continue
+		var distance := absi(int(town.get("x", 0)) - int(object.get("x", 0))) + absi(int(town.get("y", 0)) - int(object.get("y", 0)))
+		var faction_id := String(town.get("faction_id", ""))
+		if faction_id == "":
+			faction_id = String(ContentService.get_town(String(town.get("town_id", ""))).get("faction_id", ""))
+		if faction_id != "" and distance < best_distance:
+			best_distance = distance
+			best = faction_id
+	return best
+
+static func _weighted_tier(key: String) -> int:
+	var total := 0
+	for tier in RANDOM_DWELLING_TIER_WEIGHTS.keys():
+		total += int(RANDOM_DWELLING_TIER_WEIGHTS[tier])
+	var roll := _roll(key, "dwelling_tier", total)
+	for tier in [1, 2, 3, 4, 5, 6, 7]:
+		roll -= int(RANDOM_DWELLING_TIER_WEIGHTS[tier])
+		if roll < 0:
+			return tier
+	return 1
 
 static func _visit_fallback_sites() -> Array:
 	var sites := []

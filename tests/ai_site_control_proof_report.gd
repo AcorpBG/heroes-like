@@ -89,8 +89,9 @@ func _run() -> void:
 	if int(seizure_case.get("after_strength", 0)) <= int(seizure_case.get("before_strength", 0)):
 		_fail("Resource seizure did not add claim recruits to the active AI host: %s" % seizure_case)
 		return
+	# Dwellings pay no capture batch; the seizing host hires the week instead.
 	if int(seizure_case.get("claim_recruit_total", 0)) <= 0:
-		_fail("Resource seizure did not record claim recruits on the active AI host: %s" % seizure_case)
+		_fail("Resource seizure did not record dwelling hires on the active AI host: %s" % seizure_case)
 		return
 	if _failed:
 		return
@@ -148,7 +149,7 @@ func _run() -> void:
 		_fail("Opportunistic recruit site did not add claim recruits to the active AI host: %s" % opportunistic_recruit_site_case)
 		return
 	if int(opportunistic_recruit_site_case.get("claim_recruit_total", 0)) <= 0:
-		_fail("Opportunistic recruit site did not record claim recruits on the active AI host: %s" % opportunistic_recruit_site_case)
+		_fail("Opportunistic recruit site did not record dwelling hires on the active AI host: %s" % opportunistic_recruit_site_case)
 		return
 	if String(opportunistic_recruit_site_case.get("last_opportunistic_pickup_placement_id", "")) != PRIMARY_SITE:
 		_fail("Opportunistic recruit-site fixture did not claim %s: %s" % [PRIMARY_SITE, opportunistic_recruit_site_case])
@@ -234,8 +235,8 @@ func _run_seizure_case() -> Dictionary:
 		"controller_after": _resource_controller(session, PRIMARY_SITE),
 		"before_strength": before_strength,
 		"after_strength": EnemyAdventureRules.raid_strength(after_raid),
-		"claim_recruits": after_raid.get("last_site_claim_recruits", {}),
-		"claim_recruit_total": _recruit_total(after_raid.get("last_site_claim_recruits", {})),
+		"claim_recruits": after_raid.get("last_dwelling_hires", {}),
+		"claim_recruit_total": _recruit_total(after_raid.get("last_dwelling_hires", {})),
 		"commander_rebuild_need_after": int(after_raid.get("enemy_commander_state", {}).get("army_rebuild_need", -1)) if after_raid.get("enemy_commander_state", {}) is Dictionary else -1,
 		"enemy_state_delta": _state_delta(before_state, after_state),
 		"event": _event_by_type_and_target(events, "ai_site_seized", PRIMARY_SITE),
@@ -258,8 +259,8 @@ func _run_opportunistic_recruit_site_claim_case() -> Dictionary:
 		"controller_after": _resource_controller(session, PRIMARY_SITE),
 		"before_strength": before_strength,
 		"after_strength": EnemyAdventureRules.raid_strength(after_raid),
-		"claim_recruits": after_raid.get("last_site_claim_recruits", {}),
-		"claim_recruit_total": _recruit_total(after_raid.get("last_site_claim_recruits", {})),
+		"claim_recruits": after_raid.get("last_dwelling_hires", {}),
+		"claim_recruit_total": _recruit_total(after_raid.get("last_dwelling_hires", {})),
 		"last_opportunistic_pickup_kind": String(after_raid.get("last_opportunistic_pickup_kind", "")),
 		"last_opportunistic_pickup_placement_id": String(after_raid.get("last_opportunistic_pickup_placement_id", "")),
 		"commander_rebuild_need_after": int(after_raid.get("enemy_commander_state", {}).get("army_rebuild_need", -1)) if after_raid.get("enemy_commander_state", {}) is Dictionary else -1,

@@ -2111,9 +2111,9 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 		or String(dwelling_taxonomy.get("cadence", "")) != "persistent_control"
 		or "neutral_recruit_source" not in dwelling_taxonomy.get("secondary_tags", [])
 		or dwelling_text.find("Recruit Source: Roadward Lodge | Neutral dwelling") < 0
-		or dwelling_text.find("Ready: +1 Hearthbow Carriers (T2 Ranged, 80 gold), +2 Roadwardens (T1 Melee, 55 gold)") < 0
-		or dwelling_text.find("Weekly: +1 Roadwardens (T1 Melee, 55 gold) to nearest held town") < 0
-		or dwelling_text.find("Why: Capture adds field recruits, feeds weekly musters.") < 0
+		or dwelling_text.find("Ready:") >= 0
+		or dwelling_text.find("Weekly: +7 Roadwardens (T1 Melee, free) hired here") < 0
+		or dwelling_text.find("Why: Hire here each week") < 0
 	):
 		_fail("Map editor smoke: neutral dwelling site inspection did not expose recruit-source identity, roster, cadence, and value: detail=%s result=%s." % [dwelling_detail, dwelling_result])
 		return false

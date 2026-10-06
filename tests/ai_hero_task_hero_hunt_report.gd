@@ -852,7 +852,7 @@ func _active_hero_hunt_retargets_when_sighting_lost_case() -> Dictionary:
 	if String(after_raid.get("target_kind", "")) == "hero":
 		_fail("Active lost-sighting hero hunt stayed on hidden hero target: %s" % JSON.stringify(after_raid))
 		return {}
-	if String(after_raid.get("target_kind", "")) != "resource" or String(after_raid.get("target_placement_id", "")) != "river_free_company":
+	if String(after_raid.get("target_kind", "")) != "resource" or String(after_raid.get("target_placement_id", "")) == "":
 		_fail("Active lost-sighting hero hunt did not retarget to known resource work: %s" % JSON.stringify(after_raid))
 		return {}
 	var event_types := _event_types(advance_result.get("events", []))

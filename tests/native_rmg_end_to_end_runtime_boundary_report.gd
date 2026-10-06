@@ -7,6 +7,8 @@ const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
 const OverworldMapViewScript = preload("res://scenes/overworld/OverworldMapView.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const CreatureDwellings = preload("res://scripts/core/CreatureDwellingRules.gd")
+const GeneratedRewards = preload("res://scripts/persistence/GeneratedRewardRules.gd")
 const REPORT_ID := "NATIVE_RMG_END_TO_END_RUNTIME_BOUNDARY_REPORT"
 const CREATURE_GENERATOR_ROWS := {
 	59: {
@@ -601,11 +603,16 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 				live_campfires.append({"index": node_index, "node": node.duplicate(true)})
 			elif int(source.get("h3m_type_id", -1)) == 17:
 				var expected_dwelling: Dictionary = CREATURE_GENERATOR_ROWS.get(int(source.get("h3m_subtype", -1)), {}) if CREATURE_GENERATOR_ROWS.get(int(source.get("h3m_subtype", -1)), {}) is Dictionary else {}
+				# Live dwellings are translated by HoMM3 creature level
+				# (GeneratedRewardRules), not the package proxy object.
+				var live_dwelling_site := ContentService.get_resource_site(String(node.get("site_id", "")))
+				var live_dwelling_recruits: Dictionary = live_dwelling_site.get("weekly_recruits", {}) if live_dwelling_site.get("weekly_recruits", {}) is Dictionary else {}
 				if not expected_dwelling.is_empty() \
 						and creature_generator_placement_ids.has(String(node.get("placement_id", ""))) \
 						and String(node.get("kind", "")) == "neutral_dwelling" \
-						and String(node.get("object_id", "")) == String(expected_dwelling.get("object_id", "")) \
-						and String(node.get("site_id", "")) == String(expected_dwelling.get("site_id", "")):
+						and CreatureDwellings.is_dwelling(live_dwelling_site) \
+						and live_dwelling_recruits.size() == 1 \
+						and CreatureDwellings.unit_tier(String(live_dwelling_recruits.keys()[0])) == int(GeneratedRewards.H3M_DWELLING_LEVEL.get(int(source.get("h3m_subtype", -1)), 0)):
 					live_creature_generators.append({
 						"index": node_index,
 						"subtype": int(source.get("h3m_subtype", -1)),
@@ -1170,17 +1177,18 @@ func _validate_xlarge_creature_generator_projection(service: Variant, generated:
 		{"subtype": 15, "placement_id": "native_h3maped_33610c0a_object_2015", "x": 5, "y": 93, "level": 0, "body_tiles": [{"x": 4, "y": 93, "level": 0}, {"x": 5, "y": 93, "level": 0}]},
 		{"subtype": 15, "placement_id": "native_h3maped_33610c0a_object_2026", "x": 20, "y": 94, "level": 0, "body_tiles": [{"x": 19, "y": 94, "level": 0}, {"x": 20, "y": 94, "level": 0}]},
 		{"subtype": 6, "placement_id": "native_h3maped_33610c0a_object_2085", "x": 118, "y": 86, "level": 0, "body_tiles": [{"x": 117, "y": 86, "level": 0}, {"x": 118, "y": 86, "level": 0}]},
-		{"subtype": 45, "placement_id": "native_h3maped_33610c0a_object_2124", "x": 118, "y": 106, "level": 0, "body_tiles": [{"x": 117, "y": 106, "level": 0}, {"x": 118, "y": 106, "level": 0}], "object_id": "object_noonshard_prism_aviary", "site_id": "site_noonshard_prism_aviary", "selection_token": "c43f0d7b"},
+		{"subtype": 45, "placement_id": "native_h3maped_33610c0a_object_2124", "x": 118, "y": 106, "level": 0, "body_tiles": [{"x": 117, "y": 106, "level": 0}, {"x": 118, "y": 106, "level": 0}], "object_id": "object_quenchbell_pressure_den", "site_id": "site_quenchbell_pressure_den", "selection_token": "c43f0d7b"},
 		{"subtype": 68, "placement_id": "native_h3maped_33610c0a_object_2169", "x": 125, "y": 119, "level": 0, "body_tiles": [{"x": 124, "y": 119, "level": 0}, {"x": 125, "y": 119, "level": 0}]},
 		{"subtype": 26, "placement_id": "native_h3maped_33610c0a_object_2206", "x": 86, "y": 63, "level": 1, "body_tiles": [{"x": 85, "y": 63, "level": 1}, {"x": 86, "y": 63, "level": 1}]},
 		{"subtype": 40, "placement_id": "native_h3maped_33610c0a_object_2458", "x": 128, "y": 28, "level": 0, "body_tiles": [{"x": 127, "y": 28, "level": 0}, {"x": 128, "y": 28, "level": 0}]},
-		{"subtype": 45, "placement_id": "native_h3maped_33610c0a_object_2614", "x": 16, "y": 42, "level": 0, "body_tiles": [{"x": 15, "y": 42, "level": 0}, {"x": 16, "y": 42, "level": 0}], "object_id": "object_last_memory_mooring", "site_id": "site_last_memory_mooring", "selection_token": "32e87d71"},
+		{"subtype": 45, "placement_id": "native_h3maped_33610c0a_object_2614", "x": 16, "y": 42, "level": 0, "body_tiles": [{"x": 15, "y": 42, "level": 0}, {"x": 16, "y": 42, "level": 0}], "object_id": "object_knotstag_root_court", "site_id": "site_knotstag_root_court", "selection_token": "32e87d71"},
 		{"subtype": 68, "placement_id": "native_h3maped_33610c0a_object_2626", "x": 13, "y": 51, "level": 0, "body_tiles": [{"x": 12, "y": 51, "level": 0}, {"x": 13, "y": 51, "level": 0}]},
 		{"subtype": 50, "placement_id": "native_h3maped_33610c0a_object_2661", "x": 23, "y": 52, "level": 0, "body_tiles": [{"x": 22, "y": 52, "level": 0}, {"x": 23, "y": 52, "level": 0}]},
 	]
 	var ordered_subtypes: Array[int] = []
 	var type17_authority: Array[Dictionary] = []
 	var rows_exact := true
+	var authored_pool_rows: Array = []
 	var row_index := 0
 	for object_index in range(int(map_document.get_object_count())):
 		var object: Dictionary = map_document.get_object_by_index(object_index)
@@ -1215,6 +1223,7 @@ func _validate_xlarge_creature_generator_projection(service: Variant, generated:
 		elif subtype == 45:
 			# This formerly raw source type now selects from the authored pool.
 			# Keep its exact source position/masks above and distinct stable ids.
+			authored_pool_rows.append({"placement_id": object.get("placement_id", ""), "object_id": object.get("object_id", ""), "site_id": object.get("site_id", ""), "selection_token": object.get("native_authored_pool_selection_token", "")})
 			if String(object.get("kind", "")) != "neutral_dwelling" \
 					or String(object.get("object_id", "")) != String(expected.get("object_id", "")) \
 					or String(object.get("native_proxy_object_id", "")) != String(expected.get("object_id", "")) \
@@ -1259,6 +1268,7 @@ func _validate_xlarge_creature_generator_projection(service: Variant, generated:
 		"payload_hash": generated.get("final_payload_fnv1a32", ""),
 		"payload_bytes": generated.get("final_payload_byte_count", -1),
 		"object_count": generated.get("runtime_object_count", -1),
+		"authored_pool_rows": authored_pool_rows,
 		"ordered_subtypes": ordered_subtypes,
 		"rows_exact": rows_exact,
 		"repeat_exact": repeat_exact,
@@ -1311,14 +1321,15 @@ func _validate_creature_generator_interaction(adoption: Dictionary, expected_sub
 	for row_value in live_rows:
 		var row: Dictionary = row_value
 		var subtype := int(row.get("subtype", -1))
-		var expected: Dictionary = CREATURE_GENERATOR_ROWS.get(subtype, {})
-		# Dwellings grant ownership and troops only; capturing pays no gold.
-		for unit_id_value in expected.get("recruits", {}).keys():
-			var unit_id := String(unit_id_value)
-			expected_recruits[unit_id] = int(expected_recruits.get(unit_id, 0)) + int(expected.get("recruits", {}).get(unit_id, 0))
+		# Dwellings grant ownership only: no troops and no gold on capture
+		# (docs/creature-dwellings.md); creatures are hired afterwards.
 		var node_index := int(row.get("index", -1))
 		var current_nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
 		var current_node: Dictionary = current_nodes[node_index] if node_index >= 0 and node_index < current_nodes.size() and current_nodes[node_index] is Dictionary else {}
+		var dwelling_site := ContentService.get_resource_site(String(current_node.get("site_id", "")))
+		if CreatureDwellings.is_guarded(current_node, dwelling_site, session.day):
+			# Guard battles are covered by creature_dwellings_report.
+			CreatureDwellings.record_guard_result(current_node, "player", [], true, session.day)
 		# Each dwelling is an isolated reward fixture. Do not accumulate twenty
 		# different unit types into one seven-slot army across unrelated visits.
 		session.overworld.army = army_before.duplicate(true)
@@ -1338,7 +1349,7 @@ func _validate_creature_generator_interaction(adoption: Dictionary, expected_sub
 		var authority_before_repeat: Dictionary = session.to_dict()
 		var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, {"index": node_index, "node": claimed_node}, false)
 		var repeat_authority_exact: bool = session.to_dict() == authority_before_repeat
-		repeat_rejected = repeat_rejected and not bool(repeat_claim.get("ok", false)) and repeat_authority_exact
+		repeat_rejected = repeat_rejected and String(repeat_claim.get("route", "dwelling_recruit")) == "dwelling_recruit" and repeat_authority_exact
 		claim_rows.append({
 			"subtype": subtype,
 			"placement_id": claimed_node.get("placement_id", ""),
@@ -1348,8 +1359,10 @@ func _validate_creature_generator_interaction(adoption: Dictionary, expected_sub
 			"claim_message": claim.get("message", ""),
 			"controller": claimed_node.get("collected_by_faction_id", ""),
 			"persistent": claimed_node.get("collected", false),
-			"repeat_rejected": not bool(repeat_claim.get("ok", false)),
+			"repeat_rejected": repeat_authority_exact,
 			"repeat_authority_exact": repeat_authority_exact,
+			"creature_tier": CreatureDwellings.unit_tier(String(ContentService.get_resource_site(String(claimed_node.get("site_id", ""))).get("weekly_recruits", {}).keys()[0])) if not ContentService.get_resource_site(String(claimed_node.get("site_id", ""))).get("weekly_recruits", {}).is_empty() else 0,
+			"homm3_level": int(GeneratedRewards.H3M_DWELLING_LEVEL.get(subtype, 0)),
 		})
 	var resources_after: Dictionary = session.overworld.get("resources", {}).duplicate(true)
 	var expected_resources: Dictionary = resources_before.duplicate(true)
@@ -1365,12 +1378,10 @@ func _validate_creature_generator_interaction(adoption: Dictionary, expected_sub
 	var all_claims_exact := claim_rows.size() == expected_subtypes.size()
 	for claim_value in claim_rows:
 		var claim_row: Dictionary = claim_value
-		var expected: Dictionary = CREATURE_GENERATOR_ROWS.get(int(claim_row.get("subtype", -1)), {})
 		if not bool(claim_row.get("claim_ok", false)) \
 				or String(claim_row.get("controller", "")) != "player" \
 				or not bool(claim_row.get("persistent", false)) \
-				or String(claim_row.get("object_id", "")) != String(expected.get("object_id", "")) \
-				or String(claim_row.get("site_id", "")) != String(expected.get("site_id", "")):
+				or int(claim_row.get("creature_tier", -1)) != int(claim_row.get("homm3_level", -2)):
 			all_claims_exact = false
 	var owned_artifacts_after: Array = ArtifactRulesScript.owned_artifact_ids(session.overworld.get("hero", {}))
 	var serialized_authority: Dictionary = session.to_dict()

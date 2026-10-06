@@ -85,7 +85,7 @@ static func build_session_from_adoption(
 				town["controlling_player_id"] = String(player.get("player_id", ""))
 				town["team_id"] = String(player.get("team_id", ""))
 				break
-	var resource_nodes := _resource_nodes_from_objects(source_objects)
+	var resource_nodes := _resource_nodes_from_objects(source_objects, towns)
 	var scenery_validation := NativeScenery.validate(source_objects)
 	if not bool(scenery_validation.get("ok", false)):
 		push_error("Generated scenery adoption failed: %s" % JSON.stringify(scenery_validation))
@@ -432,13 +432,13 @@ static func _bool_or_default(value: Variant, default_value: bool) -> bool:
 static func _resource_nodes_from_document(map_document: Variant) -> Array:
 	return _resource_nodes_from_objects(_document_objects(map_document))
 
-static func _resource_nodes_from_objects(objects: Array) -> Array:
+static func _resource_nodes_from_objects(objects: Array, towns: Array = []) -> Array:
 	var nodes := []
 	for object in objects:
 		var kind := String(object.get("kind", ""))
 		if not (kind in ["resource_site", "mine", "neutral_dwelling", "reward_reference"]):
 			continue
-		var translated := GeneratedRewards.resolve(object)
+		var translated := GeneratedRewards.resolve(object, towns)
 		if not translated.is_empty():
 			translated["collected"] = false
 			nodes.append(translated)
