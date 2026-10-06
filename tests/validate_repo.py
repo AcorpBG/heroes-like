@@ -3711,8 +3711,8 @@ def validate_economy_capture_income_loop_expansion(errors: list[str]) -> None:
 
     relay = resource_sites.get("site_prism_watch_relay", {})
     lens_house = resource_sites.get("site_lens_house", {})
-    ensure(relay.get("control_income", {}).get("gold", 0) == 25, errors, "Prism Watch Relay must keep 25 gold daily control income for the expansion proof")
-    ensure(lens_house.get("control_income", {}).get("gold", 0) == 45, errors, "Lens House must keep 45 gold daily control income for the expansion proof")
+    ensure(bool(relay.get("persistent_control", False)) and not relay.get("control_income") and not relay.get("claim_rewards"), errors, "Prism Watch Relay must stay a capture target that pays no capture bonus or daily income")
+    ensure(bool(lens_house.get("persistent_control", False)) and not lens_house.get("control_income") and not lens_house.get("claim_rewards"), errors, "Lens House must stay a capture target that pays no capture bonus or daily income")
     for site_id in ("site_prism_watch_relay", "site_lens_house", "site_wood_wagon", "site_ore_crates", "site_waystone_cache"):
         site = resource_sites.get(site_id, {})
         for field_name in ("rewards", "claim_rewards", "control_income", "service_cost"):
@@ -7225,8 +7225,10 @@ def build_overworld_object_content_batch_007_section(
                 add_error(f"Batch 007 {counter_key} must match object count")
         if section["metadata_only_boundary_count"] != 0:
             add_error("Batch 007 must not retain metadata-only object/site pairs after the Accordfall promotion")
-        if section["no_rare_resource_activation_count"] != len(batch_objects) - 6:
-            add_error("Batch 007 Accordfall promotion must keep all 14 newly activated object/site pairs free of new rare-resource activation")
+        # The six faction landmarks no longer pay a rare capture bonus, so no
+        # Batch 007 pair activates a rare resource in its live site fields.
+        if section["no_rare_resource_activation_count"] != len(batch_objects):
+            add_error("Batch 007 object/site pairs must stay free of rare-resource activation now that landmarks pay no capture bonus")
         if section["landmark_contract_count"] != expected_role_counts["faction_landmark"]:
             add_error("Batch 007 landmark contracts must match landmark object count")
         if section["objective_contract_count"] != expected_role_counts["scenario_objective"]:
@@ -51860,14 +51862,14 @@ def validate_eight_guarded_route_gates(errors: list[str]) -> None:
 
 def validate_eight_neutral_dwelling_musters(errors: list[str]) -> None:
     expected = {
-        "site_free_company_yard": ("object_roadward_lodge", "tollreaver-roadward-lodge", "tollreaver_watch_dwelling", "tollreaver_roadward_lodge_watch", "encounter_roadward_lodge_watch", "mapobj_roadward_lodge", "resource_site_neutral_roadward_lodge_claimed", "roadward_lodge_claimed", "53178f2c1b78544d04c2572cb3ba7a1fc266252663935e64764b41f980fe415a", [0,0,48,48], {"gold":80}, {"gold":40}, {"unit_neutral_roadwardens":2,"unit_neutral_hearthbow_carriers":1}, {"unit_neutral_roadwardens":1}),
-        "site_fenhound_kennels": ("object_fenhound_kennels", "cinderquill-fenhound-lexicon", "cinderquill_watch_dwelling", "cinderquill_fenhound_kennel_watch", "encounter_fenhound_kennel_watch", "mapobj_fenhound_kennels", "resource_site_neutral_fenhound_kennels_claimed", "fenhound_kennels_claimed", "d8c65127f6b36cb17639273339f80f29de703b69155d86a36efc4c9f671eed62", [48,0,48,48], {"gold":70}, {"gold":35}, {"unit_neutral_fenhound_runners":2,"unit_neutral_mossglass_sentinels":1}, {"unit_neutral_fenhound_runners":1}),
-        "site_cliffhawk_roost": ("object_cliffhawk_roost", "facetlane-cliffhawk-roost", "facetlane_watch_dwelling", "facetlane_cliffhawk_roost_watch", "encounter_cliffhawk_roost_watch", "mapobj_cliffhawk_roost", "resource_site_neutral_cliffhawk_roost_claimed", "cliffhawk_roost_claimed", "5916bd8da0d0f827e95a44c64489370490c376367bbd2206a23657ba49158761", [96,0,48,48], {"gold":75}, {"gold":30}, {"unit_neutral_cliffhawk_wardens":2,"unit_neutral_windglass_slingers":1}, {"unit_neutral_cliffhawk_wardens":1}),
-        "site_reedbarge_mooring": ("object_reedbarge_mooring", "reedscript-reedbarge-circuit", "reedscript_watch_dwelling", "reedscript_reedbarge_mooring_watch", "encounter_reedbarge_mooring_watch", "mapobj_reedbarge_mooring", "resource_site_neutral_reedbarge_mooring_claimed", "reedbarge_mooring_claimed", "73541a8d1c660dfb65b4b203ef98ddd69cf5d3638f12d181c23c1cae282d539a", [144,0,48,48], {"gold":90}, {"gold":35}, {"unit_neutral_reedbarge_poles":2,"unit_neutral_lanternet_throwers":1}, {"unit_neutral_reedbarge_poles":1}),
-        "site_glowcap_croft": ("object_glowcap_croft", "rotlamp-glowcap-refrain", "rotlamp_watch_dwelling", "rotlamp_glowcap_croft_watch", "encounter_glowcap_croft_watch", "mapobj_glowcap_croft", "resource_site_neutral_glowcap_croft_claimed", "glowcap_croft_claimed", "6f8b8d3bfc9281fe24af20d239035ced6fec3927b1c4cb119e438ffec61bc274", [192,0,48,48], {"gold":105}, {"gold":40}, {"unit_neutral_glowcap_bulwarks":2,"unit_neutral_sporelamp_tossers":1}, {"unit_neutral_glowcap_bulwarks":1}),
-        "site_dustjack_yard": ("object_dustjack_yard", "ashmeter-dustjack-circuit", "ashmeter_watch_dwelling", "ashmeter_dustjack_yard_watch", "encounter_dustjack_yard_watch", "mapobj_dustjack_yard", "resource_site_neutral_dustjack_yard_claimed", "dustjack_yard_claimed", "0f104bf8b0887341e6df7169863947a17dcf803314b7d43b88e24e974dedab71", [240,0,48,48], {"gold":60}, {"gold":25}, {"unit_neutral_dustjack_blades":2,"unit_neutral_scrapbow_teams":1}, {"unit_neutral_dustjack_blades":1}),
-        "site_cinder_kiln": ("object_cinder_kiln", "lockmaster-cinder-kiln", "lockmaster_watch_dwelling", "lockmaster_cinder_kiln_watch", "encounter_cinder_kiln_watch", "mapobj_cinder_kiln", "resource_site_neutral_cinder_kiln_claimed", "cinder_kiln_claimed", "6fed1f4cc64fa13e1544fba1286367ef90ee98baf65bcf56a0754df3b55e6e2c", [288,0,48,48], {"gold":75}, {"gold":30}, {"unit_neutral_kilnward_mallets":2,"unit_neutral_cinderpot_hurlers":1}, {"unit_neutral_kilnward_mallets":1}),
-        "site_frostbeacon_bothy": ("object_frostbeacon_bothy", "beaconscribe-frostbeacon-circuit", "beaconscribe_watch_dwelling", "beaconscribe_frostbeacon_bothy_watch", "encounter_frostbeacon_bothy_watch", "mapobj_frostbeacon_bothy", "resource_site_neutral_frostbeacon_bothy_claimed", "frostbeacon_bothy_claimed", "4bd5bb1cc2dde5cb2cd48b03913eae7d317ad10794abc511940943584c19af5a", [336,0,48,48], {"gold":90}, {"gold":35}, {"unit_neutral_frostbeacon_pikes":2,"unit_neutral_snowglass_markers":1}, {"unit_neutral_frostbeacon_pikes":1}),
+        "site_free_company_yard": ("object_roadward_lodge", "tollreaver-roadward-lodge", "tollreaver_watch_dwelling", "tollreaver_roadward_lodge_watch", "encounter_roadward_lodge_watch", "mapobj_roadward_lodge", "resource_site_neutral_roadward_lodge_claimed", "roadward_lodge_claimed", "53178f2c1b78544d04c2572cb3ba7a1fc266252663935e64764b41f980fe415a", [0,0,48,48], None, None, {"unit_neutral_roadwardens":2,"unit_neutral_hearthbow_carriers":1}, {"unit_neutral_roadwardens":1}),
+        "site_fenhound_kennels": ("object_fenhound_kennels", "cinderquill-fenhound-lexicon", "cinderquill_watch_dwelling", "cinderquill_fenhound_kennel_watch", "encounter_fenhound_kennel_watch", "mapobj_fenhound_kennels", "resource_site_neutral_fenhound_kennels_claimed", "fenhound_kennels_claimed", "d8c65127f6b36cb17639273339f80f29de703b69155d86a36efc4c9f671eed62", [48,0,48,48], None, None, {"unit_neutral_fenhound_runners":2,"unit_neutral_mossglass_sentinels":1}, {"unit_neutral_fenhound_runners":1}),
+        "site_cliffhawk_roost": ("object_cliffhawk_roost", "facetlane-cliffhawk-roost", "facetlane_watch_dwelling", "facetlane_cliffhawk_roost_watch", "encounter_cliffhawk_roost_watch", "mapobj_cliffhawk_roost", "resource_site_neutral_cliffhawk_roost_claimed", "cliffhawk_roost_claimed", "5916bd8da0d0f827e95a44c64489370490c376367bbd2206a23657ba49158761", [96,0,48,48], None, None, {"unit_neutral_cliffhawk_wardens":2,"unit_neutral_windglass_slingers":1}, {"unit_neutral_cliffhawk_wardens":1}),
+        "site_reedbarge_mooring": ("object_reedbarge_mooring", "reedscript-reedbarge-circuit", "reedscript_watch_dwelling", "reedscript_reedbarge_mooring_watch", "encounter_reedbarge_mooring_watch", "mapobj_reedbarge_mooring", "resource_site_neutral_reedbarge_mooring_claimed", "reedbarge_mooring_claimed", "73541a8d1c660dfb65b4b203ef98ddd69cf5d3638f12d181c23c1cae282d539a", [144,0,48,48], None, None, {"unit_neutral_reedbarge_poles":2,"unit_neutral_lanternet_throwers":1}, {"unit_neutral_reedbarge_poles":1}),
+        "site_glowcap_croft": ("object_glowcap_croft", "rotlamp-glowcap-refrain", "rotlamp_watch_dwelling", "rotlamp_glowcap_croft_watch", "encounter_glowcap_croft_watch", "mapobj_glowcap_croft", "resource_site_neutral_glowcap_croft_claimed", "glowcap_croft_claimed", "6f8b8d3bfc9281fe24af20d239035ced6fec3927b1c4cb119e438ffec61bc274", [192,0,48,48], None, None, {"unit_neutral_glowcap_bulwarks":2,"unit_neutral_sporelamp_tossers":1}, {"unit_neutral_glowcap_bulwarks":1}),
+        "site_dustjack_yard": ("object_dustjack_yard", "ashmeter-dustjack-circuit", "ashmeter_watch_dwelling", "ashmeter_dustjack_yard_watch", "encounter_dustjack_yard_watch", "mapobj_dustjack_yard", "resource_site_neutral_dustjack_yard_claimed", "dustjack_yard_claimed", "0f104bf8b0887341e6df7169863947a17dcf803314b7d43b88e24e974dedab71", [240,0,48,48], None, None, {"unit_neutral_dustjack_blades":2,"unit_neutral_scrapbow_teams":1}, {"unit_neutral_dustjack_blades":1}),
+        "site_cinder_kiln": ("object_cinder_kiln", "lockmaster-cinder-kiln", "lockmaster_watch_dwelling", "lockmaster_cinder_kiln_watch", "encounter_cinder_kiln_watch", "mapobj_cinder_kiln", "resource_site_neutral_cinder_kiln_claimed", "cinder_kiln_claimed", "6fed1f4cc64fa13e1544fba1286367ef90ee98baf65bcf56a0754df3b55e6e2c", [288,0,48,48], None, None, {"unit_neutral_kilnward_mallets":2,"unit_neutral_cinderpot_hurlers":1}, {"unit_neutral_kilnward_mallets":1}),
+        "site_frostbeacon_bothy": ("object_frostbeacon_bothy", "beaconscribe-frostbeacon-circuit", "beaconscribe_watch_dwelling", "beaconscribe_frostbeacon_bothy_watch", "encounter_frostbeacon_bothy_watch", "mapobj_frostbeacon_bothy", "resource_site_neutral_frostbeacon_bothy_claimed", "frostbeacon_bothy_claimed", "4bd5bb1cc2dde5cb2cd48b03913eae7d317ad10794abc511940943584c19af5a", [336,0,48,48], None, None, {"unit_neutral_frostbeacon_pikes":2,"unit_neutral_snowglass_markers":1}, {"unit_neutral_frostbeacon_pikes":1}),
     }
     # Historical hashes remain exact; current reconstruction is checked above.
     source_dir = ROOT / "art" / "overworld" / "source" / "generated" / "resource_sites" / "neutral_dwelling_claimed_wave1"
@@ -51893,7 +51895,7 @@ def validate_eight_neutral_dwelling_musters(errors: list[str]) -> None:
         boundary = site.get("runtime_boundary", {})
         object_boundary = map_object.get("runtime_boundary", {})
         ensure(site.get("family") == "neutral_dwelling" and bool(site.get("persistent_control", False)), errors, f"{site_id} must remain a persistent neutral dwelling")
-        ensure(site.get("claim_rewards") == rewards and site.get("control_income") == income and site.get("claim_recruits") == claim_recruits and site.get("weekly_recruits") == weekly_recruits, errors, f"{site_id} reward, income, or muster payload changed")
+        ensure(site.get("claim_rewards") == rewards and site.get("control_income") == income and site.get("claim_recruits") == claim_recruits and site.get("weekly_recruits") == weekly_recruits, errors, f"{site_id} must keep its muster payload and pay no capture bonus or income")
         ensure(site.get("response_profile", {}).get("watch_days") == 3 and str(site.get("response_profile", {}).get("action_label", "")) == "Dispatch Relief", errors, f"{site_id} response order changed")
         for candidate in (boundary, object_boundary):
             ensure(candidate.get("status") == "neutral_dwelling_live" and candidate.get("neutral_dwelling_site_runtime_supported") is True and candidate.get("guard_resolution_runtime_adopted") is True and candidate.get("save_payload_required") is True and candidate.get("renderer_sprite_required") is True and candidate.get("pathing_runtime_adopted") is True and candidate.get("scenario_placement_migration") is True and candidate.get("rare_resource_activation") is False, errors, f"{site_id} live runtime boundary changed")
@@ -52599,12 +52601,12 @@ def validate_recurring_resource_site_landmarks(errors: list[str]) -> None:
 
 def validate_live_faction_landmarks(errors: list[str]) -> None:
     expected = {
-        "site_ember_signal_brazier": ("object_ember_signal_brazier", "charter-bastion-counterseal", "counterseal_signal_brazier", "resource_site_live_ember_signal_brazier", "ember_signal_brazier", "7e46248a274dd98e2eec7eef82477abc19e2bc80bfd2793e28dc5bad9d101300", [0, 0, 48, 48], {"gold": 120, "embergrain": 1}, {"gold": 25}, 3, 1, 0),
-        "site_bog_drum_totem": ("object_bog_drum_totem", "nightglass-ledger-reversal", "nightglass_bog_drum_totem", "resource_site_live_bog_drum_totem", "bog_drum_totem", "1306f5d580579fc65284695a0be821d7922f1b1ac8131cf7f165a6154de4ef84", [48, 0, 48, 48], {"gold": 110, "peatwax": 1}, {"gold": 20}, 2, 0, 1),
-        "site_prism_relay_lens": ("object_prism_relay_lens", "halo-reserve-refraction-claim", "halo_prism_relay_lens", "resource_site_live_prism_relay_lens", "prism_relay_lens", "e33ede76b7e6c551c710c39e90df0f6be621b3d1c2731c9a6dd0da4c4171f3d8", [96, 0, 48, 48], {"gold": 100, "aetherglass": 1}, {"gold": 20}, 4, 0, 0),
-        "site_thornwake_graft_arch": ("object_thornwake_graft_arch", "rootgate-toll", "rootgate_graft_arch", "resource_site_live_thornwake_graft_arch", "thornwake_graft_arch", "77c67057e2f53f574f26af34b504566dce33841fb9ce6f5f6b8d2b9ab2e95fbd", [144, 0, 48, 48], {"gold": 100, "verdant_grafts": 1}, {"wood": 1}, 2, 1, 0),
-        "site_brasshollow_gauge_shrine": ("object_brasshollow_gauge_shrine", "clauseworks-counterclaim", "clauseworks_gauge_shrine", "resource_site_live_brasshollow_gauge_shrine", "brasshollow_gauge_shrine", "ddd6a82cb0288b0ea9286b2101d0c10c4187b9908af69bfb05eb2d677bd3dbc2", [192, 0, 48, 48], {"gold": 130, "brass_scrip": 1}, {"gold": 35}, 1, 0, 1),
-        "site_veilmourn_bell_mast": ("object_veilmourn_bell_mast", "fogchart-mooring", "fogchart_bell_mast", "resource_site_live_veilmourn_bell_mast", "veilmourn_bell_mast", "6393d24b5ed783fcf537a9ecb9e56d42e6ce48c5b772c831bd1ad3fd9d421e7c", [240, 0, 48, 48], {"gold": 100, "memory_salt": 1}, {"gold": 20}, 3, 1, 0),
+        "site_ember_signal_brazier": ("object_ember_signal_brazier", "charter-bastion-counterseal", "counterseal_signal_brazier", "resource_site_live_ember_signal_brazier", "ember_signal_brazier", "7e46248a274dd98e2eec7eef82477abc19e2bc80bfd2793e28dc5bad9d101300", [0, 0, 48, 48], None, None, 3, 1, 0),
+        "site_bog_drum_totem": ("object_bog_drum_totem", "nightglass-ledger-reversal", "nightglass_bog_drum_totem", "resource_site_live_bog_drum_totem", "bog_drum_totem", "1306f5d580579fc65284695a0be821d7922f1b1ac8131cf7f165a6154de4ef84", [48, 0, 48, 48], None, None, 2, 0, 1),
+        "site_prism_relay_lens": ("object_prism_relay_lens", "halo-reserve-refraction-claim", "halo_prism_relay_lens", "resource_site_live_prism_relay_lens", "prism_relay_lens", "e33ede76b7e6c551c710c39e90df0f6be621b3d1c2731c9a6dd0da4c4171f3d8", [96, 0, 48, 48], None, None, 4, 0, 0),
+        "site_thornwake_graft_arch": ("object_thornwake_graft_arch", "rootgate-toll", "rootgate_graft_arch", "resource_site_live_thornwake_graft_arch", "thornwake_graft_arch", "77c67057e2f53f574f26af34b504566dce33841fb9ce6f5f6b8d2b9ab2e95fbd", [144, 0, 48, 48], None, None, 2, 1, 0),
+        "site_brasshollow_gauge_shrine": ("object_brasshollow_gauge_shrine", "clauseworks-counterclaim", "clauseworks_gauge_shrine", "resource_site_live_brasshollow_gauge_shrine", "brasshollow_gauge_shrine", "ddd6a82cb0288b0ea9286b2101d0c10c4187b9908af69bfb05eb2d677bd3dbc2", [192, 0, 48, 48], None, None, 1, 0, 1),
+        "site_veilmourn_bell_mast": ("object_veilmourn_bell_mast", "fogchart-mooring", "fogchart_bell_mast", "resource_site_live_veilmourn_bell_mast", "veilmourn_bell_mast", "6393d24b5ed783fcf537a9ecb9e56d42e6ce48c5b772c831bd1ad3fd9d421e7c", [240, 0, 48, 48], None, None, 3, 1, 0),
     }
     sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
     objects = items_index(load_json(CONTENT_DIR / "map_objects.json"))
@@ -52635,7 +52637,7 @@ def validate_live_faction_landmarks(errors: list[str]) -> None:
         scenario = scenarios.get(scenario_id, {})
         placements = [node for node in scenario.get("resource_nodes", []) if isinstance(node, dict) and str(node.get("placement_id", "")) == placement_id]
         ensure(site.get("family") == "faction_landmark" and bool(site.get("persistent_control", False)), errors, f"{site_id} must remain a persistent faction landmark")
-        ensure(site.get("claim_rewards") == rewards and site.get("control_income") == income, errors, f"{site_id} live reward or income changed")
+        ensure(site.get("claim_rewards") == rewards and site.get("control_income") == income, errors, f"{site_id} must pay no capture bonus or income")
         ensure(int(site.get("vision_radius", 0)) == vision and int(site.get("pressure_guard", 0)) == guard and int(site.get("pressure_bonus", 0)) == pressure, errors, f"{site_id} strategic effect changed")
         boundary = site.get("runtime_boundary", {})
         ensure(boundary.get("status") == "live" and bool(boundary.get("live_reward_grants", False)) and bool(boundary.get("ownership_capture_runtime_adopted", False)) and bool(boundary.get("save_payload_required", False)) and bool(boundary.get("renderer_sprite_required", False)) and bool(boundary.get("scenario_placement_migration", False)), errors, f"{site_id} live runtime boundary changed")
@@ -66258,8 +66260,8 @@ def validate_native_rmg_authored_object_pool_eligibility(errors: list[str]) -> N
             decisions.append(f"excluded:{exclusion_id}")
             excluded_decisions[object_id] = exclusion_id
         ensure(len(decisions) == 1, errors, f"Authored map object {object_id} must have exactly one native-RMG eligibility decision, got {decisions}")
-    ensure(len(authored) == 422, errors, "Native RMG eligibility baseline must cover all 422 authored map objects")
-    ensure(len(eligible_decisions) == 356, errors, "Native RMG eligibility must expose all 356 compatible authored map objects, including guarded sites and rare pickups")
+    ensure(len(authored) == 425, errors, "Native RMG eligibility baseline must cover all 425 authored map objects")
+    ensure(len(eligible_decisions) == 359, errors, "Native RMG eligibility must expose all 359 compatible authored map objects, including guarded sites and rare pickups")
     ensure(len(excluded_decisions) == 66, errors, "Native RMG eligibility must retain 66 explicit safety/scenario exclusions")
     ensure(len(candidate_ids_by_pool.get("guarded_reward", set())) == 32, errors, "All 32 executable guarded sites must be eligible; stale object summaries cannot exclude them")
     source_type_pools = registry.get("source_type_pools", {})
@@ -66536,23 +66538,23 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         map_objects_by_id = items_index(load_json(CONTENT_DIR / "map_objects.json"))
         resource_sites_by_id = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
         expected_live_dwellings = {
-            "object_greenbranch_copse": ("site_greenbranch_copse", {"gold": 105}, {"unit_neutral_greenbranch_cudgels": 2, "unit_neutral_sapwhistle_callers": 1}),
-            "object_lantern_warren": ("site_lantern_warren", {"gold": 90}, {"unit_neutral_tunnel_lanterns": 2, "unit_neutral_glimmercap_needlers": 1}),
-            "object_cinder_kiln": ("site_cinder_kiln", {"gold": 75}, {"unit_neutral_kilnward_mallets": 2, "unit_neutral_cinderpot_hurlers": 1}),
-            "object_bogbell_croft": ("site_bogbell_croft", {"gold": 105}, {"unit_neutral_bogbell_mauls": 2, "unit_neutral_peatflare_jarriers": 1}),
-            "object_roadward_lodge": ("site_free_company_yard", {"gold": 80}, {"unit_neutral_roadwardens": 2, "unit_neutral_hearthbow_carriers": 1}),
-            "object_kite_signal_eyrie": ("site_kite_signal_eyrie", {"gold": 75}, {"unit_neutral_kitehook_runners": 2, "unit_neutral_ridgeflare_shots": 1}),
-            "object_cliffhawk_roost": ("site_cliffhawk_roost", {"gold": 75}, {"unit_neutral_cliffhawk_wardens": 2, "unit_neutral_windglass_slingers": 1}),
-            "object_obsidian_scar": ("site_obsidian_scar", {"gold": 90}, {"unit_neutral_scarshield_veterans": 2, "unit_neutral_ashdart_stalkers": 1}),
-            "object_charcoal_burners": ("site_charcoal_burners", {"gold": 90}, {"unit_neutral_charcoal_mauls": 2, "unit_neutral_emberpack_lobbers": 1}),
-            "object_prism_outrider_post": ("site_prism_outrider_post", {"gold": 80}, {"unit_neutral_kitehook_runners": 2, "unit_neutral_ridgeflare_shots": 1}),
-            "object_reedbarge_mooring": ("site_reedbarge_mooring", {"gold": 90}, {"unit_neutral_reedbarge_poles": 2, "unit_neutral_lanternet_throwers": 1}),
-            "object_bramble_hedge": ("site_bramble_hedge", {"gold": 60}, {"unit_neutral_hedgehook_watch": 2, "unit_neutral_thornbow_scouts": 1}),
-            "object_fenhound_kennels": ("site_fenhound_kennels", {"gold": 70}, {"unit_neutral_fenhound_runners": 2, "unit_neutral_mossglass_sentinels": 1}),
+            "object_greenbranch_copse": ("site_greenbranch_copse", {"unit_neutral_greenbranch_cudgels": 2, "unit_neutral_sapwhistle_callers": 1}),
+            "object_lantern_warren": ("site_lantern_warren", {"unit_neutral_tunnel_lanterns": 2, "unit_neutral_glimmercap_needlers": 1}),
+            "object_cinder_kiln": ("site_cinder_kiln", {"unit_neutral_kilnward_mallets": 2, "unit_neutral_cinderpot_hurlers": 1}),
+            "object_bogbell_croft": ("site_bogbell_croft", {"unit_neutral_bogbell_mauls": 2, "unit_neutral_peatflare_jarriers": 1}),
+            "object_roadward_lodge": ("site_free_company_yard", {"unit_neutral_roadwardens": 2, "unit_neutral_hearthbow_carriers": 1}),
+            "object_kite_signal_eyrie": ("site_kite_signal_eyrie", {"unit_neutral_kitehook_runners": 2, "unit_neutral_ridgeflare_shots": 1}),
+            "object_cliffhawk_roost": ("site_cliffhawk_roost", {"unit_neutral_cliffhawk_wardens": 2, "unit_neutral_windglass_slingers": 1}),
+            "object_obsidian_scar": ("site_obsidian_scar", {"unit_neutral_scarshield_veterans": 2, "unit_neutral_ashdart_stalkers": 1}),
+            "object_charcoal_burners": ("site_charcoal_burners", {"unit_neutral_charcoal_mauls": 2, "unit_neutral_emberpack_lobbers": 1}),
+            "object_prism_outrider_post": ("site_prism_outrider_post", {"unit_neutral_kitehook_runners": 2, "unit_neutral_ridgeflare_shots": 1}),
+            "object_reedbarge_mooring": ("site_reedbarge_mooring", {"unit_neutral_reedbarge_poles": 2, "unit_neutral_lanternet_throwers": 1}),
+            "object_bramble_hedge": ("site_bramble_hedge", {"unit_neutral_hedgehook_watch": 2, "unit_neutral_thornbow_scouts": 1}),
+            "object_fenhound_kennels": ("site_fenhound_kennels", {"unit_neutral_fenhound_runners": 2, "unit_neutral_mossglass_sentinels": 1}),
         }
         for object_id, expected in expected_live_dwellings.items():
             map_object = map_objects_by_id.get(object_id, {})
-            site_id, rewards, recruits = expected
+            site_id, recruits = expected
             site = resource_sites_by_id.get(site_id, {})
             ensure(
                 str(map_object.get("family", "")) == "neutral_dwelling"
@@ -66566,10 +66568,11 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             ensure(
                 str(site.get("family", "")) == "neutral_dwelling"
                 and bool(site.get("persistent_control", False))
-                and site.get("claim_rewards", {}) == rewards
+                and not site.get("claim_rewards")
+                and not site.get("control_income")
                 and site.get("claim_recruits", {}) == recruits,
                 errors,
-                f"{site_id} must retain its exact live claim economy and recruit payload",
+                f"{site_id} must keep its exact recruit payload and pay no capture bonus or income",
             )
         reedbarge_object = map_objects_by_id.get("object_reedbarge_mooring", {})
         reedbarge_site = resource_sites_by_id.get("site_reedbarge_mooring", {})
@@ -67072,9 +67075,9 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'restored.from_dict(session.to_dict())',
             '"save_round_trip_exact": restored_node == claimed_node',
             'var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, selected_rare_resource, false)',
-            'and int(resources_after.get("embergrain", 0)) == int(resources_before.get("embergrain", 0)) + 1',
+            'and int(resources_after.get(rare_id, 0)) == int(resources_before.get(rare_id, 0)) + rare_amount',
             'and int(resources_after.get("gold", 0)) == int(resources_before.get("gold", 0))',
-            'for resource_id in ["aetherglass", "brass_scrip", "memory_salt", "peatwax", "verdant_grafts"]:',
+            'for resource_id in ["aetherglass", "brass_scrip", "embergrain", "memory_salt", "peatwax", "verdant_grafts"]:',
             'and mine_count == 18',
             'and mine_subtypes.size() == 7',
             'and campfire_count == 2',
@@ -67106,10 +67109,10 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'elif int(source.get("h3m_type_id", -1)) == 93:',
             'spell_scroll_placement_ids.has(String(node.get("placement_id", "")))',
             'var spellbook_before: Dictionary = hero_before.get("spellbook", {}).duplicate(true)',
-            'expected_known_after.append("spell_beacon_path")',
+            'expected_known_after.append(scroll_spell_id)',
             'var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, scroll_result, false)',
             'var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, {"index": scroll_index, "node": claimed_node}, false)',
-            'and not known_before.has("spell_beacon_path")',
+            'and not known_before.has(scroll_spell_id)',
             'and known_after == expected_known_after',
             'and session.overworld.get("resources", {}) == resources_before',
             'and session.overworld.get("artifact_nodes", []) == artifact_nodes_before',
@@ -67144,11 +67147,13 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'and bool(fallback_art.get("fallback_procedural_marker", false))',
             'and bool(spell_scroll_interaction.get("ok", false))',
             'const LOOSE_RESOURCE_PRESENTATION_ROWS := [',
-            '{"site_id": "site_peatwax_votive_bundle", "object_id": "object_peatwax_votive_bundle", "resource_id": "peatwax", "asset_id": "mapobj_peatwax_votive_bundle", "mine_asset_id": "mapobj_marsh_peat_yard", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_peatwax_votive_bundle.png", "rewards": {"peatwax": 1}, "current_small": false, "mine_site_id": "site_peatwax_reed_yard"}',
-            '{"site_id": "site_embergrain_sample_sack", "object_id": "object_embergrain_sample_sack", "resource_id": "embergrain", "asset_id": "mapobj_embergrain_sample_sack", "mine_asset_id": "mapobj_floodplain_sluice_camp", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_embergrain_sample_sack.png", "rewards": {"embergrain": 1}, "current_small": true, "mine_site_id": "site_embergrain_warm_granary"}',
-            '{"site_id": "site_aetherglass_splinter_lot", "object_id": "object_aetherglass_splinter_lot", "resource_id": "aetherglass", "asset_id": "mapobj_aetherglass_splinter_lot", "mine_asset_id": "mapobj_cinder_ore_face", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_aetherglass_splinter_lot.png", "rewards": {"aetherglass": 1}, "current_small": true, "mine_site_id": "site_aetherglass_lens_house"}',
-            '{"site_id": "site_memory_salt_jar", "object_id": "object_memory_salt_jar", "resource_id": "memory_salt", "asset_id": "mapobj_memory_salt_jar", "mine_asset_id": "mapobj_badlands_coin_sluice", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_memory_salt_jar.png", "rewards": {"memory_salt": 1}, "current_small": true, "mine_site_id": "site_memory_salt_pan"}',
-            '{"site_id": "site_road_writ_purse", "object_id": "object_road_writ_purse", "resource_id": "gold", "asset_id": "mapobj_road_writ_purse", "mine_asset_id": "mapobj_reef_coin_assay", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/pickups/raw_gold_pile.png", "rewards": {"gold": 1000}, "current_small": true, "mine_site_id": "site_reef_coin_assay"}',
+            '{"site_id": "site_peatwax_votive_bundle", "object_id": "object_peatwax_votive_bundle", "resource_id": "peatwax", "asset_id": "mapobj_peatwax_votive_bundle", "mine_asset_id": "mapobj_rare_peatwax_mine", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_peatwax_votive_bundle.png", "rewards": {"peatwax": 1}, "current_small": true, "mine_site_id": "site_peatwax_reed_yard"}',
+            '{"site_id": "site_embergrain_sample_sack", "object_id": "object_embergrain_sample_sack", "resource_id": "embergrain", "asset_id": "mapobj_embergrain_sample_sack", "mine_asset_id": "mapobj_rare_embergrain_mine", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_embergrain_sample_sack.png", "rewards": {"embergrain": 1}, "current_small": true, "mine_site_id": "site_embergrain_warm_granary"}',
+            '{"site_id": "site_aetherglass_splinter_lot", "object_id": "object_aetherglass_splinter_lot", "resource_id": "aetherglass", "asset_id": "mapobj_aetherglass_splinter_lot", "mine_asset_id": "mapobj_rare_aetherglass_mine", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_aetherglass_splinter_lot.png", "rewards": {"aetherglass": 1}, "current_small": true, "mine_site_id": "site_aetherglass_lens_house"}',
+            '{"site_id": "site_memory_salt_jar", "object_id": "object_memory_salt_jar", "resource_id": "memory_salt", "asset_id": "mapobj_memory_salt_jar", "mine_asset_id": "mapobj_rare_memory_salt_mine", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_memory_salt_jar.png", "rewards": {"memory_salt": 1}, "current_small": true, "mine_site_id": "site_memory_salt_pan"}',
+            '{"site_id": "site_verdant_graft_bundle", "object_id": "object_verdant_graft_bundle", "resource_id": "verdant_grafts", "asset_id": "mapobj_verdant_graft_bundle", "mine_asset_id": "mapobj_rare_verdant_grafts_mine", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_verdant_graft_bundle.png", "rewards": {"verdant_grafts": 1}, "current_small": false, "mine_site_id": "site_verdant_graft_nursery"}',
+            '{"site_id": "site_brass_scrip_case", "object_id": "object_brass_scrip_case", "resource_id": "brass_scrip", "asset_id": "mapobj_brass_scrip_case", "mine_asset_id": "mapobj_rare_brass_scrip_mine", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_brass_scrip_case.png", "rewards": {"brass_scrip": 1}, "current_small": false, "mine_site_id": "site_brass_scrip_mint"}',
+            '{"site_id": "site_road_writ_purse", "object_id": "object_road_writ_purse", "resource_id": "gold", "asset_id": "mapobj_road_writ_purse", "mine_asset_id": "mapobj_common_gold_mine", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/pickups/raw_gold_pile.png", "rewards": {"gold": 1000}, "current_small": true, "mine_site_id": "site_reef_coin_assay"}',
             'func _validate_loose_resource_presentation(',
             'var session_authority_before: Dictionary = session.to_dict()',
             'if actual_current_sites != expected_current_sites or live_nodes_by_site.size() != expected_current_sites.size():',
@@ -77710,7 +77715,7 @@ def validate_four_elder_wild_recruitment_sanctuaries(errors: list[str]) -> None:
             "site_xy": (12, 34), "guard_xy": (13, 34), "abilities": ["reach", "bloodrush"],
             "claim": {"unit_neutral_galehorn_striders": 1, "unit_neutral_ridgeflare_shots": 3},
             "weekly": {"unit_neutral_galehorn_striders": 1, "unit_neutral_ridgeflare_shots": 1},
-            "reward": {"gold": 360, "ore": 2}, "income": {"gold": 100, "ore": 1}, "cost": {"gold": 520, "ore": 2},
+            "reward": None, "income": None, "cost": {"gold": 520, "ore": 2},
             "unclaimed": "mapobj_galehorn_windfold", "controlled": "resource_site_neutral_galehorn_windfold_controlled",
             "regions": ([0, 0, 48, 48], [48, 0, 48, 48]),
         },
@@ -77722,7 +77727,7 @@ def validate_four_elder_wild_recruitment_sanctuaries(errors: list[str]) -> None:
             "site_xy": (39, 36), "guard_xy": (40, 36), "abilities": ["harry", "volley"],
             "claim": {"unit_neutral_sunscale_lanternmoths": 1, "unit_neutral_suncrack_throwers": 3},
             "weekly": {"unit_neutral_sunscale_lanternmoths": 1, "unit_neutral_suncrack_throwers": 1},
-            "reward": {"gold": 390, "ore": 2}, "income": {"gold": 115, "ore": 1}, "cost": {"gold": 560, "ore": 3},
+            "reward": None, "income": None, "cost": {"gold": 560, "ore": 3},
             "unclaimed": "mapobj_sunscale_lantern_conservatory", "controlled": "resource_site_neutral_sunscale_lantern_conservatory_controlled",
             "regions": ([96, 0, 48, 48], [144, 0, 48, 48]),
         },
@@ -77734,7 +77739,7 @@ def validate_four_elder_wild_recruitment_sanctuaries(errors: list[str]) -> None:
             "site_xy": (4, 43), "guard_xy": (5, 43), "abilities": ["fog_screen", "reach"],
             "claim": {"unit_neutral_rimebell_skyrakers": 1, "unit_neutral_whitepike_keepers": 3},
             "weekly": {"unit_neutral_rimebell_skyrakers": 1, "unit_neutral_whitepike_keepers": 1},
-            "reward": {"gold": 430, "wood": 2}, "income": {"gold": 125, "wood": 1}, "cost": {"gold": 620, "wood": 3},
+            "reward": None, "income": None, "cost": {"gold": 620, "wood": 3},
             "unclaimed": "mapobj_rimebell_whitewake_eyrie", "controlled": "resource_site_neutral_rimebell_whitewake_eyrie_controlled",
             "regions": ([192, 0, 48, 48], [240, 0, 48, 48]),
         },
@@ -77746,7 +77751,7 @@ def validate_four_elder_wild_recruitment_sanctuaries(errors: list[str]) -> None:
             "site_xy": (57, 41), "guard_xy": (58, 41), "abilities": ["brace", "shielding"],
             "claim": {"unit_neutral_deepforge_vaultwyrms": 1, "unit_neutral_basalt_wardens": 2},
             "weekly": {"unit_neutral_deepforge_vaultwyrms": 1, "unit_neutral_basalt_wardens": 1},
-            "reward": {"gold": 520, "ore": 3}, "income": {"gold": 145, "ore": 1}, "cost": {"gold": 760, "ore": 4},
+            "reward": None, "income": None, "cost": {"gold": 760, "ore": 4},
             "unclaimed": "mapobj_deepforge_seventh_vault", "controlled": "resource_site_neutral_deepforge_seventh_vault_controlled",
             "regions": ([288, 0, 48, 48], [336, 0, 48, 48]),
         },
@@ -79556,10 +79561,10 @@ def validate_eight_foundation_map_object_identities(errors: list[str]) -> None:
     object_assets = art_manifest.get("object_assets", {})
     site_sprites = art_manifest.get("resource_site_sprites", {})
     nondecorative_ids = {object_id for object_id, row in map_objects.items() if row.get("family") not in {"blocker", "decoration"}}
-    ensure(len(nondecorative_ids) == 222 and set(mappings) == nondecorative_ids and len(asset_ids) == 222 and len(set(asset_ids)) == 222, errors, "All 222 authored non-decorative map objects must retain one exact distinct sprite mapping")
+    ensure(len(nondecorative_ids) == 225 and set(mappings) == nondecorative_ids and len(asset_ids) == 225 and len(set(asset_ids)) == 225, errors, "All 225 authored non-decorative map objects must retain one exact distinct sprite mapping")
     ensure(sprite_manifest.get("source", {}).get("new_generated_sprite_count") == 222 and sprite_manifest.get("source", {}).get("generated_batch_count") == 20, errors, "Foundation identity coverage must retain the expanded 222-object, 20-batch mapping provenance")
     coverage = sprite_manifest.get("coverage", {})
-    ensure(coverage.get("preexisting_unique_non_decorative_count") == 0 and coverage.get("new_distinct_non_decorative_asset_count") == 222 and coverage.get("total_distinct_authored_map_object_count_after_pass") == 422, errors, "Foundation identity coverage totals changed")
+    ensure(coverage.get("preexisting_unique_non_decorative_count") == 0 and coverage.get("new_distinct_non_decorative_asset_count") == 225 and coverage.get("total_distinct_authored_map_object_count_after_pass") == 425, errors, "Foundation identity coverage totals changed")
     ensure(source_manifest.get("schema") == "foundation_map_object_identities_source_manifest_v1" and source_manifest.get("content_slice_id") == "content-eight-foundation-map-object-identities-10184" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("background_extraction_mode") == "built_in_image_gen_background_extraction" and len(str(source_manifest.get("prompt_set_summary", ""))) >= 500, errors, "Foundation object source provenance changed")
     source_rows = {str(row.get("object_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     ensure(set(source_rows) == set(expected), errors, "Foundation object source manifest must own exactly the eight completed identities")

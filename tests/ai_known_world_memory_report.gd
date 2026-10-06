@@ -1596,7 +1596,9 @@ func _configure_known_world_catalog_fixture(session) -> void:
 	session.overworld["resource_nodes"] = [
 		{
 			"placement_id": "catalog_resource_target",
-			"site_id": "site_wood_wagon",
+			# A held mine stays on the map as a capture target; the Wood Wagon
+			# is now a one-time pickup that disappears once collected.
+			"site_id": "site_ridge_quarry",
 			"x": 6,
 			"y": 3,
 			"collected": true,

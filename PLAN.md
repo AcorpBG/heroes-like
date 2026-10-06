@@ -26,6 +26,10 @@ Rules:
 
 `content-authored-scenarios-obsolete-20261005` (paused, owner decision 2026-10-05): every authored map, scenario and campaign (`content/scenarios.json`, `content/campaigns.json`, `tools/author_*.py`) is obsolete and will be redone completely once the owner selects that rework. Until then put no effort into them: no new authored scenarios or campaigns, fixes, retuning, art or validation work, and no chasing failures in the authored-scenario checks listed in `docs/authored-scenarios-obsolete.md`. Every authored-scenario and campaign section below is history, not work to continue. Generated maps, shared content definitions and the scenario/campaign runtime are not covered.
 
+### HoMM-style pickups and income sites
+
+`content-homm-pickups-income-20261006` (completed, owner-directed economy and random-map content): only mines pay daily income and no site pays a capture or recapture bonus; dwellings, landmarks, watchtowers and outposts keep only their non-resource roles. The six small producers are weekly visit sites, Wood Wagon and Ore Crates are one-time pickups kept off random maps, and generated maps translate HoMM3 reward types into original sites with per-placement HoMM payloads (pile sizes, chest tiers, campfire hauls, scroll spells, six-way rare spread) through `scripts/persistence/GeneratedRewardRules.gd`. Two new rare piles (Verdant Graft Bundle, Brass Scrip Case) carry original sprites. See `docs/pickups-and-income-sites.md`.
+
 ### Full-screen Town construction board
 
 `ux-town-construction-board-20261005` (completed, owner-directed UI): the Construction Ledger popout is replaced by one full-screen 23-slot board shared by every faction town (rows Town, Army, Growth/Hero training, faction signature), opened from the main building or Build command. Tiles show stage art, stage and status; tiers I–V compare both exclusive branches before a confirmed build; the detail panel shows stage strips, unit upgrades, cost need/have, requirement jumps, Trade and View in town. Rules, costs, daily limit, saves and AI are unchanged. See `docs/town-construction-board.md`.

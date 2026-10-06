@@ -13,6 +13,7 @@ const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
+const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 static var _path_distance_surface_cache: Dictionary = {}
 static var _native_navigation_surface_cache: Dictionary = {}
@@ -17369,6 +17370,7 @@ static func _secure_opportunistic_route_resource(
 	node: Dictionary,
 	site: Dictionary
 ) -> Dictionary:
+	site = NodePayload.site_for_node(node, site)
 	var nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
 	if node_index < 0 or node_index >= nodes.size():
 		return {"resolved": false, "encounter": raid, "state": state, "event_message": "", "ai_events": []}
@@ -17386,6 +17388,7 @@ static func _secure_opportunistic_route_resource(
 	route_node["collected"] = true
 	PlayerRules.set_resource_controller(route_node, session, faction_id)
 	route_node["collected_day"] = session.day
+	NodePayload.mark_claimed(route_node, site)
 	route_node["response_origin"] = ""
 	route_node["response_source_town_id"] = ""
 	route_node["response_last_day"] = 0
@@ -17963,7 +17966,7 @@ static func _secure_resource_target(
 		return {"encounter": raid, "state": state, "event_message": ""}
 	if NativeTransit.is_native(node):
 		return _secure_native_passage_target(session, raid, state, faction_id, node)
-	var site = ContentService.get_resource_site(String(node.get("site_id", "")))
+	var site = NodePayload.site_for_node(node)
 	if not OverworldRulesScript.resource_site_blocking_guard(session, node, site).is_empty():
 		return {"encounter": raid, "state": state, "event_message": ""}
 	if not _resource_node_contestable_by_faction(node, site, faction_id, session):
@@ -17984,6 +17987,7 @@ static func _secure_resource_target(
 	node["collected"] = true
 	PlayerRules.set_resource_controller(node, session, faction_id)
 	node["collected_day"] = session.day
+	NodePayload.mark_claimed(node, site)
 	node["response_origin"] = ""
 	node["response_source_town_id"] = ""
 	node["response_last_day"] = 0
@@ -18288,6 +18292,9 @@ static func _apply_resource_site_spell_reward_to_commander(
 	site: Dictionary
 ) -> Dictionary:
 	var spell_id := String(site.get("learn_spell_id", ""))
+	var spell_ids = site.get("learn_spell_ids", [])
+	if spell_id == "" and spell_ids is Array and not spell_ids.is_empty():
+		spell_id = String(spell_ids[0])
 	if session == null or faction_id == "" or raid.is_empty() or spell_id == "":
 		return {"raid": raid, "learned": false, "spell_id": spell_id, "spell_name": ""}
 	var spell := ContentService.get_spell(spell_id)

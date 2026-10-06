@@ -11,6 +11,7 @@ const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
+const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 
 const FOG_KEY := "fog"
 const VISIBLE_TILES_KEY := "visible_tiles"
@@ -1416,7 +1417,7 @@ static func _collect_resource_node_result(
 	_rules_profile_count("resource_collect_count")
 	var claimability_started_usec := _rules_profile_timer()
 	var node = node_result.get("node", {})
-	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	var site := NodePayload.site_for_node(node)
 	if site.is_empty():
 		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
 		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
@@ -1526,6 +1527,7 @@ static func _collect_resource_node_result(
 	node["collected_by_faction_id"] = "player"
 	node.erase("collected_by_player_id")
 	node["collected_day"] = session.day
+	NodePayload.mark_claimed(node, site)
 	if not reward_choice_id.is_empty():
 		node["reward_choice_id"] = reward_choice_id
 	var route_opened := _open_resource_site_route_body(node, site)
@@ -4002,7 +4004,7 @@ static func describe_context(session: SessionStateStoreScript.SessionData) -> St
 			]
 		"resource":
 			var node = context.get("node", {})
-			var site = ContentService.get_resource_site(String(node.get("site_id", "")))
+			var site = NodePayload.site_for_node(node)
 			return "%s\nTerrain %s | %s\n%s" % [
 				_resource_site_role_label(node, site),
 				terrain,
@@ -6289,7 +6291,7 @@ static func get_context_actions(session: SessionStateStoreScript.SessionData) ->
 				)
 		"resource":
 			var node = context.get("node", {})
-			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+			var site := NodePayload.site_for_node(node)
 			if NativeTransit.is_native(node) and NativeTransit.destinations(node).size() > 1:
 				actions.append({"id": "collect_resource", "label": "Choose Destination", "summary": "Choose which connected passage exit to use."})
 				for destination in NativeTransit.destinations(node):
@@ -6744,6 +6746,11 @@ static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictiona
 		"artifact_reward_claimed_by_faction_id",
 		"artifact_reward_claimed_by_player_id",
 		"artifact_reward_claimed_day",
+		NodePayload.PAYLOAD_REWARDS,
+		NodePayload.PAYLOAD_REWARD_CHOICES,
+		NodePayload.PAYLOAD_SPELL_IDS,
+		NodePayload.CLAIM_PAYLOAD_SPENT,
+		"generated_reward_translation",
 	]:
 		if source.has(key):
 			target[key] = source[key].duplicate(true) if source[key] is Array or source[key] is Dictionary else source[key]
@@ -6996,7 +7003,7 @@ static func capture_resource_after_defender_victory(
 	if int(node_result.get("index", -1)) < 0:
 		return {"ok": false, "message": ""}
 	var node: Dictionary = node_result.get("node", {})
-	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	var site := NodePayload.site_for_node(node)
 	if site.is_empty() or not _resource_site_is_persistent(site):
 		return {"ok": false, "message": ""}
 	var nodes = session.overworld.get("resource_nodes", [])
@@ -7207,6 +7214,7 @@ static func describe_resource_site_surface(
 	node: Dictionary,
 	site: Dictionary
 ) -> String:
+	site = NodePayload.site_for_node(node, site)
 	var parts := [_resource_site_role_label(node, site), _resource_site_family_label(site)]
 	var control_label := _resource_site_control_label(node, site)
 	if control_label != "":
@@ -7497,9 +7505,10 @@ static func _resource_site_control_detail(node: Dictionary, site: Dictionary) ->
 		var controller := PlayerRules.resource_controller_id(node)
 		if controller == "":
 			return "Unclaimed; capture flips control."
+		var held_effects := "income and support" if not _describe_resource_delta(site.get("control_income", {})).is_empty() else "support"
 		if controller == "player":
-			return "Player held; income and support stay active while held."
-		return "%s held; reclaim to deny its income and support." % _controller_display_name(controller, String(node.get("collected_by_faction_id", "")))
+			return "Player held; %s stay%s active while held." % [held_effects, "" if held_effects.contains(" and ") else "s"]
+		return "%s held; reclaim to deny its %s." % [_controller_display_name(controller, String(node.get("collected_by_faction_id", ""))), held_effects]
 	if bool(node.get("collected", false)):
 		var collected_day := int(node.get("collected_day", 0))
 		var day_clause := " on day %d" % collected_day if collected_day > 0 else ""
@@ -7514,6 +7523,7 @@ static func _resource_site_yield_line(
 	node: Dictionary,
 	site: Dictionary
 ) -> String:
+	site = NodePayload.site_for_node(node, site)
 	var parts := []
 	var claim_summary := _resource_site_reward_summary(site)
 	var income_summary := _describe_resource_delta(site.get("control_income", {}))
@@ -7886,7 +7896,7 @@ static func _encounter_guard_consequence_line(
 			var node_result := _find_resource_node_by_guard(guard, session)
 			var node: Dictionary = node_result.get("node", {})
 			if not node.is_empty():
-				var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+				var site := NodePayload.site_for_node(node)
 				value_line = _resource_site_yield_line(session, node, site)
 		if value_line != "":
 			return "Clear: access %s (%s)" % [target_label, value_line]
@@ -9067,6 +9077,7 @@ static func _resource_site_response_action(
 	}
 
 static func _resource_site_context_summary(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> String:
+	site = NodePayload.site_for_node(node, site)
 	if NativeTransit.is_native(node):
 		var resolved := NativeTransit.resolve(session.overworld.get("resource_nodes", []), node)
 		if not bool(resolved.get("ok", false)):
@@ -14140,14 +14151,14 @@ static func _context_action_briefing(session: SessionStateStoreScript.SessionDat
 			var node = context.get("node", {})
 			if NativeTransit.is_native(node):
 				return "Use the paired passage. Costs 1 movement when already at its entrance; approaching it includes travel. The destination must be clear."
-			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+			var site := NodePayload.site_for_node(node)
 			return "Secure %s now to %s." % [
 				String(site.get("name", "this site")),
 				_resource_site_opening_value(site),
 			]
 		"site_response":
 			var node = context.get("node", {})
-			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+			var site := NodePayload.site_for_node(node)
 			var response_state := _resource_site_response_state(session, node, site)
 			var command_clause := "Commit %s at %s" % [
 				String(response_state.get("action_label", "Secure Route")),
@@ -14190,7 +14201,7 @@ static func _context_action_summary(session: SessionStateStoreScript.SessionData
 			return _context_action_briefing(session, {"id": action_id}, context)
 		"collect_resource":
 			var node = context.get("node", {})
-			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+			var site := NodePayload.site_for_node(node)
 			return _resource_site_context_summary(session, node, site)
 		"collect_artifact":
 			var artifact_node = context.get("node", {})

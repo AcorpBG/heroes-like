@@ -113956,6 +113956,22 @@
       "updatedAt": "2026-10-05T19:15:00Z",
       "purpose": "Owner decision 2026-10-05: every authored map and scenario is obsolete and needs revisiting; the owner will redo them completely. No effort goes into the existing authored roster before that rework.",
       "notes": "PAUSED until the owner selects the full rework. Covers all 299 authored scenarios in content/scenarios.json (maps, starts, objectives, scripts, encounter balance), all 25 campaigns in content/campaigns.json with their campaign-only art, the 20 tools/author_*.py scripts, and the authored-scenario/campaign sections of PLAN.md and rows here, which are history. Do not add, fix, retune, rebalance, re-art or re-validate them; do not chase failures in the 131 test files and 85 tests/validate_repo.py functions listed as obsolete in docs/authored-scenarios-obsolete.md (26 tests and 22 validator functions are mixed: shared definitions stay valid, authored-placement assertions are obsolete). Do not delete or skip those checks and do not change the data or domain_status to hide it; the game still loads it. Not covered: generated maps and RMG, shared content definitions (factions, heroes, units, towns, buildings, artifacts, spells, encounters, sites, dwellings, art, audio) and the scenario/campaign runtime code. System tests that only use an authored scenario as a harness still test their system. The six twin-command Wayfarers Hall findings in content-validator-findings-20261004 are dropped under this hold; they were the only tests/validate_repo.py errors when it started. Marker only: no game data, behavior or tests changed."
+    },
+    {
+      "id": "content-homm-pickups-income-20261006",
+      "title": "HoMM-style pickups and income sites",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "owner_directed_content_and_rules_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/pickups-and-income-sites.md"
+      ],
+      "createdAt": "2026-10-05T19:20:00Z",
+      "updatedAt": "2026-10-06T06:00:00Z",
+      "purpose": "Owner direction 2026-10-05: streamline map economy objects to the HoMM model. Only mines pay daily income, no capture or recapture bonus, weekly producers instead of 20-35 gold/day buildings, varied random-map pickups and spell scrolls, Wood Wagon and Ore Crates off random maps.",
+      "notes": "Content: dwellings, landmarks, watchtowers and outposts lose control_income and claim_rewards; mines and rare mines lose claim_rewards; six support producers are free 7-day visit sites; Wood Wagon/Ore Crates are one-time pickups; new sites Verdant Graft Bundle, Brass Scrip Case (original sprites), Wayfarer Camp Cache, Spell Scroll. Rules: ResourceNodePayloadRules gives per-placement payloads and pays a persistent site's claim payload once per placement (player and AI). Random maps: GeneratedRewardRules translates HoMM3 reward/economy types with HoMM amounts, chest tiers, campfire hauls, tiered scroll spells and a six-way rare spread from a stable placement hash; eligibility pools move non-resource HoMM objects to visit sites, Corpse/Survivor to uncommon artifacts, Derelict Ship/Shipwreck to guarded sites, Water Wheel/Windmill/Mystical Garden to the weekly-producer pool. No native code or RNG change. New tests/pickups_income_rules_report passes; native_rmg_end_to_end_runtime_boundary_report, native_random_map_homm3_re_object_table_proxy_report, neutral_dwelling_claimed_landmark_report, ai_known_world_memory_report pass on Windows. economy_capture_income_expansion_report and map_editor_smoke were updated and now stop at the same pre-existing failures as main; core_systems_regression_smoke, overworld_visual_smoke, footprint, corpus, save-replay, disk-startup, materialization, art-coverage, eight-dwelling and six-service reports fail identically on main. validate_repo: only checks listed in docs/authored-scenarios-obsolete.md fail (697, authored runways and catalog totals). No Linux run (GDScript/content only)."
     }
   ],
   "project": "heroes-like",

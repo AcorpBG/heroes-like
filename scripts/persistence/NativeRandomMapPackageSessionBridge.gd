@@ -9,6 +9,7 @@ const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const GeneratedNeutralRules = preload("res://scripts/persistence/GeneratedNeutralEncounterRules.gd")
+const GeneratedRewards = preload("res://scripts/persistence/GeneratedRewardRules.gd")
 
 const H3M_TOWN_TYPE_PROJECT_IDENTITY := {
 	"castle": {"faction_id": "faction_embercourt", "town_id": "town_riverwatch"},
@@ -436,6 +437,11 @@ static func _resource_nodes_from_objects(objects: Array) -> Array:
 	for object in objects:
 		var kind := String(object.get("kind", ""))
 		if not (kind in ["resource_site", "mine", "neutral_dwelling", "reward_reference"]):
+			continue
+		var translated := GeneratedRewards.resolve(object)
+		if not translated.is_empty():
+			translated["collected"] = false
+			nodes.append(translated)
 			continue
 		var site_id := _resource_site_id_for_object(object)
 		if site_id == "":

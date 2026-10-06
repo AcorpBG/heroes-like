@@ -172,18 +172,18 @@
     ]
   },
   "coverage": {
-    "authored_map_object_count": 422,
+    "authored_map_object_count": 425,
     "foundation_decorative_or_blocker_distinct_count": 200,
     "preexisting_unique_non_decorative_count": 0,
-    "new_distinct_non_decorative_asset_count": 222,
-    "total_distinct_authored_map_object_count_after_pass": 422,
+    "new_distinct_non_decorative_asset_count": 225,
+    "total_distinct_authored_map_object_count_after_pass": 425,
     "by_family": {
       "faction_landmark": 9,
       "guarded_reward_site": 32,
       "mine": 10,
       "neutral_dwelling": 69,
       "neutral_encounter": 6,
-      "pickup": 9,
+      "pickup": 12,
       "repeatable_service": 7,
       "scenario_objective": 14,
       "scouting_structure": 6,
@@ -416,7 +416,10 @@
     "mapobj_gloambell_sounding_deep",
     "mapobj_common_wood_mine",
     "mapobj_common_ore_mine",
-    "mapobj_common_gold_mine"
+    "mapobj_common_gold_mine",
+    "mapobj_verdant_graft_bundle",
+    "mapobj_brass_scrip_case",
+    "adventurers_bundle"
   ],
   "object_sprite_mappings": {
     "object_roadward_lodge": {
@@ -1960,6 +1963,24 @@
       "assignment_source": "frontier_mythic_habitat_completion",
       "family": "neutral_dwelling",
       "source_batch": 20
+    },
+    "object_verdant_graft_bundle": {
+      "asset_id": "mapobj_verdant_graft_bundle",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Verdant Graft Bundle' (pickup).",
+      "assignment_source": "rare_pile_completion_20261005",
+      "family": "pickup"
+    },
+    "object_brass_scrip_case": {
+      "asset_id": "mapobj_brass_scrip_case",
+      "fit": "Distinct generated overworld sprite assigned to authored map object 'Brass Scrip Case' (pickup).",
+      "assignment_source": "rare_pile_completion_20261005",
+      "family": "pickup"
+    },
+    "object_wayfarer_camp_cache": {
+      "asset_id": "adventurers_bundle",
+      "fit": "Existing original traveller's bundle sprite for the one-time Wayfarer Camp Cache.",
+      "assignment_source": "generated_reward_translation_20261005",
+      "family": "pickup"
     }
   }
 }

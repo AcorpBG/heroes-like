@@ -1,0 +1,25 @@
+{
+  "generator": "built_in_image_gen",
+  "references": [
+    "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_peatwax_votive_bundle.png",
+    "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_embergrain_sample_sack.png",
+    "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_aetherglass_splinter_lot.png",
+    "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_memory_salt_jar.png"
+  ],
+  "purpose": "One-time pickups for the two rare resources that had no map pile, so random maps can place every rare resource. Original painted sprites in the style of the existing rare pickups.",
+  "images": [
+    {
+      "resource": "verdant_grafts",
+      "prompt": "A single small treasure pickup object for a fantasy strategy game's adventure map: a \"Verdant Graft Bundle\" - a hand-sized bundle of freshly cut living plant cuttings and saplings with bright green leaves and pale exposed roots, tied tightly around the middle with rough twine, with a small round green wax seal and a little linen tag hanging from the twine, a few loose leaves and a clump of dark soil at its base.\n\nMatch the style of the reference images exactly: painterly hand-painted fantasy game sprite, rich saturated colours, soft warm key light from the upper left, crisp dark outlines softened by painting, small soft contact shadow under the object. Same 3/4 top-down isometric camera angle as the references, object centered and standing upright, filling roughly 45% of the frame with generous empty margin around it, the same scale as the reference pickups.\n\nOne object only, no ground tile, no scenery, no text, no letters, no frame. Plain transparent background.",
+      "file": "verdant_grafts-source.png",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_verdant_graft_bundle.png"
+    },
+    {
+      "resource": "brass_scrip",
+      "prompt": "A single small treasure pickup object for a fantasy strategy game's adventure map: a \"Brass Scrip Case\" - a small open document case of dark leather bound with polished brass corners and a brass clasp, overflowing with a neat stack of stamped rectangular brass certificate plates engraved with gear-like seals, a few paper and leather tags tied to them with string, and one bright red wax seal on top; two loose brass plates lie beside the case.\n\nMatch the style of the reference images exactly: painterly hand-painted fantasy game sprite, rich saturated colours, soft warm key light from the upper left, crisp dark outlines softened by painting, small soft contact shadow under the object. Same 3/4 top-down isometric camera angle as the references, object centered, filling roughly 45% of the frame with generous empty margin around it, the same scale as the reference pickups.\n\nOne object only, no ground tile, no scenery, no text, no letters, no frame. Plain transparent background.",
+      "file": "brass_scrip-source.png",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_brass_scrip_case.png"
+    }
+  ],
+  "packing": "Mechanical alpha trim and aspect-preserving downsample onto a 512px transparent canvas, bottom-aligned with the other rare pickups (largest extent 215-225px); no repainting."
+}

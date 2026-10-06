@@ -15,7 +15,6 @@ const CREATURE_GENERATOR_ROWS := {
 		"object_id": "object_greenbranch_copse",
 		"site_id": "site_greenbranch_copse",
 		"catalog_id": "dwelling_creature_generator_pixie_greenbranch_proxy",
-		"gold": 105,
 		"recruits": {"unit_neutral_greenbranch_cudgels": 2, "unit_neutral_sapwhistle_callers": 1},
 	},
 	52: {
@@ -24,7 +23,6 @@ const CREATURE_GENERATOR_ROWS := {
 		"object_id": "object_lantern_warren",
 		"site_id": "site_lantern_warren",
 		"catalog_id": "dwelling_creature_generator_lich_lantern_proxy",
-		"gold": 90,
 		"recruits": {"unit_neutral_tunnel_lanterns": 2, "unit_neutral_glimmercap_needlers": 1},
 	},
 	22: {
@@ -33,7 +31,6 @@ const CREATURE_GENERATOR_ROWS := {
 		"object_id": "object_cinder_kiln",
 		"site_id": "site_cinder_kiln",
 		"catalog_id": "dwelling_creature_generator_gog_cinder_kiln_proxy",
-		"gold": 75,
 		"recruits": {"unit_neutral_kilnward_mallets": 2, "unit_neutral_cinderpot_hurlers": 1},
 	},
 	0: {
@@ -42,7 +39,6 @@ const CREATURE_GENERATOR_ROWS := {
 		"object_id": "object_bogbell_croft",
 		"site_id": "site_bogbell_croft",
 		"catalog_id": "dwelling_creature_generator_basilisk_bogbell_proxy",
-		"gold": 105,
 		"recruits": {"unit_neutral_bogbell_mauls": 2, "unit_neutral_peatflare_jarriers": 1},
 	},
 	5: {
@@ -51,7 +47,6 @@ const CREATURE_GENERATOR_ROWS := {
 		"object_id": "object_roadward_lodge",
 		"site_id": "site_free_company_yard",
 		"catalog_id": "dwelling_creature_generator_cavalier_roadward_proxy",
-		"gold": 80,
 		"recruits": {"unit_neutral_roadwardens": 2, "unit_neutral_hearthbow_carriers": 1},
 	},
 	50: {
@@ -60,7 +55,6 @@ const CREATURE_GENERATOR_ROWS := {
 		"object_id": "object_kite_signal_eyrie",
 		"site_id": "site_kite_signal_eyrie",
 		"catalog_id": "dwelling_creature_generator_pegasus_kite_signal_eyrie_proxy",
-		"gold": 75,
 		"recruits": {"unit_neutral_kitehook_runners": 2, "unit_neutral_ridgeflare_shots": 1},
 	},
 	26: {
@@ -69,7 +63,6 @@ const CREATURE_GENERATOR_ROWS := {
 		"object_id": "object_cliffhawk_roost",
 		"site_id": "site_cliffhawk_roost",
 		"catalog_id": "dwelling_creature_generator_harpy_cliffhawk_roost_proxy",
-		"gold": 75,
 		"recruits": {"unit_neutral_cliffhawk_wardens": 2, "unit_neutral_windglass_slingers": 1},
 	},
 	40: {
@@ -78,7 +71,6 @@ const CREATURE_GENERATOR_ROWS := {
 		"object_id": "object_obsidian_scar",
 		"site_id": "site_obsidian_scar",
 		"catalog_id": "dwelling_creature_generator_pit_lord_obsidian_scar_proxy",
-		"gold": 90,
 		"recruits": {"unit_neutral_scarshield_veterans": 2, "unit_neutral_ashdart_stalkers": 1},
 	},
 	29: {
@@ -87,7 +79,6 @@ const CREATURE_GENERATOR_ROWS := {
 		"object_id": "object_charcoal_burners",
 		"site_id": "site_charcoal_burners",
 		"catalog_id": "dwelling_creature_generator_imp_charcoal_burners_proxy",
-		"gold": 90,
 		"recruits": {"unit_neutral_charcoal_mauls": 2, "unit_neutral_emberpack_lobbers": 1},
 	},
 	6: {
@@ -96,7 +87,6 @@ const CREATURE_GENERATOR_ROWS := {
 		"object_id": "object_prism_outrider_post",
 		"site_id": "site_prism_outrider_post",
 		"catalog_id": "dwelling_creature_generator_centaur_prism_outrider_proxy",
-		"gold": 80,
 		"recruits": {"unit_neutral_kitehook_runners": 2, "unit_neutral_ridgeflare_shots": 1},
 	},
 	30: {
@@ -105,7 +95,6 @@ const CREATURE_GENERATOR_ROWS := {
 		"object_id": "object_reedbarge_mooring",
 		"site_id": "site_reedbarge_mooring",
 		"catalog_id": "dwelling_creature_generator_lizard_reedbarge_mooring_proxy",
-		"gold": 90,
 		"recruits": {"unit_neutral_reedbarge_poles": 2, "unit_neutral_lanternet_throwers": 1},
 	},
 	15: {
@@ -114,7 +103,6 @@ const CREATURE_GENERATOR_ROWS := {
 		"object_id": "object_bramble_hedge",
 		"site_id": "site_bramble_hedge",
 		"catalog_id": "dwelling_creature_generator_elf_bramble_hedge_proxy",
-		"gold": 60,
 		"recruits": {"unit_neutral_hedgehook_watch": 2, "unit_neutral_thornbow_scouts": 1},
 	},
 	68: {
@@ -123,16 +111,27 @@ const CREATURE_GENERATOR_ROWS := {
 		"object_id": "object_fenhound_kennels",
 		"site_id": "site_fenhound_kennels",
 		"catalog_id": "dwelling_creature_generator_unicorn_fenhound_kennels_proxy",
-		"gold": 70,
 		"recruits": {"unit_neutral_fenhound_runners": 2, "unit_neutral_mossglass_sentinels": 1},
 	},
 }
+const RARE_PILE_RESOURCE_BY_SITE := {
+	"site_aetherglass_splinter_lot": "aetherglass",
+	"site_embergrain_sample_sack": "embergrain",
+	"site_peatwax_votive_bundle": "peatwax",
+	"site_verdant_graft_bundle": "verdant_grafts",
+	"site_brass_scrip_case": "brass_scrip",
+	"site_memory_salt_jar": "memory_salt",
+}
+const RARE_MINE_SITES := ["site_aetherglass_lens_house", "site_embergrain_warm_granary", "site_peatwax_reed_yard", "site_verdant_graft_nursery", "site_brass_scrip_mint", "site_memory_salt_pan"]
+const H3M_RARE_SUBTYPES := [1, 3, 4, 5]
 const LOOSE_RESOURCE_PRESENTATION_ROWS := [
-	{"site_id": "site_peatwax_votive_bundle", "object_id": "object_peatwax_votive_bundle", "resource_id": "peatwax", "asset_id": "mapobj_peatwax_votive_bundle", "mine_asset_id": "mapobj_marsh_peat_yard", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_peatwax_votive_bundle.png", "rewards": {"peatwax": 1}, "current_small": false, "mine_site_id": "site_peatwax_reed_yard"},
-	{"site_id": "site_embergrain_sample_sack", "object_id": "object_embergrain_sample_sack", "resource_id": "embergrain", "asset_id": "mapobj_embergrain_sample_sack", "mine_asset_id": "mapobj_floodplain_sluice_camp", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_embergrain_sample_sack.png", "rewards": {"embergrain": 1}, "current_small": true, "mine_site_id": "site_embergrain_warm_granary"},
-	{"site_id": "site_aetherglass_splinter_lot", "object_id": "object_aetherglass_splinter_lot", "resource_id": "aetherglass", "asset_id": "mapobj_aetherglass_splinter_lot", "mine_asset_id": "mapobj_cinder_ore_face", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_aetherglass_splinter_lot.png", "rewards": {"aetherglass": 1}, "current_small": true, "mine_site_id": "site_aetherglass_lens_house"},
-	{"site_id": "site_memory_salt_jar", "object_id": "object_memory_salt_jar", "resource_id": "memory_salt", "asset_id": "mapobj_memory_salt_jar", "mine_asset_id": "mapobj_badlands_coin_sluice", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_memory_salt_jar.png", "rewards": {"memory_salt": 1}, "current_small": true, "mine_site_id": "site_memory_salt_pan"},
-	{"site_id": "site_road_writ_purse", "object_id": "object_road_writ_purse", "resource_id": "gold", "asset_id": "mapobj_road_writ_purse", "mine_asset_id": "mapobj_reef_coin_assay", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/pickups/raw_gold_pile.png", "rewards": {"gold": 1000}, "current_small": true, "mine_site_id": "site_reef_coin_assay"},
+	{"site_id": "site_peatwax_votive_bundle", "object_id": "object_peatwax_votive_bundle", "resource_id": "peatwax", "asset_id": "mapobj_peatwax_votive_bundle", "mine_asset_id": "mapobj_rare_peatwax_mine", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_peatwax_votive_bundle.png", "rewards": {"peatwax": 1}, "current_small": true, "mine_site_id": "site_peatwax_reed_yard"},
+	{"site_id": "site_embergrain_sample_sack", "object_id": "object_embergrain_sample_sack", "resource_id": "embergrain", "asset_id": "mapobj_embergrain_sample_sack", "mine_asset_id": "mapobj_rare_embergrain_mine", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_embergrain_sample_sack.png", "rewards": {"embergrain": 1}, "current_small": true, "mine_site_id": "site_embergrain_warm_granary"},
+	{"site_id": "site_aetherglass_splinter_lot", "object_id": "object_aetherglass_splinter_lot", "resource_id": "aetherglass", "asset_id": "mapobj_aetherglass_splinter_lot", "mine_asset_id": "mapobj_rare_aetherglass_mine", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_aetherglass_splinter_lot.png", "rewards": {"aetherglass": 1}, "current_small": true, "mine_site_id": "site_aetherglass_lens_house"},
+	{"site_id": "site_memory_salt_jar", "object_id": "object_memory_salt_jar", "resource_id": "memory_salt", "asset_id": "mapobj_memory_salt_jar", "mine_asset_id": "mapobj_rare_memory_salt_mine", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_memory_salt_jar.png", "rewards": {"memory_salt": 1}, "current_small": true, "mine_site_id": "site_memory_salt_pan"},
+	{"site_id": "site_verdant_graft_bundle", "object_id": "object_verdant_graft_bundle", "resource_id": "verdant_grafts", "asset_id": "mapobj_verdant_graft_bundle", "mine_asset_id": "mapobj_rare_verdant_grafts_mine", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_verdant_graft_bundle.png", "rewards": {"verdant_grafts": 1}, "current_small": false, "mine_site_id": "site_verdant_graft_nursery"},
+	{"site_id": "site_brass_scrip_case", "object_id": "object_brass_scrip_case", "resource_id": "brass_scrip", "asset_id": "mapobj_brass_scrip_case", "mine_asset_id": "mapobj_rare_brass_scrip_mine", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_brass_scrip_case.png", "rewards": {"brass_scrip": 1}, "current_small": false, "mine_site_id": "site_brass_scrip_mint"},
+	{"site_id": "site_road_writ_purse", "object_id": "object_road_writ_purse", "resource_id": "gold", "asset_id": "mapobj_road_writ_purse", "mine_asset_id": "mapobj_common_gold_mine", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/pickups/raw_gold_pile.png", "rewards": {"gold": 1000}, "current_small": true, "mine_site_id": "site_reef_coin_assay"},
 ]
 
 func _ready() -> void:
@@ -559,11 +558,7 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 	var session = NativeRandomMapPackageSessionBridgeScript.build_session_from_adoption(adoption)
 	var expected_site_by_subtype := {
 		0: "site_brightwood_sawmill",
-		1: "site_peatwax_reed_yard",
 		2: "site_ridge_quarry",
-		3: "site_embergrain_warm_granary",
-		4: "site_aetherglass_lens_house",
-		5: "site_memory_salt_pan",
 		6: "site_reef_coin_assay",
 	}
 	var live_mine_count := 0
@@ -590,7 +585,11 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 			var source: Dictionary = package_source_objects.get(String(node.get("placement_id", "")), {}) if package_source_objects.get(String(node.get("placement_id", "")), {}) is Dictionary else {}
 			if int(source.get("h3m_type_id", -1)) == 53:
 				live_mine_count += 1
-				if String(node.get("site_id", "")) != String(expected_site_by_subtype.get(int(source.get("h3m_subtype", -1)), "")):
+				var mine_subtype := int(source.get("h3m_subtype", -1))
+				if mine_subtype in H3M_RARE_SUBTYPES:
+					if String(node.get("site_id", "")) not in RARE_MINE_SITES:
+						live_mine_sites_exact = false
+				elif String(node.get("site_id", "")) != String(expected_site_by_subtype.get(mine_subtype, "")):
 					live_mine_sites_exact = false
 				var mine_site_id := String(node.get("site_id", ""))
 				for presentation_row in LOOSE_RESOURCE_PRESENTATION_ROWS:
@@ -614,11 +613,7 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 				artifact_resource_node_count += 1
 			elif int(source.get("h3m_type_id", -1)) == 79:
 				live_resource_proxy_count += 1
-				var expected_resource: Dictionary = expected_resources.get(int(source.get("h3m_subtype", -1)), {}) if expected_resources.get(int(source.get("h3m_subtype", -1)), {}) is Dictionary else {}
-				if expected_resource.is_empty() \
-						or String(node.get("object_id", "")) != String(expected_resource.get("object_id", "")) \
-						or String(node.get("site_id", "")) != String(expected_resource.get("site_id", "")) \
-						or String(node.get("resource_id", "")) != String(expected_resource.get("resource_id", "")):
+				if not _live_pile_row_exact(node, int(source.get("h3m_subtype", -1)), expected_resources):
 					live_resource_proxy_rows_exact = false
 				if int(source.get("h3m_subtype", -1)) == 3 and selected_rare_resource.is_empty():
 					selected_rare_resource = {"index": node_index, "node": node.duplicate(true)}
@@ -628,7 +623,8 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 						loose_resource_nodes_by_site[loose_site_id] = node.duplicate(true)
 			elif int(source.get("h3m_type_id", -1)) == 93:
 				if String(node.get("object_id", "")) == "spell_beacon_path" \
-						and String(node.get("site_id", "")) == "site_beacon_path_scroll" \
+						and String(node.get("site_id", "")) == "site_spell_scroll" \
+						and node.get("payload_spell_ids", []) is Array and node.get("payload_spell_ids", []).size() == 1 \
 						and spell_scroll_placement_ids.has(String(node.get("placement_id", ""))):
 					live_spell_scrolls.append({"index": node_index, "node": node.duplicate(true)})
 			elif int(source.get("h3m_type_id", -1)) == 16 and int(source.get("h3m_subtype", -1)) == 4:
@@ -703,13 +699,17 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 		var restored_node: Dictionary = restored_nodes[int(selected_rare_resource.get("index", -1))] if int(selected_rare_resource.get("index", -1)) >= 0 and int(selected_rare_resource.get("index", -1)) < restored_nodes.size() and restored_nodes[int(selected_rare_resource.get("index", -1))] is Dictionary else {}
 		var claimed_nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
 		var claimed_node: Dictionary = claimed_nodes[int(selected_rare_resource.get("index", -1))] if int(selected_rare_resource.get("index", -1)) >= 0 and int(selected_rare_resource.get("index", -1)) < claimed_nodes.size() and claimed_nodes[int(selected_rare_resource.get("index", -1))] is Dictionary else {}
+		var rare_node: Dictionary = selected_rare_resource.get("node", {})
+		var rare_id := String(rare_node.get("resource_id", ""))
+		var rare_amount := int(rare_node.get("payload_rewards", {}).get(rare_id, 0))
 		var other_rare_exact := true
-		for resource_id in ["aetherglass", "brass_scrip", "memory_salt", "peatwax", "verdant_grafts"]:
-			if resources_after.get(resource_id, 0) != resources_before.get(resource_id, 0):
+		for resource_id in ["aetherglass", "brass_scrip", "embergrain", "memory_salt", "peatwax", "verdant_grafts"]:
+			if resource_id != rare_id and resources_after.get(resource_id, 0) != resources_before.get(resource_id, 0):
 				other_rare_exact = false
 		rare_resource_interaction = {
 			"ok": bool(claim.get("ok", false)) \
-					and int(resources_after.get("embergrain", 0)) == int(resources_before.get("embergrain", 0)) + 1 \
+					and rare_amount >= 3 and rare_amount <= 6 \
+					and int(resources_after.get(rare_id, 0)) == int(resources_before.get(rare_id, 0)) + rare_amount \
 					and int(resources_after.get("gold", 0)) == int(resources_before.get("gold", 0)) \
 					and other_rare_exact \
 					and restored_node == claimed_node \
@@ -717,7 +717,8 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 			"site_id": claimed_node.get("site_id", ""),
 			"resource_id": claimed_node.get("resource_id", ""),
 			"claim_ok": claim.get("ok", false),
-			"embergrain_delta": int(resources_after.get("embergrain", 0)) - int(resources_before.get("embergrain", 0)),
+			"rare_amount": rare_amount,
+			"rare_delta": int(resources_after.get(rare_id, 0)) - int(resources_before.get(rare_id, 0)),
 			"gold_delta": int(resources_after.get("gold", 0)) - int(resources_before.get("gold", 0)),
 			"other_rare_exact": other_rare_exact,
 			"save_round_trip_exact": restored_node == claimed_node and restored.overworld.get("resources", {}) == resources_after,
@@ -736,8 +737,9 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 		var army_before: Dictionary = session.overworld.get("army", {}).duplicate(true)
 		var spellbook_before: Dictionary = hero_before.get("spellbook", {}).duplicate(true) if hero_before.get("spellbook", {}) is Dictionary else {}
 		var known_before: Array = spellbook_before.get("known_spell_ids", []).duplicate(true) if spellbook_before.get("known_spell_ids", []) is Array else []
+		var scroll_spell_id := String(scroll_node.get("payload_spell_ids", [""])[0])
 		var expected_known_after: Array = known_before.duplicate(true)
-		expected_known_after.append("spell_beacon_path")
+		expected_known_after.append(scroll_spell_id)
 		var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, scroll_result, false)
 		var resource_nodes_after: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
 		var claimed_node: Dictionary = resource_nodes_after[scroll_index] if scroll_index >= 0 and scroll_index < resource_nodes_after.size() and resource_nodes_after[scroll_index] is Dictionary else {}
@@ -766,7 +768,8 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 		var restored_hero: Dictionary = restored.overworld.get("hero", {}) if restored.overworld.get("hero", {}) is Dictionary else {}
 		spell_scroll_interaction = {
 			"ok": bool(claim.get("ok", false)) \
-					and not known_before.has("spell_beacon_path") \
+					and not ContentService.get_spell(scroll_spell_id).is_empty() \
+					and not known_before.has(scroll_spell_id) \
 					and known_after == expected_known_after \
 					and bool(claimed_node.get("collected", false)) \
 					and session.overworld.get("resources", {}) == resources_before \
@@ -1307,7 +1310,7 @@ func _validate_creature_generator_interaction(adoption: Dictionary, expected_sub
 		var row: Dictionary = row_value
 		var subtype := int(row.get("subtype", -1))
 		var expected: Dictionary = CREATURE_GENERATOR_ROWS.get(subtype, {})
-		expected_gold += int(expected.get("gold", 0))
+		# Dwellings grant ownership and troops only; capturing pays no gold.
 		for unit_id_value in expected.get("recruits", {}).keys():
 			var unit_id := String(unit_id_value)
 			expected_recruits[unit_id] = int(expected_recruits.get(unit_id, 0)) + int(expected.get("recruits", {}).get(unit_id, 0))
@@ -1401,6 +1404,27 @@ func _validate_creature_generator_interaction(adoption: Dictionary, expected_sub
 		"save_round_trip_exact": save_round_trip_exact,
 	}
 
+func _live_pile_row_exact(node: Dictionary, subtype: int, expected_resources: Dictionary) -> bool:
+	var rewards: Dictionary = node.get("payload_rewards", {}) if node.get("payload_rewards", {}) is Dictionary else {}
+	var resource_id := String(node.get("resource_id", ""))
+	var amount := int(rewards.get(resource_id, 0))
+	if rewards.size() != 1:
+		return false
+	if subtype in H3M_RARE_SUBTYPES:
+		var site_id := String(node.get("site_id", ""))
+		return String(RARE_PILE_RESOURCE_BY_SITE.get(site_id, "")) == resource_id \
+				and String(node.get("object_id", "")) == String(ContentService.get_map_object_for_resource_site(site_id).get("id", "")) \
+				and amount >= 3 and amount <= 6
+	var expected_resource: Dictionary = expected_resources.get(subtype, {}) if expected_resources.get(subtype, {}) is Dictionary else {}
+	if expected_resource.is_empty() \
+			or String(node.get("object_id", "")) != String(expected_resource.get("object_id", "")) \
+			or String(node.get("site_id", "")) != String(expected_resource.get("site_id", "")) \
+			or resource_id != String(expected_resource.get("resource_id", "")):
+		return false
+	if resource_id == "gold":
+		return amount >= 500 and amount <= 1000 and amount % 100 == 0
+	return amount >= 5 and amount <= 10
+
 func _army_stack_counts(army: Dictionary) -> Dictionary:
 	var counts := {}
 	for stack_value in army.get("stacks", []):
@@ -1432,7 +1456,7 @@ func _validate_loose_resource_presentation(
 			"expected": expected_current_sites,
 			"actual": actual_current_sites,
 		}
-	if live_mine_nodes_by_site.size() != LOOSE_RESOURCE_PRESENTATION_ROWS.size():
+	if live_mine_nodes_by_site.is_empty():
 		return {"ok": false, "reason": "current_small_mine_site_set_mismatch", "actual": live_mine_nodes_by_site.keys()}
 	var template_node_value: Variant = live_nodes_by_site.values()[0]
 	if not (template_node_value is Dictionary) or template_node_value.is_empty():
@@ -1454,6 +1478,7 @@ func _validate_loose_resource_presentation(
 		node["collected"] = false
 		node["collected_by_faction_id"] = ""
 		node.erase("collected_day")
+		node.erase("payload_rewards")
 		if not bool(row.get("current_small", false)):
 			node.erase("runtime_footprint")
 		var tile := Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))
@@ -1517,6 +1542,11 @@ func _validate_loose_resource_presentation(
 				and remembered_asset_ids.count(String(row.get("asset_id", ""))) == 1
 		var mine_site_id := String(row.get("mine_site_id", ""))
 		var mine_node: Dictionary = live_mine_nodes_by_site.get(mine_site_id, {}) if live_mine_nodes_by_site.get(mine_site_id, {}) is Dictionary else {}
+		if mine_node.is_empty() and not live_mine_nodes_by_site.is_empty():
+			# This seed did not roll this rare mine; dress another live mine as it.
+			mine_node = live_mine_nodes_by_site.values()[0].duplicate(true)
+			mine_node["site_id"] = mine_site_id
+			mine_node["object_id"] = String(ContentService.get_map_object_for_resource_site(mine_site_id).get("id", ""))
 		var mine_session := SessionStateStoreScript.SessionData.new()
 		mine_session.from_dict(session_authority_before)
 		mine_session.overworld["resource_nodes"] = [mine_node.duplicate(true)]

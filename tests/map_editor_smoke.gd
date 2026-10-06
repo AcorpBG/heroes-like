@@ -2042,7 +2042,7 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 	if (
 		not bool(palette_result.get("ok", false))
 		or String(palette_taxonomy.get("primary_class", "")) != "pickup"
-		or String(palette_taxonomy.get("cadence", "")) != "persistent_control"
+		or String(palette_taxonomy.get("cadence", "")) != "one_time"
 		or String(palette_taxonomy.get("passability_class", "")) != "passable_visit_on_enter"
 		or String(palette_taxonomy.get("resource_site_id", "")) != "site_wood_wagon"
 		or "build_resource" not in palette_taxonomy.get("secondary_tags", [])
@@ -2066,7 +2066,7 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 	var resource_guidance: Dictionary = resource_detail.get("placement_guidance", {})
 	if (
 		String(resource_taxonomy.get("primary_class", "")) != "pickup"
-		or String(resource_taxonomy.get("cadence", "")) != "persistent_control"
+		or String(resource_taxonomy.get("cadence", "")) != "one_time"
 		or String(resource_taxonomy.get("passability_class", "")) != "passable_visit_on_enter"
 		or String(resource_taxonomy.get("map_object_id", "")) != "object_wood_wagon"
 		or String(resource_detail.get("taxonomy_summary", "")).find("class Pickup") < 0
@@ -2084,7 +2084,8 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 	if resource_text.find("Taxonomy: class Pickup") < 0 or resource_text.find("Link: Object object_wood_wagon | Site site_wood_wagon") < 0 or resource_text.find("Place: Resource reward pacing | Density 4-7 pickups/rewards per 16x16") < 0:
 		_fail("Map editor smoke: tile text did not include compact resource taxonomy/link lines: %s." % resource_text)
 		return false
-	if resource_text.find("Control: Unclaimed; capture flips control.") < 0 or resource_text.find("Economy: claim 150 gold, 2 wood, daily 1 wood") < 0:
+	# The Wood Wagon is a one-time pickup: no capture, no daily income.
+	if resource_text.find("Control: Uncollected; one visit can claim it.") < 0 or resource_text.find("Economy: one-time 150 gold, 2 wood") < 0:
 		_fail("Map editor smoke: tile text did not include practical resource-site control/reward inspection: %s." % resource_text)
 		return false
 	var guarded_resource_result: Dictionary = shell.call("validation_select_tile", 60, 36)
@@ -2112,7 +2113,7 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 		or dwelling_text.find("Recruit Source: Roadward Lodge | Neutral dwelling") < 0
 		or dwelling_text.find("Ready: +1 Hearthbow Carriers (T2 Ranged, 80 gold), +2 Roadwardens (T1 Melee, 55 gold)") < 0
 		or dwelling_text.find("Weekly: +1 Roadwardens (T1 Melee, 55 gold) to nearest held town") < 0
-		or dwelling_text.find("Why: Capture adds field recruits, feeds weekly musters, keeps local pay flowing.") < 0
+		or dwelling_text.find("Why: Capture adds field recruits, feeds weekly musters.") < 0
 	):
 		_fail("Map editor smoke: neutral dwelling site inspection did not expose recruit-source identity, roster, cadence, and value: detail=%s result=%s." % [dwelling_detail, dwelling_result])
 		return false

@@ -54,8 +54,9 @@ func _run() -> void:
 	var relay_day := _advance_day(session, "relay_income_day")
 	if _failed:
 		return
-	_assert_resource_amount("relay day income", relay_day.get("site_income", {}), "gold", 25)
-	_assert_message_contains(relay_day.get("message", ""), "Field sites yield 25 gold", "relay income message")
+	# Only mines pay daily income: a captured relay grants control, not coin.
+	_assert_resource_amount("relay day income", relay_day.get("site_income", {}), "gold", 0)
+	_assert_message_absent(relay_day.get("message", ""), "Field sites yield", "relay income message")
 	if _failed:
 		return
 
@@ -67,8 +68,9 @@ func _run() -> void:
 	var lens_day := _advance_day(session, "relay_and_lens_income_day")
 	if _failed:
 		return
-	_assert_resource_amount("relay plus lens day income", lens_day.get("site_income", {}), "gold", 70)
-	_assert_message_contains(lens_day.get("message", ""), "Field sites yield 70 gold", "relay plus lens income message")
+	# A captured dwelling grants its troops, not daily gold.
+	_assert_resource_amount("relay plus lens day income", lens_day.get("site_income", {}), "gold", 0)
+	_assert_message_absent(lens_day.get("message", ""), "Field sites yield", "relay plus lens income message")
 	if _failed:
 		return
 
@@ -373,6 +375,10 @@ func _assert_resource_amount(label: String, resources: Variant, resource_id: Str
 func _assert_message_contains(message: String, expected: String, label: String) -> void:
 	if not message.contains(expected):
 		_fail("%s expected message token %s, got %s" % [label, expected, message])
+
+func _assert_message_absent(message: String, unexpected: String, label: String) -> void:
+	if message.contains(unexpected):
+		_fail("%s should not contain %s: %s" % [label, unexpected, message])
 
 func _assert_army_at_least(label: String, session, unit_id: String, minimum: int) -> void:
 	var counts := _army_counts(session)

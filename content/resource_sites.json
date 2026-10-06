@@ -14,6 +14,16 @@
       ]
     },
     {
+      "id": "site_wayfarer_camp_cache",
+      "name": "Wayfarer Camp Cache",
+      "action_label": "Search the Camp",
+      "overworld_sprite_asset_id": "adventurers_bundle",
+      "rewards": {
+        "gold": 500,
+        "wood": 5
+      }
+    },
+    {
       "id": "site_beacon_path_scroll",
       "name": "Beacon Path Scroll",
       "family": "one_shot_pickup",
@@ -28,27 +38,27 @@
       }
     },
     {
+      "id": "site_spell_scroll",
+      "name": "Spell Scroll",
+      "family": "one_shot_pickup",
+      "action_label": "Read Scroll",
+      "overworld_sprite_asset_id": "beacon_path_scroll",
+      "learn_spell_id": "spell_beacon_path"
+    },
+    {
       "id": "site_wood_wagon",
       "name": "Wood Wagon",
-      "persistent_control": true,
       "rewards": {
         "wood": 2,
         "gold": 150
-      },
-      "control_income": {
-        "wood": 1
       }
     },
     {
       "id": "site_ore_crates",
       "name": "Ore Crates",
-      "persistent_control": true,
       "rewards": {
         "ore": 2,
         "gold": 100
-      },
-      "control_income": {
-        "ore": 1
       }
     },
     {
@@ -65,12 +75,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_roadward_lodge",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 80
-      },
-      "control_income": {
-        "gold": 40
-      },
       "claim_recruits": {
         "unit_neutral_roadwardens": 2,
         "unit_neutral_hearthbow_carriers": 1
@@ -145,12 +149,6 @@
       "family": "neutral_dwelling",
       "dwelling_scope": "faction_linked",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 80
-      },
-      "control_income": {
-        "gold": 40
-      },
       "claim_recruits": {
         "unit_river_guard": 5,
         "unit_ember_archer": 3
@@ -178,12 +176,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_fenhound_kennels",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 70
-      },
-      "control_income": {
-        "gold": 35
-      },
       "claim_recruits": {
         "unit_neutral_fenhound_runners": 2,
         "unit_neutral_mossglass_sentinels": 1
@@ -259,12 +251,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_cliffhawk_roost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 75
-      },
-      "control_income": {
-        "gold": 30
-      },
       "claim_recruits": {
         "unit_neutral_cliffhawk_wardens": 2,
         "unit_neutral_windglass_slingers": 1
@@ -344,12 +330,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_reedbarge_mooring",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 90
-      },
-      "control_income": {
-        "gold": 35
-      },
       "claim_recruits": {
         "unit_neutral_reedbarge_poles": 2,
         "unit_neutral_lanternet_throwers": 1
@@ -429,12 +409,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_glowcap_croft",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 105
-      },
-      "control_income": {
-        "gold": 40
-      },
       "claim_recruits": {
         "unit_neutral_glowcap_bulwarks": 2,
         "unit_neutral_sporelamp_tossers": 1
@@ -514,12 +488,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_dustjack_yard",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 60
-      },
-      "control_income": {
-        "gold": 25
-      },
       "claim_recruits": {
         "unit_neutral_dustjack_blades": 2,
         "unit_neutral_scrapbow_teams": 1
@@ -599,12 +567,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_cinder_kiln",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 75
-      },
-      "control_income": {
-        "gold": 30
-      },
       "claim_recruits": {
         "unit_neutral_kilnward_mallets": 2,
         "unit_neutral_cinderpot_hurlers": 1
@@ -684,12 +646,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_frostbeacon_bothy",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 90
-      },
-      "control_income": {
-        "gold": 35
-      },
       "claim_recruits": {
         "unit_neutral_frostbeacon_pikes": 2,
         "unit_neutral_snowglass_markers": 1
@@ -769,12 +725,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_orchard_levy",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 105
-      },
-      "control_income": {
-        "gold": 40
-      },
       "claim_recruits": {
         "unit_neutral_orchard_halberds": 2,
         "unit_neutral_millstone_slingers": 1
@@ -854,12 +804,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_bramble_hedge",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 60
-      },
-      "control_income": {
-        "gold": 25
-      },
       "claim_recruits": {
         "unit_neutral_hedgehook_watch": 2,
         "unit_neutral_thornbow_scouts": 1
@@ -939,12 +883,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_tidepool_skiffyard",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 75
-      },
-      "control_income": {
-        "gold": 30
-      },
       "claim_recruits": {
         "unit_neutral_tidepool_cutters": 2,
         "unit_neutral_reefbolt_crews": 1
@@ -1024,12 +962,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_switchback_hostel",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 90
-      },
-      "control_income": {
-        "gold": 35
-      },
       "claim_recruits": {
         "unit_neutral_switchback_pikes": 2,
         "unit_neutral_cairnshield_porters": 1
@@ -1109,12 +1041,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_saltpan_camp",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 105
-      },
-      "control_income": {
-        "gold": 40
-      },
       "claim_recruits": {
         "unit_neutral_saltpan_bucklers": 2,
         "unit_neutral_suncrack_throwers": 1
@@ -1194,12 +1120,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_crystal_sump",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 60
-      },
-      "control_income": {
-        "gold": 25
-      },
       "claim_recruits": {
         "unit_neutral_sumpstone_guards": 2,
         "unit_neutral_echodart_casts": 1
@@ -1279,12 +1199,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_icehook_trapper_lodge",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 75
-      },
-      "control_income": {
-        "gold": 30
-      },
       "claim_recruits": {
         "unit_neutral_icehook_trappers": 2,
         "unit_neutral_whitepike_keepers": 1
@@ -1364,12 +1278,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_obsidian_scar",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 90
-      },
-      "control_income": {
-        "gold": 35
-      },
       "claim_recruits": {
         "unit_neutral_scarshield_veterans": 2,
         "unit_neutral_ashdart_stalkers": 1
@@ -1449,12 +1357,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_greenbranch_copse",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 105
-      },
-      "control_income": {
-        "gold": 40
-      },
       "claim_recruits": {
         "unit_neutral_greenbranch_cudgels": 2,
         "unit_neutral_sapwhistle_callers": 1
@@ -1548,12 +1450,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_harbor_pilot_house",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 60
-      },
-      "control_income": {
-        "gold": 25
-      },
       "claim_recruits": {
         "unit_neutral_harbor_polearms": 2,
         "unit_neutral_flaremast_crews": 1
@@ -1633,12 +1529,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_kite_signal_eyrie",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 75
-      },
-      "control_income": {
-        "gold": 30
-      },
       "claim_recruits": {
         "unit_neutral_kitehook_runners": 2,
         "unit_neutral_ridgeflare_shots": 1
@@ -1718,12 +1608,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_lantern_warren",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 90
-      },
-      "control_income": {
-        "gold": 35
-      },
       "claim_recruits": {
         "unit_neutral_tunnel_lanterns": 2,
         "unit_neutral_glimmercap_needlers": 1
@@ -1803,12 +1687,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_bogbell_croft",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 105
-      },
-      "control_income": {
-        "gold": 40
-      },
       "claim_recruits": {
         "unit_neutral_bogbell_mauls": 2,
         "unit_neutral_peatflare_jarriers": 1
@@ -1888,12 +1766,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_milestone_arsenal",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 60
-      },
-      "control_income": {
-        "gold": 25
-      },
       "claim_recruits": {
         "unit_neutral_milestone_bucklers": 2,
         "unit_neutral_cartbow_tenders": 1
@@ -1973,12 +1845,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_frostwharf_house",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 75
-      },
-      "control_income": {
-        "gold": 30
-      },
       "claim_recruits": {
         "unit_neutral_frostwharf_cutters": 2,
         "unit_neutral_lanternskate_throwers": 1
@@ -2058,12 +1924,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_charcoal_burners",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 90
-      },
-      "control_income": {
-        "gold": 35
-      },
       "claim_recruits": {
         "unit_neutral_charcoal_mauls": 2,
         "unit_neutral_emberpack_lobbers": 1
@@ -2143,12 +2003,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_basalt_gatehouse",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 105
-      },
-      "control_income": {
-        "gold": 40
-      },
       "claim_recruits": {
         "unit_neutral_basalt_wardens": 2,
         "unit_neutral_tunnelmark_bolters": 1
@@ -2227,12 +2081,6 @@
       "family": "neutral_dwelling",
       "dwelling_scope": "faction_linked",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 90
-      },
-      "control_income": {
-        "gold": 45
-      },
       "claim_recruits": {
         "unit_shard_guard": 1,
         "unit_prism_adept": 1
@@ -2260,12 +2108,6 @@
       "name": "Ember Signal Post",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 50
-      },
-      "control_income": {
-        "gold": 20
-      },
       "vision_radius": 2,
       "pressure_guard": 1,
       "response_profile": {
@@ -2287,12 +2129,6 @@
       "name": "Bog Drum Outpost",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 50
-      },
-      "control_income": {
-        "gold": 20
-      },
       "vision_radius": 2,
       "pressure_guard": 1,
       "pressure_bonus": 1,
@@ -2315,12 +2151,6 @@
       "name": "Prism Watch Relay",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 60
-      },
-      "control_income": {
-        "gold": 25
-      },
       "vision_radius": 3,
       "pressure_guard": 1,
       "response_profile": {
@@ -2510,10 +2340,6 @@
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
-      "claim_rewards": {
-        "wood": 2,
-        "gold": 120
-      },
       "control_income": {
         "wood": 2
       },
@@ -2571,10 +2397,6 @@
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
-      "claim_rewards": {
-        "ore": 2,
-        "gold": 100
-      },
       "control_income": {
         "ore": 2
       },
@@ -2632,10 +2454,6 @@
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
-      "claim_rewards": {
-        "wood": 1,
-        "gold": 140
-      },
       "control_income": {
         "gold": 1000
       },
@@ -2692,12 +2510,6 @@
       "name": "Watchtower Beacon",
       "family": "scouting_structure",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 80
-      },
-      "control_income": {
-        "gold": 15
-      },
       "vision_radius": 10,
       "pressure_guard": 1,
       "town_support": {
@@ -2721,12 +2533,6 @@
       "name": "Mist Lighthouse",
       "family": "scouting_structure",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 100
-      },
-      "control_income": {
-        "gold": 20
-      },
       "vision_radius": 10,
       "pressure_guard": 1,
       "response_profile": {
@@ -3025,6 +2831,20 @@
       }
     },
     {
+      "id": "site_verdant_graft_bundle",
+      "name": "Verdant Graft Bundle",
+      "rewards": {
+        "verdant_grafts": 1
+      }
+    },
+    {
+      "id": "site_brass_scrip_case",
+      "name": "Brass Scrip Case",
+      "rewards": {
+        "brass_scrip": 1
+      }
+    },
+    {
       "id": "site_payroll_casket",
       "name": "Payroll Casket",
       "rewards": {
@@ -3046,10 +2866,6 @@
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
-      "claim_rewards": {
-        "wood": 2,
-        "gold": 90
-      },
       "control_income": {
         "wood": 2
       },
@@ -3106,9 +2922,6 @@
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 180
-      },
       "control_income": {
         "gold": 1000
       },
@@ -3165,10 +2978,6 @@
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
-      "claim_rewards": {
-        "ore": 2,
-        "gold": 80
-      },
       "control_income": {
         "ore": 2
       },
@@ -3225,9 +3034,6 @@
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 220
-      },
       "control_income": {
         "gold": 1000
       },
@@ -3284,10 +3090,6 @@
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
-      "claim_rewards": {
-        "ore": 2,
-        "gold": 90
-      },
       "control_income": {
         "ore": 2
       },
@@ -3344,10 +3146,6 @@
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
-      "claim_rewards": {
-        "wood": 2,
-        "gold": 90
-      },
       "control_income": {
         "wood": 2
       },
@@ -3452,9 +3250,6 @@
       "control_income": {
         "aetherglass": 1
       },
-      "claim_rewards": {
-        "aetherglass": 1
-      },
       "live_resource_front": true,
       "rare_mine_resource": "aetherglass",
       "overworld_sprite_asset_id": "mapobj_rare_aetherglass_mine"
@@ -3511,9 +3306,6 @@
         "pressure_guard_bonus": 1
       },
       "control_income": {
-        "aetherglass": 1
-      },
-      "claim_rewards": {
         "aetherglass": 1
       },
       "live_resource_front": true,
@@ -3574,9 +3366,6 @@
       "control_income": {
         "embergrain": 1
       },
-      "claim_rewards": {
-        "embergrain": 1
-      },
       "live_resource_front": true,
       "rare_mine_resource": "embergrain",
       "overworld_sprite_asset_id": "mapobj_rare_embergrain_mine"
@@ -3633,9 +3422,6 @@
         "pressure_guard_bonus": 1
       },
       "control_income": {
-        "embergrain": 1
-      },
-      "claim_rewards": {
         "embergrain": 1
       },
       "live_resource_front": true,
@@ -3696,9 +3482,6 @@
       "control_income": {
         "peatwax": 1
       },
-      "claim_rewards": {
-        "peatwax": 1
-      },
       "live_resource_front": true,
       "rare_mine_resource": "peatwax",
       "overworld_sprite_asset_id": "mapobj_rare_peatwax_mine"
@@ -3755,9 +3538,6 @@
         "pressure_guard_bonus": 1
       },
       "control_income": {
-        "verdant_grafts": 1
-      },
-      "claim_rewards": {
         "verdant_grafts": 1
       },
       "live_resource_front": true,
@@ -3818,9 +3598,6 @@
       "control_income": {
         "brass_scrip": 1
       },
-      "claim_rewards": {
-        "brass_scrip": 1
-      },
       "live_resource_front": true,
       "rare_mine_resource": "brass_scrip",
       "overworld_sprite_asset_id": "mapobj_rare_brass_scrip_mine"
@@ -3877,9 +3654,6 @@
         "pressure_guard_bonus": 1
       },
       "control_income": {
-        "brass_scrip": 1
-      },
-      "claim_rewards": {
         "brass_scrip": 1
       },
       "live_resource_front": true,
@@ -3940,9 +3714,6 @@
       "control_income": {
         "memory_salt": 1
       },
-      "claim_rewards": {
-        "memory_salt": 1
-      },
       "live_resource_front": true,
       "rare_mine_resource": "memory_salt",
       "overworld_sprite_asset_id": "mapobj_rare_memory_salt_mine"
@@ -3952,59 +3723,20 @@
       "name": "Wind Press",
       "family": "support_producer",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
-      "persistent_control": true,
-      "claim_rewards": {
-        "gold": 90
-      },
-      "control_income": {
-        "gold": 25
-      },
-      "resource_outputs": [
-        {
-          "resource_id": "gold",
-          "cadence": "daily",
-          "amount": 25,
-          "requires_owner": true,
-          "starts_after_claim": true,
-          "route_link_id": "",
-          "weekly_day": 0,
-          "cap_per_week": 0
-        }
-      ],
-      "capture_profile": {
-        "capture_model": "capturable",
-        "counter_capture_value": 4,
-        "pillage_policy": "limited_stock",
-        "damaged_state_policy": "temporary_output_pause",
-        "retake_recovery_days": 2,
-        "defense_investment_ids": [],
-        "route_dependency_tags": [
-          "town_support",
-          "road_control"
-        ]
-      },
       "guard_profile": {
         "threat": "light",
         "encounter_palette_tags": [
           "support_producer",
           "town_influence"
         ],
-        "reward_tone": "support and common-resource throughput"
+        "reward_tone": "weekly visit payout"
       },
-      "town_support": {
-        "readiness_bonus": 1
-      },
-      "response_profile": {
-        "action_label": "Prime Wind Press",
-        "summary": "Press crews keep relay canvas, rope, and messenger seals ready.",
-        "movement_cost": 3,
-        "resource_cost": {
-          "gold": 100
-        },
-        "watch_days": 3,
-        "readiness_bonus": 1,
-        "quality_bonus": 0,
-        "recovery_relief": 0
+      "repeatable": true,
+      "visit_cooldown_days": 7,
+      "action_label": "Collect Pressings",
+      "service_summary": "The press grinds a week's harvest of rare stock for the next caller.",
+      "claim_rewards": {
+        "embergrain": 4
       }
     },
     {
@@ -4012,59 +3744,20 @@
       "name": "Saw Chain",
       "family": "support_producer",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
-      "persistent_control": true,
-      "claim_rewards": {
-        "gold": 90
-      },
-      "control_income": {
-        "wood": 1
-      },
-      "resource_outputs": [
-        {
-          "resource_id": "wood",
-          "cadence": "daily",
-          "amount": 1,
-          "requires_owner": true,
-          "starts_after_claim": true,
-          "route_link_id": "",
-          "weekly_day": 0,
-          "cap_per_week": 0
-        }
-      ],
-      "capture_profile": {
-        "capture_model": "capturable",
-        "counter_capture_value": 4,
-        "pillage_policy": "limited_stock",
-        "damaged_state_policy": "temporary_output_pause",
-        "retake_recovery_days": 2,
-        "defense_investment_ids": [],
-        "route_dependency_tags": [
-          "town_support",
-          "road_control"
-        ]
-      },
       "guard_profile": {
         "threat": "light",
         "encounter_palette_tags": [
           "support_producer",
           "town_influence"
         ],
-        "reward_tone": "support and common-resource throughput"
+        "reward_tone": "weekly visit payout"
       },
-      "town_support": {
-        "growth_bonus_percent": 4
-      },
-      "response_profile": {
-        "action_label": "Secure Saw Chain",
-        "summary": "Linked saw crews keep controlled yards supplied with straight-cut beams.",
-        "movement_cost": 3,
-        "resource_cost": {
-          "gold": 100
-        },
-        "watch_days": 3,
-        "readiness_bonus": 0,
-        "quality_bonus": 0,
-        "recovery_relief": 0
+      "repeatable": true,
+      "visit_cooldown_days": 7,
+      "action_label": "Collect Cut Timber",
+      "service_summary": "The saw chain stacks a week of cut timber by the road.",
+      "claim_rewards": {
+        "wood": 5
       }
     },
     {
@@ -4072,59 +3765,20 @@
       "name": "Tide Kiln",
       "family": "support_producer",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
-      "persistent_control": true,
-      "claim_rewards": {
-        "gold": 90
-      },
-      "control_income": {
-        "gold": 20
-      },
-      "resource_outputs": [
-        {
-          "resource_id": "gold",
-          "cadence": "daily",
-          "amount": 20,
-          "requires_owner": true,
-          "starts_after_claim": true,
-          "route_link_id": "",
-          "weekly_day": 0,
-          "cap_per_week": 0
-        }
-      ],
-      "capture_profile": {
-        "capture_model": "capturable",
-        "counter_capture_value": 4,
-        "pillage_policy": "limited_stock",
-        "damaged_state_policy": "temporary_output_pause",
-        "retake_recovery_days": 2,
-        "defense_investment_ids": [],
-        "route_dependency_tags": [
-          "town_support",
-          "road_control"
-        ]
-      },
       "guard_profile": {
         "threat": "light",
         "encounter_palette_tags": [
           "support_producer",
           "town_influence"
         ],
-        "reward_tone": "support and common-resource throughput"
+        "reward_tone": "weekly visit payout"
       },
-      "town_support": {
-        "recovery_relief": 1
-      },
-      "response_profile": {
-        "action_label": "Light Tide Kiln",
-        "summary": "Kiln tenders dry coastal stores and keep return routes serviceable.",
-        "movement_cost": 3,
-        "resource_cost": {
-          "gold": 100
-        },
-        "watch_days": 3,
-        "readiness_bonus": 0,
-        "quality_bonus": 0,
-        "recovery_relief": 1
+      "repeatable": true,
+      "visit_cooldown_days": 7,
+      "action_label": "Collect Kiln Sales",
+      "service_summary": "The kiln's weekly firing is sold off and the coin kept for the next visitor.",
+      "claim_rewards": {
+        "gold": 500
       }
     },
     {
@@ -4132,60 +3786,20 @@
       "name": "Orchard Levy Post",
       "family": "support_producer",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
-      "persistent_control": true,
-      "claim_rewards": {
-        "gold": 90
-      },
-      "control_income": {
-        "gold": 20
-      },
-      "resource_outputs": [
-        {
-          "resource_id": "gold",
-          "cadence": "daily",
-          "amount": 20,
-          "requires_owner": true,
-          "starts_after_claim": true,
-          "route_link_id": "",
-          "weekly_day": 0,
-          "cap_per_week": 0
-        }
-      ],
-      "capture_profile": {
-        "capture_model": "capturable",
-        "counter_capture_value": 4,
-        "pillage_policy": "limited_stock",
-        "damaged_state_policy": "temporary_output_pause",
-        "retake_recovery_days": 2,
-        "defense_investment_ids": [],
-        "route_dependency_tags": [
-          "town_support",
-          "road_control"
-        ]
-      },
       "guard_profile": {
         "threat": "light",
         "encounter_palette_tags": [
           "support_producer",
           "town_influence"
         ],
-        "reward_tone": "support and common-resource throughput"
+        "reward_tone": "weekly visit payout"
       },
-      "town_support": {
-        "readiness_bonus": 1,
-        "growth_bonus_percent": 3
-      },
-      "response_profile": {
-        "action_label": "Muster Orchard Levy",
-        "summary": "Local levy clerks rotate orchard watch crews and wagon teams.",
-        "movement_cost": 3,
-        "resource_cost": {
-          "gold": 100
-        },
-        "watch_days": 3,
-        "readiness_bonus": 1,
-        "quality_bonus": 0,
-        "recovery_relief": 0
+      "repeatable": true,
+      "visit_cooldown_days": 7,
+      "action_label": "Collect Orchard Levy",
+      "service_summary": "Orchard tenants leave a week's levy in coin at the post.",
+      "claim_rewards": {
+        "gold": 500
       }
     },
     {
@@ -4193,59 +3807,20 @@
       "name": "Smelter Annex",
       "family": "support_producer",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
-      "persistent_control": true,
-      "claim_rewards": {
-        "gold": 90
-      },
-      "control_income": {
-        "ore": 1
-      },
-      "resource_outputs": [
-        {
-          "resource_id": "ore",
-          "cadence": "daily",
-          "amount": 1,
-          "requires_owner": true,
-          "starts_after_claim": true,
-          "route_link_id": "",
-          "weekly_day": 0,
-          "cap_per_week": 0
-        }
-      ],
-      "capture_profile": {
-        "capture_model": "capturable",
-        "counter_capture_value": 4,
-        "pillage_policy": "limited_stock",
-        "damaged_state_policy": "temporary_output_pause",
-        "retake_recovery_days": 2,
-        "defense_investment_ids": [],
-        "route_dependency_tags": [
-          "town_support",
-          "road_control"
-        ]
-      },
       "guard_profile": {
         "threat": "light",
         "encounter_palette_tags": [
           "support_producer",
           "town_influence"
         ],
-        "reward_tone": "support and common-resource throughput"
+        "reward_tone": "weekly visit payout"
       },
-      "town_support": {
-        "quality_bonus": 1
-      },
-      "response_profile": {
-        "action_label": "Fire Smelter Annex",
-        "summary": "Annex crews sort usable bloom and reinforce armor stores.",
-        "movement_cost": 3,
-        "resource_cost": {
-          "gold": 100
-        },
-        "watch_days": 3,
-        "readiness_bonus": 0,
-        "quality_bonus": 1,
-        "recovery_relief": 0
+      "repeatable": true,
+      "visit_cooldown_days": 7,
+      "action_label": "Collect Smelted Ore",
+      "service_summary": "The annex banks a week of smelted ore for the next caller.",
+      "claim_rewards": {
+        "ore": 5
       }
     },
     {
@@ -4253,60 +3828,20 @@
       "name": "Charter Countinghouse",
       "family": "support_producer",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
-      "persistent_control": true,
-      "claim_rewards": {
-        "gold": 90
-      },
-      "control_income": {
-        "gold": 35
-      },
-      "resource_outputs": [
-        {
-          "resource_id": "gold",
-          "cadence": "daily",
-          "amount": 35,
-          "requires_owner": true,
-          "starts_after_claim": true,
-          "route_link_id": "",
-          "weekly_day": 0,
-          "cap_per_week": 0
-        }
-      ],
-      "capture_profile": {
-        "capture_model": "capturable",
-        "counter_capture_value": 4,
-        "pillage_policy": "limited_stock",
-        "damaged_state_policy": "temporary_output_pause",
-        "retake_recovery_days": 2,
-        "defense_investment_ids": [],
-        "route_dependency_tags": [
-          "town_support",
-          "road_control"
-        ]
-      },
       "guard_profile": {
         "threat": "light",
         "encounter_palette_tags": [
           "support_producer",
           "town_influence"
         ],
-        "reward_tone": "support and common-resource throughput"
+        "reward_tone": "weekly visit payout"
       },
-      "town_support": {
-        "readiness_bonus": 1,
-        "quality_bonus": 1
-      },
-      "response_profile": {
-        "action_label": "Audit Countinghouse",
-        "summary": "Charter clerks stabilize payrolls and pressure-road contracts.",
-        "movement_cost": 3,
-        "resource_cost": {
-          "gold": 100
-        },
-        "watch_days": 3,
-        "readiness_bonus": 1,
-        "quality_bonus": 1,
-        "recovery_relief": 0
+      "repeatable": true,
+      "visit_cooldown_days": 7,
+      "action_label": "Collect Tally Payout",
+      "service_summary": "Countinghouse clerks settle a week of road tolls in coin for whoever calls.",
+      "claim_rewards": {
+        "gold": 1000
       }
     },
     {
@@ -4315,9 +3850,6 @@
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 210
-      },
       "control_income": {
         "gold": 1000
       },
@@ -4374,10 +3906,6 @@
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
-      "claim_rewards": {
-        "ore": 2,
-        "gold": 90
-      },
       "control_income": {
         "ore": 2
       },
@@ -4434,10 +3962,6 @@
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
-      "claim_rewards": {
-        "wood": 2,
-        "gold": 80
-      },
       "control_income": {
         "wood": 2
       },
@@ -7034,12 +6558,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_saltpan_camp",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 70
-      },
-      "control_income": {
-        "gold": 25
-      },
       "claim_recruits": {
         "unit_neutral_saltpan_bucklers": 2,
         "unit_neutral_suncrack_throwers": 1
@@ -7115,12 +6633,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_greenbranch_copse",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 65
-      },
-      "control_income": {
-        "gold": 25
-      },
       "claim_recruits": {
         "unit_neutral_greenbranch_cudgels": 3,
         "unit_neutral_sapwhistle_callers": 1
@@ -7210,12 +6722,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_charcoal_burners",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 75
-      },
-      "control_income": {
-        "gold": 30
-      },
       "claim_recruits": {
         "unit_neutral_charcoal_mauls": 2,
         "unit_neutral_emberpack_lobbers": 1
@@ -7291,12 +6797,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_kite_signal_eyrie",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 80
-      },
-      "control_income": {
-        "gold": 30
-      },
       "claim_recruits": {
         "unit_neutral_kitehook_runners": 2,
         "unit_neutral_ridgeflare_shots": 1
@@ -7372,12 +6872,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_cliffhawk_roost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 130
-      },
-      "control_income": {
-        "gold": 45
-      },
       "claim_recruits": {
         "unit_neutral_cliffhawk_wardens": 4,
         "unit_neutral_windglass_slingers": 2
@@ -7462,12 +6956,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_crystal_sump",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 140
-      },
-      "control_income": {
-        "gold": 50
-      },
       "claim_recruits": {
         "unit_neutral_sumpstone_guards": 3,
         "unit_neutral_echodart_casts": 2
@@ -7554,12 +7042,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_cinder_kiln",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 150
-      },
-      "control_income": {
-        "gold": 50
-      },
       "claim_recruits": {
         "unit_neutral_kilnward_mallets": 4,
         "unit_neutral_cinderpot_hurlers": 2
@@ -7644,12 +7126,6 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_tidepool_skiffyard",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 180
-      },
-      "control_income": {
-        "gold": 55
-      },
       "claim_recruits": {
         "unit_neutral_tidepool_cutters": 4,
         "unit_neutral_reefbolt_crews": 2
@@ -10379,13 +9855,6 @@
       "name": "Ember Signal Brazier",
       "family": "faction_landmark",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 120,
-        "embergrain": 1
-      },
-      "control_income": {
-        "gold": 25
-      },
       "vision_radius": 3,
       "pressure_guard": 1,
       "response_profile": {
@@ -10447,13 +9916,6 @@
       "name": "Bog Drum Totem",
       "family": "faction_landmark",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 110,
-        "peatwax": 1
-      },
-      "control_income": {
-        "gold": 20
-      },
       "vision_radius": 2,
       "pressure_bonus": 1,
       "response_profile": {
@@ -10515,13 +9977,6 @@
       "name": "Prism Relay Lens",
       "family": "faction_landmark",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 100,
-        "aetherglass": 1
-      },
-      "control_income": {
-        "gold": 20
-      },
       "vision_radius": 4,
       "response_profile": {
         "action_label": "Align Relay",
@@ -10582,13 +10037,6 @@
       "name": "Thornwake Graft Arch",
       "family": "faction_landmark",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 100,
-        "verdant_grafts": 1
-      },
-      "control_income": {
-        "wood": 1
-      },
       "vision_radius": 2,
       "pressure_guard": 1,
       "response_profile": {
@@ -10651,13 +10099,6 @@
       "name": "Brasshollow Gauge Shrine",
       "family": "faction_landmark",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 130,
-        "brass_scrip": 1
-      },
-      "control_income": {
-        "gold": 35
-      },
       "vision_radius": 1,
       "pressure_bonus": 1,
       "response_profile": {
@@ -10720,13 +10161,6 @@
       "name": "Veilmourn Bell Mast",
       "family": "faction_landmark",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 100,
-        "memory_salt": 1
-      },
-      "control_income": {
-        "gold": 20
-      },
       "vision_radius": 3,
       "pressure_guard": 1,
       "response_profile": {
@@ -10829,14 +10263,6 @@
         "public_text_panel_required": false
       },
       "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
-      "claim_rewards": {
-        "gold": 120,
-        "wood": 2
-      },
-      "control_income": {
-        "gold": 25,
-        "wood": 1
-      },
       "vision_radius": 3,
       "action_label": "Secure Exchange",
       "summary": "The roadward company secures the grain locks and reopens the exchange ledger."
@@ -10886,14 +10312,6 @@
         "public_text_panel_required": false
       },
       "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
-      "claim_rewards": {
-        "gold": 100,
-        "wood": 1
-      },
-      "control_income": {
-        "gold": 20,
-        "wood": 1
-      },
       "vision_radius": 3,
       "action_label": "Bind Blackwater Shrine",
       "summary": "The company lights the reed lanterns and binds the low shrine to its supply line."
@@ -10943,14 +10361,6 @@
         "public_text_panel_required": false
       },
       "content_batch_id": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
-      "claim_rewards": {
-        "gold": 120,
-        "ore": 2
-      },
-      "control_income": {
-        "gold": 25,
-        "ore": 1
-      },
       "vision_radius": 4,
       "action_label": "Raise Prism Standard",
       "summary": "The company aligns the yard prism and raises a clear standard over the crystal works."
@@ -11622,14 +11032,6 @@
       "name": "Frontier Rare Exchange",
       "family": "mine",
       "persistent_control": true,
-      "claim_rewards": {
-        "aetherglass": 1,
-        "embergrain": 1,
-        "peatwax": 1,
-        "verdant_grafts": 1,
-        "brass_scrip": 1,
-        "memory_salt": 1
-      },
       "control_income": {
         "aetherglass": 4,
         "embergrain": 4,
@@ -11728,15 +11130,6 @@
       "name": "Orevein Assay Depot",
       "family": "mine",
       "persistent_control": true,
-      "claim_rewards": {
-        "ore": 1,
-        "aetherglass": 1,
-        "embergrain": 1,
-        "peatwax": 1,
-        "verdant_grafts": 1,
-        "brass_scrip": 1,
-        "memory_salt": 1
-      },
       "control_income": {
         "ore": 1,
         "aetherglass": 1,
@@ -11845,14 +11238,6 @@
       "name": "Bellwake Wreck Ledger",
       "family": "mine",
       "persistent_control": true,
-      "claim_rewards": {
-        "ore": 1,
-        "aetherglass": 1,
-        "embergrain": 1,
-        "peatwax": 1,
-        "verdant_grafts": 1,
-        "brass_scrip": 1
-      },
       "control_income": {
         "ore": 1,
         "aetherglass": 1,
@@ -11950,16 +11335,6 @@
       "name": "Generated Town Supply Cache",
       "family": "mine",
       "persistent_control": true,
-      "claim_rewards": {
-        "wood": 1,
-        "ore": 1,
-        "aetherglass": 1,
-        "embergrain": 1,
-        "peatwax": 1,
-        "verdant_grafts": 1,
-        "brass_scrip": 1,
-        "memory_salt": 1
-      },
       "control_income": {
         "aetherglass": 1,
         "embergrain": 1,
@@ -12121,16 +11496,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_cinderwake_fold",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 320,
-        "ore": 2
-      },
       "claim_flags": {
         "cinderwake_fold_claimed": true
-      },
-      "control_income": {
-        "gold": 90,
-        "ore": 1
       },
       "claim_recruits": {
         "unit_neutral_cinderwake_aurochs": 1,
@@ -12219,16 +11586,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_tideglass_roost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 360,
-        "wood": 2
-      },
       "claim_flags": {
         "tideglass_roost_claimed": true
-      },
-      "control_income": {
-        "gold": 105,
-        "wood": 1
       },
       "claim_recruits": {
         "unit_neutral_tideglass_skyrays": 1,
@@ -12317,8 +11676,7 @@
       "persistent_control": true,
       "summary": "A neutral traveling desk where road claims become witnessed testimony only after the local frontier watch is broken.",
       "claim_rewards": {
-        "experience": 140,
-        "gold": 90
+        "experience": 140
       },
       "claim_flags": {
         "pactwright_waydesk_witnessed": true
@@ -12362,8 +11720,7 @@
       "persistent_control": true,
       "summary": "Two reed-bound siltglass tablets hold the foreclosure tally until Brakka gives the mire an independent counterseal.",
       "claim_rewards": {
-        "experience": 160,
-        "gold": 80
+        "experience": 160
       },
       "claim_flags": {
         "mireglass_siltglass_index_countersealed": true
@@ -12404,8 +11761,7 @@
       "persistent_control": true,
       "summary": "A root-touched crystal lens accepts a second meridian only after Dovan clears the survey line.",
       "claim_rewards": {
-        "experience": 160,
-        "gold": 80
+        "experience": 160
       },
       "claim_flags": {
         "mireglass_greenline_lens_countersealed": true
@@ -12446,8 +11802,7 @@
       "persistent_control": true,
       "summary": "A woven reed wheel holds an ember vow that Nix can temper without consuming its older ferry promise.",
       "claim_rewards": {
-        "experience": 160,
-        "gold": 80
+        "experience": 160
       },
       "claim_flags": {
         "mireglass_reedflame_frame_countersealed": true
@@ -12488,8 +11843,7 @@
       "persistent_control": true,
       "summary": "Three pale arches sound a drowned reflection through one suspended prism after Ilyr turns the battery.",
       "claim_rewards": {
-        "experience": 160,
-        "gold": 80
+        "experience": 160
       },
       "claim_flags": {
         "mireglass_ossuary_prism_countersealed": true
@@ -12530,8 +11884,7 @@
       "persistent_control": true,
       "summary": "A luminous fungal bell answers a peat-dark bowl once Edda secures the croft watch.",
       "claim_rewards": {
-        "experience": 160,
-        "gold": 80
+        "experience": 160
       },
       "claim_flags": {
         "mireglass_glowcap_bell_countersealed": true
@@ -12572,8 +11925,7 @@
       "persistent_control": true,
       "summary": "Two opposed kite vanes and hanging weights carry the complete counterpoint after Essa clears the eyrie watch.",
       "claim_rewards": {
-        "experience": 160,
-        "gold": 80
+        "experience": 160
       },
       "claim_flags": {
         "mireglass_kite_countermast_countersealed": true
@@ -12845,16 +12197,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_galehorn_windfold",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 360,
-        "ore": 2
-      },
       "claim_flags": {
         "galehorn_windfold_claimed": true
-      },
-      "control_income": {
-        "gold": 100,
-        "ore": 1
       },
       "claim_recruits": {
         "unit_neutral_galehorn_striders": 1,
@@ -12943,16 +12287,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_sunscale_lantern_conservatory",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 390,
-        "ore": 2
-      },
       "claim_flags": {
         "sunscale_lantern_conservatory_claimed": true
-      },
-      "control_income": {
-        "gold": 115,
-        "ore": 1
       },
       "claim_recruits": {
         "unit_neutral_sunscale_lanternmoths": 1,
@@ -13041,16 +12377,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_rimebell_whitewake_eyrie",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 430,
-        "wood": 2
-      },
       "claim_flags": {
         "rimebell_whitewake_eyrie_claimed": true
-      },
-      "control_income": {
-        "gold": 125,
-        "wood": 1
       },
       "claim_recruits": {
         "unit_neutral_rimebell_skyrakers": 1,
@@ -13139,16 +12467,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_deepforge_seventh_vault",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 520,
-        "ore": 3
-      },
       "claim_flags": {
         "deepforge_seventh_vault_claimed": true
-      },
-      "control_income": {
-        "gold": 145,
-        "ore": 1
       },
       "claim_recruits": {
         "unit_neutral_deepforge_vaultwyrms": 1,
@@ -13237,16 +12557,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_ashcrown_cinderfold",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 440,
-        "embergrain": 1
-      },
       "claim_flags": {
         "ashcrown_cinderfold_claimed": true
-      },
-      "control_income": {
-        "gold": 120,
-        "embergrain": 1
       },
       "claim_recruits": {
         "unit_neutral_ashcrown_kilnelk": 1,
@@ -13346,16 +12658,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_miremoon_crownmere",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 460,
-        "peatwax": 1
-      },
       "claim_flags": {
         "miremoon_crownmere_claimed": true
-      },
-      "control_income": {
-        "gold": 125,
-        "peatwax": 1
       },
       "claim_recruits": {
         "unit_neutral_miremoon_crownmaws": 1,
@@ -13455,16 +12759,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_noonshard_prism_aviary",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 470,
-        "aetherglass": 1
-      },
       "claim_flags": {
         "noonshard_prism_aviary_claimed": true
-      },
-      "control_income": {
-        "gold": 130,
-        "aetherglass": 1
       },
       "claim_recruits": {
         "unit_neutral_noonshard_prism_kites": 1,
@@ -13564,16 +12860,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_rootvault_heartwood_hollow",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 600,
-        "verdant_grafts": 2
-      },
       "claim_flags": {
         "rootvault_heartwood_hollow_claimed": true
-      },
-      "control_income": {
-        "gold": 160,
-        "verdant_grafts": 1
       },
       "claim_recruits": {
         "unit_neutral_rootvault_barkhulks": 1,
@@ -13673,16 +12961,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_quenchbell_pressure_den",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 620,
-        "brass_scrip": 2
-      },
       "claim_flags": {
         "quenchbell_pressure_den_claimed": true
-      },
-      "control_income": {
-        "gold": 165,
-        "brass_scrip": 1
       },
       "claim_recruits": {
         "unit_neutral_quenchbell_ironbacks": 1,
@@ -13782,16 +13062,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_saltwake_belldeep",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 610,
-        "memory_salt": 2
-      },
       "claim_flags": {
         "saltwake_belldeep_claimed": true
-      },
-      "control_income": {
-        "gold": 160,
-        "memory_salt": 1
       },
       "claim_recruits": {
         "unit_neutral_saltwake_bellwhales": 1,
@@ -13891,16 +13163,8 @@
       "dwelling_scope": "faction_linked",
       "faction_id": "faction_embercourt",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 120,
-        "ore": 1
-      },
       "claim_flags": {
         "stormseal_powder_wharf_claimed": true
-      },
-      "control_income": {
-        "gold": 45,
-        "ore": 1
       },
       "claim_recruits": {
         "unit_embercourt_cinderseal_bombardiers": 1
@@ -13947,16 +13211,8 @@
       "dwelling_scope": "faction_linked",
       "faction_id": "faction_mireclaw",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 90,
-        "peatwax": 1
-      },
       "claim_flags": {
         "moonwax_reed_circle_claimed": true
-      },
-      "control_income": {
-        "gold": 30,
-        "peatwax": 1
       },
       "claim_recruits": {
         "unit_mireclaw_mireglass_reedcasters": 2
@@ -14002,16 +13258,8 @@
       "dwelling_scope": "faction_linked",
       "faction_id": "faction_sunvault",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 110,
-        "aetherglass": 1
-      },
       "claim_flags": {
         "facet_vigil_claimed": true
-      },
-      "control_income": {
-        "gold": 40,
-        "aetherglass": 1
       },
       "claim_recruits": {
         "unit_sunvault_noonfacet_sentinels": 2
@@ -14058,16 +13306,8 @@
       "dwelling_scope": "faction_linked",
       "faction_id": "faction_thornwake",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 80,
-        "wood": 2
-      },
       "claim_flags": {
         "heartseed_bolt_grove_claimed": true
-      },
-      "control_income": {
-        "gold": 25,
-        "wood": 1
       },
       "claim_recruits": {
         "unit_thornwake_dawnseed_bolters": 2
@@ -14113,16 +13353,8 @@
       "dwelling_scope": "faction_linked",
       "faction_id": "faction_brasshollow",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 130,
-        "ore": 2
-      },
       "claim_flags": {
         "blackbell_assay_watch_claimed": true
-      },
-      "control_income": {
-        "gold": 35,
-        "ore": 1
       },
       "claim_recruits": {
         "unit_brasshollow_gaugeplate_bailiffs": 2
@@ -14169,16 +13401,8 @@
       "dwelling_scope": "faction_linked",
       "faction_id": "faction_veilmourn",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 100,
-        "memory_salt": 1
-      },
       "claim_flags": {
         "last_memory_mooring_claimed": true
-      },
-      "control_income": {
-        "gold": 35,
-        "memory_salt": 1
       },
       "claim_recruits": {
         "unit_veilmourn_tidehook_deckhands": 5
@@ -15245,16 +14469,8 @@
       "family": "faction_outpost",
       "faction_id": "faction_embercourt",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 240,
-        "embergrain": 1
-      },
       "claim_flags": {
         "locklantern_relay_claimed": true
-      },
-      "control_income": {
-        "gold": 55,
-        "embergrain": 1
       },
       "response_profile": {
         "action_label": "Raise the Locklantern Train",
@@ -15297,16 +14513,8 @@
       "family": "faction_outpost",
       "faction_id": "faction_mireclaw",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 240,
-        "peatwax": 1
-      },
       "claim_flags": {
         "antlerraft_relay_claimed": true
-      },
-      "control_income": {
-        "gold": 55,
-        "peatwax": 1
       },
       "response_profile": {
         "action_label": "Loose the Antlerraft Train",
@@ -15349,16 +14557,8 @@
       "family": "faction_outpost",
       "faction_id": "faction_sunvault",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 240,
-        "aetherglass": 1
-      },
       "claim_flags": {
         "prismwheel_relay_claimed": true
-      },
-      "control_income": {
-        "gold": 55,
-        "aetherglass": 1
       },
       "response_profile": {
         "action_label": "Turn the Prismwheel Train",
@@ -15401,16 +14601,8 @@
       "family": "faction_outpost",
       "faction_id": "faction_thornwake",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 240,
-        "verdant_grafts": 1
-      },
       "claim_flags": {
         "seedcart_relay_claimed": true
-      },
-      "control_income": {
-        "gold": 55,
-        "verdant_grafts": 1
       },
       "response_profile": {
         "action_label": "Lower the Seedcart Train",
@@ -15453,16 +14645,8 @@
       "family": "faction_outpost",
       "faction_id": "faction_brasshollow",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 240,
-        "brass_scrip": 1
-      },
       "claim_flags": {
         "quenchrail_relay_claimed": true
-      },
-      "control_income": {
-        "gold": 55,
-        "brass_scrip": 1
       },
       "response_profile": {
         "action_label": "Clear the Quenchrail Train",
@@ -15505,16 +14689,8 @@
       "family": "faction_outpost",
       "faction_id": "faction_veilmourn",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 240,
-        "memory_salt": 1
-      },
       "claim_flags": {
         "wakeglass_relay_claimed": true
-      },
-      "control_income": {
-        "gold": 55,
-        "memory_salt": 1
       },
       "response_profile": {
         "action_label": "Sound the Wakeglass Train",
@@ -15772,14 +14948,6 @@
       "name": "Rainwrit Ledger Brazier",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 300,
-        "embergrain": 1
-      },
-      "control_income": {
-        "gold": 350,
-        "embergrain": 1
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_embercourt",
@@ -15818,14 +14986,6 @@
       "name": "Reedbarrow Tally Drum",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 300,
-        "peatwax": 1
-      },
-      "control_income": {
-        "gold": 350,
-        "peatwax": 1
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_mireclaw",
@@ -15864,14 +15024,6 @@
       "name": "Meridian Prism Ledger",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 300,
-        "aetherglass": 1
-      },
-      "control_income": {
-        "gold": 350,
-        "aetherglass": 1
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_sunvault",
@@ -15910,14 +15062,6 @@
       "name": "Crownroot Seed-Tithe Arbor",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 300,
-        "verdant_grafts": 1
-      },
-      "control_income": {
-        "gold": 350,
-        "verdant_grafts": 1
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_thornwake",
@@ -15956,14 +15100,6 @@
       "name": "Blackbell Counterwheel",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 300,
-        "brass_scrip": 1
-      },
-      "control_income": {
-        "gold": 350,
-        "brass_scrip": 1
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_brasshollow",
@@ -16002,14 +15138,6 @@
       "name": "Pale Sounding Wake Ledger",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 300,
-        "memory_salt": 1
-      },
-      "control_income": {
-        "gold": 350,
-        "memory_salt": 1
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_veilmourn",
@@ -16048,13 +15176,6 @@
       "name": "Three-Writ Border Standard",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 250,
-        "embergrain": 1
-      },
-      "control_income": {
-        "gold": 100
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_embercourt",
@@ -16093,13 +15214,6 @@
       "name": "Fenhook Border Standard",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 250,
-        "peatwax": 1
-      },
-      "control_income": {
-        "gold": 100
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_mireclaw",
@@ -16138,13 +15252,6 @@
       "name": "Trifold Prism Border Standard",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 250,
-        "aetherglass": 1
-      },
-      "control_income": {
-        "gold": 100
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_sunvault",
@@ -16183,13 +15290,6 @@
       "name": "Three-Seed Border Standard",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 250,
-        "verdant_grafts": 1
-      },
-      "control_income": {
-        "gold": 100
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_thornwake",
@@ -16228,13 +15328,6 @@
       "name": "Tripgauge Border Standard",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 250,
-        "brass_scrip": 1
-      },
-      "control_income": {
-        "gold": 100
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_brasshollow",
@@ -16273,13 +15366,6 @@
       "name": "Three-Wake Border Standard",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 250,
-        "memory_salt": 1
-      },
-      "control_income": {
-        "gold": 100
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_veilmourn",
@@ -16980,16 +16066,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_brambleback_hedgecourt",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 520,
-        "embergrain": 1
-      },
       "claim_flags": {
         "brambleback_hedgecourt_claimed": true
-      },
-      "control_income": {
-        "gold": 145,
-        "embergrain": 1
       },
       "claim_recruits": {
         "unit_neutral_brambleback_knucklebears": 2,
@@ -17078,16 +16156,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_mireglass_bellfen",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 520,
-        "peatwax": 1
-      },
       "claim_flags": {
         "mireglass_bellfen_claimed": true
-      },
-      "control_income": {
-        "gold": 145,
-        "peatwax": 1
       },
       "claim_recruits": {
         "unit_neutral_mireglass_belltoads": 2,
@@ -17176,16 +16246,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_windcairn_wayhouse",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 520,
-        "aetherglass": 1
-      },
       "claim_flags": {
         "windcairn_wayhouse_claimed": true
-      },
-      "control_income": {
-        "gold": 145,
-        "aetherglass": 1
       },
       "claim_recruits": {
         "unit_neutral_cairnshield_porters": 5,
@@ -17274,16 +16336,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_sapwhistle_greenward",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 520,
-        "verdant_grafts": 1
-      },
       "claim_flags": {
         "sapwhistle_greenward_claimed": true
-      },
-      "control_income": {
-        "gold": 145,
-        "verdant_grafts": 1
       },
       "claim_recruits": {
         "unit_neutral_greenbranch_cudgels": 10,
@@ -17372,16 +16426,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_scarshield_breakyard",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 520,
-        "brass_scrip": 1
-      },
       "claim_flags": {
         "scarshield_breakyard_claimed": true
-      },
-      "control_income": {
-        "gold": 145,
-        "brass_scrip": 1
       },
       "claim_recruits": {
         "unit_neutral_scarshield_veterans": 5,
@@ -17470,16 +16516,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_flaremast_pilotage",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 520,
-        "memory_salt": 1
-      },
       "claim_flags": {
         "flaremast_pilotage_claimed": true
-      },
-      "control_income": {
-        "gold": 145,
-        "memory_salt": 1
       },
       "claim_recruits": {
         "unit_neutral_harbor_polearms": 10,
@@ -17566,13 +16604,6 @@
       "name": "Tollmoon Claim Post",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 300,
-        "embergrain": 1
-      },
-      "control_income": {
-        "gold": 110
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_mireclaw",
@@ -17611,13 +16642,6 @@
       "name": "Facetline Duel Standard",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 300,
-        "peatwax": 1
-      },
-      "control_income": {
-        "gold": 110
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_sunvault",
@@ -17656,13 +16680,6 @@
       "name": "Greenbarrow Recovery Mark",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 300,
-        "aetherglass": 1
-      },
-      "control_income": {
-        "gold": 110
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_thornwake",
@@ -17701,13 +16718,6 @@
       "name": "Bellfounder Siege Gauge",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 300,
-        "verdant_grafts": 1
-      },
-      "control_income": {
-        "gold": 110
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_brasshollow",
@@ -17746,13 +16756,6 @@
       "name": "Vanehook Wake Pennant",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 300,
-        "brass_scrip": 1
-      },
-      "control_income": {
-        "gold": 110
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_veilmourn",
@@ -17791,13 +16794,6 @@
       "name": "Pikeward Charter Fork",
       "family": "faction_outpost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 300,
-        "memory_salt": 1
-      },
-      "control_income": {
-        "gold": 110
-      },
       "vision_radius": 3,
       "pressure_guard": 2,
       "faction_id": "faction_embercourt",
@@ -17838,16 +16834,8 @@
       "dwelling_scope": "faction_linked",
       "faction_id": "faction_embercourt",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 180,
-        "embergrain": 1
-      },
       "claim_flags": {
         "ashcharter_veteran_muster_claimed": true
-      },
-      "control_income": {
-        "gold": 40,
-        "embergrain": 1
       },
       "claim_recruits": {
         "unit_embercourt_lantern_sappers": 4,
@@ -17906,16 +16894,8 @@
       "dwelling_scope": "faction_linked",
       "faction_id": "faction_mireclaw",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 180,
-        "peatwax": 1
-      },
       "claim_flags": {
         "gorefenring_veteran_muster_claimed": true
-      },
-      "control_income": {
-        "gold": 40,
-        "peatwax": 1
       },
       "claim_recruits": {
         "unit_mireclaw_ferrychain_lashers": 2,
@@ -17971,16 +16951,8 @@
       "dwelling_scope": "faction_linked",
       "faction_id": "faction_sunvault",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 180,
-        "aetherglass": 1
-      },
       "claim_flags": {
         "daybreakprism_veteran_muster_claimed": true
-      },
-      "control_income": {
-        "gold": 40,
-        "aetherglass": 1
       },
       "claim_recruits": {
         "unit_sunvault_mirror_duelists": 3,
@@ -18036,16 +17008,8 @@
       "dwelling_scope": "faction_linked",
       "faction_id": "faction_thornwake",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 180,
-        "verdant_grafts": 1
-      },
       "claim_flags": {
         "fivebough_veteran_muster_claimed": true
-      },
-      "control_income": {
-        "gold": 40,
-        "verdant_grafts": 1
       },
       "claim_recruits": {
         "unit_thornwake_pollenhook_whistlers": 6,
@@ -18110,16 +17074,8 @@
       "dwelling_scope": "faction_linked",
       "faction_id": "faction_brasshollow",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 180,
-        "brass_scrip": 1
-      },
       "claim_flags": {
         "threegauge_veteran_muster_claimed": true
-      },
-      "control_income": {
-        "gold": 40,
-        "brass_scrip": 1
       },
       "claim_recruits": {
         "unit_brasshollow_quenchspool_slingers": 4,
@@ -18178,16 +17134,8 @@
       "dwelling_scope": "faction_linked",
       "faction_id": "faction_veilmourn",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 180,
-        "memory_salt": 1
-      },
       "claim_flags": {
         "fogkeel_veteran_muster_claimed": true
-      },
-      "control_income": {
-        "gold": 40,
-        "memory_salt": 1
       },
       "claim_recruits": {
         "unit_veilmourn_wakechain_boarders": 3,
@@ -19948,16 +18896,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_cindervane_updraft_roost",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 500,
-        "embergrain": 1
-      },
       "claim_flags": {
         "cindervane_updraft_roost_claimed": true
-      },
-      "control_income": {
-        "gold": 130,
-        "embergrain": 1
       },
       "claim_recruits": {
         "unit_neutral_cindervane_censerwings": 1,
@@ -20046,16 +18986,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_fenmirror_shell_basin",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 500,
-        "peatwax": 1
-      },
       "claim_flags": {
         "fenmirror_shell_basin_claimed": true
-      },
-      "control_income": {
-        "gold": 130,
-        "peatwax": 1
       },
       "claim_recruits": {
         "unit_neutral_fenmirror_gallowshells": 1,
@@ -20144,16 +19076,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_prismwake_refraction_shelf",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 500,
-        "aetherglass": 1
-      },
       "claim_flags": {
         "prismwake_refraction_shelf_claimed": true
-      },
-      "control_income": {
-        "gold": 130,
-        "aetherglass": 1
       },
       "claim_recruits": {
         "unit_neutral_prismwake_raylings": 1,
@@ -20242,16 +19166,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_knotstag_root_court",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 500,
-        "verdant_grafts": 1
-      },
       "claim_flags": {
         "knotstag_root_court_claimed": true
-      },
-      "control_income": {
-        "gold": 130,
-        "verdant_grafts": 1
       },
       "claim_recruits": {
         "unit_neutral_rootcrown_knotstags": 1,
@@ -20340,16 +19256,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_gaugecoil_pressure_burrow",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 500,
-        "brass_scrip": 1
-      },
       "claim_flags": {
         "gaugecoil_pressure_burrow_claimed": true
-      },
-      "control_income": {
-        "gold": 130,
-        "brass_scrip": 1
       },
       "claim_recruits": {
         "unit_neutral_gaugecoil_orewyrms": 1,
@@ -20438,16 +19346,8 @@
       "dwelling_scope": "neutral",
       "neutral_dwelling_family_id": "neutral_dwelling_gloambell_sounding_deep",
       "persistent_control": true,
-      "claim_rewards": {
-        "gold": 500,
-        "memory_salt": 1
-      },
       "claim_flags": {
         "gloambell_sounding_deep_claimed": true
-      },
-      "control_income": {
-        "gold": 130,
-        "memory_salt": 1
       },
       "claim_recruits": {
         "unit_neutral_gloambell_wake_mantas": 1,
