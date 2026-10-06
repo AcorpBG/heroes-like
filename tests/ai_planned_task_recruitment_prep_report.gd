@@ -5,7 +5,9 @@ const SCENARIO_ID := "river-pass"
 const FACTION_ID := "faction_mireclaw"
 const DUSKFEN := "duskfen_bastion"
 const PREP_UNIT := "unit_bog_brute"
-const MARKET_WOOD_UNIT := "unit_mireclaw_mudglass_slingers"
+# Only T7 units cost a faction rare on top of gold; the market imports it.
+const MARKET_RARE_UNIT := "unit_mireclaw_drowned_antler_sovereign"
+const MARKET_RARE := "peatwax"
 const TREASURY := {
 	"gold": 16000,
 	"wood": 24,
@@ -1624,7 +1626,7 @@ func _market_backed_recruitment_covers_unit_material_cost() -> Dictionary:
 	var session = _base_session()
 	var config := _enemy_config()
 	var treasury := {
-		"gold": 2000,
+		"gold": 9000,
 		"wood": 0,
 		"ore": 0,
 		"aetherglass": 0,
@@ -1636,36 +1638,41 @@ func _market_backed_recruitment_covers_unit_material_cost() -> Dictionary:
 	}
 	_prepare_market_recruiting_town(session)
 	var town := _town_by_id(session, DUSKFEN)
-	var direct_count := EnemyTurnRules._max_affordable_from_pool(treasury, ContentService.get_unit(MARKET_WOOD_UNIT).get("cost", {}))
+	var unit_cost := EnemyTurnRules._enemy_recruit_cost(town, MARKET_RARE_UNIT)
+	var rare_price := int(unit_cost.get(MARKET_RARE, 0))
+	if rare_price <= 0:
+		_fail("Market recruitment fixture expected %s to cost %s: %s" % [MARKET_RARE_UNIT, MARKET_RARE, JSON.stringify(unit_cost)])
+		return {}
+	var direct_count := EnemyTurnRules._max_affordable_from_pool(treasury, unit_cost)
 	if direct_count != 0:
 		_fail("Market recruitment fixture expected direct raw-stock affordability to be zero, got %d" % direct_count)
 		return {}
 	var report := EnemyTurnRules.town_recruitment_pressure_report(session, config, town, treasury.duplicate(true), FACTION_ID)
 	var selected: Dictionary = report.get("selected_recruitment", {}) if report.get("selected_recruitment", {}) is Dictionary else {}
-	if String(selected.get("unit_id", "")) != MARKET_WOOD_UNIT or int(selected.get("recruit_count", 0)) <= 0:
+	if String(selected.get("unit_id", "")) != MARKET_RARE_UNIT or int(selected.get("recruit_count", 0)) <= 0:
 		_fail("Recruitment pressure report did not treat market-backed unit as affordable: %s" % JSON.stringify(report))
 		return {}
 	var recruit_result := EnemyTurnRules._recruit_town_forces(session, config, town, treasury, FACTION_ID)
 	var recruited_town: Dictionary = recruit_result.get("town", {}) if recruit_result.get("town", {}) is Dictionary else {}
-	var recruited_count := _garrison_count(recruited_town, MARKET_WOOD_UNIT)
+	var recruited_count := _garrison_count(recruited_town, MARKET_RARE_UNIT)
 	if recruited_count <= 0:
-		_fail("Market-backed recruitment did not add wood-cost units to the garrison: %s" % JSON.stringify(recruit_result))
+		_fail("Market-backed recruitment did not add rare-cost units to the garrison: %s" % JSON.stringify(recruit_result))
 		return {}
 	var market_usage: Dictionary = recruited_town.get("market_usage", {}) if recruited_town.get("market_usage", {}) is Dictionary else {}
 	var buy_usage: Dictionary = market_usage.get("buy", {}) if market_usage.get("buy", {}) is Dictionary else {}
-	if int(buy_usage.get("wood", 0)) < recruited_count:
-		_fail("Market-backed recruitment did not consume wood buy cap: count=%d usage=%s" % [recruited_count, JSON.stringify(market_usage)])
+	if int(buy_usage.get(MARKET_RARE, 0)) < recruited_count * rare_price:
+		_fail("Market-backed recruitment did not consume the rare import allowance: count=%d usage=%s" % [recruited_count, JSON.stringify(market_usage)])
 		return {}
-	if int(treasury.get("wood", 0)) != 0:
-		_fail("Market-backed recruitment should spend bought wood immediately, treasury=%s" % JSON.stringify(treasury))
+	if int(treasury.get(MARKET_RARE, 0)) != 0:
+		_fail("Market-backed recruitment should spend imported rare stock immediately, treasury=%s" % JSON.stringify(treasury))
 		return {}
 	return {
 		"case_id": "market_backed_recruitment_covers_unit_material_cost",
-		"unit_id": MARKET_WOOD_UNIT,
+		"unit_id": MARKET_RARE_UNIT,
 		"direct_affordable_count": direct_count,
 		"reported_recruit_count": int(selected.get("recruit_count", 0)),
 		"actual_recruited_count": recruited_count,
-		"market_buy_wood": int(buy_usage.get("wood", 0)),
+		"market_buy_rare": int(buy_usage.get(MARKET_RARE, 0)),
 		"gold_after": int(treasury.get("gold", 0)),
 	}
 
@@ -1968,9 +1975,9 @@ func _prepare_critical_recruiting_town(session) -> void:
 
 func _prepare_market_recruiting_town(session) -> void:
 	_update_duskfen_town(session, {
-		"built_buildings": ["building_town_hall", "building_market_square"],
+		"built_buildings": ["building_town_hall", "building_market_square", "building_dev_trade_exchange"],
 		"garrison": [],
-		"available_recruits": {MARKET_WOOD_UNIT: 2},
+		"available_recruits": {MARKET_RARE_UNIT: 2},
 		"market_usage": {},
 	})
 

@@ -213,11 +213,13 @@ Examples:
 
 Recruitment should force roster choices without making low-tier recovery impossible.
 
-- Tier 1 and 2 units should mostly cost gold and one common staple only when faction identity demands it.
-- Tier 3 and 4 introduce faction resources in light amounts.
-- Tier 5 and 6 require a meaningful faction resource or construction material.
-- Tier 7 requires rare resource pressure and should make site control matter.
-- Neutral dwellings should use gold plus local resource flavor, but should not undercut faction identity.
+Owner rule, 2026-10-06 (`content-gold-only-unit-costs-20261006`), replacing the earlier tiered material mix:
+
+- Tier 1 to 6 units, base and upgraded, cost gold only.
+- Tier 7 units cost gold plus their faction's main rare resource (`town_resources.main`); that rare is the only non-gold unit cost and makes site control and rare imports matter.
+- No unit costs wood or ore. Wood and ore stay construction materials.
+- Neutral units follow the same tiers: tier 1 to 6 gold only, tier 7 gold plus one local rare.
+- Faction resource pressure otherwise lives in building costs (tier 5+ dwellings and upgrades), not in recruitment.
 - Some factions can have non-cost recruitment constraints: route link, recent salvage, den control, root network maturity, relay readiness, repair window.
 
 Recruitment scarcity should shape play but not create unwinnable starts. Campaign and skirmish starts need minimum viable opening paths for each faction.

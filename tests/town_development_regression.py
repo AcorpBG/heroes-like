@@ -114,12 +114,15 @@ func run():
 			var row:Dictionary=roster.filter(func(r):return r.tier==tier)[0]
 			var rare:String=resource.secondary if tier==6 else resource.main
 			var b:=ContentService.get_building(row.building_id)
-			check(b.cost.has(rare) and ContentService.get_unit(row.unit_id).cost.has(rare),"wrong T6/T7 cost resource")
+			# Units cost only gold through T6; only T7 adds its faction's main rare.
+			var unit_cost:Dictionary=ContentService.get_unit(row.unit_id).cost
+			check(b.cost.has(rare),"wrong T6/T7 building cost resource")
+			check(unit_cost.keys()==(["gold",rare] if tier==7 else ["gold"]),"wrong T6/T7 unit cost resources")
 			var reserve:int=s.overworld.resources[rare];s.overworld.resources[rare]=0;s.day+=1
 			check(not Rules.build_in_active_town(s,row.building_id).get("ok",false),"building ignores rare cost")
 			s.overworld.resources[rare]=reserve;t=build(s,row.building_id)
 			reserve=s.overworld.resources[rare];s.overworld.resources[rare]=0
-			check(not Rules.recruit_in_active_town(s,row.unit_id,1).get("ok",false),"recruit ignores rare cost")
+			check(Rules.recruit_in_active_town(s,row.unit_id,1).get("ok",false)==(tier==6),"recruit rare cost mismatch")
 			s.overworld.resources[rare]=reserve;t=build(s,row.upgrade_building_id)
 		check(Enemy._normalized_built_buildings(t)==Dev.active_buildings(t),"AI stage interpretation differs")
 		var before_growth:Dictionary=t.available_recruits.duplicate(true)

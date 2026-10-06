@@ -113972,6 +113972,22 @@
       "updatedAt": "2026-10-06T06:00:00Z",
       "purpose": "Owner direction 2026-10-05: streamline map economy objects to the HoMM model. Only mines pay daily income, no capture or recapture bonus, weekly producers instead of 20-35 gold/day buildings, varied random-map pickups and spell scrolls, Wood Wagon and Ore Crates off random maps.",
       "notes": "Content: dwellings, landmarks, watchtowers and outposts lose control_income and claim_rewards; mines and rare mines lose claim_rewards; six support producers are free 7-day visit sites; Wood Wagon/Ore Crates are one-time pickups; new sites Verdant Graft Bundle, Brass Scrip Case (original sprites), Wayfarer Camp Cache, Spell Scroll. Rules: ResourceNodePayloadRules gives per-placement payloads and pays a persistent site's claim payload once per placement (player and AI). Random maps: GeneratedRewardRules translates HoMM3 reward/economy types with HoMM amounts, chest tiers, campfire hauls, tiered scroll spells and a six-way rare spread from a stable placement hash; eligibility pools move non-resource HoMM objects to visit sites, Corpse/Survivor to uncommon artifacts, Derelict Ship/Shipwreck to guarded sites, Water Wheel/Windmill/Mystical Garden to the weekly-producer pool. No native code or RNG change. New tests/pickups_income_rules_report passes; native_rmg_end_to_end_runtime_boundary_report, native_random_map_homm3_re_object_table_proxy_report, neutral_dwelling_claimed_landmark_report, ai_known_world_memory_report pass on Windows. economy_capture_income_expansion_report and map_editor_smoke were updated and now stop at the same pre-existing failures as main; core_systems_regression_smoke, overworld_visual_smoke, footprint, corpus, save-replay, disk-startup, materialization, art-coverage, eight-dwelling and six-service reports fail identically on main. validate_repo: only checks listed in docs/authored-scenarios-obsolete.md fail (697, authored runways and catalog totals). No Linux run (GDScript/content only)."
+    },
+    {
+      "id": "content-gold-only-unit-costs-20261006",
+      "title": "Gold-only unit recruitment costs",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "owner_directed_content_and_rules_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/economy-overhaul-foundation.md"
+      ],
+      "createdAt": "2026-10-06T06:40:00Z",
+      "updatedAt": "2026-10-06T07:40:00Z",
+      "purpose": "Owner direction 2026-10-06: town units cost only gold for tiers 1-6, only the tier 7 unit costs a faction resource, and no unit costs wood or ore.",
+      "notes": "Content: 147 of 232 unit costs in content/units.json changed; gold amounts unchanged. Tier 1-6 units (base and upgraded) cost gold only; the twelve faction tier 7 units keep gold plus 2 of their faction's main rare (already their only extra cost); neutral units follow the same tiers, so Deepforge Vaultwyrms drop 3 ore and keep 1 brass scrip. Upgrade costs follow because they are cost deltas. No rules code changed: recruitment, AI and market coverage read costs generically. tests/validate_repo.py gains validate_gold_only_unit_costs and two pinned elite-neutral costs; town_development_regression now expects T6 units to recruit without their secondary rare and T7 units to need their main rare; the AI market-backed recruitment case now imports peatwax for the Mireclaw tier 7 instead of buying wood. Validation on Windows: town_development_regression Godot probe 688 checks pass (its Python content pre-check fails on a pre-existing veteran hp assertion), town_creature_upgrades 655 checks pass (art pass skipped, PIL missing), town_rare_import 198 checks pass, the reworked AI market case passes on its own (the full ai_planned_task_recruitment_prep_report stops earlier at a raid-capacity fixture failure unrelated to unit costs). validate_repo reports exactly the same errors as before the change. Curated unit art reports still pin older costs; they already failed on main and are untouched. The obsolete tools/author_*.py scripts still hold old costs and must not be rerun. No Linux run (content/tests only)."
     }
   ],
   "project": "heroes-like",

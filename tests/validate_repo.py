@@ -77610,6 +77610,26 @@ def validate_sevenfold_high_arcanum(errors: list[str]) -> None:
         ensure('REQUIRED_SEVENFOLD_HIGH_ARCANUM_ATLAS_NAME = "sevenfold_high_arcanum_atlas"' in packaging_text and "sevenfold_high_arcanum_atlas.png.import" in packaging_text, errors, f"{packaging_name} must audit the Sevenfold High Arcanum atlas")
 
 
+def validate_gold_only_unit_costs(errors: list[str]) -> None:
+    """Owner rule content-gold-only-unit-costs-20261006: tier 1-6 units cost
+    only gold; tier 7 adds one rare (the faction's main rare); no unit costs
+    wood or ore."""
+    units = items_index(load_json(CONTENT_DIR / "units.json"))
+    factions = items_index(load_json(CONTENT_DIR / "factions.json"))
+    for unit_id, unit in units.items():
+        cost = unit.get("cost", {})
+        if not isinstance(cost, dict) or int(cost.get("gold", 0)) <= 0:
+            errors.append(f"{unit_id} must have a positive gold cost")
+            continue
+        extra = sorted(str(key) for key in cost if str(key) != "gold")
+        if int(unit.get("tier", 0)) < 7:
+            ensure(not extra, errors, f"{unit_id} is tier {unit.get('tier')} and must cost gold only, not {extra}")
+            continue
+        main_rare = str(factions.get(str(unit.get("faction_id", "")), {}).get("town_resources", {}).get("main", ""))
+        expected = [main_rare] if main_rare else extra[:1]
+        ensure(extra == expected and expected and expected[0] in ECONOMY_RARE_RESOURCE_IDS and int(cost[expected[0]]) > 0, errors, f"{unit_id} is tier 7 and must cost gold plus one rare ({main_rare or 'any'}), not {extra}")
+
+
 def validate_two_elite_neutral_dwellings(errors: list[str]) -> None:
     units = items_index(load_json(CONTENT_DIR / "units.json"))
     dwellings = items_index(load_json(CONTENT_DIR / "neutral_dwellings.json"))
@@ -77625,7 +77645,7 @@ def validate_two_elite_neutral_dwellings(errors: list[str]) -> None:
     expected = {
         "unit_neutral_cinderwake_aurochs": {
             "name": "Cinderwake Aurochs", "tier": 5, "role": "melee", "hp": 52, "attack": 11, "defense": 12,
-            "damage": (10, 15), "speed": 4, "initiative": 6, "ranged": False, "growth": 1, "cost": {"gold": 760, "ore": 2},
+            "damage": (10, 15), "speed": 4, "initiative": 6, "ranged": False, "growth": 1, "cost": {"gold": 760},
             "abilities": ["reach", "shielding"], "support_unit_id": "unit_neutral_emberpack_lobbers", "claim_recruits": {"unit_neutral_cinderwake_aurochs": 1, "unit_neutral_emberpack_lobbers": 3}, "weekly_recruits": {"unit_neutral_cinderwake_aurochs": 1, "unit_neutral_emberpack_lobbers": 1}, "source_sha": "3b8525b7f40345295e4a74de88f8f46a51490adbeb70ab93fc66412d545aff0e",
             "dwelling_id": "neutral_dwelling_cinderwake_fold", "site_id": "site_cinderwake_fold", "object_id": "object_cinderwake_fold",
             "group_id": "army_neutral_cinderwake_fold_watch", "encounter_id": "encounter_cinderwake_fold_watch",
@@ -77634,7 +77654,7 @@ def validate_two_elite_neutral_dwellings(errors: list[str]) -> None:
         },
         "unit_neutral_tideglass_skyrays": {
             "name": "Tideglass Skyrays", "tier": 6, "role": "ranged", "hp": 46, "attack": 13, "defense": 10,
-            "damage": (12, 18), "speed": 7, "initiative": 9, "ranged": True, "growth": 1, "cost": {"gold": 950, "wood": 1},
+            "damage": (12, 18), "speed": 7, "initiative": 9, "ranged": True, "growth": 1, "cost": {"gold": 950},
             "abilities": ["harry", "volley"], "support_unit_id": "unit_neutral_reefbolt_crews", "claim_recruits": {"unit_neutral_tideglass_skyrays": 1, "unit_neutral_reefbolt_crews": 3}, "weekly_recruits": {"unit_neutral_tideglass_skyrays": 1, "unit_neutral_reefbolt_crews": 1}, "source_sha": "22a21c70b22ea35331c7b46e75bf4efbd2ceb996999780b21e6846906a2be9cb",
             "dwelling_id": "neutral_dwelling_tideglass_roost", "site_id": "site_tideglass_roost", "object_id": "object_tideglass_roost",
             "group_id": "army_neutral_tideglass_roost_watch", "encounter_id": "encounter_tideglass_roost_watch",
@@ -82841,6 +82861,7 @@ def main() -> int:
     validate_overworld_resource_assault_victory_return_feedback(errors)
     validate_overworld_encounter_victory_return_feedback(errors)
     validate_content(errors)
+    validate_gold_only_unit_costs(errors)
     validate_scenario_script_active_army_reinforcements(errors)
     validate_stonewake_watch_chapter_one_sequential_viability(errors)
     validate_bogbound_oath_chapter_one_sequential_viability(errors)

@@ -26,6 +26,10 @@ Rules:
 
 `content-authored-scenarios-obsolete-20261005` (paused, owner decision 2026-10-05): every authored map, scenario and campaign (`content/scenarios.json`, `content/campaigns.json`, `tools/author_*.py`) is obsolete and will be redone completely once the owner selects that rework. Until then put no effort into them: no new authored scenarios or campaigns, fixes, retuning, art or validation work, and no chasing failures in the authored-scenario checks listed in `docs/authored-scenarios-obsolete.md`. Every authored-scenario and campaign section below is history, not work to continue. Generated maps, shared content definitions and the scenario/campaign runtime are not covered.
 
+### Gold-only unit recruitment costs
+
+`content-gold-only-unit-costs-20261006` (completed, owner-directed economy content): tier 1-6 units, base and upgraded, cost only gold; each faction's tier 7 costs gold plus its main rare resource, the only non-gold unit cost; no unit costs wood or ore, and neutral units follow the same tiers. Gold amounts are unchanged and faction resource pressure stays in building costs. `tests/validate_repo.py` enforces the rule. See `docs/economy-overhaul-foundation.md`.
+
 ### HoMM-style pickups and income sites
 
 `content-homm-pickups-income-20261006` (completed, owner-directed economy and random-map content): only mines pay daily income and no site pays a capture or recapture bonus; dwellings, landmarks, watchtowers and outposts keep only their non-resource roles. The six small producers are weekly visit sites, Wood Wagon and Ore Crates are one-time pickups kept off random maps, and generated maps translate HoMM3 reward types into original sites with per-placement HoMM payloads (pile sizes, chest tiers, campfire hauls, scroll spells, six-way rare spread) through `scripts/persistence/GeneratedRewardRules.gd`. Two new rare piles (Verdant Graft Bundle, Brass Scrip Case) carry original sprites. See `docs/pickups-and-income-sites.md`.
