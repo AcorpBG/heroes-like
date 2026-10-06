@@ -30,6 +30,10 @@ Rules:
 
 `content-gold-only-unit-costs-20261006` (completed, owner-directed economy content): tier 1-6 units, base and upgraded, cost only gold; each faction's tier 7 costs gold plus its main rare resource, the only non-gold unit cost; no unit costs wood or ore, and neutral units follow the same tiers. Gold amounts are unchanged and faction resource pressure stays in building costs. `tests/validate_repo.py` enforces the rule. See `docs/economy-overhaul-foundation.md`.
 
+### Dwelling pair balance
+
+`balance-dwelling-pairs-20261006` (completed, owner-directed balance content): the two exclusive dwelling lines of every tier I–V choice, base and upgrade, are trade-offs instead of one line being slightly better at everything. Same-role lines split into tank and striker and trade evenly per gold; a shooter is never bulkier than its melee partner and keeps a 1.3–2.0 head-on edge per gold; upgrades stay above their base. Only health, attack, defense, damage and gold changed (107 faction units). `tests/unit_pair_duel_report.tscn` duels all 60 pairs at equal gold and fails on any pair outside the bands. See `docs/dwelling-pair-balance.md`.
+
 ### Creature dwellings
 
 `content-creature-dwellings-20261006` (completed, owner-directed content, rules, AI and random maps): adventure-map dwellings follow HoMM3. Each makes one creature at its weekly town growth, resets weekly, and is hired at the dwelling by a visiting hero at town price, with tier 1 free. Flagging grants nothing; each flagged dwelling adds +1 weekly growth for its creature in the owner's towns. Tier 5+ dwellings are guarded by three weeks of their creature and every side must beat that guard once (owner rule). The AI breaks guards, flags and hires. The capture batch, town feed, logistics growth bonus, response orders and capital dwelling requirement are removed. Random maps translate HoMM3 dwellings by creature level and nearest-town faction; the Conflux and Golem Factory become the two multi-creature dwellings, and the Refugee Camp becomes the Drifters' Camp. 23 new faction dwellings and the camp have original sprites. See `docs/creature-dwellings.md`.

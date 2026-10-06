@@ -77,8 +77,8 @@ func _validate_unit(unit: Dictionary) -> void:
 		_error("Unit record is missing id.")
 		return
 	if unit_id == UNDERTOW_HARPOONER_UNIT_ID:
-		if int(unit.get("min_damage", 0)) != 5 or int(unit.get("max_damage", 0)) != 8:
-			_error("Undertow Harpooners must retain their calibrated tier-four ranged 5-8 damage band.")
+		if int(unit.get("min_damage", 0)) != 4 or int(unit.get("max_damage", 0)) != 7:
+			_error("Undertow Harpooners must retain their dwelling-pair calibrated tier-four ranged 4-7 damage band.")
 	var ability_summaries := []
 	var abilities: Array = unit.get("abilities", []) if unit.get("abilities", []) is Array else []
 	var player_summary := BattleRulesScript._stack_ability_summary(_stack_for_unit(unit_id, "player", 0)) if not abilities.is_empty() else ""
@@ -1434,7 +1434,8 @@ func _probe_obituary(unit_id: String) -> Dictionary:
 	var braced_cohesion_pressure := SpellRulesScript.effect_bonus_for_kind(braced_marked, braced_battle, "cohesion")
 	var braced_retaliation_pressure := SpellRulesScript.effect_bonus_for_kind(braced_marked, braced_battle, "retaliation")
 	var ai_scribe := _stack_for_unit(unit_id, "enemy", 0)
-	var ai_ranged_target := _stack_for_unit("unit_thornwake_sporeglass_menders", "player", 0)
+	# A shooter the plain Scribes prefer, so Final Notice must decide the target.
+	var ai_ranged_target := _stack_for_unit("unit_thornwake_dawnseed_bolters", "player", 0)
 	var ai_braced_target := _stack_for_unit("unit_thornwake_thornwhip_carriers", "player", 1)
 	var ai_tier_one_brace := _stack_for_unit("unit_river_guard", "player", 2)
 	_set_hex(ai_scribe, 4, 3)
@@ -1444,6 +1445,7 @@ func _probe_obituary(unit_id: String) -> Dictionary:
 	var ai_battle := _battle_for_stacks([ai_scribe, ai_ranged_target, ai_braced_target])
 	var ai_action := BattleAiRulesScript.choose_enemy_action(ai_battle, ai_scribe, {})
 	var stripped_ai_scribe := _without_ability(ai_scribe, "obituary")
+	var stripped_ai_action := BattleAiRulesScript.choose_enemy_action(ai_battle, stripped_ai_scribe, {})
 	var braced_score := BattleAiRulesScript._attack_score(ai_scribe, ai_braced_target, ai_battle, true)
 	var ranged_score := BattleAiRulesScript._attack_score(ai_scribe, ai_ranged_target, ai_battle, true)
 	var stripped_braced_score := BattleAiRulesScript._attack_score(stripped_ai_scribe, ai_braced_target, ai_battle, true)
@@ -1472,6 +1474,7 @@ func _probe_obituary(unit_id: String) -> Dictionary:
 		and String(ai_action.get("action", "")) == "shoot"
 		and String(ai_action.get("target_battle_id", "")) == String(ai_braced_target.get("battle_id", ""))
 		and braced_score > ranged_score
+		and String(stripped_ai_action.get("target_battle_id", "")) == String(ai_ranged_target.get("battle_id", ""))
 		and is_equal_approx(braced_priority_delta, 4.0)
 		and is_equal_approx(tier_one_priority_delta, 0.25)
 		and marked_retaliation < base_retaliation
@@ -1493,6 +1496,7 @@ func _probe_obituary(unit_id: String) -> Dictionary:
 		"braced_cohesion_pressure": braced_cohesion_pressure,
 		"braced_retaliation_pressure_pct": braced_retaliation_pressure,
 		"ai_selected_target_id": String(ai_action.get("target_battle_id", "")),
+		"stripped_ai_selected_target_id": String(stripped_ai_action.get("target_battle_id", "")),
 		"braced_target_score": braced_score,
 		"ranged_target_score": ranged_score,
 		"braced_priority_delta": braced_priority_delta,

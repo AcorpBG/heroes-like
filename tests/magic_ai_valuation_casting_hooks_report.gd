@@ -1387,6 +1387,8 @@ func _run_adventure_scouting_executor_case() -> Dictionary:
 			"days_active": 0,
 			"arrived": false,
 			"goal_distance": 9999,
+			# Scouting bias only: hero intercepts are proved by the hero-hunt reports.
+			"hero_intercept_delay_until_day": int(session.day) + 1,
 			"enemy_army": {
 				"id": "adventure_spell_scouting_raid",
 				"name": "Scouting Spell Raid",

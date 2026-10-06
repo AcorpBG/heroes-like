@@ -11157,9 +11157,9 @@ def validate_content(errors: list[str]) -> None:
             ensure(int(unit.get("shots", 0)) > 0, errors, f"Ranged unit {unit_id} must define shots > 0")
         if unit_id == "unit_veilmourn_undertow_harpooners":
             ensure(
-                int(unit.get("min_damage", 0)) == 5 and int(unit.get("max_damage", 0)) == 8,
+                int(unit.get("min_damage", 0)) == 4 and int(unit.get("max_damage", 0)) == 7,
                 errors,
-                "Undertow Harpooners must retain the calibrated tier-four ranged 5-8 damage band",
+                "Undertow Harpooners must retain the dwelling-pair calibrated tier-four ranged 4-7 damage band",
             )
 
         abilities = unit.get("abilities", [])
