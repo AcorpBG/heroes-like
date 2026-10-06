@@ -106,6 +106,30 @@ func _run_town(template_id: String, viewport_size: Vector2i) -> Dictionary:
 			tile_rects.append(rect)
 	_check(failures, covered.size() == template_ids.size(), "covered %d of %d" % [covered.size(), template_ids.size()])
 	var board: Dictionary = screen.board()
+	var tiles_by_id := {}
+	for row in snap.get("rows", []):
+		for tile_snap in row.get("slots", []):
+			tiles_by_id[String(tile_snap.get("id", ""))] = tile_snap
+	for slot in Board.ordered_slots(board):
+		var tile_snap: Dictionary = tiles_by_id.get(String(slot.get("id", "")), {})
+		var expected_cost := []
+		for resource_id in Board.RESOURCE_ORDER:
+			if slot.get("cost", {}).has(resource_id):
+				expected_cost.append(resource_id)
+		if String(slot.get("next_id", "")) != "":
+			_check(failures, tile_snap.get("cost_ids", []) == expected_cost, "tile %s cost %s expected %s" % [slot.id, tile_snap.get("cost_ids", []), expected_cost])
+		var expected_roles := []
+		if String(slot.get("kind", "")) == "choice":
+			for option in slot.get("options", []):
+				expected_roles.append(_role_of(String(option.get("unit_id", ""))))
+		elif String(slot.get("kind", "")) == "dwelling":
+			var unit_building := String(slot.get("current_id", "")) if String(slot.get("current_id", "")) != "" else String(slot.get("art_building_id", ""))
+			expected_roles.append(_role_of(String(ContentService.get_building(unit_building).get("unlock_unit_id", ""))))
+		_check(failures, tile_snap.get("roles", []) == expected_roles, "tile %s roles %s expected %s" % [slot.id, tile_snap.get("roles", []), expected_roles])
+		var expected_buttons := 0
+		if String(slot.get("status", "")) == Board.STATUS_READY:
+			expected_buttons = 2 if String(slot.get("kind", "")) == "choice" else 1
+		_check(failures, int(tile_snap.get("quick_buttons", -1)) == expected_buttons, "tile %s one-click buttons %s" % [slot.id, tile_snap.get("quick_buttons", -1)])
 	for tier in range(1, 8):
 		var slot := Board.slot_by_id(board, "dwelling_%d" % tier)
 		var expected_kind := "choice" if tier <= 5 else "dwelling"
@@ -132,7 +156,9 @@ func _run_town(template_id: String, viewport_size: Vector2i) -> Dictionary:
 		_check(failures, String(picked.get("selected_building_id", "")) == String(options[1].building_id), "picked option id")
 		_check(failures, not bool(picked.get("primary_disabled", true)), "picked option buildable")
 		await _capture(template_id, "choice", viewport_size)
-		screen.validation_press_primary()
+		screen.select_slot("hall")
+		await _frames(1)
+		_check(failures, screen.validation_quick_build("dwelling_1", 1), "choice tile has one-click build per branch")
 		await _frames(3)
 		if session.scenario_status != "in_progress":
 			shell.queue_free()
@@ -195,6 +221,23 @@ func _run_town(template_id: String, viewport_size: Vector2i) -> Dictionary:
 	await _frames(2)
 	_check(failures, not bool(screen.visible) and not bool(shell.call("_town_catalog_is_open")), "esc closes screen")
 
+	# One click on a tile's Build strip constructs without visiting the panel.
+	await _open_construction(shell, failures)
+	screen.select_slot("hall")
+	await _frames(1)
+	_check(failures, screen.validation_quick_build("tavern"), "tavern one-click build button")
+	await _frames(3)
+	town = TownRules.get_active_town(session)
+	_check(failures, "building_wayfarers_hall" in town.get("built_buildings", []) and not bool(screen.visible), "one-click tile build")
+
+	# A double-click on a ready tile builds it as well.
+	session.day += 1
+	await _open_construction(shell, failures)
+	_check(failures, screen.validation_double_click("fort"), "fort double-click")
+	await _frames(4)
+	town = TownRules.get_active_town(session)
+	_check(failures, TownDevelopment.satisfies(town.get("built_buildings", []), "building_dev_fort_1"), "double-click tile build")
+
 	# Market hand-off when trade can cover a shortfall.
 	session.day += 1
 	town = TownRules.get_active_town(session)
@@ -230,6 +273,10 @@ func _open_construction(shell: Node, failures: Array) -> void:
 	await _frames(2)
 	var screen = shell.get("_construction_screen")
 	_check(failures, screen != null and bool(screen.visible), "construction opened")
+
+func _role_of(unit_id: String) -> String:
+	var unit := ContentService.get_unit(unit_id)
+	return "ranged" if bool(unit.get("ranged", false)) else "melee"
 
 func _cancel(shell: Node) -> void:
 	var event := InputEventAction.new()

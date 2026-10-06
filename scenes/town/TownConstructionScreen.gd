@@ -53,6 +53,12 @@ const ASSISTED_STATUS_PALETTE := {
 const STATUS_LEGEND := [["ready", "Can build"], ["trade", "Market can cover"], ["short", "Short of resources"], ["locked", "Locked"], ["complete", "Fully built"]]
 const STAT_BETTER_KEYS := ["Attack", "Defense", "Damage", "Health", "Speed", "Initiative", "Growth"]
 const BETTER_STAT := Color(0.62, 0.90, 0.45)
+const SHORT_AMOUNT := Color(1.0, 0.56, 0.46)
+const ASSISTED_SHORT_AMOUNT := Color(1.0, 0.68, 0.28)
+const ROLE_STYLES := {
+	"ranged": [Color(0.07, 0.15, 0.20, 0.94), Color(0.40, 0.72, 0.88), Color(0.76, 0.91, 1.0)],
+	"melee": [Color(0.22, 0.12, 0.07, 0.94), Color(0.88, 0.58, 0.34), Color(1.0, 0.86, 0.70)],
+}
 const ASSISTED_BETTER_STAT := Color(0.45, 0.80, 1.0)
 
 var _board: Dictionary = {}
@@ -60,6 +66,7 @@ var _resources: Dictionary = {}
 var _faction_id := ""
 var _selected_slot_id := ""
 var _selected_option_index := -1
+var _pending_option_index := -1
 var _peek := false
 var _tiles: Dictionary = {}
 var _texture_cache: Dictionary = {}
@@ -226,6 +233,9 @@ func validation_snapshot() -> Dictionary:
 				"tile_rect": _visual_rect(tile),
 				"tile_visible": tile != null and tile.is_visible_in_tree(),
 				"tile_has_art": tile != null and _tile_has_art(tile),
+				"cost_ids": _tile_cost_ids(tile),
+				"roles": _tile_roles(tile),
+				"quick_buttons": tile.find_children("QuickBuild*", "Button", true, false).size() if tile != null else 0,
 			})
 		rows.append({"id": String(row.get("id", "")), "title": String(row.get("title", "")), "slots": slots})
 	var focus_owner := get_viewport().gui_get_focus_owner() if is_inside_tree() else null
@@ -262,6 +272,45 @@ func _visual_rect(control: Control) -> Rect2:
 		return Rect2()
 	var transform := control.get_global_transform()
 	return Rect2(transform.origin, control.size * transform.get_scale())
+
+func _tile_cost_ids(tile: Control) -> Array:
+	var ids := []
+	var row := tile.find_child("Cost", true, false) if tile != null else null
+	if row != null:
+		for cell in row.get_children():
+			ids.append(String(cell.name))
+	return ids
+
+func _tile_roles(tile: Control) -> Array:
+	var roles := []
+	if tile != null:
+		for chip in tile.find_children("Role_*", "PanelContainer", true, false):
+			roles.append(String(chip.get_meta("role", "")))
+	return roles
+
+## Presses a tile's one-click build strip (option 0/1 for exclusive choices).
+func validation_quick_build(slot_id: String, option_index: int = -1) -> bool:
+	var tile: Button = _tiles.get(slot_id)
+	if tile == null:
+		return false
+	var button := tile.find_child("QuickBuild" if option_index < 0 else "QuickBuild_%d" % (option_index + 1), true, false) as Button
+	if button == null:
+		return false
+	button.emit_signal("pressed")
+	return true
+
+## Sends a left double-click to a tile at its left or right half.
+func validation_double_click(slot_id: String, right_half: bool = false) -> bool:
+	var tile: Button = _tiles.get(slot_id)
+	if tile == null:
+		return false
+	var event := InputEventMouseButton.new()
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.pressed = true
+	event.double_click = true
+	event.position = Vector2(tile.size.x * (0.75 if right_half else 0.25), tile.size.y * 0.4)
+	tile.gui_input.emit(event)
+	return true
 
 func validation_press_primary() -> bool:
 	if not _primary_button.visible or _primary_button.disabled:
@@ -585,6 +634,7 @@ func _make_tile(slot: Dictionary, wide: bool) -> Button:
 	tile.accessibility_description = String(slot.get("status_detail", ""))
 	tile.pressed.connect(_on_tile_pressed.bind(String(slot.get("id", ""))))
 	tile.focus_entered.connect(_on_tile_focused.bind(String(slot.get("id", ""))))
+	tile.gui_input.connect(_on_tile_gui_input.bind(String(slot.get("id", "")), tile))
 	var column := VBoxContainer.new()
 	column.name = "Content"
 	column.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -614,6 +664,10 @@ func _make_tile(slot: Dictionary, wide: bool) -> Button:
 		blurb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		blurb.max_lines_visible = 2
 		text_column.add_child(blurb)
+		if String(slot.get("next_id", "")) != "":
+			var wide_cost := _cost_row(slot.get("cost", {}))
+			wide_cost.alignment = BoxContainer.ALIGNMENT_BEGIN
+			text_column.add_child(wide_cost)
 	elif String(slot.get("kind", "")) == "choice":
 		var halves := HBoxContainer.new()
 		halves.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -628,6 +682,10 @@ func _make_tile(slot: Dictionary, wide: bool) -> Button:
 			var art := _art_rect(String(option.get("building_id", "")), true)
 			art.size_flags_vertical = Control.SIZE_EXPAND_FILL
 			half.add_child(art)
+			var chip_holder := CenterContainer.new()
+			chip_holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			chip_holder.add_child(_role_chip(String(option.get("unit_id", "")), true))
+			half.add_child(chip_holder)
 			var option_label := _label(String(option.get("unit_name", "")), Color(0.90, 0.93, 0.95), 10)
 			option_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			option_label.vertical_alignment = VERTICAL_ALIGNMENT_TOP
@@ -635,6 +693,7 @@ func _make_tile(slot: Dictionary, wide: bool) -> Button:
 			option_label.max_lines_visible = 2
 			option_label.custom_minimum_size.y = 30
 			half.add_child(option_label)
+		column.add_child(_cost_row(slot.get("cost", {})))
 		var or_badge := PanelContainer.new()
 		or_badge.name = "OrBadge"
 		or_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -660,8 +719,9 @@ func _make_tile(slot: Dictionary, wide: bool) -> Button:
 			blurb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			blurb.custom_minimum_size.y = 20
 			column.add_child(blurb)
-	var status := _status_strip(slot)
-	column.add_child(status)
+		if String(slot.get("next_id", "")) != "":
+			column.add_child(_cost_row(slot.get("cost", {})))
+	column.add_child(_action_strip(slot))
 	if int(slot.get("tier", 0)) > 0:
 		var badge := PanelContainer.new()
 		badge.name = "TierBadge"
@@ -670,6 +730,11 @@ func _make_tile(slot: Dictionary, wide: bool) -> Button:
 		badge.add_theme_stylebox_override("panel", _flat(Color(0.035, 0.047, 0.059, 0.86), Color(0.88, 0.72, 0.40, 0.6), 4, [1, 1, 1, 1], 4))
 		badge.add_child(_label(String(slot.get("tier_label", "")), GOLD_TEXT, 13))
 		tile.add_child(badge)
+		if String(slot.get("kind", "")) == "dwelling":
+			var role_chip := _role_chip(_slot_unit_id(slot), true)
+			role_chip.name = "Role_%s" % String(role_chip.get_meta("role", ""))
+			role_chip.position = Vector2(42, 9)
+			tile.add_child(role_chip)
 	if int(slot.get("stage_count", 1)) > 1:
 		var pips := ConstructionPips.new()
 		pips.name = "StagePips"
@@ -705,6 +770,137 @@ func _status_strip(slot: Dictionary) -> PanelContainer:
 	text.name = "StatusText"
 	row.add_child(text)
 	return strip
+
+## Ready and trade slots act straight from the tile: one click builds (or
+## opens the market). Open exclusive choices get one Build per branch.
+func _action_strip(slot: Dictionary) -> Control:
+	var status_id := String(slot.get("status", "locked"))
+	if status_id not in [Board.STATUS_READY, Board.STATUS_TRADE]:
+		return _status_strip(slot)
+	var strip := HBoxContainer.new()
+	strip.name = "Actions"
+	strip.custom_minimum_size.y = 30
+	strip.add_theme_constant_override("separation", 2)
+	var options: Array = slot.get("options", [])
+	if String(slot.get("kind", "")) == "choice" and status_id == Board.STATUS_READY:
+		for index in range(options.size()):
+			var choice_tip := "Build %s now (%s). This permanently picks that line for tier %s." % [String(options[index].get("unit_name", "")), _cost_text(slot.get("cost", {})), String(slot.get("tier_label", ""))]
+			strip.add_child(_quick_button(slot, index, "Build", choice_tip))
+		return strip
+	var next_name := _building_name(String(slot.get("next_id", "")))
+	if status_id == Board.STATUS_TRADE:
+		strip.add_child(_quick_button(slot, -1, "Trade", "Open the market to cover the shortfall for %s." % next_name))
+	else:
+		var verb := String(slot.get("verb", "Build"))
+		strip.add_child(_quick_button(slot, -1, verb, "%s %s now (%s)." % [verb, next_name, _cost_text(slot.get("cost", {}))]))
+	return strip
+
+func _quick_button(slot: Dictionary, option_index: int, text: String, tip: String) -> Button:
+	var colors := _status_colors(String(slot.get("status", "")))
+	var button := Button.new()
+	button.name = "QuickBuild" if option_index < 0 else "QuickBuild_%d" % (option_index + 1)
+	button.text = text
+	button.tooltip_text = tip
+	button.accessibility_name = tip
+	button.focus_mode = Control.FOCUS_NONE
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button.add_theme_font_size_override("font_size", 13)
+	button.add_theme_color_override("font_color", colors[2])
+	for state in ["font_hover_color", "font_pressed_color", "font_focus_color"]:
+		button.add_theme_color_override(state, colors[2].lightened(0.3))
+	button.add_theme_stylebox_override("normal", _flat(colors[0], colors[1], 0, [0, 2, 0, 0], 4))
+	button.add_theme_stylebox_override("hover", _flat(colors[0].lightened(0.16), colors[1].lightened(0.2), 0, [0, 2, 0, 0], 4))
+	button.add_theme_stylebox_override("pressed", _flat(colors[0].darkened(0.2), colors[1], 0, [0, 2, 0, 0], 4))
+	button.pressed.connect(_quick_build.bind(String(slot.get("id", "")), option_index))
+	return button
+
+func _quick_build(slot_id: String, option_index: int = -1) -> void:
+	if _peek or not select_slot(slot_id, option_index):
+		return
+	_on_primary_pressed()
+
+func _cost_row(cost: Dictionary) -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.name = "Cost"
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 6)
+	row.custom_minimum_size.y = 20
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for resource_id in Board.RESOURCE_ORDER:
+		if not cost.has(resource_id):
+			continue
+		var need := int(cost[resource_id])
+		var short := int(_resources.get(resource_id, 0)) < need
+		var cell := HBoxContainer.new()
+		cell.name = String(resource_id)
+		cell.add_theme_constant_override("separation", 2)
+		cell.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var icon := TextureRect.new()
+		icon.custom_minimum_size = Vector2(15, 15)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		icon.texture = _texture(OverworldRulesScript.resource_icon_path(resource_id))
+		cell.add_child(icon)
+		var amount := _label(_compact_amount(need), _short_color() if short else BODY_TEXT, 11)
+		amount.name = "Amount"
+		cell.add_child(amount)
+		row.add_child(cell)
+	return row
+
+func _compact_amount(value: int) -> String:
+	if value >= 10000:
+		var thousands := float(value) / 1000.0
+		return ("%dk" % int(thousands)) if is_equal_approx(thousands, floorf(thousands)) else ("%.1fk" % thousands)
+	return Board.format_amount(value)
+
+func _cost_text(cost: Dictionary) -> String:
+	var parts := []
+	for resource_id in Board.RESOURCE_ORDER:
+		if cost.has(resource_id):
+			parts.append("%s %s" % [Board.format_amount(int(cost[resource_id])), Board.resource_name(resource_id)])
+	return ", ".join(parts) if not parts.is_empty() else "free"
+
+func _short_color() -> Color:
+	return ASSISTED_SHORT_AMOUNT if FrontierVisualKit.color_cue_assist_enabled() else SHORT_AMOUNT
+
+func _slot_unit_id(slot: Dictionary) -> String:
+	var focus_id := String(slot.get("current_id", "")) if String(slot.get("current_id", "")) != "" else String(slot.get("art_building_id", ""))
+	return String(ContentService.get_building(focus_id).get("unlock_unit_id", ""))
+
+func _unit_role_id(unit_id: String) -> String:
+	var unit := ContentService.get_unit(unit_id)
+	return "ranged" if bool(unit.get("ranged", false)) or String(unit.get("role", "")) == "ranged" else "melee"
+
+## A drawn sword/bow badge with text, so melee and ranged read without the
+## portrait's baked caption and without relying on colour alone.
+func _role_chip(unit_id: String, small: bool) -> PanelContainer:
+	var role := _unit_role_id(unit_id)
+	var palette: Array = ROLE_STYLES[role]
+	var chip := PanelContainer.new()
+	chip.name = "Role_%s" % role
+	chip.set_meta("role", role)
+	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var style := _flat(palette[0], palette[1], 9, [1, 1, 1, 1], 5.0 if small else 8.0)
+	style.content_margin_top = 1 if small else 3
+	style.content_margin_bottom = 1 if small else 3
+	chip.add_theme_stylebox_override("panel", style)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 3 if small else 5)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	chip.add_child(row)
+	var glyph := ConstructionRoleGlyph.new()
+	glyph.role = role
+	glyph.color = palette[2]
+	glyph.custom_minimum_size = Vector2(13, 13) if small else Vector2(16, 16)
+	glyph.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(glyph)
+	var text := _label(role.to_upper(), palette[2], 10 if small else 12)
+	text.name = "RoleText"
+	row.add_child(text)
+	return chip
 
 func _art_rect(building_id: String, dim: bool) -> TextureRect:
 	var art := TextureRect.new()
@@ -767,7 +963,25 @@ func _on_tile_pressed(slot_id: String) -> void:
 	if slot_id != _selected_slot_id:
 		_selected_option_index = -1
 	_selected_slot_id = slot_id
+	if String(selected_slot().get("kind", "")) == "choice" and _pending_option_index >= 0:
+		_selected_option_index = _pending_option_index
+	_pending_option_index = -1
 	_refresh_selection()
+
+## Choice tiles pick the clicked half; a double-click builds at once.
+func _on_tile_gui_input(event: InputEvent, slot_id: String, tile: Control) -> void:
+	if not (event is InputEventMouseButton):
+		return
+	var mouse := event as InputEventMouseButton
+	if mouse.button_index != MOUSE_BUTTON_LEFT or not mouse.pressed:
+		return
+	var slot := Board.slot_by_id(_board, slot_id)
+	var option_index := -1
+	if String(slot.get("kind", "")) == "choice":
+		option_index = 0 if mouse.position.x < tile.size.x * 0.5 else 1
+		_pending_option_index = option_index
+	if mouse.double_click and String(slot.get("status", "")) in [Board.STATUS_READY, Board.STATUS_TRADE]:
+		call_deferred("_quick_build", slot_id, option_index)
 
 func _on_tile_focused(slot_id: String) -> void:
 	if slot_id == _selected_slot_id:
@@ -1119,9 +1333,7 @@ func _choice_view(slot: Dictionary) -> Control:
 		var portrait := _portrait(String(option.get("unit_id", "")), false)
 		portrait.custom_minimum_size = Vector2(0, 168)
 		column.add_child(portrait)
-		var role := _label(_unit_role(String(option.get("unit_id", ""))), TEAL_TEXT, 12)
-		role.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		column.add_child(role)
+		column.add_child(_role_line(String(option.get("unit_id", ""))))
 		var other: Array = stats[1 - index] if options.size() == 2 else []
 		column.add_child(_stat_grid(stats[index], other))
 		var abilities := _label(_unit_abilities(String(option.get("unit_id", ""))), BODY_TEXT, 12)
@@ -1130,11 +1342,20 @@ func _choice_view(slot: Dictionary) -> Control:
 		column.add_child(_label("Upgrades to %s" % String(option.get("upgrade_unit_name", "")), MUTED_TEXT, 12))
 		var pick := Button.new()
 		pick.name = "PickOption%d" % (index + 1)
-		pick.text = "Selected" if selected else "Pick this line"
-		pick.tooltip_text = "Select this line, then confirm with the Build button below. Press %d to pick it from the keyboard." % (index + 1)
-		pick.accessibility_name = "Pick %s for tier %s" % [String(option.get("unit_name", "")), String(slot.get("tier_label", ""))]
-		FrontierVisualKit.apply_button(pick, "primary" if selected else "secondary", 120, 40, 13)
-		pick.pressed.connect(_on_pick_option.bind(String(slot.get("id", "")), index))
+		var ready := String(slot.get("status", "")) == Board.STATUS_READY
+		var unit_name := String(option.get("unit_name", ""))
+		if ready:
+			pick.text = "Build this line"
+			pick.tooltip_text = "Build %s now (%s). This permanently picks the line for tier %s." % [unit_name, _cost_text(slot.get("cost", {})), String(slot.get("tier_label", ""))]
+			pick.accessibility_name = "Build %s for tier %s" % [unit_name, String(slot.get("tier_label", ""))]
+			pick.pressed.connect(_quick_build.bind(String(slot.get("id", "")), index))
+		else:
+			pick.text = "Selected" if selected else "Select this line"
+			pick.tooltip_text = "Select this line to preview it in town. Press %d to select it from the keyboard." % (index + 1)
+			pick.accessibility_name = "Select %s for tier %s" % [unit_name, String(slot.get("tier_label", ""))]
+			pick.pressed.connect(_on_pick_option.bind(String(slot.get("id", "")), index))
+		FrontierVisualKit.apply_button(pick, "primary" if ready or selected else "secondary", 120, 40, 13)
+		pick.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		column.add_child(pick)
 	return row
 
@@ -1167,6 +1388,7 @@ func _dwelling_view(slot: Dictionary) -> Control:
 		var portrait := _portrait(String(stage.get("unit_id", "")), not bool(stage.get("done", false)))
 		portrait.custom_minimum_size = Vector2(150, 200)
 		stage_column.add_child(portrait)
+		stage_column.add_child(_role_line(String(stage.get("unit_id", ""))))
 		var tag := "RECRUITING" if bool(stage.get("done", false)) else ("DWELLING" if index == 0 else "LODGE UPGRADE")
 		var tag_label := _label(tag, GOLD_TEXT if bool(stage.get("done", false)) else MUTED_TEXT, 11)
 		tag_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -1200,6 +1422,17 @@ func _single_view(slot: Dictionary) -> Control:
 	art.custom_minimum_size = Vector2(0, 260)
 	card.add_child(art)
 	return card
+
+func _role_line(unit_id: String) -> Control:
+	var holder := HBoxContainer.new()
+	holder.name = "RoleLine"
+	holder.alignment = BoxContainer.ALIGNMENT_CENTER
+	holder.add_theme_constant_override("separation", 6)
+	holder.add_child(_role_chip(unit_id, false))
+	var unit := ContentService.get_unit(unit_id)
+	if bool(unit.get("ranged", false)) and int(unit.get("shots", 0)) > 0:
+		holder.add_child(_label("%d shots" % int(unit.get("shots", 0)), TEAL_TEXT, 12))
+	return holder
 
 func _stat_grid(stats: Array, other: Array) -> GridContainer:
 	var grid := GridContainer.new()
@@ -1354,8 +1587,8 @@ func _layout() -> void:
 	var tile_width := floorf((board_width - GAP * 6.0) / 7.0)
 	# Rows share the height that labels, gaps and the legend leave free.
 	var fixed := LABEL_HEIGHT * 4.0 + ROW_GAP * 9.0 + 24.0
-	var scale := clampf((body_height - fixed) / 752.0, 0.62, 1.18)
-	var heights := {"town": 200.0 * scale, "army": 230.0 * scale, "growth": 200.0 * scale, "training": 200.0 * scale, "signature": 122.0 * scale}
+	var scale := clampf((body_height - fixed) / 796.0, 0.62, 1.18)
+	var heights := {"town": 212.0 * scale, "army": 246.0 * scale, "growth": 212.0 * scale, "training": 212.0 * scale, "signature": 126.0 * scale}
 	for row_id in _row_boxes.keys():
 		var box: HBoxContainer = _row_boxes[row_id]
 		for tile in box.get_children():
@@ -1547,3 +1780,27 @@ class ConstructionStatusGlyph:
 			_:
 				draw_rect(Rect2(Vector2(3, 7) * s, Vector2(10, 7) * s), color, false, w)
 				draw_arc(Vector2(8, 7) * s, 2.6 * s, PI, TAU, 12, color, w, true)
+
+
+class ConstructionRoleGlyph:
+	extends Control
+	var role := "melee"
+	var color := Color.WHITE
+
+	func _draw() -> void:
+		var s := minf(size.x, size.y) / 16.0
+		var w := 1.6 * s
+		if role == "ranged":
+			# Bow limb, string and a nocked arrow.
+			draw_arc(Vector2(3.0, 8.0) * s, 7.0 * s, -1.15, 1.15, 14, color, w, true)
+			var top := Vector2(3.0 + 7.0 * cos(-1.15), 8.0 + 7.0 * sin(-1.15)) * s
+			var bottom := Vector2(3.0 + 7.0 * cos(1.15), 8.0 + 7.0 * sin(1.15)) * s
+			draw_line(top, bottom, color, 1.0 * s, true)
+			draw_line(Vector2(1.5, 8.0) * s, Vector2(14.5, 8.0) * s, color, w, true)
+			draw_colored_polygon(PackedVector2Array([Vector2(15.0, 8.0) * s, Vector2(11.8, 6.0) * s, Vector2(11.8, 10.0) * s]), color)
+		else:
+			# Blade, crossguard and pommel.
+			draw_line(Vector2(4.5, 11.5) * s, Vector2(13.5, 2.5) * s, color, w, true)
+			draw_line(Vector2(3.2, 8.6) * s, Vector2(7.4, 12.8) * s, color, w, true)
+			draw_line(Vector2(4.5, 11.5) * s, Vector2(2.4, 13.6) * s, color, w * 1.2, true)
+			draw_circle(Vector2(2.0, 14.0) * s, 1.2 * s, color)

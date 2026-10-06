@@ -108,7 +108,12 @@ func construction() -> void:
 	for row in board.rows:
 		for slot in row.slots:
 			var tile=screen.find_child("Slot_"+String(slot.id),true,false)
-			check(tile!=null and String(tile.find_child("StatusText",true,false).text)==String(slot.status_text),"construction tile status disagrees with its slot: "+String(slot.id))
+			if String(slot.status) in ["ready","trade"]:
+				# Ready and market-coverable slots act from the tile in one click.
+				check(tile!=null and not tile.find_children("QuickBuild*","Button",true,false).is_empty(),"construction tile lacks its one-click order: "+String(slot.id))
+			else:
+				var status_label=tile.find_child("StatusText",true,false) if tile!=null else null
+				check(status_label!=null and String(status_label.text)==String(slot.status_text),"construction tile status disagrees with its slot: "+String(slot.id))
 	completed.append(6)
 	check(Details.resource_shortfall({"gold":100,"wood":5},{"gold":23,"wood":8})=={"gold":77},"shortfall is not exact")
 	for slot in TownConstructionBoard.ordered_slots(board):
