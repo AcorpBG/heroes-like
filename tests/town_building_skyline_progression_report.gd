@@ -157,8 +157,15 @@ func _validate_live_build_and_save_round_trip(fixture: Control) -> Dictionary:
 	if actions.is_empty():
 		_errors.append("Live town has no construction action")
 		return {"session": session}
-	var building_id := TownRules.building_id_for_action(String(actions[0].get("id", "")))
-	var action_cost: Dictionary = actions[0].get("cost", {}) if actions[0].get("cost", {}) is Dictionary else {}
+	# The hall is the main building and opens construction, so build and then
+	# inspect the first order that opens its own building popout.
+	var picked: Dictionary = actions[0]
+	for action_value in actions:
+		if String(ContentService.get_building(TownRules.building_id_for_action(String(action_value.get("id", "")))).get("line_id", "")) != "hall":
+			picked = action_value
+			break
+	var building_id := TownRules.building_id_for_action(String(picked.get("id", "")))
+	var action_cost: Dictionary = picked.get("cost", {}) if picked.get("cost", {}) is Dictionary else {}
 	var resources_before: Dictionary = session.overworld.get("resources", {}).duplicate(true)
 	fixture.set_town_state(session)
 	var before: Dictionary = fixture.validation_town_building_progression_summary()
@@ -237,7 +244,7 @@ func _validate_building_information(session, building_id: String) -> Dictionary:
 		and String(snapshot.get("effects", "")).contains("Effects:")
 		and bool(snapshot.get("icon_loaded", false))
 		and bool(snapshot.get("surface_visible", false))
-		and bool(snapshot.get("read_only", false))
+		and String(snapshot.get("panel", {}).get("kind", "")) != ""
 		and bool(hotspot.get("aligned", false))
 		and String(hotspot.get("accessibility_name", "")) != ""
 	)

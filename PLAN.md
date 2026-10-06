@@ -30,6 +30,10 @@ Rules:
 
 `content-gold-only-unit-costs-20261006` (completed, owner-directed economy content): tier 1-6 units, base and upgraded, cost only gold; each faction's tier 7 costs gold plus its main rare resource, the only non-gold unit cost; no unit costs wood or ore, and neutral units follow the same tiers. Gold amounts are unchanged and faction resource pressure stays in building costs. `tests/validate_repo.py` enforces the rule. See `docs/economy-overhaul-foundation.md`.
 
+### Town building popouts
+
+`ux-town-building-popouts-20261006` (completed, owner-directed UI): clicking a built Town building opens a popout made for it. Dwellings recruit with an amount slider and full creature stats, the magic guild shows its spells by level, the tavern lists hireable heroes with portraits and stats, markets, artifact exchanges and training buildings offer their orders, and every building shows its description, effect tags and upgrade line with cost and an Upgrade button. Orders run through the existing Town rules; opening a popout changes nothing. See `docs/town-building-popouts.md`.
+
 ### Dwelling pair balance
 
 `balance-dwelling-pairs-20261006` (completed, owner-directed balance content): the two exclusive dwelling lines of every tier I–V choice, base and upgrade, are trade-offs instead of one line being slightly better at everything. Same-role lines split into tank and striker and trade evenly per gold; a shooter is never bulkier than its melee partner and keeps a 1.3–2.0 head-on edge per gold; upgrades stay above their base. Only health, attack, defense, damage and gold changed (107 faction units). `tests/unit_pair_duel_report.tscn` duels all 60 pairs at equal gold and fails on any pair outside the bands. See `docs/dwelling-pair-balance.md`.

@@ -1713,8 +1713,11 @@ static func current_spell_tier(town: Dictionary) -> int:
 	return highest_tier
 
 static func accessible_spell_ids(town: Dictionary) -> Array:
+	return spell_ids_through_tier(town, current_spell_tier(town))
+
+## Library and school spells this town teaches once its guild reaches `tier`.
+static func spell_ids_through_tier(town: Dictionary, tier: int) -> Array:
 	var town_template := ContentService.get_town(String(town.get("town_id", "")))
-	var tier := current_spell_tier(town)
 	if tier <= 0:
 		return []
 

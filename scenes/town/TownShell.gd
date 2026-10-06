@@ -11,6 +11,8 @@ const ArmyStackBarScript = preload("res://scenes/shared/ArmyStackBar.gd")
 const SpellbookViewScript = preload("res://scenes/shared/SpellbookView.gd")
 const TownConstructionScreenScript = preload("res://scenes/town/TownConstructionScreen.gd")
 const TownConstructionBoardScript = preload("res://scripts/core/TownConstructionBoard.gd")
+const TownBuildingPanelScript = preload("res://scripts/core/TownBuildingPanel.gd")
+const TownBuildingPanelViewScript = preload("res://scenes/town/TownBuildingPanelView.gd")
 var _spellbook_view: VBoxContainer
 
 const UI_ART_TOWN_BANNER_FRAME := "res://art/ui/runtime/town/banner_frame.png"
@@ -224,11 +226,7 @@ var _selected_build_action_id := ""
 var _town_catalog_mode := ""
 var _town_catalog_previous_focus: Control
 var _selected_building_info_id := ""
-var _building_info_surface: VBoxContainer
-var _building_info_icon: TextureRect
-var _building_info_status: Label
-var _building_info_description: Label
-var _building_info_effects: Label
+var _building_info_surface: TownBuildingPanelViewScript
 var _narrow_layout_active := false
 var _narrow_orders_open := false
 var _last_management_tab_index := 0
@@ -379,9 +377,12 @@ func _apply_responsive_layout() -> void:
 		catalog_center.offset_bottom = -18.0
 		(_town_catalog_overlay.get_node("CatalogShade") as ColorRect).color.a = 0.72
 		_town_catalog_scroll.custom_minimum_size.y = 340.0
+		# Building popouts carry recruitment, spell shelves and hero cards, so
+		# they may use more of a large screen than the list dialogs.
+		var building_popout := _town_catalog_mode == "building_info"
 		_town_catalog_panel.custom_minimum_size = Vector2(
-			min(1080.0, max(620.0, available_size.x - 44.0)),
-			min(690.0, max(480.0, available_size.y - 44.0))
+			min(1280.0 if building_popout else 1080.0, max(620.0, available_size.x - 44.0)),
+			min(900.0 if building_popout else 690.0, max(480.0, available_size.y - 44.0))
 		)
 	var catalog_columns := 2 if available_size.x < 900.0 else (3 if available_size.x < 1320.0 else 4)
 	if _recruit_actions is GridContainer:
@@ -430,44 +431,13 @@ func _prepare_direct_dialog_surfaces() -> void:
 func _create_building_information_surface() -> void:
 	if _building_info_surface != null:
 		return
-	_building_info_surface = VBoxContainer.new()
-	_building_info_surface.name = "BuildingInformation"
-	_building_info_surface.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_building_info_surface.add_theme_constant_override("separation", 12)
-	var identity_row := HBoxContainer.new()
-	identity_row.name = "BuildingIdentity"
-	identity_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	identity_row.add_theme_constant_override("separation", 16)
-	_building_info_surface.add_child(identity_row)
-	_building_info_icon = TextureRect.new()
-	_building_info_icon.name = "BuildingPainting"
-	_building_info_icon.custom_minimum_size = Vector2(176.0, 176.0)
-	_building_info_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_building_info_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_building_info_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	identity_row.add_child(_building_info_icon)
-	var copy_column := VBoxContainer.new()
-	copy_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	copy_column.add_theme_constant_override("separation", 8)
-	identity_row.add_child(copy_column)
-	_building_info_status = Label.new()
-	_building_info_status.name = "BuildingStatus"
-	_building_info_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	FrontierVisualKit.apply_label(_building_info_status, "title", 16)
-	copy_column.add_child(_building_info_status)
-	_building_info_description = Label.new()
-	_building_info_description.name = "BuildingDescription"
-	_building_info_description.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_building_info_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	FrontierVisualKit.apply_label(_building_info_description, "body", 15)
-	copy_column.add_child(_building_info_description)
-	_building_info_surface.add_child(HSeparator.new())
-	_building_info_effects = Label.new()
-	_building_info_effects.name = "BuildingEffects"
-	_building_info_effects.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_building_info_effects.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	FrontierVisualKit.apply_label(_building_info_effects, "body", 14)
-	_building_info_surface.add_child(_building_info_effects)
+	_building_info_surface = TownBuildingPanelViewScript.new()
+	_building_info_surface.recruit_requested.connect(_on_building_recruit_requested)
+	_building_info_surface.hire_requested.connect(_on_building_hire_requested)
+	_building_info_surface.build_requested.connect(_on_construction_build_requested)
+	_building_info_surface.trade_requested.connect(_on_construction_trade_requested.bind(""))
+	_building_info_surface.service_requested.connect(_on_response_action_pressed)
+	_building_info_surface.controls_changed.connect(func(): call_deferred("_configure_town_keyboard_focus"))
 	_domain_actions.add_child(_building_info_surface)
 
 func _direct_dialog_mode_surfaces(mode: String) -> Array:
@@ -546,97 +516,48 @@ func _on_town_building_activated(building_id: String) -> void:
 	_open_town_catalog("building_info")
 
 func _populate_building_information(building_id: String) -> void:
-	var building := ContentService.get_building(building_id)
-	if building.is_empty():
+	OverworldRules.begin_normalized_read_scope(_session)
+	TownRules.begin_read_scope(_session)
+	var model := TownBuildingPanelScript.build(_session, building_id)
+	TownRules.end_read_scope(_session)
+	OverworldRules.end_normalized_read_scope(_session)
+	if model.is_empty():
 		_town_catalog_title_label.text = "Building Information"
 		_town_catalog_subtitle_label.text = "This building is not available in the active town."
-		_building_info_icon.texture = null
-		_building_info_status.text = "Unavailable"
-		_building_info_description.text = "No authored building record could be resolved."
-		_building_info_effects.text = ""
+		_building_info_surface.configure({"building_id": building_id, "description": "No authored building record could be resolved.", "effects": []})
 		return
-	var building_name := String(building.get("name", building_id))
-	var category := String(building.get("category", "support")).capitalize()
-	_town_catalog_title_label.text = building_name
-	_town_catalog_subtitle_label.text = "Completed %s building • inspect its permanent town contribution" % category.to_lower()
-	_building_info_status.text = "%s • Standing in %s" % [category, String(_header_label.text).split(" • ")[0]]
-	_building_info_description.text = String(building.get("description", "No description available."))
-	var texture_path := TownRules.building_icon_path(building_id, _active_town_faction_id())
-	_building_info_icon.texture = load(texture_path) as Texture2D if texture_path != "" and ResourceLoader.exists(texture_path, "Texture2D") else null
-	_building_info_icon.tooltip_text = "%s — original Town building painting" % building_name
-	_building_info_icon.accessibility_name = "%s building painting" % building_name
-	_building_info_icon.accessibility_description = String(building.get("description", ""))
-	_building_info_effects.text = "\n".join(_building_information_lines(building))
-	_building_info_effects.tooltip_text = _building_info_effects.text
+	_town_catalog_title_label.text = String(model.get("name", building_id))
+	_town_catalog_subtitle_label.text = String(model.get("subtitle", ""))
+	_building_info_surface.configure(model)
+	call_deferred("_fit_building_popout")
 
-func _building_information_lines(building: Dictionary) -> Array:
-	var lines: Array = []
-	var cost: Dictionary = building.get("cost", {}) if building.get("cost", {}) is Dictionary else {}
-	lines.append("Construction cost: %s" % TownRules._describe_resources(cost, "founding structure"))
-	if int(building.get("development_version", 0)) == 1:
-		lines.append(String(building.get("description", "")))
-		if int(building.get("requires_dwelling_tier", 0)) > 0:
-			lines.append("Requires either tier-%d dwelling." % int(building.requires_dwelling_tier))
-		for requirement_id in building.get("requires", []):
-			lines.append("Requires: " + String(ContentService.get_building(String(requirement_id)).get("name", requirement_id)))
-		return lines
-	var requirement_names: Array = []
-	for requirement_id_value in Array(building.get("requires", [])):
-		var requirement := ContentService.get_building(String(requirement_id_value))
-		requirement_names.append(String(requirement.get("name", requirement_id_value)))
-	lines.append("Requires: %s" % (", ".join(requirement_names) if not requirement_names.is_empty() else "none"))
-	var upgrade_from := String(building.get("upgrade_from", ""))
-	if upgrade_from != "":
-		var predecessor := ContentService.get_building(upgrade_from)
-		lines.append("Replaces: %s on the same town site" % String(predecessor.get("name", upgrade_from)))
-	var effects: Array = []
-	var income: Dictionary = building.get("income", {}) if building.get("income", {}) is Dictionary else {}
-	if not income.is_empty():
-		effects.append("Daily income: %s" % TownRules._describe_resources(income))
-	var unlock_unit_id := String(building.get("unlock_unit_id", ""))
-	if unlock_unit_id != "":
-		var unit := ContentService.get_unit(unlock_unit_id)
-		effects.append("Unlocks recruitment: %s" % String(unit.get("name", unlock_unit_id)))
-	var growth_bonus: Dictionary = building.get("growth_bonus", {}) if building.get("growth_bonus", {}) is Dictionary else {}
-	for unit_id_value in growth_bonus:
-		var unit_id := String(unit_id_value)
-		var unit := ContentService.get_unit(unit_id)
-		effects.append("Weekly growth: +%d %s" % [int(growth_bonus.get(unit_id, 0)), String(unit.get("name", unit_id))])
-	var discounts: Dictionary = building.get("recruitment_discount_percent", {}) if building.get("recruitment_discount_percent", {}) is Dictionary else {}
-	for unit_id_value in discounts:
-		var unit_id := String(unit_id_value)
-		var unit := ContentService.get_unit(unit_id)
-		effects.append("Recruitment discount: %d%% for %s" % [int(discounts.get(unit_id, 0)), String(unit.get("name", unit_id))])
-	if int(building.get("spell_tier", 0)) > 0:
-		effects.append("Spell study: opens tier %d" % int(building.get("spell_tier", 0)))
-	if int(building.get("readiness_bonus", 0)) != 0:
-		effects.append("Town readiness: +%d" % int(building.get("readiness_bonus", 0)))
-	if int(building.get("pressure_bonus", 0)) != 0:
-		effects.append("Frontier pressure: +%d" % int(building.get("pressure_bonus", 0)))
-	var recovery_relief: Dictionary = building.get("recovery_relief", {}) if building.get("recovery_relief", {}) is Dictionary else {}
-	if not recovery_relief.is_empty():
-		effects.append("Recovery support: %s" % _humanize_building_effect_dictionary(recovery_relief))
-	var market_profile: Dictionary = building.get("market_profile", {}) if building.get("market_profile", {}) is Dictionary else {}
-	if not market_profile.is_empty():
-		effects.append("Market: %s" % String(market_profile.get("specialty_summary", "specialized exchange rates")))
-	var capital_project: Dictionary = building.get("capital_project", {}) if building.get("capital_project", {}) is Dictionary else {}
-	if not capital_project.is_empty():
-		effects.append("Capital project: %s" % String(capital_project.get("summary", "strengthens the town and its frontier reach")))
-	var artifact_contract: Dictionary = building.get("artifact_reward_contract", {}) if building.get("artifact_reward_contract", {}) is Dictionary else {}
-	if not artifact_contract.is_empty() and not bool(artifact_contract.get("metadata_only", true)):
-		effects.append("Artifact commission: %s, %s" % [String(artifact_contract.get("reward_tier", "standard")).capitalize(), "one-time" if bool(artifact_contract.get("one_time_reward", false)) else "repeatable"])
-	if effects.is_empty():
-		effects.append("Supports the town through its authored civic role.")
-	lines.append("Effects:")
-	for effect_value in effects:
-		lines.append("• %s" % String(effect_value))
-	return lines
+## Building popouts shrink to their content, up to the responsive cap, so a
+## plain building does not open an empty sheet over the town.
+func _fit_building_popout() -> void:
+	if not is_inside_tree() or _town_catalog_mode != "building_info" or not _town_catalog_overlay.visible:
+		return
+	_apply_responsive_layout()
+	await get_tree().process_frame
+	if _town_catalog_mode != "building_info" or not _town_catalog_overlay.visible:
+		return
+	var content := _town_catalog_scroll.get_child(0) as Control
+	if content == null:
+		return
+	var cap := _town_catalog_panel.custom_minimum_size.y
+	var chrome := _town_catalog_panel.size.y - _town_catalog_scroll.size.y
+	_town_catalog_panel.custom_minimum_size.y = clampf(content.get_combined_minimum_size().y + chrome + 8.0, 480.0, cap)
 
-func _humanize_building_effect_dictionary(values: Dictionary) -> String:
-	var parts: Array = []
-	for key_value in values:
-		parts.append("%s %s" % [String(key_value).replace("_", " "), str(values.get(key_value))])
-	return ", ".join(parts)
+func _on_building_recruit_requested(unit_id: String, count: int) -> void:
+	_on_recruit_action_pressed(unit_id, count)
+	_refresh_building_information()
+
+func _on_building_hire_requested(hero_id: String) -> void:
+	_on_tavern_action_pressed("hire_hero:%s" % hero_id)
+	_refresh_building_information()
+
+func _refresh_building_information() -> void:
+	if _town_catalog_is_open() and _town_catalog_mode == "building_info":
+		_populate_building_information(_selected_building_info_id)
 
 func _on_town_catalog_close_pressed() -> void:
 	_close_town_catalog()
@@ -850,12 +771,12 @@ func _read_action_consequence_signature() -> Dictionary:
 	OverworldRules.end_normalized_read_scope(_session)
 	return signature
 
-func _on_recruit_action_pressed(action_id: String) -> void:
+func _on_recruit_action_pressed(action_id: String, count: int = -1) -> void:
 	var full_action_id := "recruit:%s" % action_id
 	var context := _prepare_order_read_context(full_action_id)
 	var before: Dictionary = context.before
 	var action: Dictionary = context.action
-	var result := TownRules.recruit_active_town(_session, action_id)
+	var result := TownRules.recruit_active_town(_session, action_id, count)
 	_record_town_action_result("recruit", full_action_id, action, result, before)
 	_invalidate_active_town_entity_cache("recruit", ["town", "economy", "hero_army"])
 	if _handle_session_resolution():
@@ -3349,12 +3270,12 @@ func validation_building_information_snapshot(building_id: String = "") -> Dicti
 		"mode": _town_catalog_mode,
 		"title": _town_catalog_title_label.text,
 		"expected_title": String(building.get("name", expected_id)),
-		"description": _building_info_description.text if _building_info_description != null else "",
+		"description": _building_info_surface.description_text() if _building_info_surface != null else "",
 		"expected_description": String(building.get("description", "")),
-		"effects": _building_info_effects.text if _building_info_effects != null else "",
-		"icon_loaded": _building_info_icon != null and _building_info_icon.texture != null,
+		"effects": _building_info_surface.effects_text() if _building_info_surface != null else "",
+		"icon_loaded": _building_info_surface != null and _building_info_surface.painting_loaded(),
 		"surface_visible": _building_info_surface != null and _building_info_surface.is_visible_in_tree(),
-		"read_only": true,
+		"panel": _building_info_surface.validation_snapshot() if _building_info_surface != null else {},
 		"hotspot": _town_stage_view.call("validation_building_hotspot_summary", expected_id) if _town_stage_view.has_method("validation_building_hotspot_summary") else {},
 	}
 

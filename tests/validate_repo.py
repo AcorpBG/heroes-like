@@ -31896,7 +31896,7 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
     ):
         ensure(required_token in shell_text, errors, f"TownShell.gd is missing exact recruitment-presentation publication: {required_token}")
     recruit_handler_match = re.search(
-        r"func _on_recruit_action_pressed\(action_id: String\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+        r"func _on_recruit_action_pressed\(action_id: String, count: int = -1\) -> void:\n(?P<body>.*?)(?=\nfunc )",
         shell_text,
         re.DOTALL,
     )
@@ -31904,7 +31904,7 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
     if recruit_handler_match is not None:
         recruit_handler = recruit_handler_match.group("body")
         recruit_order = [
-            recruit_handler.find("var result := TownRules.recruit_active_town(_session, action_id)"),
+            recruit_handler.find("var result := TownRules.recruit_active_town(_session, action_id, count)"),
             recruit_handler.find('_record_town_action_result("recruit", full_action_id, action, result, before)'),
             recruit_handler.find('_invalidate_active_town_entity_cache("recruit", ["town", "economy", "hero_army"])'),
             recruit_handler.find("if _handle_session_resolution():"),
