@@ -4157,7 +4157,7 @@
       "public_text": "Survey charts of the whole region. Pay 1,000 gold to reveal this map level, once per hero.",
       "visit": {
         "role": "chartmaker",
-        "cadence": "once_per_hero",
+        "cadence": "once_per_side",
         "cost": {
           "gold": 1000
         },
@@ -4275,7 +4275,7 @@
       "public_text": "Calibrated lenses show the land around the cart. Reveals everything within 12 tiles, once per hero.",
       "visit": {
         "role": "far_lens",
-        "cadence": "once_per_hero",
+        "cadence": "once_per_side",
         "effects": {
           "reveal_radius": 12
         }

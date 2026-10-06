@@ -148,6 +148,12 @@ func _check_services() -> Dictionary:
 	var charts := _inject("site_contract_scribe_booth")
 	var charted := _visit(charts)
 	_expect(bool(charted.get("ok", false)) and String(charted.get("message", "")).contains("Charts reveal"), "Chartmaker reveals the map level for 1,000 gold: %s" % charted.get("message", ""))
+	OverworldRulesScript.normalize_overworld_state(_session)
+	var charts_node: Dictionary = _session.overworld.get("resource_nodes", [])[charts]
+	var charts_site := ContentService.get_resource_site("site_contract_scribe_booth")
+	_expect(not bool(VisitBuildings.readiness(charts_node, charts_site, "another_hero", _session.day + 3, VisitBuildings.side_key(_session)).get("ok", false)), "Chartmaker serves each player once, not each hero")
+	_expect(bool(VisitBuildings.readiness(charts_node, charts_site, "ai:faction_mireclaw", _session.day).get("ok", false)), "Chartmaker still serves another player")
+	_expect(not bool(_visit(charts).get("ok", false)), "Chartmaker refuses a second visit by the same player")
 	for site in ContentService.load_json("res://content/resource_sites.json").get("items", []):
 		if VisitBuildings.is_visit_building(site):
 			_expect(int(VisitBuildings.effects(site).get("experience", 0)) == 0 or VisitBuildings.cost(site).is_empty(), "%s does not sell experience" % site.get("id", ""))

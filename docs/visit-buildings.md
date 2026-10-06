@@ -17,12 +17,13 @@ A visit building is a resource site with family `visit_building` and a `visit` b
 | Cadence | Meaning |
 | --- | --- |
 | `once_per_hero` | Each hero may visit once. |
+| `once_per_side` | Each player (the human side or a computer faction) may use it once; what it reveals stays revealed. |
 | `daily_per_hero` | Each hero may visit once per day. |
 | `weekly_per_hero` | Each hero may visit once per week (days 1-7, 8-14, ...). |
 | `weekly_site` | The first hero each week uses it; the rest wait for the next week. |
 | `always` | No limit (the Wayside Exchange). |
 
-The node stores `hero_visits` (`{hero_id or "ai:<faction>": day}`) and `site_last_visit_day`. A computer faction's commanders share one key per faction.
+The node stores `hero_visits` (`{hero_id or "ai:<faction>": day}`), `side_visits` (`{"player:<id>" or "ai:<faction>": day}`) and `site_last_visit_day`. A computer faction's commanders share one key per faction.
 
 Effects (`visit.effects`, or the picked entry of `visit.choices`):
 
@@ -69,9 +70,9 @@ Computer players visit stat, experience, level and spell buildings with their co
 | Rally Flag | Muster Banner | +2 movement, +1 cohesion and +1 momentum next battle | weekly per hero |
 | Buoy | Tide Bell | +1 cohesion next battle | weekly per hero |
 | Faerie Ring, Swan Pond, Fountain of Fortune, Idol of Fortune, Mermaid | Fortune Ring | +1 momentum next battle (+1 to +3 for Fountain of Fortune) | weekly per hero |
-| Cartographer | Chartmaker | 1,000 gold to reveal the whole map level | once per hero |
+| Cartographer | Chartmaker | 1,000 gold to reveal the whole map level | once per player |
 | Trading Post | Wayside Exchange | trade wood, ore and gold without a town | always |
-| Eye of the Magi, Hut of the Magi | Lens Calibration Cart | reveal radius 12 | once per hero |
+| Eye of the Magi, Hut of the Magi | Lens Calibration Cart | reveal radius 12 | once per player |
 | (no HoMM3 match; not placed on random maps) | Reedboat Supply Stand | +3 movement today | daily per hero |
 
 The Bell Spire, Drum Cairn, Clamp Forge, Facet Orrery, Proving Rostrum, War College, Arcane Collegium, Lorestone, Elder Graft Tree and Grand Archive reuse existing original sprites; the Ley Well and Moonspring have new original sprites (`art/overworld/source/generated/resource_sites/visit_buildings_20261006/provenance.json`). The services and shrines keep their sprites.

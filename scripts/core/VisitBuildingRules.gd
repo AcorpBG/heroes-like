@@ -1,16 +1,19 @@
 extends RefCounted
 ## HoMM-style visit buildings: a site that stays on the map and gives a hero
 ## one clear effect, free unless the site names a price. The placed node keeps
-## a visit memory per hero (or per site for weekly sites), so each hero can use
-## a building once, once a day or once a week. See docs/visit-buildings.md.
+## a visit memory per hero (or per side, or per site for weekly sites), so each
+## hero can use a building once, once a day or once a week, and a side can chart
+## or survey once. See docs/visit-buildings.md.
 
 const FAMILY := "visit_building"
 const HERO_VISITS := "hero_visits"
+const SIDE_VISITS := "side_visits"
 const SITE_LAST_VISIT_DAY := "site_last_visit_day"
 const WEEK_BONUSES := "week_bonuses"
 const BATTLE_BOOSTS := "battle_boosts"
 
 const CADENCE_ONCE_PER_HERO := "once_per_hero"
+const CADENCE_ONCE_PER_SIDE := "once_per_side"
 const CADENCE_DAILY_PER_HERO := "daily_per_hero"
 const CADENCE_WEEKLY_PER_HERO := "weekly_per_hero"
 const CADENCE_WEEKLY_SITE := "weekly_site"
@@ -58,15 +61,25 @@ static func effects(site: Dictionary, choice_id: String = "") -> Dictionary:
 static func week_index(day: int) -> int:
 	return int(floor(float(max(1, day) - 1) / float(WEEK_LENGTH)))
 
+## The side a visitor plays for: the human player, or "ai:<faction>".
+static func side_key(session) -> String:
+	var player_id := String(session.overworld.get("active_player_id", "")) if session != null else ""
+	return "player:%s" % (player_id if player_id != "" else "player")
+
 ## Whether visitor_key (a hero id, or "ai:<faction>" for computer players) may
-## use the building on this day. Returns {ok, message}.
-static func readiness(node: Dictionary, site: Dictionary, visitor_key: String, day: int) -> Dictionary:
+## use the building on this day. A once-per-side building checks side (the
+## visitor key when empty). Returns {ok, message}.
+static func readiness(node: Dictionary, site: Dictionary, visitor_key: String, day: int, side: String = "") -> Dictionary:
 	var visits = node.get(HERO_VISITS, {})
 	if not (visits is Dictionary):
 		visits = {}
 	match cadence(site):
 		CADENCE_ALWAYS:
 			pass
+		CADENCE_ONCE_PER_SIDE:
+			var side_visits = node.get(SIDE_VISITS, {})
+			if side_visits is Dictionary and side_visits.has(side if side != "" else visitor_key):
+				return {"ok": false, "message": "You have already used %s; what it shows stays revealed." % String(site.get("name", "this site"))}
 		CADENCE_WEEKLY_SITE:
 			var last_site_day := int(node.get(SITE_LAST_VISIT_DAY, 0))
 			if last_site_day > 0 and week_index(last_site_day) == week_index(day):
@@ -82,17 +95,25 @@ static func readiness(node: Dictionary, site: Dictionary, visitor_key: String, d
 				return {"ok": false, "message": "This hero has already visited %s." % String(site.get("name", "this site"))}
 	return {"ok": true, "message": ""}
 
-static func record_visit(node: Dictionary, site: Dictionary, visitor_key: String, day: int) -> void:
+static func record_visit(node: Dictionary, site: Dictionary, visitor_key: String, day: int, side: String = "") -> void:
 	var visits = node.get(HERO_VISITS, {})
 	if not (visits is Dictionary):
 		visits = {}
 	visits[visitor_key] = day
 	node[HERO_VISITS] = visits
+	if cadence(site) == CADENCE_ONCE_PER_SIDE:
+		var side_visits = node.get(SIDE_VISITS, {})
+		if not (side_visits is Dictionary):
+			side_visits = {}
+		side_visits[side if side != "" else visitor_key] = day
+		node[SIDE_VISITS] = side_visits
 	if cadence(site) == CADENCE_WEEKLY_SITE:
 		node[SITE_LAST_VISIT_DAY] = day
 
 static func cadence_label(site: Dictionary) -> String:
 	match cadence(site):
+		CADENCE_ONCE_PER_SIDE:
+			return "once per player"
 		CADENCE_DAILY_PER_HERO:
 			return "once per hero each day"
 		CADENCE_WEEKLY_PER_HERO:
@@ -167,9 +188,11 @@ static func summary(site: Dictionary) -> String:
 		text = "%s (hero level %d+)" % [text, required_level(site)]
 	return "%s, %s" % [text, cadence_label(site)] if text != "" else cadence_label(site)
 
-static func status_line(node: Dictionary, site: Dictionary, visitor_key: String, day: int) -> String:
-	var ready := readiness(node, site, visitor_key, day)
-	return "Ready for this hero" if bool(ready.get("ok", false)) else String(ready.get("message", ""))
+static func status_line(node: Dictionary, site: Dictionary, visitor_key: String, day: int, side: String = "") -> String:
+	var ready := readiness(node, site, visitor_key, day, side)
+	if not bool(ready.get("ok", false)):
+		return String(ready.get("message", ""))
+	return "Ready" if cadence(site) == CADENCE_ONCE_PER_SIDE else "Ready for this hero"
 
 ## Adds this-week bonuses and next-battle boosts to a hero dictionary.
 static func add_week_bonus(hero: Dictionary, key: String, amount: int) -> void:

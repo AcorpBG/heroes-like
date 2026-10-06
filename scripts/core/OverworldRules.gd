@@ -1781,7 +1781,8 @@ static func _visit_building_result(
 	var node: Dictionary = nodes[index]
 	var site_name := String(site.get("name", "the building"))
 	var hero_id := String(session.overworld.get("active_hero_id", ""))
-	var ready := VisitBuildings.readiness(node, site, hero_id, session.day)
+	var side := VisitBuildings.side_key(session)
+	var ready := VisitBuildings.readiness(node, site, hero_id, session.day, side)
 	if not bool(ready.get("ok", false)):
 		return {"ok": false, "message": String(ready.get("message", ""))}
 	var hero: Dictionary = session.overworld.get("hero", {})
@@ -1816,7 +1817,7 @@ static func _visit_building_result(
 		return {"ok": false, "message": "%s asks %s." % [site_name, _describe_resource_delta(price)]}
 	if not price.is_empty():
 		_spend_resources(session, price)
-	VisitBuildings.record_visit(node, site, hero_id, session.day)
+	VisitBuildings.record_visit(node, site, hero_id, session.day, side)
 	nodes[index] = node
 	session.overworld["resource_nodes"] = nodes
 	var messages := ["%s visits %s." % [String(hero.get("name", "The hero")), site_name]]
@@ -6920,6 +6921,7 @@ static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictiona
 		NodePayload.CLAIM_PAYLOAD_SPENT,
 		NodePayload.PAYLOAD_VISIT,
 		VisitBuildings.HERO_VISITS,
+		VisitBuildings.SIDE_VISITS,
 		VisitBuildings.SITE_LAST_VISIT_DAY,
 		"generated_reward_translation",
 	]:
@@ -7127,7 +7129,7 @@ static func _resource_node_claimable_by_player(
 		if _resource_site_guard_blocks_node(guard_encounter, node):
 			return false
 	if VisitBuildings.is_visit_building(site):
-		return session != null and bool(VisitBuildings.readiness(node, site, String(session.overworld.get("active_hero_id", "")), session.day).get("ok", false))
+		return session != null and bool(VisitBuildings.readiness(node, site, String(session.overworld.get("active_hero_id", "")), session.day, VisitBuildings.side_key(session)).get("ok", false))
 	if _resource_site_is_repeatable(site) and not _resource_site_is_persistent(site):
 		return _resource_site_repeat_ready(session, node, site)
 	if _resource_site_is_persistent(site):
@@ -7708,7 +7710,7 @@ static func _resource_site_yield_line(
 	if VisitBuildings.is_visit_building(site):
 		var visit_parts := [VisitBuildings.summary(site)]
 		if session != null:
-			visit_parts.append(VisitBuildings.status_line(node, site, String(session.overworld.get("active_hero_id", "")), session.day))
+			visit_parts.append(VisitBuildings.status_line(node, site, String(session.overworld.get("active_hero_id", "")), session.day, VisitBuildings.side_key(session)))
 		return " | ".join(_non_empty_strings(visit_parts))
 	var parts := []
 	var claim_summary := _resource_site_reward_summary(site)
