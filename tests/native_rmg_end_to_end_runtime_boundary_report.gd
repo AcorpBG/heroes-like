@@ -262,8 +262,8 @@ func _validate_medium_authored_pool_proxy_projection(service: Variant, generated
 	var expected_rows := [
 		{
 			"index": 1110,
-			"object_id": "object_hilltop_signal_nest",
-			"site_id": "site_hilltop_signal_nest",
+			"object_id": "object_visit_moonspring",
+			"site_id": "site_visit_moonspring",
 			"placement_id": "native_h3maped_e76c8967_object_1110",
 			"primary_tile": {"x": 29, "y": 6, "level": 0},
 			"body_tiles": [
@@ -276,8 +276,8 @@ func _validate_medium_authored_pool_proxy_projection(service: Variant, generated
 		},
 		{
 			"index": 1174,
-			"object_id": "object_courier_change_post",
-			"site_id": "site_courier_change_post",
+			"object_id": "object_visit_arcane_collegium",
+			"site_id": "site_visit_arcane_collegium",
 			"placement_id": "native_h3maped_e76c8967_object_1174",
 			"primary_tile": {"x": 6, "y": 21, "level": 0},
 			"body_tiles": [
@@ -366,8 +366,10 @@ func _validate_medium_authored_pool_proxy_projection(service: Variant, generated
 		for row_index in range(expected_rows.size()):
 			var actual: Dictionary = live_type_107_nodes[row_index]
 			var expected: Dictionary = expected_rows[row_index]
-			for key in ["placement_id", "object_id", "site_id"]:
-				live_rows_exact = live_rows_exact and actual.get(key, "") == expected.get(key, "")
+			# The live session translates a HoMM3 School of War into the War College
+			# visit building; the package keeps the native proxy row.
+			live_rows_exact = live_rows_exact and actual.get("placement_id", "") == expected.get("placement_id", "")
+			live_rows_exact = live_rows_exact and actual.get("site_id", "") == "site_visit_war_college" and actual.get("object_id", "") == "object_visit_war_college"
 			live_rows_exact = live_rows_exact and actual.get("package_body_tiles", []) == expected.body_tiles and actual.get("package_visit_tiles", []) == expected.visit_tiles
 	return {
 		"ok": String(generated.get("final_payload_fnv1a32", "")) == "e76c8967" \

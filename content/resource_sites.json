@@ -2717,69 +2717,109 @@
     },
     {
       "id": "site_wayfarer_infirmary",
-      "name": "Wayfarer Infirmary",
-      "family": "repeatable_service",
-      "repeatable": true,
-      "visit_cooldown_days": 7,
-      "service_cost": {
-        "gold": 120
-      },
-      "rewards": {
-        "experience": 80
-      },
-      "town_support": {
-        "recovery_relief": 1
-      },
-      "action_label": "Use Infirmary",
-      "service_summary": "A field surgeon treats the command retinue and records lessons from the march."
+      "name": "Wayside Chapel",
+      "family": "visit_building",
+      "action_label": "Visit",
+      "public_text": "Blessings before the march. +1 cohesion in the next battle, +2 on day 7 of the week, once per hero each week.",
+      "visit": {
+        "role": "chapel",
+        "cadence": "weekly_per_hero",
+        "effects": {
+          "battle_boosts": {
+            "cohesion": 1
+          },
+          "day7_battle_boosts": {
+            "cohesion": 1
+          }
+        }
+      }
     },
     {
       "id": "site_market_caravanserai",
-      "name": "Market Caravanserai",
-      "family": "repeatable_service",
+      "name": "Wayside Exchange",
+      "family": "visit_building",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "normalized_content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
-      "repeatable": true,
-      "visit_cooldown_days": 7,
-      "service_cost": {
-        "gold": 180
-      },
-      "rewards": {
-        "wood": 1,
-        "ore": 1
-      },
-      "resource_outputs": [
-        {
-          "resource_id": "wood",
-          "cadence": "service_refresh",
-          "amount": 1,
-          "requires_owner": true,
-          "starts_after_claim": true,
-          "route_link_id": "",
-          "weekly_day": 0,
-          "cap_per_week": 0
-        },
-        {
-          "resource_id": "ore",
-          "cadence": "service_refresh",
-          "amount": 1,
-          "requires_owner": true,
-          "starts_after_claim": true,
-          "route_link_id": "",
-          "weekly_day": 0,
-          "cap_per_week": 0
-        }
-      ],
-      "service_refresh_profile": {
-        "refresh_cadence": "weekly",
-        "common_resource_only": true,
-        "rare_resource_exchange_enabled": false
-      },
-      "town_support": {
-        "recovery_relief": 1
-      },
-      "action_label": "Trade at Caravanserai",
-      "service_summary": "Caravans exchange coin for mixed construction lots on a weekly cycle."
+      "action_label": "Visit",
+      "public_text": "Caravans trade wood, ore and gold any time.",
+      "visit": {
+        "role": "trading_post",
+        "cadence": "always",
+        "choices": [
+          {
+            "id": "sell_wood",
+            "label": "Sell 5 wood for 250 gold",
+            "cost": {
+              "wood": 5
+            },
+            "effects": {
+              "resources": {
+                "gold": 250
+              }
+            }
+          },
+          {
+            "id": "sell_ore",
+            "label": "Sell 5 ore for 250 gold",
+            "cost": {
+              "ore": 5
+            },
+            "effects": {
+              "resources": {
+                "gold": 250
+              }
+            }
+          },
+          {
+            "id": "buy_wood",
+            "label": "Buy 5 wood for 600 gold",
+            "cost": {
+              "gold": 600
+            },
+            "effects": {
+              "resources": {
+                "wood": 5
+              }
+            }
+          },
+          {
+            "id": "buy_ore",
+            "label": "Buy 5 ore for 600 gold",
+            "cost": {
+              "gold": 600
+            },
+            "effects": {
+              "resources": {
+                "ore": 5
+              }
+            }
+          },
+          {
+            "id": "wood_for_ore",
+            "label": "Trade 5 wood for 4 ore",
+            "cost": {
+              "wood": 5
+            },
+            "effects": {
+              "resources": {
+                "ore": 4
+              }
+            }
+          },
+          {
+            "id": "ore_for_wood",
+            "label": "Trade 5 ore for 4 wood",
+            "cost": {
+              "ore": 5
+            },
+            "effects": {
+              "resources": {
+                "wood": 4
+              }
+            }
+          }
+        ]
+      }
     },
     {
       "id": "site_road_writ_purse",
@@ -4014,8 +4054,8 @@
     },
     {
       "id": "site_wayfarer_menders_tent",
-      "name": "Wayfarer Menders Tent",
-      "family": "repeatable_service",
+      "name": "Wayside Rest",
+      "family": "visit_building",
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "repeatable_service",
       "runtime_boundary": {
@@ -4037,24 +4077,24 @@
         "metadata_only": false,
         "runtime_service_execution_adopted": true
       },
-      "action_label": "Use Menders Tent",
+      "action_label": "Visit",
       "summary": "Road surgeons dress the company and dispatch supplies to the nearest recovering town.",
-      "service_cost": {
-        "gold": 120
-      },
-      "claim_rewards": {
-        "experience": 80
-      },
-      "service_effects": {
-        "nearest_player_town_recovery_relief": 2
-      },
-      "repeatable": true,
-      "visit_cooldown_days": 7
+      "public_text": "A night's rest steadies the ranks. +4 movement now and +1 cohesion in the next battle, once per hero each week.",
+      "visit": {
+        "role": "rest_stop",
+        "cadence": "weekly_per_hero",
+        "effects": {
+          "movement": 4,
+          "battle_boosts": {
+            "cohesion": 1
+          }
+        }
+      }
     },
     {
       "id": "site_courier_change_post",
-      "name": "Courier Change Post",
-      "family": "repeatable_service",
+      "name": "Remount Stable",
+      "family": "visit_building",
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "repeatable_service",
       "runtime_boundary": {
@@ -4076,24 +4116,21 @@
         "metadata_only": false,
         "runtime_service_execution_adopted": true
       },
-      "action_label": "Change Mounts",
+      "action_label": "Visit",
       "summary": "Couriers exchange tack, mounts, and road notes for a renewed march.",
-      "service_cost": {
-        "gold": 100
-      },
-      "claim_rewards": {
-        "experience": 40
-      },
-      "service_effects": {
-        "movement_restore": 260
-      },
-      "repeatable": true,
-      "visit_cooldown_days": 7
+      "public_text": "Fresh mounts for the week. +3 movement each day until the week ends, once per hero each week.",
+      "visit": {
+        "role": "stable",
+        "cadence": "weekly_per_hero",
+        "effects": {
+          "week_movement": 3
+        }
+      }
     },
     {
       "id": "site_contract_scribe_booth",
-      "name": "Contract Scribe Booth",
-      "family": "repeatable_service",
+      "name": "Chartmaker",
+      "family": "visit_building",
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "repeatable_service",
       "runtime_boundary": {
@@ -4115,24 +4152,24 @@
         "metadata_only": false,
         "runtime_service_execution_adopted": true
       },
-      "action_label": "Review Contracts",
+      "action_label": "Visit",
       "summary": "A frontier scribe closes loopholes and eases the most urgent hostile obligation.",
-      "service_cost": {
-        "gold": 80
-      },
-      "claim_rewards": {
-        "experience": 60
-      },
-      "service_effects": {
-        "enemy_pressure_relief": 1
-      },
-      "repeatable": true,
-      "visit_cooldown_days": 7
+      "public_text": "Survey charts of the whole region. Pay 1,000 gold to reveal this map level, once per hero.",
+      "visit": {
+        "role": "chartmaker",
+        "cadence": "once_per_hero",
+        "cost": {
+          "gold": 1000
+        },
+        "effects": {
+          "reveal": "level"
+        }
+      }
     },
     {
       "id": "site_reedboat_supply_stand",
       "name": "Reedboat Supply Stand",
-      "family": "repeatable_service",
+      "family": "visit_building",
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "repeatable_service",
       "runtime_boundary": {
@@ -4155,26 +4192,22 @@
         "metadata_only": false,
         "runtime_service_execution_adopted": true
       },
-      "action_label": "Take Reedboat Supplies",
+      "action_label": "Visit",
       "summary": "Reed pilots issue channel gear, sound the nearby water, and lash prepared wood aboard.",
-      "service_cost": {
-        "gold": 110,
-        "wood": 1
-      },
-      "claim_rewards": {
-        "wood": 2
-      },
-      "service_effects": {
-        "movement_restore": 160
-      },
       "vision_radius": 2,
-      "repeatable": true,
-      "visit_cooldown_days": 7
+      "public_text": "Fresh poles and rations for the crossing. +3 movement now, once per hero each day.",
+      "visit": {
+        "role": "supply_stand",
+        "cadence": "daily_per_hero",
+        "effects": {
+          "movement": 3
+        }
+      }
     },
     {
       "id": "site_ash_cooler_kitchen",
-      "name": "Ash Cooler Kitchen",
-      "family": "repeatable_service",
+      "name": "Cookfire Rest",
+      "family": "visit_building",
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "repeatable_service",
       "runtime_boundary": {
@@ -4197,26 +4230,24 @@
         "metadata_only": false,
         "runtime_service_execution_adopted": true
       },
-      "action_label": "Rest at Ash Cooler",
+      "action_label": "Visit",
       "summary": "A cooled field meal steadies the march while relief stores travel to the nearest town.",
-      "service_cost": {
-        "gold": 100,
-        "ore": 1
-      },
-      "claim_rewards": {
-        "experience": 65
-      },
-      "service_effects": {
-        "movement_restore": 100,
-        "nearest_player_town_recovery_relief": 1
-      },
-      "repeatable": true,
-      "visit_cooldown_days": 7
+      "public_text": "Hot food and shade restore the column. +4 movement now and +1 cohesion in the next battle, once per hero each week.",
+      "visit": {
+        "role": "rest_stop",
+        "cadence": "weekly_per_hero",
+        "effects": {
+          "movement": 4,
+          "battle_boosts": {
+            "cohesion": 1
+          }
+        }
+      }
     },
     {
       "id": "site_lens_calibration_cart",
       "name": "Lens Calibration Cart",
-      "family": "repeatable_service",
+      "family": "visit_building",
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "repeatable_service",
       "runtime_boundary": {
@@ -4238,22 +4269,22 @@
         "metadata_only": false,
         "runtime_service_execution_adopted": true
       },
-      "action_label": "Calibrate Survey Lens",
+      "action_label": "Visit",
       "summary": "Surveyors align the field prism and chart a broad ring beyond the road.",
-      "service_cost": {
-        "gold": 130
-      },
-      "claim_rewards": {
-        "experience": 50
-      },
       "vision_radius": 5,
-      "repeatable": true,
-      "visit_cooldown_days": 7
+      "public_text": "Calibrated lenses show the land around the cart. Reveals everything within 12 tiles, once per hero.",
+      "visit": {
+        "role": "far_lens",
+        "cadence": "once_per_hero",
+        "effects": {
+          "reveal_radius": 12
+        }
+      }
     },
     {
       "id": "site_oath_ember_shrine",
       "name": "Oath Ember Shrine",
-      "family": "shrine",
+      "family": "visit_building",
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "shrine_progression",
       "runtime_boundary": {
@@ -4273,20 +4304,22 @@
         "metadata_only": false,
         "runtime_shrine_execution_adopted": true
       },
-      "action_label": "Kindle Oath Ember",
+      "action_label": "Visit",
       "summary": "The ember answers a commander who binds resolve to the old roadward oath.",
-      "claim_rewards": {
-        "experience": 90
+      "public_text": "The ember-keepers teach one tier 1 spell to each hero who visits.",
+      "visit": {
+        "role": "spell_shrine",
+        "cadence": "once_per_hero",
+        "effects": {
+          "spell_tier": 1
+        }
       },
-      "hero_command_bonus": {
-        "attack": 1
-      },
-      "learn_spell_id": "spell_beacon_waymark_road_15"
+      "learn_spell_id": "spell_relay_drum"
     },
     {
       "id": "site_reedscript_vow_shrine",
       "name": "Reedscript Vow Shrine",
-      "family": "shrine",
+      "family": "visit_building",
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "shrine_progression",
       "runtime_boundary": {
@@ -4306,21 +4339,23 @@
         "metadata_only": false,
         "runtime_shrine_execution_adopted": true
       },
-      "action_label": "Seal Reedscript Vow",
+      "action_label": "Visit",
       "summary": "A knotted vow teaches the patient routes hidden beneath mire and reed.",
-      "claim_rewards": {
-        "experience": 75
+      "vision_radius": 3,
+      "public_text": "The reed scribes teach one tier 2 spell to each hero who visits.",
+      "visit": {
+        "role": "spell_shrine",
+        "cadence": "once_per_hero",
+        "effects": {
+          "spell_tier": 2
+        }
       },
-      "hero_command_bonus": {
-        "knowledge": 1
-      },
-      "learn_spell_id": "spell_mire_flood_fenlight_12",
-      "vision_radius": 3
+      "learn_spell_id": "spell_lantern_phalanx"
     },
     {
       "id": "site_prism_measure_shrine",
       "name": "Prism Measure Shrine",
-      "family": "shrine",
+      "family": "visit_building",
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "shrine_progression",
       "runtime_boundary": {
@@ -4340,21 +4375,23 @@
         "metadata_only": false,
         "runtime_shrine_execution_adopted": true
       },
-      "action_label": "Align Prism Measure",
+      "action_label": "Visit",
       "summary": "The calibrated facets teach a commander to turn distance into magical leverage.",
-      "claim_rewards": {
-        "experience": 80
+      "vision_radius": 4,
+      "public_text": "The prism readers teach one tier 3 spell to each hero who visits.",
+      "visit": {
+        "role": "spell_shrine",
+        "cadence": "once_per_hero",
+        "effects": {
+          "spell_tier": 3
+        }
       },
-      "hero_command_bonus": {
-        "power": 1
-      },
-      "learn_spell_id": "spell_lens_starlens_survey_12",
-      "vision_radius": 4
+      "learn_spell_id": "spell_lens_glass_facet_08"
     },
     {
       "id": "site_root_accord_ring",
-      "name": "Root Accord Ring",
-      "family": "shrine",
+      "name": "Fortune Ring",
+      "family": "visit_building",
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "shrine_progression",
       "runtime_boundary": {
@@ -4374,22 +4411,23 @@
         "metadata_only": false,
         "runtime_shrine_execution_adopted": true
       },
-      "action_label": "Renew Root Accord",
+      "action_label": "Visit",
       "summary": "Living roots answer the renewed pact with vigor for road and settlement alike.",
-      "claim_rewards": {
-        "experience": 60
-      },
-      "shrine_effects": {
-        "movement_restore": 120,
-        "nearest_player_town_recovery_relief": 1
-      },
-      "repeatable": true,
-      "visit_cooldown_days": 7
+      "public_text": "Luck rides with whoever walks the ring. +1 momentum in the next battle, once per hero each week.",
+      "visit": {
+        "role": "fortune_ring",
+        "cadence": "weekly_per_hero",
+        "effects": {
+          "battle_boosts": {
+            "momentum": 1
+          }
+        }
+      }
     },
     {
       "id": "site_furnace_oath_marker",
-      "name": "Furnace Oath Marker",
-      "family": "shrine",
+      "name": "Muster Banner",
+      "family": "visit_building",
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "shrine_progression",
       "runtime_boundary": {
@@ -4409,21 +4447,25 @@
         "metadata_only": false,
         "runtime_shrine_execution_adopted": true
       },
-      "action_label": "Strike Furnace Oath",
+      "action_label": "Visit",
       "summary": "A measured hammer rite restores the company rhythm for another hard march.",
-      "claim_rewards": {
-        "experience": 65
-      },
-      "shrine_effects": {
-        "movement_restore": 150
-      },
-      "repeatable": true,
-      "visit_cooldown_days": 7
+      "public_text": "The banner rallies the column. +2 movement now and +1 cohesion and +1 momentum in the next battle, once per hero each week.",
+      "visit": {
+        "role": "rally_banner",
+        "cadence": "weekly_per_hero",
+        "effects": {
+          "movement": 2,
+          "battle_boosts": {
+            "cohesion": 1,
+            "momentum": 1
+          }
+        }
+      }
     },
     {
       "id": "site_tide_bell_shrine",
-      "name": "Tide Bell Shrine",
-      "family": "shrine",
+      "name": "Tide Bell",
+      "family": "visit_building",
       "content_batch_id": "overworld-object-content-batch-003-services-shrines-signs-events-10184",
       "batch003_role": "shrine_progression",
       "runtime_boundary": {
@@ -4443,17 +4485,270 @@
         "metadata_only": false,
         "runtime_shrine_execution_adopted": true
       },
-      "action_label": "Ring Tide Bell",
+      "action_label": "Visit",
       "summary": "The tide bell carries a warning across hostile lanes and clears the coast ahead.",
-      "claim_rewards": {
-        "experience": 55
-      },
-      "shrine_effects": {
-        "enemy_pressure_relief": 1
-      },
       "vision_radius": 4,
-      "repeatable": true,
-      "visit_cooldown_days": 7
+      "public_text": "The bell steadies nerves for the next fight. +1 cohesion in the next battle, once per hero each week.",
+      "visit": {
+        "role": "tide_bell",
+        "cadence": "weekly_per_hero",
+        "effects": {
+          "battle_boosts": {
+            "cohesion": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "site_visit_bell_spire",
+      "name": "Bell Spire",
+      "family": "visit_building",
+      "action_label": "Visit",
+      "overworld_sprite_asset_id": "resource_site_high_arcanum_lastroad_bell_spire",
+      "public_text": "Bell-wardens drill every passing hero in the charge. +1 attack, once per hero.",
+      "visit": {
+        "role": "attack_building",
+        "cadence": "once_per_hero",
+        "effects": {
+          "stats": {
+            "attack": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "site_visit_drum_cairn",
+      "name": "Drum Cairn",
+      "family": "visit_building",
+      "action_label": "Visit",
+      "overworld_sprite_asset_id": "resource_site_high_arcanum_siltheart_drum_cairn",
+      "public_text": "The cairn's slow drumbeat teaches a steady guard. +1 defense, once per hero.",
+      "visit": {
+        "role": "defense_building",
+        "cadence": "once_per_hero",
+        "effects": {
+          "stats": {
+            "defense": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "site_visit_clamp_forge",
+      "name": "Clamp Forge",
+      "family": "visit_building",
+      "action_label": "Visit",
+      "overworld_sprite_asset_id": "resource_site_high_arcanum_slagbound_clamp_forge",
+      "public_text": "Smiths of the clamp forge temper a hero's will with their fires. +1 power, once per hero.",
+      "visit": {
+        "role": "power_building",
+        "cadence": "once_per_hero",
+        "effects": {
+          "stats": {
+            "power": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "site_visit_facet_orrery",
+      "name": "Facet Orrery",
+      "family": "visit_building",
+      "action_label": "Visit",
+      "overworld_sprite_asset_id": "resource_site_high_arcanum_aurora_facet_orrery",
+      "public_text": "Turning the orrery's facets sharpens a hero's mind. +1 knowledge, once per hero.",
+      "visit": {
+        "role": "knowledge_building",
+        "cadence": "once_per_hero",
+        "effects": {
+          "stats": {
+            "knowledge": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "site_visit_proving_rostrum",
+      "name": "Proving Rostrum",
+      "family": "visit_building",
+      "action_label": "Visit",
+      "overworld_sprite_asset_id": "resource_site_triune_arcanum_lockfire_rostrum",
+      "public_text": "Champions spar on the rostrum. Choose +2 attack or +2 defense, once per hero.",
+      "visit": {
+        "role": "arena_building",
+        "cadence": "once_per_hero",
+        "choices": [
+          {
+            "id": "attack",
+            "label": "Train the charge: +2 attack",
+            "effects": {
+              "stats": {
+                "attack": 2
+              }
+            }
+          },
+          {
+            "id": "defense",
+            "label": "Train the guard: +2 defense",
+            "effects": {
+              "stats": {
+                "defense": 2
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "site_visit_war_college",
+      "name": "War College",
+      "family": "visit_building",
+      "action_label": "Visit",
+      "overworld_sprite_asset_id": "resource_site_grand_arcanum_ashrail_forge",
+      "public_text": "Instructors teach for a fee. Pay 1,000 gold for +1 attack or +1 defense, once per hero.",
+      "visit": {
+        "role": "war_school",
+        "cadence": "once_per_hero",
+        "cost": {
+          "gold": 1000
+        },
+        "choices": [
+          {
+            "id": "attack",
+            "label": "Study assault: +1 attack for 1,000 gold",
+            "effects": {
+              "stats": {
+                "attack": 1
+              }
+            }
+          },
+          {
+            "id": "defense",
+            "label": "Study fieldworks: +1 defense for 1,000 gold",
+            "effects": {
+              "stats": {
+                "defense": 1
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "site_visit_arcane_collegium",
+      "name": "Arcane Collegium",
+      "family": "visit_building",
+      "action_label": "Visit",
+      "overworld_sprite_asset_id": "resource_site_grand_arcanum_aurora_halo_array",
+      "public_text": "Masters of the halo array teach for a fee. Pay 1,000 gold for +1 power or +1 knowledge, once per hero.",
+      "visit": {
+        "role": "magic_school",
+        "cadence": "once_per_hero",
+        "cost": {
+          "gold": 1000
+        },
+        "choices": [
+          {
+            "id": "power",
+            "label": "Study channeling: +1 power for 1,000 gold",
+            "effects": {
+              "stats": {
+                "power": 1
+              }
+            }
+          },
+          {
+            "id": "knowledge",
+            "label": "Study lore: +1 knowledge for 1,000 gold",
+            "effects": {
+              "stats": {
+                "knowledge": 1
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "site_visit_lorestone",
+      "name": "Lorestone",
+      "family": "visit_building",
+      "action_label": "Visit",
+      "overworld_sprite_asset_id": "resource_site_frontier_marker_old_measure",
+      "public_text": "Surveyors' marks cover the stone with old campaigns. +1,000 experience, once per hero.",
+      "visit": {
+        "role": "experience_building",
+        "cadence": "once_per_hero",
+        "effects": {
+          "experience": 1000
+        }
+      }
+    },
+    {
+      "id": "site_visit_elder_graft_tree",
+      "name": "Elder Graft Tree",
+      "family": "visit_building",
+      "action_label": "Visit",
+      "overworld_sprite_asset_id": "resource_site_high_arcanum_bloombark_covenant_tree",
+      "public_text": "The old graft tree shares a lifetime of seasons. +1 level, once per hero; some trees ask a gift first.",
+      "visit": {
+        "role": "level_building",
+        "cadence": "once_per_hero",
+        "effects": {
+          "levels": 1
+        }
+      }
+    },
+    {
+      "id": "site_visit_grand_archive",
+      "name": "Grand Archive",
+      "family": "visit_building",
+      "action_label": "Visit",
+      "overworld_sprite_asset_id": "resource_site_grand_arcanum_mistmourning_archive",
+      "public_text": "Only seasoned commanders may read in the archive. +2 to every stat for heroes of level 10 or higher, once per hero.",
+      "visit": {
+        "role": "library_building",
+        "cadence": "once_per_hero",
+        "required_level": 10,
+        "effects": {
+          "stats": {
+            "attack": 2,
+            "defense": 2,
+            "power": 2,
+            "knowledge": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "site_visit_ley_well",
+      "name": "Ley Well",
+      "family": "visit_building",
+      "action_label": "Visit",
+      "overworld_sprite_asset_id": "mapobj_ley_well",
+      "public_text": "Ley water restores a caster's strength. Refills mana, once per hero each day.",
+      "visit": {
+        "role": "mana_well",
+        "cadence": "daily_per_hero",
+        "effects": {
+          "mana": "refill"
+        }
+      }
+    },
+    {
+      "id": "site_visit_moonspring",
+      "name": "Moonspring",
+      "family": "visit_building",
+      "action_label": "Visit",
+      "overworld_sprite_asset_id": "mapobj_moonspring",
+      "public_text": "Once a week the spring runs bright. Doubles a hero's mana until the week ends.",
+      "visit": {
+        "role": "mana_spring",
+        "cadence": "weekly_site",
+        "effects": {
+          "mana": "week_double"
+        }
+      }
     },
     {
       "id": "site_hilltop_signal_nest",

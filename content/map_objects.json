@@ -4109,13 +4109,12 @@
     },
     {
       "id": "object_wayfarer_infirmary",
-      "name": "Wayfarer Infirmary",
+      "name": "Wayside Chapel",
       "family": "repeatable_service",
       "schema_version": 1,
       "primary_class": "interactable_site",
       "secondary_tags": [
-        "recovery",
-        "town_support"
+        "recovery"
       ],
       "resource_site_id": "site_wayfarer_infirmary",
       "biome_ids": [
@@ -4138,26 +4137,25 @@
       ],
       "passability_class": "blocking_visitable",
       "interaction": {
-        "cadence": "cooldown_days",
+        "cadence": "per_hero_visit",
         "remains_after_visit": true,
-        "state_after_visit": "visited",
+        "state_after_visit": "unchanged",
         "requires_ownership": false,
-        "requires_guard_clear": false,
+        "requires_guard_clear": true,
         "supports_revisit": true,
-        "cooldown_days": 7,
-        "refresh_rule": "cooldown"
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
       }
     },
     {
       "id": "object_market_caravanserai",
-      "name": "Market Caravanserai",
+      "name": "Wayside Exchange",
       "family": "repeatable_service",
       "schema_version": 1,
       "primary_class": "interactable_site",
       "secondary_tags": [
         "market",
-        "recovery",
-        "town_support"
+        "recovery"
       ],
       "resource_site_id": "site_market_caravanserai",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
@@ -4229,14 +4227,14 @@
       ],
       "passability_class": "blocking_visitable",
       "interaction": {
-        "cadence": "cooldown_days",
+        "cadence": "per_hero_visit",
         "remains_after_visit": true,
-        "state_after_visit": "visited",
+        "state_after_visit": "unchanged",
         "requires_ownership": false,
-        "requires_guard_clear": false,
+        "requires_guard_clear": true,
         "supports_revisit": true,
-        "cooldown_days": 7,
-        "refresh_rule": "cooldown"
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
       },
       "animation_cues": [
         "object_support_producer_idle_placeholder"
@@ -23604,7 +23602,7 @@
     },
     {
       "id": "object_wayfarer_menders_tent",
-      "name": "Wayfarer Menders Tent",
+      "name": "Wayside Rest",
       "family": "repeatable_service",
       "schema_version": 1,
       "primary_class": "interactable_site",
@@ -23661,14 +23659,14 @@
       ],
       "passability_class": "blocking_visitable",
       "interaction": {
-        "cadence": "cooldown_days",
+        "cadence": "per_hero_visit",
         "remains_after_visit": true,
         "state_after_visit": "unchanged",
         "requires_ownership": false,
-        "requires_guard_clear": false,
+        "requires_guard_clear": true,
         "supports_revisit": true,
-        "cooldown_days": 7,
-        "refresh_rule": "cooldown"
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
       },
       "guard_expectation": {
         "tier": "light",
@@ -23713,7 +23711,7 @@
     },
     {
       "id": "object_courier_change_post",
-      "name": "Courier Change Post",
+      "name": "Remount Stable",
       "family": "repeatable_service",
       "schema_version": 1,
       "primary_class": "interactable_site",
@@ -23769,14 +23767,14 @@
       ],
       "passability_class": "blocking_visitable",
       "interaction": {
-        "cadence": "cooldown_days",
+        "cadence": "per_hero_visit",
         "remains_after_visit": true,
         "state_after_visit": "unchanged",
         "requires_ownership": false,
-        "requires_guard_clear": false,
+        "requires_guard_clear": true,
         "supports_revisit": true,
-        "cooldown_days": 7,
-        "refresh_rule": "cooldown"
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
       },
       "guard_expectation": {
         "tier": "unguarded",
@@ -23821,7 +23819,7 @@
     },
     {
       "id": "object_contract_scribe_booth",
-      "name": "Contract Scribe Booth",
+      "name": "Chartmaker",
       "family": "repeatable_service",
       "schema_version": 1,
       "primary_class": "interactable_site",
@@ -23879,14 +23877,14 @@
       ],
       "passability_class": "blocking_visitable",
       "interaction": {
-        "cadence": "cooldown_days",
+        "cadence": "per_hero_visit",
         "remains_after_visit": true,
         "state_after_visit": "unchanged",
         "requires_ownership": false,
-        "requires_guard_clear": false,
+        "requires_guard_clear": true,
         "supports_revisit": true,
-        "cooldown_days": 7,
-        "refresh_rule": "cooldown"
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
       },
       "guard_expectation": {
         "tier": "unguarded",
@@ -23987,14 +23985,14 @@
       ],
       "passability_class": "blocking_visitable",
       "interaction": {
-        "cadence": "cooldown_days",
+        "cadence": "per_hero_visit",
         "remains_after_visit": true,
         "state_after_visit": "unchanged",
         "requires_ownership": false,
-        "requires_guard_clear": false,
+        "requires_guard_clear": true,
         "supports_revisit": true,
-        "cooldown_days": 7,
-        "refresh_rule": "cooldown"
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
       },
       "guard_expectation": {
         "tier": "light",
@@ -24039,7 +24037,7 @@
     },
     {
       "id": "object_ash_cooler_kitchen",
-      "name": "Ash Cooler Kitchen",
+      "name": "Cookfire Rest",
       "family": "repeatable_service",
       "schema_version": 1,
       "primary_class": "interactable_site",
@@ -24095,14 +24093,14 @@
       ],
       "passability_class": "blocking_visitable",
       "interaction": {
-        "cadence": "cooldown_days",
+        "cadence": "per_hero_visit",
         "remains_after_visit": true,
         "state_after_visit": "unchanged",
         "requires_ownership": false,
-        "requires_guard_clear": false,
+        "requires_guard_clear": true,
         "supports_revisit": true,
-        "cooldown_days": 7,
-        "refresh_rule": "cooldown"
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
       },
       "guard_expectation": {
         "tier": "light",
@@ -24203,14 +24201,14 @@
       ],
       "passability_class": "blocking_visitable",
       "interaction": {
-        "cadence": "cooldown_days",
+        "cadence": "per_hero_visit",
         "remains_after_visit": true,
         "state_after_visit": "unchanged",
         "requires_ownership": false,
-        "requires_guard_clear": false,
+        "requires_guard_clear": true,
         "supports_revisit": true,
-        "cooldown_days": 7,
-        "refresh_rule": "cooldown"
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
       },
       "guard_expectation": {
         "tier": "unguarded",
@@ -24306,14 +24304,14 @@
       ],
       "passability_class": "blocking_visitable",
       "interaction": {
-        "cadence": "one_time",
+        "cadence": "per_hero_visit",
         "remains_after_visit": true,
         "state_after_visit": "unchanged",
         "requires_ownership": false,
-        "requires_guard_clear": false,
+        "requires_guard_clear": true,
         "supports_revisit": true,
         "cooldown_days": 0,
-        "refresh_rule": "persistent_state"
+        "refresh_rule": "per_hero_visit"
       },
       "guard_expectation": {
         "tier": "light",
@@ -24407,14 +24405,14 @@
       ],
       "passability_class": "blocking_visitable",
       "interaction": {
-        "cadence": "one_time",
+        "cadence": "per_hero_visit",
         "remains_after_visit": true,
         "state_after_visit": "unchanged",
         "requires_ownership": false,
-        "requires_guard_clear": false,
+        "requires_guard_clear": true,
         "supports_revisit": true,
         "cooldown_days": 0,
-        "refresh_rule": "persistent_state"
+        "refresh_rule": "per_hero_visit"
       },
       "guard_expectation": {
         "tier": "light",
@@ -24508,14 +24506,14 @@
       ],
       "passability_class": "blocking_visitable",
       "interaction": {
-        "cadence": "one_time",
+        "cadence": "per_hero_visit",
         "remains_after_visit": true,
         "state_after_visit": "unchanged",
         "requires_ownership": false,
-        "requires_guard_clear": false,
+        "requires_guard_clear": true,
         "supports_revisit": true,
         "cooldown_days": 0,
-        "refresh_rule": "persistent_state"
+        "refresh_rule": "per_hero_visit"
       },
       "guard_expectation": {
         "tier": "light",
@@ -24557,7 +24555,7 @@
     },
     {
       "id": "object_root_accord_ring",
-      "name": "Root Accord Ring",
+      "name": "Fortune Ring",
       "family": "shrine",
       "schema_version": 1,
       "primary_class": "interactable_site",
@@ -24624,14 +24622,14 @@
       ],
       "passability_class": "blocking_visitable",
       "interaction": {
-        "cadence": "repeatable_weekly",
+        "cadence": "per_hero_visit",
         "remains_after_visit": true,
         "state_after_visit": "unchanged",
         "requires_ownership": false,
         "requires_guard_clear": true,
         "supports_revisit": true,
-        "cooldown_days": 7,
-        "refresh_rule": "weekly_growth"
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
       },
       "guard_expectation": {
         "tier": "standard",
@@ -24675,7 +24673,7 @@
     },
     {
       "id": "object_furnace_oath_marker",
-      "name": "Furnace Oath Marker",
+      "name": "Muster Banner",
       "family": "shrine",
       "schema_version": 1,
       "primary_class": "interactable_site",
@@ -24733,14 +24731,14 @@
       ],
       "passability_class": "blocking_visitable",
       "interaction": {
-        "cadence": "repeatable_weekly",
+        "cadence": "per_hero_visit",
         "remains_after_visit": true,
         "state_after_visit": "unchanged",
         "requires_ownership": false,
         "requires_guard_clear": true,
         "supports_revisit": true,
-        "cooldown_days": 7,
-        "refresh_rule": "weekly_growth"
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
       },
       "guard_expectation": {
         "tier": "standard",
@@ -24785,7 +24783,7 @@
     },
     {
       "id": "object_tide_bell_shrine",
-      "name": "Tide Bell Shrine",
+      "name": "Tide Bell",
       "family": "shrine",
       "schema_version": 1,
       "primary_class": "interactable_site",
@@ -24842,14 +24840,14 @@
       ],
       "passability_class": "blocking_visitable",
       "interaction": {
-        "cadence": "repeatable_weekly",
+        "cadence": "per_hero_visit",
         "remains_after_visit": true,
         "state_after_visit": "unchanged",
         "requires_ownership": false,
         "requires_guard_clear": true,
         "supports_revisit": true,
-        "cooldown_days": 7,
-        "refresh_rule": "weekly_growth"
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
       },
       "guard_expectation": {
         "tier": "standard",
@@ -24887,6 +24885,1266 @@
         "shrine_kind": "bell_watch",
         "live_bonus": "Weekly enemy-pressure relief, coast survey, and watch experience.",
         "cadence": "repeatable_weekly",
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      }
+    },
+    {
+      "id": "object_visit_bell_spire",
+      "name": "Bell Spire",
+      "family": "shrine",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "hero_progression",
+        "visit_building"
+      ],
+      "resource_site_id": "site_visit_bell_spire",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_mire_fen",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "hero_progression",
+        "world_lore"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "per_hero_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "site approach is readable before visit",
+        "event_expectation": "live one-time progression lesson with visible awakened state"
+      },
+      "runtime_boundary": {
+        "status": "visit_building_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "animation_cues": [
+        "object_batch003_idle_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "visit_building"
+      },
+      "shrine_contract": {
+        "shrine_kind": "progression_memory",
+        "live_bonus": "A permanent attack lesson, battlefield experience, and the Waymark Road spell.",
+        "cadence": "one_time",
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      }
+    },
+    {
+      "id": "object_visit_drum_cairn",
+      "name": "Drum Cairn",
+      "family": "shrine",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "hero_progression",
+        "visit_building"
+      ],
+      "resource_site_id": "site_visit_drum_cairn",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_mire_fen",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "hero_progression",
+        "world_lore"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "per_hero_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "site approach is readable before visit",
+        "event_expectation": "live one-time progression lesson with visible awakened state"
+      },
+      "runtime_boundary": {
+        "status": "visit_building_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "animation_cues": [
+        "object_batch003_idle_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "visit_building"
+      },
+      "shrine_contract": {
+        "shrine_kind": "progression_memory",
+        "live_bonus": "A permanent attack lesson, battlefield experience, and the Waymark Road spell.",
+        "cadence": "one_time",
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      }
+    },
+    {
+      "id": "object_visit_clamp_forge",
+      "name": "Clamp Forge",
+      "family": "shrine",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "hero_progression",
+        "visit_building"
+      ],
+      "resource_site_id": "site_visit_clamp_forge",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_mire_fen",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "hero_progression",
+        "world_lore"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "per_hero_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "site approach is readable before visit",
+        "event_expectation": "live one-time progression lesson with visible awakened state"
+      },
+      "runtime_boundary": {
+        "status": "visit_building_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "animation_cues": [
+        "object_batch003_idle_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "visit_building"
+      },
+      "shrine_contract": {
+        "shrine_kind": "progression_memory",
+        "live_bonus": "A permanent attack lesson, battlefield experience, and the Waymark Road spell.",
+        "cadence": "one_time",
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      }
+    },
+    {
+      "id": "object_visit_facet_orrery",
+      "name": "Facet Orrery",
+      "family": "shrine",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "hero_progression",
+        "visit_building"
+      ],
+      "resource_site_id": "site_visit_facet_orrery",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_mire_fen",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "hero_progression",
+        "world_lore"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "per_hero_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "site approach is readable before visit",
+        "event_expectation": "live one-time progression lesson with visible awakened state"
+      },
+      "runtime_boundary": {
+        "status": "visit_building_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "animation_cues": [
+        "object_batch003_idle_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "visit_building"
+      },
+      "shrine_contract": {
+        "shrine_kind": "progression_memory",
+        "live_bonus": "A permanent attack lesson, battlefield experience, and the Waymark Road spell.",
+        "cadence": "one_time",
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      }
+    },
+    {
+      "id": "object_visit_proving_rostrum",
+      "name": "Proving Rostrum",
+      "family": "shrine",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "hero_progression",
+        "visit_building"
+      ],
+      "resource_site_id": "site_visit_proving_rostrum",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_mire_fen",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "hero_progression",
+        "world_lore"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "per_hero_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "site approach is readable before visit",
+        "event_expectation": "live one-time progression lesson with visible awakened state"
+      },
+      "runtime_boundary": {
+        "status": "visit_building_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "animation_cues": [
+        "object_batch003_idle_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "visit_building"
+      },
+      "shrine_contract": {
+        "shrine_kind": "progression_memory",
+        "live_bonus": "A permanent attack lesson, battlefield experience, and the Waymark Road spell.",
+        "cadence": "one_time",
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      }
+    },
+    {
+      "id": "object_visit_war_college",
+      "name": "War College",
+      "family": "shrine",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "hero_progression",
+        "visit_building"
+      ],
+      "resource_site_id": "site_visit_war_college",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_mire_fen",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "hero_progression",
+        "world_lore"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "per_hero_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "site approach is readable before visit",
+        "event_expectation": "live one-time progression lesson with visible awakened state"
+      },
+      "runtime_boundary": {
+        "status": "visit_building_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "animation_cues": [
+        "object_batch003_idle_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "visit_building"
+      },
+      "shrine_contract": {
+        "shrine_kind": "progression_memory",
+        "live_bonus": "A permanent attack lesson, battlefield experience, and the Waymark Road spell.",
+        "cadence": "one_time",
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      }
+    },
+    {
+      "id": "object_visit_arcane_collegium",
+      "name": "Arcane Collegium",
+      "family": "shrine",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "hero_progression",
+        "visit_building"
+      ],
+      "resource_site_id": "site_visit_arcane_collegium",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_mire_fen",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "hero_progression",
+        "world_lore"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "per_hero_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "site approach is readable before visit",
+        "event_expectation": "live one-time progression lesson with visible awakened state"
+      },
+      "runtime_boundary": {
+        "status": "visit_building_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "animation_cues": [
+        "object_batch003_idle_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "visit_building"
+      },
+      "shrine_contract": {
+        "shrine_kind": "progression_memory",
+        "live_bonus": "A permanent attack lesson, battlefield experience, and the Waymark Road spell.",
+        "cadence": "one_time",
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      }
+    },
+    {
+      "id": "object_visit_lorestone",
+      "name": "Lorestone",
+      "family": "shrine",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "hero_progression",
+        "visit_building"
+      ],
+      "resource_site_id": "site_visit_lorestone",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_mire_fen",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "hero_progression",
+        "world_lore"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "per_hero_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "site approach is readable before visit",
+        "event_expectation": "live one-time progression lesson with visible awakened state"
+      },
+      "runtime_boundary": {
+        "status": "visit_building_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "animation_cues": [
+        "object_batch003_idle_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "visit_building"
+      },
+      "shrine_contract": {
+        "shrine_kind": "progression_memory",
+        "live_bonus": "A permanent attack lesson, battlefield experience, and the Waymark Road spell.",
+        "cadence": "one_time",
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      }
+    },
+    {
+      "id": "object_visit_elder_graft_tree",
+      "name": "Elder Graft Tree",
+      "family": "shrine",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "hero_progression",
+        "visit_building"
+      ],
+      "resource_site_id": "site_visit_elder_graft_tree",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_mire_fen",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "hero_progression",
+        "world_lore"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "per_hero_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "site approach is readable before visit",
+        "event_expectation": "live one-time progression lesson with visible awakened state"
+      },
+      "runtime_boundary": {
+        "status": "visit_building_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "animation_cues": [
+        "object_batch003_idle_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "visit_building"
+      },
+      "shrine_contract": {
+        "shrine_kind": "progression_memory",
+        "live_bonus": "A permanent attack lesson, battlefield experience, and the Waymark Road spell.",
+        "cadence": "one_time",
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      }
+    },
+    {
+      "id": "object_visit_grand_archive",
+      "name": "Grand Archive",
+      "family": "shrine",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "hero_progression",
+        "visit_building"
+      ],
+      "resource_site_id": "site_visit_grand_archive",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_mire_fen",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "hero_progression",
+        "world_lore"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "per_hero_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "site approach is readable before visit",
+        "event_expectation": "live one-time progression lesson with visible awakened state"
+      },
+      "runtime_boundary": {
+        "status": "visit_building_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "animation_cues": [
+        "object_batch003_idle_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "visit_building"
+      },
+      "shrine_contract": {
+        "shrine_kind": "progression_memory",
+        "live_bonus": "A permanent attack lesson, battlefield experience, and the Waymark Road spell.",
+        "cadence": "one_time",
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      }
+    },
+    {
+      "id": "object_visit_ley_well",
+      "name": "Ley Well",
+      "family": "shrine",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "hero_progression",
+        "visit_building"
+      ],
+      "resource_site_id": "site_visit_ley_well",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_mire_fen",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "hero_progression",
+        "world_lore"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "per_hero_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "site approach is readable before visit",
+        "event_expectation": "live one-time progression lesson with visible awakened state"
+      },
+      "runtime_boundary": {
+        "status": "visit_building_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "animation_cues": [
+        "object_batch003_idle_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "visit_building"
+      },
+      "shrine_contract": {
+        "shrine_kind": "progression_memory",
+        "live_bonus": "A permanent attack lesson, battlefield experience, and the Waymark Road spell.",
+        "cadence": "one_time",
+        "metadata_only": false,
+        "runtime_shrine_execution_adopted": true
+      }
+    },
+    {
+      "id": "object_visit_moonspring",
+      "name": "Moonspring",
+      "family": "shrine",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "hero_progression",
+        "visit_building"
+      ],
+      "resource_site_id": "site_visit_moonspring",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_highland_ridge",
+        "biome_mire_fen",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "hero_progression",
+        "world_lore"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "per_hero_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
+      },
+      "guard_expectation": {
+        "tier": "light",
+        "visible_cue": "site approach is readable before visit",
+        "event_expectation": "live one-time progression lesson with visible awakened state"
+      },
+      "runtime_boundary": {
+        "status": "visit_building_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": true
+      },
+      "animation_cues": [
+        "object_batch003_idle_placeholder"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true
+      },
+      "ai_hints": {
+        "strategic_value": 4,
+        "risk_tier": "light",
+        "placement_role": "visit_building"
+      },
+      "shrine_contract": {
+        "shrine_kind": "progression_memory",
+        "live_bonus": "A permanent attack lesson, battlefield experience, and the Waymark Road spell.",
+        "cadence": "one_time",
         "metadata_only": false,
         "runtime_shrine_execution_adopted": true
       }

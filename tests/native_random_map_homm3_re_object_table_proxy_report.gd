@@ -100,7 +100,7 @@ func _validate_registry(registry: Dictionary, authored: Dictionary, sites: Dicti
 		if decisions.size() != 1:
 			_fail("Authored object %s has %d eligibility decisions: %s" % [object_id, decisions.size(), JSON.stringify(decisions)])
 			return {}
-	if authored.get("items", []).size() != 425 or eligible_ids.size() != 359 or excluded_ids.size() != 66:
+	if authored.get("items", []).size() != 437 or eligible_ids.size() != 371 or excluded_ids.size() != 66:
 		_fail("Eligibility totals drifted: authored=%d eligible=%d excluded=%d" % [authored.get("items", []).size(), eligible_ids.size(), excluded_ids.size()])
 		return {}
 	for source_type in registry.get("source_type_pools", {}).keys():
@@ -111,7 +111,7 @@ func _validate_registry(registry: Dictionary, authored: Dictionary, sites: Dicti
 	return {
 		"candidate_ids_by_pool": candidate_ids_by_pool,
 		"public_summary": {
-			"authored_object_count": 425,
+			"authored_object_count": 437,
 			"eligible_object_count": eligible_ids.size(),
 			"excluded_object_count": excluded_ids.size(),
 			"artifact_candidate_count": artifact_ids.size(),

@@ -172,11 +172,11 @@
     ]
   },
   "coverage": {
-    "authored_map_object_count": 425,
+    "authored_map_object_count": 437,
     "foundation_decorative_or_blocker_distinct_count": 200,
     "preexisting_unique_non_decorative_count": 0,
-    "new_distinct_non_decorative_asset_count": 225,
-    "total_distinct_authored_map_object_count_after_pass": 425,
+    "new_distinct_non_decorative_asset_count": 237,
+    "total_distinct_authored_map_object_count_after_pass": 437,
     "by_family": {
       "faction_landmark": 9,
       "guarded_reward_site": 32,
@@ -187,7 +187,7 @@
       "repeatable_service": 7,
       "scenario_objective": 14,
       "scouting_structure": 6,
-      "shrine": 6,
+      "shrine": 18,
       "sign_waypoint": 5,
       "staged_resource_front": 9,
       "support_producer": 6,
@@ -419,7 +419,19 @@
     "mapobj_common_gold_mine",
     "mapobj_verdant_graft_bundle",
     "mapobj_brass_scrip_case",
-    "adventurers_bundle"
+    "adventurers_bundle",
+    "resource_site_high_arcanum_lastroad_bell_spire",
+    "resource_site_high_arcanum_siltheart_drum_cairn",
+    "resource_site_high_arcanum_slagbound_clamp_forge",
+    "resource_site_high_arcanum_aurora_facet_orrery",
+    "resource_site_triune_arcanum_lockfire_rostrum",
+    "resource_site_grand_arcanum_ashrail_forge",
+    "resource_site_grand_arcanum_aurora_halo_array",
+    "resource_site_frontier_marker_old_measure",
+    "resource_site_high_arcanum_bloombark_covenant_tree",
+    "resource_site_grand_arcanum_mistmourning_archive",
+    "mapobj_ley_well",
+    "mapobj_moonspring"
   ],
   "object_sprite_mappings": {
     "object_roadward_lodge": {
@@ -1981,6 +1993,78 @@
       "fit": "Existing original traveller's bundle sprite for the one-time Wayfarer Camp Cache.",
       "assignment_source": "generated_reward_translation_20261005",
       "family": "pickup"
+    },
+    "object_visit_bell_spire": {
+      "asset_id": "resource_site_high_arcanum_lastroad_bell_spire",
+      "fit": "Original sprite assigned to the Bell Spire visit building.",
+      "assignment_source": "visit_buildings_20261006",
+      "family": "shrine"
+    },
+    "object_visit_drum_cairn": {
+      "asset_id": "resource_site_high_arcanum_siltheart_drum_cairn",
+      "fit": "Original sprite assigned to the Drum Cairn visit building.",
+      "assignment_source": "visit_buildings_20261006",
+      "family": "shrine"
+    },
+    "object_visit_clamp_forge": {
+      "asset_id": "resource_site_high_arcanum_slagbound_clamp_forge",
+      "fit": "Original sprite assigned to the Clamp Forge visit building.",
+      "assignment_source": "visit_buildings_20261006",
+      "family": "shrine"
+    },
+    "object_visit_facet_orrery": {
+      "asset_id": "resource_site_high_arcanum_aurora_facet_orrery",
+      "fit": "Original sprite assigned to the Facet Orrery visit building.",
+      "assignment_source": "visit_buildings_20261006",
+      "family": "shrine"
+    },
+    "object_visit_proving_rostrum": {
+      "asset_id": "resource_site_triune_arcanum_lockfire_rostrum",
+      "fit": "Original sprite assigned to the Proving Rostrum visit building.",
+      "assignment_source": "visit_buildings_20261006",
+      "family": "shrine"
+    },
+    "object_visit_war_college": {
+      "asset_id": "resource_site_grand_arcanum_ashrail_forge",
+      "fit": "Original sprite assigned to the War College visit building.",
+      "assignment_source": "visit_buildings_20261006",
+      "family": "shrine"
+    },
+    "object_visit_arcane_collegium": {
+      "asset_id": "resource_site_grand_arcanum_aurora_halo_array",
+      "fit": "Original sprite assigned to the Arcane Collegium visit building.",
+      "assignment_source": "visit_buildings_20261006",
+      "family": "shrine"
+    },
+    "object_visit_lorestone": {
+      "asset_id": "resource_site_frontier_marker_old_measure",
+      "fit": "Original sprite assigned to the Lorestone visit building.",
+      "assignment_source": "visit_buildings_20261006",
+      "family": "shrine"
+    },
+    "object_visit_elder_graft_tree": {
+      "asset_id": "resource_site_high_arcanum_bloombark_covenant_tree",
+      "fit": "Original sprite assigned to the Elder Graft Tree visit building.",
+      "assignment_source": "visit_buildings_20261006",
+      "family": "shrine"
+    },
+    "object_visit_grand_archive": {
+      "asset_id": "resource_site_grand_arcanum_mistmourning_archive",
+      "fit": "Original sprite assigned to the Grand Archive visit building.",
+      "assignment_source": "visit_buildings_20261006",
+      "family": "shrine"
+    },
+    "object_visit_ley_well": {
+      "asset_id": "mapobj_ley_well",
+      "fit": "Original sprite assigned to the Ley Well visit building.",
+      "assignment_source": "visit_buildings_20261006",
+      "family": "shrine"
+    },
+    "object_visit_moonspring": {
+      "asset_id": "mapobj_moonspring",
+      "fit": "Original sprite assigned to the Moonspring visit building.",
+      "assignment_source": "visit_buildings_20261006",
+      "family": "shrine"
     }
   }
 }

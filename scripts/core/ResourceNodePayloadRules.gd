@@ -8,6 +8,7 @@ extends RefCounted
 const PAYLOAD_REWARDS := "payload_rewards"
 const PAYLOAD_REWARD_CHOICES := "payload_reward_choices"
 const PAYLOAD_SPELL_IDS := "payload_spell_ids"
+const PAYLOAD_VISIT := "payload_visit"
 const CLAIM_PAYLOAD_SPENT := "claim_payload_spent"
 
 static func site_for_node(node: Dictionary, site: Dictionary = {}) -> Dictionary:
@@ -27,6 +28,12 @@ static func site_for_node(node: Dictionary, site: Dictionary = {}) -> Dictionary
 	if spell_ids is Array:
 		effective.erase("learn_spell_id")
 		effective["learn_spell_ids"] = spell_ids.duplicate()
+	var visit_override = node.get(PAYLOAD_VISIT, null)
+	if visit_override is Dictionary and effective.get("visit", {}) is Dictionary:
+		var visit: Dictionary = effective.get("visit", {}).duplicate(true)
+		for key in visit_override.keys():
+			visit[key] = visit_override[key].duplicate(true) if visit_override[key] is Dictionary or visit_override[key] is Array else visit_override[key]
+		effective["visit"] = visit
 	if claim_payload_spent(node, site):
 		for key in ["claim_rewards", "rewards", "reward_choices", "claim_recruits", "learn_spell_id", "learn_spell_ids"]:
 			effective.erase(key)
@@ -48,5 +55,6 @@ static func _has_node_payload(node: Dictionary, site: Dictionary) -> bool:
 		node.has(PAYLOAD_REWARDS)
 		or node.has(PAYLOAD_REWARD_CHOICES)
 		or node.has(PAYLOAD_SPELL_IDS)
+		or node.has(PAYLOAD_VISIT)
 		or claim_payload_spent(node, site)
 	)

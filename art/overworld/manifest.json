@@ -11456,7 +11456,11 @@
       "accessible_description": "A weathered measuring arch with brass plumb, unequal survey arms, boundary chain, and sliding gauge.",
       "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/route_arcane/resource_site_frontier_marker_old_measure.png",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "3f150772af4f65338a6c205cc057d3f047f473c1d23678921ae2eaa74d121687"
+      "runtime_sha256": "3f150772af4f65338a6c205cc057d3f047f473c1d23678921ae2eaa74d121687",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_visit_lorestone",
+      "assigned_map_object_family": "shrine"
     },
     "resource_site_frontier_marker_rootway": {
       "path": "res://art/overworld/runtime/objects/resource_sites/frontier_marker_landmarks_atlas.png",
@@ -13258,7 +13262,11 @@
       "presentation_role": "ivory_road_spire_bronze_bell_three_lamps",
       "accessible_description": "An ivory road spire bears a large bronze bell, three hanging lamps, red oath cords, and deep waymark grooves.",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "4f26e92a49b9d3b15972833278feb772cdce67d19e20adf780c8e7bd9a1d381c"
+      "runtime_sha256": "4f26e92a49b9d3b15972833278feb772cdce67d19e20adf780c8e7bd9a1d381c",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_visit_bell_spire",
+      "assigned_map_object_family": "shrine"
     },
     "resource_site_high_arcanum_siltheart_drum_cairn": {
       "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
@@ -13279,7 +13287,11 @@
       "presentation_role": "broad_hide_drum_bogstone_reed_pipes",
       "accessible_description": "A broad hide drum rests on a wet black bogstone cairn between hooked reed pipes and a sealed silt jar.",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "4f26e92a49b9d3b15972833278feb772cdce67d19e20adf780c8e7bd9a1d381c"
+      "runtime_sha256": "4f26e92a49b9d3b15972833278feb772cdce67d19e20adf780c8e7bd9a1d381c",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_visit_drum_cairn",
+      "assigned_map_object_family": "shrine"
     },
     "resource_site_high_arcanum_aurora_facet_orrery": {
       "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
@@ -13300,7 +13312,11 @@
       "presentation_role": "three_crystal_lenses_suspended_mirror_shard",
       "accessible_description": "Three asymmetric crystal lenses orbit a suspended mirror shard above an engraved white-gold observatory plinth.",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "4f26e92a49b9d3b15972833278feb772cdce67d19e20adf780c8e7bd9a1d381c"
+      "runtime_sha256": "4f26e92a49b9d3b15972833278feb772cdce67d19e20adf780c8e7bd9a1d381c",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_visit_facet_orrery",
+      "assigned_map_object_family": "shrine"
     },
     "resource_site_high_arcanum_bloombark_covenant_tree": {
       "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
@@ -13321,7 +13337,11 @@
       "presentation_role": "living_stump_greenstone_copper_blossom_arch",
       "accessible_description": "A gnarled living stump embraces a carved greenstone tablet beneath one arch of broad copper-red blossoms.",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "4f26e92a49b9d3b15972833278feb772cdce67d19e20adf780c8e7bd9a1d381c"
+      "runtime_sha256": "4f26e92a49b9d3b15972833278feb772cdce67d19e20adf780c8e7bd9a1d381c",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_visit_elder_graft_tree",
+      "assigned_map_object_family": "shrine"
     },
     "resource_site_high_arcanum_slagbound_clamp_forge": {
       "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
@@ -13342,7 +13362,11 @@
       "presentation_role": "brass_clamp_basalt_anvil_banked_furnace",
       "accessible_description": "A massive asymmetric brass clamp locks around a basalt anvil beside a compact banked coal furnace and gauge.",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/route_arcane/manifest.json",
-      "runtime_sha256": "4f26e92a49b9d3b15972833278feb772cdce67d19e20adf780c8e7bd9a1d381c"
+      "runtime_sha256": "4f26e92a49b9d3b15972833278feb772cdce67d19e20adf780c8e7bd9a1d381c",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_visit_clamp_forge",
+      "assigned_map_object_family": "shrine"
     },
     "resource_site_high_arcanum_mourning_tide_obelisk": {
       "path": "res://art/overworld/runtime/objects/resource_sites/sevenfold_high_arcanum_atlas.png",
@@ -15837,7 +15861,11 @@
       "presentation_role": "bell_lantern_wax_tablet",
       "accessible_description": "An ivory oath-stone rostrum carries a tall bronze bell, a forked lantern standard, and a red wax lance tablet.",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_sites/manifest.json",
-      "runtime_sha256": "b0c40a69a3835a296be2c31e86260b880601bab50a8aa62067897417f4ded267"
+      "runtime_sha256": "b0c40a69a3835a296be2c31e86260b880601bab50a8aa62067897417f4ded267",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_visit_proving_rostrum",
+      "assigned_map_object_family": "shrine"
     },
     "resource_site_triune_arcanum_moonfen_drumcourt": {
       "path": "res://art/overworld/runtime/objects/resource_sites/triune_arcanum_trials_atlas.png",
@@ -20304,7 +20332,11 @@
       "accessible_description": "An offset oval lens turns inside three unequal halo rails beneath a prism vane and glass calibration needles.",
       "background": "transparent",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_sites/manifest.json",
-      "runtime_sha256": "a7bbeb1c229e40d559dccd8c077527e565f90bba8becadd1732b84c048b6c22a"
+      "runtime_sha256": "a7bbeb1c229e40d559dccd8c077527e565f90bba8becadd1732b84c048b6c22a",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_visit_arcane_collegium",
+      "assigned_map_object_family": "shrine"
     },
     "resource_site_grand_arcanum_loambriar_loom": {
       "path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
@@ -20348,7 +20380,11 @@
       "accessible_description": "A squat basalt and brass forge carries a diagonal hammer rail, riveted mantle, three clamp jaws, and a red pressure gauge.",
       "background": "transparent",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_sites/manifest.json",
-      "runtime_sha256": "a7bbeb1c229e40d559dccd8c077527e565f90bba8becadd1732b84c048b6c22a"
+      "runtime_sha256": "a7bbeb1c229e40d559dccd8c077527e565f90bba8becadd1732b84c048b6c22a",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_visit_war_college",
+      "assigned_map_object_family": "shrine"
     },
     "resource_site_grand_arcanum_mistmourning_archive": {
       "path": "res://art/overworld/runtime/objects/resource_sites/grand_arcanum_convocations_atlas.png",
@@ -20370,7 +20406,11 @@
       "accessible_description": "A tilted whalebone crescent bears shroud sails, a drowned lantern mask, tide marker, and three memory chimes.",
       "background": "transparent",
       "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/remaining_sites/manifest.json",
-      "runtime_sha256": "a7bbeb1c229e40d559dccd8c077527e565f90bba8becadd1732b84c048b6c22a"
+      "runtime_sha256": "a7bbeb1c229e40d559dccd8c077527e565f90bba8becadd1732b84c048b6c22a",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_visit_grand_archive",
+      "assigned_map_object_family": "shrine"
     },
     "resource_site_uncrowned_cinderlock_throne": {
       "path": "res://art/overworld/runtime/objects/resource_sites/uncrowned_sovereign_roads_atlas.png",
@@ -41764,6 +41804,28 @@
       "assigned_map_object_family": "pickup",
       "source_processing_manifest": "res://art/overworld/source/generated/pickups/rare_piles_20261005/provenance.json",
       "runtime_sha256": "a757bb3982f0c2ee48715fc2686f32b993bb189c0b28843befe616eaae8f8257"
+    },
+    "mapobj_ley_well": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_ley_well.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/visit_buildings_20261006/ley_well-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/visit_buildings_20261006/provenance.json",
+      "runtime_sha256": "8824eb5ede1b2ed1c9c9a2dc8c8b7b486aa3ffbb8f59d41fe27ffa6a9f2155de",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_visit_ley_well",
+      "assigned_map_object_family": "shrine"
+    },
+    "mapobj_moonspring": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_moonspring.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/visit_buildings_20261006/moonspring-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/visit_buildings_20261006/provenance.json",
+      "runtime_sha256": "9a79665f3448125f5c8083684f428e61d31f1568126208da90e3d1763d3f4198",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_visit_moonspring",
+      "assigned_map_object_family": "shrine"
     }
   },
   "resource_site_sprites": {
@@ -43483,6 +43545,54 @@
     "site_spell_scroll": {
       "asset_id": "beacon_path_scroll",
       "fit": "Sealed spell scroll field sprite; each generated scroll teaches its own spell."
+    },
+    "site_visit_bell_spire": {
+      "asset_id": "resource_site_high_arcanum_lastroad_bell_spire",
+      "fit": "Bell Spire visit building sprite."
+    },
+    "site_visit_drum_cairn": {
+      "asset_id": "resource_site_high_arcanum_siltheart_drum_cairn",
+      "fit": "Drum Cairn visit building sprite."
+    },
+    "site_visit_clamp_forge": {
+      "asset_id": "resource_site_high_arcanum_slagbound_clamp_forge",
+      "fit": "Clamp Forge visit building sprite."
+    },
+    "site_visit_facet_orrery": {
+      "asset_id": "resource_site_high_arcanum_aurora_facet_orrery",
+      "fit": "Facet Orrery visit building sprite."
+    },
+    "site_visit_proving_rostrum": {
+      "asset_id": "resource_site_triune_arcanum_lockfire_rostrum",
+      "fit": "Proving Rostrum visit building sprite."
+    },
+    "site_visit_war_college": {
+      "asset_id": "resource_site_grand_arcanum_ashrail_forge",
+      "fit": "War College visit building sprite."
+    },
+    "site_visit_arcane_collegium": {
+      "asset_id": "resource_site_grand_arcanum_aurora_halo_array",
+      "fit": "Arcane Collegium visit building sprite."
+    },
+    "site_visit_lorestone": {
+      "asset_id": "resource_site_frontier_marker_old_measure",
+      "fit": "Lorestone visit building sprite."
+    },
+    "site_visit_elder_graft_tree": {
+      "asset_id": "resource_site_high_arcanum_bloombark_covenant_tree",
+      "fit": "Elder Graft Tree visit building sprite."
+    },
+    "site_visit_grand_archive": {
+      "asset_id": "resource_site_grand_arcanum_mistmourning_archive",
+      "fit": "Grand Archive visit building sprite."
+    },
+    "site_visit_ley_well": {
+      "asset_id": "mapobj_ley_well",
+      "fit": "Ley Well visit building sprite."
+    },
+    "site_visit_moonspring": {
+      "asset_id": "mapobj_moonspring",
+      "fit": "Moonspring visit building sprite."
     }
   },
   "artifact_default_sprite": {

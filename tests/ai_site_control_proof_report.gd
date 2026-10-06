@@ -53,8 +53,8 @@ func _run() -> void:
 		_fail("Missing signal-yard targets in site-control resource report")
 		return
 
-	_assert_public_reason(free_company, "free company target", "recruit and income denial", ["persistent_income_denial", "recruit_denial", "player_town_support"])
-	_assert_public_reason(signal_post, "signal post target", "income and route vision denial", ["persistent_income_denial", "route_vision", "player_town_support"])
+	_assert_public_reason(free_company, "free company target", "recruit denial", ["recruit_denial", "player_town_support"])
+	_assert_public_reason(signal_post, "signal post target", "route vision denial", ["route_vision", "player_town_support"])
 	if _failed:
 		return
 
@@ -63,8 +63,8 @@ func _run() -> void:
 		assignment_event,
 		"ai_target_assigned",
 		PRIMARY_SITE,
-		"recruit and income denial",
-		["persistent_income_denial", "recruit_denial", "player_town_support"]
+		"recruit denial",
+		["recruit_denial", "player_town_support"]
 	)
 	if _failed:
 		return
@@ -77,8 +77,8 @@ func _run() -> void:
 		seizure_event,
 		"ai_site_seized",
 		PRIMARY_SITE,
-		"recruit and income denial",
-		["site_seized", "persistent_income_denial", "recruit_denial"]
+		"recruit denial",
+		["site_seized", "recruit_denial"]
 	)
 	if not String(seizure_case.get("message", "")).contains("denies its logistics route"):
 		_fail("Resource seizure message did not keep compact logistics denial wording")
@@ -365,10 +365,10 @@ func _add_site_raid(session) -> void:
 		"target_y": 4,
 		"goal_x": 0,
 		"goal_y": 4,
-		"target_public_reason": "recruit and income denial",
-		"target_reason_codes": ["persistent_income_denial", "recruit_denial", "player_town_support"],
+		"target_public_reason": "recruit denial",
+		"target_reason_codes": ["recruit_denial", "player_town_support"],
 		"target_public_importance": "high",
-		"target_debug_reason": "denies 40 gold daily, recruit denial, player-town support",
+		"target_debug_reason": "recruit denial, player-town support",
 	}
 	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
 		raid,
@@ -414,8 +414,8 @@ func _add_spell_site_raid(session) -> void:
 		"target_y": 4,
 		"goal_x": 1,
 		"goal_y": 4,
-		"target_public_reason": "income and route vision denial",
-		"target_reason_codes": ["persistent_income_denial", "route_vision", "player_town_support"],
+		"target_public_reason": "route vision denial",
+		"target_reason_codes": ["route_vision", "player_town_support"],
 		"target_public_importance": "high",
 		"target_debug_reason": "spell-site learning fixture",
 	}
@@ -450,8 +450,8 @@ func _add_opportunistic_spell_site_raid(session) -> void:
 		"target_y": 4,
 		"goal_x": 0,
 		"goal_y": 4,
-		"target_public_reason": "recruit and income denial",
-		"target_reason_codes": ["persistent_income_denial", "recruit_denial", "player_town_support"],
+		"target_public_reason": "recruit denial",
+		"target_reason_codes": ["recruit_denial", "player_town_support"],
 		"target_public_importance": "high",
 		"target_debug_reason": "opportunistic spell-site learning fixture",
 	}
@@ -486,8 +486,8 @@ func _add_opportunistic_recruit_site_raid(session) -> void:
 		"target_y": 4,
 		"goal_x": 4,
 		"goal_y": 4,
-		"target_public_reason": "income and route vision denial",
-		"target_reason_codes": ["persistent_income_denial", "route_vision", "player_town_support"],
+		"target_public_reason": "route vision denial",
+		"target_reason_codes": ["route_vision", "player_town_support"],
 		"target_public_importance": "high",
 		"target_debug_reason": "opportunistic recruit-site claim fixture",
 	}

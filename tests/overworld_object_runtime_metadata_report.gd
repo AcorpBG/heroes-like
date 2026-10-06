@@ -29,13 +29,13 @@ func _run() -> void:
 			],
 		},
 		{
-			"label": "safe cooldown service metadata",
+			"label": "safe visit building metadata",
 			"site_id": "site_wayfarer_infirmary",
 			"expected": [
 				"Class: Interactable Site",
-				"Cadence: cooldown days",
-				"repeat service",
-				"Roles: Recovery, Town Support",
+				"Cadence: once per hero each week",
+				"visit building",
+				"Roles: Recovery",
 			],
 		},
 	]

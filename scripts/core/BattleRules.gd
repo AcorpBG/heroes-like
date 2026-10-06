@@ -306,6 +306,7 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 				)
 			)
 
+	_apply_hero_battle_boosts(session, stacks, player_commander_state)
 	battle["stacks"] = stacks
 	var town_context_type := String(battle_context.get("type", ""))
 	if town_context_type in ["town_defense", "town_assault"]:
@@ -324,6 +325,30 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 		"stack_count": stacks.size(),
 	}, session)
 	return battle
+
+# Visit buildings (Wayside Chapel, Muster Banner, Fortune Ring...) leave
+# cohesion and momentum on the hero; its army spends them in the next battle.
+static func _apply_hero_battle_boosts(session: SessionStateStoreScript.SessionData, stacks: Array, commander_state: Variant) -> void:
+	if not (commander_state is Dictionary):
+		return
+	var boosts = commander_state.get("battle_boosts", {})
+	if not (boosts is Dictionary) or boosts.is_empty():
+		return
+	var cohesion := int(boosts.get("cohesion", 0))
+	var momentum := int(boosts.get("momentum", 0))
+	for stack in stacks:
+		if not (stack is Dictionary) or String(stack.get("side", "")) != "player":
+			continue
+		if cohesion != 0:
+			stack["cohesion_base"] = clamp(int(stack.get("cohesion_base", 5)) + cohesion, COHESION_MIN, COHESION_MAX)
+			stack["cohesion"] = clamp(int(stack.get("cohesion", stack.get("cohesion_base", 5))) + cohesion, COHESION_MIN, COHESION_MAX)
+		if momentum != 0:
+			stack["momentum"] = clamp(int(stack.get("momentum", 0)) + momentum, 0, MOMENTUM_MAX)
+	var hero = session.overworld.get("hero", {})
+	if hero is Dictionary and String(hero.get("id", "")) != "" and String(hero.get("id", "")) == String(commander_state.get("id", "")):
+		hero.erase("battle_boosts")
+		session.overworld["hero"] = hero
+		HeroCommandRulesScript.commit_active_hero(session)
 
 static func normalize_battle_state_bridge(session) -> bool:
 	return normalize_battle_state(session)

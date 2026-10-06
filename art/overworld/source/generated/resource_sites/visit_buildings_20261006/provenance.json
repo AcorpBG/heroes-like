@@ -1,0 +1,21 @@
+{
+  "generator": "built_in_image_gen",
+  "references": [
+    "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_oath_ember_shrine.png",
+    "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_root_accord_ring.png"
+  ],
+  "purpose": "Original sprites for the two mana visit buildings (Ley Well, Moonspring) added with the HoMM-style visit building set; the other buildings reuse existing original sprites.",
+  "images": [
+    {
+      "asset_id": "mapobj_ley_well",
+      "prompt": "A single adventure-map building sprite for an original fantasy strategy game: a \"Ley Well\" - a round stone well of carved pale masonry with three short rune-cut pillars around its rim, a small bronze winch, and softly glowing blue-violet water inside that gives off a faint upward shimmer of light motes. Moss and a few flagstones at its base. It refills a hero's magic when visited.\n\nMatch the style of the reference images exactly: painterly hand-painted fantasy game sprite, rich saturated colours, soft warm key light from the upper left, crisp dark outlines softened by painting, small soft contact shadow. Same elevated three-quarter isometric camera angle as the references, object centered, filling about 60% of the frame with transparent margin around it.\n\nOne object only, no ground tile, no scenery, no text, no letters, no frame. Plain transparent background.",
+      "file": "ley_well-source.png"
+    },
+    {
+      "asset_id": "mapobj_moonspring",
+      "prompt": "A single adventure-map building sprite for an original fantasy strategy game: a \"Moonspring\" - a small natural spring pool ringed by pale standing stones shaped like crescent moons, clear silver-blue water welling up from a cracked stone basin in the centre, a few water lilies, and a soft silver glow over the water. Low reeds and smooth pebbles at the edge. It doubles a hero's magic once a week.\n\nMatch the style of the reference images exactly: painterly hand-painted fantasy game sprite, rich saturated colours, soft warm key light from the upper left, crisp dark outlines softened by painting, small soft contact shadow. Same elevated three-quarter isometric camera angle as the references, object centered, filling about 60% of the frame with transparent margin around it.\n\nOne object only, no ground tile, no scenery, no text, no letters, no frame. Plain transparent background.",
+      "file": "moonspring-source.png"
+    }
+  ],
+  "packing": "Mechanical alpha trim and aspect-preserving resize onto a 512px transparent canvas, bottom-aligned with mapobj_root_accord_ring; no repainting."
+}

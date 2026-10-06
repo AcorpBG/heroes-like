@@ -110,7 +110,9 @@ static func ensure_hero_spellbook(hero_state: Dictionary, hero_template: Diction
 	return hero_state
 
 static func mana_max_from_hero(hero_state: Dictionary) -> int:
-	return mana_max_from_command(hero_state.get("command", {})) + HeroProgressionRulesScript.mana_max_bonus(hero_state)
+	var week_bonuses = hero_state.get("week_bonuses", {})
+	var week_mana := int(week_bonuses.get("mana", 0)) if week_bonuses is Dictionary else 0
+	return mana_max_from_command(hero_state.get("command", {})) + HeroProgressionRulesScript.mana_max_bonus(hero_state) + week_mana
 
 static func mana_max_from_command(command: Variant) -> int:
 	if not (command is Dictionary):

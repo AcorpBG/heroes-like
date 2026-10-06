@@ -6,9 +6,10 @@ Owner direction, 2026-10-05: streamline map economy objects to the HoMM model. P
 
 - Only mines pay daily income: Sawmill 2 wood, Ore Mine 2 ore, Gold Mine 1,000 gold, each rare mine 1 of its resource. The scenario-only multi-resource mines (Orevein Assay Depot, Bellwake Wreck Ledger, Frontier Rare Exchange) and the authored AI helper (Generated Town Supply Cache) keep their income.
 - Capturing or recapturing a site pays nothing beyond ownership. Neutral dwellings, faction landmarks, watchtowers and faction outposts pay no capture bonus and no daily income; they keep recruits, vision, response orders and town support.
-- A site that stays on the map pays its own claim payload (vault loot, shrine experience, dwelling troops) once per placement. Recapturing it never pays again (`ResourceNodePayloadRules.CLAIM_PAYLOAD_SPENT`).
+- A site that stays on the map pays its own claim payload (vault loot, dwelling troops) once per placement. Recapturing it never pays again (`ResourceNodePayloadRules.CLAIM_PAYLOAD_SPENT`).
 - The six small producers are weekly visit sites, free, usable again 7 days after the last visit: Charter Countinghouse 1,000 gold, Tide Kiln 500 gold, Orchard Levy Post 500 gold, Wind Press 4 of a rare (3-6 of a rolled rare on random maps), Saw Chain 5 wood, Smelter Annex 5 ore.
 - Wood Wagon and Ore Crates are plain one-time pickups and are never placed by the random map generator.
+- Services and shrines are visit buildings now and pay no resources or experience; see `docs/visit-buildings.md`.
 
 ## Random maps
 

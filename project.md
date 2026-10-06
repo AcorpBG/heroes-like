@@ -174,6 +174,7 @@ Exit criteria:
 - Runtime zones preserve source-template roles, areas, owner slots, terrain/faction choices, link semantics, guard values, wide/border-guard flags, and explicit infeasibility reporting.
 - Terrain, island/water shaping, roads/rivers, towns, mines, resources, rewards, monsters/guards, and decoration placement follow the recovered phase order closely enough to produce structurally HoMM3-like maps with original content ids/assets.
 - Placed HoMM3 reward and economy objects translate to original sites after generation, with HoMM-style payloads (pile sizes, chest tiers, scroll spells, rare kind) rolled from a stable hash of the placement id; only mines pay daily income and capturing a site pays no bonus (`docs/pickups-and-income-sites.md`).
+- HoMM3 visit buildings translate by meaning to original visit buildings that are never captured and remember each visiting hero, with HoMM cadences (once per hero, daily, weekly); no site sells experience (`docs/visit-buildings.md`).
 - Object definitions, footprints, terrain/passability/action masks, per-zone/global limits, value bands, density rules, and deterministic validation are implemented as reusable generator data rather than one-off placement heuristics.
 - Performance is acceptable for supported sizes without the current XL island candidate-scoring bottleneck, and unsupported exact byte/art parity gaps are explicitly reported.
 - Native package/session adoption remains gated behind validators, fixture comparisons, generated-map inspection reports, and save/replay boundary checks.

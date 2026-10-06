@@ -159,7 +159,13 @@ static func movement_max_for_hero(hero_state: Dictionary, movement_source: Varia
 		+ int(artifact_bonuses.get("overworld_movement", 0))
 		+ int(specialty_bonuses.get("overworld_movement", 0))
 		+ difficulty_bonus
+		+ _week_bonus(hero_state, "movement")
 	)
+
+# Visit buildings can raise movement or mana until the week ends.
+static func _week_bonus(hero_state: Dictionary, key: String) -> int:
+	var bonuses = hero_state.get("week_bonuses", {})
+	return int(bonuses.get(key, 0)) if bonuses is Dictionary else 0
 
 static func scouting_radius_for_hero(hero_state: Dictionary) -> int:
 	var artifact_bonuses = ArtifactRulesScript.aggregate_bonuses(hero_state)

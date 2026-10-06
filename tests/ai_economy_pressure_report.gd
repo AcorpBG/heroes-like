@@ -21,7 +21,9 @@ func _run() -> void:
 	var both_case := _run_case(
 		"signal_post_and_free_company_owned",
 		["river_signal_post", "river_free_company"],
-		["river_free_company", "river_signal_post"]
+		# The signal post pays no income since only mines do, so only the free
+		# company's recruits keep it ahead of the town-support targets.
+		["river_free_company"]
 	)
 	if both_case.is_empty():
 		return
@@ -207,8 +209,9 @@ func _run_rare_starved_targeting_case() -> Dictionary:
 	if "resource_scarcity" not in reason_codes:
 		_fail("rare-starved peatwax target should expose resource_scarcity reason code: %s" % JSON.stringify(rare_breakdown))
 		return {}
-	if int(rare_breakdown.get("weighted_claim_value", 0)) <= 0 or int(rare_breakdown.get("weighted_income_value", 0)) <= 0:
-		_fail("rare resources should contribute to weighted claim and income values: %s" % JSON.stringify(rare_breakdown))
+	# Capturing a mine pays no bonus, so a rare mine's pull is its income.
+	if int(rare_breakdown.get("weighted_income_value", 0)) <= 0:
+		_fail("rare resources should contribute to the weighted income value: %s" % JSON.stringify(rare_breakdown))
 		return {}
 	if String(rare_breakdown.get("debug_reason", "")).find("peatwax") < 0:
 		_fail("rare-resource pressure should name the scarce rare in debug evidence: %s" % JSON.stringify(rare_breakdown))

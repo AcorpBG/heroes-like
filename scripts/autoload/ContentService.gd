@@ -551,6 +551,7 @@ func _supported_resource_site_families() -> Array:
 		"scouting_structure",
 		"transit_object",
 		"repeatable_service",
+		"visit_building",
 		"staged_resource_front",
 		"support_producer",
 		"shrine",

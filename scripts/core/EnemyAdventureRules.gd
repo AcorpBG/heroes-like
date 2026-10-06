@@ -14,6 +14,7 @@ const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
+const VisitBuildings = preload("res://scripts/core/VisitBuildingRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 static var _path_distance_surface_cache: Dictionary = {}
 static var _native_navigation_surface_cache: Dictionary = {}
@@ -12274,6 +12275,9 @@ static func resource_target_score_breakdown(
 	var income_value := _target_resource_value(site.get("control_income", {}))
 	var strategy := enemy_strategy(config, resolved_faction_id)
 	var weighted_claim_value := _target_resource_value_for_strategy(_resource_site_claim_rewards(site), strategy)
+	if VisitBuildings.is_visit_building(site):
+		claim_value += VisitBuildings.ai_value(site)
+		weighted_claim_value += VisitBuildings.ai_value(site)
 	var weighted_income_value := _target_resource_value_for_strategy(site.get("control_income", {}), strategy)
 	var claim_recruit_value := _recruit_payload_value(site.get("claim_recruits", {}))
 	var weekly_recruit_value := _recruit_payload_value(site.get("weekly_recruits", {}))
@@ -17372,7 +17376,7 @@ static func _secure_opportunistic_route_resource(
 ) -> Dictionary:
 	site = NodePayload.site_for_node(node, site)
 	var nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
-	if node_index < 0 or node_index >= nodes.size():
+	if node_index < 0 or node_index >= nodes.size() or VisitBuildings.is_visit_building(site):
 		return {"resolved": false, "encounter": raid, "state": state, "event_message": "", "ai_events": []}
 	if not bool(_raid_site_recruit_admission(raid, site).get("ok", false)):
 		return {"resolved": false, "encounter": raid, "state": state, "event_message": "", "ai_events": [], "capacity_blocked": true}
@@ -17973,6 +17977,8 @@ static func _secure_resource_target(
 		if PlayerRules.resource_controller_id(node) == faction_id:
 			_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
 		return {"encounter": raid, "state": state, "event_message": ""}
+	if VisitBuildings.is_visit_building(site):
+		return _visit_building_by_raid(session, raid, state, faction_id, node_result, site, config)
 	if not bool(_raid_site_recruit_admission(raid, site).get("ok", false)):
 		return {"encounter": raid, "state": state, "event_message": "", "capacity_blocked": true}
 	var nodes = session.overworld.get("resource_nodes", [])
@@ -18173,6 +18179,98 @@ static func _secure_resource_target(
 		"ai_events": events,
 		"artifact_reward": artifact_reward,
 	}
+
+static func _visit_key(faction_id: String) -> String:
+	return "ai:%s" % faction_id
+
+# A raid commander visits a stat, experience or spell building: the building
+# stays neutral, the commander grows, and the faction cannot use it again
+# until its cadence allows.
+static func _visit_building_by_raid(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	state: Dictionary,
+	faction_id: String,
+	node_result: Dictionary,
+	site: Dictionary,
+	config: Dictionary
+) -> Dictionary:
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	var index := int(node_result.get("index", -1))
+	if index < 0 or index >= nodes.size():
+		return {"encounter": raid, "state": state, "event_message": ""}
+	var node: Dictionary = nodes[index]
+	var choice_id := ""
+	var options := VisitBuildings.choices(site)
+	if not options.is_empty() and options[0] is Dictionary:
+		choice_id = String(options[0].get("id", ""))
+	var price := VisitBuildings.cost(site, choice_id)
+	var treasury: Dictionary = state.get("treasury", {}) if state.get("treasury", {}) is Dictionary else {}
+	for key in price.keys():
+		if int(treasury.get(key, 0)) < int(price[key]):
+			_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")
+			return {"encounter": raid, "state": state, "event_message": ""}
+	for key in price.keys():
+		treasury[key] = int(treasury.get(key, 0)) - int(price[key])
+	state["treasury"] = treasury
+	VisitBuildings.record_visit(node, site, _visit_key(faction_id), session.day)
+	nodes[index] = node
+	session.overworld["resource_nodes"] = nodes
+	var effect := VisitBuildings.effects(site, choice_id)
+	var updated_raid := _record_adventure_objective_success(session, faction_id, raid, COMMANDER_OUTCOME_RESOURCE_SECURED)
+	var commander = updated_raid.get("enemy_commander_state", {})
+	var commander_changed := false
+	if commander is Dictionary and not commander.is_empty():
+		var stats = effect.get("stats", {})
+		if stats is Dictionary and not stats.is_empty():
+			var command = commander.get("command", {})
+			if not (command is Dictionary):
+				command = {}
+			for key in VisitBuildings.STAT_KEYS:
+				if int(stats.get(key, 0)) != 0:
+					command[key] = maxi(0, int(command.get(key, 0)) + int(stats.get(key, 0)))
+			commander["command"] = command
+			commander_changed = true
+		var experience := maxi(0, int(effect.get("experience", 0)))
+		for _level in range(maxi(0, int(effect.get("levels", 0)))):
+			var progression := HeroProgressionRulesScript.ensure_hero_progression(commander.duplicate(true))
+			experience += maxi(1, int(progression.get("next_level_experience", 250)) - int(progression.get("experience", 0)))
+		if experience > 0:
+			commander = HeroProgressionRulesScript.add_experience(commander, experience).get("hero", commander)
+			commander_changed = true
+		updated_raid["enemy_commander_state"] = commander
+	if int(effect.get("spell_tier", 0)) > 0:
+		var spell_reward := _apply_resource_site_spell_reward_to_commander(session, faction_id, updated_raid, site)
+		updated_raid = spell_reward.get("raid", updated_raid)
+		commander_changed = commander_changed or bool(spell_reward.get("learned", false))
+	var effect_text := VisitBuildings.effect_summary(effect)
+	var message := "%s visits %s%s." % [_raid_name(updated_raid), String(site.get("name", "a building")), " (%s)" % effect_text if effect_text != "" else ""]
+	TurnPlayback.action(session, updated_raid, "visits a building")
+	_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
+	var continuation := _continue_mobile_raid_after_field_objective(
+		session,
+		config if not config.is_empty() else PlayerRules.config_for_controller(session, faction_id),
+		updated_raid,
+		state,
+		faction_id
+	)
+	var final_raid: Dictionary = continuation.get("encounter", updated_raid)
+	if commander_changed:
+		var final_commander = final_raid.get("enemy_commander_state", {})
+		if final_commander is Dictionary and not final_commander.is_empty():
+			sync_commander_state_to_roster(
+				session,
+				faction_id,
+				final_commander,
+				COMMANDER_STATUS_ACTIVE,
+				String(final_raid.get("placement_id", "")),
+				-1,
+				String(final_commander.get("last_outcome", COMMANDER_OUTCOME_RESOURCE_SECURED))
+			)
+	var events := []
+	if not continuation.get("ai_event", {}).is_empty():
+		events.append(continuation.get("ai_event", {}))
+	return {"encounter": final_raid, "state": state, "event_message": message, "ai_events": events}
 
 static func _apply_resource_site_artifact_reward_to_raid(
 	session: SessionStateStoreScript.SessionData,
@@ -21277,6 +21375,13 @@ static func _resource_site_is_persistent(site: Dictionary) -> bool:
 static func _resource_node_contestable_by_faction(node: Dictionary, site: Dictionary, faction_id: String, session: SessionStateStoreScript.SessionData = null) -> bool:
 	if NativeTransit.is_native(node):
 		return not NativeTransit.destinations(node).is_empty()
+	if VisitBuildings.is_visit_building(site):
+		return (
+			session != null
+			and VisitBuildings.cadence(site) != VisitBuildings.CADENCE_ALWAYS
+			and VisitBuildings.ai_value(site) > 0
+			and bool(VisitBuildings.readiness(node, site, _visit_key(faction_id), session.day).get("ok", false))
+		)
 	if _resource_site_is_persistent(site):
 		return not PlayerRules.allied(session, PlayerRules.resource_controller_id(node), faction_id)
 	return not bool(node.get("collected", false))

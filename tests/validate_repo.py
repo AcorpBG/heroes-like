@@ -1187,7 +1187,7 @@ OVERWORLD_FOUNDATION_SITE_FAMILIES = {
     "scouting_structure",
     "guarded_reward_site",
     "transit_object",
-    "repeatable_service",
+    "visit_building",
 }
 SUPPORTED_RESOURCE_SITE_FAMILIES = LOGISTICS_SITE_FAMILIES | OVERWORLD_FOUNDATION_SITE_FAMILIES | {
     "one_shot_pickup",
@@ -1197,6 +1197,7 @@ SUPPORTED_RESOURCE_SITE_FAMILIES = LOGISTICS_SITE_FAMILIES | OVERWORLD_FOUNDATIO
     "sign_waypoint",
     "scenario_objective",
     "faction_landmark",
+    "repeatable_service",
 }
 SUPPORTED_MAP_OBJECT_FAMILIES = {
     "pickup",
@@ -2013,6 +2014,7 @@ OVERWORLD_OBJECT_FOOTPRINT_ANCHORS = {"bottom_center", "center", "top_left", "bo
 OVERWORLD_OBJECT_FOOTPRINT_TIERS = {"micro", "small", "medium", "large", "region_feature"}
 OVERWORLD_OBJECT_INTERACTION_CADENCES = {
     "none",
+    "per_hero_visit",
     "one_time",
     "repeatable_daily",
     "repeatable_weekly",
@@ -2078,7 +2080,7 @@ OVERWORLD_OBJECT_SAFE_INTERACTION_KEYS = {
     "refresh_rule",
 }
 OVERWORLD_OBJECT_SAFE_STATE_AFTER_VISIT = {"collected", "visited", "claimed", "opened", "cleared", "unchanged"}
-OVERWORLD_OBJECT_SAFE_REFRESH_RULES = {"none", "daily_income", "weekly_growth", "cooldown", "route_state", "scenario", "persistent_state"}
+OVERWORLD_OBJECT_SAFE_REFRESH_RULES = {"none", "daily_income", "weekly_growth", "cooldown", "route_state", "scenario", "persistent_state", "per_hero_visit"}
 
 
 def load_json(path: Path) -> dict:
@@ -3989,6 +3991,8 @@ def infer_overworld_object_interaction_cadence(obj: dict, site: dict | None = No
         return "one_time" if bool(obj.get("visitable", False)) else "none"
     if isinstance(site.get("transit_profile", {}), dict) and bool(site.get("transit_profile", {})):
         return "conditional"
+    if str(site.get("family", "")) == "visit_building":
+        return "per_hero_visit"
     if bool(site.get("persistent_control", False)):
         return "persistent_control"
     if bool(site.get("repeatable", False)):
@@ -5503,7 +5507,7 @@ def build_overworld_object_content_batch_003_section(map_objects: dict[str, dict
             add_error(f"{object_id}: Batch 003 objects must author ai_hints")
         if not isinstance(obj.get("editor_placement", {}), dict) or not obj.get("editor_placement", {}):
             add_error(f"{object_id}: Batch 003 objects must author editor_placement")
-        if str(interaction.get("cadence", "")) not in {"one_time", "repeatable_daily", "repeatable_weekly", "cooldown_days", "persistent_control", "conditional", "scenario_scripted"}:
+        if str(interaction.get("cadence", "")) not in {"one_time", "repeatable_daily", "repeatable_weekly", "cooldown_days", "persistent_control", "conditional", "scenario_scripted", "per_hero_visit"}:
             add_error(f"{object_id}: Batch 003 interaction cadence is missing or unsupported")
         live_repeatable_service = role == "repeatable_service" and all(
             str(owner.get("runtime_boundary", {}).get("status", "")) == "repeatable_service_live"
@@ -5615,7 +5619,7 @@ def build_overworld_object_content_batch_003_section(map_objects: dict[str, dict
                         if token in public_text:
                             add_error(f"{object_id}: route_effect.{public_key} leaks internal token {token}")
             section["route_lock_metadata_count"] += 1
-        if role == "repeatable_service" and (not bool(site.get("repeatable", False)) or int(site.get("visit_cooldown_days", 0)) <= 0):
+        if role == "repeatable_service" and str(site.get("family", "")) != "visit_building" and (not bool(site.get("repeatable", False)) or int(site.get("visit_cooldown_days", 0)) <= 0):
             add_error(f"{object_id}: repeatable services must define repeatable site cooldown metadata")
         if role == "scouting_info":
             if int(site.get("vision_radius", 0)) <= 0:
@@ -5644,7 +5648,7 @@ def build_overworld_object_content_batch_003_section(map_objects: dict[str, dict
             add_error("Batch 003 must not add live reward, income, or production fields")
         if section["route_lock_metadata_count"] != expected_role_counts["route_lock"]:
             add_error("Batch 003 route locks must all carry safe route-effect metadata")
-        for cadence in ("cooldown_days", "one_time", "repeatable_weekly", "persistent_control", "repeatable_daily", "conditional", "scenario_scripted"):
+        for cadence in ("per_hero_visit", "persistent_control", "repeatable_daily", "conditional", "scenario_scripted"):
             if cadence not in section["cadence_counts"]:
                 add_error(f"Batch 003 must cover interaction cadence {cadence}")
         for biome_id in sorted(biomes.keys()):
@@ -39808,11 +39812,11 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
     ensure({"grass", "snow", "sand", "dirt", "rough", "lava", "underground", "water"}.issubset(terrain_to_biome.keys()), errors, "Biomes must map the canonical terrain ids used by current scenarios")
     if "water" in terrain_to_biome:
         ensure(not bool(biomes.get(terrain_to_biome["water"], {}).get("passable", True)), errors, "The biome mapped from water must remain impassable for current overworld pathing")
-    ensure(OVERWORLD_FOUNDATION_SITE_FAMILIES.issubset(site_families_allowed_by_biomes), errors, "Biome palettes must allow mines, scouting structures, guarded reward sites, transit objects, and repeatable services")
+    ensure(OVERWORLD_FOUNDATION_SITE_FAMILIES.issubset(site_families_allowed_by_biomes), errors, "Biome palettes must allow mines, scouting structures, guarded reward sites, transit objects, and visit buildings")
 
     ensure(OVERWORLD_FOUNDATION_RESOURCE_SITE_IDS.issubset(resource_sites.keys()), errors, "Overworld content foundation must keep the first new resource-site family set authored")
     families_present = {str(site.get("family", "one_shot_pickup")) for site in resource_sites.values()}
-    ensure(OVERWORLD_FOUNDATION_SITE_FAMILIES.issubset(families_present), errors, "Resource sites must include mines, scouting structures, guarded reward sites, transit objects, and repeatable services")
+    ensure(OVERWORLD_FOUNDATION_SITE_FAMILIES.issubset(families_present), errors, "Resource sites must include mines, scouting structures, guarded reward sites, transit objects, and visit buildings")
 
     for site_id, site in resource_sites.items():
         family = str(site.get("family", "one_shot_pickup")) or "one_shot_pickup"
@@ -39857,9 +39861,11 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
         spell_id = str(site.get("learn_spell_id", ""))
         if spell_id:
             ensure(spell_id in spells, errors, f"Resource site {site_id} references missing learn_spell_id {spell_id}")
+            visit_effects = site.get("visit", {}).get("effects", {}) if isinstance(site.get("visit", {}), dict) else {}
             ensure(
                 str(spells.get(spell_id, {}).get("context", "")) == "overworld"
-                or str(site.get("runtime_boundary", {}).get("status", "")) in {"high_arcanum_live", "triune_arcanum_live"},
+                or str(site.get("runtime_boundary", {}).get("status", "")) in {"high_arcanum_live", "triune_arcanum_live"}
+                or (str(site.get("family", "")) == "visit_building" and int(visit_effects.get("spell_tier", 0) or 0) == int(spells.get(spell_id, {}).get("tier", -1))),
                 errors,
                 f"Resource site {site_id} learn_spell_id must be an overworld spell or an explicit live arcanum battle lesson",
             )
@@ -51539,6 +51545,10 @@ def validate_seven_minor_guarded_caches(errors: list[str]) -> None:
         ensure('REQUIRED_MINOR_GUARDED_CACHE_OPENED_ATLAS_NAME = "minor_guarded_cache_opened_atlas"' in packaging_text and 'minor_guarded_cache_opened_atlas.png.import' in packaging_text, errors, f"{packaging_path.name} must audit the minor guarded-cache opened atlas")
 
 
+SIX_SERVICE_VISIT_CONTRACTS = {"site_wayfarer_menders_tent": {"role": "rest_stop", "cadence": "weekly_per_hero", "effects": {"movement": 4, "battle_boosts": {"cohesion": 1}}}, "site_courier_change_post": {"role": "stable", "cadence": "weekly_per_hero", "effects": {"week_movement": 3}}, "site_contract_scribe_booth": {"role": "chartmaker", "cadence": "once_per_hero", "cost": {"gold": 1000}, "effects": {"reveal": "level"}}, "site_reedboat_supply_stand": {"role": "supply_stand", "cadence": "daily_per_hero", "effects": {"movement": 3}}, "site_ash_cooler_kitchen": {"role": "rest_stop", "cadence": "weekly_per_hero", "effects": {"movement": 4, "battle_boosts": {"cohesion": 1}}}, "site_lens_calibration_cart": {"role": "far_lens", "cadence": "once_per_hero", "effects": {"reveal_radius": 12}}}
+SIX_SHRINE_VISIT_CONTRACTS = {"site_oath_ember_shrine": {"role": "spell_shrine", "cadence": "once_per_hero", "effects": {"spell_tier": 1}}, "site_reedscript_vow_shrine": {"role": "spell_shrine", "cadence": "once_per_hero", "effects": {"spell_tier": 2}}, "site_prism_measure_shrine": {"role": "spell_shrine", "cadence": "once_per_hero", "effects": {"spell_tier": 3}}, "site_root_accord_ring": {"role": "fortune_ring", "cadence": "weekly_per_hero", "effects": {"battle_boosts": {"momentum": 1}}}, "site_furnace_oath_marker": {"role": "rally_banner", "cadence": "weekly_per_hero", "effects": {"movement": 2, "battle_boosts": {"cohesion": 1, "momentum": 1}}}, "site_tide_bell_shrine": {"role": "tide_bell", "cadence": "weekly_per_hero", "effects": {"battle_boosts": {"cohesion": 1}}}}
+
+
 def validate_six_repeatable_field_services(errors: list[str]) -> None:
     expected = {
         "site_wayfarer_menders_tent": ("object_wayfarer_menders_tent", "ninefold_wayfarer_menders_tent", (24,4), {"gold":120}, {"experience":80}, {"nearest_player_town_recovery_relief":2}, "resource_site_repeatable_service_wayfarer_menders_tent_visited", [0,0,48,48]),
@@ -51570,7 +51580,8 @@ def validate_six_repeatable_field_services(errors: list[str]) -> None:
             contract = owner.get("service_contract", {})
             ensure(boundary.get("status") == "repeatable_service_live" and boundary.get("live_reward_grants") is True and boundary.get("save_payload_required") is True and boundary.get("renderer_sprite_required") is True and boundary.get("pathing_runtime_adopted") is True and boundary.get("scenario_placement_migration") is True, errors, f"{site_id} live service boundary changed")
             ensure(contract.get("service_cost") == cost and contract.get("metadata_only") is False and contract.get("runtime_service_execution_adopted") is True, errors, f"{site_id} runtime service contract changed")
-        ensure(site.get("service_cost") == cost and site.get("claim_rewards") == rewards and site.get("service_effects", {}) == effects and site.get("repeatable") is True and site.get("visit_cooldown_days") == 7, errors, f"{site_id} weekly effect payload changed")
+        # Paid experience is gone: each service is now a free visit building.
+        ensure(site.get("family") == "visit_building" and site.get("visit") == SIX_SERVICE_VISIT_CONTRACTS.get(site_id) and not site.get("service_cost") and not site.get("claim_rewards"), errors, f"{site_id} visit-building contract changed")
         node = next((row for row in scenario.get("resource_nodes", []) if isinstance(row, dict) and row.get("placement_id") == placement_id), {})
         ensure(node == {"placement_id":placement_id,"site_id":site_id,"x":xy[0],"y":xy[1]}, errors, f"{site_id} Ninefold placement changed")
         mapping = mappings.get(site_id, {})
@@ -51626,8 +51637,8 @@ def validate_six_progression_shrines(errors: list[str]) -> None:
             contract = owner.get("shrine_contract", {})
             ensure(boundary.get("status") == "shrine_progression_live" and boundary.get("live_reward_grants") is True and boundary.get("save_payload_required") is True and boundary.get("renderer_sprite_required") is True and boundary.get("pathing_runtime_adopted") is True and boundary.get("scenario_placement_migration") is True and boundary.get("rare_resource_activation") is False, errors, f"{site_id} live shrine boundary changed")
             ensure(contract.get("metadata_only") is False and contract.get("runtime_shrine_execution_adopted") is True and len(str(contract.get("live_bonus", ""))) >= 48, errors, f"{site_id} runtime shrine contract changed")
-        ensure(site.get("claim_rewards") == rewards and site.get("hero_command_bonus", {}) == bonus and site.get("shrine_effects", {}) == effects and str(site.get("learn_spell_id", "")) == spell_id and int(site.get("vision_radius", 0)) == vision, errors, f"{site_id} progression payload changed")
-        ensure(bool(site.get("repeatable", False)) is repeatable and int(site.get("visit_cooldown_days", 0)) == (7 if repeatable else 0), errors, f"{site_id} cadence payload changed")
+        # The shrines are visit buildings now: three spell shrines and three next-battle boosts.
+        ensure(site.get("family") == "visit_building" and site.get("visit") == SIX_SHRINE_VISIT_CONTRACTS.get(site_id) and not site.get("claim_rewards") and not site.get("hero_command_bonus") and int(site.get("vision_radius", 0)) == vision, errors, f"{site_id} visit-building contract changed")
         scenario = scenarios.get(scenario_id, {})
         node = next((row for row in scenario.get("resource_nodes", []) if isinstance(row, dict) and row.get("placement_id") == placement_id), {})
         ensure(node.get("site_id") == site_id and (int(node.get("x", -1)), int(node.get("y", -1))) == xy and str(node.get("guard_front_id", "")) == guard_id, errors, f"{site_id} exact scenario placement changed")
@@ -66260,8 +66271,8 @@ def validate_native_rmg_authored_object_pool_eligibility(errors: list[str]) -> N
             decisions.append(f"excluded:{exclusion_id}")
             excluded_decisions[object_id] = exclusion_id
         ensure(len(decisions) == 1, errors, f"Authored map object {object_id} must have exactly one native-RMG eligibility decision, got {decisions}")
-    ensure(len(authored) == 425, errors, "Native RMG eligibility baseline must cover all 425 authored map objects")
-    ensure(len(eligible_decisions) == 359, errors, "Native RMG eligibility must expose all 359 compatible authored map objects, including guarded sites and rare pickups")
+    ensure(len(authored) == 437, errors, "Native RMG eligibility baseline must cover all 437 authored map objects")
+    ensure(len(eligible_decisions) == 371, errors, "Native RMG eligibility must expose all 371 compatible authored map objects, including guarded sites and rare pickups")
     ensure(len(excluded_decisions) == 66, errors, "Native RMG eligibility must retain 66 explicit safety/scenario exclusions")
     ensure(len(candidate_ids_by_pool.get("guarded_reward", set())) == 32, errors, "All 32 executable guarded sites must be eligible; stale object summaries cannot exclude them")
     source_type_pools = registry.get("source_type_pools", {})
@@ -67266,8 +67277,8 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'var source_objects: Dictionary = session.overworld.get("package_source_objects_by_id", {})',
             'source.get("package_body_tiles", []) != expected.get("body_tiles", [])',
             'source.get("package_visit_tiles", []) != expected.get("visit_tiles", [])',
-            '"site_id": "site_hilltop_signal_nest"',
-            '"object_id": "object_courier_change_post"',
+            '"site_id": "site_visit_moonspring"',
+            '"object_id": "object_visit_arcane_collegium"',
             'and live_catalog_row_count == 328',
             'and raw_rows_exact',
             'and source_rows_exact',
@@ -79581,10 +79592,10 @@ def validate_eight_foundation_map_object_identities(errors: list[str]) -> None:
     object_assets = art_manifest.get("object_assets", {})
     site_sprites = art_manifest.get("resource_site_sprites", {})
     nondecorative_ids = {object_id for object_id, row in map_objects.items() if row.get("family") not in {"blocker", "decoration"}}
-    ensure(len(nondecorative_ids) == 225 and set(mappings) == nondecorative_ids and len(asset_ids) == 225 and len(set(asset_ids)) == 225, errors, "All 225 authored non-decorative map objects must retain one exact distinct sprite mapping")
+    ensure(len(nondecorative_ids) == 237 and set(mappings) == nondecorative_ids and len(asset_ids) == 237 and len(set(asset_ids)) == 237, errors, "All 237 authored non-decorative map objects must retain one exact distinct sprite mapping")
     ensure(sprite_manifest.get("source", {}).get("new_generated_sprite_count") == 222 and sprite_manifest.get("source", {}).get("generated_batch_count") == 20, errors, "Foundation identity coverage must retain the expanded 222-object, 20-batch mapping provenance")
     coverage = sprite_manifest.get("coverage", {})
-    ensure(coverage.get("preexisting_unique_non_decorative_count") == 0 and coverage.get("new_distinct_non_decorative_asset_count") == 225 and coverage.get("total_distinct_authored_map_object_count_after_pass") == 425, errors, "Foundation identity coverage totals changed")
+    ensure(coverage.get("preexisting_unique_non_decorative_count") == 0 and coverage.get("new_distinct_non_decorative_asset_count") == 237 and coverage.get("total_distinct_authored_map_object_count_after_pass") == 437, errors, "Foundation identity coverage totals changed")
     ensure(source_manifest.get("schema") == "foundation_map_object_identities_source_manifest_v1" and source_manifest.get("content_slice_id") == "content-eight-foundation-map-object-identities-10184" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("background_extraction_mode") == "built_in_image_gen_background_extraction" and len(str(source_manifest.get("prompt_set_summary", ""))) >= 500, errors, "Foundation object source provenance changed")
     source_rows = {str(row.get("object_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     ensure(set(source_rows) == set(expected), errors, "Foundation object source manifest must own exactly the eight completed identities")

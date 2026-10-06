@@ -12,6 +12,7 @@ const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
+const VisitBuildings = preload("res://scripts/core/VisitBuildingRules.gd")
 
 const FOG_KEY := "fog"
 const VISIBLE_TILES_KEY := "visible_tiles"
@@ -1474,6 +1475,10 @@ static func _collect_resource_node_result(
 			"message": "Battle is joined for %s." % String(site.get("name", "the field site")),
 			"route": "battle",
 		}
+	if VisitBuildings.is_visit_building(site):
+		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
+		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
+		return _visit_building_result(session, node_result, site, refresh_fog_after_action, reward_choice_id)
 	if not _resource_node_claimable_by_player(node, site, session):
 		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
 		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
@@ -1761,6 +1766,169 @@ static func _apply_shrine_command_bonus(
 		"hero_command_bonus": applied,
 		"messages": ["The shrine grants %s permanently." % ", ".join(labels)],
 	}
+
+static func _visit_building_result(
+	session: SessionStateStoreScript.SessionData,
+	node_result: Dictionary,
+	site: Dictionary,
+	refresh_fog_after_action: bool,
+	choice_id: String
+) -> Dictionary:
+	var index := int(node_result.get("index", -1))
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	if index < 0 or index >= nodes.size():
+		return {"ok": false, "message": "No building is here."}
+	var node: Dictionary = nodes[index]
+	var site_name := String(site.get("name", "the building"))
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	var ready := VisitBuildings.readiness(node, site, hero_id, session.day)
+	if not bool(ready.get("ok", false)):
+		return {"ok": false, "message": String(ready.get("message", ""))}
+	var hero: Dictionary = session.overworld.get("hero", {})
+	var required_level := VisitBuildings.required_level(site)
+	if required_level > 0 and int(hero.get("level", 1)) < required_level:
+		return {"ok": false, "message": "%s admits only heroes of level %d or higher." % [site_name, required_level]}
+	var options := VisitBuildings.choices(site)
+	if not options.is_empty() and choice_id == "":
+		var prompt_choices := []
+		for choice in options:
+			if choice is Dictionary:
+				var label := String(choice.get("label", ""))
+				if label == "":
+					label = VisitBuildings.effect_summary(choice.get("effects", {})).capitalize()
+				prompt_choices.append({"id": String(choice.get("id", "")), "label": label})
+		return {
+			"ok": true,
+			"route": "reward_choice",
+			"message": "Visit %s: %s." % [site_name, VisitBuildings.summary(site)],
+			"reward_choice": {
+				"title": site_name,
+				"asset_id": String(site.get("overworld_sprite_asset_id", "")),
+				"context": _resource_reward_choice_context(session, node),
+				"choices": prompt_choices,
+			},
+		}
+	var effect := VisitBuildings.effects(site, choice_id)
+	if not options.is_empty() and effect.is_empty():
+		return {"ok": false, "message": "Choose one of the boons %s offers." % site_name}
+	var price := VisitBuildings.cost(site, choice_id)
+	if not price.is_empty() and not _can_afford(session, price):
+		return {"ok": false, "message": "%s asks %s." % [site_name, _describe_resource_delta(price)]}
+	if not price.is_empty():
+		_spend_resources(session, price)
+	VisitBuildings.record_visit(node, site, hero_id, session.day)
+	nodes[index] = node
+	session.overworld["resource_nodes"] = nodes
+	var messages := ["%s visits %s." % [String(hero.get("name", "The hero")), site_name]]
+	if not price.is_empty():
+		messages.append("Paid %s." % _describe_resource_delta(price))
+	messages.append_array(_apply_visit_effects(session, node, site, effect))
+	var facts := {"visit_building_site_id": String(site.get("id", "")), "visit_effects": effect.duplicate(true)}
+	var result := _finalize_action_result(session, true, " ".join(messages), refresh_fog_after_action, false, facts)
+	result["visit_building"] = {"site_id": String(site.get("id", "")), "hero_id": hero_id, "effects": effect.duplicate(true)}
+	result["interaction_result"] = _interactable_result_payload("resource_site", node, facts, {"contract_known": true, "blocks_changed": false, "body_tiles_changed": false})
+	return result
+
+static func _apply_visit_effects(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary,
+	effect: Dictionary
+) -> Array:
+	var messages := []
+	var gains = effect.get("resources", {})
+	if gains is Dictionary and not gains.is_empty():
+		_add_resources(session, gains)
+		messages.append("Receives %s." % _describe_resource_delta(gains))
+	var hero: Dictionary = session.overworld.get("hero", {})
+	var stats = effect.get("stats", {})
+	if stats is Dictionary and not stats.is_empty():
+		var command = hero.get("command", {})
+		if not (command is Dictionary):
+			command = {}
+		var labels := []
+		for key in VisitBuildings.STAT_KEYS:
+			var amount := int(stats.get(key, 0))
+			if amount == 0:
+				continue
+			command[key] = maxi(0, int(command.get(key, 0)) + amount)
+			labels.append("+%d %s" % [amount, String(key).capitalize()])
+		hero["command"] = command
+		hero = SpellRulesScript.ensure_hero_spellbook(hero)
+		if not labels.is_empty():
+			messages.append("Gains %s permanently." % ", ".join(labels))
+		session.overworld["hero"] = hero
+		HeroCommandRulesScript.commit_active_hero(session)
+	var experience := maxi(0, int(effect.get("experience", 0)))
+	for _level in range(maxi(0, int(effect.get("levels", 0)))):
+		var current_hero: Dictionary = HeroProgressionRulesScript.ensure_hero_progression(session.overworld.get("hero", {}).duplicate(true))
+		experience += maxi(1, int(current_hero.get("next_level_experience", 250)) - int(current_hero.get("experience", 0)))
+	if experience > 0:
+		messages.append("Gains %d experience." % experience)
+		messages.append_array(_award_experience(session, experience))
+		HeroCommandRulesScript.commit_active_hero(session)
+	if int(effect.get("spell_tier", 0)) > 0:
+		var learned := _learn_site_spells(session, _resource_site_spell_ids(site))
+		if learned.is_empty():
+			messages.append("The hero already knows what %s teaches." % String(site.get("name", "the shrine")))
+		messages.append_array(learned)
+		HeroCommandRulesScript.commit_active_hero(session)
+	var mana_mode := String(effect.get("mana", ""))
+	if mana_mode != "":
+		hero = SpellRulesScript.ensure_hero_spellbook(session.overworld.get("hero", {}))
+		if mana_mode == "week_double":
+			var base_mana := SpellRulesScript.mana_max_from_hero(hero) - VisitBuildings.week_bonus(hero, "mana")
+			VisitBuildings.add_week_bonus(hero, "mana", maxi(0, base_mana - VisitBuildings.week_bonus(hero, "mana")))
+			hero = SpellRulesScript.ensure_hero_spellbook(hero)
+		var spellbook: Dictionary = hero.get("spellbook", {})
+		var mana: Dictionary = spellbook.get("mana", {})
+		mana["current"] = int(mana.get("max", 0))
+		spellbook["mana"] = mana
+		hero["spellbook"] = spellbook
+		session.overworld["hero"] = hero
+		HeroCommandRulesScript.commit_active_hero(session)
+		messages.append("Mana %s to %d." % ["doubles" if mana_mode == "week_double" else "refills", int(mana.get("current", 0))])
+	var week_movement := maxi(0, int(effect.get("week_movement", 0)))
+	var movement_gain := maxi(0, int(effect.get("movement", 0))) + week_movement
+	if movement_gain > 0:
+		hero = session.overworld.get("hero", {})
+		if week_movement > 0:
+			VisitBuildings.add_week_bonus(hero, "movement", week_movement)
+			session.overworld["hero"] = hero
+		var movement = session.overworld.get("movement", {})
+		if not (movement is Dictionary):
+			movement = {}
+		var movement_max := _movement_max_from_hero(hero, session)
+		var before := int(movement.get("current", 0))
+		movement["max"] = movement_max
+		movement["current"] = mini(movement_max, before + movement_gain)
+		session.overworld["movement"] = movement
+		HeroCommandRulesScript.commit_active_hero(session)
+		messages.append("Movement rises to %d." % int(movement["current"]))
+	var boosts = effect.get("battle_boosts", {})
+	var rest_day_boosts = effect.get("day7_battle_boosts", {})
+	if boosts is Dictionary and rest_day_boosts is Dictionary and not rest_day_boosts.is_empty() and session.day % VisitBuildings.WEEK_LENGTH == 0:
+		boosts = boosts.duplicate(true)
+		for key in rest_day_boosts.keys():
+			boosts[key] = int(boosts.get(key, 0)) + int(rest_day_boosts[key])
+	if boosts is Dictionary and not boosts.is_empty():
+		hero = session.overworld.get("hero", {})
+		var applied := VisitBuildings.add_battle_boosts(hero, boosts)
+		session.overworld["hero"] = hero
+		HeroCommandRulesScript.commit_active_hero(session)
+		var boost_labels := []
+		for key in applied.keys():
+			if int(applied[key]) > 0:
+				boost_labels.append("+%d %s" % [int(applied[key]), key])
+		messages.append("The army carries %s into its next battle." % ", ".join(boost_labels) if not boost_labels.is_empty() else "The army is already as ready as it can be.")
+	if int(effect.get("reveal_radius", 0)) > 0:
+		var nearby := _reveal_resource_site_claim_fog(session, node, int(effect.get("reveal_radius", 0)))
+		messages.append("The lenses reveal %d new tiles." % nearby)
+	if String(effect.get("reveal", "")) == "level":
+		var map_size := derive_map_size(session)
+		var revealed := _reveal_resource_site_claim_fog(session, node, map_size.x + map_size.y)
+		messages.append("Charts reveal %d new tiles." % revealed)
+	return messages
 
 static func _resource_site_grants_command_lesson(site: Dictionary) -> bool:
 	return String(site.get("batch003_role", "")) == "shrine_progression" \
@@ -6750,6 +6918,9 @@ static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictiona
 		NodePayload.PAYLOAD_REWARD_CHOICES,
 		NodePayload.PAYLOAD_SPELL_IDS,
 		NodePayload.CLAIM_PAYLOAD_SPENT,
+		NodePayload.PAYLOAD_VISIT,
+		VisitBuildings.HERO_VISITS,
+		VisitBuildings.SITE_LAST_VISIT_DAY,
 		"generated_reward_translation",
 	]:
 		if source.has(key):
@@ -6955,6 +7126,8 @@ static func _resource_node_claimable_by_player(
 		var guard_encounter := _resource_site_guard_encounter(session, node, site)
 		if _resource_site_guard_blocks_node(guard_encounter, node):
 			return false
+	if VisitBuildings.is_visit_building(site):
+		return session != null and bool(VisitBuildings.readiness(node, site, String(session.overworld.get("active_hero_id", "")), session.day).get("ok", false))
 	if _resource_site_is_repeatable(site) and not _resource_site_is_persistent(site):
 		return _resource_site_repeat_ready(session, node, site)
 	if _resource_site_is_persistent(site):
@@ -7215,6 +7388,8 @@ static func describe_resource_site_surface(
 	site: Dictionary
 ) -> String:
 	site = NodePayload.site_for_node(node, site)
+	if VisitBuildings.is_visit_building(site):
+		return " | ".join(_non_empty_strings([String(site.get("name", "Visit building")), VisitBuildings.summary(site)]))
 	var parts := [_resource_site_role_label(node, site), _resource_site_family_label(site)]
 	var control_label := _resource_site_control_label(node, site)
 	if control_label != "":
@@ -7280,7 +7455,9 @@ static func describe_resource_site_interaction_surface(node: Dictionary, site: D
 	var map_object := ContentService.get_map_object_for_resource_site(String(node.get("site_id", "")))
 	var cadence := _resource_site_interaction_cadence(site, map_object)
 	var interaction_parts := [_interaction_cadence_label(cadence)]
-	if _resource_site_is_persistent(site):
+	if VisitBuildings.is_visit_building(site):
+		interaction_parts = ["Cadence: %s" % VisitBuildings.cadence_label(site), "visit building"]
+	elif _resource_site_is_persistent(site):
 		interaction_parts.append("capture/ownership")
 		var control_income = site.get("control_income", {})
 		if control_income is Dictionary and not control_income.is_empty():
@@ -7428,6 +7605,8 @@ static func _resource_site_action_label(node: Dictionary, site: Dictionary) -> S
 	var authored_label := String(site.get("action_label", ""))
 	if authored_label != "":
 		return authored_label
+	if VisitBuildings.is_visit_building(site):
+		return "Visit %s" % String(site.get("name", "Site"))
 	if _resource_site_is_persistent(site) and String(node.get("collected_by_faction_id", "")) not in ["", "player"]:
 		return "Reclaim Site"
 	match String(site.get("family", "")):
@@ -7501,6 +7680,8 @@ static func _resource_site_control_brief(node: Dictionary, site: Dictionary) -> 
 	return "State uncollected"
 
 static func _resource_site_control_detail(node: Dictionary, site: Dictionary) -> String:
+	if VisitBuildings.is_visit_building(site):
+		return "Stays on the map; each visit is tracked %s." % VisitBuildings.cadence_label(site)
 	if _resource_site_is_persistent(site):
 		var controller := PlayerRules.resource_controller_id(node)
 		if controller == "":
@@ -7524,6 +7705,11 @@ static func _resource_site_yield_line(
 	site: Dictionary
 ) -> String:
 	site = NodePayload.site_for_node(node, site)
+	if VisitBuildings.is_visit_building(site):
+		var visit_parts := [VisitBuildings.summary(site)]
+		if session != null:
+			visit_parts.append(VisitBuildings.status_line(node, site, String(session.overworld.get("active_hero_id", "")), session.day))
+		return " | ".join(_non_empty_strings(visit_parts))
 	var parts := []
 	var claim_summary := _resource_site_reward_summary(site)
 	var income_summary := _describe_resource_delta(site.get("control_income", {}))
@@ -15310,10 +15496,13 @@ static func _refresh_all_player_heroes_for_new_day(session: SessionStateStoreScr
 		return
 	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
 	var synced_active := false
+	var new_week := VisitBuildings.week_index(session.day) != VisitBuildings.week_index(session.day - 1)
 	for index in range(heroes.size()):
 		var hero = heroes[index]
 		if not (hero is Dictionary):
 			continue
+		if new_week:
+			hero.erase(VisitBuildings.WEEK_BONUSES)
 		hero = SpellRulesScript.refresh_daily_mana(hero)
 		var movement_max := _movement_max_from_hero(hero, session)
 		hero["movement"] = {"current": movement_max, "max": movement_max}

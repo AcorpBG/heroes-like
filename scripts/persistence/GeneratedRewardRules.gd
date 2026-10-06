@@ -66,6 +66,53 @@ const TREASURE_CHEST_TIERS := [[1000, 500], [1500, 1000], [2000, 1500]]
 # Scroll spells lean to the lower tiers; tier 5 is never found on the map.
 const SCROLL_TIER_WEIGHTS := {1: 40, 2: 30, 3: 20, 4: 10}
 
+# HoMM3 visit buildings become the original building with the same role
+# (docs/visit-buildings.md).
+const VISIT_SITE_BY_TYPE := {
+	4: "site_visit_proving_rostrum",
+	11: "site_tide_bell_shrine",
+	13: "site_contract_scribe_booth",
+	14: "site_root_accord_ring",
+	23: "site_visit_drum_cairn",
+	27: "site_lens_calibration_cart",
+	28: "site_root_accord_ring",
+	30: "site_root_accord_ring",
+	31: "site_wayfarer_menders_tent",
+	32: "site_visit_facet_orrery",
+	37: "site_lens_calibration_cart",
+	38: "site_root_accord_ring",
+	41: "site_visit_grand_archive",
+	47: "site_visit_arcane_collegium",
+	48: "site_visit_moonspring",
+	49: "site_visit_ley_well",
+	51: "site_visit_bell_spire",
+	52: "site_root_accord_ring",
+	56: "site_wayfarer_menders_tent",
+	61: "site_visit_clamp_forge",
+	64: "site_furnace_oath_marker",
+	94: "site_courier_change_post",
+	96: "site_wayfarer_infirmary",
+	99: "site_market_caravanserai",
+	100: "site_visit_lorestone",
+	102: "site_visit_elder_graft_tree",
+	107: "site_visit_war_college",
+	110: "site_ash_cooler_kitchen",
+	221: "site_market_caravanserai",
+}
+const SPELL_SHRINE_BY_TYPE := {88: ["site_oath_ember_shrine", 1], 89: ["site_reedscript_vow_shrine", 2], 90: ["site_prism_measure_shrine", 3]}
+const SCOUTING_TYPES := [42, 58, 60]
+const SCOUTING_SITES := ["site_watchtower_beacon", "site_mist_lighthouse", "site_hilltop_signal_nest", "site_marsh_listener_post", "site_prism_survey_frame", "site_underway_echo_well", "site_coast_bell_watch"]
+const SIGN_TYPES := [59, 91]
+const SIGN_SITES := ["site_mile_writ_sign", "site_reed_knot_waypost", "site_switchback_cairn", "site_ash_road_marker", "site_underway_chalk_index"]
+const LANDMARK_TYPES := [57]
+const LANDMARK_SITES := ["site_ember_signal_brazier", "site_bog_drum_totem", "site_prism_relay_lens", "site_thornwake_graft_arch", "site_brasshollow_gauge_shrine", "site_veilmourn_bell_mast", "site_granary_lock_exchange", "site_blackwater_shrine_marker", "site_prism_yard_standard"]
+# Witch Hut, University and Scholar teach in HoMM3; until skill sites exist
+# they become one of the growth buildings.
+const LEARNING_TYPES := [81, 104, 113]
+const GROWTH_SITES := ["site_visit_bell_spire", "site_visit_drum_cairn", "site_visit_clamp_forge", "site_visit_facet_orrery", "site_visit_lorestone", "site_oath_ember_shrine"]
+const FORTUNE_TYPE := 30
+const ELDER_TREE_TYPE := 102
+
 ## Returns the node the session should hold for a generated object, or an empty
 ## dictionary when this object type is not one of the translated reward types.
 static func resolve(object: Dictionary) -> Dictionary:
@@ -126,7 +173,54 @@ static func resolve(object: Dictionary) -> Dictionary:
 			return _node(object, site_id, "resource_site", payload)
 		TYPE_MYSTICAL_GARDEN:
 			return _node(object, MYSTICAL_GARDEN_SITE, "resource_site", {})
+	return _visit_building(object, key, type_id)
+
+static func _visit_building(object: Dictionary, key: String, type_id: int) -> Dictionary:
+	if SPELL_SHRINE_BY_TYPE.has(type_id):
+		var shrine: Array = SPELL_SHRINE_BY_TYPE[type_id]
+		var spell_id := _tier_spell_id(key, int(shrine[1]))
+		return _node(object, String(shrine[0]), "resource_site", {NodePayload.PAYLOAD_SPELL_IDS: [spell_id]} if spell_id != "" else {})
+	if VISIT_SITE_BY_TYPE.has(type_id):
+		var payload := {}
+		if type_id == ELDER_TREE_TYPE:
+			# HoMM3: a third of the trees are free, a third ask 2,000 gold, a third 10 of a rare.
+			match _roll(key, "tree_price", 3):
+				1:
+					payload[NodePayload.PAYLOAD_VISIT] = {"cost": {"gold": 2000}}
+				2:
+					payload[NodePayload.PAYLOAD_VISIT] = {"cost": {_pick(RARE_RESOURCES, key, "tree_rare"): 10}}
+		elif type_id == FORTUNE_TYPE:
+			payload[NodePayload.PAYLOAD_VISIT] = {"effects": {"battle_boosts": {"momentum": _roll_range(key, "fortune", 1, 3)}}}
+		return _node(object, String(VISIT_SITE_BY_TYPE[type_id]), "resource_site", payload)
+	if type_id in SCOUTING_TYPES:
+		return _node(object, _pick(SCOUTING_SITES, key, "scouting"), "resource_site", {})
+	if type_id in SIGN_TYPES:
+		return _node(object, _pick(SIGN_SITES, key, "sign"), "resource_site", {})
+	if type_id in LANDMARK_TYPES:
+		return _node(object, _pick(LANDMARK_SITES, key, "landmark"), "resource_site", {})
+	if type_id in LEARNING_TYPES:
+		return _node(object, _pick(GROWTH_SITES, key, "learning"), "resource_site", {})
+	if String(object.get("native_authored_pool_id", "")) == "interactable_site":
+		return _node(object, _pick(_visit_fallback_sites(), key, "visit_fallback"), "resource_site", {})
 	return {}
+
+static func _visit_fallback_sites() -> Array:
+	var sites := []
+	for site_id in VISIT_SITE_BY_TYPE.values():
+		if String(site_id) not in sites:
+			sites.append(String(site_id))
+	for shrine in SPELL_SHRINE_BY_TYPE.values():
+		sites.append(String(shrine[0]))
+	sites.sort()
+	return sites
+
+static func _tier_spell_id(key: String, tier: int) -> String:
+	var candidates := []
+	for spell in ContentService.load_json("res://content/spells.json").get("items", []):
+		if spell is Dictionary and int(spell.get("tier", 0)) == tier and String(spell.get("id", "")) != "":
+			candidates.append(String(spell.get("id", "")))
+	candidates.sort()
+	return _pick(candidates, key, "shrine_spell")
 
 static func treasure_chest_choices(gold: int, experience: int) -> Array:
 	return [
