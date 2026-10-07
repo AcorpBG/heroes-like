@@ -8,6 +8,7 @@ const EMBERCOURT := "faction_embercourt"
 const RIVER_ORIGIN := {"x": 7, "y": 1}
 const GLASSROAD_ORIGIN := {"x": 9, "y": 1}
 const TREASURY := {"gold": 5200, "wood": 8, "ore": 8}
+const RELAY_RETAKE_TURNS := 4
 
 var _failed := false
 
@@ -168,9 +169,21 @@ func _glassroad_relay_retake_to_defend_transition() -> Dictionary:
 		],
 		"glassroad_charter_front"
 	)
-	var turn_result := EnemyTurnRules.run_enemy_turn(session)
-	if not bool(turn_result.get("ok", false)):
-		_fail("Glassroad relay transition enemy turn failed")
+	# The raid host loads as an enemy hero, which picks its own errands by the
+	# player's rules. Loose pickups are cleared so the relay is its errand, and
+	# it gets a few days of movement points to walk there and retake it.
+	_clear_loose_rewards(session)
+	var turn_result := {"ok": true, "events": []}
+	for _turn in range(RELAY_RETAKE_TURNS):
+		var day_result := EnemyTurnRules.run_enemy_turn(session)
+		if not bool(day_result.get("ok", false)):
+			_fail("Glassroad relay transition enemy turn failed")
+			return {}
+		turn_result["events"].append_array(day_result.get("events", []))
+		if _resource_controller(session, "glassroad_watch_relay") == EMBERCOURT:
+			break
+	if _resource_controller(session, "glassroad_watch_relay") != EMBERCOURT:
+		_fail("Embercourt's hero did not retake the Glassroad relay: %s" % JSON.stringify(_event_lines(turn_result)))
 		return {}
 	var after_snapshot := _turn_snapshot(
 		session,
@@ -186,7 +199,7 @@ func _glassroad_relay_retake_to_defend_transition() -> Dictionary:
 	var transcript := EnemyAdventureRules.commander_role_turn_transcript_report(before_snapshot, after_snapshot, config, turn_result, {"case_id": "task_boundary_glassroad_relay_transition"})
 	var arrival := _arrival_for_target(transcript.get("raid_arrival_summary", []), "glassroad_watch_relay")
 	if arrival.is_empty():
-		_fail("Glassroad relay transition missing arrival summary")
+		_fail("Glassroad relay transition missing arrival summary: %s" % JSON.stringify(_event_lines(turn_result)))
 		return {}
 	var transition := EnemyAdventureRules.ai_hero_task_transition_from_arrival(before_task, arrival)
 	if String(transition.get("transition_result", "")) == "completed_by_controller_flip":
@@ -450,6 +463,30 @@ func _combine_checks(checks: Array) -> Dictionary:
 		for task_id in check.get("task_ids", []):
 			task_ids.append(task_id)
 	return {"ok": true, "checked_tasks": checked, "task_ids": task_ids, "case_scoped_uniqueness": true}
+
+func _clear_loose_rewards(session) -> void:
+	for artifact in session.overworld.get("artifact_nodes", []):
+		if artifact is Dictionary:
+			artifact["collected"] = true
+	for node in session.overworld.get("resource_nodes", []):
+		if not (node is Dictionary) or bool(node.get("collected", false)):
+			continue
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		if not bool(site.get("persistent_control", false)):
+			node["collected"] = true
+
+func _resource_controller(session, placement_id: String) -> String:
+	for node in session.overworld.get("resource_nodes", []):
+		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
+			return String(node.get("collected_by_faction_id", ""))
+	return ""
+
+func _event_lines(turn_result: Dictionary) -> Array:
+	var lines := []
+	for event in turn_result.get("events", []):
+		if event is Dictionary:
+			lines.append("%s|%s|%s" % [String(event.get("event_type", "")), String(event.get("actor_id", "")), String(event.get("target_id", ""))])
+	return lines
 
 func _arrival_for_target(arrivals: Array, target_id: String) -> Dictionary:
 	for arrival in arrivals:

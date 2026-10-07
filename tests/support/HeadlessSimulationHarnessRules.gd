@@ -7,6 +7,7 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
 const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const BattleAutoResolveRulesScript = preload("res://scripts/core/BattleAutoResolveRules.gd")
+const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
 
 const REPORT_SCHEMA_ID := "headless_simulation_harness_report_v1"
 const REPORT_ID := "HEADLESS_SIMULATION_HARNESS_REPORT"
@@ -90,6 +91,10 @@ const STRATEGIC_AI_BASELINE_CAPABILITIES := {
 	],
 }
 const STRATEGIC_AI_BASELINE_RMG_TURN_COUNT := 3
+## Days the live town-governor case plays: build, then buy the new troops.
+const LIVE_TOWN_GOVERNOR_TURNS := 3
+## What a computer player's heroes visibly get done on the map.
+const AI_HERO_OBJECTIVE_EVENT_TYPES := ["ai_site_seized", "ai_artifact_secured", "ai_guard_defeated", "ai_town_captured"]
 const STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET := 100
 const STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET := 56
 const STRATEGIC_AI_MEDIUM_LONG_RUN_SLICE_ID := "strategic-ai-medium-long-run-seed-matrix-10184"
@@ -522,13 +527,11 @@ static func _strategic_ai_baseline_existing_contract_evidence() -> Dictionary:
 			"faction_case_count": 1,
 		}),
 		_strategic_ai_baseline_contract_case("strategic_ai_live_turn_execution", "live_commander_resource_front_turn_execution", {
-			"target_assignment_event_count": 2,
 			"site_seizure_event_count": 2,
 			"scenario_count": 1,
 			"faction_case_count": 1,
 		}),
 		_strategic_ai_baseline_contract_case("strategic_ai_live_route_progression", "live_commander_resource_front_route_progression", {
-			"target_assignment_event_count": 1,
 			"site_seizure_event_count": 1,
 			"turns_simulated": 10,
 			"scenario_count": 1,
@@ -558,12 +561,10 @@ static func _strategic_ai_baseline_existing_contract_evidence() -> Dictionary:
 			"faction_case_count": 1,
 		}),
 		_strategic_ai_baseline_contract_case("strategic_ai_live_town_retake_assault", "live_retake_front_queues_town_defense_battle", {
-			"target_assignment_event_count": 1,
 			"scenario_count": 1,
 			"faction_case_count": 1,
 		}),
 		_strategic_ai_baseline_contract_case("strategic_ai_live_raid_assault_grouping", "live_nearby_raids_group_for_town_assault", {
-			"grouping_event_count": 1,
 			"scenario_count": 1,
 			"faction_case_count": 1,
 		}),
@@ -575,13 +576,13 @@ static func _strategic_ai_baseline_existing_contract_evidence() -> Dictionary:
 		}),
 		_strategic_ai_baseline_contract_case("strategic_ai_live_recruitment_delivery", "live_town_recruits_feed_active_raid_host", {
 			"town_recruit_event_count": 1,
-			"raid_reinforcement_event_count": 1,
+			"hero_reinforcement_event_count": 1,
 			"scenario_count": 1,
 			"faction_case_count": 1,
 		}),
 		_strategic_ai_baseline_contract_case("strategic_ai_multi_scenario_recruitment_delivery", "live_town_recruits_feed_active_raid_hosts_across_scenario_breadth", {
 			"town_recruit_event_count": 5,
-			"raid_reinforcement_event_count": 5,
+			"hero_reinforcement_event_count": 5,
 			"scenario_count": 5,
 			"faction_case_count": 5,
 			"delivered_faction_count": 5,
@@ -645,6 +646,7 @@ static func _strategic_ai_baseline_subsystem_summary(strategic_cases: Dictionary
 		"town_build": 0,
 		"town_recruit": 0,
 		"raid_reinforcement": 0,
+		"hero_reinforcement": 0,
 		"raid_grouping": 0,
 		"raid_regroup": 0,
 	}
@@ -668,6 +670,7 @@ static func _strategic_ai_baseline_subsystem_summary(strategic_cases: Dictionary
 		total_event_counts["town_build"] = int(total_event_counts.get("town_build", 0)) + int(summary.get("town_build_event_count", 0))
 		total_event_counts["town_recruit"] = int(total_event_counts.get("town_recruit", 0)) + int(summary.get("town_recruit_event_count", 0))
 		total_event_counts["raid_reinforcement"] = int(total_event_counts.get("raid_reinforcement", 0)) + int(summary.get("raid_reinforcement_event_count", 0))
+		total_event_counts["hero_reinforcement"] = int(total_event_counts.get("hero_reinforcement", 0)) + int(summary.get("hero_reinforcement_event_count", 0))
 		total_event_counts["raid_grouping"] = int(total_event_counts.get("raid_grouping", 0)) + int(summary.get("grouping_event_count", 0))
 		total_event_counts["raid_regroup"] = int(total_event_counts.get("raid_regroup", 0)) + int(summary.get("regroup_event_count", 0))
 	var expected_count := STRATEGIC_AI_BASELINE_SUBSYSTEM_IDS.size()
@@ -848,8 +851,15 @@ static func _strategic_ai_baseline_rmg_case(case_config: Dictionary, input_confi
 	row["enemy_activity_event_count"] = enemy_event_count
 	row["public_event_count"] = public_event_count
 	row["target_assignment_event_count"] = int(row.get("event_counts", {}).get("ai_target_assigned", 0)) if row.get("event_counts", {}) is Dictionary else 0
+	# Computer players field heroes that move under the player's rules and
+	# take things on the map; raid target assignments no longer exist.
+	var objective_events := 0
+	for event_type in AI_HERO_OBJECTIVE_EVENT_TYPES:
+		objective_events += int(row.get("event_counts", {}).get(event_type, 0)) if row.get("event_counts", {}) is Dictionary else 0
+	row["ai_hero_objective_event_count"] = objective_events
+	row["ai_hero_count"] = AiHeroRulesScript.active_hero_entries(session).size()
 	row["final_day"] = int(session.day)
-	row["ok"] = all_turns_ok and int(row.get("initial_enemy_state_count", 0)) > 0 and int(row.get("target_assignment_event_count", 0)) > 0
+	row["ok"] = all_turns_ok and int(row.get("initial_enemy_state_count", 0)) > 0 and int(row.get("ai_hero_count", 0)) > 0 and objective_events > 0
 	row["classification"] = "generated_ai_live_probe" if bool(row.get("ok", false)) else "behavior_bug"
 	row["state_signature"] = _signature_for({
 		"scenario_id": String(session.scenario_id),
@@ -911,6 +921,8 @@ static func _strategic_ai_baseline_rmg_summary(rmg_cases: Array) -> Dictionary:
 	var medium_setup_failure_error_codes := []
 	var enemy_event_count := 0
 	var target_assignment_count := 0
+	var ai_hero_objective_count := 0
+	var ai_hero_count := 0
 	for row_value in rmg_cases:
 		if not (row_value is Dictionary):
 			continue
@@ -943,6 +955,8 @@ static func _strategic_ai_baseline_rmg_summary(rmg_cases: Array) -> Dictionary:
 					medium_setup_failure_error_codes.append(error_code)
 		enemy_event_count += int(row.get("enemy_activity_event_count", 0))
 		target_assignment_count += int(row.get("target_assignment_event_count", 0))
+		ai_hero_objective_count += int(row.get("ai_hero_objective_event_count", 0))
+		ai_hero_count += int(row.get("ai_hero_count", 0))
 	return {
 		"case_count": rmg_cases.size(),
 		"setup_ok_count": setup_ok_count,
@@ -958,6 +972,8 @@ static func _strategic_ai_baseline_rmg_summary(rmg_cases: Array) -> Dictionary:
 		"medium_setup_failure_error_codes": medium_setup_failure_error_codes,
 		"enemy_activity_event_count": enemy_event_count,
 		"target_assignment_event_count": target_assignment_count,
+		"ai_hero_objective_event_count": ai_hero_objective_count,
+		"ai_hero_count": ai_hero_count,
 	}
 
 static func _strategic_ai_baseline_blocker_rows(
@@ -2202,6 +2218,10 @@ static func _strategic_ai_live_turn_execution(input_config: Dictionary) -> Dicti
 		_update_enemy_state(session, state)
 	_set_resource_controller(session, primary_target_id, "player", failures)
 	_set_resource_controller(session, companion_target_id, "player", failures)
+	# The pass's loose pickups are gone and the human's hero is far away: the
+	# held sites are what is left to take.
+	_clear_loose_map_rewards(session)
+	_set_player_position(session, {"x": 0, "y": 12})
 	var controllers_before := {
 		primary_target_id: _resource_controller(session, primary_target_id),
 		companion_target_id: _resource_controller(session, companion_target_id),
@@ -2222,29 +2242,21 @@ static func _strategic_ai_live_turn_execution(input_config: Dictionary) -> Dicti
 		primary_target_id: _resource_controller(session, primary_target_id),
 		companion_target_id: _resource_controller(session, companion_target_id),
 	}
-	var target_assignments := _event_count(turn_result.get("events", []), "ai_target_assigned")
+	# Hosts from an older save load as heroes and take the sites they stand on.
 	var site_seizures := _event_count(turn_result.get("events", []), "ai_site_seized")
-	var primary_ok := _raid_completed_target(primary_raid, "resource", primary_target_id) and String(controllers_after.get(primary_target_id, "")) == faction_id
-	var companion_ok := _raid_completed_target(companion_raid, "resource", companion_target_id) and String(controllers_after.get(companion_target_id, "")) == faction_id
-	var reserved_unique_targets := (
-		String(primary_raid.get("target_placement_id", "")) != ""
-		and String(companion_raid.get("target_placement_id", "")) != ""
-		and String(primary_raid.get("target_placement_id", "")) != String(companion_raid.get("target_placement_id", ""))
-	)
+	var primary_ok := AiHeroRulesScript.is_ai_hero(primary_raid) and String(controllers_after.get(primary_target_id, "")) == faction_id
+	var companion_ok := AiHeroRulesScript.is_ai_hero(companion_raid) and String(controllers_after.get(companion_target_id, "")) == faction_id
+	var private_goals := _hero_goal_private(primary_raid) and _hero_goal_private(companion_raid)
 	if not bool(turn_result.get("ok", false)):
 		failures.append("Enemy turn returned not-ok.")
 	if not primary_ok:
-		failures.append("Primary live-turn raid did not assign and seize %s." % primary_target_id)
+		failures.append("Primary live-turn hero did not take %s." % primary_target_id)
 	if not companion_ok:
-		failures.append("Companion live-turn raid did not assign and seize %s." % companion_target_id)
-	if not reserved_unique_targets:
-		failures.append("Companion reservation did not preserve unique live targets.")
-	if target_assignments < 2:
-		failures.append("Live turn produced fewer than two target assignment events.")
+		failures.append("Companion live-turn hero did not take %s." % companion_target_id)
+	if not private_goals:
+		failures.append("A live-turn hero exposed a raid-style target.")
 	if site_seizures < 2:
 		failures.append("Live turn produced fewer than two site seizure events.")
-	if not _has_saved_hero_task_state(session):
-		failures.append("Live turn execution did not persist hero_task_state.")
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(turn_result.get("events", []), 8)
 	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
 	if not bool(public_log.get("ok", false)):
@@ -2264,9 +2276,9 @@ static func _strategic_ai_live_turn_execution(input_config: Dictionary) -> Dicti
 			"primary_roster_hero_id": primary_roster_hero_id,
 			"companion_roster_hero_id": companion_roster_hero_id,
 			"resource_fronts_seized": (1 if primary_ok else 0) + (1 if companion_ok else 0),
-			"target_assignment_event_count": target_assignments,
+			"ai_hero_count": _faction_ai_hero_count(session, faction_id),
 			"site_seizure_event_count": site_seizures,
-			"reserved_unique_targets": reserved_unique_targets,
+			"private_hero_goals": private_goals,
 			"public_event_count": int(public_log.get("public_event_count", 0)),
 			"warning_count": warnings.size(),
 			"failure_count": failures.size(),
@@ -2278,7 +2290,7 @@ static func _strategic_ai_live_turn_execution(input_config: Dictionary) -> Dicti
 			"companion_raid": _raid_execution_signal(companion_raid),
 			"event_types": _event_types(turn_result.get("events", [])),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "hero_task_state_live_persist_no_save_migration",
+			"save_policy": "raid_hosts_from_old_saves_become_ai_heroes",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -2340,12 +2352,16 @@ static func _strategic_ai_live_route_progression(input_config: Dictionary) -> Di
 	encounters.append(_live_route_raid_seed(session, faction_id, route_roster_hero_id, raid_id, origin))
 	session.overworld["encounters"] = encounters
 	EnemyAdventureRules.normalize_all_commander_rosters(session)
+	# The host loads as a hero and walks to the site on its own movement
+	# points; its goal stays private, so progress is measured on the map.
+	var target_node := _resource_node_by_placement(session, target_id)
+	var target_tile := Vector2i(int(target_node.get("x", 0)), int(target_node.get("y", 0)))
 	var route_records := []
 	var all_events := []
 	var assigned_target := false
 	var seized_target := false
-	var initial_goal_distance := -1
-	var final_goal_distance := -1
+	var initial_goal_distance := _tile_distance_to(origin, target_tile)
+	var final_goal_distance := initial_goal_distance
 	for turn_index in range(max_turns):
 		var turn_result: Dictionary = OverworldRules.end_turn(session)
 		if not bool(turn_result.get("ok", false)):
@@ -2357,40 +2373,35 @@ static func _strategic_ai_live_route_progression(input_config: Dictionary) -> Di
 		if raid.is_empty():
 			failures.append("Live route raid disappeared on turn %d." % (turn_index + 1))
 			break
-		if String(raid.get("target_placement_id", "")) == target_id:
+		var goal: Dictionary = raid.get("ai_hero", {}).get("goal", {}) if raid.get("ai_hero", {}) is Dictionary else {}
+		if String(goal.get("id", "")) == target_id:
 			assigned_target = true
-		var current_distance := int(raid.get("goal_distance", 9999))
-		if assigned_target and initial_goal_distance < 0:
-			initial_goal_distance = current_distance
+		var current_distance := _tile_distance_to(raid, target_tile)
 		final_goal_distance = current_distance
 		route_records.append({
 			"turn": turn_index + 1,
 			"day": int(session.day),
 			"x": int(raid.get("x", 0)),
 			"y": int(raid.get("y", 0)),
-			"target_id": String(raid.get("target_placement_id", "")),
+			"target_id": String(goal.get("id", "")),
 			"goal_distance": current_distance,
-			"arrived": bool(raid.get("arrived", false)),
+			"ai_hero": AiHeroRulesScript.is_ai_hero(raid),
 			"controller": _resource_controller(session, target_id),
 		})
 		if String(_resource_controller(session, target_id)) == faction_id:
 			seized_target = true
+			assigned_target = true
 			break
 	var target_controller := _resource_controller(session, target_id)
 	if not assigned_target:
-		failures.append("Live route raid never assigned the expected resource target %s." % target_id)
+		failures.append("Live route hero never set out for %s." % target_id)
 	if initial_goal_distance <= 0:
-		failures.append("Live route raid did not establish a positive route distance.")
+		failures.append("Live route hero did not start away from its target.")
 	if final_goal_distance < 0 or final_goal_distance >= initial_goal_distance:
-		failures.append("Live route raid did not reduce goal distance: initial=%d final=%d." % [initial_goal_distance, final_goal_distance])
+		failures.append("Live route hero did not close the distance: initial=%d final=%d." % [initial_goal_distance, final_goal_distance])
 	if not seized_target or target_controller != faction_id:
-		failures.append("Live route raid did not seize %s within %d turns." % [target_id, max_turns])
-	if not _has_saved_hero_task_state(session):
-		failures.append("Live route progression did not persist hero_task_state.")
-	var assignment_events := _event_count(all_events, "ai_target_assigned")
+		failures.append("Live route hero did not seize %s within %d turns." % [target_id, max_turns])
 	var seizure_events := _event_count(all_events, "ai_site_seized")
-	if assignment_events < 1:
-		failures.append("Live route progression did not surface an ai_target_assigned event.")
 	if seizure_events < 1:
 		failures.append("Live route progression did not surface an ai_site_seized event.")
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(all_events, 12)
@@ -2415,7 +2426,6 @@ static func _strategic_ai_live_route_progression(input_config: Dictionary) -> Di
 			"initial_goal_distance": initial_goal_distance,
 			"final_goal_distance": final_goal_distance,
 			"target_controller": target_controller,
-			"target_assignment_event_count": assignment_events,
 			"site_seizure_event_count": seizure_events,
 			"public_event_count": int(public_log.get("public_event_count", 0)),
 			"warning_count": warnings.size(),
@@ -2426,7 +2436,7 @@ static func _strategic_ai_live_route_progression(input_config: Dictionary) -> Di
 			"route_records": route_records,
 			"event_types": _event_types(all_events),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "hero_task_state_live_persist_no_save_migration",
+			"save_policy": "raid_hosts_from_old_saves_become_ai_heroes",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -2516,8 +2526,24 @@ static func _strategic_ai_live_town_governor_build_execution(input_config: Dicti
 		failures.append("Live town-governor fixture did not project an affordable build.")
 	if recruit_unit_id == "" or recruit_count_projected <= 0:
 		failures.append("Live town-governor fixture did not project affordable recruitment.")
-	var turn_result: Dictionary = EnemyTurnRules.run_enemy_turn(session)
-	var events: Array = turn_result.get("events", []) if turn_result.get("events", []) is Array else []
+	# The legacy governor projection above is context only: computer players
+	# build and recruit by the player's rules. The town already has its Tavern,
+	# so a day's build goes to the best-value building; troops a new dwelling
+	# adds are bought the following day.
+	_ensure_town_building(session, town_id, HeroCommandRules.HALL_BUILDING_ID, failures)
+	town_before = _town_by_placement(session, town_id)
+	built_before = _town_building_ids(town_before)
+	recruit_pool_before = _recruit_pool_total(town_before.get("available_recruits", {}))
+	garrison_count_before = _army_stack_count(town_before.get("garrison", []))
+	var turn_result := {"ok": true}
+	var events: Array = []
+	for turn_index in range(LIVE_TOWN_GOVERNOR_TURNS):
+		if turn_index > 0:
+			session.day += 1
+		var day_result: Dictionary = EnemyTurnRules.run_enemy_turn(session)
+		if not bool(day_result.get("ok", false)):
+			turn_result["ok"] = false
+		events.append_array(day_result.get("events", []) if day_result.get("events", []) is Array else [])
 	var town_after := _town_by_placement(session, town_id)
 	var state_after := _enemy_state_for_faction(session, faction_id)
 	var treasury_after := _resource_pool(state_after.get("treasury", {})) if not state_after.is_empty() else _resource_pool({})
@@ -2527,15 +2553,20 @@ static func _strategic_ai_live_town_governor_build_execution(input_config: Dicti
 	var treasury_delta := _resource_delta(treasury_before, treasury_after)
 	var town_build_events := _event_count(events, "ai_town_built")
 	var town_recruit_events := _event_count(events, "ai_town_recruited")
-	var garrison_events := _event_count(events, "ai_garrison_reinforced")
-	var raid_reinforcement_events := _event_count(events, "ai_raid_reinforced")
-	var rebuild_events := _event_count(events, "ai_commander_rebuilt")
+	# Recruits go to the garrison; a hero visiting the town marches them out.
+	var garrison_events := _town_recruit_event_count_for(events, town_id)
+	var raid_reinforcement_events := _event_count(events, "ai_hero_reinforced")
+	var rebuild_events := 0
+	var new_buildings := []
+	for building_id in built_after:
+		if building_id not in built_before:
+			new_buildings.append(building_id)
+	var projected_build_id := selected_build_id
+	selected_build_id = String(new_buildings[0]) if not new_buildings.is_empty() else ""
 	if not bool(turn_result.get("ok", false)):
 		failures.append("Enemy turn returned not-ok during live town-governor execution.")
-	if selected_build_id != "" and selected_build_id not in built_after:
-		failures.append("Live town-governor build did not mutate built buildings with %s." % selected_build_id)
-	if selected_build_id != "" and selected_build_id in built_before:
-		failures.append("Live town-governor fixture selected a building that was already built: %s." % selected_build_id)
+	if new_buildings.is_empty():
+		failures.append("Live town-governor turns did not build anything in %s." % town_id)
 	if _resource_abs_sum(treasury_delta) <= 0:
 		failures.append("Live town-governor execution did not mutate treasury: %s." % treasury_delta)
 	if town_build_events < 1:
@@ -2544,10 +2575,8 @@ static func _strategic_ai_live_town_governor_build_execution(input_config: Dicti
 		failures.append("Live town-governor execution did not emit ai_town_recruited.")
 	if garrison_events + raid_reinforcement_events + rebuild_events < 1:
 		failures.append("Live town-governor execution did not emit a recruitment destination event.")
-	if garrison_count_after <= garrison_count_before and recruit_pool_after == recruit_pool_before:
+	if garrison_count_after <= garrison_count_before and recruit_pool_after == recruit_pool_before and raid_reinforcement_events < 1:
 		failures.append("Live town-governor execution did not produce visible recruitment mutation.")
-	if not _has_saved_hero_task_state(session):
-		failures.append("Live town-governor execution did not preserve hero_task_state from the enemy turn.")
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 10)
 	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
 	if not bool(public_log.get("ok", false)):
@@ -2585,11 +2614,13 @@ static func _strategic_ai_live_town_governor_build_execution(input_config: Dicti
 			"treasury_delta": treasury_delta,
 			"built_before": built_before,
 			"built_after": built_after,
+			"projected_build_id": projected_build_id,
+			"new_buildings": new_buildings,
 			"selected_build": _town_build_signal(selected_build),
 			"selected_recruitment": _town_recruitment_signal(selected_recruitment),
 			"event_types": _event_types(events),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "hero_task_state_live_persist_no_save_migration",
+			"save_policy": "raid_hosts_from_old_saves_become_ai_heroes",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -2913,9 +2944,11 @@ static func _strategic_ai_live_recruitment_delivery(input_config: Dictionary) ->
 	_set_resource_controller(session, target_id, "player", failures)
 	_prepare_recruitment_delivery_town(session, town_id, faction_id, unit_id, recruit_count, failures)
 	var raid_id := "headless_recruitment_delivery_%s" % target_id
+	# The host at the town gate loads as a hero; the town recruits into its
+	# garrison and the faction's main hero marches the garrison out.
 	var seed_raid := _recruitment_delivery_raid_seed(session, faction_id, roster_hero_id, raid_id, target_id, unit_id)
-	var before_strength := EnemyAdventureRules.raid_strength(seed_raid)
-	var desired_before := EnemyAdventureRules.desired_raid_strength(seed_raid)
+	var before_strength := _faction_hero_strength(session, faction_id) + EnemyAdventureRules.raid_strength(seed_raid)
+	var hero_units_before := _faction_hero_unit_count(session, faction_id, unit_id) + _raid_unit_count(seed_raid, unit_id)
 	var town_recruits_before := _town_available_recruit_count(session, town_id, unit_id)
 	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
 	encounters.append(seed_raid)
@@ -2924,27 +2957,25 @@ static func _strategic_ai_live_recruitment_delivery(input_config: Dictionary) ->
 	var turn_result: Dictionary = EnemyTurnRules.run_enemy_turn(session)
 	var events: Array = turn_result.get("events", []) if turn_result.get("events", []) is Array else []
 	var after_raid := _encounter_by_placement(session, raid_id)
-	var after_strength := EnemyAdventureRules.raid_strength(after_raid)
+	var after_strength := _faction_hero_strength(session, faction_id)
 	var town_recruits_after := _town_available_recruit_count(session, town_id, unit_id)
-	var raid_unit_after := _raid_unit_count(after_raid, unit_id)
+	var hero_units_after := _faction_hero_unit_count(session, faction_id, unit_id)
 	var town_recruit_events := _event_count(events, "ai_town_recruited")
-	var raid_reinforcement_events := _event_count(events, "ai_raid_reinforced")
+	var hero_reinforcement_events := _event_count(events, "ai_hero_reinforced")
 	if not bool(turn_result.get("ok", false)):
 		failures.append("Enemy turn returned not-ok during live recruitment delivery.")
-	if after_raid.is_empty():
-		failures.append("Live recruitment delivery raid disappeared after enemy turn.")
-	if desired_before <= before_strength:
-		failures.append("Live recruitment fixture did not start with an active raid strength need.")
+	if not AiHeroRulesScript.is_ai_hero(after_raid):
+		failures.append("Live recruitment delivery host did not play as an enemy hero.")
 	if after_strength <= before_strength:
-		failures.append("Live recruitment delivery did not increase raid strength: before=%d after=%d." % [before_strength, after_strength])
+		failures.append("Live recruitment delivery did not strengthen the faction's heroes: before=%d after=%d." % [before_strength, after_strength])
 	if town_recruits_after >= town_recruits_before:
 		failures.append("Live recruitment delivery did not consume town recruits: before=%d after=%d." % [town_recruits_before, town_recruits_after])
-	if raid_unit_after < recruit_count + 1:
-		failures.append("Live recruitment delivery did not add expected %s stack count: %d." % [unit_id, raid_unit_after])
+	if hero_units_after < hero_units_before + recruit_count:
+		failures.append("Live recruitment delivery did not put %s recruits in a hero army: %d -> %d." % [unit_id, hero_units_before, hero_units_after])
 	if town_recruit_events < 1:
 		failures.append("Live recruitment delivery did not emit ai_town_recruited.")
-	if raid_reinforcement_events < 1:
-		failures.append("Live recruitment delivery did not emit ai_raid_reinforced.")
+	if hero_reinforcement_events < 1:
+		failures.append("Live recruitment delivery did not emit ai_hero_reinforced.")
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 10)
 	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
 	if not bool(public_log.get("ok", false)):
@@ -2964,12 +2995,12 @@ static func _strategic_ai_live_recruitment_delivery(input_config: Dictionary) ->
 			"unit_id": unit_id,
 			"before_strength": before_strength,
 			"after_strength": after_strength,
-			"desired_before": desired_before,
 			"town_recruits_before": town_recruits_before,
 			"town_recruits_after": town_recruits_after,
-			"raid_unit_after": raid_unit_after,
+			"hero_units_before": hero_units_before,
+			"hero_units_after": hero_units_after,
 			"town_recruit_event_count": town_recruit_events,
-			"raid_reinforcement_event_count": raid_reinforcement_events,
+			"hero_reinforcement_event_count": hero_reinforcement_events,
 			"public_event_count": int(public_log.get("public_event_count", 0)),
 			"warning_count": warnings.size(),
 			"failure_count": failures.size(),
@@ -2978,7 +3009,7 @@ static func _strategic_ai_live_recruitment_delivery(input_config: Dictionary) ->
 			"raid": _raid_execution_signal(after_raid),
 			"event_types": _event_types(events),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "hero_task_state_live_persist_no_save_migration",
+			"save_policy": "raid_hosts_from_old_saves_become_ai_heroes",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -3310,7 +3341,7 @@ static func _strategic_ai_multi_scenario_recruitment_delivery(input_config: Dict
 	var public_boundary_events := []
 	var delivered_faction_count := 0
 	var town_recruit_event_count := 0
-	var raid_reinforcement_event_count := 0
+	var hero_reinforcement_event_count := 0
 	for scenario_id_value in scenario_ids:
 		var scenario_id := String(scenario_id_value)
 		var scenario := ContentService.get_scenario(scenario_id)
@@ -3366,9 +3397,12 @@ static func _strategic_ai_multi_scenario_recruitment_delivery(input_config: Dict
 			_set_resource_controller(session, target_id, "player", failures)
 			_prepare_recruitment_delivery_town(session, town_id, faction_id, unit_id, recruit_count, failures)
 			var raid_id := "headless_multi_recruitment_%s_%s" % [scenario_id.replace("-", "_"), faction_id.replace("faction_", "")]
+			# The host standing at the town gate loads as a hero; the town
+			# recruits into its garrison and the faction's main hero marches the
+			# garrison out.
 			var seed_raid := _recruitment_delivery_raid_seed(session, faction_id, roster_hero_id, raid_id, target_id, unit_id)
-			var before_strength := EnemyAdventureRules.raid_strength(seed_raid)
-			var desired_before := EnemyAdventureRules.desired_raid_strength(seed_raid)
+			var before_strength := _faction_hero_strength(session, faction_id) + EnemyAdventureRules.raid_strength(seed_raid)
+			var hero_units_before := _faction_hero_unit_count(session, faction_id, unit_id) + _raid_unit_count(seed_raid, unit_id)
 			var town_recruits_before := _town_available_recruit_count(session, town_id, unit_id)
 			var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
 			encounters.append(seed_raid)
@@ -3380,30 +3414,27 @@ static func _strategic_ai_multi_scenario_recruitment_delivery(input_config: Dict
 				if not (event is Dictionary):
 					continue
 				event_type_map[String(event.get("event_type", ""))] = true
-				if String(event.get("event_type", "")) in ["ai_town_recruited", "ai_raid_reinforced"]:
+				if String(event.get("event_type", "")) in ["ai_town_recruited", "ai_hero_reinforced"]:
 					public_boundary_events.append(event)
 			var after_raid := _encounter_by_placement(session, raid_id)
-			var after_strength := EnemyAdventureRules.raid_strength(after_raid)
+			var after_strength := _faction_hero_strength(session, faction_id)
 			var town_recruits_after := _town_available_recruit_count(session, town_id, unit_id)
-			var raid_unit_after := _raid_unit_count(after_raid, unit_id)
+			var hero_units_after := _faction_hero_unit_count(session, faction_id, unit_id)
 			var case_town_recruit_events := _event_count_for_faction(events, "ai_town_recruited", faction_id)
-			var case_raid_reinforcement_events := _event_count_for_faction(events, "ai_raid_reinforced", faction_id)
+			var case_hero_reinforcement_events := _event_count_for_faction(events, "ai_hero_reinforced", faction_id)
 			town_recruit_event_count += case_town_recruit_events
-			raid_reinforcement_event_count += case_raid_reinforcement_events
+			hero_reinforcement_event_count += case_hero_reinforcement_events
 			var delivered := (
 				bool(turn_result.get("ok", false))
-				and not after_raid.is_empty()
-				and desired_before > before_strength
+				and AiHeroRulesScript.is_ai_hero(after_raid)
 				and after_strength > before_strength
 				and town_recruits_after < town_recruits_before
-				and raid_unit_after >= recruit_count + 1
+				and hero_units_after >= hero_units_before + recruit_count
 				and case_town_recruit_events > 0
-				and case_raid_reinforcement_events > 0
-				and String(after_raid.get("target_kind", "")) != ""
-				and String(after_raid.get("target_placement_id", "")) != ""
+				and case_hero_reinforcement_events > 0
 			)
 			if not delivered:
-				failures.append("%s/%s did not deliver recruits from %s into raid %s." % [scenario_id, faction_id, town_id, raid_id])
+				failures.append("%s/%s did not deliver recruits from %s to hero %s." % [scenario_id, faction_id, town_id, raid_id])
 			else:
 				delivered_faction_count += 1
 				scenario_delivery_count += 1
@@ -3412,18 +3443,19 @@ static func _strategic_ai_multi_scenario_recruitment_delivery(input_config: Dict
 				"faction_id": faction_id,
 				"town_id": town_id,
 				"target_id": target_id,
-				"raid_target_id_after": String(after_raid.get("target_placement_id", "")),
 				"roster_hero_id": roster_hero_id,
 				"unit_id": unit_id,
 				"delivered": delivered,
+				"ai_hero": AiHeroRulesScript.is_ai_hero(after_raid),
 				"before_strength": before_strength,
 				"after_strength": after_strength,
-				"desired_before": desired_before,
 				"town_recruits_before": town_recruits_before,
 				"town_recruits_after": town_recruits_after,
-				"raid_unit_after": raid_unit_after,
+				"hero_units_before": hero_units_before,
+				"hero_units_after": hero_units_after,
 				"town_recruit_event_count": case_town_recruit_events,
-				"raid_reinforcement_event_count": case_raid_reinforcement_events,
+				"hero_reinforcement_event_count": case_hero_reinforcement_events,
+				"event_lines": _event_lines(events),
 				"raid": _raid_execution_signal(after_raid),
 			})
 		scenario_rows.append({
@@ -3449,7 +3481,7 @@ static func _strategic_ai_multi_scenario_recruitment_delivery(input_config: Dict
 			"faction_case_count": faction_rows.size(),
 			"delivered_faction_count": delivered_faction_count,
 			"town_recruit_event_count": town_recruit_event_count,
-			"raid_reinforcement_event_count": raid_reinforcement_event_count,
+			"hero_reinforcement_event_count": hero_reinforcement_event_count,
 			"warning_count": warnings.size(),
 			"deferred_count": deferred.size(),
 			"failure_count": failures.size(),
@@ -3460,7 +3492,7 @@ static func _strategic_ai_multi_scenario_recruitment_delivery(input_config: Dict
 			"event_types": event_types,
 			"public_event_count": int(public_log.get("public_event_count", 0)),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "hero_task_state_live_persist_no_save_migration",
+			"save_policy": "raid_hosts_from_old_saves_become_ai_heroes",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -3961,23 +3993,20 @@ static func _strategic_ai_live_town_retake_assault(input_config: Dictionary) -> 
 	var events: Array = turn_result.get("events", []) if turn_result.get("events", []) is Array else []
 	var after_raid := _encounter_by_placement(session, raid_id)
 	var battle_context: Dictionary = session.battle.get("context", {}) if session.battle.get("context", {}) is Dictionary else {}
-	var assignment_events := _event_count(events, "ai_target_assigned")
 	if String(selector_plan.get("target_kind", "")) != "town" or String(selector_plan.get("target_placement_id", "")) != town_id:
 		failures.append("Live retake selector did not prefer %s." % town_id)
 	if not bool(turn_result.get("ok", false)):
 		failures.append("Enemy turn returned not-ok during live town-retake assault.")
 	if after_raid.is_empty():
 		failures.append("Live town-retake raid disappeared after enemy turn.")
-	if String(after_raid.get("target_kind", "")) != "town" or String(after_raid.get("target_placement_id", "")) != town_id:
-		failures.append("Live town-retake raid did not target %s." % town_id)
+	if not AiHeroRulesScript.is_ai_hero(after_raid):
+		failures.append("Live town-retake host did not play as an enemy hero.")
 	if session.battle.is_empty():
 		failures.append("Live town-retake assault did not queue a battle.")
 	if String(battle_context.get("type", "")) != "town_defense" or String(battle_context.get("town_placement_id", "")) != town_id:
 		failures.append("Live town-retake assault queued wrong battle context.")
-	if assignment_events < 1:
-		failures.append("Live town-retake assault did not surface an ai_target_assigned event.")
-	if not _has_saved_hero_task_state(session):
-		failures.append("Live town-retake assault did not persist hero_task_state.")
+	if String(battle_context.get("raid_encounter_key", "")) != raid_id:
+		failures.append("Live town-retake battle was not started by the enemy hero.")
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 8)
 	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
 	if not bool(public_log.get("ok", false)):
@@ -3995,7 +4024,7 @@ static func _strategic_ai_live_town_retake_assault(input_config: Dictionary) -> 
 			"town_id": town_id,
 			"selector_target_kind": String(selector_plan.get("target_kind", "")),
 			"selector_target_id": String(selector_plan.get("target_placement_id", "")),
-			"target_assignment_event_count": assignment_events,
+			"battle_attacker_id": String(battle_context.get("raid_encounter_key", "")),
 			"battle_context_type": String(battle_context.get("type", "")),
 			"battle_town_id": String(battle_context.get("town_placement_id", "")),
 			"public_event_count": int(public_log.get("public_event_count", 0)),
@@ -4006,7 +4035,7 @@ static func _strategic_ai_live_town_retake_assault(input_config: Dictionary) -> 
 			"raid": _raid_execution_signal(after_raid),
 			"event_types": _event_types(events),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "hero_task_state_live_persist_no_save_migration",
+			"save_policy": "raid_hosts_from_old_saves_become_ai_heroes",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -4089,7 +4118,7 @@ static func _strategic_ai_live_raid_assault_grouping(input_config: Dictionary) -
 	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
 	var battle_context: Dictionary = session.battle.get("context", {}) if session.battle.get("context", {}) is Dictionary else {}
 	var leader_strength_after := EnemyAdventureRules.raid_strength(after_leader)
-	var grouping_events := _event_count(events, "ai_raid_grouped")
+	var joined_column_id := String(after_leader.get("joined_column_placement_id", ""))
 	if not bool(turn_result.get("ok", false)):
 		failures.append("Enemy turn returned not-ok during live raid grouping.")
 	if after_leader.is_empty():
@@ -4098,18 +4127,15 @@ static func _strategic_ai_live_raid_assault_grouping(input_config: Dictionary) -
 		failures.append("Live raid grouping support host stayed active.")
 	if leader_strength_after < leader_strength_before + support_strength_before:
 		failures.append("Live raid grouping leader did not absorb support strength.")
-	if int(after_leader.get("grouped_support_count", 0)) < 1:
-		failures.append("Live raid grouping leader is missing grouped support marker.")
-	if String(after_leader.get("last_grouped_support_placement_id", "")) != support_id:
-		failures.append("Live raid grouping leader recorded wrong support host.")
-	if grouping_events < 1:
-		failures.append("Live raid grouping did not emit ai_raid_grouped.")
+	# Old saves: the column standing beside the hero joins it.
+	if not AiHeroRulesScript.is_ai_hero(after_leader):
+		failures.append("Live grouping leader did not play as an enemy hero.")
+	if joined_column_id != support_id:
+		failures.append("Live grouping leader did not record the column that joined it.")
 	if session.battle.is_empty():
 		failures.append("Live raid grouping did not continue into a battle.")
 	if String(battle_context.get("type", "")) != "town_defense" or String(battle_context.get("town_placement_id", "")) != town_id:
 		failures.append("Live raid grouping queued wrong battle context.")
-	if not _has_saved_hero_task_state(session):
-		failures.append("Live raid grouping did not persist hero_task_state.")
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(events, 8)
 	var public_event_leak_tokens := _public_event_leak_tokens(public_log.get("public_events", []))
 	if not bool(public_log.get("ok", false)):
@@ -4132,7 +4158,7 @@ static func _strategic_ai_live_raid_assault_grouping(input_config: Dictionary) -
 			"leader_strength_before": leader_strength_before,
 			"support_strength_before": support_strength_before,
 			"leader_strength_after": leader_strength_after,
-			"grouping_event_count": grouping_events,
+			"joined_column_id": joined_column_id,
 			"battle_context_type": String(battle_context.get("type", "")),
 			"battle_town_id": String(battle_context.get("town_placement_id", "")),
 			"public_event_count": int(public_log.get("public_event_count", 0)),
@@ -4144,7 +4170,7 @@ static func _strategic_ai_live_raid_assault_grouping(input_config: Dictionary) -
 			"resolved_encounters": resolved,
 			"event_types": _event_types(events),
 			"public_event_leak_tokens": public_event_leak_tokens,
-			"save_policy": "hero_task_state_live_persist_no_save_migration",
+			"save_policy": "raid_hosts_from_old_saves_become_ai_heroes",
 			"warnings": warnings,
 			"failures": failures,
 		},
@@ -5150,7 +5176,14 @@ static func _set_player_position(session: SessionStateStoreScript.SessionData, p
 			hero["position"] = session.overworld["hero_position"].duplicate(true)
 			heroes[index] = hero
 			session.overworld["heroes"] = heroes
-			return
+			break
+	# Enemy heroes see and path around the human's heroes where they stand.
+	if session.overworld.get("player_heroes", null) is Array:
+		var player_heroes: Array = session.overworld.get("player_heroes", [])
+		for index in range(player_heroes.size()):
+			if player_heroes[index] is Dictionary:
+				player_heroes[index]["position"] = session.overworld["hero_position"].duplicate(true)
+		session.overworld["player_heroes"] = player_heroes
 
 static func _prime_objective_priority_targets_for_harness(
 	session: SessionStateStoreScript.SessionData,
@@ -5231,7 +5264,17 @@ static func _live_turn_raid_seed(
 		{},
 		EnemyAdventureRules.commander_roster_for_faction(session, faction_id)
 	)
-	return EnemyAdventureRules.ensure_raid_army(raid, session)
+	raid = EnemyAdventureRules.ensure_raid_army(raid, session)
+	# Heroes fight a site's guards by auto-resolve before taking it, so the
+	# hosts carry an army that wins those fights.
+	var army := {
+		"id": "headless_live_turn_fixture_host",
+		"name": "Live Turn Host",
+		"stacks": [{"unit_id": "unit_bog_brute", "count": 12}, {"unit_id": "unit_mire_slinger", "count": 12}],
+	}
+	raid["enemy_army"] = army
+	raid["enemy_commander_state"] = EnemyAdventureRules.sync_commander_army_continuity(raid.get("enemy_commander_state", {}), army, "encounter_mire_raid")
+	return raid
 
 static func _generated_town_handoff_raid_seed(
 	session: SessionStateStoreScript.SessionData,
@@ -5752,6 +5795,77 @@ static func _town_available_recruit_count(session: SessionStateStoreScript.Sessi
 			return int(town.get("available_recruits", {}).get(unit_id, 0))
 	return 0
 
+static func _ensure_town_building(session: SessionStateStoreScript.SessionData, placement_id: String, building_id: String, failures: Array) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary) or String(town.get("placement_id", "")) != placement_id:
+			continue
+		var built: Array = town.get("built_buildings", []) if town.get("built_buildings", []) is Array else []
+		if building_id not in built:
+			built.append(building_id)
+		town["built_buildings"] = built
+		towns[index] = town
+		session.overworld["towns"] = towns
+		return
+	failures.append("Missing town %s for building fixture." % placement_id)
+
+static func _town_recruit_event_count_for(events: Array, town_id: String) -> int:
+	var count := 0
+	for event in events:
+		if event is Dictionary and String(event.get("event_type", "")) == "ai_town_recruited" and String(event.get("actor_id", "")) == town_id:
+			count += 1
+	return count
+
+## Pickups and loose artifacts are gone, so heroes go for the sites under test.
+static func _clear_loose_map_rewards(session: SessionStateStoreScript.SessionData) -> void:
+	for artifact in session.overworld.get("artifact_nodes", []):
+		if artifact is Dictionary:
+			artifact["collected"] = true
+	for node in session.overworld.get("resource_nodes", []):
+		if not (node is Dictionary) or bool(node.get("collected", false)):
+			continue
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		if not bool(site.get("persistent_control", false)):
+			node["collected"] = true
+
+## A hero's goal is its own business: no raid-style target fields.
+static func _hero_goal_private(entry: Dictionary) -> bool:
+	return String(entry.get("target_kind", "")) == "" and String(entry.get("target_placement_id", "")) == ""
+
+static func _faction_ai_hero_count(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
+	var count := 0
+	for entry in AiHeroRulesScript.active_hero_entries(session):
+		if String(entry.get("spawned_by_faction_id", "")) == faction_id:
+			count += 1
+	return count
+
+static func _event_lines(events: Array) -> Array:
+	var lines := []
+	for event in events:
+		if event is Dictionary:
+			lines.append("%s|%s|%s|%s" % [event.get("event_type", ""), event.get("actor_id", ""), event.get("target_id", ""), event.get("summary", "")])
+	return lines
+
+static func _tile_distance_to(point: Dictionary, tile: Vector2i) -> int:
+	return maxi(absi(int(point.get("x", 0)) - tile.x), absi(int(point.get("y", 0)) - tile.y))
+
+## Every hero a computer player fields, summed: recruits count as delivered
+## once any of its heroes carries them.
+static func _faction_hero_strength(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
+	var total := 0
+	for entry in AiHeroRulesScript.active_hero_entries(session):
+		if String(entry.get("spawned_by_faction_id", "")) == faction_id:
+			total += EnemyAdventureRules.raid_strength(entry)
+	return total
+
+static func _faction_hero_unit_count(session: SessionStateStoreScript.SessionData, faction_id: String, unit_id: String) -> int:
+	var total := 0
+	for entry in AiHeroRulesScript.active_hero_entries(session):
+		if String(entry.get("spawned_by_faction_id", "")) == faction_id:
+			total += _raid_unit_count(entry, unit_id)
+	return total
+
 static func _raid_unit_count(raid: Dictionary, unit_id: String) -> int:
 	var army: Dictionary = raid.get("enemy_army", {}) if raid.get("enemy_army", {}) is Dictionary else {}
 	var total := 0
@@ -5831,8 +5945,11 @@ static func _public_event_leak_tokens(public_events: Variant) -> Array:
 	return leaks
 
 static func _raid_execution_signal(raid: Dictionary) -> Dictionary:
+	var goal: Dictionary = raid.get("ai_hero", {}).get("goal", {}) if raid.get("ai_hero", {}) is Dictionary else {}
 	return {
 		"placement_id": String(raid.get("placement_id", "")),
+		"ai_hero": AiHeroRulesScript.is_ai_hero(raid),
+		"goal_kind": String(goal.get("kind", "")),
 		"target_kind": String(raid.get("target_kind", "")),
 		"target_placement_id": String(raid.get("target_placement_id", "")),
 		"previous_completed_target_kind": String(raid.get("previous_completed_target_kind", "")),
@@ -5844,18 +5961,6 @@ static func _raid_execution_signal(raid: Dictionary) -> Dictionary:
 		"last_regroup_town_id": String(raid.get("last_regroup_town_id", "")),
 		"last_regroup_strength_delta": int(raid.get("last_regroup_strength_delta", 0)),
 	}
-
-static func _raid_completed_target(raid: Dictionary, target_kind: String, target_id: String) -> bool:
-	if raid.is_empty() or target_kind == "" or target_id == "":
-		return false
-	if String(raid.get("target_kind", "")) == target_kind \
-			and String(raid.get("target_placement_id", "")) == target_id \
-			and bool(raid.get("arrived", false)):
-		return true
-	return (
-		String(raid.get("previous_completed_target_kind", "")) == target_kind
-		and String(raid.get("previous_completed_target_placement_id", "")) == target_id
-	)
 
 static func _target_signal(target: Dictionary) -> Dictionary:
 	return {

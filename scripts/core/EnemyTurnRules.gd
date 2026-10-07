@@ -11,6 +11,9 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
+const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
+# Computer-player state AiHeroRules keeps between days.
+const AI_PLAYER_STATE_KEYS := ["ai_start_hero_granted", "ai_opening_granted", "ai_tavern", "ai_hero_counter", "ai_explored"]
 static var SpellRulesScript: Variant = load("res://scripts/core/SpellRules.gd")
 static var TownRulesScript: Variant = load("res://scripts/core/TownRules.gd")
 static var BattleRulesScript: Variant = load("res://scripts/core/BattleRules.gd")
@@ -121,10 +124,15 @@ static func normalize_enemy_states(session: SessionStateStoreScript.SessionData)
 				var task_state_report := normalize_optional_hero_task_state(existing_state.get("hero_task_state", {}))
 				if bool(task_state_report.get("ok", false)) and bool(task_state_report.get("normalized_present", false)):
 					normalized_state["hero_task_state"] = task_state_report.get("task_state", {})
+			for key in AI_PLAYER_STATE_KEYS:
+				if existing_state.has(key):
+					normalized_state[key] = existing_state[key]
 			normalized_states.append(normalized_state)
 
 	session.overworld["enemy_states"] = normalized_states
 	EnemyAdventureRulesScript.normalize_raid_armies(session)
+	# Older saves carry raid hosts; they continue as heroes (or disband).
+	AiHeroRulesScript.migrate_legacy_raids(session)
 	EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
 
 static func _normalize_rebuild_pressure_request(value: Variant, current_day: int) -> Dictionary:
@@ -243,6 +251,7 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 		"factions": [],
 	} if profile_enabled else {}
 	EnemyAdventureRulesScript.begin_enemy_turn_path_caches()
+	AiHeroRulesScript.clear_shared_surfaces()
 	var phase_started := _profile_timer(profile_enabled)
 	DifficultyRulesScript.normalize_session(session)
 	_profile_add_ms(profile, "difficulty_normalize_ms", phase_started)
@@ -270,8 +279,13 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 			continue
 		var state = states[state_index]
 		TurnPlayback.player_turn(session, config)
-		var turn_result = _run_empire_cycle(session, config, state, should_apply_weekly_growth, profile_enabled)
-		state = turn_result.get("state", state)
+		# Computer players act through heroes and towns under the human's rules.
+		var turn_result = AiHeroRulesScript.run_faction_turn(session, config, state, should_apply_weekly_growth, profile_enabled)
+		state = _latest_enemy_state(session, faction_id, turn_result.get("state", state))
+		states = session.overworld.get("enemy_states", states)
+		state_index = _find_state_index(states, faction_id)
+		if state_index < 0:
+			continue
 		if profile_enabled and turn_result.get("profile", {}) is Dictionary:
 			profile["factions"].append(turn_result.get("profile", {}))
 		var turn_messages = turn_result.get("messages", [])
@@ -286,21 +300,9 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 	session.overworld["enemy_states"] = states
 	_profile_add_ms(profile, "state_writeback_ms", phase_started)
 	phase_started = _profile_timer(profile_enabled)
-	for config in configs:
-		if not (config is Dictionary):
-			continue
-		var repair_result := EnemyAdventureRulesScript.repair_active_raid_target_integrity(session, config)
-		_append_event_records(events, repair_result.get("events", []))
-	_profile_add_ms(profile, "post_cycle_target_integrity_repair_ms", phase_started)
-	phase_started = _profile_timer(profile_enabled)
 	EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
 	_profile_add_ms(profile, "final_commander_roster_normalize_ms", phase_started)
-	events = EnemyAdventureRulesScript._reconcile_raid_assignment_events(
-		events,
-		session.overworld.get("encounters", []),
-		"",
-		session.overworld.get("resolved_encounters", [])
-	)
+	AiHeroRulesScript.clear_shared_surfaces()
 	EnemyAdventureRulesScript.end_enemy_turn_path_caches()
 	return _enemy_turn_result(true, " ".join(messages), events, profile_enabled, profile)
 
@@ -487,13 +489,14 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 	for config in configs:
 		if not (config is Dictionary):
 			continue
+		# Only what a player could know: the rival's stance, its capital and the
+		# heroes currently in sight.
 		var faction_id = PlayerRules.controller_id(config)
 		var state = _find_state(session.overworld.get("enemy_states", []), faction_id)
 		var front_state := _faction_front_state(session, faction_id)
-		var threshold = _raid_threshold_for_strategy(session, config, faction_id)
 		var line_parts = [
 			String(config.get("label", faction_id)),
-			_public_posture_label(state, threshold, PlayerRules.faction_id(session, faction_id)),
+			_public_posture_label(state, 0, PlayerRules.faction_id(session, faction_id)),
 		]
 		var strategy_summary = EnemyAdventureRulesScript.public_strategy_summary(config, faction_id)
 		if strategy_summary != "":
@@ -501,63 +504,17 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 		var capital_watch = _capital_watch_summary(_faction_capital_state(session, faction_id))
 		if capital_watch != "":
 			line_parts.append(capital_watch)
-
-		var visible_raids = EnemyAdventureRulesScript.visible_raid_count(session, faction_id)
-		if visible_raids > 0:
-			line_parts.append("Known raids %d" % visible_raids)
-		elif active_raid_count(session, faction_id) > 0:
-			line_parts.append("Raid hosts are moving beyond the fog")
-
-		var siege_target_id = String(config.get("siege_target_placement_id", ""))
-		if siege_target_id != "":
-			var siege_progress = int(state.get("siege_progress", 0))
-			if siege_progress > 0:
-				line_parts.append(
-					"Siege %d/%d" % [siege_progress, max(1, int(config.get("siege_capture_progress", 1)))]
-				)
-
-		var focus = EnemyAdventureRulesScript.describe_focus(session, faction_id, true)
-		if focus != "":
-			line_parts.append(focus)
+		var visible_heroes := _visible_raids_for_faction(session, faction_id)
+		var hero_names = EnemyAdventureRulesScript.raid_commander_summaries(visible_heroes, 2)
+		if not hero_names.is_empty():
+			var sighting: String = "Heroes sighted %s" % ", ".join(hero_names)
+			var hidden_count: int = max(0, visible_heroes.size() - hero_names.size())
+			if hidden_count > 0:
+				sighting += " (+%d more)" % hidden_count
+			line_parts.append(sighting)
 		var front_summary := String(front_state.get("summary", ""))
 		if front_summary != "":
 			line_parts.append(front_summary)
-		var commander_recovery = EnemyAdventureRulesScript.public_commander_recovery_summary(
-			session,
-			faction_id,
-			state.get("commander_roster", [])
-		)
-		if commander_recovery != "":
-			line_parts.append(commander_recovery)
-		var commander_rebuild = EnemyAdventureRulesScript.public_commander_rebuild_summary(
-			session,
-			faction_id,
-			state.get("commander_roster", [])
-		)
-		if commander_rebuild != "":
-			line_parts.append(commander_rebuild)
-		var visible_commanders = EnemyAdventureRulesScript.raid_commander_summaries(
-			_visible_raids_for_faction(session, faction_id),
-			2
-		)
-		if not visible_commanders.is_empty():
-			var commander_summary: String = "Commanders sighted %s" % ", ".join(visible_commanders)
-			var hidden_count: int = max(0, EnemyAdventureRulesScript.visible_raid_count(session, faction_id) - visible_commanders.size())
-			if hidden_count > 0:
-				commander_summary += " (+%d more)" % hidden_count
-			line_parts.append(commander_summary)
-		var commander_memory = EnemyAdventureRulesScript.raid_commander_memory_summaries(
-			_visible_raids_for_faction(session, faction_id),
-			2
-		)
-		if not commander_memory.is_empty():
-			line_parts.append("Command memory %s" % ", ".join(commander_memory))
-		var contestation = EnemyAdventureRulesScript.describe_contestation(session, faction_id, true)
-		if contestation != "":
-			line_parts.append(contestation)
-		var relic_summary = _captured_artifact_summary(state)
-		if relic_summary != "":
-			line_parts.append(relic_summary)
 		lines.append(" | ".join(line_parts))
 
 	return "\n".join(lines)
@@ -726,7 +683,8 @@ static func town_build_pressure_report(
 	)
 	var selected := {}
 	for candidate in candidates:
-		if bool(candidate.get("affordable", false)) and bool(candidate.get("pacing_eligible", true)):
+		# Pacing fields stay informational; live builds follow the human's rules.
+		if bool(candidate.get("affordable", false)):
 			selected = candidate
 			break
 	return {
@@ -1533,9 +1491,9 @@ static func _build_in_enemy_towns(
 			continue
 		var building_id = String(candidate.get("building_id", ""))
 		var status: Dictionary = OverworldRulesScript.get_town_build_status(town, building_id)
+		# Same rules as the human: any buildable, affordable building, one per
+		# town per day. The old development pacing floor no longer applies.
 		if not bool(status.get("buildable", false)):
-			continue
-		if not _enemy_town_development_pacing_allows_build(session, town, building_id):
 			continue
 		var building: Dictionary = status.get("building", {})
 		var cost: Dictionary = building.get("cost", {})
@@ -1576,7 +1534,7 @@ static func _enemy_rare_import_target(session: SessionStateStoreScript.SessionDa
 	var score_context := _town_build_score_context(session, town, config, controller)
 	for id in OverworldRulesScript.get_town_build_options(town, int(session.day)):
 		var status: Dictionary = OverworldRulesScript.get_town_build_status(town, String(id))
-		if not bool(status.get("buildable", false)) or not _enemy_town_development_pacing_allows_build(session, town, String(id)): continue
+		if not bool(status.get("buildable", false)): continue
 		var building: Dictionary = status.get("building", {})
 		if int(building.get("dwelling_tier", 0)) not in [6, 7]: continue
 		var cost: Dictionary = building.get("cost", {})
@@ -4588,8 +4546,6 @@ static func _enemy_town_build_candidates(
 		var cost = building.get("cost", {})
 		if not OverworldRulesScript.can_afford_cost_with_town_market(town, treasury, cost, int(session.day)):
 			continue
-		if not _enemy_town_development_pacing_allows_build(session, town, String(building_id)):
-			continue
 		var breakdown := _build_candidate_score_breakdown(session, town, building, cost, config, faction_id, score_context)
 		var candidate := breakdown.duplicate(true)
 		candidate["town_index"] = town_index
@@ -5049,7 +5005,7 @@ static func _public_posture_label(state: Dictionary, raid_threshold: int, factio
 		"raiding":
 			match faction_id:
 				"faction_embercourt":
-					return "Charter columns are pushing measured raids down the lanes"
+					return "Charter columns are pushing measured strikes down the lanes"
 				"faction_mireclaw":
 					return "Warbands are spilling forward in staggered packs"
 				"faction_sunvault":
@@ -5059,8 +5015,8 @@ static func _public_posture_label(state: Dictionary, raid_threshold: int, factio
 				"faction_brasshollow":
 					return "Contract columns are rolling engines toward production sites"
 				"faction_veilmourn":
-					return "Black-sail raiders are slipping through fog lanes toward weak backs"
-			return "Field hosts are driving raids into the frontier"
+					return "Black-sail crews are slipping through fog lanes toward weak backs"
+			return "Enemy heroes are driving into the frontier"
 		"massing":
 			if int(state.get("pressure", 0)) >= raid_threshold * 2:
 				match faction_id:
@@ -5093,6 +5049,12 @@ static func _public_posture_label(state: Dictionary, raid_threshold: int, factio
 			return "War bands are massing for another strike"
 		"collapsed":
 			return "The hostile empire has lost its strongholds"
+		"attacking":
+			return "Enemy heroes are on the attack"
+		"expanding":
+			return "Enemy heroes are claiming the countryside"
+		"building":
+			return "Enemy towns are building up their strength"
 		_:
 			match faction_id:
 				"faction_embercourt":
@@ -7239,10 +7201,6 @@ static func _capital_watch_summary(capital_state: Dictionary) -> String:
 	var active_labels = capital_state.get("active_project_labels", [])
 	if active_labels is Array and not active_labels.is_empty():
 		var parts = ["Capital watch: %s online" % ", ".join(active_labels)]
-		if int(capital_state.get("pressure_bonus", 0)) > 0:
-			parts.append("pressure +%d" % int(capital_state.get("pressure_bonus", 0)))
-		if int(capital_state.get("max_active_raids_bonus", 0)) > 0:
-			parts.append("raid slots +%d" % int(capital_state.get("max_active_raids_bonus", 0)))
 		if int(capital_state.get("support_gap", 0)) > 0:
 			parts.append("logistics gaps %d" % int(capital_state.get("support_gap", 0)))
 		if int(capital_state.get("recovery_pressure", 0)) > 0:
@@ -7786,7 +7744,7 @@ static func _apply_discount(cost: Variant, discount_percent: int) -> Dictionary:
 
 static func _normalize_posture(value: Variant) -> String:
 	var posture = String(value)
-	if posture in ["probing", "massing", "raiding", "fortifying", "reorganizing", "collapsed"]:
+	if posture in ["probing", "massing", "raiding", "fortifying", "reorganizing", "collapsed", "attacking", "expanding", "building"]:
 		return posture
 	return "probing"
 

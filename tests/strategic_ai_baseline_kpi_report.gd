@@ -37,7 +37,7 @@ func _assert_report(report: Dictionary) -> bool:
 		_fail("Strategic AI baseline did not include broad multi-scenario evidence: %s" % JSON.stringify(subsystem_summary))
 		return false
 	var event_counts: Dictionary = subsystem_summary.get("event_counts", {}) if subsystem_summary.get("event_counts", {}) is Dictionary else {}
-	for required_key in ["target_assignment", "town_recruit", "raid_reinforcement"]:
+	for required_key in ["target_assignment", "town_recruit", "hero_reinforcement"]:
 		if int(event_counts.get(required_key, 0)) <= 0:
 			_fail("Strategic AI baseline missed required event KPI %s: %s" % [required_key, JSON.stringify(event_counts)])
 			return false
@@ -56,8 +56,8 @@ func _assert_report(report: Dictionary) -> bool:
 	if int(rmg_summary.get("supported_small_ok_count", 0)) < int(rmg_summary.get("supported_small_count", 0)):
 		_fail("Supported Small generated-map AI turn probes must execute and pass by default: %s" % JSON.stringify(rmg_summary))
 		return false
-	if int(rmg_summary.get("target_assignment_event_count", 0)) <= 0:
-		_fail("Supported generated-map AI turns did not expose target-assignment threat events: %s" % JSON.stringify(rmg_summary))
+	if int(rmg_summary.get("ai_hero_count", 0)) <= 0 or int(rmg_summary.get("ai_hero_objective_event_count", 0)) <= 0:
+		_fail("Supported generated-map AI turns did not field heroes that take objectives: %s" % JSON.stringify(rmg_summary))
 		return false
 	if int(rmg_summary.get("medium_probe_count", 0)) < 3:
 		_fail("Strategic AI baseline did not record enough Medium generated-map generalization probes: %s" % JSON.stringify(rmg_summary))

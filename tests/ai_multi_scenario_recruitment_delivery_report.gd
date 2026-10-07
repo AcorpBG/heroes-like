@@ -41,15 +41,15 @@ func _assert_case(simulation_case: Dictionary) -> void:
 	if int(summary.get("faction_case_count", 0)) < 5:
 		_error("Faction coverage is too narrow: %s" % summary)
 	if int(summary.get("delivered_faction_count", 0)) != int(summary.get("faction_case_count", -1)):
-		_error("Not every faction case delivered recruits into its raid host: %s" % summary)
+		_error("Not every faction case delivered recruits to its hero: %s" % summary)
 	if int(summary.get("town_recruit_event_count", 0)) < int(summary.get("faction_case_count", 0)):
 		_error("Missing ai_town_recruited event coverage: %s" % summary)
-	if int(summary.get("raid_reinforcement_event_count", 0)) < int(summary.get("faction_case_count", 0)):
-		_error("Missing ai_raid_reinforced event coverage: %s" % summary)
+	if int(summary.get("hero_reinforcement_event_count", 0)) < int(summary.get("faction_case_count", 0)):
+		_error("Missing ai_hero_reinforced event coverage: %s" % summary)
 	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
-	if "ai_town_recruited" not in event_types or "ai_raid_reinforced" not in event_types:
+	if "ai_town_recruited" not in event_types or "ai_hero_reinforced" not in event_types:
 		_error("Event type coverage missing recruitment/reinforcement events: %s" % [event_types])
-	if String(evidence.get("save_policy", "")) != "hero_task_state_live_persist_no_save_migration":
+	if String(evidence.get("save_policy", "")) != "raid_hosts_from_old_saves_become_ai_heroes":
 		_error("Save policy changed: %s" % evidence)
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
 	if not leak_tokens.is_empty():
@@ -60,14 +60,13 @@ func _assert_case(simulation_case: Dictionary) -> void:
 		if not bool(row.get("delivered", false)):
 			_error("Undelivered faction row: %s" % row)
 		if int(row.get("after_strength", 0)) <= int(row.get("before_strength", 0)):
-			_error("Raid host strength did not increase: %s" % row)
+			_error("Hero army strength did not increase: %s" % row)
 		if int(row.get("town_recruits_after", 9999)) >= int(row.get("town_recruits_before", 0)):
 			_error("Town recruit pool was not consumed: %s" % row)
-		if int(row.get("town_recruit_event_count", 0)) < 1 or int(row.get("raid_reinforcement_event_count", 0)) < 1:
+		if int(row.get("town_recruit_event_count", 0)) < 1 or int(row.get("hero_reinforcement_event_count", 0)) < 1:
 			_error("Faction row is missing recruitment event evidence: %s" % row)
-		var raid: Dictionary = row.get("raid", {}) if row.get("raid", {}) is Dictionary else {}
-		if String(raid.get("target_kind", "")) == "" or String(raid.get("target_placement_id", "")) == "":
-			_error("Raid host lost its active target after recruitment delivery: %s" % row)
+		if not bool(row.get("ai_hero", false)):
+			_error("The host at the town gate did not play as an enemy hero: %s" % row)
 
 func _summary_payload(simulation_case: Dictionary) -> Dictionary:
 	var summary: Dictionary = simulation_case.get("summary", {}) if simulation_case.get("summary", {}) is Dictionary else {}
@@ -77,7 +76,7 @@ func _summary_payload(simulation_case: Dictionary) -> Dictionary:
 		"faction_case_count": int(summary.get("faction_case_count", 0)),
 		"delivered_faction_count": int(summary.get("delivered_faction_count", 0)),
 		"town_recruit_event_count": int(summary.get("town_recruit_event_count", 0)),
-		"raid_reinforcement_event_count": int(summary.get("raid_reinforcement_event_count", 0)),
+		"hero_reinforcement_event_count": int(summary.get("hero_reinforcement_event_count", 0)),
 	}
 
 func _scenario_ids_from_args() -> Array:

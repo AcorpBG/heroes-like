@@ -4500,7 +4500,7 @@ func _defense_check_surface() -> Dictionary:
 	var garrison_line := _first_matching_line(TownRules.describe_defense(_session), ["companies", "Garrison"])
 	if garrison_line == "":
 		garrison_line = "Garrison state is listed in Defense Posture."
-	var threat_line := _first_matching_line(TownRules.describe_threats(_session), ["raid", "Front watch", "Occupation watch", "No hostile"])
+	var threat_line := _first_matching_line(TownRules.describe_threats(_session), ["approaches", "marching", "can reach", "Front watch", "Occupation watch", "No hostile"])
 	if threat_line == "":
 		threat_line = frontier_state.capitalize()
 	var next_step := "Leave when town orders are set; keep the frontier watch current."

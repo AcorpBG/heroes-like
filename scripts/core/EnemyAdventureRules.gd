@@ -197,6 +197,9 @@ const AI_PUBLIC_EVENT_LOG_TYPES := [
 	"ai_raid_grouped",
 	"ai_adventure_spell_cast",
 	"ai_artifact_secured",
+	"ai_hero_hired",
+	"ai_guard_defeated",
+	"ai_hero_defeated",
 ]
 const COMMANDER_ROLE_BLOCKED_PUBLIC_TOKENS := [
 	"base_value",
@@ -7080,6 +7083,12 @@ static func _record_adventure_objective_success(
 	if not (commander_state is Dictionary) or commander_state.is_empty():
 		return updated_raid
 	var updated_commander := advance_commander_record(commander_state, outcome_id)
+	if raid.get("ai_hero", null) is Dictionary:
+		# Heroes earn experience from battles and the rewards they collect, as
+		# the human's do, not for the errand itself.
+		for key in ["level", "experience", "next_level_experience", "command", "specialties", "pending_specialty_choices", "specialty_focus_ids", "spellbook"]:
+			if commander_state.has(key):
+				updated_commander[key] = commander_state[key]
 	updated_raid["enemy_commander_state"] = updated_commander
 	var placement_id := active_placement_id
 	if placement_id == "":
@@ -7578,8 +7587,13 @@ static func raid_commander_display_name(encounter: Dictionary) -> String:
 static func raid_display_name(encounter: Dictionary) -> String:
 	if encounter.is_empty():
 		return "Hostile contact"
+	# An enemy hero is named like any hero; there is no "host" around it.
+	if encounter.get("ai_hero", null) is Dictionary:
+		var hero_name := raid_commander_name(encounter)
+		if hero_name != "":
+			return hero_name
 	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
-	var encounter_name := String(encounter_template.get("name", encounter.get("placement_id", "Raid host")))
+	var encounter_name := String(encounter_template.get("name", encounter.get("placement_id", "Enemy army")))
 	var commander_name := raid_commander_display_name(encounter)
 	if commander_name == "" or PlayerRules.raid_controller_id(encounter) == "":
 		return encounter_name
@@ -9918,7 +9932,7 @@ static func public_strategy_summary(config: Dictionary, faction_id: String) -> S
 				return "Priorities: hold towns, reinforce outposts, and grind forward on siege lanes"
 			return "Priorities: stabilize the line, defend charter assets, and press key crossings"
 		"faction_mireclaw":
-			return "Priorities: cut logistics sites, chase exposed heroes, and keep raids rolling"
+			return "Priorities: cut logistics sites, chase exposed heroes, and keep their heroes on the move"
 		"faction_sunvault":
 			return "Priorities: secure relays and shrines, then align focused pushes on objectives"
 		"faction_thornwake":
@@ -9926,7 +9940,7 @@ static func public_strategy_summary(config: Dictionary, faction_id: String) -> S
 		"faction_brasshollow":
 			return "Priorities: secure mines, stage siege engines, and exhaust resource fronts"
 		"faction_veilmourn":
-			return "Priorities: scout hidden routes, mark weak backs, and raid through fog lanes"
+			return "Priorities: scout hidden routes, mark weak backs, and strike through fog lanes"
 		_:
 			return "Priorities: pressure objectives while contesting frontier assets"
 
@@ -18082,7 +18096,7 @@ static func _secure_resource_target(
 	var message = "%s seizes %s." % [_raid_name(updated_raid), String(site.get("name", "the site"))]
 	TurnPlayback.action(session, updated_raid, "seizes a resource site")
 	if not spoils.is_empty():
-		message = "%s seizes %s and strips %s." % [
+		message = "%s claims %s and collects %s." % [
 			_raid_name(updated_raid),
 			String(site.get("name", "the site")),
 			_describe_resource_set(spoils),
@@ -19309,6 +19323,9 @@ static func _continue_mobile_raid_after_field_objective(
 ) -> Dictionary:
 	if session == null or raid.is_empty() or faction_id == "":
 		return {"encounter": raid, "state": state, "ai_event": {}}
+	# AI heroes choose their next objective themselves (AiHeroRules).
+	if raid.get("ai_hero", null) is Dictionary:
+		return {"encounter": raid, "state": state, "ai_event": {}}
 	var army := _normalize_army_payload(raid.get("enemy_army", {}))
 	if _army_strength(army.get("stacks", [])) <= 0:
 		return {"encounter": raid, "state": state, "ai_event": {}}
@@ -20048,7 +20065,8 @@ static func _reward_resources_for_empire(rewards: Variant) -> Dictionary:
 	var treasury = {}
 	if not (rewards is Dictionary):
 		return treasury
-	for key in ["gold", "wood", "ore"]:
+	# Every stockpile resource the human would collect from the same reward.
+	for key in ["gold", "wood", "ore", "aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]:
 		var amount: int = max(0, int(rewards.get(key, 0)))
 		if amount > 0:
 			treasury[key] = amount
@@ -20080,8 +20098,12 @@ static func _artifact_pressure_value(artifact_id: String) -> int:
 	return clamp(pressure, 1, 3)
 
 static func _raid_name(raid: Dictionary) -> String:
+	if raid.get("ai_hero", null) is Dictionary:
+		var hero_name := raid_commander_name(raid)
+		if hero_name != "":
+			return hero_name
 	var encounter = ContentService.get_encounter(String(raid.get("encounter_id", raid.get("id", ""))))
-	return String(encounter.get("name", "The raid"))
+	return String(encounter.get("name", "The enemy army"))
 
 static func _goal_tiles_from_raid(
 	session: SessionStateStoreScript.SessionData,
