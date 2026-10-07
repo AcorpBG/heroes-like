@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-movement-feedback-20261007",
-  "currentSliceId": "ux-overworld-movement-feedback-20261007",
-  "currentSliceNotes": "COMPLETED 2026-10-07. Owner playtest: the hero portrait bar kept stale movement after map moves, and attack orders opened the battle instantly. Rules were already correct; the shell's route-only refresh now updates each portrait button's movement/mana meters in place (no roster rebuild) and drains the bar per tile during the walk, and battle routes play the walk with an order blocker before opening the battle on arrival (Escape/Enter skips; out-of-range attacks stop short with no battle). Headless automation keeps the instant handoff unless a report enables the march. Validation: overworld_movement_feedback_report 48/48 (failed 8 checks on the old code), movement/encounter/route regressions unchanged, validate_repo unchanged. Follow-ups: town fallback entry and chest reward dialogs still skip the walk; the attack target is not remembered across End Turn.",
+  "currentSlice": "feature-hero-hire-army-level-20261007",
+  "currentSliceId": "feature-hero-hire-army-level-20261007",
+  "currentSliceNotes": "COMPLETED 2026-10-07. Owner playtest: new heroes came without units and always at level 1. HeroCommandRules.tavern_offer fixes each weekly offer's level (about 87% L1, 10% L2, 3% L3) and HoMM3-style starting army (a tier-1 company sized 0.75-1.5x weekly growth, 75% a second tier-2 or tier-1 company), deterministic per session/scenario/week/hero. All hires go through HeroCommandRules.build_recruited_hero (levels via the new HeroProgressionRules.advance_to_level, full mana); start heroes with empty scenario armies get a starting army; a won town defense keeps one garrison creature with a hero whose troops died; SaveService restore gives empty-army player heroes (and empty AI raid commanders) their starting army. The tavern card shows level and army. Validation: hero_hire_army_level_report (2,496 offers, 384 hires, save/load determinism, old-save restore, one-creature rules, card at both resolutions); town/rendezvous/hero selection reports unchanged; validate_repo unchanged. Follow-up: AI hiring through build_recruited_hero (AI slice).",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Portrait bar movement refresh and walked attack orders",
-  "currentSliceUpdatedAt": "2026-10-07T19:05:00Z",
+  "currentSliceTitle": "Hired heroes come with a starting army and a weekly level",
+  "currentSliceUpdatedAt": "2026-10-07T19:30:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -114111,6 +114111,20 @@
         "docs/overworld-movement-feedback.md"
       ],
       "notes": "Owner playtest: the hero portrait bar kept stale movement after map moves, and attack orders opened the battle instantly. Rules were already correct; the shell's route-only refresh now updates each portrait button's movement/mana meters in place (no roster rebuild) and drains the bar per tile during the walk, and battle routes play the walk with an order blocker before opening the battle on arrival (Escape/Enter skips; out-of-range attacks stop short with no battle). Headless automation keeps the instant handoff unless a report enables the march. Validation: overworld_movement_feedback_report 48/48 (failed 8 checks on the old code), movement/encounter/route regressions unchanged, validate_repo unchanged. Follow-ups: town fallback entry and chest reward dialogs still skip the walk; the attack target is not remembered across End Turn."
+    },
+    {
+      "id": "feature-hero-hire-army-level-20261007",
+      "title": "Hired heroes come with a starting army and a weekly level",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "gameplay_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/hero-hire-army-level.md",
+        "docs/town-building-popouts.md"
+      ],
+      "notes": "Owner playtest: new heroes came without units and always at level 1. HeroCommandRules.tavern_offer fixes each weekly offer's level (about 87% L1, 10% L2, 3% L3) and HoMM3-style starting army (a tier-1 company sized 0.75-1.5x weekly growth, 75% a second tier-2 or tier-1 company), deterministic per session/scenario/week/hero. All hires go through HeroCommandRules.build_recruited_hero (levels via the new HeroProgressionRules.advance_to_level, full mana); start heroes with empty scenario armies get a starting army; a won town defense keeps one garrison creature with a hero whose troops died; SaveService restore gives empty-army player heroes (and empty AI raid commanders) their starting army. The tavern card shows level and army. Validation: hero_hire_army_level_report (2,496 offers, 384 hires, save/load determinism, old-save restore, one-creature rules, card at both resolutions); town/rendezvous/hero selection reports unchanged; validate_repo unchanged. Follow-up: AI hiring through build_recruited_hero (AI slice)."
     }
   ],
   "project": "heroes-like",
@@ -114770,7 +114784,7 @@
   ],
   "summary": "Owner-directed overworld actor readability completed: 112 original generated hero/creature sprites, full-size town visitors, painted-bound scale and cached alpha-edge contrast. Source/Linux/Windows visual/runtime acceptance, Large travel/AI/fog, existing reports, full repository and official exports/parity pass; 3.255 GB disposable outputs cleaned. Prior generated-world quality work remains completed; gameplay/native generation and save schema are unchanged. Broader production/release limits remain in project.md.",
   "taskId": "10236",
-  "updatedAt": "2026-10-07T19:05:00Z",
+  "updatedAt": "2026-10-07T19:30:00Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",
