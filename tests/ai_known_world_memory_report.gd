@@ -1,11 +1,14 @@
 extends Node
 
 const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRules.gd")
+const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
 
 const REPORT_ID := "AI_KNOWN_WORLD_MEMORY_REPORT"
 const RIVER_PASS := "river-pass"
 const MIRECLAW := "faction_mireclaw"
 const EMBERCOURT := "faction_embercourt"
+const EXPLORATION_DAYS := 3
+const SCOUTING_MAP_HEIGHT := 30
 
 var _failed := false
 
@@ -437,24 +440,41 @@ func _empty_target_fallback_does_not_hunt_hidden_hero() -> Dictionary:
 	if "no_known_targets" not in _normalize_string_array(chosen.get("target_reason_codes", [])):
 		_fail("No-candidate exploration fallback did not explain no_known_targets: %s" % JSON.stringify(chosen))
 		return {}
-	var state := _enemy_state(session)
-	state["pressure"] = 999
-	_update_enemy_state(session, state)
-	if not EnemyTurnRules._can_launch_raid(session, config, state, MIRECLAW):
-		_fail("Fresh pressure should launch an exploration commander when no legitimate target candidates exist.")
-		return {}
+	# Live play: with nothing known, Mireclaw fields a hero that scouts the
+	# unexplored frontier and never walks at the hidden player hero. Towns
+	# see as far as the player's towns do, which covers the whole river
+	# strip, so the map gets an unseen south with the hero hidden in it.
+	_extend_map_south(session, SCOUTING_MAP_HEIGHT)
+	_set_primary_hero_position(session, 0, SCOUTING_MAP_HEIGHT - 2)
 	var turn_result := EnemyTurnRules.run_enemy_turn(session)
-	var exploration_raid := _first_enemy_raid_for_kind(session, "explore")
-	if exploration_raid.is_empty():
-		_fail("Live enemy turn did not dispatch an exploration raid with no known targets: %s" % JSON.stringify(turn_result))
+	if not bool(turn_result.get("ok", false)):
+		_fail("No-known-target enemy turn failed: %s" % JSON.stringify(turn_result))
+		return {}
+	if not _first_enemy_raid_for_kind(session, "explore").is_empty():
+		_fail("Live enemy turn spawned a raid host instead of fielding a hero.")
+		return {}
+	var explorer := {}
+	for entry in AiHeroRulesScript.active_hero_entries(session, MIRECLAW):
+		var goal: Dictionary = entry.get("ai_hero", {}).get("goal", {})
+		if String(goal.get("kind", "")) == "hero":
+			_fail("Enemy hero hunted the hidden player hero: %s" % JSON.stringify(entry))
+			return {}
+		if String(goal.get("kind", "")) == "explore" and explorer.is_empty():
+			explorer = entry
+	if explorer.is_empty():
+		_fail("Live enemy turn did not send a hero to scout with no known targets: %s" % JSON.stringify(AiHeroRulesScript.active_hero_entries(session, MIRECLAW)))
+		return {}
+	if _distance_to_hidden_hero(session, explorer) < 3:
+		_fail("Scouting hero ended its day beside the hidden player hero: %s" % JSON.stringify(explorer))
 		return {}
 	return {
 		"case_id": "empty_target_fallback_does_not_hunt_hidden_hero",
 		"fallback_target_kind": String(chosen.get("target_kind", "")),
 		"fallback_target_id": String(chosen.get("target_placement_id", "")),
 		"fallback_goal_distance": int(chosen.get("goal_distance", -1)),
-		"pressure_launch_allowed_without_target": true,
-		"live_exploration_raid_id": String(exploration_raid.get("placement_id", "")),
+		"live_scouting_hero_id": String(explorer.get("placement_id", "")),
+		"live_scouting_goal": explorer.get("ai_hero", {}).get("goal", {}),
+		"explored_tiles": AiHeroRulesScript.explored_tile_count(_enemy_state(session)),
 	}
 
 func _nonhero_targets_require_visibility_or_memory() -> Dictionary:
@@ -687,47 +707,39 @@ func _persistent_exploration_tasks_launch_and_complete() -> Dictionary:
 		_fail("Exploration task should use scout_frontier class: %s" % JSON.stringify(scout_task))
 		return {}
 	var task_target_id := String(scout_task.get("target_id", ""))
-	state = _enemy_state(session)
-	state["pressure"] = 999
-	_update_enemy_state(session, state)
-	var turn_result := EnemyTurnRules.run_enemy_turn(session)
-	var exploration_raid := _first_enemy_raid_for_kind(session, "explore")
-	if exploration_raid.is_empty():
-		_fail("Saved exploration task did not launch an exploration raid: %s" % JSON.stringify(turn_result))
+	# Live play: enemy heroes keep their own explored map instead of saved
+	# scout tasks. Day after day the scout reaches new ground and moves on
+	# from frontiers it has already uncovered.
+	_extend_map_south(session, SCOUTING_MAP_HEIGHT)
+	_set_primary_hero_position(session, 0, SCOUTING_MAP_HEIGHT - 2)
+	var explored_by_day := []
+	var scout_positions := []
+	var scout_id := ""
+	for _day in range(EXPLORATION_DAYS):
+		var turn_result := EnemyTurnRules.run_enemy_turn(session)
+		if not bool(turn_result.get("ok", false)):
+			_fail("Exploration enemy turn failed: %s" % JSON.stringify(turn_result))
+			return {}
+		if not _first_enemy_raid_for_kind(session, "explore").is_empty():
+			_fail("Exploration turn spawned a raid host instead of moving a hero.")
+			return {}
+		var heroes := AiHeroRulesScript.active_hero_entries(session, MIRECLAW)
+		if heroes.is_empty():
+			_fail("Mireclaw fielded no hero to explore with.")
+			return {}
+		if scout_id == "":
+			scout_id = String(heroes[0].get("placement_id", ""))
+		var scout := _encounter_by_id(session, scout_id)
+		if scout.is_empty():
+			_fail("Scouting hero disappeared on an empty map: %s" % JSON.stringify(heroes))
+			return {}
+		scout_positions.append({"x": int(scout.get("x", 0)), "y": int(scout.get("y", 0))})
+		explored_by_day.append(AiHeroRulesScript.explored_tile_count(_enemy_state(session)))
+	if int(explored_by_day[explored_by_day.size() - 1]) <= int(explored_by_day[0]):
+		_fail("Scouting hero did not uncover new ground over %d days: %s" % [EXPLORATION_DAYS, JSON.stringify(explored_by_day)])
 		return {}
-	var launched_task := _first_task_for_target(session, "explore", String(exploration_raid.get("target_placement_id", "")))
-	if launched_task.is_empty() or String(launched_task.get("task_class", "")) != "scout_frontier":
-		_fail("Exploration raid did not launch from a saved scout task: planned=%s raid=%s" % [JSON.stringify(_task_state(session)), JSON.stringify(exploration_raid)])
-		return {}
-	task_target_id = String(exploration_raid.get("target_placement_id", ""))
-	var target_tile := _explore_target_tile(task_target_id)
-	if target_tile.is_empty():
-		_fail("Exploration task target id did not encode a tile: %s" % task_target_id)
-		return {}
-	if int(exploration_raid.get("target_x", -1)) != int(target_tile.get("x", -2)) or int(exploration_raid.get("target_y", -1)) != int(target_tile.get("y", -2)):
-		_fail("Exploration raid lost saved target coordinates during spawn: %s" % JSON.stringify(exploration_raid))
-		return {}
-	_move_raid_to_target(session, String(exploration_raid.get("placement_id", "")), int(target_tile.get("x", 0)), int(target_tile.get("y", 0)))
-	var arrival_result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, _enemy_state(session))
-	_update_enemy_state(session, arrival_result.get("state", _enemy_state(session)))
-	var completed_task := _task_by_id(session, String(launched_task.get("task_id", "")))
-	if String(completed_task.get("task_status", "")) != "completed":
-		_fail("Exploration arrival did not complete the saved scout task: %s" % JSON.stringify(completed_task))
-		return {}
-	var reservation: Dictionary = completed_task.get("reservation", {}) if completed_task.get("reservation", {}) is Dictionary else {}
-	if String(reservation.get("reservation_status", "")) != "released":
-		_fail("Completed exploration task did not release its reservation: %s" % JSON.stringify(completed_task))
-		return {}
-	var continued_raid := _encounter_by_id(session, String(exploration_raid.get("placement_id", "")))
-	if continued_raid.is_empty():
-		_fail("Exploration commander disappeared after completing an empty scout tile: %s" % JSON.stringify(session.overworld.get("encounters", [])))
-		return {}
-	if String(continued_raid.get("target_kind", "")) == "explore" and String(continued_raid.get("target_placement_id", "")) == task_target_id:
-		_fail("Exploration commander stayed on the completed scout tile instead of continuing: %s" % JSON.stringify(continued_raid))
-		return {}
-	var recent_exploration_target_ids: Array = continued_raid.get("recent_exploration_target_ids", []) if continued_raid.get("recent_exploration_target_ids", []) is Array else []
-	if task_target_id not in recent_exploration_target_ids:
-		_fail("Exploration host did not retain its completed frontier target: %s" % JSON.stringify(continued_raid))
+	if scout_positions[0] == scout_positions[scout_positions.size() - 1]:
+		_fail("Scouting hero stayed on one tile instead of moving to new frontiers: %s" % JSON.stringify(scout_positions))
 		return {}
 
 	var planner_session = _base_session()
@@ -759,16 +771,12 @@ func _persistent_exploration_tasks_launch_and_complete() -> Dictionary:
 	return {
 		"case_id": "persistent_exploration_tasks_launch_and_complete",
 		"planned_count": int(plan_result.get("planned_count", 0)),
-		"task_class": String(launched_task.get("task_class", "")),
+		"task_class": String(scout_task.get("task_class", "")),
 		"task_target_id": task_target_id,
-		"spawned_raid_id": String(exploration_raid.get("placement_id", "")),
-		"spawned_target_x": int(exploration_raid.get("target_x", -1)),
-		"spawned_target_y": int(exploration_raid.get("target_y", -1)),
-		"completed_task_status": String(completed_task.get("task_status", "")),
-		"continued_target_id": String(continued_raid.get("target_placement_id", "")),
-		"recent_exploration_target_ids": recent_exploration_target_ids,
+		"scouting_hero_id": scout_id,
+		"scout_positions": scout_positions,
+		"explored_tiles_by_day": explored_by_day,
 		"planner_target_sequence": [first_plan_id, second_plan_id, third_plan_id],
-		"event_types": _event_types(arrival_result.get("events", [])),
 	}
 
 func _exclusive_frontier_reservations_diversify_live_hosts() -> Dictionary:
@@ -1379,6 +1387,10 @@ func _first_delivery_candidate(candidates: Array, target_kind: String, target_id
 			continue
 		return candidate
 	return {}
+
+func _distance_to_hidden_hero(session, entry: Dictionary) -> int:
+	var hero_position: Dictionary = session.overworld.get("hero_position", {})
+	return maxi(absi(int(entry.get("x", 0)) - int(hero_position.get("x", 0))), absi(int(entry.get("y", 0)) - int(hero_position.get("y", 0))))
 
 func _first_enemy_raid_for_kind(session, target_kind: String) -> Dictionary:
 	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []

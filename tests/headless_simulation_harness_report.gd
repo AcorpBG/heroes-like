@@ -293,30 +293,27 @@ func _assert_live_ai_recruitment_delivery(live_recruitment_case: Dictionary) -> 
 	if String(summary.get("unit_id", "")) != "unit_bog_brute":
 		_fail("Live strategic AI recruitment delivery used unexpected unit id: %s" % summary)
 		return false
-	if int(summary.get("desired_before", 0)) <= int(summary.get("before_strength", 0)):
-		_fail("Live strategic AI recruitment delivery fixture had no raid strength need: %s" % summary)
-		return false
 	if int(summary.get("after_strength", 0)) <= int(summary.get("before_strength", 0)):
-		_fail("Live strategic AI recruitment delivery did not increase raid strength: %s" % summary)
+		_fail("Live strategic AI recruitment delivery did not strengthen the faction's heroes: %s" % summary)
 		return false
 	if int(summary.get("town_recruits_after", 9999)) >= int(summary.get("town_recruits_before", 0)):
 		_fail("Live strategic AI recruitment delivery did not consume town recruits: %s" % summary)
 		return false
-	if int(summary.get("raid_unit_after", 0)) < 5:
-		_fail("Live strategic AI recruitment delivery did not add recruits to the raid army: %s" % summary)
+	if int(summary.get("hero_units_after", 0)) < int(summary.get("hero_units_before", 0)) + 4:
+		_fail("Live strategic AI recruitment delivery did not put the recruits in a hero army: %s" % summary)
 		return false
-	if int(summary.get("town_recruit_event_count", 0)) < 1 or int(summary.get("raid_reinforcement_event_count", 0)) < 1:
+	if int(summary.get("town_recruit_event_count", 0)) < 1 or int(summary.get("hero_reinforcement_event_count", 0)) < 1:
 		_fail("Live strategic AI recruitment delivery is missing recruitment/reinforcement events: %s" % summary)
 		return false
 	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
-	if "ai_town_recruited" not in event_types or "ai_raid_reinforced" not in event_types:
+	if "ai_town_recruited" not in event_types or "ai_hero_reinforced" not in event_types:
 		_fail("Live strategic AI recruitment delivery missing event type evidence: %s" % event_types)
 		return false
 	var raid: Dictionary = evidence.get("raid", {}) if evidence.get("raid", {}) is Dictionary else {}
-	if String(raid.get("target_kind", "")) != "resource" or String(raid.get("target_placement_id", "")) != "river_free_company":
-		_fail("Live strategic AI recruitment delivery lost the active raid target: %s" % raid)
+	if not bool(raid.get("ai_hero", false)):
+		_fail("Live strategic AI recruitment delivery host did not play as an enemy hero: %s" % raid)
 		return false
-	if String(evidence.get("save_policy", "")) != "hero_task_state_live_persist_no_save_migration":
+	if String(evidence.get("save_policy", "")) != "raid_hosts_from_old_saves_become_ai_heroes":
 		_fail("Live strategic AI recruitment delivery save policy changed: %s" % evidence)
 		return false
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
@@ -340,8 +337,8 @@ func _assert_live_ai_multi_scenario_recruitment_delivery(multi_recruitment_case:
 	if int(summary.get("town_recruit_event_count", 0)) < int(summary.get("faction_case_count", 0)):
 		_fail("Multi-scenario strategic AI recruitment delivery is missing town recruitment events: %s" % summary)
 		return false
-	if int(summary.get("raid_reinforcement_event_count", 0)) < int(summary.get("faction_case_count", 0)):
-		_fail("Multi-scenario strategic AI recruitment delivery is missing raid reinforcement events: %s" % summary)
+	if int(summary.get("hero_reinforcement_event_count", 0)) < int(summary.get("faction_case_count", 0)):
+		_fail("Multi-scenario strategic AI recruitment delivery is missing hero reinforcement events: %s" % summary)
 		return false
 	var scenario_ids := []
 	for row in evidence.get("scenarios", []):
@@ -358,30 +355,23 @@ func _assert_live_ai_multi_scenario_recruitment_delivery(multi_recruitment_case:
 		if not bool(row.get("delivered", false)):
 			_fail("Multi-scenario strategic AI recruitment delivery has an undelivered row: %s" % row)
 			return false
-		if int(row.get("desired_before", 0)) <= int(row.get("before_strength", 0)):
-			_fail("Multi-scenario strategic AI recruitment fixture had no raid strength need: %s" % row)
-			return false
 		if int(row.get("after_strength", 0)) <= int(row.get("before_strength", 0)):
-			_fail("Multi-scenario strategic AI recruitment did not strengthen raid host: %s" % row)
+			_fail("Multi-scenario strategic AI recruitment did not strengthen the faction's heroes: %s" % row)
 			return false
 		if int(row.get("town_recruits_after", 9999)) >= int(row.get("town_recruits_before", 0)):
 			_fail("Multi-scenario strategic AI recruitment did not consume town recruits: %s" % row)
 			return false
-		if int(row.get("town_recruit_event_count", 0)) < 1 or int(row.get("raid_reinforcement_event_count", 0)) < 1:
+		if int(row.get("town_recruit_event_count", 0)) < 1 or int(row.get("hero_reinforcement_event_count", 0)) < 1:
 			_fail("Multi-scenario strategic AI recruitment row is missing event evidence: %s" % row)
 			return false
-		var raid: Dictionary = row.get("raid", {}) if row.get("raid", {}) is Dictionary else {}
-		if String(row.get("raid_target_id_after", "")) == "":
-			_fail("Multi-scenario strategic AI recruitment did not report the post-delivery raid target id: %s" % row)
-			return false
-		if String(raid.get("target_kind", "")) == "" or String(raid.get("target_placement_id", "")) == "":
-			_fail("Multi-scenario strategic AI recruitment lost the active raid target: %s" % row)
+		if not bool(row.get("ai_hero", false)):
+			_fail("Multi-scenario strategic AI recruitment host did not play as an enemy hero: %s" % row)
 			return false
 	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
-	if "ai_town_recruited" not in event_types or "ai_raid_reinforced" not in event_types:
+	if "ai_town_recruited" not in event_types or "ai_hero_reinforced" not in event_types:
 		_fail("Multi-scenario strategic AI recruitment delivery missing event type evidence: %s" % event_types)
 		return false
-	if String(evidence.get("save_policy", "")) != "hero_task_state_live_persist_no_save_migration":
+	if String(evidence.get("save_policy", "")) != "raid_hosts_from_old_saves_become_ai_heroes":
 		_fail("Multi-scenario strategic AI recruitment delivery save policy changed: %s" % evidence)
 		return false
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
@@ -433,7 +423,7 @@ func _assert_live_ai_town_governor_build_execution(live_town_governor_case: Dict
 	if "ai_town_built" not in event_types or "ai_town_recruited" not in event_types:
 		_fail("Live strategic AI town-governor execution missing event type evidence: %s" % event_types)
 		return false
-	if String(evidence.get("save_policy", "")) != "hero_task_state_live_persist_no_save_migration":
+	if String(evidence.get("save_policy", "")) != "raid_hosts_from_old_saves_become_ai_heroes":
 		_fail("Live strategic AI town-governor execution save policy changed: %s" % evidence)
 		return false
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
@@ -622,18 +612,18 @@ func _assert_live_ai_route_progression(live_route_case: Dictionary) -> bool:
 	if int(summary.get("initial_goal_distance", 0)) <= 0:
 		_fail("Live strategic AI route progression has invalid initial route distance: %s" % summary)
 		return false
-	if int(summary.get("turns_simulated", 0)) < 2:
-		_fail("Live strategic AI route progression did not exercise multiple turns: %s" % summary)
+	if int(summary.get("turns_simulated", 0)) < 1:
+		_fail("Live strategic AI route progression did not run a turn: %s" % summary)
 		return false
-	if int(summary.get("target_assignment_event_count", 0)) < 1 or int(summary.get("site_seizure_event_count", 0)) < 1:
-		_fail("Live strategic AI route progression is missing assignment/seizure events: %s" % summary)
+	if int(summary.get("site_seizure_event_count", 0)) < 1:
+		_fail("Live strategic AI route progression is missing seizure events: %s" % summary)
 		return false
 	var route_records: Array = evidence.get("route_records", []) if evidence.get("route_records", []) is Array else []
 	if route_records.size() != int(summary.get("turns_simulated", -1)):
 		_fail("Live strategic AI route progression route records do not match turn count: %s" % evidence)
 		return false
-	if route_records.is_empty() or String(route_records[0].get("target_id", "")) != "river_free_company":
-		_fail("Live strategic AI route progression first route record does not show target assignment: %s" % route_records)
+	if route_records.is_empty() or not bool(route_records[0].get("ai_hero", false)):
+		_fail("Live strategic AI route progression host did not play as an enemy hero: %s" % route_records)
 		return false
 	var seized_record_found := false
 	for route_record in route_records:
@@ -643,7 +633,7 @@ func _assert_live_ai_route_progression(live_route_case: Dictionary) -> bool:
 	if not seized_record_found:
 		_fail("Live strategic AI route progression records did not show target seizure before continuation: %s" % route_records)
 		return false
-	if String(evidence.get("save_policy", "")) != "hero_task_state_live_persist_no_save_migration":
+	if String(evidence.get("save_policy", "")) != "raid_hosts_from_old_saves_become_ai_heroes":
 		_fail("Live strategic AI route progression save policy changed: %s" % evidence)
 		return false
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
@@ -814,21 +804,17 @@ func _assert_live_ai_town_retake_assault(live_retake_case: Dictionary) -> bool:
 	if String(summary.get("selector_target_kind", "")) != "town" or String(summary.get("selector_target_id", "")) != "duskfen_bastion":
 		_fail("Live strategic AI town-retake selector did not prefer Duskfen: %s" % summary)
 		return false
-	if int(summary.get("target_assignment_event_count", 0)) < 1:
-		_fail("Live strategic AI town-retake assault is missing assignment event evidence: %s" % summary)
+	if String(summary.get("battle_attacker_id", "")) != "headless_live_retake_duskfen_bastion":
+		_fail("Live strategic AI town-retake battle was not started by the enemy hero: %s" % summary)
 		return false
 	if String(summary.get("battle_context_type", "")) != "town_defense" or String(summary.get("battle_town_id", "")) != "duskfen_bastion":
 		_fail("Live strategic AI town-retake assault did not queue a Duskfen town-defense battle: %s" % summary)
 		return false
 	var raid: Dictionary = evidence.get("raid", {}) if evidence.get("raid", {}) is Dictionary else {}
-	if String(raid.get("target_kind", "")) != "town" or String(raid.get("target_placement_id", "")) != "duskfen_bastion":
-		_fail("Live strategic AI town-retake raid did not target Duskfen: %s" % raid)
+	if not bool(raid.get("ai_hero", false)):
+		_fail("Live strategic AI town-retake host did not play as an enemy hero: %s" % raid)
 		return false
-	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
-	if "ai_target_assigned" not in event_types:
-		_fail("Live strategic AI town-retake assault missing assignment event type evidence: %s" % event_types)
-		return false
-	if String(evidence.get("save_policy", "")) != "hero_task_state_live_persist_no_save_migration":
+	if String(evidence.get("save_policy", "")) != "raid_hosts_from_old_saves_become_ai_heroes":
 		_fail("Live strategic AI town-retake assault save policy changed: %s" % evidence)
 		return false
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
@@ -852,8 +838,8 @@ func _assert_live_ai_raid_assault_grouping(live_grouping_case: Dictionary) -> bo
 	if int(summary.get("leader_strength_after", 0)) < int(summary.get("leader_strength_before", 0)) + int(summary.get("support_strength_before", 0)):
 		_fail("Live strategic AI raid assault grouping did not transfer support strength: %s" % summary)
 		return false
-	if int(summary.get("grouping_event_count", 0)) < 1:
-		_fail("Live strategic AI raid assault grouping is missing ai_raid_grouped evidence: %s" % summary)
+	if String(summary.get("joined_column_id", "")) != String(summary.get("support_id", "-")):
+		_fail("Live strategic AI raid assault grouping did not record the column joining the hero: %s" % summary)
 		return false
 	if String(summary.get("battle_context_type", "")) != "town_defense" or String(summary.get("battle_town_id", "")) != "duskfen_bastion":
 		_fail("Live strategic AI raid assault grouping did not continue into Duskfen town defense: %s" % summary)
@@ -862,11 +848,7 @@ func _assert_live_ai_raid_assault_grouping(live_grouping_case: Dictionary) -> bo
 	if String(summary.get("support_id", "")) not in resolved:
 		_fail("Live strategic AI raid assault grouping did not resolve the support host: %s" % evidence)
 		return false
-	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
-	if "ai_raid_grouped" not in event_types:
-		_fail("Live strategic AI raid assault grouping missing event type evidence: %s" % event_types)
-		return false
-	if String(evidence.get("save_policy", "")) != "hero_task_state_live_persist_no_save_migration":
+	if String(evidence.get("save_policy", "")) != "raid_hosts_from_old_saves_become_ai_heroes":
 		_fail("Live strategic AI raid assault grouping save policy changed: %s" % evidence)
 		return false
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
@@ -887,11 +869,11 @@ func _assert_live_ai_turn_execution(live_ai_case: Dictionary) -> bool:
 	if int(summary.get("resource_fronts_seized", 0)) < 2:
 		_fail("Live strategic AI turn execution did not seize both resource fronts: %s" % summary)
 		return false
-	if int(summary.get("target_assignment_event_count", 0)) < 2 or int(summary.get("site_seizure_event_count", 0)) < 2:
-		_fail("Live strategic AI turn execution is missing assignment/seizure event evidence: %s" % summary)
+	if int(summary.get("site_seizure_event_count", 0)) < 2:
+		_fail("Live strategic AI turn execution is missing seizure event evidence: %s" % summary)
 		return false
-	if not bool(summary.get("reserved_unique_targets", false)):
-		_fail("Live strategic AI turn execution did not prove companion target reservation: %s" % summary)
+	if not bool(summary.get("private_hero_goals", false)):
+		_fail("Live strategic AI turn execution heroes exposed raid-style targets: %s" % summary)
 		return false
 	var controllers_after: Dictionary = evidence.get("controllers_after", {}) if evidence.get("controllers_after", {}) is Dictionary else {}
 	if String(controllers_after.get("river_free_company", "")) != "faction_mireclaw" or String(controllers_after.get("river_signal_post", "")) != "faction_mireclaw":
@@ -899,13 +881,10 @@ func _assert_live_ai_turn_execution(live_ai_case: Dictionary) -> bool:
 		return false
 	var primary_raid: Dictionary = evidence.get("primary_raid", {}) if evidence.get("primary_raid", {}) is Dictionary else {}
 	var companion_raid: Dictionary = evidence.get("companion_raid", {}) if evidence.get("companion_raid", {}) is Dictionary else {}
-	if not _raid_completed_resource_target(primary_raid, "river_free_company"):
-		_fail("Live strategic AI primary raid did not arrive at Free Company: %s" % primary_raid)
+	if not bool(primary_raid.get("ai_hero", false)) or not bool(companion_raid.get("ai_hero", false)):
+		_fail("Live strategic AI turn execution hosts did not play as enemy heroes: %s" % [primary_raid, companion_raid])
 		return false
-	if not _raid_completed_resource_target(companion_raid, "river_signal_post"):
-		_fail("Live strategic AI companion raid did not arrive at Signal Post: %s" % companion_raid)
-		return false
-	if String(evidence.get("save_policy", "")) != "hero_task_state_live_persist_no_save_migration":
+	if String(evidence.get("save_policy", "")) != "raid_hosts_from_old_saves_become_ai_heroes":
 		_fail("Live strategic AI turn execution save policy changed: %s" % evidence)
 		return false
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
@@ -913,16 +892,6 @@ func _assert_live_ai_turn_execution(live_ai_case: Dictionary) -> bool:
 		_fail("Live strategic AI turn execution leaked internal public-event tokens: %s" % leak_tokens)
 		return false
 	return true
-
-func _raid_completed_resource_target(raid: Dictionary, placement_id: String) -> bool:
-	if String(raid.get("target_kind", "")) == "resource" \
-			and String(raid.get("target_placement_id", "")) == placement_id \
-			and bool(raid.get("arrived", false)):
-		return true
-	return (
-		String(raid.get("previous_completed_target_kind", "")) == "resource"
-		and String(raid.get("previous_completed_target_placement_id", "")) == placement_id
-	)
 
 func _resource_abs_sum(resources: Dictionary) -> int:
 	var total := 0
