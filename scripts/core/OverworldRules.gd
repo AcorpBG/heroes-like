@@ -59,6 +59,8 @@ const ENCOUNTER_ARMY_DETAIL_GROUP_LIMIT := 4
 static var _normalized_read_scope_session_id := ""
 static var _normalized_read_scope_depth := 0
 static var _normalized_read_scope_cache: Dictionary = {}
+# [town dictionary, content hash, content digest] seen in the current read scope.
+static var _normalized_read_scope_town_digests: Array = []
 static var _last_normalized_read_scope_cache_profile: Dictionary = {}
 static var _runtime_normalized_signatures: Dictionary = {}
 static var _active_town_visit_indexes: Dictionary = {}
@@ -471,6 +473,7 @@ static func begin_normalized_read_scope(session: SessionStateStoreScript.Session
 		_normalized_read_scope_session_id = String(session.session_id)
 		_normalized_read_scope_depth = 1
 		_normalized_read_scope_cache = {}
+		_normalized_read_scope_town_digests = []
 		_last_normalized_read_scope_cache_profile = {"hits": 0, "misses": 0, "entries": 0}
 		return
 	if String(session.session_id) == _normalized_read_scope_session_id:
@@ -489,6 +492,7 @@ static func end_normalized_read_scope(session: SessionStateStoreScript.SessionDa
 		_normalized_read_scope_depth = 0
 		_normalized_read_scope_session_id = ""
 		_normalized_read_scope_cache = {}
+		_normalized_read_scope_town_digests = []
 
 static func validation_last_normalized_read_scope_cache_profile() -> Dictionary:
 	return _last_normalized_read_scope_cache_profile.duplicate(true)
@@ -506,7 +510,34 @@ static func _town_read_scope_cache_key(
 		return ""
 	# Nested save-summary reads can inspect a different snapshot with the same
 	# persisted session id and town but different sites, threats or current day.
-	return "%d|%s|%s|%s" % [session.get_instance_id(), kind, JSON.stringify(town).sha256_text(), extra]
+	return "%d|%s|%s|%s" % [session.get_instance_id(), kind, _read_scope_town_digest(town), extra]
+
+## Read-scope key for a town value that depends only on the town record and
+## authored content, never on the rest of the session (build status, seeded
+## growth). Empty outside a normalized read scope.
+static func _town_content_read_scope_key(kind: String, town: Dictionary, extra: String = "") -> String:
+	if _normalized_read_scope_depth <= 0:
+		return ""
+	return "content|%s|%s|%s" % [kind, _read_scope_town_digest(town), extra]
+
+## Content digest of a town for read-scope cache keys. A town screen refresh
+## asks for one town's keys hundreds of times; the JSON digest is computed once
+## per town dictionary and reused while that same dictionary's content hash is
+## unchanged. Copies and edited towns get their own digest.
+static func _read_scope_town_digest(town: Dictionary) -> String:
+	var content_hash := town.hash()
+	for entry in _normalized_read_scope_town_digests:
+		if is_same(entry[0], town):
+			if int(entry[1]) == content_hash:
+				return String(entry[2])
+			var refreshed := JSON.stringify(town).sha256_text()
+			entry[1] = content_hash
+			entry[2] = refreshed
+			return refreshed
+	var digest := JSON.stringify(town).sha256_text()
+	if _normalized_read_scope_town_digests.size() < 64:
+		_normalized_read_scope_town_digests.append([town, content_hash, digest])
+	return digest
 
 static func _town_read_scope_cache_has(key: String) -> bool:
 	if key == "" or not _normalized_read_scope_cache.has(key):
@@ -2921,8 +2952,11 @@ static func build_in_active_town(session: SessionStateStoreScript.SessionData, b
 		" ".join(message_parts)
 	)
 
-static func recruit_in_active_town(session: SessionStateStoreScript.SessionData, unit_id: String, requested_count: int = -1) -> Dictionary:
-	normalize_overworld_state(session)
+static func recruit_in_active_town(session: SessionStateStoreScript.SessionData, unit_id: String, requested_count: int = -1, runtime_normalized: bool = false) -> Dictionary:
+	if runtime_normalized:
+		normalize_overworld_state_for_runtime(session)
+	else:
+		normalize_overworld_state(session)
 	var town_result := _find_active_town(session)
 	if int(town_result.get("index", -1)) < 0:
 		return {"ok": false, "message": "No town is available for recruitment here."}
@@ -6040,7 +6074,8 @@ static func _dispatch_context_brief(session: SessionStateStoreScript.SessionData
 			return "Open ground at %d,%d on %s" % [pos.x, pos.y, terrain]
 
 static func town_weekly_growth(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
-	var cache_key := _town_read_scope_cache_key(session, "weekly_growth", town)
+	# Without a session the growth is the town's seeded growth alone.
+	var cache_key := _town_read_scope_cache_key(session, "weekly_growth", town) if session != null else _town_content_read_scope_key("seeded_weekly_growth", town)
 	if _town_read_scope_cache_has(cache_key):
 		return _town_read_scope_cache_get(cache_key)
 	var result := _effective_player_town_weekly_growth(session, town) if session != null and String(town.get("owner", "neutral")) == "player" else _town_weekly_growth(town, session)
@@ -6800,6 +6835,25 @@ static func _player_hero_states(session: SessionStateStoreScript.SessionData) ->
 	return heroes
 
 static func get_town_build_status(town: Dictionary, building_id: String, current_day: int = -1) -> Dictionary:
+	# Town screens check every building's status many times per refresh.
+	var cache_key := _town_content_read_scope_key("build_status", town, "%s|%d" % [building_id, current_day])
+	if _town_read_scope_cache_has(cache_key):
+		return _build_status_copy(_normalized_read_scope_cache[cache_key])
+	var status := _town_build_status(town, building_id, current_day)
+	if cache_key != "":
+		_normalized_read_scope_cache[cache_key] = _build_status_copy(status)
+		_last_normalized_read_scope_cache_profile["entries"] = _normalized_read_scope_cache.size()
+	return status
+
+## A build status as get_town_build_status returns it: its own dictionary and
+## blocker list, sharing the authored building record like the original.
+static func _build_status_copy(status: Dictionary) -> Dictionary:
+	var copy := status.duplicate()
+	if copy.get("blockers", null) is Array:
+		copy["blockers"] = (copy["blockers"] as Array).duplicate()
+	return copy
+
+static func _town_build_status(town: Dictionary, building_id: String, current_day: int = -1) -> Dictionary:
 	var building := ContentService.get_building(building_id)
 	if building.is_empty():
 		return {

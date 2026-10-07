@@ -197,7 +197,12 @@ func _summary_exceeds_width() -> bool:
 
 func _rebuild_popup() -> void:
 	var popup: PopupMenu = get_popup()
-	popup.clear()
+	# Rebuilding the popup re-lays out its window. While it lists the same
+	# resources with the same icons, only the amounts change: update in place.
+	var in_place := _popup_lists_current_resources(popup)
+	if not in_place:
+		popup.clear()
+	var row := 0
 	for resource_id_value in OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS:
 		var resource_id := String(resource_id_value)
 		var definition := OverworldRules.resource_definition(resource_id)
@@ -214,12 +219,16 @@ func _rebuild_popup() -> void:
 			var loaded_icon = load(icon_path)
 			if loaded_icon is Texture2D:
 				icon_texture = loaded_icon
-		var index := popup.item_count
-		if icon_texture != null:
-			popup.add_icon_item(icon_texture, item_text, index)
-		else:
-			popup.add_item(item_text, index)
-		popup.set_item_disabled(index, true)
+		var index := row if in_place else popup.item_count
+		row += 1
+		if not in_place:
+			if icon_texture != null:
+				popup.add_icon_item(icon_texture, item_text, index)
+			else:
+				popup.add_item(item_text, index)
+			popup.set_item_disabled(index, true)
+		elif popup.get_item_text(index) != item_text:
+			popup.set_item_text(index, item_text)
 		popup.set_item_tooltip(index, "%s: %d" % [display_name, amount])
 		popup.set_item_metadata(index, {
 			"resource_id": resource_id,
@@ -228,6 +237,26 @@ func _rebuild_popup() -> void:
 			"icon_path": icon_path if icon_texture != null else "",
 		})
 	_sync_inline_icons()
+
+
+## True when the popup already lists exactly the resources a rebuild would
+## list, in order and with the same icons.
+func _popup_lists_current_resources(popup: PopupMenu) -> bool:
+	var index := 0
+	for resource_id_value in OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS:
+		var resource_id := String(resource_id_value)
+		var definition := OverworldRules.resource_definition(resource_id)
+		if definition.is_empty() or String(definition.get("display_name", "")).strip_edges() == "":
+			continue
+		if index >= popup.item_count:
+			return false
+		var metadata: Variant = popup.get_item_metadata(index)
+		var icon_path := OverworldRules.resource_icon_path(resource_id)
+		var icon: Texture2D = load(icon_path) as Texture2D if icon_path != "" else null
+		if not (metadata is Dictionary) or String(metadata.get("resource_id", "")) != resource_id or popup.get_item_icon(index) != icon:
+			return false
+		index += 1
+	return index == popup.item_count
 
 
 func _on_popup_about_to_show() -> void:

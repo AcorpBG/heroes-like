@@ -16,6 +16,13 @@ func _ready() -> void:
 
 
 func set_hero_id(hero_id: String) -> bool:
+	# Screens re-apply the same hero on every refresh. Clearing first would drop
+	# the last reference to the portrait and reload it from disk each time.
+	if hero_id != "" and hero_id == _hero_id and texture != null:
+		if String(ContentService.get_hero_art(hero_id).get("portrait", "")) == _portrait_path:
+			tooltip_text = "%s portrait" % String(ContentService.get_hero(hero_id).get("name", hero_id))
+			visible = true
+			return true
 	_clear_portrait()
 	if hero_id == "":
 		return false

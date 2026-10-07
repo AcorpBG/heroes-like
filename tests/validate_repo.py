@@ -31794,7 +31794,7 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
     shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
     ensure_script_functions(shell_text, errors, "TownShell.gd", ["_record_town_action_presentation"])
     for required_token in (
-		'_record_town_action_presentation("recruit", full_action_id, action, result, before)',
+		'_record_town_action_presentation("recruit", full_action_id, action, result, before, after)',
         'if lane not in ["build", "recruit", "response", "market", "study", "tavern", "specialty", "transfer"] or not bool(result.get("ok", false)):',
         'var unit_id := action_id.trim_prefix("recruit:")',
         'var after := TownRules.town_action_consequence_signature(_session)',
@@ -31807,7 +31807,7 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
     ):
         ensure(required_token in shell_text, errors, f"TownShell.gd is missing exact recruitment-presentation publication: {required_token}")
     recruit_handler_match = re.search(
-        r"func _on_recruit_action_pressed\(action_id: String, count: int = -1\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+        r"func _commit_recruit_order\(action_id: String, count: int, refresh_popout: bool\) -> void:\n(?P<body>.*?)(?=\nfunc )",
         shell_text,
         re.DOTALL,
     )
@@ -31815,12 +31815,12 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
     if recruit_handler_match is not None:
         recruit_handler = recruit_handler_match.group("body")
         recruit_order = [
-            recruit_handler.find("var result := TownRules.recruit_active_town(_session, action_id, count)"),
-            recruit_handler.find('_record_town_action_result("recruit", full_action_id, action, result, before)'),
+            recruit_handler.find("var result := TownRules.recruit_active_town(_session, action_id, count, true)"),
+            recruit_handler.find('_record_town_action_result("recruit", full_action_id, action, result, before, after)'),
             recruit_handler.find('_invalidate_active_town_entity_cache("recruit", ["town", "economy", "hero_army"])'),
             recruit_handler.find("if _handle_session_resolution():"),
             recruit_handler.find("\t_refresh()"),
-            recruit_handler.find('_record_town_action_presentation("recruit", full_action_id, action, result, before)'),
+            recruit_handler.find('_record_town_action_presentation("recruit", full_action_id, action, result, before, after)'),
         ]
         ensure(
             all(index >= 0 for index in recruit_order) and recruit_order == sorted(recruit_order),

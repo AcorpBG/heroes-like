@@ -32,6 +32,8 @@ var _model: Dictionary = {}
 var _resources: Dictionary = {}
 var _guild_level := 0
 var _recruit_cards: Dictionary = {}
+var _recruit_note: Label
+var _validation_in_place_refresh_count := 0
 var _hire_buttons: Dictionary = {}
 var _service_buttons: Dictionary = {}
 var _spell_cards: Dictionary = {}
@@ -119,6 +121,8 @@ func _notification(what: int) -> void:
 ## building already shown; refreshes after an order keep them.
 func configure(model: Dictionary, fresh: bool = false) -> void:
 	var same_building := String(model.get("building_id", "")) == String(_model.get("building_id", ""))
+	if same_building and not fresh and _refresh_dwelling_in_place(model):
+		return
 	_model = model.duplicate(true)
 	_resources = model.get("resources", {}) if model.get("resources", {}) is Dictionary else {}
 	if not same_building or fresh:
@@ -135,6 +139,71 @@ func configure(model: Dictionary, fresh: bool = false) -> void:
 		_effects_box.add_child(_chip(String(line), "gold"))
 	_effects_box.visible = _effects_box.get_child_count() > 0
 	_rebuild_body()
+
+## A recruit in an open dwelling popout changes the reserve, the stores and
+## what they can pay for. Update the recruit cards in place, redraw only the
+## upgrade line when its order or the stores its cost row shows changed, and
+## keep every other section, exactly as a full redraw would show them.
+## Anything else redraws the whole body.
+func _refresh_dwelling_in_place(model: Dictionary) -> bool:
+	if String(model.get("kind", "")) != "dwelling" or String(_model.get("kind", "")) != "dwelling":
+		return false
+	var resources: Dictionary = model.get("resources", {}) if model.get("resources", {}) is Dictionary else {}
+	for key in model.keys():
+		if String(key) not in ["resources", "recruit", "upgrade"] and model[key] != _model.get(key):
+			return false
+	if model.size() != _model.size():
+		return false
+	var upgrade: Dictionary = model.get("upgrade", {}) if model.get("upgrade", {}) is Dictionary else {}
+	var old_upgrade: Dictionary = _model.get("upgrade", {}) if _model.get("upgrade", {}) is Dictionary else {}
+	var redraw_upgrade := upgrade != old_upgrade
+	if bool(upgrade.get("has_line", false)) and not bool(upgrade.get("complete", false)):
+		var cost: Dictionary = upgrade.get("cost", {}) if upgrade.get("cost", {}) is Dictionary else {}
+		redraw_upgrade = redraw_upgrade or _cost_view(cost, resources) != _cost_view(cost, _resources)
+	# Only a line in the side column redraws on its own.
+	if redraw_upgrade and not (bool(upgrade.get("has_line", false)) and bool(old_upgrade.get("has_line", false))):
+		return false
+	var recruit: Dictionary = model.get("recruit", {}) if model.get("recruit", {}) is Dictionary else {}
+	var old_recruit: Dictionary = _model.get("recruit", {}) if _model.get("recruit", {}) is Dictionary else {}
+	if recruit.get("troop_upgrades", []) != old_recruit.get("troop_upgrades", []) or recruit.get("line_unit_ids", []) != old_recruit.get("line_unit_ids", []):
+		return false
+	var units: Array = recruit.get("units", []) if recruit.get("units", []) is Array else []
+	var old_units: Array = old_recruit.get("units", []) if old_recruit.get("units", []) is Array else []
+	if units.is_empty() or units.size() != old_units.size() or _recruit_cards.size() != units.size() or _recruit_note == null:
+		return false
+	for index in range(units.size()):
+		var unit_id := String(units[index].get("unit_id", ""))
+		var card = _recruit_cards.get(unit_id)
+		if unit_id != String(old_units[index].get("unit_id", "")) or card == null or not is_instance_valid(card) or card.is_queued_for_deletion() or units[index].get("unit_cost", {}) != old_units[index].get("unit_cost", {}):
+			return false
+	_model = model.duplicate(true)
+	_resources = resources
+	var destination := String(recruit.get("destination", ""))
+	_recruit_note.text = destination
+	_recruit_note.tooltip_text = destination
+	_recruit_note.visible = destination != ""
+	for unit in units:
+		_recruit_cards[String(unit.get("unit_id", ""))].update_state(unit, _resources)
+	if redraw_upgrade:
+		_clear(_side)
+		_upgrade_button = null
+		_trade_button = null
+		_build_upgrade()
+		controls_changed.emit()
+	_validation_in_place_refresh_count += 1
+	return true
+
+## What a cost row draws for these stores: each amount, and the stock beside
+## the amounts the stores cannot pay.
+func _cost_view(cost: Dictionary, resources: Dictionary) -> Array:
+	var view := []
+	for resource_id in cost:
+		var short := int(resources.get(resource_id, 0)) < int(cost[resource_id])
+		view.append([String(resource_id), int(cost[resource_id]), short, int(resources.get(resource_id, 0)) if short else 0])
+	return view
+
+func validation_in_place_refresh_count() -> int:
+	return _validation_in_place_refresh_count
 
 func model() -> Dictionary:
 	return _model
@@ -157,6 +226,7 @@ func _rebuild_body() -> void:
 	_clear(_body)
 	_clear(_side)
 	_recruit_cards.clear()
+	_recruit_note = null
 	_hire_buttons.clear()
 	_service_buttons.clear()
 	_spell_cards.clear()
@@ -217,6 +287,8 @@ func _build_recruitment() -> void:
 	var recruit: Dictionary = _model.get("recruit", {})
 	var section := _section("Recruit", String(recruit.get("destination", "")))
 	section.name = "Recruitment"
+	var header := section.get_child(0)
+	_recruit_note = header.get_child(1) as Label if header.get_child_count() > 1 else null
 	var units: Array = recruit.get("units", [])
 	if units.is_empty():
 		section.add_child(_label("No creatures wait here yet. Weekly growth arrives at the start of each week.", "muted", 14))

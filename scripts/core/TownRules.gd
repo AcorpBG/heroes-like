@@ -709,7 +709,8 @@ static func build_town_action_recap(
 	action_id: String,
 	action: Dictionary,
 	result: Dictionary,
-	before: Dictionary
+	before: Dictionary,
+	after_signature: Dictionary = {}
 ) -> Dictionary:
 	var message := String(result.get("message", ""))
 	if not bool(result.get("ok", false)):
@@ -720,7 +721,8 @@ static func build_town_action_recap(
 			"message": message,
 			"text": message,
 		}
-	var after := town_action_consequence_signature(session)
+	# A caller that already read the post-order signature passes it in.
+	var after := after_signature if not after_signature.is_empty() else town_action_consequence_signature(session)
 	var happened := _town_action_happened_line(lane, action_id, action, message)
 	var affected := _town_action_affected_line(lane, action_id, action, before, after)
 	var matters := _town_action_matters_line(session, lane, before, after)
@@ -1228,6 +1230,8 @@ static func get_build_catalog(session: SessionStateStoreScript.SessionData) -> A
 	return catalog
 
 static func get_muster_catalog(session: SessionStateStoreScript.SessionData) -> Array:
+	if _read_cache_has(session, "muster_catalog"):
+		return _read_cache_get(session, "muster_catalog")
 	var town := get_active_town(session)
 	if town.is_empty():
 		return []
@@ -1292,6 +1296,7 @@ static func get_muster_catalog(session: SessionStateStoreScript.SessionData) -> 
 		}, true)
 		catalog.append(row)
 	catalog.sort_custom(_muster_catalog_row_less)
+	_read_cache_store(session, "muster_catalog", catalog)
 	return catalog
 
 static func _muster_catalog_row_less(left: Dictionary, right: Dictionary) -> bool:
@@ -1432,8 +1437,10 @@ static func switch_active_hero_at_town(session: SessionStateStoreScript.SessionD
 	teach_visiting_heroes(session, town)
 	return _finalize_town_result(session, true, String(result.get("message", "")))
 
-static func recruit_active_town(session: SessionStateStoreScript.SessionData, unit_id: String, requested_count: int = -1) -> Dictionary:
-	return OverworldRulesScript.recruit_in_active_town(session, unit_id, requested_count)
+## `runtime_normalized`: the caller (the Town screen) has just runtime-normalized
+## the session in its order preflight, so the order skips a second full pass.
+static func recruit_active_town(session: SessionStateStoreScript.SessionData, unit_id: String, requested_count: int = -1, runtime_normalized: bool = false) -> Dictionary:
+	return OverworldRulesScript.recruit_in_active_town(session, unit_id, requested_count, runtime_normalized)
 
 static func perform_market_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
 	var town := get_active_town(session)
