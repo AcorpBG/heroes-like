@@ -45897,7 +45897,7 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
         ensure(required_token in shell_text, errors, f"OverworldShell.gd is missing hero-route locomotion token {required_token}")
     ensure(shell_text.count("func _record_hero_movement_presentation") == 1, errors, "OverworldShell.gd must define one hero movement presentation producer")
     record_block = gdscript_function_block(shell_text, "_record_hero_movement_presentation")
-    ensure('not bool(result.get("ok", false)) or route != ""' in record_block, errors, "Hero locomotion must fail closed outside successful non-routing field movement")
+    ensure('not bool(result.get("ok", false)) or route not in ["", "battle"]' in record_block, errors, "Hero locomotion must fail closed outside successful field movement (plain moves and walks that end in battle)")
     ensure('route_tiles.size() != route_steps.size() + 1' in record_block, errors, "Hero locomotion must require the exact origin plus resolved step count")
     ensure(record_block.find("cue_playback_policy_for_event") < record_block.find("_hero_movement_presentation_serial += 1"), errors, "Hero locomotion must resolve the authored cue policy before issuing a presentation serial")
     ensure("session.overworld" not in record_block and "session.flags" not in record_block, errors, "Hero locomotion presentation must not mutate session authority")
@@ -72388,7 +72388,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             ensure(required_token in text, errors, f"{path.name} is missing system presentation-audio proof: {required_token}")
 
     for function_name, cue_id in (("_record_hero_movement_presentation", "audio_placeholder_map_step"), ("_record_route_blocked_presentation", "audio_placeholder_invalid_route")):
-        match = re.search(rf"func {function_name}\(.*?\) -> void:\n(?P<body>.*?)(?=\nfunc )", overworld_shell_text, re.DOTALL)
+        match = re.search(rf"func {function_name}\(.*?\) -> (?:void|bool):\n(?P<body>.*?)(?=\nfunc )", overworld_shell_text, re.DOTALL)
         ensure(match is not None, errors, f"Could not isolate {function_name} navigation-audio ownership")
         if match is not None:
             body = match.group("body")

@@ -306,6 +306,14 @@ var _last_action_recap: Dictionary = {}
 var _last_route_execution: Dictionary = {}
 var _hero_movement_presentation: Dictionary = {}
 var _hero_movement_presentation_serial := 0
+# A move that ends in combat plays the hero's walk before the battle opens.
+const BATTLE_APPROACH_ARRIVAL_BEAT_SEC := 0.15
+const BATTLE_APPROACH_MIN_HOLD_SEC := 0.25
+var _battle_approach: Dictionary = {}
+var _last_battle_approach: Dictionary = {}
+var _battle_approach_serial := 0
+var _battle_approach_input_blocker: Control
+var _validation_battle_approach_presentation_mode := ""
 var _object_focus_presentation: Dictionary = {}
 var _object_resolution_presentation: Dictionary = {}
 var _object_resolution_presentation_serial := 0
@@ -645,6 +653,12 @@ func _input(event: InputEvent) -> void:
 		return
 	if is_instance_valid(_hero_exchange) and _hero_exchange.visible:
 		return
+	if not _battle_approach.is_empty():
+		if event.is_action_pressed("ui_cancel") or event.is_action_pressed("ui_accept"):
+			_complete_battle_approach(int(_battle_approach.get("serial", -1)), "skipped")
+		if not (event is InputEventMouse):
+			get_viewport().set_input_as_handled()
+		return
 	if is_instance_valid(_turn_presenter):
 		if event.is_action_pressed("ui_cancel") or event.is_action_pressed("ui_accept"): _turn_presenter.skip_playback()
 		if not (event is InputEventMouse): get_viewport().set_input_as_handled()
@@ -968,6 +982,8 @@ func _overworld_gameplay_movement_blocked_reason() -> String:
 		return "missing_session"
 	if _session.game_state != "overworld":
 		return "not_overworld"
+	if not _battle_approach.is_empty():
+		return "battle_approach"
 	if _active_drawer != "":
 		return "drawer_open"
 	if _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():
@@ -2467,7 +2483,7 @@ func _visit_selected_town() -> bool:
 	return true
 
 func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
-	if not _viewing_hero_level():
+	if not _viewing_hero_level() or not _battle_approach.is_empty():
 		return
 	var hero_pos_before := OverworldRules.hero_position(_session)
 	var debug_started := _debug_begin_path_command("move", hero_pos_before + Vector2i(dx, dy))
@@ -2486,7 +2502,7 @@ func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_sta
 		var route_steps = result.get("route_steps", [])
 		if route_steps is Array:
 			_last_route_execution["route_steps"] = route_steps.duplicate(true)
-	_record_hero_movement_presentation(result, route)
+	var walk_recorded := _record_hero_movement_presentation(result, route)
 	_record_object_resolution_presentation(result, route)
 	if route == "battle":
 		_session.flags["last_action"] = "entered_battle"
@@ -2504,6 +2520,12 @@ func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_sta
 		_dismiss_command_briefing()
 		if not preserve_selection:
 			_select_hero_tile()
+	# The rules already moved the hero and spent the route's movement. Let the
+	# player watch that walk end at the enemy before the battle screen opens.
+	if route == "battle" and walk_recorded and _begin_battle_approach("movement_result"):
+		if debug_started:
+			_debug_finish_path_command()
+		return
 	var resolution := _handle_session_resolution()
 	if bool(resolution.get("handled", false)):
 		if debug_started:
@@ -2542,7 +2564,7 @@ func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_sta
 		_debug_finish_path_command()
 
 func _move_toward_selected_tile() -> void:
-	if not _viewing_hero_level():
+	if not _viewing_hero_level() or not _battle_approach.is_empty():
 		return
 	var debug_started := _debug_begin_path_command("full_route_execute", _selected_tile)
 	var route_lookup_started_usec := _debug_phase_begin("route_execution_lookup")
@@ -3276,20 +3298,21 @@ func _on_native_destination_canceled() -> void:
 	FrontierVisualKit.hide_exclusive_dialog(_native_destination_dialog)
 	call_deferred("_configure_overworld_keyboard_focus", true)
 
-func _record_hero_movement_presentation(result: Dictionary, route: String) -> void:
-	if not bool(result.get("ok", false)) or route != "" or result.has("native_transit"):
-		return
+func _record_hero_movement_presentation(result: Dictionary, route: String) -> bool:
+	# A walk that ends in combat is still a walk; the battle waits for it.
+	if not bool(result.get("ok", false)) or route not in ["", "battle"] or result.has("native_transit"):
+		return false
 	var route_execution: Dictionary = result.get("route_execution", {}) if result.get("route_execution", {}) is Dictionary else {}
 	var route_tiles: Array = route_execution.get("reachable_tiles", []) if route_execution.get("reachable_tiles", []) is Array else []
 	var route_steps: Array = result.get("route_steps", []) if result.get("route_steps", []) is Array else []
 	if route_steps.is_empty() or route_tiles.size() != route_steps.size() + 1:
-		return
+		return false
 	var policy: Dictionary = AnimationCueCatalogScript.cue_playback_policy_for_event(
 		"overworld_hero_move",
 		SettingsService.animation_preferences()
 	)
 	if policy.is_empty():
-		return
+		return false
 	_hero_movement_presentation_serial += 1
 	var max_duration_ms: int = maxi(0, int(policy.get("max_duration_ms", 700)))
 	var duration_scale := maxf(0.0, float(policy.get("duration_scale", 1.0)))
@@ -3308,6 +3331,76 @@ func _record_hero_movement_presentation(result: Dictionary, route: String) -> vo
 		"duration_ms": int(round(float(authored_duration_ms) * duration_scale)),
 		"max_duration_ms": max_duration_ms,
 	}
+	return true
+
+func _battle_approach_presentation_enabled() -> bool:
+	# Like end-turn playback, the march needs a display to be seen. Headless
+	# automation keeps the synchronous battle handoff unless a report opts in.
+	if _validation_battle_approach_presentation_mode != "":
+		return _validation_battle_approach_presentation_mode == "enabled"
+	return DisplayServer.get_name() != "headless"
+
+## Shows the walk the rules just executed, then opens the staged battle. The
+## hero, movement and battle payload are already committed; only the screen
+## change waits, and every order is blocked until it happens.
+func _begin_battle_approach(source: String) -> bool:
+	if _session == null or not is_inside_tree() or not _battle_approach_presentation_enabled():
+		return false
+	if _session.scenario_status != "in_progress" or _session.battle.is_empty():
+		return false
+	_battle_approach_serial += 1
+	var serial := _battle_approach_serial
+	var hero_pos := OverworldRules.hero_position(_session)
+	var movement: Dictionary = _session.overworld.get("movement", {}) if _session.overworld.get("movement", {}) is Dictionary else {}
+	_battle_approach = {
+		"serial": serial,
+		"source": source,
+		"started_msec": Time.get_ticks_msec(),
+		"hero_tile": {"x": hero_pos.x, "y": hero_pos.y},
+		"movement_current": int(movement.get("current", 0)),
+		"route_step_count": int(_hero_movement_presentation.get("route_step_count", 0)),
+	}
+	_set_battle_approach_input_blocker(true)
+	# Starts the walk on the map and drains the portrait bar with it.
+	_refresh_selected_route_preview("battle_approach")
+	var walk_sec: float = _map_view.hero_movement_remaining_sec() if _map_view.has_method("hero_movement_remaining_sec") else 0.0
+	var hold_sec := maxf(BATTLE_APPROACH_MIN_HOLD_SEC, walk_sec + BATTLE_APPROACH_ARRIVAL_BEAT_SEC)
+	_battle_approach["walk_ms"] = int(round(walk_sec * 1000.0))
+	_battle_approach["hold_ms"] = int(round(hold_sec * 1000.0))
+	get_tree().create_timer(hold_sec).timeout.connect(_complete_battle_approach.bind(serial, "walk_finished"))
+	return true
+
+func _complete_battle_approach(serial: int, reason: String) -> void:
+	if _battle_approach.is_empty() or int(_battle_approach.get("serial", -1)) != serial:
+		return
+	_last_battle_approach = _battle_approach.duplicate(true)
+	_last_battle_approach["completed_reason"] = reason
+	_last_battle_approach["elapsed_ms"] = Time.get_ticks_msec() - int(_battle_approach.get("started_msec", 0))
+	_battle_approach.clear()
+	_set_battle_approach_input_blocker(false)
+	if _session == null or not is_inside_tree():
+		return
+	var resolution := _handle_session_resolution()
+	if not bool(resolution.get("handled", false)):
+		_refresh()
+
+func _set_battle_approach_input_blocker(blocking: bool) -> void:
+	if _battle_approach_input_blocker == null:
+		if not blocking:
+			return
+		_battle_approach_input_blocker = Control.new()
+		_battle_approach_input_blocker.name = "BattleApproachInputBlocker"
+		_battle_approach_input_blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		_battle_approach_input_blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+		_battle_approach_input_blocker.focus_mode = Control.FOCUS_ALL
+		_battle_approach_input_blocker.z_index = 46
+		_battle_approach_input_blocker.tooltip_text = "Marching into battle. Press Escape or Enter to skip."
+		_battle_approach_input_blocker.accessibility_name = "Marching into battle"
+		add_child(_battle_approach_input_blocker)
+	_battle_approach_input_blocker.visible = blocking
+	if blocking:
+		_clear_controller_move_state()
+		_battle_approach_input_blocker.call_deferred("grab_focus")
 
 func _record_route_blocked_presentation(source_reason: String) -> void:
 	if not _tile_in_bounds(_selected_tile) or _selected_tile == OverworldRules.hero_position(_session):
@@ -4660,11 +4753,13 @@ func _refresh_live_route_status() -> Dictionary:
 	for button in _hero_actions.get_children():
 		if not (button is Button):
 			continue
-		var id := "switch_hero:%s" % String(button.get_meta("hero_id", ""))
+		var hero_id := String(button.get_meta("hero_id", ""))
+		var id := "switch_hero:%s" % hero_id
 		for action in actions:
 			if action is Dictionary and String(action.get("id", "")) == id:
-				button.tooltip_text = _hero_roster_tooltip(action)
+				_sync_hero_roster_readiness(button, hero_id, action)
 				break
+	_sync_next_movable_hero_state()
 	return forecast
 
 func _refresh_generated_opening_surfaces() -> void:
@@ -5168,8 +5263,6 @@ func _rebuild_hero_actions() -> void:
 		button.button_pressed = is_active
 		button.focus_mode = Control.FOCUS_ALL
 		button.accessibility_name = "%s hero %s" % ["Active" if is_active else "Select", hero_name]
-		button.accessibility_description = "Click to select and center. Double-click, Enter or controller Confirm to inspect army, artifacts, stats and specializations."
-		button.tooltip_text = _hero_roster_tooltip(action)
 		_style_roster_icon_button(button, "primary" if is_active else "secondary")
 		var art := ContentService.get_hero_art(hero_id)
 		var portrait_path := String(art.get("portrait", ""))
@@ -5180,20 +5273,89 @@ func _rebuild_hero_actions() -> void:
 		button.set_meta("visual_model", "ornamental_art_card")
 		button.set_meta("art_path", portrait_path)
 		button.set_meta("active", is_active)
-		var movement: Dictionary = hero.get("movement", {})
-		var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
-		Readiness.meter(button, "Movement", int(movement.get("current", 0)), int(movement.get("max", 0)), Color("89c276"), 10)
-		Readiness.meter(button, "Mana", int(mana.get("current", 0)), int(mana.get("max", 0)), Color("83b9e4"), 5)
-		var ready_text := "Movement %d / %d; mana %d / %d" % [int(movement.get("current", 0)), int(movement.get("max", 0)), int(mana.get("current", 0)), int(mana.get("max", 0))]
-		button.tooltip_text = ready_text + "\n" + button.tooltip_text
-		button.accessibility_description = ready_text + ". " + button.accessibility_description
+		_sync_hero_roster_readiness(button, hero_id, action)
 		retained.append(button)
 		displayed_hero_count += 1
 	_reconcile_roster_buttons(_hero_actions, retained)
 	_hero_roster_title_label.text = "Heroes  %d" % displayed_hero_count
-	if _next_movable_hero != null:
-		_next_movable_hero.disabled = not _session.overworld.get("player_heroes", []).any(func(hero): return int(hero.get("movement", {}).get("current", 0)) > 0)
-		_next_movable_hero.tooltip_text = "All owned heroes have spent their movement." if _next_movable_hero.disabled else "Select and center the next owned hero with movement remaining. Does not move them."
+	_sync_next_movable_hero_state()
+
+## Movement and mana as the player sees them now. The active hero's values live
+## on the session mirrors until commit_active_hero copies them into the roster.
+func _hero_roster_readiness(hero_id: String) -> Dictionary:
+	var hero := HeroCommandRules.hero_by_id(_session, hero_id)
+	var movement: Variant = hero.get("movement", {})
+	var spellbook: Variant = hero.get("spellbook", {})
+	if hero_id == String(_session.overworld.get("active_hero_id", "")):
+		movement = _session.overworld.get("movement", movement)
+		var active_hero: Variant = _session.overworld.get("hero", {})
+		if active_hero is Dictionary and active_hero.get("spellbook", {}) is Dictionary:
+			spellbook = active_hero.get("spellbook", {})
+	var mana: Variant = spellbook.get("mana", {}) if spellbook is Dictionary else {}
+	if not (movement is Dictionary):
+		movement = {}
+	if not (mana is Dictionary):
+		mana = {}
+	return {
+		"movement_current": int(movement.get("current", 0)),
+		"movement_max": int(movement.get("max", 0)),
+		"mana_current": int(mana.get("current", 0)),
+		"mana_max": int(mana.get("max", 0)),
+	}
+
+## Updates a roster portrait's meters and tooltip in place. Route-only refreshes
+## call this instead of rebuilding the roster, so movement spent on the map shows
+## without recreating buttons or stealing focus.
+func _sync_hero_roster_readiness(button: Button, hero_id: String, action: Dictionary) -> void:
+	var readiness := _hero_roster_readiness(hero_id)
+	var movement_current := int(readiness.get("movement_current", 0))
+	var movement_max := int(readiness.get("movement_max", 0))
+	var ready_text := "Movement %d / %d; mana %d / %d" % [movement_current, movement_max, int(readiness.get("mana_current", 0)), int(readiness.get("mana_max", 0))]
+	var tooltip := ready_text + "\n" + _hero_roster_tooltip(action)
+	var signature := "%s|%s" % [ready_text, tooltip]
+	if String(button.get_meta("roster_readiness_signature", "")) == signature:
+		_profile_add("hero_roster_readiness_reuses", 1)
+		return
+	_profile_add("hero_roster_readiness_updates", 1)
+	_set_roster_movement_meter(button, movement_current, movement_max, hero_id == String(_session.overworld.get("active_hero_id", "")))
+	Readiness.meter(button, "Mana", int(readiness.get("mana_current", 0)), int(readiness.get("mana_max", 0)), Color("83b9e4"), 5)
+	button.tooltip_text = tooltip
+	button.accessibility_description = "%s. Click to select and center. Double-click, Enter or controller Confirm to inspect army, artifacts, stats and specializations." % ready_text
+	button.set_meta("roster_readiness_signature", signature)
+	button.set_meta("movement_current", movement_current)
+
+## While the active hero's walk plays on the map, the movement bar drains one
+## step at a time with it instead of jumping before the hero has moved.
+func _set_roster_movement_meter(button: Button, current: int, maximum: int, follows_walk: bool) -> void:
+	var existing := button.get_node_or_null("Movement") as ProgressBar
+	var shown := existing.value if existing != null else -1.0
+	var bar := Readiness.meter(button, "Movement", current, maximum, Color("89c276"), 10)
+	var running: Variant = bar.get_meta("walk_drain") if bar.has_meta("walk_drain") else null
+	if running is Tween and running.is_valid():
+		running.kill()
+	bar.remove_meta("walk_drain")
+	var target := bar.value
+	var steps := int(_hero_movement_presentation.get("route_step_count", 0))
+	var walk_sec: float = _map_view.hero_movement_remaining_sec() if _map_view != null and _map_view.has_method("hero_movement_remaining_sec") else 0.0
+	if not follows_walk or shown <= target or steps <= 0 or walk_sec <= 0.0 or not is_inside_tree():
+		return
+	bar.value = shown
+	var drain := bar.create_tween()
+	for step in range(1, steps + 1):
+		drain.tween_interval(walk_sec / float(steps))
+		drain.tween_property(bar, "value", target if step == steps else maxf(target, shown - float(step)), 0.0)
+	bar.set_meta("walk_drain", drain)
+
+func _sync_next_movable_hero_state() -> void:
+	if _next_movable_hero == null:
+		return
+	var any_movement := false
+	for hero in _session.overworld.get("player_heroes", []):
+		if hero is Dictionary and int(_hero_roster_readiness(String(hero.get("id", ""))).get("movement_current", 0)) > 0:
+			any_movement = true
+			break
+	_next_movable_hero.disabled = not any_movement
+	_next_movable_hero.tooltip_text = "All owned heroes have spent their movement." if _next_movable_hero.disabled else "Select and center the next owned hero with movement remaining. Does not move them."
 
 func _existing_roster_button(container: Container, identity_key: String, identity: String) -> Button:
 	for child in container.get_children():
@@ -12331,6 +12493,22 @@ func validation_battle_entry_snapshot() -> Dictionary:
 		"game_state": _session.game_state,
 	}
 
+## Reports opt in to the battle approach march in headless runs.
+func validation_set_battle_approach_presentation_enabled(enabled: bool) -> void:
+	_validation_battle_approach_presentation_mode = "enabled" if enabled else "disabled"
+
+func validation_battle_approach_pending() -> bool:
+	return not _battle_approach.is_empty()
+
+func validation_battle_approach_snapshot() -> Dictionary:
+	return {
+		"pending": not _battle_approach.is_empty(),
+		"active": _battle_approach.duplicate(true),
+		"last": _last_battle_approach.duplicate(true),
+		"input_blocker_visible": _battle_approach_input_blocker != null and _battle_approach_input_blocker.visible,
+		"movement_blocked_reason": _overworld_gameplay_movement_blocked_reason(),
+	}
+
 func validation_request_manual_save() -> Dictionary:
 	_on_save_pressed(true)
 	return _manual_save_overwrite_dialog.validation_snapshot()
@@ -12921,6 +13099,9 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 
 	var next_step: Vector2i = path[1]
 	_try_move(next_step.x - hero_pos.x, next_step.y - hero_pos.y, true)
+	# Validation steps promise a settled result; skip the march to the battle.
+	if not _battle_approach.is_empty():
+		_complete_battle_approach(int(_battle_approach.get("serial", -1)), "validation_route_step")
 	var finish := OverworldRules.hero_position(_session)
 	return {
 		"ok": finish != hero_pos or String(_session.flags.get("last_action", "")) in ["visited_town", "entered_battle"],
