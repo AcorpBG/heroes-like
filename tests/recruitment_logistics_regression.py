@@ -181,9 +181,10 @@ func run_logistics()->void:
 		get_viewport().get_texture().get_image().save_png(out+"/garrison-muster-before.png")
 	var army_before:Dictionary=ui_session.overworld.army.duplicate(true)
 	var button:Button=null
+	# Muster recruit cards nest the Recruit button inside the card.
 	for row in shell._recruit_actions.get_children():
-		for child in row.get_child(0).get_children():
-			if child is Button and child.get_meta("catalog_entry_id","")=="recruit:"+ui_unit:button=child
+		for child in row.find_children("*","Button",true,false):
+			if child.get_meta("catalog_entry_id","")=="recruit:"+ui_unit:button=child
 	check(button!=null and not button.disabled,"live recruit button unavailable")
 	if button!=null and not button.disabled:button.pressed.emit()
 	for i in range(6):await get_tree().process_frame

@@ -14,30 +14,19 @@ signal service_requested(action_id: String)
 signal controls_changed
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
-const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const Board = preload("res://scripts/core/TownConstructionBoard.gd")
-const ConstructionScreenScript = preload("res://scenes/town/TownConstructionScreen.gd")
+const Widgets = preload("res://scenes/town/TownPanelWidgets.gd")
+const RecruitCardScript = preload("res://scenes/town/TownRecruitCard.gd")
 
-const ROLE_STYLES := {
-	"ranged": [Color(0.07, 0.15, 0.20, 0.94), Color(0.40, 0.72, 0.88), Color(0.76, 0.91, 1.0)],
-	"melee": [Color(0.22, 0.12, 0.07, 0.94), Color(0.88, 0.58, 0.34), Color(1.0, 0.86, 0.70)],
-}
 const STATUS_TONES := {"ready": "green", "trade": "teal", "short": "red", "locked": "muted", "tomorrow": "muted", "complete": "gold"}
-const SHORT_AMOUNT := Color(1.0, 0.56, 0.46)
-const ASSISTED_SHORT_AMOUNT := Color(1.0, 0.68, 0.28)
-const BETTER_STAT := Color(0.62, 0.90, 0.45)
-const ASSISTED_BETTER_STAT := Color(0.45, 0.80, 1.0)
 const SIDE_WIDTH := 372.0
 const SPELL_CARD_HEIGHT := 58.0
 const GRID_GAP := 8
 
 var _model: Dictionary = {}
 var _resources: Dictionary = {}
-var _texture_cache: Dictionary = {}
 var _guild_level := 0
-var _recruit_sliders: Dictionary = {}
-var _recruit_buttons: Dictionary = {}
-var _recruit_counts: Dictionary = {}
+var _recruit_cards: Dictionary = {}
 var _hire_buttons: Dictionary = {}
 var _service_buttons: Dictionary = {}
 var _spell_cards: Dictionary = {}
@@ -143,9 +132,7 @@ func painting_loaded() -> bool:
 func _rebuild_body() -> void:
 	_clear(_body)
 	_clear(_side)
-	_recruit_sliders.clear()
-	_recruit_buttons.clear()
-	_recruit_counts.clear()
+	_recruit_cards.clear()
 	_hire_buttons.clear()
 	_service_buttons.clear()
 	_spell_cards.clear()
@@ -202,186 +189,18 @@ func _build_recruitment() -> void:
 	if units.is_empty():
 		section.add_child(_label("No creatures wait here yet. Weekly growth arrives at the start of each week.", "muted", 14))
 	for card_value in units:
-		section.add_child(_recruit_card(card_value))
+		var card := RecruitCardScript.new()
+		card.configure(card_value, _resources)
+		card.recruit_requested.connect(func(unit_id: String, count: int): recruit_requested.emit(unit_id, count))
+		card.trade_requested.connect(func(): trade_requested.emit())
+		section.add_child(card)
+		_recruit_cards[card.unit_id] = card
 	var upgrades: Array = recruit.get("troop_upgrades", [])
 	if not upgrades.is_empty():
 		var upgrade_section := _section("Upgrade stationed troops")
 		upgrade_section.name = "TroopUpgrades"
 		for action in upgrades:
 			upgrade_section.add_child(_service_row(action))
-
-func _recruit_card(card: Dictionary) -> PanelContainer:
-	var unit_id := String(card.get("unit_id", ""))
-	var panel := PanelContainer.new()
-	panel.name = "Recruit_%s" % unit_id
-	_apply_card(panel, "green" if not bool(card.get("disabled", true)) else "ink")
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 14)
-	panel.add_child(row)
-	var portrait := TextureRect.new()
-	portrait.name = "Portrait"
-	portrait.custom_minimum_size = Vector2(80, 104)
-	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	portrait.texture = _texture(String(card.get("portrait_path", "")))
-	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	row.add_child(portrait)
-	var info := VBoxContainer.new()
-	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	info.add_theme_constant_override("separation", 4)
-	row.add_child(info)
-	var name_row := HBoxContainer.new()
-	name_row.add_theme_constant_override("separation", 8)
-	info.add_child(name_row)
-	name_row.add_child(_label(String(card.get("name", unit_id)), "title", 16))
-	name_row.add_child(_chip("Tier %s" % Board.roman(int(card.get("tier", 0))), "gold"))
-	name_row.add_child(_role_chip(String(card.get("role", "melee"))))
-	info.add_child(_unit_stat_grid(card, {}))
-	var abilities := _ability_text(card)
-	if abilities != "":
-		var ability_label := _label(abilities, "muted", 13)
-		ability_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		ability_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		ability_label.tooltip_text = _ability_tooltip(card)
-		ability_label.mouse_filter = Control.MOUSE_FILTER_PASS
-		info.add_child(ability_label)
-	var order := VBoxContainer.new()
-	order.name = "Order"
-	order.custom_minimum_size = Vector2(230, 0)
-	order.add_theme_constant_override("separation", 6)
-	row.add_child(order)
-	order.add_child(_label("%d available · +%d per week" % [int(card.get("available", 0)), int(card.get("weekly_growth", 0))], "body", 14))
-	var each := HBoxContainer.new()
-	each.add_theme_constant_override("separation", 6)
-	each.add_child(_label("Each", "muted", 13))
-	each.add_child(_cost_row(card.get("unit_cost", {}), 1))
-	order.add_child(each)
-	var max_now := int(card.get("max_now", 0))
-	var amount_row := HBoxContainer.new()
-	amount_row.add_theme_constant_override("separation", 6)
-	order.add_child(amount_row)
-	var slider := HSlider.new()
-	slider.name = "Amount"
-	slider.min_value = 0
-	slider.max_value = max(max_now, 0)
-	slider.step = 1
-	slider.value = max_now
-	slider.editable = max_now > 0
-	slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	slider.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	slider.custom_minimum_size = Vector2(120, 24)
-	slider.accessibility_name = "Recruit amount for %s" % String(card.get("name", unit_id))
-	FrontierVisualKit.apply_range(slider, "gold")
-	amount_row.add_child(slider)
-	var max_button := Button.new()
-	max_button.name = "Max"
-	max_button.text = "Max"
-	max_button.disabled = max_now <= 0
-	max_button.tooltip_text = "Set the most this town's stores can pay for now."
-	FrontierVisualKit.apply_button(max_button, "secondary", 56, 30, 13)
-	max_button.pressed.connect(func(): slider.value = slider.max_value)
-	amount_row.add_child(max_button)
-	var recruit_button := Button.new()
-	recruit_button.name = "RecruitButton"
-	recruit_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	FrontierVisualKit.apply_button(recruit_button, "primary", 220, 36, 14)
-	recruit_button.pressed.connect(_on_recruit_pressed.bind(unit_id))
-	order.add_child(recruit_button)
-	_recruit_sliders[unit_id] = slider
-	_recruit_buttons[unit_id] = recruit_button
-	slider.value_changed.connect(func(_value): _sync_recruit_button(unit_id))
-	_recruit_counts[unit_id] = max_now
-	_sync_recruit_button(unit_id)
-	if max_now <= 0:
-		var reason := _label(String(card.get("status_detail", "")), "muted", 12)
-		reason.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		reason.custom_minimum_size = Vector2(230, 0)
-		order.add_child(reason)
-		if int(card.get("market_max", 0)) > 0:
-			order.add_child(_trade_link("Trade for it"))
-	return panel
-
-func _sync_recruit_button(unit_id: String) -> void:
-	var slider: HSlider = _recruit_sliders.get(unit_id)
-	var button: Button = _recruit_buttons.get(unit_id)
-	if slider == null or button == null:
-		return
-	var count := int(slider.value)
-	_recruit_counts[unit_id] = count
-	var card := _recruit_card_model(unit_id)
-	var total := {}
-	for resource_id in card.get("unit_cost", {}):
-		total[resource_id] = int(card.unit_cost[resource_id]) * count
-	button.text = "Recruit %d · %s" % [count, _cost_text(total)] if count > 0 else "Recruit"
-	button.disabled = count <= 0
-	button.tooltip_text = "Recruit %d %s for %s." % [count, String(card.get("name", unit_id)), _cost_text(total)] if count > 0 else String(card.get("status_detail", "Nothing to recruit."))
-
-func _recruit_card_model(unit_id: String) -> Dictionary:
-	for card in _model.get("recruit", {}).get("units", []):
-		if String(card.get("unit_id", "")) == unit_id:
-			return card
-	return {}
-
-func _on_recruit_pressed(unit_id: String) -> void:
-	var count := int(_recruit_counts.get(unit_id, 0))
-	if count > 0:
-		recruit_requested.emit(unit_id, count)
-
-func _unit_stat_grid(card: Dictionary, compare: Dictionary) -> GridContainer:
-	var grid := GridContainer.new()
-	grid.name = "Stats"
-	grid.columns = 4
-	grid.add_theme_constant_override("h_separation", 18)
-	grid.add_theme_constant_override("v_separation", 2)
-	var stats := [
-		["Attack", int(card.get("attack", 0)), "%d"],
-		["Defense", int(card.get("defense", 0)), "%d"],
-		["Damage", int(card.get("min_damage", 0)) + int(card.get("max_damage", 0)), "%d-%d" % [int(card.get("min_damage", 0)), int(card.get("max_damage", 0))]],
-		["Health", int(card.get("hp", 0)), "%d"],
-		["Speed", int(card.get("speed", 0)), "%d"],
-		["Initiative", int(card.get("initiative", 0)), "%d"],
-	]
-	if int(card.get("shots", 0)) > 0:
-		stats.append(["Shots", int(card.get("shots", 0)), "%d"])
-	for entry in stats:
-		var cell := HBoxContainer.new()
-		cell.name = String(entry[0])
-		cell.add_theme_constant_override("separation", 6)
-		cell.add_child(_label(String(entry[0]), "muted", 13))
-		var value_text := String(entry[2]) if String(entry[2]).contains("-") else String(entry[2]) % int(entry[1])
-		var value := _label(value_text, "title", 14)
-		value.name = "Value"
-		if not compare.is_empty():
-			var before := _compare_value(compare, String(entry[0]))
-			if int(entry[1]) > before:
-				value.add_theme_color_override("font_color", ASSISTED_BETTER_STAT if FrontierVisualKit.color_cue_assist_enabled() else BETTER_STAT)
-				value.text += " (+%d)" % (int(entry[1]) - before)
-		cell.add_child(value)
-		grid.add_child(cell)
-	return grid
-
-func _compare_value(card: Dictionary, stat: String) -> int:
-	match stat:
-		"Attack": return int(card.get("attack", 0))
-		"Defense": return int(card.get("defense", 0))
-		"Damage": return int(card.get("min_damage", 0)) + int(card.get("max_damage", 0))
-		"Health": return int(card.get("hp", 0))
-		"Speed": return int(card.get("speed", 0))
-		"Initiative": return int(card.get("initiative", 0))
-		"Shots": return int(card.get("shots", 0))
-	return 0
-
-func _ability_text(card: Dictionary) -> String:
-	var names := []
-	for ability in card.get("abilities", []):
-		names.append(String(ability.get("name", "")))
-	return "Abilities: %s" % ", ".join(names) if not names.is_empty() else ""
-
-func _ability_tooltip(card: Dictionary) -> String:
-	var lines := []
-	for ability in card.get("abilities", []):
-		lines.append("%s — %s" % [String(ability.get("name", "")), String(ability.get("description", ""))])
-	return "\n".join(lines)
 
 # --- magic guild ----------------------------------------------------------------
 
@@ -744,7 +563,7 @@ func _unit_upgrade_compare(from_id: String, to_id: String) -> VBoxContainer:
 	gains.name = "Gains"
 	gains.add_theme_constant_override("h_separation", 12)
 	gains.add_theme_constant_override("v_separation", 2)
-	var stats := _unit_stat_grid(after, before)
+	var stats := Widgets.stat_grid(after, before)
 	for cell in stats.get_children():
 		var value := cell.get_node("Value") as Label
 		if value != null and value.text.contains("(+"):
@@ -768,123 +587,25 @@ func _trade_link(text: String) -> Button:
 	return button
 
 func _cost_row(cost: Dictionary, multiplier: int) -> HBoxContainer:
-	var row := HBoxContainer.new()
-	row.name = "Cost"
-	row.add_theme_constant_override("separation", 8)
-	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	for resource_id in Board.RESOURCE_ORDER:
-		if not cost.has(resource_id):
-			continue
-		var need := int(cost[resource_id]) * multiplier
-		var short := int(_resources.get(resource_id, 0)) < need
-		var cell := HBoxContainer.new()
-		cell.name = String(resource_id)
-		cell.add_theme_constant_override("separation", 3)
-		var icon := TextureRect.new()
-		icon.custom_minimum_size = Vector2(18, 18)
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		icon.texture = _texture(OverworldRulesScript.resource_icon_path(resource_id))
-		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		cell.add_child(icon)
-		var amount := _label(Board.format_amount(need), "body", 14)
-		if short:
-			amount.add_theme_color_override("font_color", ASSISTED_SHORT_AMOUNT if FrontierVisualKit.color_cue_assist_enabled() else SHORT_AMOUNT)
-			amount.text += " (have %s)" % Board.format_amount(int(_resources.get(resource_id, 0)))
-		cell.add_child(amount)
-		row.add_child(cell)
-	if row.get_child_count() == 0:
-		row.add_child(_label("Free", "body", 14))
-	return row
+	return Widgets.cost_row(cost, _resources, multiplier)
 
 func _cost_text(cost: Dictionary) -> String:
-	var parts := []
-	for resource_id in Board.RESOURCE_ORDER:
-		if cost.has(resource_id):
-			parts.append("%s %s" % [Board.format_amount(int(cost[resource_id])), Board.resource_name(resource_id)])
-	return ", ".join(parts) if not parts.is_empty() else "free"
+	return Widgets.cost_text(cost)
 
 func _apply_card(panel: PanelContainer, tone: String) -> void:
-	var style := FrontierVisualKit.panel_style(tone, 10)
-	style.content_margin_left = 12
-	style.content_margin_right = 12
-	style.content_margin_top = 10
-	style.content_margin_bottom = 10
-	panel.add_theme_stylebox_override("panel", style)
+	Widgets.apply_card(panel, tone)
 
 func _chip(text: String, tone: String) -> PanelContainer:
-	var chip := PanelContainer.new()
-	var style := FrontierVisualKit.badge_style("ink")
-	style.content_margin_left = 8
-	style.content_margin_right = 8
-	style.content_margin_top = 2
-	style.content_margin_bottom = 2
-	style.shadow_size = 0
-	style.set_border_width_all(1)
-	style.border_color = FrontierVisualKit.text_color(tone)
-	chip.add_theme_stylebox_override("panel", style)
-	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	chip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	chip.add_child(_label(text, tone, 12))
-	return chip
-
-## Drawn sword/bow badge with text, matching the construction board.
-func _role_chip(role: String) -> PanelContainer:
-	var palette: Array = ROLE_STYLES.get(role, ROLE_STYLES["melee"])
-	var chip := PanelContainer.new()
-	chip.name = "Role_%s" % role
-	chip.set_meta("role", role)
-	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	chip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	var style := StyleBoxFlat.new()
-	style.bg_color = palette[0]
-	style.border_color = palette[1]
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(9)
-	style.content_margin_left = 8
-	style.content_margin_right = 8
-	style.content_margin_top = 2
-	style.content_margin_bottom = 2
-	chip.add_theme_stylebox_override("panel", style)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 5)
-	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	chip.add_child(row)
-	var glyph := ConstructionScreenScript.ConstructionRoleGlyph.new()
-	glyph.role = role
-	glyph.color = palette[2]
-	glyph.custom_minimum_size = Vector2(15, 15)
-	glyph.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	row.add_child(glyph)
-	var text := _label(role.to_upper(), "body", 12)
-	text.add_theme_color_override("font_color", palette[2])
-	row.add_child(text)
-	return chip
+	return Widgets.chip(text, tone)
 
 func _label(text: String, tone: String, font_size: int) -> Label:
-	var label := Label.new()
-	label.text = text
-	FrontierVisualKit.apply_label(label, tone, font_size)
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	return label
+	return Widgets.label(text, tone, font_size)
 
 func _wrapped(text: String, tone: String, font_size: int) -> Label:
-	var label := _label(text, tone, font_size)
-	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	return label
+	return Widgets.wrapped(text, tone, font_size)
 
 func _texture(path: String) -> Texture2D:
-	if path == "":
-		return null
-	if _texture_cache.has(path):
-		return _texture_cache[path]
-	var texture: Texture2D = load(path) as Texture2D if ResourceLoader.exists(path, "Texture2D") else null
-	_texture_cache[path] = texture
-	return texture
+	return Widgets.texture(path)
 
 func _clear(node: Node) -> void:
 	for child in node.get_children():
@@ -908,10 +629,8 @@ func _apply_columns() -> void:
 
 func validation_snapshot() -> Dictionary:
 	var recruit := []
-	for unit_id in _recruit_buttons:
-		var slider: HSlider = _recruit_sliders[unit_id]
-		var button: Button = _recruit_buttons[unit_id]
-		recruit.append({"unit_id": unit_id, "max": int(slider.max_value), "amount": int(slider.value), "button_enabled": not button.disabled, "button_text": button.text, "visible": button.is_visible_in_tree()})
+	for unit_id in _recruit_cards:
+		recruit.append(_recruit_cards[unit_id].snapshot())
 	var heroes := []
 	for hero_id in _hire_buttons:
 		var hire: Button = _hire_buttons[hero_id]
@@ -950,18 +669,10 @@ func validation_snapshot() -> Dictionary:
 	}
 
 func validation_set_recruit_amount(unit_id: String, count: int) -> bool:
-	var slider: HSlider = _recruit_sliders.get(unit_id)
-	if slider == null:
-		return false
-	slider.value = count
-	return int(slider.value) == count
+	return _recruit_cards.has(unit_id) and _recruit_cards[unit_id].set_amount(count)
 
 func validation_press_recruit(unit_id: String) -> bool:
-	var button: Button = _recruit_buttons.get(unit_id)
-	if button == null or button.disabled:
-		return false
-	button.pressed.emit()
-	return true
+	return _recruit_cards.has(unit_id) and _recruit_cards[unit_id].press_recruit()
 
 func validation_press_hire(hero_id: String) -> bool:
 	var button: Button = _hire_buttons.get(hero_id)

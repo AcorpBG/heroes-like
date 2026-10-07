@@ -1,6 +1,6 @@
 # Town building popouts
 
-Slices: `ux-town-building-popouts-20261006` (owner-directed UI, 2026-10-06) and `ux-town-popouts-no-scroll-tavern-rotation-20261007` (owner follow-up, 2026-10-07: no scrolling, two-hero weekly tavern).
+Slices: `ux-town-building-popouts-20261006` (owner-directed UI, 2026-10-06) `ux-town-popouts-no-scroll-tavern-rotation-20261007` (owner follow-up, 2026-10-07: no scrolling, two-hero weekly tavern) and `ux-muster-hall-recruit-cards-20261007` (owner follow-up, 2026-10-07: Muster Hall uses the dwelling recruit cards).
 
 Clicking a built building in the Town scene opens a popout made for that building instead of a generic information sheet. The main building still opens the full-screen construction board.
 
@@ -27,6 +27,10 @@ Popouts fit on screen without scrolling at 1280×720 and above:
 
 The upgrade line lists the building's stages (built, next, later), the next stage's description, for dwellings the creature's stat gains, the cost with any shortfall, and an **Upgrade** button. When the market can cover the cost a **Trade for it** button opens the market; locked or already-built-today states explain why. Exclusive dwellings note the line they were chosen over. Buildings without stages say they have no upgrades.
 
+## Muster Hall
+
+The Muster Hall (Muster command) lists every creature the town can muster with the same recruit card as the dwelling popouts (`scenes/town/TownRecruitCard.gd`): portrait, tier and melee/ranged badge, stats, abilities, reserve and weekly growth, cost each, the amount slider with **Max** and the total-cost **Recruit** button, plus **Trade for it** when the market can cover the price. Muster cards are the compact variant: a smaller portrait, short stat names (ATK, DEF, DMG, HP, SPD, INI) and the badges under the name, two cards per row. A town with a dwelling for every tier musters without scrolling. Stationed-troop upgrade orders stay above the cards. The dwelling popout and the Muster Hall build their cards from the same model row (`TownBuildingPanel.recruit_card`) and recruit through the same order with the chosen amount.
+
 ## Tavern rotation
 
 - Every player tavern offers the same two heroes each week, drawn on days 1, 8, 15 and so on from the player faction's hireable heroes (`HeroCommandRules.tavern_offer_ids`).
@@ -37,6 +41,7 @@ The upgrade line lists the building's stages (built, next, later), the next stag
 ## Rules and ownership
 
 - `scripts/core/TownBuildingPanel.gd` builds a read-only model from the live rules: the construction board slot (stages, next order, status, cost), the muster catalog, the town spell library per guild level (`TownRules.spell_ids_through_tier`), the weekly tavern offer and the town's service orders. Opening a popout never changes the session.
+- `scenes/town/TownPanelWidgets.gd` holds the shared labels, chips, melee/ranged badge, cost rows and stat grids; `scenes/town/TownRecruitCard.gd` is the recruit card used by dwellings and the Muster Hall.
 - `scenes/town/TownBuildingPanelView.gd` renders the model and emits intents. `TownShell` runs every order through the existing paths: recruitment with a requested amount (`TownRules.recruit_active_town`), hiring, the construction commit and its scenic presentation, town services and the market hand-off. After recruiting or hiring the popout refreshes in place.
 
 ## Validation
@@ -48,5 +53,6 @@ The upgrade line lists the building's stages (built, next, later), the next stag
 - The guild shows five levels whose spells cover the town library once each, switches levels and waits for tomorrow after the day's build.
 - The tavern shows exactly this week's two offered heroes, refuses a hero outside the offer, leaves an empty place after a hire, and draws a fresh pair next week.
 - Training, artifact and market services appear; the fort shows description, effects and its next stage inside the panel.
+- The Muster Hall shows one shared recruit card per muster row with the creature name visible, recruits a chosen amount from a card, and still fits without scrolling once every tier has a dwelling.
 
 Set `PANEL_TOWN=<town id>` to run one town. Roster and hero-art reports that hire a specific hero place that hero in the week's offer first.

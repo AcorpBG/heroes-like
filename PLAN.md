@@ -36,6 +36,8 @@ Rules:
 
 `ux-town-popouts-no-scroll-tavern-rotation-20261007` (completed, owner follow-up): popouts fit without scrolling at 1280×720 and above (compact header, orders and upgrade line side by side, guild grid sized for its largest level). Every player tavern offers the same two heroes each week, drawn from the faction's hireable heroes; a hired hero's place stays empty until the next week and only offered heroes can be hired.
 
+`ux-muster-hall-recruit-cards-20261007` (completed, owner follow-up): the Muster Hall uses the dwelling popouts' recruit card (portrait, tier and role badge, stats, abilities, reserve, cost, amount slider, Max and total-cost Recruit) in a compact two-up grid; one shared card component and model row serve both screens.
+
 ### Dwelling pair balance
 
 `balance-dwelling-pairs-20261006` (completed, owner-directed balance content): the two exclusive dwelling lines of every tier I–V choice, base and upgrade, are trade-offs instead of one line being slightly better at everything. Same-role lines split into tank and striker and trade evenly per gold; a shooter is never bulkier than its melee partner and keeps a 1.3–2.0 head-on edge per gold; upgrades stay above their base. Only health, attack, defense, damage and gold changed (107 faction units). `tests/unit_pair_duel_report.tscn` duels all 60 pairs at equal gold and fails on any pair outside the bands. See `docs/dwelling-pair-balance.md`.

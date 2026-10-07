@@ -13,6 +13,7 @@ const TownConstructionScreenScript = preload("res://scenes/town/TownConstruction
 const TownConstructionBoardScript = preload("res://scripts/core/TownConstructionBoard.gd")
 const TownBuildingPanelScript = preload("res://scripts/core/TownBuildingPanel.gd")
 const TownBuildingPanelViewScript = preload("res://scenes/town/TownBuildingPanelView.gd")
+const TownRecruitCardScript = preload("res://scenes/town/TownRecruitCard.gd")
 var _spellbook_view: VBoxContainer
 
 const UI_ART_TOWN_BANNER_FRAME := "res://art/ui/runtime/town/banner_frame.png"
@@ -377,16 +378,16 @@ func _apply_responsive_layout() -> void:
 		catalog_center.offset_bottom = -18.0
 		(_town_catalog_overlay.get_node("CatalogShade") as ColorRect).color.a = 0.72
 		_town_catalog_scroll.custom_minimum_size.y = 340.0
-		# Building popouts carry recruitment, spell shelves and hero cards, so
-		# they may use more of a large screen than the list dialogs.
-		var building_popout := _town_catalog_mode == "building_info"
+		# Building popouts and the Muster Hall carry recruit cards, spell shelves
+		# and hero cards, so they may use more of a large screen than the lists.
+		var building_popout := _town_catalog_mode in ["building_info", "muster"]
 		_town_catalog_panel.custom_minimum_size = Vector2(
 			min(1280.0 if building_popout else 1080.0, max(620.0, available_size.x - 44.0)),
 			min(900.0 if building_popout else 690.0, max(480.0, available_size.y - 44.0))
 		)
-	var catalog_columns := 2 if available_size.x < 900.0 else (3 if available_size.x < 1320.0 else 4)
+	# Muster recruit cards match the dwelling popouts; two fit side by side.
 	if _recruit_actions is GridContainer:
-		(_recruit_actions as GridContainer).columns = catalog_columns
+		(_recruit_actions as GridContainer).columns = 2 if available_size.x >= 1200.0 else 1
 
 func _promote_town_edge_overlays() -> void:
 	if _sidebar_shell_panel.get_parent() != self:
@@ -538,11 +539,11 @@ func _building_popout_needs_scroll() -> bool:
 ## Building popouts shrink to their content, up to the responsive cap, so a
 ## plain building does not open an empty sheet over the town.
 func _fit_building_popout() -> void:
-	if not is_inside_tree() or _town_catalog_mode != "building_info" or not _town_catalog_overlay.visible:
+	if not is_inside_tree() or _town_catalog_mode not in ["building_info", "muster"] or not _town_catalog_overlay.visible:
 		return
 	_apply_responsive_layout()
 	await get_tree().process_frame
-	if _town_catalog_mode != "building_info" or not _town_catalog_overlay.visible:
+	if _town_catalog_mode not in ["building_info", "muster"] or not _town_catalog_overlay.visible:
 		return
 	var content := _town_catalog_scroll.get_child(0) as Control
 	if content == null:
@@ -3850,6 +3851,7 @@ func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
 	if _town_catalog_mode == "muster":
 		_town_catalog_subtitle_label.text = destination_summary
 	for child in _recruit_actions.get_children():
+		_recruit_actions.remove_child(child)
 		child.queue_free()
 
 	var actions = actions_override if actions_override is Array and _catalog_rows_are_complete(actions_override, "unit_id") else TownRules.get_muster_catalog(_session)
@@ -3857,65 +3859,18 @@ func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
 		_recruit_actions.add_child(_make_placeholder_label("No recruits waiting"))
 		return
 
+	# The same recruit cards as the dwelling popouts, in a compact two-up grid.
+	var resources: Dictionary = _session.overworld.get("resources", {}) if _session.overworld.get("resources", {}) is Dictionary else {}
 	for action in actions:
 		if not (action is Dictionary):
 			continue
-		var unit_id := String(action.get("unit_id", _unit_id_for_recruit_action(action)))
-		var portrait_path := String(action.get("portrait_path", ContentService.get_unit_art(unit_id).get("portrait", "")))
-		var portrait_texture: Variant = _unit_art_texture(portrait_path)
-		var row_tooltip := _catalog_muster_tooltip(action, destination_summary)
-		var row := PanelContainer.new()
-		row.custom_minimum_size = Vector2(190, 232)
-		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		FrontierVisualKit.apply_panel(row, _catalog_panel_tone(String(action.get("catalog_status", "Locked"))))
-		var row_box := VBoxContainer.new()
-		row_box.add_theme_constant_override("separation", 4)
-		row.add_child(row_box)
-		if portrait_texture is Texture2D:
-			var portrait := TextureRect.new()
-			portrait.texture = portrait_texture
-			portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-			portrait.custom_minimum_size = Vector2(88, 112)
-			portrait.tooltip_text = row_tooltip
-			row_box.add_child(portrait)
-		var identity_label := Label.new()
-		identity_label.text = "%s • %s" % [String(action.get("tier_label", "Tier")), String(action.get("name", unit_id))]
-		identity_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		identity_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		identity_label.tooltip_text = row_tooltip
-		FrontierVisualKit.apply_label(identity_label, "body", 12)
-		row_box.add_child(identity_label)
-		var reserve_label := Label.new()
-		reserve_label.text = "%s • %d reserve • +%d/week" % [
-			String(action.get("catalog_status", "Locked")),
-			int(action.get("available_count", 0)),
-			int(action.get("weekly_growth", 0)),
-		]
-		reserve_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		reserve_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		reserve_label.tooltip_text = row_tooltip
-		FrontierVisualKit.apply_label(reserve_label, "muted", 11)
-		row_box.add_child(reserve_label)
-		var button := Button.new()
-		var ready_count := int(action.get("direct_affordable_count", 0))
-		var cost_label := Label.new()
-		cost_label.text = "Total: %s" % TownRules._describe_resources(TownRules._multiply_resource_cost(action.get("unit_cost", {}), ready_count)) if ready_count > 0 else "No purchase available"
-		cost_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		cost_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		cost_label.tooltip_text = row_tooltip
-		FrontierVisualKit.apply_label(cost_label, "muted", 11)
-		row_box.add_child(cost_label)
-		button.text = "Recruit %s x%d" % [String(action.get("tier_label", "Tier")), ready_count] if ready_count > 0 else String(action.get("catalog_status", "Unavailable"))
-		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = row_tooltip
-		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		_style_action_button(button)
-		button.set_meta("catalog_entry_id", String(action.get("id", "")))
-		button.set_meta("catalog_status", String(action.get("catalog_status", "")))
-		button.pressed.connect(_on_recruit_action_pressed.bind(String(action.get("id", "")).trim_prefix("recruit:")))
-		row_box.add_child(button)
-		_recruit_actions.add_child(row)
+		var card = TownRecruitCardScript.new()
+		card.configure(TownBuildingPanelScript.recruit_card(action), resources, true, _catalog_muster_tooltip(action, destination_summary))
+		card.recruit_requested.connect(_on_recruit_action_pressed)
+		card.trade_requested.connect(_on_construction_trade_requested.bind(""))
+		_recruit_actions.add_child(card)
+	if _town_catalog_mode == "muster":
+		call_deferred("_fit_building_popout")
 
 func _catalog_muster_tooltip(action: Dictionary, destination_summary: String = "") -> String:
 	var unit_cost := TownRules._describe_resources(action.get("unit_cost", {}))

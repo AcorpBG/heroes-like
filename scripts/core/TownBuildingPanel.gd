@@ -175,19 +175,7 @@ static func _recruitment(session, town: Dictionary, slot: Dictionary, building: 
 	for row_value in TownRulesScript.get_muster_catalog(session):
 		if not (row_value is Dictionary) or String(row_value.get("unit_id", "")) not in line_unit_ids:
 			continue
-		var row: Dictionary = row_value
-		var unit_id := String(row.get("unit_id", ""))
-		var direct := int(row.get("direct_affordable_count", 0))
-		units.append(unit_card(unit_id).merged({
-			"available": int(row.get("available_count", 0)),
-			"weekly_growth": int(row.get("weekly_growth", 0)),
-			"unit_cost": row.get("unit_cost", {}).duplicate(true),
-			"max_now": direct,
-			"market_max": int(row.get("market_affordable_count", 0)),
-			"status": String(row.get("catalog_status", "")),
-			"status_detail": String(row.get("catalog_status_detail", "")),
-			"disabled": bool(row.get("disabled", true)) or direct <= 0,
-		}, true))
+		units.append(recruit_card(row_value))
 	var base_unit_ids := []
 	for unit_id in line_unit_ids:
 		var base_id := String(ContentService.get_unit(String(unit_id)).get("upgrade_from", ""))
@@ -204,6 +192,48 @@ static func _recruitment(session, town: Dictionary, slot: Dictionary, building: 
 		"destination": String(HeroCommandRulesScript.town_recruitment_destination(session, town).get("summary", "")),
 		"troop_upgrades": troop_upgrades,
 	}
+
+## Every creature the town can muster, as the same recruit cards the dwelling
+## popouts show, with all stationed-troop upgrades. Read-only.
+static func muster(session) -> Dictionary:
+	if session == null:
+		return {}
+	var town: Dictionary = TownRulesScript.get_active_town(session)
+	if town.is_empty():
+		return {}
+	var units := []
+	for row_value in TownRulesScript.get_muster_catalog(session):
+		if row_value is Dictionary:
+			units.append(recruit_card(row_value))
+	var troop_upgrades := []
+	for action in TownRulesScript.get_response_actions(session):
+		if String(action.get("id", "")).begins_with("town_upgrade:"):
+			troop_upgrades.append(_action_entry(action))
+	var resources: Dictionary = session.overworld.get("resources", {}) if session.overworld.get("resources", {}) is Dictionary else {}
+	return {
+		"schema": SCHEMA,
+		"kind": "muster",
+		"units": units,
+		"destination": String(HeroCommandRulesScript.town_recruitment_destination(session, town).get("summary", "")),
+		"troop_upgrades": troop_upgrades,
+		"resources": resources.duplicate(true),
+	}
+
+## One muster catalog row as a recruit card: the creature's battle profile
+## plus reserve, growth, price and what the stores can pay for now.
+static func recruit_card(row: Dictionary) -> Dictionary:
+	var unit_id := String(row.get("unit_id", ""))
+	var direct := int(row.get("direct_affordable_count", 0))
+	return unit_card(unit_id).merged({
+		"available": int(row.get("available_count", 0)),
+		"weekly_growth": int(row.get("weekly_growth", 0)),
+		"unit_cost": row.get("unit_cost", {}).duplicate(true) if row.get("unit_cost", {}) is Dictionary else {},
+		"max_now": direct,
+		"market_max": int(row.get("market_affordable_count", 0)),
+		"status": String(row.get("catalog_status", "")),
+		"status_detail": String(row.get("catalog_status_detail", "")),
+		"disabled": bool(row.get("disabled", true)) or direct <= 0,
+	}, true)
 
 ## Battle profile of one creature for recruitment and upgrade cards.
 static func unit_card(unit_id: String) -> Dictionary:

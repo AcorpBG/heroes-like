@@ -106,7 +106,8 @@ func _run_case(viewport_size: Vector2i) -> Dictionary:
 	await get_tree().process_frame
 	var muster_snapshot: Dictionary = shell.call("validation_town_catalog_snapshot")
 	var muster_catalog: Array = TownRules.get_muster_catalog(SessionState.ensure_active_session())
-	var portrait_count := _texture_rect_count(shell.get_node("%RecruitActions"))
+	# Recruit cards also carry cost icons; count the creature portraits.
+	var portrait_count := _portrait_count(shell.get_node("%RecruitActions"))
 	var muster_contained := _rect_contains(muster_snapshot.get("overlay_rect", Rect2()), muster_snapshot.get("panel_rect", Rect2()))
 	_capture("muster", viewport_size)
 	shell.call("validation_close_town_catalog")
@@ -386,6 +387,12 @@ func _catalog_button_icon_count(node: Node) -> int:
 		count += 1
 	for child in node.get_children():
 		count += _catalog_button_icon_count(child)
+	return count
+
+func _portrait_count(node: Node) -> int:
+	var count := 1 if node is TextureRect and node.name == "Portrait" and node.texture != null else 0
+	for child in node.get_children():
+		count += _portrait_count(child)
 	return count
 
 func _texture_rect_count(node: Node) -> int:

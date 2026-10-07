@@ -95,6 +95,7 @@ func _run_town(template_id: String, viewport_size: Vector2i) -> Dictionary:
 	_check(failures, bool(info.get("icon_loaded", false)), "dwelling painting")
 	var recruit := _entry(panel.get("recruit", []), "unit_id", base_unit)
 	_check(failures, int(recruit.get("max", 0)) == 10 and int(recruit.get("amount", 0)) == 10 and bool(recruit.get("button_enabled", false)), "recruit card %s" % recruit)
+	_check(failures, float(recruit.get("name_width", 0.0)) > 40.0, "dwelling card hides the creature name %s" % recruit)
 	await _capture(template_id, "dwelling", viewport_size)
 	var view = shell.get("_building_info_surface")
 	var army_before := _army_count(session, base_unit)
@@ -111,6 +112,37 @@ func _run_town(template_id: String, viewport_size: Vector2i) -> Dictionary:
 	_check(failures, _army_count(SessionState.ensure_active_session(), base_unit) == army_before + 3, "army gained 3")
 	_check(failures, bool(info.get("open", false)) and int(recruit.get("max", 0)) == 7, "popout refreshed after recruit %s" % recruit)
 	_no_scroll(failures, info, "dwelling after recruit")
+
+	# The Muster Hall shows the same recruit cards for every creature in town.
+	shell.call("_close_town_catalog", false)
+	await _frames(2)
+	shell.call("validation_open_town_catalog", "muster")
+	await _frames(4)
+	var muster_snapshot: Dictionary = shell.call("validation_town_catalog_snapshot")
+	var muster_rows: Array = TownRules.get_muster_catalog(SessionState.ensure_active_session())
+	var muster_cards: Array = shell.get_node("%RecruitActions").get_children().filter(func(node): return node.has_method("snapshot"))
+	_check(failures, String(muster_snapshot.get("mode", "")) == "muster" and muster_cards.size() == muster_rows.size() and int(muster_snapshot.get("muster_card_count", 0)) == muster_rows.size(), "muster cards %d for %d rows" % [muster_cards.size(), muster_rows.size()])
+	_check(failures, not bool(shell.call("_building_popout_needs_scroll")), "muster hall needs a scrollbar")
+	var muster_card = null
+	for card in muster_cards:
+		if String(card.get("unit_id")) == base_unit:
+			muster_card = card
+	_check(failures, muster_card != null and float(muster_card.call("snapshot").get("name_width", 0.0)) > 40.0, "muster card hides the creature name")
+	_check(failures, muster_card != null and int(muster_card.call("snapshot").get("max", 0)) == 7 and muster_card.find_child("Stats", true, false) != null and muster_card.find_child("Role_*", true, false) != null, "muster card matches the dwelling card")
+	await _capture(template_id, "muster", viewport_size)
+	if muster_card != null:
+		_check(failures, bool(muster_card.call("set_amount", 2)) and bool(muster_card.call("press_recruit")), "muster recruit pressed")
+	await _frames(3)
+	_dismiss_presentation(shell)
+	await _frames(2)
+	town_after = TownRules.get_active_town(SessionState.ensure_active_session())
+	_check(failures, int(town_after.get("available_recruits", {}).get(base_unit, -1)) == 5, "reserve after muster recruit %s" % town_after.get("available_recruits", {}))
+	_check(failures, _army_count(SessionState.ensure_active_session(), base_unit) == army_before + 5, "army gained 2 from the muster hall")
+	shell.call("_close_town_catalog", false)
+	await _frames(2)
+	info = await _open(shell, ids.dwelling)
+	panel = info.get("panel", {})
+	view = shell.get("_building_info_surface")
 	var upgrade: Dictionary = panel.get("upgrade", {})
 	_check(failures, bool(upgrade.get("has_line", false)) and String(upgrade.get("next_id", "")) == String(ids.dwelling_upgrade), "dwelling upgrade line %s" % upgrade)
 	_check(failures, String(upgrade.get("status", "")) == "ready" and bool(upgrade.get("button_enabled", false)), "dwelling upgrade ready %s" % upgrade)
@@ -226,6 +258,36 @@ func _run_town(template_id: String, viewport_size: Vector2i) -> Dictionary:
 	var view_rect: Rect2 = shell.get("_building_info_surface").get_global_rect()
 	_check(failures, view_rect.size.x <= catalog_rect.size.x and view_rect.position.x >= catalog_rect.position.x - 1.0, "popout body fits the panel %s in %s" % [view_rect, catalog_rect])
 	await _capture(template_id, "fort", viewport_size)
+
+	# A town with a dwelling for every tier still musters without scrolling.
+	shell.call("_close_town_catalog", false)
+	await _frames(2)
+	var full_session = SessionState.ensure_active_session()
+	var towns: Array = full_session.overworld.get("towns", [])
+	var active_town: Dictionary = TownRules.get_active_town(full_session)
+	var tier_units := []
+	for index in range(towns.size()):
+		if String(towns[index].get("placement_id", "")) != String(active_town.get("placement_id", "")):
+			continue
+		var built: Array = towns[index].get("built_buildings", []).duplicate()
+		var reserves: Dictionary = towns[index].get("available_recruits", {}).duplicate()
+		for building_id_value in Board.town_building_ids(template):
+			var building := ContentService.get_building(String(building_id_value))
+			if int(building.get("dwelling_tier", 0)) > 0 and int(building.get("choice_branch", 1)) == 1 and int(building.get("stage", 1)) == 1:
+				if String(building_id_value) not in built:
+					built.append(String(building_id_value))
+				reserves[String(building.get("unlock_unit_id", ""))] = 6
+				tier_units.append(String(building.get("unlock_unit_id", "")))
+		towns[index]["built_buildings"] = built
+		towns[index]["available_recruits"] = reserves
+	full_session.overworld["towns"] = towns
+	shell.call("validation_open_town_catalog", "muster")
+	await _frames(4)
+	var full_rows: Array = TownRules.get_muster_catalog(full_session)
+	var full_cards: Array = shell.get_node("%RecruitActions").get_children().filter(func(node): return node.has_method("snapshot"))
+	_check(failures, tier_units.size() == 7 and full_rows.size() >= 7 and full_cards.size() == full_rows.size(), "full muster cards %d rows %d tiers %d" % [full_cards.size(), full_rows.size(), tier_units.size()])
+	_check(failures, not bool(shell.call("_building_popout_needs_scroll")), "full muster hall needs a scrollbar")
+	await _capture(template_id, "muster_full", viewport_size)
 	shell.queue_free()
 	await _frames(2)
 	return {"ok": failures.is_empty(), "template_id": template_id, "viewport": viewport_size, "failures": failures}
