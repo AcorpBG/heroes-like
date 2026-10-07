@@ -3455,6 +3455,7 @@ static func _strategic_ai_multi_scenario_recruitment_delivery(input_config: Dict
 				"hero_units_after": hero_units_after,
 				"town_recruit_event_count": case_town_recruit_events,
 				"hero_reinforcement_event_count": case_hero_reinforcement_events,
+				"debug_events": _debug_event_lines(events),
 				"raid": _raid_execution_signal(after_raid),
 			})
 		scenario_rows.append({
@@ -5838,6 +5839,13 @@ static func _faction_ai_hero_count(session: SessionStateStoreScript.SessionData,
 		if String(entry.get("spawned_by_faction_id", "")) == faction_id:
 			count += 1
 	return count
+
+static func _debug_event_lines(events: Array) -> Array:
+	var lines := []
+	for event in events:
+		if event is Dictionary:
+			lines.append("%s|%s|%s|%s" % [event.get("event_type", ""), event.get("actor_id", ""), event.get("target_id", ""), event.get("summary", "")])
+	return lines
 
 static func _tile_distance_to(point: Dictionary, tile: Vector2i) -> int:
 	return maxi(absi(int(point.get("x", 0)) - tile.x), absi(int(point.get("y", 0)) - tile.y))

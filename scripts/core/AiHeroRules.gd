@@ -40,6 +40,8 @@ const BUILD_HORIZON_WEEKS := 2.0
 ## A town whose dwellings muster less than this (gold value) a week is short
 ## of troops.
 const STARVED_TOWN_WEEKLY_TROOPS := 1500.0
+## Fights a hero sizes up and turns down before settling on a decision.
+const MAX_FIGHT_VETOES := 3
 ## A hand-over of troops is worth at most what a modest site is worth.
 const MEET_VALUE_CAP := 600.0
 const GOAL_CONTINUITY_BONUS := 1.25
@@ -1374,7 +1376,7 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 	var search := _search(session, context, entry, radius)
 	_profile_add(context, "search_ms", started)
 	started = Time.get_ticks_usec()
-	var best := _best_candidate(session, context, entry, search, movement_max)
+	var best := _vetted_candidate(session, context, entry, search, movement_max)
 	_profile_add(context, "choose_ms", started)
 	if best.is_empty():
 		# Nothing worth doing nearby: look a week out before standing still.
@@ -1382,7 +1384,7 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 		search = _search(session, context, entry, movement_max * FAR_SEARCH_DAYS)
 		_profile_add(context, "search_ms", started)
 		started = Time.get_ticks_usec()
-		best = _best_candidate(session, context, entry, search, movement_max)
+		best = _vetted_candidate(session, context, entry, search, movement_max)
 		_profile_add(context, "choose_ms", started)
 	if best.is_empty():
 		best = _cornered_fight(session, entry, search)
@@ -1390,6 +1392,17 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 		return {}
 	best["path"] = _path_to(search, int(best.tile_index))
 	return best
+
+## The best candidate whose fight, if any, the hero expects to win well. A
+## fight that looks bad is left alone for a few days and the next best taken.
+static func _vetted_candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary, movement_max: int) -> Dictionary:
+	var best := _best_candidate(session, context, entry, search, movement_max)
+	for _veto in range(MAX_FIGHT_VETOES):
+		if best.is_empty() or _fight_looks_good(session, context, entry, best):
+			return best
+		_avoid_target(session, String(entry.get("placement_id", "")), String(best.get("id", "")), int(session.day) + 3)
+		best = _best_candidate(session, context, entry, search, movement_max)
+	return best if best.is_empty() or _fight_looks_good(session, context, entry, best) else {}
 
 ## A hero hemmed in by a guard's zone (every way out passes through it) fights
 ## that guard when the odds are at least even, rather than waiting forever.
@@ -2505,9 +2518,25 @@ static func _record_hero_defeat(session: SessionStateStoreScript.SessionData, co
 ## AI fights against neutrals (and other computer players) use the human's
 ## auto-resolve: a disposable session holding the hero as the attacking side
 ## and the defender as an ordinary encounter, resolved by BattleAutoResolveRules.
-static func _auto_resolve(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, defender: Dictionary) -> Dictionary:
-	context["auto_battle_count"] = int(context.get("auto_battle_count", 0)) + 1
-	var entry: Dictionary = session.overworld.encounters[index]
+## Before walking into a fight the hero sizes it up with the same auto-resolve
+## the fight will use, as a human weighs a battle before committing: it goes
+## only when it wins and keeps at least half of its strength.
+static func _fight_looks_good(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, plan: Dictionary) -> bool:
+	if String(plan.get("kind", "")) not in ["encounter", "ai_hero"]:
+		return true
+	var encounters: Array = session.overworld.get("encounters", [])
+	var defender_index := int(plan.get("index", -1))
+	if defender_index < 0 or defender_index >= encounters.size():
+		return true
+	context["preview_count"] = int(context.get("preview_count", 0)) + 1
+	var outcome := _simulate_battle(session, context, entry, encounters[defender_index], int(context.get("auto_battle_count", 0)) + 1)
+	if not bool(outcome.get("won", false)):
+		return false
+	return army_power(outcome.get("hero_survivors", [])) >= army_power(entry.get("enemy_army", {}).get("stacks", [])) * 0.5
+
+## One auto-resolved battle on a scratch session: the hero attacks `defender`.
+## Pure: the live session is not touched.
+static func _simulate_battle(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, defender: Dictionary, battle_number: int) -> Dictionary:
 	var hero := _battle_hero(entry)
 	var defender_copy := defender.duplicate(true)
 	defender_copy["x"] = 0
@@ -2521,7 +2550,7 @@ static func _auto_resolve(session: SessionStateStoreScript.SessionData, context:
 	elif PlayerRules.raid_controller_id(defender) == "":
 		defender_copy["enemy_army"] = _neutral_army(defender)
 	var scratch := SessionStateStoreScript.new_session_data(
-		"ai_battle_%s_%d" % [String(entry.get("placement_id", "")), int(context.auto_battle_count)],
+		"ai_battle_%s_%d" % [String(entry.get("placement_id", "")), battle_number],
 		"",
 		String(hero.get("id", "")),
 		int(session.day),
@@ -2547,7 +2576,7 @@ static func _auto_resolve(session: SessionStateStoreScript.SessionData, context:
 	)
 	var payload: Dictionary = _battle_rules().create_battle_payload(scratch, defender_copy)
 	if payload.is_empty():
-		return {"won": false, "ok": false}
+		return {"ok": false, "won": false}
 	scratch.battle = payload
 	scratch.game_state = "battle"
 	var resolution: Dictionary = _auto_resolve_rules().resolve_active_battle(scratch)
@@ -2562,7 +2591,6 @@ static func _auto_resolve(session: SessionStateStoreScript.SessionData, context:
 		# The fight ran out of orders without an outcome: both sides keep what
 		# is still standing, as after a drawn battle.
 		hero_survivors = _battle_rules()._battle_survivor_stacks(scratch, "player")
-	var lost := hero_after.is_empty() or army_power(hero_survivors) <= 0.0
 	var enemy_survivors: Array = []
 	var scratch_defender: Dictionary = scratch.overworld.get("encounters", [defender_copy])[0] if not scratch.overworld.get("encounters", []).is_empty() else defender_copy
 	if not won:
@@ -2575,6 +2603,30 @@ static func _auto_resolve(session: SessionStateStoreScript.SessionData, context:
 		var amount := int(scratch.overworld.get("resources", {}).get(key, 0))
 		if amount > 0:
 			gained[key] = amount
+	return {
+		"ok": true,
+		"won": won,
+		"state": final_state,
+		"hero_after": hero_after,
+		"hero_survivors": hero_survivors,
+		"lost": hero_after.is_empty() or army_power(hero_survivors) <= 0.0,
+		"enemy_survivors": enemy_survivors,
+		"resources_gained": gained,
+	}
+
+static func _auto_resolve(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, defender: Dictionary) -> Dictionary:
+	context["auto_battle_count"] = int(context.get("auto_battle_count", 0)) + 1
+	var entry: Dictionary = session.overworld.encounters[index]
+	var outcome := _simulate_battle(session, context, entry, defender, int(context.auto_battle_count))
+	if not bool(outcome.get("ok", false)):
+		return {"won": false, "ok": false}
+	var final_state := String(outcome.get("state", ""))
+	var won := bool(outcome.get("won", false))
+	var hero_after: Dictionary = outcome.get("hero_after", {})
+	var hero_survivors: Array = outcome.get("hero_survivors", [])
+	var lost := bool(outcome.get("lost", false))
+	var enemy_survivors: Array = outcome.get("enemy_survivors", [])
+	var gained: Dictionary = outcome.get("resources_gained", {})
 	_add_pool(context.state.treasury, gained)
 	var events := []
 	var label := _defender_label(defender)
