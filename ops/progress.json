@@ -16613,11 +16613,11 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ai-hero-expansion-20261007",
-  "currentSliceId": "ai-hero-expansion-20261007",
-  "currentSliceNotes": "COMPLETED 2026-10-07. Owner playtest 2026-10-07 (seed 579873210, won on day 32): the computer player explored 486 of 1296 tiles, held 6 sites and its main hero stood 11 days in a dead end. Causes: guards scored -4x their power (negative even at 2-3x), no value for ground a guard opens or for sites in its zone, idle lesser heroes filling the only exit, and guard-zone tiles on object bodies being enterable. AiHeroRules now values guards by reward, zone contents and passage less a Lanchester loss estimate, judges previewed fights by actual losses, gives idle heroes a second look at dismissed fights and then sends them to wait by their home town, and keeps heroes off blocked zone tiles; visit buildings are valued once in gold and need the hero level and price; AI auto-resolve wins count; the routed-commander text no longer says raid. ai_player_rules_report replays the owner's map: 625 tiles, 7 guards, 16 sites, no idle stalls by day 29 (old code 486/2/6 with a 14-day stall). Large perf run median 1.2 s, max 3.0 s (was 0.8/2.3) with twice the fights. validate_repo unchanged.",
+  "currentSlice": "perf-battle-entry-transition-20261007",
+  "currentSliceId": "perf-battle-entry-transition-20261007",
+  "currentSliceNotes": "COMPLETED 2026-10-07. Owner playtest: entering battle showed a gray screen and took a while. Cause: scene changes requested from timers (the new battle approach walk, battle exit) drew one frame with no scene, and the battle shell then spent about 1.4 s building behind it. AppRouter._change_scene now covers every route with a snapshot of the last frame (SceneTransitionCover) until the new scene has drawn, then fades it over 120 ms. Battle unit art loads on worker threads during the walk (BattleArtPrewarm); the entry autosave skips a redundant normalize and caches its own summary so the battle save bar no longer re-reads the save (156 ms -> 2 ms); the first battle refresh skips hidden surfaces (collapsed sidebar, hidden tooltip, save status lines) and builds them after the fade; BattleRules movement intents reuse per-destination setup. Owner Day 8 save: walk end -> battle visible 1,651 ms -> about 440 ms; battle_ready 721 -> 84 ms; no frame without scene or cover. Validation: battle_entry_transition_report (30 checks; fails 8 with the cover off), battle/save/transition reports unchanged, validate_repo unchanged. Follow-up: one ~350 ms frame right after the fade (sidebar plus the action-guide tooltip's BattleRules path search).",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "AI heroes clear guards and leave their starting zone",
+  "currentSliceTitle": "No gray frame on scene changes; battles open about 4x faster",
   "currentSliceUpdatedAt": "2026-10-08T00:30:00Z",
   "deferredRiskRegister": [
     {
@@ -114220,6 +114220,19 @@
         "docs/ai-plays-by-player-rules.md"
       ],
       "notes": "Owner playtest 2026-10-07 (seed 579873210, won on day 32): the computer player explored 486 of 1296 tiles, held 6 sites and its main hero stood 11 days in a dead end. Causes: guards scored -4x their power (negative even at 2-3x), no value for ground a guard opens or for sites in its zone, idle lesser heroes filling the only exit, and guard-zone tiles on object bodies being enterable. AiHeroRules now values guards by reward, zone contents and passage less a Lanchester loss estimate, judges previewed fights by actual losses, gives idle heroes a second look at dismissed fights and then sends them to wait by their home town, and keeps heroes off blocked zone tiles; visit buildings are valued once in gold and need the hero level and price; AI auto-resolve wins count; the routed-commander text no longer says raid. ai_player_rules_report replays the owner's map: 625 tiles, 7 guards, 16 sites, no idle stalls by day 29 (old code 486/2/6 with a 14-day stall). Large perf run median 1.2 s, max 3.0 s (was 0.8/2.3) with twice the fights. validate_repo unchanged."
+    },
+    {
+      "id": "perf-battle-entry-transition-20261007",
+      "title": "No gray frame on scene changes; battles open about 4x faster",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "runtime_performance_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/battle-entry-transition.md"
+      ],
+      "notes": "Owner playtest: entering battle showed a gray screen and took a while. Cause: scene changes requested from timers (the new battle approach walk, battle exit) drew one frame with no scene, and the battle shell then spent about 1.4 s building behind it. AppRouter._change_scene now covers every route with a snapshot of the last frame (SceneTransitionCover) until the new scene has drawn, then fades it over 120 ms. Battle unit art loads on worker threads during the walk (BattleArtPrewarm); the entry autosave skips a redundant normalize and caches its own summary so the battle save bar no longer re-reads the save (156 ms -> 2 ms); the first battle refresh skips hidden surfaces (collapsed sidebar, hidden tooltip, save status lines) and builds them after the fade; BattleRules movement intents reuse per-destination setup. Owner Day 8 save: walk end -> battle visible 1,651 ms -> about 440 ms; battle_ready 721 -> 84 ms; no frame without scene or cover. Validation: battle_entry_transition_report (30 checks; fails 8 with the cover off), battle/save/transition reports unchanged, validate_repo unchanged. Follow-up: one ~350 ms frame right after the fade (sidebar plus the action-guide tooltip's BattleRules path search)."
     }
   ],
   "project": "heroes-like",
@@ -114879,7 +114892,7 @@
   ],
   "summary": "Owner-directed overworld actor readability completed: 112 original generated hero/creature sprites, full-size town visitors, painted-bound scale and cached alpha-edge contrast. Source/Linux/Windows visual/runtime acceptance, Large travel/AI/fog, existing reports, full repository and official exports/parity pass; 3.255 GB disposable outputs cleaned. Prior generated-world quality work remains completed; gameplay/native generation and save schema are unchanged. Broader production/release limits remain in project.md.",
   "taskId": "10236",
-  "updatedAt": "2026-10-07T23:30:00Z",
+  "updatedAt": "2026-10-08T00:30:00Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",
