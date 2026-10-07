@@ -467,7 +467,7 @@ func _town_management_card_contract(shell: Node, viewport_size: Vector2i) -> Dic
 		{"title": "Build", "page": shell.get_node_or_null("%BuildPanel"), "controls": [shell.get_node_or_null("%Buildings"), shell.get_node_or_null("%OpenBuildCatalog")]},
 		{"title": "Muster", "page": shell.get_node_or_null("%RecruitPanel"), "controls": [shell.get_node_or_null("%Recruitment"), shell.get_node_or_null("%OpenMusterCatalog")]},
 		{"title": "Spells", "page": shell.get_node_or_null("%StudyPanel"), "controls": [shell.get_node_or_null("%StudyScroll")]},
-		{"title": "Trade", "page": shell.get_node_or_null("%MarketPanel"), "controls": [shell.get_node_or_null("%Market"), shell.get_node_or_null("%MarketActions")]},
+		{"title": "Trade", "page": shell.get_node_or_null("%MarketPanel"), "controls": [shell.get_node_or_null("%MarketPanel/MarketPad/MarketBox/MarketTitle")]},
 		{"title": "Log", "page": shell.get_node_or_null("%LogisticsPanel"), "controls": [shell.get_node_or_null("%LogisticsScroll")]},
 	]
 	if sidebar_shell == null or command_panel == null or tabs == null or sidebar_box == null:

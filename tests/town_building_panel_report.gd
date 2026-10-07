@@ -4,7 +4,8 @@ extends Node
 ## template it clicks built buildings through the real TownShell hotspot route
 ## and checks each kind's own body: dwelling recruitment with an amount and its
 ## upgrade, magic guild spell shelves by level, tavern heroes and hiring, hero
-## training and artifact services, market hand-off and plain upgrade lines.
+## training and artifact services, the market's trading desk and plain upgrade
+## lines.
 
 const TownShellScene = preload("res://scenes/town/TownShell.tscn")
 const Board = preload("res://scripts/core/TownConstructionBoard.gd")
@@ -244,7 +245,8 @@ func _run_town(template_id: String, viewport_size: Vector2i) -> Dictionary:
 	info = await _open(shell, ids.market)
 	_no_scroll(failures, info, "market")
 	panel = info.get("panel", {})
-	_check(failures, String(panel.get("kind", "")) == "market" and not _entry(panel.get("services", []), "id", "open:trade").is_empty(), "market hand-off")
+	var desk: Dictionary = panel.get("market", {})
+	_check(failures, String(panel.get("kind", "")) == "market" and _entry(panel.get("services", []), "id", "open:trade").is_empty() and String(desk.get("mode", "")) != "" and bool(desk.get("trade_enabled", false)), "market trades in its own popout %s" % desk)
 	_check(failures, bool(panel.get("upgrade", {}).get("has_line", false)), "market upgrade line")
 
 	# A plain building: description, effects and its next stage.

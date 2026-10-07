@@ -2,6 +2,7 @@ extends Node
 
 const TownShellScene = preload("res://scenes/town/TownShell.tscn")
 const TownStageViewScript = preload("res://scenes/town/TownStageView.gd")
+const TownBuildingPanelScript = preload("res://scripts/core/TownBuildingPanel.gd")
 const VIEWPORT_SIZES := [Vector2i(2048, 1079), Vector2i(1280, 720)]
 const FACTION_IDS := [
 	"faction_embercourt",
@@ -16,10 +17,11 @@ const DIRECT_MODES := ["build", "muster", "spells", "trade", "log"]
 const EXPECTED_TITLES := {
 	"build": "Construction",
 	"muster": "Muster Hall",
-	"spells": "Spellbook · Town Archives",
-	"trade": "Town Market",
 	"log": "Town Log & Logistics",
 }
+## Spells and Trade open their building's popout: the magic guild and market
+## have no separate window.
+const BUILDING_POPOUT_MODES := ["spells", "trade"]
 const CAPTURE_DIR := "res://.artifacts/town_screen_layout_and_dialog_controls/captures"
 
 var _errors: Array = []
@@ -102,9 +104,19 @@ func _run_shell_case(viewport_size: Vector2i) -> Dictionary:
 	for mode_value in DIRECT_MODES:
 		var mode := String(mode_value)
 		var result: Dictionary = shell.call("validation_activate_direct_action", mode)
-		var exact := bool(result.get("dialog_open", false)) \
-			and String(result.get("active_dialog_mode", "")) == mode \
-			and String(result.get("dialog_title", "")) == String(EXPECTED_TITLES[mode])
+		var exact := false
+		if mode in BUILDING_POPOUT_MODES:
+			var live_town: Dictionary = TownRules.get_active_town(SessionState.ensure_active_session())
+			var building_id := TownBuildingPanelScript.guild_building_id(live_town) if mode == "spells" else TownBuildingPanelScript.market_building_id(live_town)
+			var button: Button = shell.get_node("%SpellsAction" if mode == "spells" else "%TradeAction")
+			exact = (building_id == "" and button.disabled and not bool(result.get("dialog_open", true))) \
+				or (building_id != "" and bool(result.get("dialog_open", false)) \
+				and String(result.get("active_dialog_mode", "")) == "building_info" \
+				and String(result.get("dialog_title", "")) == String(ContentService.get_building(building_id).get("name", "")))
+		else:
+			exact = bool(result.get("dialog_open", false)) \
+				and String(result.get("active_dialog_mode", "")) == mode \
+				and String(result.get("dialog_title", "")) == String(EXPECTED_TITLES[mode])
 		if not exact:
 			_errors.append("%s direct %s dialog route failed: %s" % [viewport_size, mode, result])
 		dialog_rows.append({"mode": mode, "title": result.get("dialog_title", ""), "exact": exact})

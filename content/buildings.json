@@ -4430,8 +4430,7 @@
       "name": "Marketplace",
       "category": "economy",
       "cost": {
-        "gold": 1000,
-        "wood": 5
+        "gold": 3000
       },
       "requires": [
         "building_town_hall"
@@ -4455,15 +4454,14 @@
         "sell_cap_bonus": {},
         "specialty_summary": "Resource exchange; upgraded brokers offer better rates and bulk trades."
       },
-      "description": "Exchange wood and ore for gold. Basic exchange rates."
+      "description": "Buy and sell wood and ore for gold, or convert one into the other. Basic rates."
     },
     {
       "id": "building_dev_trade_exchange",
       "name": "Trade Exchange",
       "category": "economy",
       "cost": {
-        "gold": 2500,
-        "wood": 5
+        "gold": 4500
       },
       "requires": [
         "building_market_square"

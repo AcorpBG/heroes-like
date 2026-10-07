@@ -195,30 +195,15 @@ func run() -> void:
 	await frames()
 	click(shell._spells_action_button)
 	await frames()
-	check(shell._town_catalog_mode == "spells" and shell._spellbook_view.is_visible_in_tree(), "town icon did not open shared book")
-	check(get_viewport().get_visible_rect().encloses(shell._town_catalog_panel.get_global_rect()), "town book panel exceeds viewport")
-	var book: Control = shell._spellbook_view
-	check_book(book)
-	filters(book, TownRules.accessible_spell_ids(town))
-	await capture("town-spellbook")
-	if DisplayServer.get_name() != "headless":
-		var first: Button = book._grid.get_child(0)
-		var hover := InputEventMouseMotion.new()
-		hover.position = first.get_global_rect().get_center()
-		hover.global_position = hover.position
-		get_viewport().push_input(hover, true)
-		await get_tree().create_timer(0.85).timeout
-		var help = get_node("/root/ContextualHelp")
-		check(help._hover_text == first.tooltip_text, "hover did not expose selected spell description")
-		if help._hover_card != null:
-			var card: Control = help._hover_card.get_ref()
-			check(card != null and get_viewport().get_visible_rect().encloses(card.get_global_rect()), "spell tooltip exceeds viewport")
-		await capture("town-spell-hover")
-		help.dismiss()
+	# The town's spells live in the magic guild's building popout, the same
+	# window a click on the guild opens; the hero sheet below keeps the book.
+	check(shell._town_catalog_mode == "building_info" and shell._building_info_surface.is_visible_in_tree() and shell._building_info_surface.model().get("kind", "") == "guild", "town icon did not open the guild popout")
+	check(get_viewport().get_visible_rect().encloses(shell._town_catalog_panel.get_global_rect()), "town guild panel exceeds viewport")
+	await capture("town-guild")
 	key(KEY_ESCAPE)
 	await frames()
-	check(not shell._town_catalog_is_open(), "Escape failed to close town book")
-	check(get_viewport().gui_get_focus_owner() == shell._spells_action_button, "town book did not restore launcher focus")
+	check(not shell._town_catalog_is_open(), "Escape failed to close the town guild")
+	check(get_viewport().gui_get_focus_owner() == shell._spells_action_button, "town guild did not restore launcher focus")
 	shell.queue_free()
 	await frames()
 	# Hero page is detached read-only data; all authored spells test scrolling.
@@ -231,7 +216,7 @@ func run() -> void:
 	sheet._tabs.current_tab = 3
 	await frames()
 	var before: Dictionary = session.to_dict().duplicate(true)
-	book = sheet._spellbook_view
+	var book: Control = sheet._spellbook_view
 	check_book(book)
 	filters(book, all_ids)
 	await frames()

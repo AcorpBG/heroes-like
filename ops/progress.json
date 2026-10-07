@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "feature-hero-hire-army-level-20261007",
-  "currentSliceId": "feature-hero-hire-army-level-20261007",
-  "currentSliceNotes": "COMPLETED 2026-10-07. Owner playtest: new heroes came without units and always at level 1. HeroCommandRules.tavern_offer fixes each weekly offer's level (about 87% L1, 10% L2, 3% L3) and HoMM3-style starting army (a tier-1 company sized 0.75-1.5x weekly growth, 75% a second tier-2 or tier-1 company), deterministic per session/scenario/week/hero. All hires go through HeroCommandRules.build_recruited_hero (levels via the new HeroProgressionRules.advance_to_level, full mana); start heroes with empty scenario armies get a starting army; a won town defense keeps one garrison creature with a hero whose troops died; SaveService restore gives empty-army player heroes (and empty AI raid commanders) their starting army. The tavern card shows level and army. Validation: hero_hire_army_level_report (2,496 offers, 384 hires, save/load determinism, old-save restore, one-creature rules, card at both resolutions); town/rendezvous/hero selection reports unchanged; validate_repo unchanged. Follow-up: AI hiring through build_recruited_hero (AI slice).",
+  "currentSlice": "ux-town-market-popout-20261007",
+  "currentSliceId": "ux-town-market-popout-20261007",
+  "currentSliceNotes": "COMPLETED 2026-10-07. Owner playtest: the Town screen kept separate market and magic guild windows besides the building popouts, trading lacked resource-to-resource conversion, and the market should cost only gold. The Trade/Spells commands, building clicks and every trade-for-it button (construction board, popout upgrade lines, dwelling and Muster Hall recruit cards) now open the market or highest guild popout; the Town Market dialog, town spellbook dialog and the popout's Open market hand-off are removed. The market popout is a HoMM-style desk (give/get, slider, quote, trade): buy and sell at the existing rates plus direct wood/ore conversion priced at the received resource's mid rate paid at the given resource's sell rate, within weekly sell/buy limits (TownRules.market_trade_quote, market_conversion_rate, market_desk, perform_market_action market:convert). Rare resources stay import-only gold buys at the Trade Exchange. Marketplace 1,000 gold + 5 wood -> 3,000 gold; Trade Exchange 2,500 gold + 5 wood -> 4,500 gold (wood at the AI's 400-gold construction value). Trade Exchange bulk lots apply to every full lot. Validation: town_market_popout_report (six towns, headless and windowed), town_building_panel/construction/hero hire reports pass, town development 688/688 and rare imports 198/198, other town failures match the baseline, validate_repo unchanged. Follow-ups: AI never converts resources; hidden legacy tab strip and spell-study lane remain in TownShell.tscn.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Hired heroes come with a starting army and a weekly level",
-  "currentSliceUpdatedAt": "2026-10-07T19:30:00Z",
+  "currentSliceTitle": "Market and magic guild live only in their building popouts; resource conversion; gold-only market",
+  "currentSliceUpdatedAt": "2026-10-07T20:30:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -114125,6 +114125,20 @@
         "docs/town-building-popouts.md"
       ],
       "notes": "Owner playtest: new heroes came without units and always at level 1. HeroCommandRules.tavern_offer fixes each weekly offer's level (about 87% L1, 10% L2, 3% L3) and HoMM3-style starting army (a tier-1 company sized 0.75-1.5x weekly growth, 75% a second tier-2 or tier-1 company), deterministic per session/scenario/week/hero. All hires go through HeroCommandRules.build_recruited_hero (levels via the new HeroProgressionRules.advance_to_level, full mana); start heroes with empty scenario armies get a starting army; a won town defense keeps one garrison creature with a hero whose troops died; SaveService restore gives empty-army player heroes (and empty AI raid commanders) their starting army. The tavern card shows level and army. Validation: hero_hire_army_level_report (2,496 offers, 384 hires, save/load determinism, old-save restore, one-creature rules, card at both resolutions); town/rendezvous/hero selection reports unchanged; validate_repo unchanged. Follow-up: AI hiring through build_recruited_hero (AI slice)."
+    },
+    {
+      "id": "ux-town-market-popout-20261007",
+      "title": "Market and magic guild live only in their building popouts; resource conversion; gold-only market",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/town-market.md",
+        "docs/town-building-popouts.md"
+      ],
+      "notes": "Owner playtest: the Town screen kept separate market and magic guild windows besides the building popouts, trading lacked resource-to-resource conversion, and the market should cost only gold. The Trade/Spells commands, building clicks and every trade-for-it button (construction board, popout upgrade lines, dwelling and Muster Hall recruit cards) now open the market or highest guild popout; the Town Market dialog, town spellbook dialog and the popout's Open market hand-off are removed. The market popout is a HoMM-style desk (give/get, slider, quote, trade): buy and sell at the existing rates plus direct wood/ore conversion priced at the received resource's mid rate paid at the given resource's sell rate, within weekly sell/buy limits (TownRules.market_trade_quote, market_conversion_rate, market_desk, perform_market_action market:convert). Rare resources stay import-only gold buys at the Trade Exchange. Marketplace 1,000 gold + 5 wood -> 3,000 gold; Trade Exchange 2,500 gold + 5 wood -> 4,500 gold (wood at the AI's 400-gold construction value). Trade Exchange bulk lots apply to every full lot. Validation: town_market_popout_report (six towns, headless and windowed), town_building_panel/construction/hero hire reports pass, town development 688/688 and rare imports 198/198, other town failures match the baseline, validate_repo unchanged. Follow-ups: AI never converts resources; hidden legacy tab strip and spell-study lane remain in TownShell.tscn."
     }
   ],
   "project": "heroes-like",
@@ -114784,7 +114798,7 @@
   ],
   "summary": "Owner-directed overworld actor readability completed: 112 original generated hero/creature sprites, full-size town visitors, painted-bound scale and cached alpha-edge contrast. Source/Linux/Windows visual/runtime acceptance, Large travel/AI/fog, existing reports, full repository and official exports/parity pass; 3.255 GB disposable outputs cleaned. Prior generated-world quality work remains completed; gameplay/native generation and save schema are unchanged. Broader production/release limits remain in project.md.",
   "taskId": "10236",
-  "updatedAt": "2026-10-07T19:30:00Z",
+  "updatedAt": "2026-10-07T20:30:00Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",

@@ -30987,7 +30987,7 @@ def validate_town_market_exchange_completion_feedback(errors: list[str]) -> None
 
     stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
-        'event_id == "town_market_exchange_completed" and String(presentation.get("exchange_action", "")) not in ["buy", "sell"]',
+        'event_id == "town_market_exchange_completed" and String(presentation.get("exchange_action", "")) not in ["buy", "sell", "convert"]',
         'event_id == "town_market_exchange_completed" and String(presentation.get("exchange_resource_id", "")) not in ["wood", "ore"]',
         'event_id == "town_market_exchange_completed" and int(presentation.get("exchange_amount", 0)) <= 0',
         'event_id == "town_market_exchange_completed" and Array(presentation.get("resource_deltas", [])).size() != 2',
@@ -32202,7 +32202,6 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
             ("LogisticsPanel", "PanelContainer"),
             ("Defense", "Label"),
             ("Pressure", "Label"),
-            ("Market", "Label"),
             ("Responses", "Label"),
             ("Event", "Label"),
             ("FooterPanel", "PanelContainer"),
@@ -32267,7 +32266,7 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         "TownRules.perform_response_action",
         "_defense_label",
         "_pressure_label",
-        "_market_label",
+        "_building_info_surface.market_trade_requested.connect(_on_building_market_trade_requested)",
         "_market_actions",
         "_response_label",
         "_response_actions",
@@ -35820,8 +35819,11 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
     ):
         ensure(token in script_text, errors, f"TownShell owner-directed layout contract is missing: {token}")
     open_catalog = gd_function_block(script_text, "_open_town_catalog")
-    for mode, title in (("muster", "Muster Hall"), ("spells", "Spellbook · Town Archives"), ("trade", "Town Market"), ("log", "Town Log & Logistics")):
+    for mode, title in (("muster", "Muster Hall"), ("log", "Town Log & Logistics")):
         ensure(f'"{mode}"' in open_catalog and f'"{title}"' in open_catalog, errors, f"Town direct {mode} dialog must retain its authored title and route")
+    # The magic guild and market have one window each: their building popout.
+    for handler, route in (("_on_open_spells_dialog_pressed", "_open_guild_popout()"), ("_on_open_trade_dialog_pressed", "_open_market_popout()")):
+        ensure(route in gd_function_block(script_text, handler), errors, f"Town direct {handler} must open the building popout through {route}")
     ensure('if mode == "build":' in open_catalog and "_open_construction_screen()" in open_catalog, errors, "Town direct build route must open the full-screen construction board")
 
     ensure(stage_text.count("const MAIN_BUILDING_HOTSPOTS := {") == 1, errors, "TownStageView must own one explicit normalized main-building hotspot map")

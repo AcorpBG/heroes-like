@@ -454,7 +454,7 @@ func present_town_action(presentation: Dictionary) -> Dictionary:
 		or event_id == "town_units_recruited" and int(presentation.get("recruited_count", 0)) <= 0
 		or event_id == "town_building_built" and String(presentation.get("building_id", "")) == ""
 		or event_id == "town_route_response_ordered" and String(presentation.get("response_placement_id", "")) == ""
-		or event_id == "town_market_exchange_completed" and String(presentation.get("exchange_action", "")) not in ["buy", "sell"]
+		or event_id == "town_market_exchange_completed" and String(presentation.get("exchange_action", "")) not in ["buy", "sell", "convert"]
 		or event_id == "town_market_exchange_completed" and String(presentation.get("exchange_resource_id", "")) not in ["wood", "ore"]
 		or event_id == "town_market_exchange_completed" and int(presentation.get("exchange_amount", 0)) <= 0
 		or event_id == "town_market_exchange_completed" and not (presentation.get("resource_deltas", []) is Array)
