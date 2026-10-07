@@ -27,6 +27,13 @@ static var _consequence_cache: Dictionary = {}
 # compare equal. Building one deep-copies and re-normalizes the commander, and
 # every trait, initiative and damage check asks for it. Never saved.
 static var _hero_payload_cache: Dictionary = {}
+# Board reads memoized inside a board read scope; see begin_board_read_scope().
+# Never saved.
+static var _board_read_scope_depth := 0
+static var _board_read_scope_battle: Dictionary = {}
+static var _board_read_scope_cache: Dictionary = {}
+static var _validation_board_read_cache_disabled := false
+static var _board_read_cache_hits := 0
 
 const STATUS_HARRIED := "status_harried"
 const STATUS_STAGGERED := "status_staggered"
@@ -1427,12 +1434,59 @@ static func legal_destinations_for_active_stack(battle: Dictionary) -> Array:
 	return legal_destinations_for_stack(battle, String(battle.get("active_stack_id", "")))
 
 static func legal_destinations_for_stack(battle: Dictionary, battle_id: String) -> Array:
+	var cache_key := _board_read_cache_key(battle, "destinations", battle_id)
+	var cached: Variant = _board_read_cache_get(cache_key)
+	if cached != null:
+		return cached
+	var destinations := []
 	var stack = _get_stack_by_id(battle, battle_id)
 	if stack.is_empty() or _alive_count(stack) <= 0:
-		return []
-	if _advance_distance_delta(stack, battle) <= 0 and int(battle.get("distance", 1)) > 0:
-		return []
-	return _reachable_empty_hexes(battle, stack, _stack_movement_points(stack, battle))
+		destinations = []
+	elif _advance_distance_delta(stack, battle) <= 0 and int(battle.get("distance", 1)) > 0:
+		destinations = []
+	else:
+		destinations = _reachable_empty_hexes(battle, stack, _stack_movement_points(stack, battle))
+	if cache_key != "":
+		_board_read_scope_cache[cache_key] = destinations.duplicate(true)
+	return destinations
+
+## Opens a scope in which the caller does not move, add, remove or change any
+## stack, field objective or town defense of `battle`, as while describing one
+## board state. Board reads repeated inside it (reachable hexes per stack) are
+## computed once. Target-selection bookkeeping may still change: those reads do
+## not depend on it. Scopes nest; only the outermost battle is memoized. Every
+## begin needs its end_board_read_scope().
+static func begin_board_read_scope(battle: Dictionary) -> void:
+	if _board_read_scope_depth == 0:
+		_board_read_scope_battle = battle
+		_board_read_scope_cache = {}
+	_board_read_scope_depth += 1
+
+static func end_board_read_scope() -> void:
+	_board_read_scope_depth = maxi(0, _board_read_scope_depth - 1)
+	if _board_read_scope_depth == 0:
+		_board_read_scope_battle = {}
+		_board_read_scope_cache = {}
+
+## Reports compare board reads with and without the scope memo.
+static func validation_set_board_read_cache_enabled(enabled: bool) -> void:
+	_validation_board_read_cache_disabled = not enabled
+
+static func validation_board_read_cache_hits() -> int:
+	return _board_read_cache_hits
+
+static func _board_read_cache_get(cache_key: String) -> Variant:
+	if cache_key == "" or not _board_read_scope_cache.has(cache_key):
+		return null
+	_board_read_cache_hits += 1
+	return _board_read_scope_cache[cache_key].duplicate(true)
+
+static func _board_read_cache_key(battle: Dictionary, kind: String, id: String) -> String:
+	if _board_read_scope_depth <= 0 or _validation_board_read_cache_disabled or not is_same(battle, _board_read_scope_battle):
+		return ""
+	# A guard, not the contract: a stack that changed inside the scope misses
+	# the cache instead of reading an answer for the old board.
+	return "%s|%s|%d|%d|%d|%d" % [kind, id, hash(battle.get("stacks", [])), hash(battle.get(FIELD_OBJECTIVES_KEY, [])), int(battle.get("distance", 1)), int(battle.get("round", 1))]
 
 static func legal_attack_targets_for_active_stack(battle: Dictionary, ranged: bool = false) -> Array:
 	var active_stack = get_active_stack(battle)
@@ -1692,6 +1746,8 @@ static func legal_movement_intents_for_active_stack(
 	preloaded_legal_destinations: Variant = null
 ) -> Array:
 	var intents := []
+	# Every destination's intent re-reads the same board; read it once.
+	begin_board_read_scope(battle)
 	var destinations: Array = (
 		preloaded_legal_destinations
 		if preloaded_legal_destinations is Array
@@ -1706,6 +1762,7 @@ static func legal_movement_intents_for_active_stack(
 			int(destination.get("r", -1)),
 			destinations
 		))
+	end_board_read_scope()
 	return intents
 
 static func _legal_destination_from_preloaded(destinations: Array, q: int, r: int) -> Dictionary:
@@ -1929,11 +1986,17 @@ static func melee_approach_destination(battle: Dictionary, stack: Dictionary, ta
 		return {}
 	if String(stack.get("side", "")) == String(target.get("side", "")) or _can_make_melee_attack(stack, battle, target):
 		return {}
+	var cache_key := _board_read_cache_key(battle, "approach", "%d|%d" % [hash(stack), hash(target)])
+	var cached: Variant = _board_read_cache_get(cache_key)
+	if cached != null:
+		return cached
 	var best := {}
 	for cell in legal_destinations_for_stack(battle, String(stack.get("battle_id", ""))):
 		if Footprint.distance(stack, target, cell) != 1: continue
 		if best.is_empty() or int(cell.get("steps", 0)) < int(best.get("steps", 0)):
 			best = cell
+	if cache_key != "":
+		_board_read_scope_cache[cache_key] = best.duplicate(true)
 	return best.duplicate(true)
 
 static func _can_melee_this_action(stack: Dictionary, battle: Dictionary, target: Dictionary) -> bool:
@@ -1942,10 +2005,15 @@ static func _can_melee_this_action(stack: Dictionary, battle: Dictionary, target
 static func _attack_legality_for_target(active_stack: Dictionary, target: Dictionary, battle: Dictionary) -> Dictionary:
 	if active_stack.is_empty() or target.is_empty():
 		return {"battle_id": "", "melee": false, "ranged": false, "attackable": false, "blocked": false, "hex_distance": -1}
+	# Keyed by the exact stacks passed, so a moved projection is its own entry.
+	var cache_key := _board_read_cache_key(battle, "legality", "%d|%d" % [hash(active_stack), hash(target)])
+	var cached: Variant = _board_read_cache_get(cache_key)
+	if cached != null:
+		return cached
 	var hex_distance := _stack_hex_distance(active_stack, target)
 	var melee_legal := _can_melee_this_action(active_stack, battle, target)
 	var ranged_legal := _can_make_ranged_attack(active_stack, battle, target)
-	return {
+	var legality := {
 		"battle_id": String(target.get("battle_id", "")),
 		"melee": melee_legal,
 		"ranged": ranged_legal,
@@ -1953,6 +2021,9 @@ static func _attack_legality_for_target(active_stack: Dictionary, target: Dictio
 		"blocked": not melee_legal and not ranged_legal,
 		"hex_distance": hex_distance,
 	}
+	if cache_key != "":
+		_board_read_scope_cache[cache_key] = legality.duplicate()
+	return legality
 
 static func battle_hex_state_summary(battle: Dictionary) -> Dictionary:
 	var active_stack = get_active_stack(battle)
@@ -9275,6 +9346,16 @@ static func _preferred_default_target_for_active_stack(
 	return {}
 
 static func _legal_attack_target_ids_for_active_stack(battle: Dictionary) -> Array:
+	var cache_key := _board_read_cache_key(battle, "attack_target_ids", String(battle.get("active_stack_id", "")))
+	var cached: Variant = _board_read_cache_get(cache_key)
+	if cached != null:
+		return cached
+	var ids := _legal_attack_target_ids_for_active_stack_uncached(battle)
+	if cache_key != "":
+		_board_read_scope_cache[cache_key] = ids.duplicate()
+	return ids
+
+static func _legal_attack_target_ids_for_active_stack_uncached(battle: Dictionary) -> Array:
 	var ids := []
 	var seen := {}
 	for battle_id_value in legal_attack_targets_for_active_stack(battle, false):

@@ -1854,6 +1854,8 @@ func _refresh(defer_entry_surfaces: bool = false) -> void:
 		_normalized_battle_session = _session
 		_normalized_battle_snapshot = _session.battle.duplicate(true)
 	buckets["normalize_battle"] = ProfileLogScript.elapsed_ms(section_started)
+	# The rest of the refresh only describes this board; read it once.
+	BattleRules.begin_board_read_scope(_session.battle)
 
 	section_started = ProfileLogScript.begin_usec()
 	_rebuild_spell_actions()
@@ -1923,6 +1925,7 @@ func _refresh(defer_entry_surfaces: bool = false) -> void:
 		_refresh_action_guide_surface(intent_forecast, action_confirmation)
 	_battle_board_view.set_battle_state(_session)
 	buckets["surface_and_board"] = ProfileLogScript.elapsed_ms(section_started)
+	BattleRules.end_board_read_scope()
 	if _briefing_consumption_autosave_failure_pending:
 		_apply_briefing_consumption_autosave_failure_surface(false)
 	ProfileLogScript.emit_general("battle", "refresh", "battle_refresh", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false), _session)
@@ -2086,6 +2089,7 @@ func _complete_entry_secondary_surfaces(split_frames: bool = false) -> void:
 		return
 	if _action_playback_in_progress or _battle_exit_handoff_in_progress:
 		return
+	BattleRules.begin_board_read_scope(_session.battle)
 	while not _entry_pending_surfaces.is_empty():
 		var part := String(_entry_pending_surfaces.pop_front())
 		var section_started := ProfileLogScript.begin_usec()
@@ -2106,7 +2110,9 @@ func _complete_entry_secondary_surfaces(split_frames: bool = false) -> void:
 			var next_part := _complete_entry_secondary_surfaces.bind(true)
 			if not get_tree().process_frame.is_connected(next_part):
 				get_tree().process_frame.connect(next_part, CONNECT_ONE_SHOT)
+			BattleRules.end_board_read_scope()
 			return
+	BattleRules.end_board_read_scope()
 	if _entry_load_resumed_cue_pending:
 		_entry_load_resumed_cue_pending = false
 		_present_load_resumed_cue()
