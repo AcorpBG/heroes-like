@@ -40,6 +40,8 @@ const BUILD_HORIZON_WEEKS := 2.0
 ## A town whose dwellings muster less than this (gold value) a week is short
 ## of troops.
 const STARVED_TOWN_WEEKLY_TROOPS := 1500.0
+## With this margin a fight is won without a second look.
+const CLEAR_WIN_RATIO := 3.0
 ## Fights a hero sizes up and turns down before settling on a decision.
 const MAX_FIGHT_VETOES := 3
 ## A hand-over of troops is worth at most what a modest site is worth.
@@ -392,6 +394,7 @@ static func run_faction_turn(
 	phases["heroes_ms"] = _elapsed_ms(phase)
 	phases["searches"] = int(context.get("search_count", 0))
 	phases["auto_battles"] = int(context.get("auto_battle_count", 0))
+	phases["fight_previews"] = int(context.get("preview_count", 0))
 	for key in context.get("profile", {}).keys():
 		phases[key] = int(round(float(context.profile[key])))
 	_store_explored(context)
@@ -1536,7 +1539,7 @@ static func _candidate(session: SessionStateStoreScript.SessionData, context: Di
 			var other_power := hero_power(other)
 			if power < other_power * HERO_ATTACK_RATIO:
 				return {}
-			return {"kind": "ai_hero", "id": String(other.get("placement_id", "")), "index": int(ref.index), "value": 1200.0 + other_power * TROOP_VALUE_PER_POWER * 0.5}
+			return {"kind": "ai_hero", "id": String(other.get("placement_id", "")), "index": int(ref.index), "value": 1200.0 + other_power * TROOP_VALUE_PER_POWER * 0.5, "fight_power": other_power}
 	return {}
 
 ## A lesser hero walks its troops over to the main hero, the way a human
@@ -2528,11 +2531,24 @@ static func _fight_looks_good(session: SessionStateStoreScript.SessionData, cont
 	var defender_index := int(plan.get("index", -1))
 	if defender_index < 0 or defender_index >= encounters.size():
 		return true
+	# An overwhelming margin needs no second look.
+	var power := hero_power(entry)
+	if float(plan.get("fight_power", 0.0)) > 0.0 and power >= float(plan.fight_power) * CLEAR_WIN_RATIO:
+		return true
 	context["preview_count"] = int(context.get("preview_count", 0)) + 1
-	var outcome := _simulate_battle(session, context, entry, encounters[defender_index], int(context.get("auto_battle_count", 0)) + 1)
+	var defender: Dictionary = encounters[defender_index]
+	var battle_number := int(context.get("auto_battle_count", 0)) + 1
+	var started := Time.get_ticks_usec()
+	var outcome := _simulate_battle(session, context, entry, defender, battle_number)
+	_profile_add(context, "preview_ms", started)
+	# The fight that follows is this same battle; keep it for the hero to use.
+	context["fight_preview"] = {"key": _battle_key(entry, defender, battle_number), "outcome": outcome}
 	if not bool(outcome.get("won", false)):
 		return false
 	return army_power(outcome.get("hero_survivors", [])) >= army_power(entry.get("enemy_army", {}).get("stacks", [])) * 0.5
+
+static func _battle_key(entry: Dictionary, defender: Dictionary, battle_number: int) -> String:
+	return "%s|%s|%d|%d|%d" % [String(entry.get("placement_id", "")), String(defender.get("placement_id", "")), battle_number, hash(entry.get("enemy_army", {}).get("stacks", [])), hash(_neutral_army(defender).get("stacks", []) if PlayerRules.raid_controller_id(defender) == "" else defender.get("enemy_army", {}).get("stacks", []))]
 
 ## One auto-resolved battle on a scratch session: the hero attacks `defender`.
 ## Pure: the live session is not touched.
@@ -2617,7 +2633,11 @@ static func _simulate_battle(session: SessionStateStoreScript.SessionData, conte
 static func _auto_resolve(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, defender: Dictionary) -> Dictionary:
 	context["auto_battle_count"] = int(context.get("auto_battle_count", 0)) + 1
 	var entry: Dictionary = session.overworld.encounters[index]
-	var outcome := _simulate_battle(session, context, entry, defender, int(context.auto_battle_count))
+	var preview: Dictionary = context.get("fight_preview", {})
+	context.erase("fight_preview")
+	var outcome: Dictionary = preview.get("outcome", {}) if String(preview.get("key", "")) == _battle_key(entry, defender, int(context.auto_battle_count)) else {}
+	if outcome.is_empty():
+		outcome = _simulate_battle(session, context, entry, defender, int(context.auto_battle_count))
 	if not bool(outcome.get("ok", false)):
 		return {"won": false, "ok": false}
 	var final_state := String(outcome.get("state", ""))

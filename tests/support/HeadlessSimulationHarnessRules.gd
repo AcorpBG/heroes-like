@@ -3455,7 +3455,7 @@ static func _strategic_ai_multi_scenario_recruitment_delivery(input_config: Dict
 				"hero_units_after": hero_units_after,
 				"town_recruit_event_count": case_town_recruit_events,
 				"hero_reinforcement_event_count": case_hero_reinforcement_events,
-				"debug_events": _debug_event_lines(events),
+				"event_lines": _event_lines(events),
 				"raid": _raid_execution_signal(after_raid),
 			})
 		scenario_rows.append({
@@ -5840,7 +5840,7 @@ static func _faction_ai_hero_count(session: SessionStateStoreScript.SessionData,
 			count += 1
 	return count
 
-static func _debug_event_lines(events: Array) -> Array:
+static func _event_lines(events: Array) -> Array:
 	var lines := []
 	for event in events:
 		if event is Dictionary:
