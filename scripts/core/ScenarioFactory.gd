@@ -47,6 +47,10 @@ static func create_session(
 	var start := _normalize_position(scenario.get("start", {"x": 0, "y": 0}))
 	var normalized_difficulty: String = DifficultyRulesScript.normalize_difficulty(difficulty)
 	var player_army_state := _build_army_state(army_template)
+	# A start hero never begins without troops: a scenario without a usable
+	# starting army falls back to the hero's own starting army.
+	if not HeroCommandRulesScript.army_has_troops(player_army_state):
+		player_army_state = HeroCommandRulesScript.starting_army_for_hero(hero_template, "%s|start|%s" % [scenario_id, hero_id])
 	var hero_state: Dictionary = HeroCommandRulesScript.build_hero_from_template(hero_template, start, player_army_state, normalized_difficulty)
 	hero_state["is_primary"] = true
 

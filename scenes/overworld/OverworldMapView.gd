@@ -1167,6 +1167,12 @@ func _sync_hero_movement_presentation(presentation: Dictionary) -> void:
 	_sync_presentation_processing()
 	_invalidate_dynamic_layer("hero_movement_started")
 
+## Seconds left in the hero route walk now on screen; 0 when none is playing.
+func hero_movement_remaining_sec() -> float:
+	if not _hero_movement_active:
+		return 0.0
+	return maxf(0.0, _hero_movement_duration_sec - _hero_movement_elapsed_sec)
+
 func _sync_object_resolution_presentation(presentation: Dictionary) -> void:
 	var serial := int(presentation.get("serial", 0))
 	if serial <= 0 or serial == _object_resolution_last_serial:

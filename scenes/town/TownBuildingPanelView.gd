@@ -393,7 +393,19 @@ func _hero_card(hero: Dictionary) -> PanelContainer:
 	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	info.add_theme_constant_override("separation", 4)
 	row.add_child(info)
-	info.add_child(_label(String(hero.get("name", hero_id)), "title", 16))
+	var header := HBoxContainer.new()
+	header.name = "Header"
+	header.add_theme_constant_override("separation", 8)
+	info.add_child(header)
+	var hero_name := _label(String(hero.get("name", hero_id)), "title", 16)
+	hero_name.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	hero_name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header.add_child(hero_name)
+	var level := _chip("Level %d" % int(hero.get("level", 1)), "gold" if int(hero.get("level", 1)) > 1 else "muted")
+	level.name = "Level"
+	level.tooltip_text = "Arrives at level %d with the attack, defense, movement and specialties shown." % int(hero.get("level", 1))
+	level.mouse_filter = Control.MOUSE_FILTER_PASS
+	header.add_child(level)
 	var role := _label("%s · %s" % [String(hero.get("class_name", "")), String(hero.get("summary", ""))], "gold", 13)
 	role.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	role.tooltip_text = String(hero.get("identity", ""))
@@ -418,6 +430,15 @@ func _hero_card(hero: Dictionary) -> PanelContainer:
 	var traits: Array = hero.get("traits", [])
 	if not traits.is_empty():
 		info.add_child(_wrapped("Battle traits: %s" % ", ".join(traits), "muted", 12))
+	var army: Array = hero.get("army", [])
+	if not army.is_empty():
+		var army_row := HBoxContainer.new()
+		army_row.name = "Army"
+		army_row.add_theme_constant_override("separation", 10)
+		army_row.add_child(_label("Army", "muted", 12))
+		for stack in army:
+			army_row.add_child(_army_slot(stack))
+		info.add_child(army_row)
 	var spells: Array = hero.get("spells", [])
 	if not spells.is_empty():
 		var spell_row := HBoxContainer.new()
@@ -451,6 +472,28 @@ func _hero_card(hero: Dictionary) -> PanelContainer:
 	if hire.disabled and String(hero.get("disabled_reason", "")) != "":
 		info.add_child(_wrapped(String(hero.get("disabled_reason", "")), "muted", 12))
 	return panel
+
+## One company the hero brings: the creature's army-bar icon and its count.
+func _army_slot(stack: Dictionary) -> HBoxContainer:
+	var slot := HBoxContainer.new()
+	slot.name = "Stack_%s" % String(stack.get("unit_id", ""))
+	slot.add_theme_constant_override("separation", 2)
+	slot.tooltip_text = "%d %s" % [int(stack.get("count", 0)), String(stack.get("name", ""))]
+	slot.mouse_filter = Control.MOUSE_FILTER_PASS
+	slot.set_meta("unit_id", String(stack.get("unit_id", "")))
+	slot.set_meta("count", int(stack.get("count", 0)))
+	var portrait := TextureRect.new()
+	portrait.name = "Portrait"
+	portrait.custom_minimum_size = Vector2(40, 40)
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	portrait.texture = _texture(String(stack.get("icon_path", "")))
+	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	slot.add_child(portrait)
+	var count := _label(str(int(stack.get("count", 0))), "title", 14)
+	count.name = "Count"
+	slot.add_child(count)
+	return slot
 
 # --- market ---------------------------------------------------------------------
 
@@ -925,7 +968,7 @@ func validation_snapshot() -> Dictionary:
 	var heroes := []
 	for hero_id in _hire_buttons:
 		var hire: Button = _hire_buttons[hero_id]
-		heroes.append({"hero_id": hero_id, "enabled": not hire.disabled, "visible": hire.is_visible_in_tree()})
+		heroes.append(_hero_card_snapshot(hero_id, hire))
 	var levels := []
 	for entry in _model.get("guild", {}).get("levels", []):
 		var spell_ids := []
@@ -998,6 +1041,30 @@ func validation_set_recruit_amount(unit_id: String, count: int) -> bool:
 
 func validation_press_recruit(unit_id: String) -> bool:
 	return _recruit_cards.has(unit_id) and _recruit_cards[unit_id].press_recruit()
+
+## What a tavern card shows: the hero's level chip and starting army slots.
+func _hero_card_snapshot(hero_id: String, hire: Button) -> Dictionary:
+	var info := hire.get_parent().get_parent()
+	var level := info.get_node_or_null("Header/Level") as Control
+	var army_row := info.get_node_or_null("Army") as Control
+	var army := []
+	var portraits := 0
+	if army_row != null:
+		for slot in army_row.get_children():
+			if slot.has_meta("unit_id"):
+				army.append([String(slot.get_meta("unit_id")), int(slot.get_meta("count"))])
+				var portrait := slot.find_child("Portrait", true, false) as TextureRect
+				portraits += 1 if portrait != null and portrait.texture != null else 0
+	return {
+		"hero_id": hero_id,
+		"enabled": not hire.disabled,
+		"visible": hire.is_visible_in_tree(),
+		"level_text": (level.get_child(0) as Label).text if level != null and level.get_child_count() > 0 else "",
+		"level_visible": level != null and level.is_visible_in_tree(),
+		"army": army,
+		"army_visible": army_row != null and army_row.is_visible_in_tree(),
+		"army_portraits": portraits,
+	}
 
 func validation_press_hire(hero_id: String) -> bool:
 	var button: Button = _hire_buttons.get(hero_id)

@@ -346,6 +346,7 @@ static func _tavern(session, resources: Dictionary) -> Dictionary:
 		var card := hero_card(hero_id)
 		if card.is_empty():
 			continue
+		_apply_tavern_offer(card, HeroCommandRulesScript.tavern_offer_preview(session, hero_id))
 		var action_id := "hire_hero:%s" % hero_id
 		var shortfall := Board._shortfall(card.cost, resources)
 		var reason := ""
@@ -404,6 +405,39 @@ static func hero_card(hero_id: String) -> Dictionary:
 		"spells": spells,
 		"cost": HeroCommandRulesScript.hero_recruit_cost(hero),
 	}
+
+## This week's offer on the card: the level the hero arrives at, the stats
+## and specialties that level brings, its movement and its starting army.
+static func _apply_tavern_offer(card: Dictionary, recruit: Dictionary) -> void:
+	if recruit.is_empty():
+		return
+	var command: Dictionary = recruit.get("command", {}) if recruit.get("command", {}) is Dictionary else {}
+	for stat in ["attack", "defense", "power", "knowledge"]:
+		card[stat] = int(command.get(stat, card.get(stat, 0)))
+	card["level"] = int(recruit.get("level", 1))
+	card["movement"] = int(recruit.get("movement", {}).get("max", card.get("movement", 0)))
+	var specialties := []
+	var seen := {}
+	for specialty_id_value in recruit.get("specialties", []):
+		var specialty_id := String(specialty_id_value)
+		if seen.has(specialty_id):
+			continue
+		seen[specialty_id] = true
+		var rank := HeroProgressionRulesScript.specialty_rank(recruit, specialty_id)
+		var specialty_name := String(HeroProgressionRulesScript.specialty_definition(specialty_id).get("name", specialty_id.capitalize()))
+		specialties.append(specialty_name if rank <= 1 else "%s %s" % [specialty_name, HeroProgressionRulesScript.rank_label(rank)])
+	card["specialties"] = specialties
+	var army := []
+	for stack in recruit.get("army", {}).get("stacks", []):
+		var unit_id := String(stack.get("unit_id", ""))
+		var art := ContentService.get_unit_art(unit_id)
+		army.append({
+			"unit_id": unit_id,
+			"name": String(ContentService.get_unit(unit_id).get("name", unit_id)),
+			"count": int(stack.get("count", 0)),
+			"icon_path": String(art.get("battle_icon", art.get("portrait", ""))),
+		})
+	card["army"] = army
 
 # --- services -------------------------------------------------------------------
 
