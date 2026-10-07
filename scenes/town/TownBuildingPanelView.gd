@@ -3,13 +3,16 @@ extends VBoxContainer
 
 ## Body of the Town building popout. Renders a TownBuildingPanel model:
 ## painting, description and effects for every building, then the building's
-## own orders (dwelling recruitment, guild spell shelves, tavern heroes,
-## services) and its upgrade line. Emits intents only; TownShell runs orders.
+## own orders (dwelling recruitment, guild spell shelves, tavern heroes, the
+## market's trading desk, services) and its upgrade line. Emits intents only;
+## TownShell runs orders.
 
 signal recruit_requested(unit_id: String, count: int)
 signal hire_requested(hero_id: String)
 signal build_requested(building_id: String)
-signal trade_requested
+## A cost the player wants to cover through the market.
+signal trade_requested(need: Dictionary)
+signal market_trade_requested(action_id: String)
 signal service_requested(action_id: String)
 signal controls_changed
 
@@ -22,6 +25,7 @@ const STATUS_TONES := {"ready": "green", "trade": "teal", "short": "red", "locke
 const SIDE_WIDTH := 372.0
 const SPELL_CARD_HEIGHT := 58.0
 const GRID_GAP := 8
+const TILE_WIDTH := 132.0
 
 var _model: Dictionary = {}
 var _resources: Dictionary = {}
@@ -43,6 +47,19 @@ var _side: VBoxContainer
 var _spell_note: Label
 var _spell_grid: GridContainer
 var _hero_grid: GridContainer
+var _market_give := ""
+var _market_receive := ""
+var _market_amount := 1
+var _market_give_tiles: Dictionary = {}
+var _market_receive_tiles: Dictionary = {}
+var _market_result: HBoxContainer
+var _market_rate_label: Label
+var _market_limit_label: Label
+var _market_slider: HSlider
+var _market_less: Button
+var _market_more: Button
+var _market_max: Button
+var _market_trade_button: Button
 
 func _init() -> void:
 	name = "BuildingInformation"
@@ -96,12 +113,17 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		_apply_columns()
 
-func configure(model: Dictionary) -> void:
+## `fresh` starts the popout over (guild level, market pair) even for the
+## building already shown; refreshes after an order keep them.
+func configure(model: Dictionary, fresh: bool = false) -> void:
 	var same_building := String(model.get("building_id", "")) == String(_model.get("building_id", ""))
 	_model = model.duplicate(true)
 	_resources = model.get("resources", {}) if model.get("resources", {}) is Dictionary else {}
-	if not same_building:
+	if not same_building or fresh:
 		_guild_level = 0
+		_market_give = ""
+		_market_receive = ""
+		_market_amount = 1
 	_painting.texture = _texture(String(model.get("art_path", "")))
 	_painting.tooltip_text = "%s — original Town building painting" % String(model.get("name", ""))
 	_subtitle_label.text = String(model.get("subtitle", ""))
@@ -142,6 +164,11 @@ func _rebuild_body() -> void:
 	_spell_grid = null
 	_hero_grid = null
 	_spell_note = null
+	_market_give_tiles.clear()
+	_market_receive_tiles.clear()
+	_market_result = null
+	_market_slider = null
+	_market_trade_button = null
 	match String(_model.get("kind", "")):
 		"dwelling":
 			_build_recruitment()
@@ -149,6 +176,8 @@ func _rebuild_body() -> void:
 			_build_guild()
 		"tavern":
 			_build_tavern()
+		"market":
+			_build_market()
 	_build_services()
 	_build_upgrade()
 	var has_body := _body.get_child_count() > 0
@@ -192,7 +221,8 @@ func _build_recruitment() -> void:
 		var card := RecruitCardScript.new()
 		card.configure(card_value, _resources)
 		card.recruit_requested.connect(func(unit_id: String, count: int): recruit_requested.emit(unit_id, count))
-		card.trade_requested.connect(func(): trade_requested.emit())
+		var unit_cost: Dictionary = card_value.get("unit_cost", {}) if card_value.get("unit_cost", {}) is Dictionary else {}
+		card.trade_requested.connect(func(): trade_requested.emit(unit_cost))
 		section.add_child(card)
 		_recruit_cards[card.unit_id] = card
 	var upgrades: Array = recruit.get("troop_upgrades", [])
@@ -422,6 +452,267 @@ func _hero_card(hero: Dictionary) -> PanelContainer:
 		info.add_child(_wrapped(String(hero.get("disabled_reason", "")), "muted", 12))
 	return panel
 
+# --- market ---------------------------------------------------------------------
+
+## The market's trading desk, HoMM style: pick what to give and what to get,
+## set the amount, read the rate and the result, then trade. Gold for a
+## resource buys, a resource for gold sells, and one resource for another
+## converts directly. Every number comes from the model's per-pair quotes.
+func _build_market() -> void:
+	var desk: Dictionary = _model.get("market", {})
+	var active := bool(desk.get("active", false))
+	var section := _section("Trade", "Weekly limits reset on day %d." % int(desk.get("reset_day", 0)) if active else "")
+	section.name = "Market"
+	if not active:
+		section.add_child(_label("This market does not trade for you.", "muted", 14))
+		return
+	var give_ids: Array = desk.get("give_ids", [])
+	var receive_ids: Array = desk.get("receive_ids", [])
+	if _market_give not in give_ids or _market_receive not in receive_ids or _market_give == _market_receive:
+		_market_give = String(desk.get("suggested_give", give_ids[0] if not give_ids.is_empty() else ""))
+		_market_receive = String(desk.get("suggested_receive", ""))
+		_market_amount = 1
+	section.add_child(_market_tile_row("You give", "Give", give_ids, _market_give_tiles))
+	section.add_child(_market_tile_row("You get", "Get", receive_ids, _market_receive_tiles))
+	var card := PanelContainer.new()
+	card.name = "Quote"
+	_apply_card(card, "ink")
+	section.add_child(card)
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 6)
+	card.add_child(box)
+	_market_result = HBoxContainer.new()
+	_market_result.name = "Result"
+	_market_result.add_theme_constant_override("separation", 8)
+	box.add_child(_market_result)
+	_market_rate_label = _label("", "gold", 13)
+	_market_rate_label.name = "Rate"
+	box.add_child(_market_rate_label)
+	# This week's limits, or why nothing can trade: one line either way, so
+	# switching pairs never resizes the popout.
+	_market_limit_label = _label("", "muted", 12)
+	_market_limit_label.name = "Limit"
+	_market_limit_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_market_limit_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_market_limit_label.mouse_filter = Control.MOUSE_FILTER_PASS
+	box.add_child(_market_limit_label)
+	var amount_row := HBoxContainer.new()
+	amount_row.name = "Amount"
+	amount_row.add_theme_constant_override("separation", 6)
+	box.add_child(amount_row)
+	_market_less = _market_step_button("Less", "−", "One less.", -1)
+	amount_row.add_child(_market_less)
+	_market_slider = HSlider.new()
+	_market_slider.name = "AmountSlider"
+	_market_slider.step = 1
+	_market_slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_market_slider.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_market_slider.custom_minimum_size = Vector2(120, 22)
+	_market_slider.accessibility_name = "Trade amount"
+	FrontierVisualKit.apply_range(_market_slider, "gold")
+	amount_row.add_child(_market_slider)
+	_market_more = _market_step_button("More", "+", "One more.", 1)
+	amount_row.add_child(_market_more)
+	_market_max = Button.new()
+	_market_max.name = "Max"
+	_market_max.text = "Max"
+	_market_max.tooltip_text = "Set the most the stores and this week's limits allow."
+	FrontierVisualKit.apply_button(_market_max, "secondary", 52, 30, 13)
+	_market_max.pressed.connect(func(): _market_slider.value = _market_slider.max_value)
+	amount_row.add_child(_market_max)
+	_market_trade_button = Button.new()
+	_market_trade_button.name = "TradeButton"
+	_market_trade_button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	FrontierVisualKit.apply_button(_market_trade_button, "primary", 270, 34, 14)
+	_market_trade_button.pressed.connect(press_market_trade)
+	amount_row.add_child(_market_trade_button)
+	_market_slider.value_changed.connect(func(value: float):
+		_market_amount = int(value)
+		_update_market_quote())
+	_show_market_pair()
+
+func _market_tile_row(caption: String, prefix: String, ids: Array, tiles: Dictionary) -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.name = "%sTiles" % prefix
+	row.add_theme_constant_override("separation", 8)
+	var title := _label(caption, "muted", 13)
+	title.custom_minimum_size.x = 64
+	row.add_child(title)
+	var resources: Dictionary = _model.get("market", {}).get("resources", {})
+	for id_value in ids:
+		var resource_id := String(id_value)
+		var entry: Dictionary = resources.get(resource_id, {})
+		var tile := Button.new()
+		tile.name = "%s_%s" % [prefix, resource_id]
+		tile.custom_minimum_size = Vector2(TILE_WIDTH, 50)
+		tile.focus_mode = Control.FOCUS_ALL
+		tile.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		var content := HBoxContainer.new()
+		content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		content.offset_left = 8
+		content.offset_right = -6
+		content.add_theme_constant_override("separation", 6)
+		content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tile.add_child(content)
+		var icon := TextureRect.new()
+		icon.custom_minimum_size = Vector2(26, 26)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		icon.texture = _texture(String(entry.get("icon_path", "")))
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		content.add_child(icon)
+		var copy := VBoxContainer.new()
+		copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		copy.alignment = BoxContainer.ALIGNMENT_CENTER
+		copy.add_theme_constant_override("separation", 0)
+		copy.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		content.add_child(copy)
+		var name_label := _label(String(entry.get("name", resource_id)), "title", 13)
+		name_label.name = "Name"
+		name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		copy.add_child(name_label)
+		var value_label := _label("", "body", 12)
+		value_label.name = "Value"
+		value_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		copy.add_child(value_label)
+		if prefix == "Give":
+			tile.pressed.connect(_on_market_give_pressed.bind(resource_id))
+		else:
+			tile.pressed.connect(_on_market_receive_pressed.bind(resource_id))
+		row.add_child(tile)
+		tiles[resource_id] = tile
+	return row
+
+func _market_step_button(button_name: String, text: String, tip: String, step: int) -> Button:
+	var button := Button.new()
+	button.name = button_name
+	button.text = text
+	button.tooltip_text = tip
+	FrontierVisualKit.apply_button(button, "secondary", 32, 30, 15)
+	button.pressed.connect(func(): _market_slider.value = clampf(_market_slider.value + step, _market_slider.min_value, _market_slider.max_value))
+	return button
+
+func _on_market_give_pressed(resource_id: String) -> void:
+	_market_give = resource_id
+	if _market_pair().get("mode", "") == "":
+		# Keep the get side on a resource this give can trade for.
+		for receive_id in _model.get("market", {}).get("receive_ids", []):
+			if String(_market_pair_for(resource_id, String(receive_id)).get("mode", "")) != "":
+				_market_receive = String(receive_id)
+				break
+	_market_amount = 1
+	_show_market_pair()
+	controls_changed.emit()
+
+func _on_market_receive_pressed(resource_id: String) -> void:
+	if String(_market_pair_for(_market_give, resource_id).get("mode", "")) == "":
+		return
+	_market_receive = resource_id
+	_market_amount = 1
+	_show_market_pair()
+	controls_changed.emit()
+
+func _market_pair() -> Dictionary:
+	return _market_pair_for(_market_give, _market_receive)
+
+func _market_pair_for(give_id: String, receive_id: String) -> Dictionary:
+	var pairs: Dictionary = _model.get("market", {}).get("pairs", {})
+	return pairs.get("%s>%s" % [give_id, receive_id], {})
+
+## Restyles the tiles for the chosen pair and sets the amount range.
+func _show_market_pair() -> void:
+	if _market_slider == null:
+		return
+	var resources: Dictionary = _model.get("market", {}).get("resources", {})
+	for resource_id in _market_give_tiles:
+		var tile: Button = _market_give_tiles[resource_id]
+		FrontierVisualKit.apply_button(tile, "primary" if resource_id == _market_give else "secondary", TILE_WIDTH, 50, 13)
+		_market_tile_value(tile, "Have %s" % Board.format_amount(int(resources.get(resource_id, {}).get("stock", 0))), "body")
+		tile.tooltip_text = "Give %s. You have %s." % [String(resources.get(resource_id, {}).get("name", resource_id)), Board.format_amount(int(resources.get(resource_id, {}).get("stock", 0)))]
+	for resource_id in _market_receive_tiles:
+		var tile: Button = _market_receive_tiles[resource_id]
+		var pair := _market_pair_for(_market_give, resource_id)
+		var tradable := String(pair.get("mode", "")) != ""
+		tile.disabled = not tradable
+		FrontierVisualKit.apply_button(tile, "primary" if resource_id == _market_receive else "secondary", TILE_WIDTH, 50, 13)
+		_market_tile_value(tile, String(pair.get("unit_text", "")) if tradable else "—", "gold" if tradable else "muted")
+		tile.tooltip_text = ("%s · %s" % [String(pair.get("rate_text", "")), String(pair.get("limit_text", ""))]) if tradable else String(pair.get("reason", "This market does not trade that pair."))
+	var max_amount := int(_market_pair().get("max_amount", 0))
+	_market_slider.set_value_no_signal(1)
+	_market_slider.min_value = 1
+	_market_slider.max_value = maxi(1, max_amount)
+	_market_amount = clampi(_market_amount, 1, maxi(1, max_amount))
+	_market_slider.set_value_no_signal(_market_amount)
+	_market_slider.editable = max_amount > 1
+	_market_less.disabled = max_amount <= 1
+	_market_more.disabled = max_amount <= 1
+	_market_max.disabled = max_amount <= 1
+	_update_market_quote()
+
+func _market_tile_value(tile: Button, text: String, tone: String) -> void:
+	var value := tile.find_child("Value", true, false) as Label
+	if value == null:
+		return
+	value.text = text
+	value.add_theme_color_override("font_color", FrontierVisualKit.text_color(tone))
+
+func _market_quote() -> Dictionary:
+	var quotes: Array = _market_pair().get("quotes", [])
+	return quotes[_market_amount - 1] if _market_amount >= 1 and _market_amount <= quotes.size() else {}
+
+## Shows the result of the chosen amount and arms the Trade button.
+func _update_market_quote() -> void:
+	if _market_result == null:
+		return
+	var pair := _market_pair()
+	var quote := _market_quote()
+	_clear(_market_result)
+	if quote.is_empty():
+		_market_result.add_child(_label("Nothing to trade", "muted", 16))
+	else:
+		_market_result.add_child(_label("Give", "muted", 14))
+		_market_result.add_child(_market_amount_cell(_market_give, int(quote.get("give_amount", 0))))
+		_market_result.add_child(_label("→", "gold", 16))
+		_market_result.add_child(_market_amount_cell(_market_receive, int(quote.get("receive_amount", 0))))
+	_market_rate_label.text = "Rate: %s" % String(pair.get("rate_text", "")) if String(pair.get("rate_text", "")) != "" else ""
+	var reason := String(pair.get("reason", ""))
+	_market_limit_label.text = reason if reason != "" else String(pair.get("limit_text", ""))
+	_market_limit_label.tooltip_text = _market_limit_label.text
+	_market_limit_label.add_theme_color_override("font_color", FrontierVisualKit.text_color("red" if reason != "" else "muted"))
+	_market_trade_button.disabled = quote.is_empty()
+	_market_trade_button.text = String(quote.get("label", "Trade")) if not quote.is_empty() else "Trade"
+	_market_trade_button.tooltip_text = "%s at %s." % [String(quote.get("label", "")), String(pair.get("rate_text", ""))] if not quote.is_empty() else String(pair.get("reason", ""))
+
+func _market_amount_cell(resource_id: String, amount: int) -> HBoxContainer:
+	var entry: Dictionary = _model.get("market", {}).get("resources", {}).get(resource_id, {})
+	var cell := HBoxContainer.new()
+	cell.name = "Amount_%s" % resource_id
+	cell.add_theme_constant_override("separation", 4)
+	var icon := TextureRect.new()
+	icon.custom_minimum_size = Vector2(22, 22)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	icon.texture = _texture(String(entry.get("icon_path", "")))
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cell.add_child(icon)
+	cell.add_child(_label("%s %s" % [Board.format_amount(amount), String(entry.get("name", resource_id)).to_lower()], "title", 16))
+	return cell
+
+func market_result_text() -> String:
+	var quote := _market_quote()
+	if quote.is_empty():
+		return ""
+	return "Give %s %s → Get %s %s" % [Board.format_amount(int(quote.get("give_amount", 0))), _market_give, Board.format_amount(int(quote.get("receive_amount", 0))), _market_receive]
+
+func press_market_trade() -> bool:
+	var action_id := String(_market_quote().get("action_id", ""))
+	if action_id == "" or _market_trade_button == null or _market_trade_button.disabled:
+		return false
+	market_trade_requested.emit(action_id)
+	return true
+
 # --- services -------------------------------------------------------------------
 
 func _build_services() -> void:
@@ -447,11 +738,8 @@ func _service_row(action: Dictionary) -> HBoxContainer:
 	button.text = String(action.get("label", action_id))
 	button.disabled = bool(action.get("disabled", false))
 	button.tooltip_text = String(action.get("summary", ""))
-	FrontierVisualKit.apply_button(button, "primary" if action_id == "open:trade" else "secondary", 260, 34, 14)
-	if action_id == "open:trade":
-		button.pressed.connect(func(): trade_requested.emit())
-	else:
-		button.pressed.connect(func(): service_requested.emit(action_id))
+	FrontierVisualKit.apply_button(button, "secondary", 260, 34, 14)
+	button.pressed.connect(func(): service_requested.emit(action_id))
 	row.add_child(button)
 	var summary := _label(String(action.get("summary", "")), "muted", 13)
 	summary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -495,9 +783,11 @@ func _build_upgrade() -> void:
 	var next_unit := String(upgrade.get("next_unit_id", ""))
 	if next_unit != "" and current_unit != "" and next_unit != current_unit:
 		box.add_child(_unit_upgrade_compare(current_unit, next_unit))
-	var cost_line := HBoxContainer.new()
+	# A long shortfall wraps under the cost instead of widening the side column.
+	var cost_line := HFlowContainer.new()
 	cost_line.name = "CostLine"
-	cost_line.add_theme_constant_override("separation", 10)
+	cost_line.add_theme_constant_override("h_separation", 10)
+	cost_line.add_theme_constant_override("v_separation", 4)
 	box.add_child(cost_line)
 	cost_line.add_child(_label("Cost", "muted", 13))
 	cost_line.add_child(_cost_row(upgrade.get("cost", {}), 1))
@@ -526,8 +816,9 @@ func _build_upgrade() -> void:
 	var next_id := String(upgrade.get("next_id", ""))
 	_upgrade_button.pressed.connect(func(): build_requested.emit(next_id))
 	buttons.add_child(_upgrade_button)
-	if String(upgrade.get("status", "")) == "trade":
-		_trade_button = _trade_link("Trade for it")
+	# The market's own desk sits beside its upgrade; elsewhere a link opens it.
+	if String(upgrade.get("status", "")) == "trade" and String(_model.get("kind", "")) != "market":
+		_trade_button = _trade_link("Trade for it", upgrade.get("cost", {}))
 		buttons.add_child(_trade_button)
 
 func _stage_strip(upgrade: Dictionary) -> HFlowContainer:
@@ -577,13 +868,13 @@ func _unit_upgrade_compare(from_id: String, to_id: String) -> VBoxContainer:
 
 # --- shared widgets -------------------------------------------------------------
 
-func _trade_link(text: String) -> Button:
+func _trade_link(text: String, need: Dictionary) -> Button:
 	var button := Button.new()
 	button.name = "TradeButton"
 	button.text = text
 	button.tooltip_text = "Open the market to exchange for the missing resources."
 	FrontierVisualKit.apply_button(button, "secondary", 140, 34, 14)
-	button.pressed.connect(func(): trade_requested.emit())
+	button.pressed.connect(func(): trade_requested.emit(need))
 	return button
 
 func _cost_row(cost: Dictionary, multiplier: int) -> HBoxContainer:
@@ -666,6 +957,40 @@ func validation_snapshot() -> Dictionary:
 			"button_enabled": _upgrade_button != null and not _upgrade_button.disabled,
 			"trade_visible": _trade_button != null,
 		},
+		"market": _market_snapshot(),
+	}
+
+func _market_snapshot() -> Dictionary:
+	if _market_slider == null:
+		return {}
+	var pair := _market_pair()
+	var quote := _market_quote()
+	var stock := {}
+	for resource_id in _model.get("market", {}).get("resources", {}):
+		stock[resource_id] = int(_model.get("market", {}).get("resources", {}).get(resource_id, {}).get("stock", 0))
+	var receive_tiles := {}
+	for resource_id in _market_receive_tiles:
+		var tile: Button = _market_receive_tiles[resource_id]
+		receive_tiles[resource_id] = {"enabled": not tile.disabled, "visible": tile.is_visible_in_tree()}
+	return {
+		"give_id": _market_give,
+		"receive_id": _market_receive,
+		"mode": String(pair.get("mode", "")),
+		"amount": _market_amount,
+		"max_amount": int(pair.get("max_amount", 0)),
+		"slider_max": int(_market_slider.max_value),
+		"give_amount": int(quote.get("give_amount", 0)),
+		"receive_amount": int(quote.get("receive_amount", 0)),
+		"action_id": String(quote.get("action_id", "")),
+		"rate_text": String(pair.get("rate_text", "")),
+		"limit_text": String(pair.get("limit_text", "")),
+		"reason": String(pair.get("reason", "")),
+		"result_text": market_result_text(),
+		"trade_enabled": _market_trade_button != null and not _market_trade_button.disabled and _market_trade_button.is_visible_in_tree(),
+		"trade_text": _market_trade_button.text if _market_trade_button != null else "",
+		"give_tiles": _market_give_tiles.keys(),
+		"receive_tiles": receive_tiles,
+		"stock": stock,
 	}
 
 func validation_set_recruit_amount(unit_id: String, count: int) -> bool:
@@ -685,6 +1010,37 @@ func validation_press_upgrade() -> bool:
 	if _upgrade_button == null or _upgrade_button.disabled:
 		return false
 	_upgrade_button.pressed.emit()
+	return true
+
+func validation_select_market_pair(give_id: String, receive_id: String) -> bool:
+	var give_tile: Button = _market_give_tiles.get(give_id)
+	if give_tile == null:
+		return false
+	give_tile.pressed.emit()
+	var receive_tile: Button = _market_receive_tiles.get(receive_id)
+	if receive_tile == null or receive_tile.disabled:
+		return false
+	receive_tile.pressed.emit()
+	return _market_give == give_id and _market_receive == receive_id
+
+func validation_set_market_amount(count: int) -> bool:
+	if _market_slider == null:
+		return false
+	_market_slider.value = count
+	return _market_amount == count
+
+func validation_press_market_trade() -> bool:
+	if _market_trade_button == null or _market_trade_button.disabled:
+		return false
+	_market_trade_button.pressed.emit()
+	return true
+
+func validation_press_recruit_trade(unit_id: String) -> bool:
+	var card = _recruit_cards.get(unit_id)
+	var button := card.find_child("TradeButton", true, false) as Button if card != null else null
+	if button == null or button.disabled:
+		return false
+	button.pressed.emit()
 	return true
 
 func validation_show_guild_level(level: int) -> bool:

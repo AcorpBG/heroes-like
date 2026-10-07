@@ -12603,12 +12603,16 @@ static func _market_quote_from_state(state: Dictionary, action_type: String, res
 	if unit_rate <= 0:
 		return {}
 	var total_value = unit_rate * normalized_amount
-	var is_bulk: bool = normalized_amount > 1 and normalized_amount == int(state.get("bulk_amount", 0)) and resource_key in _market_bulk_resources(state)
+	# Every full bulk lot trades at the lot price, so a larger order never costs
+	# more than the same units bought in lots and singles.
+	var bulk_amount := int(state.get("bulk_amount", 0))
+	var bulk_lots := 0
+	if bulk_amount > 1 and resource_key in _market_bulk_resources(state):
+		bulk_lots = int(normalized_amount / bulk_amount)
+	var is_bulk: bool = bulk_lots > 0
 	if is_bulk:
-		if action_type == "buy":
-			total_value = max(1, int(round(float(total_value) * 0.9)))
-		else:
-			total_value = max(1, int(round(float(total_value) * 1.1)))
+		var lot_value: int = max(1, int(round(float(unit_rate * bulk_amount) * (0.9 if action_type == "buy" else 1.1))))
+		total_value = bulk_lots * lot_value + (normalized_amount - bulk_lots * bulk_amount) * unit_rate
 	var cost := {}
 	var gain := {}
 	if action_type == "buy":

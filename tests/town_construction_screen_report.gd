@@ -257,7 +257,7 @@ func _run_town(template_id: String, viewport_size: Vector2i) -> Dictionary:
 		await _frames(1)
 		screen.validation_press_primary()
 		await _frames(2)
-		_check(failures, String(shell.get("_town_catalog_mode")) == "trade" and not bool(screen.visible), "trade hand-off")
+		_check(failures, String(shell.get("_town_catalog_mode")) == "building_info" and String(shell.get("_selected_building_info_id")) == "building_market_square" and not bool(screen.visible), "trade hand-off opens the market popout")
 	shell.call("validation_close_town_catalog")
 	shell.queue_free()
 	await _frames(2)

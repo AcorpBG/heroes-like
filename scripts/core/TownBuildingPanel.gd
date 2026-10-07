@@ -4,8 +4,9 @@ extends RefCounted
 ## Read-only model for the popout opened by clicking a built Town building.
 ## Every building shows its description, effects and upgrade line (from
 ## TownConstructionBoard). Dwellings add recruitment and troop upgrades, the
-## magic guild its spell shelves by level, the tavern its hireable heroes, and
-## service buildings their visit, trade and artifact orders. Never mutates
+## magic guild its spell shelves by level, the tavern its hireable heroes, the
+## market its trading desk, and service buildings their visit and artifact
+## orders. The popout is the only market and magic guild window. Never mutates
 ## session state; TownShell owns every order.
 
 const SCHEMA := "town_building_panel_v1"
@@ -24,7 +25,9 @@ const KIND_ARTIFACTS := "artifact_exchange"
 const KIND_TRAINING := "training"
 const KIND_BUILDING := "building"
 
-static func build(session, building_id: String) -> Dictionary:
+## `options.market_need` is a cost the player opened the market to cover; the
+## market desk then suggests the trade for its first missing resource.
+static func build(session, building_id: String, options: Dictionary = {}) -> Dictionary:
 	if session == null:
 		return {}
 	var town: Dictionary = TownRulesScript.get_active_town(session)
@@ -58,7 +61,26 @@ static func build(session, building_id: String) -> Dictionary:
 			model["guild"] = _guild(session, town, slot)
 		KIND_TAVERN:
 			model["tavern"] = _tavern(session, resources)
+		KIND_MARKET:
+			var need: Dictionary = options.get("market_need", {}) if options.get("market_need", {}) is Dictionary else {}
+			model["market"] = TownRulesScript.market_desk(session, need)
 	return model
+
+## The built market building whose popout trades for this town (its highest
+## stage), or "" without a market.
+static func market_building_id(town: Dictionary) -> String:
+	return String(OverworldRulesScript.town_market_state(town).get("building_id", "")) if not town.is_empty() else ""
+
+## The built magic guild stage whose popout shows this town's spells, or "".
+static func guild_building_id(town: Dictionary) -> String:
+	var best_id := ""
+	var best_tier := 0
+	for building_id_value in town.get("built_buildings", []):
+		var building := ContentService.get_building(String(building_id_value))
+		if int(building.get("spell_tier", 0)) > best_tier:
+			best_tier = int(building.get("spell_tier", 0))
+			best_id = String(building_id_value)
+	return best_id
 
 static func building_kind(building: Dictionary) -> String:
 	if int(building.get("dwelling_tier", 0)) > 0 or String(building.get("unlock_unit_id", "")) != "":
@@ -386,7 +408,7 @@ static func hero_card(hero_id: String) -> Dictionary:
 # --- services -------------------------------------------------------------------
 
 ## Orders this building offers in place: hero visits, faction services and the
-## artifact exchange. Market and muster hand off to their full dialogs.
+## artifact exchange. The market trades through its own desk.
 static func _building_services(session, building_id: String, kind: String) -> Array:
 	var services := []
 	for action in TownRulesScript.get_response_actions(session):
@@ -398,8 +420,6 @@ static func _building_services(session, building_id: String, kind: String) -> Ar
 		var exchange := kind == KIND_ARTIFACTS and parts[0] in ["town_buy", "town_sell"]
 		if own or exchange:
 			services.append(_action_entry(action))
-	if kind == KIND_MARKET:
-		services.append({"id": "open:trade", "label": "Open market", "summary": "Exchange resources at this town's rates.", "disabled": false})
 	return services
 
 static func _action_entry(action: Dictionary) -> Dictionary:

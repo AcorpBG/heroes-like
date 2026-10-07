@@ -8,13 +8,11 @@ const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const SystemSaveWrittenCuePresenterScript = preload("res://scenes/shared/SystemSaveWrittenCuePresenter.gd")
 const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemLoadResumedCuePresenter.gd")
 const ArmyStackBarScript = preload("res://scenes/shared/ArmyStackBar.gd")
-const SpellbookViewScript = preload("res://scenes/shared/SpellbookView.gd")
 const TownConstructionScreenScript = preload("res://scenes/town/TownConstructionScreen.gd")
 const TownConstructionBoardScript = preload("res://scripts/core/TownConstructionBoard.gd")
 const TownBuildingPanelScript = preload("res://scripts/core/TownBuildingPanel.gd")
 const TownBuildingPanelViewScript = preload("res://scenes/town/TownBuildingPanelView.gd")
 const TownRecruitCardScript = preload("res://scenes/town/TownRecruitCard.gd")
-var _spellbook_view: VBoxContainer
 
 const UI_ART_TOWN_BANNER_FRAME := "res://art/ui/runtime/town/banner_frame.png"
 const UI_ART_TOWN_CREST_MEDALLION := "res://art/ui/runtime/town/crest_medallion.png"
@@ -95,8 +93,6 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _pressure_label: Label = %Pressure
 @onready var _building_label: Label = %Buildings
 @onready var _open_build_catalog_button: Button = %OpenBuildCatalog
-@onready var _market_label: Label = %Market
-@onready var _market_actions: Container = %MarketActions
 @onready var _recruit_label: Label = %Recruitment
 @onready var _recruit_actions: Container = %RecruitActions
 @onready var _open_muster_catalog_button: Button = %OpenMusterCatalog
@@ -192,9 +188,75 @@ func _on_construction_build_requested(building_id: String) -> void:
 	_selected_build_action_id = "build:%s" % building_id
 	_on_confirm_build_pressed()
 
-func _on_construction_trade_requested(_building_id: String) -> void:
-	_close_town_catalog(false)
-	_open_town_catalog("trade")
+func _on_construction_trade_requested(building_id: String) -> void:
+	var need: Dictionary = ContentService.get_building(building_id).get("cost", {}) if building_id != "" else {}
+	_open_market_popout({"mode": "build", "building_id": building_id}, need if need is Dictionary else {})
+
+## The market and magic guild have one window each: their building popout.
+## Commands, cost buttons and building clicks all open it. `origin` is where a
+## trade request came from; closing the market returns there. `need` is the
+## cost to cover, so the desk can suggest the trade.
+func _open_market_popout(origin: Dictionary = {}, need: Dictionary = {}) -> bool:
+	var building_id := TownBuildingPanelScript.market_building_id(TownRules.get_active_town(_session)) if _session != null else ""
+	if building_id == "":
+		return false
+	if _town_catalog_is_open():
+		_close_town_catalog(false)
+	_market_popout_origin = origin.duplicate(true)
+	_market_popout_need = need.duplicate(true)
+	_selected_building_info_id = building_id
+	_open_town_catalog("building_info")
+	return true
+
+func _open_guild_popout() -> bool:
+	var building_id := TownBuildingPanelScript.guild_building_id(TownRules.get_active_town(_session)) if _session != null else ""
+	if building_id == "":
+		return false
+	_selected_building_info_id = building_id
+	_open_town_catalog("building_info")
+	return true
+
+## Closing the market after a "trade for it" returns to the screen that asked.
+func _dismiss_town_catalog() -> void:
+	var origin := _market_popout_origin.duplicate(true)
+	var market_open := _town_catalog_mode == "building_info" and _selected_building_info_id == TownBuildingPanelScript.market_building_id(TownRules.get_active_town(_session))
+	_close_town_catalog()
+	if not market_open or origin.is_empty():
+		return
+	match String(origin.get("mode", "")):
+		"build":
+			if String(origin.get("building_id", "")) != "":
+				_selected_build_action_id = "build:%s" % String(origin.get("building_id", ""))
+			_open_town_catalog("build")
+		"muster":
+			_open_town_catalog("muster")
+		"building_info":
+			if String(origin.get("building_id", "")) != "":
+				_selected_building_info_id = String(origin.get("building_id", ""))
+				_open_town_catalog("building_info")
+
+func _on_popout_trade_requested(need: Dictionary) -> void:
+	_open_market_popout({"mode": "building_info", "building_id": _selected_building_info_id}, need)
+
+func _on_muster_trade_requested(need: Dictionary) -> void:
+	_open_market_popout({"mode": "muster"}, need)
+
+func _on_building_market_trade_requested(action_id: String) -> void:
+	_on_market_action_pressed(action_id)
+	_refresh_building_information()
+
+## The Spells and Trade commands follow their building: disabled with a hint
+## until it stands.
+func _sync_building_shortcuts() -> void:
+	var town := TownRules.get_active_town(_session)
+	var guild_id := TownBuildingPanelScript.guild_building_id(town)
+	var market_id := TownBuildingPanelScript.market_building_id(town)
+	_spells_action_button.disabled = guild_id == ""
+	_spells_action_button.tooltip_text = "Open the %s." % String(ContentService.get_building(guild_id).get("name", "magic guild")) if guild_id != "" else "Build a Mage Guild to see this town's spells."
+	_spells_action_button.accessibility_description = _spells_action_button.tooltip_text
+	_trade_action_button.disabled = market_id == ""
+	_trade_action_button.tooltip_text = "Open the %s to buy, sell and convert resources." % String(ContentService.get_building(market_id).get("name", "market")) if market_id != "" else "Build a Marketplace to trade resources."
+	_trade_action_button.accessibility_description = _trade_action_button.tooltip_text
 
 func _on_construction_view_in_town(building_id: String) -> void:
 	_town_stage_view.set_construction_preview(building_id)
@@ -225,6 +287,8 @@ var _last_town_stage_signature := ""
 var _last_departure_confirmation := {}
 var _selected_build_action_id := ""
 var _town_catalog_mode := ""
+var _market_popout_origin := {}
+var _market_popout_need := {}
 var _town_catalog_previous_focus: Control
 var _selected_building_info_id := ""
 var _building_info_surface: TownBuildingPanelViewScript
@@ -408,8 +472,6 @@ func _prepare_direct_dialog_surfaces() -> void:
 		_study_label,
 		_study_actions,
 		_spellbook_label,
-		_market_label,
-		_market_actions,
 		_army_management,
 		_artifact_label,
 		_artifact_actions,
@@ -424,9 +486,6 @@ func _prepare_direct_dialog_surfaces() -> void:
 		if surface != null and surface.get_parent() != _domain_actions:
 			surface.reparent(_domain_actions)
 	_create_building_information_surface()
-	_spellbook_view = SpellbookViewScript.new()
-	_domain_actions.add_child(_spellbook_view)
-	_spellbook_view.controls_changed.connect(func(): call_deferred("_configure_town_keyboard_focus"))
 	_set_direct_dialog_surface_visibility("")
 
 func _create_building_information_surface() -> void:
@@ -436,17 +495,14 @@ func _create_building_information_surface() -> void:
 	_building_info_surface.recruit_requested.connect(_on_building_recruit_requested)
 	_building_info_surface.hire_requested.connect(_on_building_hire_requested)
 	_building_info_surface.build_requested.connect(_on_construction_build_requested)
-	_building_info_surface.trade_requested.connect(_on_construction_trade_requested.bind(""))
+	_building_info_surface.trade_requested.connect(_on_popout_trade_requested)
+	_building_info_surface.market_trade_requested.connect(_on_building_market_trade_requested)
 	_building_info_surface.service_requested.connect(_on_response_action_pressed)
 	_building_info_surface.controls_changed.connect(func(): call_deferred("_configure_town_keyboard_focus"))
 	_domain_actions.add_child(_building_info_surface)
 
 func _direct_dialog_mode_surfaces(mode: String) -> Array:
 	match mode:
-		"spells":
-			return [_spellbook_view]
-		"trade":
-			return [_market_label, _market_actions, _response_label, _response_actions]
 		"muster":
 			return [_response_label, _response_actions]
 		"log":
@@ -498,10 +554,10 @@ func _on_open_muster_catalog_pressed() -> void:
 	_open_town_catalog("muster")
 
 func _on_open_spells_dialog_pressed() -> void:
-	_open_town_catalog("spells")
+	_open_guild_popout()
 
 func _on_open_trade_dialog_pressed() -> void:
-	_open_town_catalog("trade")
+	_open_market_popout()
 
 func _on_open_log_dialog_pressed() -> void:
 	_open_town_catalog("log")
@@ -516,10 +572,10 @@ func _on_town_building_activated(building_id: String) -> void:
 	_selected_building_info_id = building_id
 	_open_town_catalog("building_info")
 
-func _populate_building_information(building_id: String) -> void:
+func _populate_building_information(building_id: String, fresh: bool = false) -> void:
 	OverworldRules.begin_normalized_read_scope(_session)
 	TownRules.begin_read_scope(_session)
-	var model := TownBuildingPanelScript.build(_session, building_id)
+	var model := TownBuildingPanelScript.build(_session, building_id, {"market_need": _market_popout_need})
 	TownRules.end_read_scope(_session)
 	OverworldRules.end_normalized_read_scope(_session)
 	if model.is_empty():
@@ -529,7 +585,7 @@ func _populate_building_information(building_id: String) -> void:
 		return
 	_town_catalog_title_label.text = String(model.get("name", building_id))
 	_town_catalog_subtitle_label.text = String(model.get("subtitle", ""))
-	_building_info_surface.configure(model)
+	_building_info_surface.configure(model, fresh)
 	call_deferred("_fit_building_popout")
 
 func _building_popout_needs_scroll() -> bool:
@@ -565,14 +621,14 @@ func _refresh_building_information() -> void:
 		_populate_building_information(_selected_building_info_id)
 
 func _on_town_catalog_close_pressed() -> void:
-	_close_town_catalog()
+	_dismiss_town_catalog()
 
 func _town_catalog_is_open() -> bool:
 	return (_town_catalog_overlay != null and _town_catalog_overlay.visible) or _construction_screen_is_open()
 
 func _open_town_catalog(mode: String) -> void:
 	get_node("/root/ContextualHelp").dismiss()
-	if mode not in ["build", "muster", "spells", "trade", "log", "building_info"] or _session == null:
+	if mode not in ["build", "muster", "log", "building_info"] or _session == null:
 		return
 	if _town_action_input_blocker != null and _town_action_input_blocker.visible:
 		return
@@ -583,6 +639,7 @@ func _open_town_catalog(mode: String) -> void:
 		_open_construction_screen()
 		return
 	_hide_construction_screen()
+	var reopening := _town_catalog_overlay.visible and _town_catalog_mode == mode
 	_town_catalog_mode = mode
 	_town_stage_view.set_construction_preview("")
 	_apply_responsive_layout()
@@ -590,7 +647,7 @@ func _open_town_catalog(mode: String) -> void:
 	# Keep upgrade orders above the recruitment grid, within the same popout.
 	if _domain_actions.get_index() > _recruit_actions.get_index():
 		_domain_actions.get_parent().move_child(_domain_actions, _recruit_actions.get_index())
-	_domain_actions.visible = mode in ["muster", "spells", "trade", "log", "building_info"]
+	_domain_actions.visible = mode in ["muster", "log", "building_info"]
 	# Building popouts carry their subtitle beside the painting.
 	_town_catalog_subtitle_label.visible = mode != "building_info"
 	_set_direct_dialog_surface_visibility(mode)
@@ -601,23 +658,6 @@ func _open_town_catalog(mode: String) -> void:
 		_rebuild_recruit_actions(catalog)
 		_response_label.text = "Upgrade stationed troops"
 		_rebuild_response_actions(_development_service_actions("town_upgrade:"))
-	elif mode == "spells":
-		var town := TownRules.get_active_town(_session)
-		var visitor := HeroCommandRules.town_defending_hero(_session, town)
-		_town_catalog_title_label.text = "Spellbook · Town Archives"
-		_town_catalog_subtitle_label.text = "%s · Available spells learned automatically on arrival." % String(visitor.get("name", "Visiting hero")) if not visitor.is_empty() else "No visiting hero · Browse the library; bring a hero to the town entrance to learn."
-		var availability := {}
-		for spell_id in TownRules.accessible_spell_ids(town):
-			availability[spell_id] = {"message": "Learned by %s." % String(visitor.get("name", "Hero")) if not visitor.is_empty() and SpellRules.knows_spell(visitor, spell_id) else "Visit this town to learn this spell. Learning costs no mana or resources."}
-		_spellbook_view.configure(visitor, TownRules.accessible_spell_ids(town), "town", availability)
-		_spellbook_view.custom_minimum_size.y = minf(490.0, get_viewport_rect().size.y - 220.0)
-	elif mode == "trade":
-		var actions := TownRules.get_market_actions(_session)
-		_town_catalog_title_label.text = "Town Market"
-		_town_catalog_subtitle_label.text = "%d exchange order%s • restricted resources remain source-driven" % [actions.size(), "" if actions.size() == 1 else "s"]
-		_rebuild_market_actions(actions)
-		_response_label.text = "Artifact Exchange"
-		_rebuild_response_actions(_development_service_actions("town_buy:") + _development_service_actions("town_sell:"))
 	elif mode == "log":
 		var actions := _logistics_tab_actions()
 		_town_catalog_title_label.text = "Town Log & Logistics"
@@ -629,7 +669,8 @@ func _open_town_catalog(mode: String) -> void:
 		_response_label.text = "Hero training and town services"
 		_rebuild_artifact_actions(TownRules.get_artifact_actions(_session))
 	else:
-		_populate_building_information(_selected_building_info_id)
+		_populate_building_information(_selected_building_info_id, not reopening)
+	_market_popout_need = {}
 	_town_catalog_scroll.scroll_vertical = 0
 	# Canvas z-index alone does not order Control input. The promoted edge
 	# rails must not intercept clicks through a visibly foreground ledger.
@@ -645,6 +686,8 @@ func _close_town_catalog(restore_focus: bool = true) -> void:
 	_town_catalog_subtitle_label.visible = true
 	_hide_construction_screen()
 	_town_catalog_mode = ""
+	_market_popout_origin = {}
+	_market_popout_need = {}
 	_town_stage_view.set_construction_preview("")
 	_apply_responsive_layout()
 	_town_catalog_previous_focus = null
@@ -683,8 +726,8 @@ func _on_confirm_build_pressed() -> void:
 	if action.is_empty():
 		return
 	if bool(action.get("market_coverable", false)) and not bool(action.get("direct_affordable", false)):
-		_close_town_catalog(false)
-		_open_town_catalog("trade")
+		var building_id := String(action.get("id", "")).trim_prefix("build:")
+		_open_market_popout({"mode": "build", "building_id": building_id}, action.get("cost", {}) if action.get("cost", {}) is Dictionary else {})
 		return
 	if bool(action.get("disabled", false)):
 		return
@@ -796,6 +839,8 @@ func _on_market_action_pressed(action_id: String) -> void:
 	var context := _prepare_order_read_context(action_id)
 	var before: Dictionary = context.before
 	var action: Dictionary = context.action
+	if action.is_empty():
+		action = {"id": action_id, "label": TownRules.market_action_label(action_id), "lane": "market"}
 	var result := TownRules.perform_market_action(_session, action_id)
 	if result.is_empty():
 		return
@@ -1117,8 +1162,6 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	_set_compact_label(_pressure_label, String(view_state.get("threats_text", "")), 4)
 	_set_compact_label(_building_label, String(view_state.get("build_visible_text", "")), 2)
 	_building_label.tooltip_text = String(view_state.get("build_tooltip_text", ""))
-	_set_compact_label(_market_label, String(view_state.get("market_visible_text", "")), 2)
-	_market_label.tooltip_text = String(view_state.get("market_tooltip_text", ""))
 	_set_compact_label(_recruit_label, String(view_state.get("recruit_visible_text", "")), 2)
 	_recruit_label.tooltip_text = String(view_state.get("recruit_tooltip_text", ""))
 	_set_compact_label(_tavern_label, String(view_state.get("tavern_visible_text", "")), 2)
@@ -1132,6 +1175,7 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	_set_compact_label(_spellbook_label, String(view_state.get("spellbook_text", "")), 2)
 	_set_compact_label(_artifact_label, String(view_state.get("artifact_visible_text", "")), 2)
 	_artifact_label.tooltip_text = String(view_state.get("artifact_tooltip_text", ""))
+	_sync_building_shortcuts()
 	buckets["town_tabs_surfaces"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
 	var dispatch_text := String(view_state.get("dispatch_text", ""))
@@ -1240,7 +1284,7 @@ func _input(event: InputEvent) -> void:
 	if _town_catalog_is_open():
 		if event.is_action_pressed("ui_cancel"):
 			get_viewport().set_input_as_handled()
-			_close_town_catalog()
+			_dismiss_town_catalog()
 		return
 	if _town_guide_is_open():
 		if event.is_action_pressed("ui_cancel"):
@@ -1424,7 +1468,7 @@ func _town_keyboard_focus_surfaces() -> Array:
 		2:
 			return [_study_actions]
 		3:
-			return [_market_actions]
+			return [_trade_action_button]
 		4:
 			return [_tavern_actions, _transfer_actions, _response_actions, _artifact_actions]
 		_:
@@ -1441,8 +1485,6 @@ func _rebuild_current_action_surfaces(view_state: Dictionary, minimal: bool) -> 
 		var open_lanes := _open_town_catalog_lanes()
 		if open_lanes.has("build"):
 			_rebuild_build_actions(view_state.get("build_actions", []))
-		if open_lanes.has("market"):
-			_rebuild_market_actions(view_state.get("market_actions", []))
 		if open_lanes.has("recruit"):
 			_rebuild_recruit_actions(view_state.get("recruit_actions", []))
 		if open_lanes.has("tavern"):
@@ -1461,8 +1503,6 @@ func _rebuild_current_action_surfaces(view_state: Dictionary, minimal: bool) -> 
 		_rebuild_recruit_actions(view_state.get("recruit_actions", []))
 	if lanes.has("study"):
 		_rebuild_study_actions(view_state.get("study_actions", []))
-	if lanes.has("market"):
-		_rebuild_market_actions(view_state.get("market_actions", []))
 	if lanes.has("logistics"):
 		_rebuild_tavern_actions(view_state.get("tavern_actions", []))
 		_rebuild_transfer_actions(view_state.get("transfer_actions", []))
@@ -1478,8 +1518,6 @@ func _open_town_catalog_lanes() -> Array:
 			return ["build"]
 		"muster":
 			return ["recruit", "response"]
-		"trade":
-			return ["market", "response"]
 		"log":
 			return ["response", "artifact", "tavern", "transfer"]
 		_:
@@ -1495,7 +1533,8 @@ func _current_town_tab_lanes() -> Array:
 		2:
 			return ["study"]
 		3:
-			return ["market"]
+			# The hidden legacy Trade tab: the market lives in its building popout.
+			return []
 		4:
 			return ["logistics"]
 		_:
@@ -3083,8 +3122,8 @@ func validation_snapshot() -> Dictionary:
 		"town_orders_toggle_visible": _town_orders_toggle_button.visible,
 		"town_orders_toggle_text": _town_orders_toggle_button.text,
 		"market_text": TownRules.describe_market(_session),
-		"market_visible_text": _market_label.text if _market_label.text.strip_edges() != "" else String(market_readiness.get("visible_text", "")),
-		"market_tooltip_text": _market_label.tooltip_text if _market_label.tooltip_text.strip_edges() != "" else String(market_readiness.get("tooltip_text", "")),
+		"market_visible_text": String(market_readiness.get("visible_text", "")),
+		"market_tooltip_text": String(market_readiness.get("tooltip_text", "")),
 		"market_readiness": market_readiness,
 		"market_readiness_visible_text": String(market_readiness.get("visible_text", "")),
 		"market_readiness_tooltip_text": String(market_readiness.get("tooltip_text", "")),
@@ -3322,6 +3361,11 @@ func validation_army_management_snapshot() -> Dictionary:
 func validation_open_town_catalog(mode: String) -> Dictionary:
 	_open_town_catalog(mode)
 	return validation_town_catalog_snapshot()
+
+## Opens the market popout as the Trade command does.
+func validation_open_market_popout() -> Dictionary:
+	_open_market_popout()
+	return validation_building_information_snapshot()
 
 func validation_close_town_catalog() -> Dictionary:
 	_close_town_catalog()
@@ -3826,26 +3870,6 @@ func _build_action_for_id(action_id: String, actions_override: Variant = null) -
 			return action_value
 	return {}
 
-func _rebuild_market_actions(actions_override: Variant = null) -> void:
-	for child in _market_actions.get_children():
-		child.queue_free()
-
-	var actions = actions_override if actions_override is Array else TownRules.get_market_actions(_session)
-	if actions.is_empty():
-		_market_actions.add_child(_make_placeholder_label("No exchange orders ready"))
-		return
-
-	for action in actions:
-		if not (action is Dictionary):
-			continue
-		var button := Button.new()
-		button.text = String(action.get("label", action.get("id", "Trade")))
-		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = _town_action_button_tooltip(action, "market")
-		_style_action_button(button)
-		button.pressed.connect(_on_market_action_pressed.bind(String(action.get("id", ""))))
-		_market_actions.add_child(button)
-
 func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
 	var destination_summary := String(HeroCommandRules.town_recruitment_destination(_session, TownRules.get_active_town(_session)).summary)
 	if _town_catalog_mode == "muster":
@@ -3867,7 +3891,7 @@ func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
 		var card = TownRecruitCardScript.new()
 		card.configure(TownBuildingPanelScript.recruit_card(action), resources, true, _catalog_muster_tooltip(action, destination_summary))
 		card.recruit_requested.connect(_on_recruit_action_pressed)
-		card.trade_requested.connect(_on_construction_trade_requested.bind(""))
+		card.trade_requested.connect(_on_muster_trade_requested.bind(action.get("unit_cost", {}) if action.get("unit_cost", {}) is Dictionary else {}))
 		_recruit_actions.add_child(card)
 	if _town_catalog_mode == "muster":
 		call_deferred("_fit_building_popout")
@@ -3933,14 +3957,12 @@ func _rebuild_response_actions(actions_override: Variant = null) -> void:
 	var actions = actions_override if actions_override is Array else TownRules.get_response_actions(_session)
 	if _town_catalog_mode == "muster":
 		actions = actions.filter(func(a): return String(a.get("id", "")).begins_with("town_upgrade:"))
-	elif _town_catalog_mode == "trade":
-		actions = actions.filter(func(a): return String(a.get("id", "")).begins_with("town_buy:") or String(a.get("id", "")).begins_with("town_sell:"))
 	elif _town_catalog_mode == "log":
 		actions = actions.filter(func(a):
 			var id := String(a.get("id", ""))
 			return not id.begins_with("town_") or id.begins_with("town_train:") or id.begins_with("town_faction:"))
 	if actions.is_empty():
-		_response_actions.add_child(_make_placeholder_label("Build an upgraded dwelling to train its stationed troops." if _town_catalog_mode == "muster" else "Build an Artifact Exchange and bring a hero to trade." if _town_catalog_mode == "trade" else "No town services ready"))
+		_response_actions.add_child(_make_placeholder_label("Build an upgraded dwelling to train its stationed troops." if _town_catalog_mode == "muster" else "No town services ready"))
 		return
 
 	for action in actions:
@@ -4176,7 +4198,7 @@ func _town_build_plan_next_step(action: Dictionary, label: String, readiness: St
 	if bool(action.get("disabled", false)):
 		return "Review %s in Construction to inspect the missing requirements." % label
 	if readiness.begins_with("Needs exchange"):
-		return "Select %s in Construction, then use the Town Market before confirming." % label
+		return "Select %s in Construction, then trade at the market before confirming." % label
 	return "Select %s in Construction, then review and confirm the plan." % label
 
 func _town_action_button_readiness(action: Dictionary, lane: String) -> String:
@@ -4261,7 +4283,7 @@ func _town_action_surface_label(lane: String) -> String:
 		"study":
 			return "Spell Study"
 		"market":
-			return "Town Market"
+			return "the market"
 		"response":
 			return "Town Log"
 		_:
@@ -4272,7 +4294,7 @@ func _town_action_button_tooltip_snapshot() -> Dictionary:
 		"build": _action_tooltip_entries(_validation_actions_for_lane("build"), "build"),
 		"recruit": _button_tooltips_or_actions(_recruit_actions, "recruit"),
 		"study": _button_tooltips_or_actions(_study_actions, "study"),
-		"market": _button_tooltips_or_actions(_market_actions, "market"),
+		"market": _action_tooltip_entries(_validation_actions_for_lane("market"), "market"),
 		"hero": _button_tooltips_or_actions(_hero_actions, "hero"),
 		"tavern": _button_tooltips_or_actions(_tavern_actions, "tavern"),
 		"transfer": _button_tooltips_or_actions(_transfer_actions, "transfer"),
@@ -5554,9 +5576,11 @@ func _record_town_action_presentation(
 		presentation["known_spell_count"] = after_known.size()
 	elif lane == "market":
 		var parts := action_id.split(":")
-		var action_type := String(parts[1]) if parts.size() == 4 else ""
-		var resource_id := String(parts[2]) if parts.size() == 4 else ""
-		var amount := int(parts[3]) if parts.size() == 4 else 0
+		var converting := parts.size() == 5 and String(parts[1]) == "convert"
+		var action_type := String(parts[1]) if parts.size() == 4 or converting else ""
+		var resource_id := String(parts[3] if converting else parts[2]) if parts.size() == 4 or converting else ""
+		var amount := int(parts[4] if converting else parts[3]) if parts.size() == 4 or converting else 0
+		var give_id := String(parts[2]) if converting else "gold"
 		var resource_deltas := _town_action_resource_deltas(before, after)
 		var resource_delta := 0
 		var gold_delta := 0
@@ -5565,15 +5589,16 @@ func _record_town_action_presentation(
 				continue
 			if String(delta_value.get("resource_id", "")) == resource_id:
 				resource_delta = int(delta_value.get("delta", 0))
-			elif String(delta_value.get("resource_id", "")) == "gold":
+			elif String(delta_value.get("resource_id", "")) == give_id:
 				gold_delta = int(delta_value.get("delta", 0))
 		if (
-			parts.size() != 4
-			or action_type not in ["buy", "sell"]
+			not (parts.size() == 4 or converting)
+			or action_type not in ["buy", "sell", "convert"]
 			or resource_id not in OverworldRules.NORMAL_MARKET_RESOURCE_KEYS
 			or amount <= 0
 			or resource_deltas.size() != 2
 			or action_type == "buy" and (resource_delta != amount or gold_delta >= 0)
+			or action_type == "convert" and (resource_delta != amount or gold_delta >= 0)
 			or action_type == "sell" and (resource_delta != -amount or gold_delta <= 0)
 		):
 			return
@@ -6415,7 +6440,6 @@ func _apply_visual_theme() -> void:
 		_defense_label,
 		_pressure_label,
 		_building_label,
-		_market_label,
 		_recruit_label,
 		_study_label,
 		_spellbook_label,

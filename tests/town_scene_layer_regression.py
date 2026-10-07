@@ -482,7 +482,7 @@ RIGGING_ORE_PURCHASE = r'''
 func purchase_growth_ore_if_needed(building_id: String) -> void:
 	if building_id!="building_veilmourn_tideglass_chapel" or int(session.overworld.resources.ore)>=int(ContentService.get_building(building_id).cost.ore): return
 	var shell=get_tree().current_scene
-	var opened: Dictionary=shell.validation_open_town_catalog("trade")
+	var opened: Dictionary=shell.validation_open_market_popout()
 	await settle()
 	check(opened.open,"ordinary Trade dialog did not open")
 	var offered: Array=TownRules.get_market_actions(session).filter(func(a):return a.id=="market:buy:ore:1" and not a.get("disabled",true))
@@ -893,7 +893,7 @@ func purchase_mireclaw_materials(id: String) -> void:
 			var offered: Array=TownRules.get_market_actions(session).filter(func(a):return a.id==action and not a.get("disabled",true))
 			if offered.size()!=1: break # Ordinary stock/affordability; wait a legal day.
 			var shell=get_tree().current_scene
-			var opened: Dictionary=shell.validation_open_town_catalog("trade")
+			var opened: Dictionary=shell.validation_open_market_popout()
 			check(opened.open,"Duskfen material Trade dialog unavailable")
 			var control=SessionStateStore.SessionData.new()
 			control.from_dict(session.to_dict())

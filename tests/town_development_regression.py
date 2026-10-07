@@ -208,14 +208,19 @@ func inspect_ui():
 	await RenderingServer.frame_post_draw
 	get_viewport().get_texture().get_image().save_png(out+"/town.png")
 	for mode in ["muster","trade","log","build"]:
-		shell._open_town_catalog(mode)
+		# Artifact orders live in the Artifact Exchange's own building popout.
+		if mode=="trade":
+			shell._selected_building_info_id="building_dev_artifact_exchange"
+			shell._open_town_catalog("building_info")
+		else:
+			shell._open_town_catalog(mode)
 		for i in range(3):await get_tree().process_frame
-		check(shell._town_catalog_mode==mode,"town dialog failed "+mode)
+		check(shell._town_catalog_mode==("building_info" if mode=="trade" else mode),"town dialog failed "+mode)
 		if mode=="muster":check(shell._response_actions.get_child_count()>0 and shell._response_actions.is_visible_in_tree(),"upgrade UI not visible")
 		if mode=="muster":
 			check(Towns.get_muster_catalog(s).size()==7,"Muster shows excluded or superseded creatures")
 			check(shell._domain_actions.get_index()<shell._recruit_actions.get_index(),"upgrade orders below recruits")
-		if mode=="trade":check(shell._response_actions.get_child_count()>0 and shell._response_actions.is_visible_in_tree(),"artifact UI not visible")
+		if mode=="trade":check(shell._building_info_surface.validation_snapshot().services.any(func(s):return String(s.id).begins_with("town_buy:")) and shell._building_info_surface.is_visible_in_tree(),"artifact UI not visible")
 		await RenderingServer.frame_post_draw
 		get_viewport().get_texture().get_image().save_png(out+"/"+mode+".png")
 		# Exercise the redraw path as well as first-open population.
@@ -226,7 +231,7 @@ func inspect_ui():
 			shell._on_response_action_pressed("town_buy:"+aid)
 			for i in range(3):await get_tree().process_frame
 			check(Dev.Artifacts.has_artifact(s.overworld.hero,aid),"artifact purchase button not wired")
-			check(shell._town_catalog_mode=="trade","purchase closed market")
+			check(shell._town_catalog_mode=="building_info" and shell._selected_building_info_id=="building_dev_artifact_exchange","purchase closed the artifact exchange")
 	shell.queue_free()
 	await get_tree().process_frame
 '''
