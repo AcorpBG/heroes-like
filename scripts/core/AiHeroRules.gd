@@ -35,6 +35,13 @@ const HERO_ATTACK_RATIO := 1.3
 const TOWN_ATTACK_RATIO := 1.4
 const THREAT_RATIO := 1.15
 const TROOP_VALUE_PER_POWER := 10.0
+## Builds weigh a dwelling's troops and a building's income over two weeks.
+const BUILD_HORIZON_WEEKS := 2.0
+## A town whose dwellings muster less than this (gold value) a week is short
+## of troops.
+const STARVED_TOWN_WEEKLY_TROOPS := 1500.0
+## A hand-over of troops is worth at most what a modest site is worth.
+const MEET_VALUE_CAP := 600.0
 const GOAL_CONTINUITY_BONUS := 1.25
 const TOWN_SIGHT_RADIUS := 8
 const EXPLORE_VALUE := 220.0
@@ -111,6 +118,20 @@ static func active_hero_entries(session: SessionStateStoreScript.SessionData, co
 static func active_hero_count(session: SessionStateStoreScript.SessionData, controller: String) -> int:
 	return active_hero_entries(session, controller).size()
 
+# Tiles this faction's towns and heroes have seen on one map level.
+static func explored_tile_count(state: Dictionary, level: int = 0) -> int:
+	var stored = state.get(EXPLORED_KEY, {})
+	var encoded := String(stored.get(str(level), "")) if stored is Dictionary else ""
+	if encoded == "":
+		return 0
+	var count := 0
+	for byte in Marshalls.base64_to_raw(encoded):
+		var bits := int(byte)
+		while bits != 0:
+			count += bits & 1
+			bits >>= 1
+	return count
+
 static func _resolved_lookup(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var lookup := {}
 	for value in session.overworld.get("resolved_encounters", []):
@@ -144,6 +165,8 @@ static func _mark_resolved(session: SessionStateStoreScript.SessionData, placeme
 
 const MIGRATION_KEY := "ai_heroes_version"
 const MIGRATION_VERSION := 1
+## A commanderless column this close to one of its side's heroes joins it.
+const COLUMN_JOIN_RADIUS := 3
 
 ## Save migration, once per session: raid hosts from older saves become heroes.
 static func migrate_legacy_raids(session: SessionStateStoreScript.SessionData) -> void:
@@ -152,17 +175,19 @@ static func migrate_legacy_raids(session: SessionStateStoreScript.SessionData) -
 	normalize_ai_heroes(session)
 	session.overworld[MIGRATION_KEY] = MIGRATION_VERSION
 
-## Legacy raid hosts become heroes; commanderless columns are disbanded and
-## their troops return to the nearest town of their controller. Runs once per
-## save and again for any host a scenario script places later (`controller`).
+## Legacy raid hosts become heroes. A commanderless column is disbanded: its
+## troops join a hero of its controller standing close by, the rest return to
+## the controller's nearest town. Runs once per save and again for any host a
+## scenario script places later (`controller`).
 static func normalize_ai_heroes(session: SessionStateStoreScript.SessionData, only_controller: String = "") -> Dictionary:
-	var report := {"converted": 0, "disbanded": 0}
+	var report := {"converted": 0, "disbanded": 0, "joined_hero": 0}
 	# A battle in progress still refers to its armies as they are.
 	if session == null or not session.battle.is_empty():
 		return report
 	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
 	var resolved := _resolved_lookup(session)
 	var changed := false
+	var columns := []
 	for index in range(encounters.size()):
 		var entry = encounters[index]
 		if not (entry is Dictionary):
@@ -184,20 +209,60 @@ static func normalize_ai_heroes(session: SessionStateStoreScript.SessionData, on
 		var commander: Dictionary = entry.get("enemy_commander_state", {}) if entry.get("enemy_commander_state", {}) is Dictionary else {}
 		var hero_id := String(commander.get("roster_hero_id", ""))
 		if hero_id == "" or bool(entry.get("commanderless_support_column", false)):
-			_return_troops_to_nearest_town(session, entry, controller)
-			_mark_resolved(session, placement_id)
-			resolved[placement_id] = true
-			entry["ai_disbanded_day"] = int(session.day)
-			encounters[index] = entry
-			report["disbanded"] = int(report.disbanded) + 1
-			changed = true
+			columns.append(index)
 			continue
 		encounters[index] = _convert_legacy_host(session, entry, controller)
 		report["converted"] = int(report.converted) + 1
 		changed = true
+	for index in columns:
+		var entry: Dictionary = encounters[index]
+		var controller := PlayerRules.raid_controller_id(entry)
+		var placement_id := String(entry.get("placement_id", ""))
+		var stacks: Array = entry.get("enemy_army", {}).get("stacks", []) if entry.get("enemy_army", {}) is Dictionary else []
+		var hero_index := _nearest_hero_index(encounters, resolved, controller, entry, COLUMN_JOIN_RADIUS)
+		if hero_index >= 0:
+			var hero: Dictionary = encounters[hero_index]
+			var army: Dictionary = hero.get("enemy_army", {}) if hero.get("enemy_army", {}) is Dictionary else {}
+			var merged := _merge_stacks_into(army.get("stacks", []), stacks)
+			if merged.stacks != army.get("stacks", []):
+				army["stacks"] = merged.stacks
+				hero["enemy_army"] = army
+				var commander: Dictionary = hero.get("enemy_commander_state", {}) if hero.get("enemy_commander_state", {}) is Dictionary else {}
+				if not commander.is_empty():
+					hero["enemy_commander_state"] = AdventureRules.sync_commander_army_continuity(commander, army, AI_HERO_ENCOUNTER_ID)
+				hero["joined_column_placement_id"] = placement_id
+				encounters[hero_index] = hero
+				entry["ai_joined_hero_placement_id"] = String(hero.get("placement_id", ""))
+				report["joined_hero"] = int(report.joined_hero) + 1
+			stacks = merged.left
+		var leftover := entry.duplicate(true)
+		leftover["enemy_army"] = {"stacks": stacks}
+		_return_troops_to_nearest_town(session, leftover, controller)
+		_mark_resolved(session, placement_id)
+		resolved[placement_id] = true
+		entry["ai_disbanded_day"] = int(session.day)
+		encounters[index] = entry
+		report["disbanded"] = int(report.disbanded) + 1
+		changed = true
 	if changed:
 		session.overworld["encounters"] = encounters
 	return report
+
+## The closest hero of this controller within `radius` tiles of a column.
+static func _nearest_hero_index(encounters: Array, resolved: Dictionary, controller: String, column: Dictionary, radius: int) -> int:
+	var best := -1
+	var best_distance := radius + 1
+	for index in range(encounters.size()):
+		var entry = encounters[index]
+		if not is_ai_hero(entry) or resolved.has(String(entry.get("placement_id", ""))):
+			continue
+		if PlayerRules.raid_controller_id(entry) != controller or not LevelRules.same_level(entry, column):
+			continue
+		var distance := maxi(absi(int(entry.get("x", 0)) - int(column.get("x", 0))), absi(int(entry.get("y", 0)) - int(column.get("y", 0))))
+		if distance < best_distance:
+			best_distance = distance
+			best = index
+	return best
 
 static func _convert_legacy_host(session: SessionStateStoreScript.SessionData, entry: Dictionary, controller: String) -> Dictionary:
 	var converted := entry.duplicate(true)
@@ -303,10 +368,15 @@ static func run_faction_turn(
 	phases["towns_ms"] = _elapsed_ms(phase)
 
 	phase = Time.get_ticks_usec()
-	var hero_ids := []
+	# Lesser heroes move first, as a human moves couriers before the main army:
+	# troops they hand over are with the main hero when it acts.
+	var hero_order := []
 	for entry in active_hero_entries(session, controller):
-		hero_ids.append(String(entry.get("placement_id", "")))
-	hero_ids.sort()
+		hero_order.append({"id": String(entry.get("placement_id", "")), "power": hero_power(entry)})
+	hero_order.sort_custom(func(a, b): return a.power < b.power if not is_equal_approx(a.power, b.power) else a.id < b.id)
+	var hero_ids := []
+	for item in hero_order:
+		hero_ids.append(item.id)
 	var battle_started := false
 	for placement_id in hero_ids:
 		if not session.battle.is_empty():
@@ -580,6 +650,7 @@ static func _build_choice(session: SessionStateStoreScript.SessionData, town: Di
 	var overworld_rules = _overworld_rules()
 	var income_before := _trial_income(town)
 	var growth_before := _trial_growth(town)
+	var weekly_troops_before := _recruit_set_value(growth_before)
 	var options: Array = overworld_rules.get_town_build_options(town, int(session.day))
 	var built: Array = town.get("built_buildings", [])
 	var best := {}
@@ -598,11 +669,15 @@ static func _build_choice(session: SessionStateStoreScript.SessionData, town: Di
 		var trial := {"town_id": town.get("town_id", ""), "placement_id": town.get("placement_id", ""), "built_buildings": trial_built, "development_version": town.get("development_version", 0)}
 		var value := 0.0
 		var reason := "development"
-		var troops := _recruit_set_value(_trial_growth(trial)) - _recruit_set_value(growth_before)
+		# Troops and income are weighed over the same two weeks; a town that
+		# musters little wants dwellings first, as a human would.
+		var troops := (_recruit_set_value(_trial_growth(trial)) - weekly_troops_before) * BUILD_HORIZON_WEEKS
+		if weekly_troops_before < STARVED_TOWN_WEEKLY_TROOPS:
+			troops *= 1.5
 		if troops > 0.0:
 			value += troops
 			reason = "troops"
-		var income := _payload_value(_pool_delta(_trial_income(trial), income_before), {}) * 14.0
+		var income := _payload_value(_pool_delta(_trial_income(trial), income_before), {}) * 7.0 * BUILD_HORIZON_WEEKS
 		if income > value:
 			reason = "income"
 		value += income
@@ -1230,12 +1305,32 @@ static func _visit_own_town_if_inside(session: SessionStateStoreScript.SessionDa
 	var town := _own_town_at(session, String(context.controller), entry)
 	if town.is_empty():
 		return {}
+	var count_before := _creature_total(entry.get("enemy_army", {}).get("stacks", []))
 	entry = _take_garrison(session, entry, town, context)
 	TownServices.visit(town, entry, context.state.treasury, int(session.day), String(context.controller))
 	block["visited_town_day"] = int(session.day)
 	entry[AI_HERO_KEY] = block
 	_store_entry(session, index, entry)
-	return {}
+	var gained := _creature_total(entry.get("enemy_army", {}).get("stacks", [])) - count_before
+	if gained <= 0:
+		return {}
+	var event := _event(session, context, "ai_hero_reinforced", entry, {
+		"target_kind": "town",
+		"target_placement_id": String(town.get("placement_id", "")),
+		"target_label": _turn_rules()._town_name(town),
+		"target_x": int(town.get("x", 0)),
+		"target_y": int(town.get("y", 0)),
+		"target_public_importance": "low",
+	}, "%s gathers %d troops at %s." % [hero_name(entry), gained, _turn_rules()._town_name(town)], ["garrison_taken"])
+	return {"events": [event]}
+
+static func _creature_total(stacks: Variant) -> int:
+	var total := 0
+	if stacks is Array:
+		for stack in stacks:
+			if stack is Dictionary:
+				total += maxi(0, int(stack.get("count", 0)))
+	return total
 
 static func _own_town_at(session: SessionStateStoreScript.SessionData, controller: String, entry: Dictionary) -> Dictionary:
 	for town in session.overworld.get("towns", []):
@@ -1370,6 +1465,8 @@ static func _candidate(session: SessionStateStoreScript.SessionData, context: Di
 		STOP_AI_HERO:
 			var encounters: Array = session.overworld.get("encounters", [])
 			var other: Dictionary = encounters[int(ref.index)]
+			if PlayerRules.raid_controller_id(other) == controller:
+				return _meet_candidate(session, context, entry, int(ref.index))
 			if PlayerRules.allied(session, controller, PlayerRules.raid_controller_id(other)) or not _position_seen(session, context, LevelRules.position(other)):
 				return {}
 			var other_power := hero_power(other)
@@ -1377,6 +1474,61 @@ static func _candidate(session: SessionStateStoreScript.SessionData, context: Di
 				return {}
 			return {"kind": "ai_hero", "id": String(other.get("placement_id", "")), "index": int(ref.index), "value": 1200.0 + other_power * TROOP_VALUE_PER_POWER * 0.5}
 	return {}
+
+## A lesser hero walks its troops over to the main hero, the way a human
+## chains reinforcements forward, keeping one creature to stay in the field.
+static func _meet_candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, other_index: int) -> Dictionary:
+	var encounters: Array = session.overworld.get("encounters", [])
+	var other: Dictionary = encounters[other_index]
+	var main_id := _decision_main_id(session, context)
+	if main_id == "" or main_id == String(entry.get("placement_id", "")) or main_id != String(other.get("placement_id", "")):
+		return {}
+	var split := _split_for_handover(entry.get("enemy_army", {}).get("stacks", []))
+	if split.give.is_empty():
+		return {}
+	var fits := _merge_stacks_into(other.get("enemy_army", {}).get("stacks", []), split.give)
+	# Moving troops creates nothing by itself: a lesser hero finishes its own
+	# errands first and brings its troops over when nothing else is worth more.
+	var value := minf((army_power(split.give) - army_power(fits.left)) * TROOP_VALUE_PER_POWER * 0.6, MEET_VALUE_CAP)
+	if value <= 50.0:
+		return {}
+	return {"kind": "meet", "id": String(other.get("placement_id", "")), "index": other_index, "value": value}
+
+## Every creature but one of the weakest kind.
+static func _split_for_handover(stacks: Variant) -> Dictionary:
+	var give := []
+	var keep := []
+	if not (stacks is Array):
+		return {"give": give, "keep": keep}
+	var weakest := -1
+	var weakest_power := INF
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if not (stack is Dictionary) or int(stack.get("count", 0)) <= 0:
+			continue
+		var one: Dictionary = stack.duplicate(true)
+		one["count"] = 1
+		var power := army_power([one])
+		if power < weakest_power:
+			weakest_power = power
+			weakest = index
+	if weakest < 0:
+		return {"give": give, "keep": keep}
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if not (stack is Dictionary) or int(stack.get("count", 0)) <= 0:
+			continue
+		if index != weakest:
+			give.append(stack.duplicate(true))
+			continue
+		var kept: Dictionary = stack.duplicate(true)
+		kept["count"] = 1
+		keep.append(kept)
+		if int(stack.get("count", 0)) > 1:
+			var rest: Dictionary = stack.duplicate(true)
+			rest["count"] = int(stack.get("count", 0)) - 1
+			give.append(rest)
+	return {"give": give, "keep": keep}
 
 static func _resource_candidate(session: SessionStateStoreScript.SessionData, controller: String, entry: Dictionary, index: int, power: float, needs: Dictionary, treasury: Dictionary) -> Dictionary:
 	var nodes: Array = session.overworld.get("resource_nodes", [])
@@ -1472,6 +1624,8 @@ static func _town_candidate(session: SessionStateStoreScript.SessionData, contex
 	var towns: Array = session.overworld.get("towns", [])
 	var town: Dictionary = towns[index]
 	var owner := String(town.get("owner", "neutral"))
+	if owner not in ["player", "enemy", "neutral"]:
+		return {}
 	var town_controller := PlayerRules.town_controller_id(town) if owner != "neutral" else ""
 	var id := String(town.get("placement_id", ""))
 	if owner == "enemy" and town_controller == controller:
@@ -1715,8 +1869,21 @@ static func _level_surface(session: SessionStateStoreScript.SessionData, context
 			_add_stop(stops, Vector2i(int(entrance.get("x", -1)), int(entrance.get("y", -1))), size, {"kind": STOP_TOWN, "index": index})
 	var stop_mask := PackedByteArray()
 	stop_mask.resize(size.x * size.y)
+	# Map sites a hero may also walk across once they hold nothing more for it
+	# (a picked-up cache, its own mine): stepping on and off is a move like
+	# any other. Towns always end a route.
+	var site_stops := []
 	for tile_index in stops.keys():
 		stop_mask[int(tile_index)] = 1
+		var sites_only := true
+		for ref in stops[tile_index]:
+			if int(ref.kind) not in [STOP_RESOURCE, STOP_ARTIFACT]:
+				sites_only = false
+		if sites_only:
+			var refs := []
+			for ref in stops[tile_index]:
+				refs.append({"kind": int(ref.kind), "index": int(ref.index)})
+			site_stops.append({"tile": int(tile_index), "refs": refs})
 	# Neutral armies stand still: decode their bodies and engagement zones once.
 	var neutrals := []
 	var encounters: Array = session.overworld.get("encounters", [])
@@ -1736,10 +1903,32 @@ static func _level_surface(session: SessionStateStoreScript.SessionData, context
 			if tile is Vector2i and tile.x >= 0 and tile.y >= 0 and tile.x < size.x and tile.y < size.y:
 				zone.append(tile.y * size.x + tile.x)
 		neutrals.append({"id": String(encounter.get("placement_id", "")), "index": index, "body": body, "zone": zone})
-	var surface := {"blocked": blocked, "stops": stops, "stop_mask": stop_mask, "neutrals": neutrals}
+	var surface := {"blocked": blocked, "stops": stops, "stop_mask": stop_mask, "site_stops": site_stops, "neutrals": neutrals}
 	levels[level] = surface
 	_profile_add(context, "surface_ms", surface_started)
 	return surface
+
+## Whether a hero may cross this site's tile without stopping: the pickup is
+## gone, or the site is already this player's (or an ally's).
+static func _site_stop_passable(session: SessionStateStoreScript.SessionData, controller: String, ref: Dictionary) -> bool:
+	match int(ref.kind):
+		STOP_ARTIFACT:
+			var artifacts: Array = session.overworld.get("artifact_nodes", [])
+			var artifact = artifacts[int(ref.index)] if int(ref.index) < artifacts.size() else {}
+			return artifact is Dictionary and bool(artifact.get("collected", false))
+		STOP_RESOURCE:
+			var nodes: Array = session.overworld.get("resource_nodes", [])
+			var node = nodes[int(ref.index)] if int(ref.index) < nodes.size() else {}
+			if not (node is Dictionary) or NativeTransit.is_native(node):
+				return false
+			var site := NodePayload.site_for_node(node)
+			if site.is_empty():
+				return false
+			if not _overworld_rules().resource_node_is_present(node, site):
+				return true
+			var owner := PlayerRules.resource_controller_id(node)
+			return owner != "" and PlayerRules.allied(session, controller, owner)
+	return false
 
 static func _add_stop(stops: Dictionary, tile: Vector2i, size: Vector2i, ref: Dictionary) -> void:
 	if tile.x < 0 or tile.y < 0 or tile.x >= size.x or tile.y >= size.y:
@@ -1767,6 +1956,7 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 	var blocked: PackedByteArray = surface.blocked.duplicate()
 	var stop_mask: PackedByteArray = surface.stop_mask.duplicate()
 	var dynamic_stops := {}
+	var army_tiles := {}
 	var resolved := _resolved_lookup(session)
 	var encounters: Array = session.overworld.get("encounters", [])
 	for record in surface.neutrals:
@@ -1774,6 +1964,7 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 			continue
 		for body_index in record.body:
 			blocked[int(body_index)] = 1
+			army_tiles[int(body_index)] = true
 		for zone_index in record.zone:
 			stop_mask[int(zone_index)] = 1
 			_add_stop_index(dynamic_stops, int(zone_index), {"kind": STOP_ENCOUNTER, "index": int(record.index)})
@@ -1790,8 +1981,12 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 		var tile_index := _tile_index_of(other, size)
 		if tile_index < 0:
 			continue
-		if other_controller == controller or not is_ai_hero(other) or PlayerRules.allied(session, controller, other_controller):
+		# Rival heroes can be attacked and this player's own heroes met; both
+		# end a route, neither can be walked through.
+		var meetable := other_controller == controller
+		if not is_ai_hero(other) or (not meetable and PlayerRules.allied(session, controller, other_controller)):
 			blocked[tile_index] = 1
+			army_tiles[tile_index] = true
 		else:
 			stop_mask[tile_index] = 1
 			_add_stop_index(dynamic_stops, tile_index, {"kind": STOP_AI_HERO, "index": index})
@@ -1807,9 +2002,23 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 			continue
 		if human_allied:
 			blocked[hero_index] = 1
+			army_tiles[hero_index] = true
 		else:
 			stop_mask[hero_index] = 1
 			_add_stop_index(dynamic_stops, hero_index, {"kind": STOP_HERO, "index": index})
+	var pass_mask := PackedByteArray()
+	pass_mask.resize(count)
+	for site in surface.get("site_stops", []):
+		var site_tile := int(site.tile)
+		if dynamic_stops.has(site_tile) or army_tiles.has(site_tile):
+			continue
+		var open := true
+		for ref in site.refs:
+			if not _site_stop_passable(session, controller, ref):
+				open = false
+				break
+		if open:
+			pass_mask[site_tile] = 1
 	var dist := PackedInt32Array()
 	dist.resize(count)
 	dist.fill(-1)
@@ -1852,6 +2061,9 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 				dist[next] = next_distance
 				parent[next] = current
 				reached.append(next)
+				if pass_mask[next] != 0:
+					queue[tail] = next
+					tail += 1
 				continue
 			if blocked[next] != 0:
 				continue
@@ -1911,14 +2123,16 @@ static func _interact(session: SessionStateStoreScript.SessionData, context: Dic
 			block.erase("visited_town_day")
 			entry[AI_HERO_KEY] = block
 			_store_entry(session, index, entry)
-			_visit_own_town_if_inside(session, context, index)
-			return {"arrived": true}
+			var visit := _visit_own_town_if_inside(session, context, index)
+			return {"arrived": true, "acted": true, "events": visit.get("events", [])}
 		"town_neutral", "town_hostile":
 			return _attack_town(session, context, index, plan)
 		"hero":
 			return _attack_player_hero(session, context, index, plan)
 		"ai_hero":
 			return _fight_ai_hero(session, context, index, plan)
+		"meet":
+			return _meet_hero(session, context, index, plan)
 		"explore":
 			return {"arrived": true, "acted": true}
 	return {"arrived": true}
@@ -2073,6 +2287,46 @@ static func _fight_ai_hero(session: SessionStateStoreScript.SessionData, context
 		encounters[other_index] = other
 		session.overworld["encounters"] = encounters
 	return {"arrived": true, "events": fight.get("events", [])}
+
+## Hand troops to the main hero standing next to this one.
+static func _meet_hero(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
+	var other_index := _entry_index(session, String(plan.get("id", "")))
+	if other_index < 0 or _is_resolved(session, String(plan.get("id", ""))):
+		return {"arrived": true}
+	var encounters: Array = session.overworld.get("encounters", [])
+	var entry: Dictionary = encounters[index]
+	var other: Dictionary = encounters[other_index]
+	if not LevelRules.same_level(entry, other) or maxi(absi(int(entry.get("x", 0)) - int(other.get("x", 0))), absi(int(entry.get("y", 0)) - int(other.get("y", 0)))) > 1:
+		return {"arrived": true}
+	var army: Dictionary = entry.get("enemy_army", {}) if entry.get("enemy_army", {}) is Dictionary else {}
+	var other_army: Dictionary = other.get("enemy_army", {}) if other.get("enemy_army", {}) is Dictionary else {}
+	var split := _split_for_handover(army.get("stacks", []))
+	var merged := _merge_stacks_into(other_army.get("stacks", []), split.give)
+	if merged.stacks == other_army.get("stacks", []):
+		return {"arrived": true}
+	var kept: Array = split.keep
+	kept.append_array(merged.left)
+	army["stacks"] = kept
+	entry["enemy_army"] = army
+	entry["enemy_commander_state"] = AdventureRules.sync_commander_army_continuity(entry.get("enemy_commander_state", {}), army, AI_HERO_ENCOUNTER_ID)
+	other_army["stacks"] = merged.stacks
+	other["enemy_army"] = other_army
+	other["enemy_commander_state"] = AdventureRules.sync_commander_army_continuity(other.get("enemy_commander_state", {}), other_army, AI_HERO_ENCOUNTER_ID)
+	var block: Dictionary = entry.get(AI_HERO_KEY, {})
+	block["goal"] = {}
+	entry[AI_HERO_KEY] = block
+	encounters[index] = entry
+	encounters[other_index] = other
+	session.overworld["encounters"] = encounters
+	var event := _event(session, context, "ai_heroes_met", entry, {
+		"target_kind": "encounter",
+		"target_placement_id": String(other.get("placement_id", "")),
+		"target_label": hero_name(other),
+		"target_x": int(other.get("x", 0)),
+		"target_y": int(other.get("y", 0)),
+		"target_public_importance": "low",
+	}, "%s hands troops to %s." % [hero_name(entry), hero_name(other)], ["troops_handed_over"])
+	return {"arrived": true, "acted": true, "events": [event]}
 
 static func _attack_town(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
 	var controller := String(context.controller)
