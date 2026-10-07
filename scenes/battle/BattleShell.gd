@@ -196,6 +196,7 @@ var _normalized_battle_snapshot: Dictionary = {}
 const LAZY_SAVE_BAR_DETAILS := "save_bar_details"
 const LAZY_TACTICAL_DETAILS := "tactical_details"
 var _stale_lazy_surfaces := {}
+var _hovered_save_controls := {}
 var _lazy_surface_build_counts := {}
 var _save_surface_build_count := 0
 
@@ -249,7 +250,8 @@ func _ready() -> void:
 	_configure_confirmation_input_forwarding()
 	_tactical_details_button.pressed.connect(_on_tactical_details_pressed)
 	for save_control in [_save_button, _menu_button, _save_slot_picker, _system_body_label]:
-		save_control.mouse_entered.connect(_build_lazy_surfaces.bind(LAZY_SAVE_BAR_DETAILS))
+		save_control.mouse_entered.connect(_on_save_control_hover_changed.bind(save_control, true))
+		save_control.mouse_exited.connect(_on_save_control_hover_changed.bind(save_control, false))
 		save_control.focus_entered.connect(_build_lazy_surfaces.bind(LAZY_SAVE_BAR_DETAILS))
 	_sidebar_shell_panel.visibility_changed.connect(_on_sidebar_visibility_changed)
 	resized.connect(_apply_responsive_layout)
@@ -1862,6 +1864,10 @@ func _refresh() -> void:
 	section_started = ProfileLogScript.begin_usec()
 	_refresh_save_bar_status()
 	_stale_lazy_surfaces[LAZY_SAVE_BAR_DETAILS] = true
+	# A save control under the pointer or focused shows its tooltip again
+	# without a new hover, so it needs the current one now.
+	if _save_bar_in_view():
+		_build_lazy_surfaces(LAZY_SAVE_BAR_DETAILS)
 	buckets["save_surface"] = ProfileLogScript.elapsed_ms(section_started)
 
 	section_started = ProfileLogScript.begin_usec()
@@ -2094,6 +2100,21 @@ func _build_lazy_surfaces(only: String = "") -> void:
 		if String(surface_id) in [LAZY_SAVE_BAR_DETAILS, LAZY_TACTICAL_DETAILS]:
 			_lazy_surface_build_counts[surface_id] = int(_lazy_surface_build_counts.get(surface_id, 0)) + 1
 	ProfileLogScript.emit_general("battle", "refresh", "battle_lazy_surfaces", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false), _session)
+
+func _on_save_control_hover_changed(control: Control, hovered: bool) -> void:
+	if hovered:
+		_hovered_save_controls[control.get_instance_id()] = true
+		_build_lazy_surfaces(LAZY_SAVE_BAR_DETAILS)
+	else:
+		_hovered_save_controls.erase(control.get_instance_id())
+
+func _save_bar_in_view() -> bool:
+	if not _hovered_save_controls.is_empty():
+		return true
+	for control in [_save_button, _menu_button, _save_slot_picker, _system_body_label]:
+		if control.has_focus():
+			return true
+	return false
 
 func _on_sidebar_visibility_changed() -> void:
 	if _sidebar_shell_panel.visible:
@@ -3313,6 +3334,7 @@ func _refresh_save_slot_picker() -> void:
 		return
 
 	_save_surface_build_count += 1
+	_stale_lazy_surfaces.erase(LAZY_SAVE_BAR_DETAILS)
 	var surface := AppRouter.active_save_surface({}, false)
 	var selected_slot := SaveService.get_selected_manual_slot()
 	_apply_save_bar_status(surface, selected_slot)

@@ -33,15 +33,23 @@ then builds in the next frame, so the gray frame stayed on screen for that whole
     normalized. The autosave then takes the trusted path and caches its own summary
     (`cache_summary`), so the battle save bar does not parse the file it just wrote.
     The battle shell re-normalizes the overworld only if it changed.
-  - The battle shell's first refresh shows the banner, board, orders and the final
-    save-bar button labels. It leaves out what that frame does not show: the
-    collapsed Tactical Details sidebar, the hidden action-guide copy, and the save-bar
-    status (stored-save inspection).
-  - Once the battle is on screen, the sidebar and the action guide are built together
-    in the next frame. Their reads also tidy the target state, so that work stays in
-    one frame, as in a full refresh. The save bar follows a frame later.
-  - Opening the sidebar, switching its tab, any full refresh, or `validation_snapshot()`
-    builds everything still pending at once.
+- Every battle refresh (entry and after each action) describes one board state:
+  - BattleRules memoizes reachable hexes, attack legality, melee approaches and
+    attackable target ids inside `begin_board_read_scope()`/`end_board_read_scope()`.
+    The battle shell opens a scope around the read part of each refresh, and the
+    movement-intent list opens its own. Inside a scope the caller must not change
+    stacks, field objectives or town defenses. Each cache key also hashes the
+    stacks, field objectives, distance and round, so a changed board misses.
+  - Surfaces nobody is looking at are built when they are shown. The save bar's
+    visible text (status lines, button labels) comes from
+    `SaveService.in_session_save_bar_status()` on every refresh. The full save
+    surface and its tooltips, which copy the whole session, are built when a save
+    control is hovered or focused. The collapsed Tactical Details sidebar is built when
+    it opens; while it is open every refresh builds it.
+  - Commander cards stay in every refresh. Reading a commander summary also updates
+    that commander's stored state, and the battle state must not change later, when
+    the sidebar opens.
+  - `validation_snapshot()` and the tab validation getters build anything stale first.
 
 ## Validation
 
@@ -49,6 +57,10 @@ then builds in the next frame, so the gray frame stayed on screen for that whole
   overworld to battle (through the real approach timer), battle to the next scene
   after Quick Resolve, and overworld to town and back. It records every frame (each
   frame start, and `frame_post_draw` in windowed runs) and fails if a frame without a
-  scene is shown uncovered. It also checks the entry checkpoint path, and that the
-  battle shell's first frame did not build the save surface. In windowed runs,
-  `--shots=<dir>` saves the battle-entry frames.
+  scene is shown uncovered. It also checks the entry checkpoint path, that the battle
+  shell's first frame did not build the save surface, that hovering Save builds it,
+  and that opening Tactical Details builds the sidebar without changing the battle
+  state. In windowed runs, `--shots=<dir>` saves the battle-entry frames.
+- `tests/battle_board_read_scope_report.tscn` plays several turns of 17 fixture
+  battles and compares every memoized board read with an uncached run. The answers
+  and the battle state the reads leave behind must be identical.
