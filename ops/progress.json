@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-market-popout-20261007",
-  "currentSliceId": "ux-town-market-popout-20261007",
-  "currentSliceNotes": "COMPLETED 2026-10-07. Owner playtest: the Town screen kept separate market and magic guild windows besides the building popouts, trading lacked resource-to-resource conversion, and the market should cost only gold. The Trade/Spells commands, building clicks and every trade-for-it button (construction board, popout upgrade lines, dwelling and Muster Hall recruit cards) now open the market or highest guild popout; the Town Market dialog, town spellbook dialog and the popout's Open market hand-off are removed. The market popout is a HoMM-style desk (give/get, slider, quote, trade): buy and sell at the existing rates plus direct wood/ore conversion priced at the received resource's mid rate paid at the given resource's sell rate, within weekly sell/buy limits (TownRules.market_trade_quote, market_conversion_rate, market_desk, perform_market_action market:convert). Rare resources stay import-only gold buys at the Trade Exchange. Marketplace 1,000 gold + 5 wood -> 3,000 gold; Trade Exchange 2,500 gold + 5 wood -> 4,500 gold (wood at the AI's 400-gold construction value). Trade Exchange bulk lots apply to every full lot. Validation: town_market_popout_report (six towns, headless and windowed), town_building_panel/construction/hero hire reports pass, town development 688/688 and rare imports 198/198, other town failures match the baseline, validate_repo unchanged. Follow-ups: AI never converts resources; hidden legacy tab strip and spell-study lane remain in TownShell.tscn.",
+  "currentSlice": "content-rare-resources-fully-tradeable-20261007",
+  "currentSliceId": "content-rare-resources-fully-tradeable-20261007",
+  "currentSliceNotes": "COMPLETED 2026-10-07. Owner decision 2026-10-07: rare resources become fully tradeable, HoMM3-style. The Marketplace and Trade Exchange buy, sell and convert every stockpile resource (gold, wood, ore, six rares), any for any other, in a wrapped give/get tile grid without scrolling. Rares are valued at twice wood/ore from EnemyTurnRules._resource_value (mirrored by OverworldRules.MARKET_RESOURCE_VALUES, checked equal by the report): Marketplace 720/290 wood-ore and 1,440/580 rare buy/sell, Trade Exchange 590/380 and 1,180/760, local abundance kept; conversion stays mid-over-sell so direct conversion beats sell-then-buy and no buy/sell/convert cycle profits. Weekly caps (bought/sold): wood/ore 6/8 Marketplace, 8/10 Trade Exchange; each rare 2/3 and 5/5. The old Trade Exchange rare import (town's two rares, 1,200 gold, 5 a week) is folded into the normal buy path; saved import counters carry over. AI rare buying reads the new rare_resources list. Validation: town_market_popout_report (live rare buy/sell/convert and caps in six towns), town_rare_import_regression (330), town development 688, hero review 80, building panel, construction, hero hire and AI economy reports pass; validate_repo unchanged with rare-market pins updated to the owner direction. Gap: no faction has local abundance on its own rare yet.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Market and magic guild live only in their building popouts; resource conversion; gold-only market",
-  "currentSliceUpdatedAt": "2026-10-07T20:30:00Z",
+  "currentSliceTitle": "Rare resources fully tradeable at every town market",
+  "currentSliceUpdatedAt": "2026-10-07T21:30:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -114139,6 +114139,21 @@
         "docs/town-building-popouts.md"
       ],
       "notes": "Owner playtest: the Town screen kept separate market and magic guild windows besides the building popouts, trading lacked resource-to-resource conversion, and the market should cost only gold. The Trade/Spells commands, building clicks and every trade-for-it button (construction board, popout upgrade lines, dwelling and Muster Hall recruit cards) now open the market or highest guild popout; the Town Market dialog, town spellbook dialog and the popout's Open market hand-off are removed. The market popout is a HoMM-style desk (give/get, slider, quote, trade): buy and sell at the existing rates plus direct wood/ore conversion priced at the received resource's mid rate paid at the given resource's sell rate, within weekly sell/buy limits (TownRules.market_trade_quote, market_conversion_rate, market_desk, perform_market_action market:convert). Rare resources stay import-only gold buys at the Trade Exchange. Marketplace 1,000 gold + 5 wood -> 3,000 gold; Trade Exchange 2,500 gold + 5 wood -> 4,500 gold (wood at the AI's 400-gold construction value). Trade Exchange bulk lots apply to every full lot. Validation: town_market_popout_report (six towns, headless and windowed), town_building_panel/construction/hero hire reports pass, town development 688/688 and rare imports 198/198, other town failures match the baseline, validate_repo unchanged. Follow-ups: AI never converts resources; hidden legacy tab strip and spell-study lane remain in TownShell.tscn."
+    },
+    {
+      "id": "content-rare-resources-fully-tradeable-20261007",
+      "title": "Rare resources fully tradeable at every town market",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "gameplay_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/town-market.md",
+        "docs/economy-overhaul-foundation.md",
+        "docs/common-town-building-template.md"
+      ],
+      "notes": "Owner decision 2026-10-07: rare resources become fully tradeable, HoMM3-style. The Marketplace and Trade Exchange buy, sell and convert every stockpile resource (gold, wood, ore, six rares), any for any other, in a wrapped give/get tile grid without scrolling. Rares are valued at twice wood/ore from EnemyTurnRules._resource_value (mirrored by OverworldRules.MARKET_RESOURCE_VALUES, checked equal by the report): Marketplace 720/290 wood-ore and 1,440/580 rare buy/sell, Trade Exchange 590/380 and 1,180/760, local abundance kept; conversion stays mid-over-sell so direct conversion beats sell-then-buy and no buy/sell/convert cycle profits. Weekly caps (bought/sold): wood/ore 6/8 Marketplace, 8/10 Trade Exchange; each rare 2/3 and 5/5. The old Trade Exchange rare import (town's two rares, 1,200 gold, 5 a week) is folded into the normal buy path; saved import counters carry over. AI rare buying reads the new rare_resources list. Validation: town_market_popout_report (live rare buy/sell/convert and caps in six towns), town_rare_import_regression (330), town development 688, hero review 80, building panel, construction, hero hire and AI economy reports pass; validate_repo unchanged with rare-market pins updated to the owner direction. Gap: no faction has local abundance on its own rare yet."
     }
   ],
   "project": "heroes-like",
@@ -114798,7 +114813,7 @@
   ],
   "summary": "Owner-directed overworld actor readability completed: 112 original generated hero/creature sprites, full-size town visitors, painted-bound scale and cached alpha-edge contrast. Source/Linux/Windows visual/runtime acceptance, Large travel/AI/fog, existing reports, full repository and official exports/parity pass; 3.255 GB disposable outputs cleaned. Prior generated-world quality work remains completed; gameplay/native generation and save schema are unchanged. Broader production/release limits remain in project.md.",
   "taskId": "10236",
-  "updatedAt": "2026-10-07T20:30:00Z",
+  "updatedAt": "2026-10-07T21:30:00Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",
