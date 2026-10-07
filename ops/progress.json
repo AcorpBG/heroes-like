@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "perf-battle-entry-transition-20261007",
-  "currentSliceId": "perf-battle-entry-transition-20261007",
-  "currentSliceNotes": "COMPLETED 2026-10-07. Owner playtest: entering battle showed a gray screen and took a while. Cause: scene changes requested from timers (the new battle approach walk, battle exit) drew one frame with no scene, and the battle shell then spent about 1.4 s building behind it. AppRouter._change_scene now covers every route with a snapshot of the last frame (SceneTransitionCover) until the new scene has drawn, then fades it over 120 ms. Battle unit art loads on worker threads during the walk (BattleArtPrewarm); the entry autosave skips a redundant normalize and caches its own summary so the battle save bar no longer re-reads the save (156 ms -> 2 ms); the first battle refresh skips hidden surfaces (collapsed sidebar, hidden tooltip, save status lines) and builds them after the fade; BattleRules movement intents reuse per-destination setup. Owner Day 8 save: walk end -> battle visible 1,651 ms -> about 440 ms; battle_ready 721 -> 84 ms; no frame without scene or cover. Validation: battle_entry_transition_report (30 checks; fails 8 with the cover off), battle/save/transition reports unchanged, validate_repo unchanged. Follow-up: one ~350 ms frame right after the fade (sidebar plus the action-guide tooltip's BattleRules path search).",
+  "currentSlice": "perf-town-recruit-responsiveness-20261007",
+  "currentSliceId": "perf-town-recruit-responsiveness-20261007",
+  "currentSliceNotes": "COMPLETED 2026-10-07. Owner playtest: recruiting felt delayed, worst on the full Muster Hall screen. On the owner's Day 8 save a recruit click took about 410 ms (Muster), 454 ms (dwelling popout) and 380 ms (plain order), mostly a full town entity cache rebuild plus repeated reads. Recruit orders now share one read scope after the order (TownShell._commit_recruit_order), reuse the post-order town read as the next order's preflight (guarded by a mutable-state hash), skip a redundant normalize in recruit_active_town, update Muster and popout recruit cards in place (TownRecruitCard.update_state), and use exact memos (active buildings, requirement checks, build status, seeded growth, muster catalog). Hidden surfaces stay lazy (event strip tooltip, hero portrait texture, stockpile popup). Also fixes the Muster Hall troop-upgrade caption being replaced after a recruit. Coordinator probe on merged main: popout 75 ms, plain order 70 ms; agent probe: Muster 70 ms. Validation: town_recruit_responsiveness_report (post-recruit UI equals a fresh render; one town-view build per recruit), 34 town reports unchanged against main, validate_repo unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "No gray frame on scene changes; battles open about 4x faster",
-  "currentSliceUpdatedAt": "2026-10-08T00:30:00Z",
+  "currentSliceTitle": "Town recruit clicks are fast (Muster Hall, popouts, orders)",
+  "currentSliceUpdatedAt": "2026-10-08T01:00:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -114233,6 +114233,19 @@
         "docs/battle-entry-transition.md"
       ],
       "notes": "Owner playtest: entering battle showed a gray screen and took a while. Cause: scene changes requested from timers (the new battle approach walk, battle exit) drew one frame with no scene, and the battle shell then spent about 1.4 s building behind it. AppRouter._change_scene now covers every route with a snapshot of the last frame (SceneTransitionCover) until the new scene has drawn, then fades it over 120 ms. Battle unit art loads on worker threads during the walk (BattleArtPrewarm); the entry autosave skips a redundant normalize and caches its own summary so the battle save bar no longer re-reads the save (156 ms -> 2 ms); the first battle refresh skips hidden surfaces (collapsed sidebar, hidden tooltip, save status lines) and builds them after the fade; BattleRules movement intents reuse per-destination setup. Owner Day 8 save: walk end -> battle visible 1,651 ms -> about 440 ms; battle_ready 721 -> 84 ms; no frame without scene or cover. Validation: battle_entry_transition_report (30 checks; fails 8 with the cover off), battle/save/transition reports unchanged, validate_repo unchanged. Follow-up: one ~350 ms frame right after the fade (sidebar plus the action-guide tooltip's BattleRules path search)."
+    },
+    {
+      "id": "perf-town-recruit-responsiveness-20261007",
+      "title": "Town recruit clicks are fast (Muster Hall, popouts, orders)",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "runtime_performance_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/town-recruit-responsiveness.md"
+      ],
+      "notes": "Owner playtest: recruiting felt delayed, worst on the full Muster Hall screen. On the owner's Day 8 save a recruit click took about 410 ms (Muster), 454 ms (dwelling popout) and 380 ms (plain order), mostly a full town entity cache rebuild plus repeated reads. Recruit orders now share one read scope after the order (TownShell._commit_recruit_order), reuse the post-order town read as the next order's preflight (guarded by a mutable-state hash), skip a redundant normalize in recruit_active_town, update Muster and popout recruit cards in place (TownRecruitCard.update_state), and use exact memos (active buildings, requirement checks, build status, seeded growth, muster catalog). Hidden surfaces stay lazy (event strip tooltip, hero portrait texture, stockpile popup). Also fixes the Muster Hall troop-upgrade caption being replaced after a recruit. Coordinator probe on merged main: popout 75 ms, plain order 70 ms; agent probe: Muster 70 ms. Validation: town_recruit_responsiveness_report (post-recruit UI equals a fresh render; one town-view build per recruit), 34 town reports unchanged against main, validate_repo unchanged."
     }
   ],
   "project": "heroes-like",
@@ -114892,7 +114905,7 @@
   ],
   "summary": "Owner-directed overworld actor readability completed: 112 original generated hero/creature sprites, full-size town visitors, painted-bound scale and cached alpha-edge contrast. Source/Linux/Windows visual/runtime acceptance, Large travel/AI/fog, existing reports, full repository and official exports/parity pass; 3.255 GB disposable outputs cleaned. Prior generated-world quality work remains completed; gameplay/native generation and save schema are unchanged. Broader production/release limits remain in project.md.",
   "taskId": "10236",
-  "updatedAt": "2026-10-08T00:30:00Z",
+  "updatedAt": "2026-10-08T01:00:00Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",

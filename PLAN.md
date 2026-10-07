@@ -74,6 +74,10 @@ Rules:
 
 `perf-battle-entry-transition-20261007` (completed, owner playtest fix): every scene change is covered by the last frame until the new scene has drawn, then fades over 120 ms, so no empty gray frame shows. Battles open about 0.44 s after the approach walk instead of 1.65 s (art preloads during the walk, the entry autosave caches its summary, the first battle frame skips hidden surfaces). Follow-up: the ~350 ms frame right after entry. See `docs/battle-entry-transition.md`.
 
+### Fast town recruiting
+
+`perf-town-recruit-responsiveness-20261007` (completed, owner playtest fix): recruit clicks in the Muster Hall, dwelling popouts and plain orders take about 70 ms instead of 380-450 ms: one shared read scope after the order, the post-order town read reused as the next preflight, in-place recruit card updates and exact rules memos. See `docs/town-recruit-responsiveness.md`.
+
 ### Water travel and transit objects
 
 `feature-water-travel-20261007` (completed for the player, owner direction): HoMM3-style boats. Walking onto a free boat boards it and stepping onto open shore leaves it, each ending the day's movement; sailing heroes move only on water and visit water sites. Neutral shipyards build a boat at their dock for 1,000 gold and 10 wood; whirlpools throw a boat out at another whirlpool for half of the weakest stack. Random maps translate HoMM3 transit objects by meaning instead of a random transit pick: boats, shipyards and whirlpools become themselves, border guards, gates, garrisons and quest guards become terrain-matched pay-to-open gates, keymaster's tents are left off, and portals and subterranean gates keep their passage with matching art. Shipyards and whirlpools are never used as stand-ins for other HoMM3 sites. Gates ask before taking payment, and older saves are migrated once. Follow-up: AI heroes do not sail yet. See `docs/water-travel.md`.
