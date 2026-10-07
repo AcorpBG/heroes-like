@@ -79,6 +79,8 @@ static func create_session(
 		"artifact_nodes": ArtifactRulesScript.build_artifact_nodes(scenario.get("artifact_nodes", []), scenario_id),
 		"map_objects": _duplicate_array(scenario.get("map_objects", [])),
 		"enemy_states": enemy_states,
+		# New games start with computer players already fielding heroes.
+		"ai_heroes_version": EnemyTurnRulesScript.AiHeroRulesScript.MIGRATION_VERSION,
 		"scenario_script_state": ScenarioScriptRulesScript.build_script_state(),
 	}
 

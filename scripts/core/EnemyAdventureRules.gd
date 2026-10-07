@@ -7083,6 +7083,12 @@ static func _record_adventure_objective_success(
 	if not (commander_state is Dictionary) or commander_state.is_empty():
 		return updated_raid
 	var updated_commander := advance_commander_record(commander_state, outcome_id)
+	if raid.get("ai_hero", null) is Dictionary:
+		# Heroes earn experience from battles and the rewards they collect, as
+		# the human's do, not for the errand itself.
+		for key in ["level", "experience", "next_level_experience", "command", "specialties", "pending_specialty_choices", "specialty_focus_ids", "spellbook"]:
+			if commander_state.has(key):
+				updated_commander[key] = commander_state[key]
 	updated_raid["enemy_commander_state"] = updated_commander
 	var placement_id := active_placement_id
 	if placement_id == "":

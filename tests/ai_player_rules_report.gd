@@ -103,6 +103,9 @@ func _run() -> void:
 	var economy := _check_town_orders_pay_real_costs(session, controller)
 	if _failed:
 		return
+	var market := _check_market_trades_like_the_player(session, controller)
+	if _failed:
+		return
 
 	var payload := {
 		"ok": true,
@@ -112,6 +115,7 @@ func _run() -> void:
 		"migration": migration,
 		"town_orders": economy,
 		"save_round_trip": save_check,
+		"market": market,
 		"captured_mines": captured_mines,
 		"guard_fights": fights,
 		"hero_tiles_per_day": float(hero_steps) / float(maxi(1, hero_days)),
@@ -306,6 +310,31 @@ func _check_save_round_trip(session, controller: String) -> Dictionary:
 		_fail("AI heroes changed across a save restore: %s -> %s" % [JSON.stringify(before), JSON.stringify(after)])
 		return {}
 	return {"heroes": before.size()}
+
+## A computer town short of wood buys it at its market for exactly the human's
+## quote and books the week's purchase like the market popout does.
+func _check_market_trades_like_the_player(session, controller: String) -> Dictionary:
+	var town := _first_ai_town(session, controller)
+	var built: Array = town.get("built_buildings", [])
+	if "building_market_square" not in built and "building_dev_trade_exchange" not in built:
+		built.append("building_market_square")
+		town["built_buildings"] = built
+	town["market_usage"] = {}
+	var market: Dictionary = OverworldRules.town_market_state(town)
+	var usage: Dictionary = OverworldRules._normalize_town_market_usage_state({}, int(session.day))
+	var pool := {"gold": 5000, "wood": 0, "ore": 0}
+	var expected: Dictionary = TownRules.market_trade_quote(market, usage, {"gold": 4000}, "gold", "wood", 2)
+	if not bool(expected.get("ok", false)):
+		_fail("The town market should sell 2 wood for 4000 gold: %s" % JSON.stringify(expected))
+		return {}
+	if not AiHeroRulesScript._market_cover(session, town, pool, {"gold": 1000, "wood": 2}, true):
+		_fail("The AI could not cover a wood shortfall at its market: %s" % JSON.stringify(market))
+		return {}
+	var bought := int(town.get("market_usage", {}).get("buy", {}).get("wood", 0))
+	if int(pool.get("wood", 0)) != 2 or int(pool.get("gold", 0)) != 5000 - int(expected.get("give_amount", 0)) or bought != 2:
+		_fail("AI market trade differs from the human's quote %s: pool %s, usage %s" % [JSON.stringify(expected), JSON.stringify(pool), JSON.stringify(town.get("market_usage", {}))])
+		return {}
+	return {"bought_wood": 2, "gold_paid": int(expected.get("give_amount", 0))}
 
 func _hero_signature(entry: Dictionary) -> String:
 	var block: Dictionary = entry.get("ai_hero", {})

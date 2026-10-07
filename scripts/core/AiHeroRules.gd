@@ -542,7 +542,7 @@ static func _build_tavern(session: SessionStateStoreScript.SessionData, context:
 			continue
 		var building: Dictionary = status.get("building", {})
 		var cost: Dictionary = building.get("cost", {})
-		if not overworld_rules.can_afford_cost_with_town_market(town, treasury, cost, int(session.day)):
+		if not _market_cover(session, town, treasury, cost, false):
 			continue
 		var result := build_in_town(session, context, index, HeroCommandRulesScript.HALL_BUILDING_ID)
 		if bool(result.get("ok", false)):
@@ -591,7 +591,7 @@ static func _build_choice(session: SessionStateStoreScript.SessionData, town: Di
 			continue
 		var building: Dictionary = status.get("building", {})
 		var cost: Dictionary = building.get("cost", {})
-		if not overworld_rules.can_afford_cost_with_town_market(town, treasury, cost, int(session.day)):
+		if not _market_cover(session, town, treasury, cost, false):
 			continue
 		var trial_built: Array = built.duplicate()
 		trial_built.append(building_id)
@@ -636,6 +636,14 @@ static func _trial_income(town: Dictionary) -> Dictionary:
 		return development.income(town)
 	return _overworld_rules().town_income(town)
 
+static func _recruit_dict(value: Variant) -> Dictionary:
+	var result := {}
+	if value is Dictionary:
+		for unit_id in value.keys():
+			if int(value[unit_id]) > 0:
+				result[String(unit_id)] = int(value[unit_id])
+	return result
+
 static func _recruit_set_value(recruits: Dictionary) -> float:
 	var value := 0.0
 	for unit_id in recruits.keys():
@@ -669,6 +677,112 @@ static func _pool_delta(after: Dictionary, before: Dictionary) -> Dictionary:
 			delta[key] = amount
 	return delta
 
+static func _town_rules() -> Variant:
+	return load("res://scripts/core/TownRules.gd")
+
+## Covers `cost` at a town's market with the human's trades: each order is
+## priced and limited by TownRules.market_trade_quote and recorded in the
+## town's weekly market usage exactly like the market popout's buy, sell and
+## convert orders. Spare wood or ore converts first, gold buys the rest, and
+## spare wood or ore sells when gold is short. With `apply` false it only
+## checks; otherwise the trades move `pool` and the town's usage.
+static func _market_cover(session: SessionStateStoreScript.SessionData, town: Dictionary, pool: Dictionary, cost: Dictionary, apply: bool) -> bool:
+	if _can_afford(pool, cost):
+		return true
+	var overworld_rules = _overworld_rules()
+	var town_rules = _town_rules()
+	var market: Dictionary = overworld_rules.town_market_state(town)
+	if not bool(market.get("active", false)):
+		return false
+	var usage: Dictionary = overworld_rules._normalize_town_market_usage_state(town.get("market_usage", {}), int(session.day)).duplicate(true)
+	var stock := pool.duplicate()
+	var normal: Array = overworld_rules.NORMAL_MARKET_RESOURCE_KEYS
+	var imports: Array = market.get("import_resources", []) if market.get("import_resources", []) is Array else []
+	for key_value in cost.keys():
+		var key := String(key_value)
+		if key == "gold":
+			continue
+		var deficit := int(cost[key]) - int(stock.get(key, 0))
+		if deficit <= 0:
+			continue
+		if key in normal:
+			for other_value in normal:
+				var other := String(other_value)
+				var spare := int(stock.get(other, 0)) - int(cost.get(other, 0))
+				if other == key or spare <= 0 or deficit <= 0:
+					continue
+				var terms: Dictionary = town_rules.market_trade_quote(market, usage, {other: spare}, other, key, 1)
+				var count := mini(deficit, int(terms.get("max_amount", 0)))
+				if count > 0 and _market_trade(town_rules.market_trade_quote(market, usage, {other: spare}, other, key, count), stock, usage):
+					deficit -= count
+		if deficit > 0 and (key in normal or key in imports):
+			var spare_gold := maxi(0, int(stock.get("gold", 0)) - int(cost.get("gold", 0)))
+			if not _market_trade(town_rules.market_trade_quote(market, usage, {"gold": spare_gold}, "gold", key, deficit), stock, usage):
+				return false
+			deficit = 0
+		if deficit > 0:
+			return false
+	var gold_deficit := int(cost.get("gold", 0)) - int(stock.get("gold", 0))
+	for other_value in normal:
+		if gold_deficit <= 0:
+			break
+		var other := String(other_value)
+		var spare := int(stock.get(other, 0)) - int(cost.get(other, 0))
+		if spare <= 0:
+			continue
+		var terms: Dictionary = town_rules.market_trade_quote(market, usage, {other: spare}, other, "gold", 1)
+		var count := 0
+		for amount in range(1, int(terms.get("max_amount", 0)) + 1):
+			count = amount
+			if int(town_rules.market_trade_quote(market, usage, {other: spare}, other, "gold", amount).get("receive_amount", 0)) >= gold_deficit:
+				break
+		if count <= 0:
+			continue
+		var sale: Dictionary = town_rules.market_trade_quote(market, usage, {other: spare}, other, "gold", count)
+		if _market_trade(sale, stock, usage):
+			gold_deficit -= int(sale.get("receive_amount", 0))
+	if not _can_afford(stock, cost):
+		return false
+	if apply:
+		for key in stock.keys():
+			pool[key] = stock[key]
+		town["market_usage"] = usage
+	return true
+
+## Applies one quoted order to a stockpile and the week's market usage.
+static func _market_trade(quote: Dictionary, stock: Dictionary, usage: Dictionary) -> bool:
+	if not bool(quote.get("ok", false)):
+		return false
+	var give_id := String(quote.get("give_id", ""))
+	var receive_id := String(quote.get("receive_id", ""))
+	var give_amount := int(quote.get("give_amount", 0))
+	var receive_amount := int(quote.get("receive_amount", 0))
+	stock[give_id] = int(stock.get(give_id, 0)) - give_amount
+	stock[receive_id] = int(stock.get(receive_id, 0)) + receive_amount
+	var mode := String(quote.get("mode", ""))
+	if mode in ["sell", "convert"]:
+		var sold: Dictionary = usage.get("sell", {}) if usage.get("sell", {}) is Dictionary else {}
+		sold[give_id] = int(sold.get(give_id, 0)) + give_amount
+		usage["sell"] = sold
+	if mode in ["buy", "convert"]:
+		var bought: Dictionary = usage.get("buy", {}) if usage.get("buy", {}) is Dictionary else {}
+		bought[receive_id] = int(bought.get(receive_id, 0)) + receive_amount
+		usage["buy"] = bought
+	return true
+
+## The most of a creature the faction can pay for, trading at the town's
+## market if it has one.
+static func _max_affordable_with_market(session: SessionStateStoreScript.SessionData, town: Dictionary, pool: Dictionary, unit_cost: Dictionary, available: int) -> int:
+	var low := 0
+	var high := maxi(0, available)
+	while low < high:
+		var middle := (low + high + 1) / 2
+		if _market_cover(session, town, pool, _turn_rules()._scale_resource_pool(unit_cost, middle), false):
+			low = middle
+		else:
+			high = middle - 1
+	return low
+
 static func build_in_town(session: SessionStateStoreScript.SessionData, context: Dictionary, town_index: int, building_id: String, reason: String = "heroes") -> Dictionary:
 	var overworld_rules = _overworld_rules()
 	var turn_rules = _turn_rules()
@@ -680,9 +794,9 @@ static func build_in_town(session: SessionStateStoreScript.SessionData, context:
 		return {"ok": false}
 	var building: Dictionary = status.get("building", {})
 	var cost: Dictionary = building.get("cost", {})
-	if not overworld_rules.can_afford_cost_with_town_market(town, treasury, cost, int(session.day)):
+	if not _market_cover(session, town, treasury, cost, false):
 		return {"ok": false}
-	overworld_rules.apply_market_cost_coverage(town, treasury, cost, int(session.day))
+	_market_cover(session, town, treasury, cost, true)
 	turn_rules._spend_from_pool(treasury, cost)
 	var built: Array = town.get("built_buildings", []) if town.get("built_buildings", []) is Array else []
 	built.append(building_id)
@@ -927,14 +1041,14 @@ static func _recruit_in_towns(session: SessionStateStoreScript.SessionData, cont
 			var spendable := treasury.duplicate()
 			for key in reserve.keys():
 				spendable[key] = maxi(0, int(spendable.get(key, 0)) - int(reserve[key]))
-			var count: int = turn_rules._max_affordable_from_pool_with_town_market(town, spendable, cost, int(session.day), available)
+			var count: int = _max_affordable_with_market(session, town, spendable, cost, available)
 			if count <= 0:
 				continue
 			var plan := HeroCommandRulesScript.army_addition_plan(town.get("garrison", []), {unit_id: count})
 			if not bool(plan.get("ok", false)):
 				continue
 			var total: Dictionary = turn_rules._scale_resource_pool(cost, count)
-			overworld_rules.apply_market_cost_coverage(town, treasury, total, int(session.day))
+			_market_cover(session, town, treasury, total, true)
 			turn_rules._spend_from_pool(treasury, total)
 			town["garrison"] = plan.get("stacks", [])
 			town["available_recruits"] = turn_rules._consume_recruits(town.get("available_recruits", {}), unit_id, count)
@@ -1291,9 +1405,11 @@ static func _resource_candidate(session: SessionStateStoreScript.SessionData, co
 		value = 250.0 + float(VisitBuildings.ai_value(site)) * 20.0
 	else:
 		value = _payload_value(AdventureRules._resource_site_claim_rewards(site), needs)
-		value += float(AdventureRules._recruit_payload_value(site.get("claim_recruits", {}))) * 2.0
+		value += _recruit_set_value(_recruit_dict(site.get("claim_recruits", {})))
 		if bool(site.get("persistent_control", false)):
 			value += _payload_value(site.get("control_income", {}), needs) * 12.0 + 250.0
+			# A site that musters troops every week is worth a week of them.
+			value += _recruit_set_value(_recruit_dict(site.get("weekly_recruits", {})))
 			var owner := PlayerRules.resource_controller_id(node)
 			if owner != "" and owner != controller:
 				value *= 1.3
@@ -1843,9 +1959,14 @@ static func _claim_resource(session: SessionStateStoreScript.SessionData, contex
 	var result: Dictionary = AdventureRules._secure_resource_target(session, actor, state, controller, context.config)
 	var updated: Dictionary = result.get("encounter", actor)
 	entry["enemy_army"] = updated.get("enemy_army", entry.get("enemy_army", {}))
-	entry["enemy_commander_state"] = updated.get("enemy_commander_state", entry.get("enemy_commander_state", {}))
-	_store_entry(session, index, entry)
+	var commander: Dictionary = updated.get("enemy_commander_state", entry.get("enemy_commander_state", {}))
 	var claimed: Dictionary = session.overworld.resource_nodes[node_index]
+	# The experience a site grants goes to the hero, as it does for the human.
+	var experience := int(AdventureRules._resource_site_claim_rewards(site).get("experience", 0))
+	if experience > 0 and claimed != node_before:
+		commander = AdventureRules._normalize_enemy_progression(HeroProgressionRulesScript.add_experience(commander, experience).get("hero", commander))
+	entry["enemy_commander_state"] = commander
+	_store_entry(session, index, entry)
 	if was_present and not _overworld_rules().resource_node_is_present(claimed, site):
 		_clear_static_body(session, context, claimed)
 	events.append_array(result.get("ai_events", []))
