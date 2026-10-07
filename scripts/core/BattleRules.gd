@@ -11539,15 +11539,24 @@ static func _finalize_town_defense_loss(session: SessionStateStoreScript.Session
 			"encounter_key": String(session.battle.get("resolved_key", "")),
 		}
 	)
-	_capture_town_after_assault(session, String(context.get("town_placement_id", "")), enemy_survivors)
+	# An enemy hero takes the town and stays a hero with its surviving army;
+	# only armies without a hero become the new garrison.
+	var attacker: Dictionary = _find_encounter_by_key(session, String(session.battle.get("resolved_key", ""))).get("encounter", {})
+	var hero_attacker: bool = attacker.get("ai_hero", null) is Dictionary
+	_capture_town_after_assault(session, String(context.get("town_placement_id", "")), [] if hero_attacker else enemy_survivors)
 	var recovery_message = _apply_town_defense_recovery(session, "loss")
-	_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
+	if not hero_attacker:
+		_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
 	_set_enemy_siege_progress(session, _battle_context_controller_id(session, context), 0)
-	var commander_aftermath := _station_enemy_commander_after_town_capture(
-		session,
-		String(context.get("town_placement_id", "")),
-		enemy_survivors
-	)
+	var commander_aftermath := ""
+	if hero_attacker:
+		commander_aftermath = _keep_enemy_hero_after_town_capture(session, String(context.get("town_placement_id", "")), enemy_survivors)
+	else:
+		commander_aftermath = _station_enemy_commander_after_town_capture(
+			session,
+			String(context.get("town_placement_id", "")),
+			enemy_survivors
+		)
 	_finish_enemy_battle_task_assignment(session, "completed", "valid")
 	var collapse_aftermath := {}
 	messages.append(base_summary)
@@ -11748,6 +11757,38 @@ static func _capture_town_after_assault(session: SessionStateStoreScript.Session
 	town["garrison"] = enemy_survivors.duplicate(true)
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
+
+static func _keep_enemy_hero_after_town_capture(
+	session: SessionStateStoreScript.SessionData,
+	town_placement_id: String,
+	enemy_survivors: Array
+) -> String:
+	var encounter_result = _find_encounter_by_key(session, String(session.battle.get("resolved_key", "")))
+	var index := int(encounter_result.get("index", -1))
+	var town: Dictionary = _find_town_by_placement(session, town_placement_id).get("town", {})
+	if index < 0 or town.is_empty():
+		return ""
+	var encounters = session.overworld.get("encounters", [])
+	var encounter: Dictionary = encounter_result.get("encounter", {})
+	var army: Dictionary = encounter.get("enemy_army", {}) if encounter.get("enemy_army", {}) is Dictionary else {}
+	army["stacks"] = enemy_survivors.duplicate(true)
+	encounter["enemy_army"] = army
+	var commander_state = session.battle.get("enemy_hero", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		var updated_commander := EnemyAdventureRulesScript.advance_commander_record(
+			_apply_enemy_commander_battle_memory(session, commander_state),
+			EnemyAdventureRulesScript.COMMANDER_OUTCOME_TOWN_CAPTURED
+		)
+		encounter["enemy_commander_state"] = EnemyAdventureRulesScript.sync_commander_army_continuity(updated_commander, army, String(encounter.get("encounter_id", "")))
+	var entrance := LevelRules.town_entrance(town)
+	encounter["x"] = int(entrance.get("x", encounter.get("x", 0)))
+	encounter["y"] = int(entrance.get("y", encounter.get("y", 0)))
+	encounter["level"] = LevelRules.level_of(entrance)
+	encounter.erase("battle_context")
+	encounters[index] = encounter
+	session.overworld["encounters"] = encounters
+	OverworldRulesScript.invalidate_spatial_lookup(session)
+	return "%s holds %s." % [EnemyAdventureRulesScript.commander_display_name(encounter.get("enemy_commander_state", {}), false), _town_name(town)]
 
 static func _station_enemy_commander_after_town_capture(
 	session: SessionStateStoreScript.SessionData,

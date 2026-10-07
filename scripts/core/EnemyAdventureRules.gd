@@ -197,6 +197,9 @@ const AI_PUBLIC_EVENT_LOG_TYPES := [
 	"ai_raid_grouped",
 	"ai_adventure_spell_cast",
 	"ai_artifact_secured",
+	"ai_hero_hired",
+	"ai_guard_defeated",
+	"ai_hero_defeated",
 ]
 const COMMANDER_ROLE_BLOCKED_PUBLIC_TOKENS := [
 	"base_value",
@@ -7578,8 +7581,13 @@ static func raid_commander_display_name(encounter: Dictionary) -> String:
 static func raid_display_name(encounter: Dictionary) -> String:
 	if encounter.is_empty():
 		return "Hostile contact"
+	# An enemy hero is named like any hero; there is no "host" around it.
+	if encounter.get("ai_hero", null) is Dictionary:
+		var hero_name := raid_commander_name(encounter)
+		if hero_name != "":
+			return hero_name
 	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
-	var encounter_name := String(encounter_template.get("name", encounter.get("placement_id", "Raid host")))
+	var encounter_name := String(encounter_template.get("name", encounter.get("placement_id", "Enemy army")))
 	var commander_name := raid_commander_display_name(encounter)
 	if commander_name == "" or PlayerRules.raid_controller_id(encounter) == "":
 		return encounter_name
@@ -19309,6 +19317,9 @@ static func _continue_mobile_raid_after_field_objective(
 ) -> Dictionary:
 	if session == null or raid.is_empty() or faction_id == "":
 		return {"encounter": raid, "state": state, "ai_event": {}}
+	# AI heroes choose their next objective themselves (AiHeroRules).
+	if raid.get("ai_hero", null) is Dictionary:
+		return {"encounter": raid, "state": state, "ai_event": {}}
 	var army := _normalize_army_payload(raid.get("enemy_army", {}))
 	if _army_strength(army.get("stacks", [])) <= 0:
 		return {"encounter": raid, "state": state, "ai_event": {}}
@@ -20048,7 +20059,8 @@ static func _reward_resources_for_empire(rewards: Variant) -> Dictionary:
 	var treasury = {}
 	if not (rewards is Dictionary):
 		return treasury
-	for key in ["gold", "wood", "ore"]:
+	# Every stockpile resource the human would collect from the same reward.
+	for key in ["gold", "wood", "ore", "aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]:
 		var amount: int = max(0, int(rewards.get(key, 0)))
 		if amount > 0:
 			treasury[key] = amount
@@ -20080,8 +20092,12 @@ static func _artifact_pressure_value(artifact_id: String) -> int:
 	return clamp(pressure, 1, 3)
 
 static func _raid_name(raid: Dictionary) -> String:
+	if raid.get("ai_hero", null) is Dictionary:
+		var hero_name := raid_commander_name(raid)
+		if hero_name != "":
+			return hero_name
 	var encounter = ContentService.get_encounter(String(raid.get("encounter_id", raid.get("id", ""))))
-	return String(encounter.get("name", "The raid"))
+	return String(encounter.get("name", "The enemy army"))
 
 static func _goal_tiles_from_raid(
 	session: SessionStateStoreScript.SessionData,

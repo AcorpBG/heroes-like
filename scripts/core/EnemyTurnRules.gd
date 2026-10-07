@@ -11,6 +11,9 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
+const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
+# Computer-player state AiHeroRules keeps between days.
+const AI_PLAYER_STATE_KEYS := ["ai_start_hero_granted", "ai_opening_granted", "ai_tavern", "ai_hero_counter"]
 static var SpellRulesScript: Variant = load("res://scripts/core/SpellRules.gd")
 static var TownRulesScript: Variant = load("res://scripts/core/TownRules.gd")
 static var BattleRulesScript: Variant = load("res://scripts/core/BattleRules.gd")
@@ -121,10 +124,15 @@ static func normalize_enemy_states(session: SessionStateStoreScript.SessionData)
 				var task_state_report := normalize_optional_hero_task_state(existing_state.get("hero_task_state", {}))
 				if bool(task_state_report.get("ok", false)) and bool(task_state_report.get("normalized_present", false)):
 					normalized_state["hero_task_state"] = task_state_report.get("task_state", {})
+			for key in AI_PLAYER_STATE_KEYS:
+				if existing_state.has(key):
+					normalized_state[key] = existing_state[key]
 			normalized_states.append(normalized_state)
 
 	session.overworld["enemy_states"] = normalized_states
 	EnemyAdventureRulesScript.normalize_raid_armies(session)
+	# Older saves carry raid hosts; they continue as heroes (or disband).
+	AiHeroRulesScript.normalize_ai_heroes(session)
 	EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
 
 static func _normalize_rebuild_pressure_request(value: Variant, current_day: int) -> Dictionary:
@@ -243,6 +251,7 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 		"factions": [],
 	} if profile_enabled else {}
 	EnemyAdventureRulesScript.begin_enemy_turn_path_caches()
+	AiHeroRulesScript.clear_shared_surfaces()
 	var phase_started := _profile_timer(profile_enabled)
 	DifficultyRulesScript.normalize_session(session)
 	_profile_add_ms(profile, "difficulty_normalize_ms", phase_started)
@@ -270,8 +279,13 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 			continue
 		var state = states[state_index]
 		TurnPlayback.player_turn(session, config)
-		var turn_result = _run_empire_cycle(session, config, state, should_apply_weekly_growth, profile_enabled)
-		state = turn_result.get("state", state)
+		# Computer players act through heroes and towns under the human's rules.
+		var turn_result = AiHeroRulesScript.run_faction_turn(session, config, state, should_apply_weekly_growth, profile_enabled)
+		state = _latest_enemy_state(session, faction_id, turn_result.get("state", state))
+		states = session.overworld.get("enemy_states", states)
+		state_index = _find_state_index(states, faction_id)
+		if state_index < 0:
+			continue
 		if profile_enabled and turn_result.get("profile", {}) is Dictionary:
 			profile["factions"].append(turn_result.get("profile", {}))
 		var turn_messages = turn_result.get("messages", [])
@@ -286,21 +300,9 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 	session.overworld["enemy_states"] = states
 	_profile_add_ms(profile, "state_writeback_ms", phase_started)
 	phase_started = _profile_timer(profile_enabled)
-	for config in configs:
-		if not (config is Dictionary):
-			continue
-		var repair_result := EnemyAdventureRulesScript.repair_active_raid_target_integrity(session, config)
-		_append_event_records(events, repair_result.get("events", []))
-	_profile_add_ms(profile, "post_cycle_target_integrity_repair_ms", phase_started)
-	phase_started = _profile_timer(profile_enabled)
 	EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
 	_profile_add_ms(profile, "final_commander_roster_normalize_ms", phase_started)
-	events = EnemyAdventureRulesScript._reconcile_raid_assignment_events(
-		events,
-		session.overworld.get("encounters", []),
-		"",
-		session.overworld.get("resolved_encounters", [])
-	)
+	AiHeroRulesScript.clear_shared_surfaces()
 	EnemyAdventureRulesScript.end_enemy_turn_path_caches()
 	return _enemy_turn_result(true, " ".join(messages), events, profile_enabled, profile)
 
@@ -726,7 +728,8 @@ static func town_build_pressure_report(
 	)
 	var selected := {}
 	for candidate in candidates:
-		if bool(candidate.get("affordable", false)) and bool(candidate.get("pacing_eligible", true)):
+		# Pacing fields stay informational; live builds follow the human's rules.
+		if bool(candidate.get("affordable", false)):
 			selected = candidate
 			break
 	return {
@@ -1533,9 +1536,9 @@ static func _build_in_enemy_towns(
 			continue
 		var building_id = String(candidate.get("building_id", ""))
 		var status: Dictionary = OverworldRulesScript.get_town_build_status(town, building_id)
+		# Same rules as the human: any buildable, affordable building, one per
+		# town per day. The old development pacing floor no longer applies.
 		if not bool(status.get("buildable", false)):
-			continue
-		if not _enemy_town_development_pacing_allows_build(session, town, building_id):
 			continue
 		var building: Dictionary = status.get("building", {})
 		var cost: Dictionary = building.get("cost", {})
@@ -1576,7 +1579,7 @@ static func _enemy_rare_import_target(session: SessionStateStoreScript.SessionDa
 	var score_context := _town_build_score_context(session, town, config, controller)
 	for id in OverworldRulesScript.get_town_build_options(town, int(session.day)):
 		var status: Dictionary = OverworldRulesScript.get_town_build_status(town, String(id))
-		if not bool(status.get("buildable", false)) or not _enemy_town_development_pacing_allows_build(session, town, String(id)): continue
+		if not bool(status.get("buildable", false)): continue
 		var building: Dictionary = status.get("building", {})
 		if int(building.get("dwelling_tier", 0)) not in [6, 7]: continue
 		var cost: Dictionary = building.get("cost", {})
@@ -4587,8 +4590,6 @@ static func _enemy_town_build_candidates(
 		var building = status.get("building", {})
 		var cost = building.get("cost", {})
 		if not OverworldRulesScript.can_afford_cost_with_town_market(town, treasury, cost, int(session.day)):
-			continue
-		if not _enemy_town_development_pacing_allows_build(session, town, String(building_id)):
 			continue
 		var breakdown := _build_candidate_score_breakdown(session, town, building, cost, config, faction_id, score_context)
 		var candidate := breakdown.duplicate(true)
