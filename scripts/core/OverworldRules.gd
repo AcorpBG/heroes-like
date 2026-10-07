@@ -42,9 +42,18 @@ const LIVE_STOCKPILE_RESOURCE_KEYS := [
 	"brass_scrip",
 	"memory_salt",
 ]
+## Common construction staples: bulk lots and automatic cost coverage sell them.
 const NORMAL_MARKET_RESOURCE_KEYS := ["wood", "ore"]
+## Every stockpile resource but gold trades at a town market: buy, sell or
+## convert, rare resources included (owner decision, 2026-10-07).
+const MARKET_RESOURCE_KEYS := ["wood", "ore", "aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]
+## Gold value per unit in the economy's valuation (EnemyTurnRules._resource_value):
+## rare resources are worth twice wood or ore, so their market prices are too.
+const MARKET_RESOURCE_VALUES := {"wood": 400, "ore": 400, "aetherglass": 800, "embergrain": 800, "peatwax": 800, "verdant_grafts": 800, "brass_scrip": 800, "memory_salt": 800}
 const MARKET_BASE_BUY_CAP := 6
 const MARKET_BASE_SELL_CAP := 8
+const MARKET_RARE_BUY_CAP := 2
+const MARKET_RARE_SELL_CAP := 3
 const ENCOUNTER_ARMY_DETAIL_GROUP_LIMIT := 4
 
 static var _normalized_read_scope_session_id := ""
@@ -12226,11 +12235,14 @@ static func _town_market_panel_lines(session: SessionStateStoreScript.SessionDat
 	)
 	lines.append("- Weekly caps %s." % _market_usage_summary(state, usage))
 	var reset_day := int(usage.get("week", 1)) * 7 + 1
-	for resource in state.get("import_resources", []):
-		var remaining := maxi(0, int(state.buy_caps.get(resource, 0)) - int(usage.buy.get(resource, 0)))
-		lines.append("- Import %s: %d gold each; %d/%d remaining this week. Allowance resets Day %d; buy only." % [String(resource).replace("_", " "), int(buy_rates[resource]), remaining, int(state.buy_caps[resource]), reset_day])
-	if state.get("import_resources", []).is_empty():
-		lines.append("- Upgrade to Trade Exchange for limited weekly imports of this town's two rare resources.")
+	var rare_resources: Array = state.get("rare_resources", [])
+	if not rare_resources.is_empty():
+		var rare_buy := []
+		var rare_sell := []
+		for resource in rare_resources:
+			rare_buy.append(int(buy_rates.get(resource, 0)))
+			rare_sell.append(int(sell_rates.get(resource, 0)))
+		lines.append("- Rare resources buy %d-%d gold, sell %d-%d gold; up to %d bought and %d sold of each per week. Limits reset Day %d." % [int(rare_buy.min()), int(rare_buy.max()), int(rare_sell.min()), int(rare_sell.max()), int(state.buy_caps.get(rare_resources[0], 0)), int(state.sell_caps.get(rare_resources[0], 0)), reset_day])
 	var bulk_resource := String(state.get("bulk_resource", ""))
 	var bulk_resources := _market_bulk_resources(state)
 	var bulk_amount := int(state.get("bulk_amount", 0))
@@ -12310,17 +12322,15 @@ static func _market_action_entry(
 		int(cap_state.get("used", 0)),
 		int(cap_state.get("limit", 0)),
 	]
-	if resource_key in state.get("import_resources", []):
-		summary += " | Import allowance: %d remaining; resets Day %d. Buy only." % [int(cap_state.get("remaining", 0)), int(cap_state.get("week", 1)) * 7 + 1]
 	if not _can_afford(session, quote.get("cost", {})):
 		disabled = true
 		disabled_reason = "Insufficient reserves for this exchange."
 	return {
 		"id": "market:%s:%s:%d" % [action_type, resource_key, amount],
-		"label": ("Import %d %s - %d gold (%d left)" % [amount, resource_key.replace("_", " ").capitalize(), int(quote.get("gold_value", 0)), int(cap_state.get("remaining", 0))]) if resource_key in state.get("import_resources", []) else "%s %d %s" % [
+		"label": "%s %d %s" % [
 			"Buy" if action_type == "buy" else "Sell",
 			amount,
-			resource_key.capitalize(),
+			resource_key.replace("_", " ").capitalize(),
 		],
 		"summary": summary,
 		"disabled": disabled,
@@ -12411,6 +12421,7 @@ static func _town_market_state(town: Dictionary) -> Dictionary:
 		"sell_rates": {"wood": 0, "ore": 0},
 		"buy_caps": {"wood": 0, "ore": 0},
 		"sell_caps": {"wood": 0, "ore": 0},
+		"rare_resources": [],
 		"refresh_cadence": "weekly",
 		"bulk_resource": "",
 		"bulk_resources": [],
@@ -12446,16 +12457,19 @@ static func _town_market_state(town: Dictionary) -> Dictionary:
 	var sell_rates := {}
 	var buy_adjustments: Dictionary = market_profile.get("buy_rate_adjustments", {}) if market_profile.get("buy_rate_adjustments", {}) is Dictionary else {}
 	var sell_adjustments: Dictionary = market_profile.get("sell_rate_adjustments", {}) if market_profile.get("sell_rate_adjustments", {}) is Dictionary else {}
-	for resource_key in NORMAL_MARKET_RESOURCE_KEYS:
+	# Every market resource prices off the wood/ore curve (local abundance and
+	# the market's tier adjustments), scaled by its economy value.
+	for resource_key in MARKET_RESOURCE_KEYS:
 		var abundance := _market_resource_abundance_score(faction.get("economy", {}), town_template.get("economy", {}), resource_key)
 		var buy_rate := 740 - (abundance * 35)
 		var sell_rate := 280 + (abundance * 30)
-		buy_rate += int(buy_adjustments.get(resource_key, 0))
-		sell_rate += int(sell_adjustments.get(resource_key, 0))
+		buy_rate += _market_rate_adjustment(buy_adjustments, resource_key)
+		sell_rate += _market_rate_adjustment(sell_adjustments, resource_key)
 		buy_rate = clampi(buy_rate, 500, 760)
 		sell_rate = clampi(sell_rate, 260, max(260, buy_rate - 120))
-		buy_rates[resource_key] = buy_rate
-		sell_rates[resource_key] = sell_rate
+		var value_scale := _market_value_scale(resource_key)
+		buy_rates[resource_key] = int(round(buy_rate * value_scale))
+		sell_rates[resource_key] = int(round(sell_rate * value_scale))
 	var bulk_resources := []
 	for resource_value in market_profile.get("bulk_resources", []):
 		var resource_id := String(resource_value)
@@ -12469,22 +12483,15 @@ static func _town_market_state(town: Dictionary) -> Dictionary:
 		exchange_value += max(0, 900 - int(buy_rates.get(resource_key, 0)))
 	exchange_value += bulk_resources.size() * 120
 	var caps := _market_caps_for_profile(market_profile)
-	var import_resources: Array = []
-	var imports: Dictionary = market_profile.get("rare_import", {})
-	if tier >= 2 and not imports.is_empty():
-		var pair: Dictionary = faction.get("town_resources", {})
-		for slot in ["main", "secondary"]:
-			var resource := String(pair.get(slot, ""))
-			if resource == "gold" or resource in NORMAL_MARKET_RESOURCE_KEYS or resource not in LIVE_STOCKPILE_RESOURCE_KEYS or resource in import_resources:
-				continue
-			import_resources.append(resource)
-			buy_rates[resource] = maxi(1, int(imports.get("unit_gold", 1200)))
-			caps.buy_caps[resource] = maxi(0, int(imports.get("weekly_cap", 5)))
+	var rare_resources: Array = []
+	for resource_key in MARKET_RESOURCE_KEYS:
+		if resource_key not in NORMAL_MARKET_RESOURCE_KEYS:
+			rare_resources.append(resource_key)
 	return {
 		"active": true,
 		"tier": tier,
 		"profile": profile_id,
-		"import_resources": import_resources,
+		"rare_resources": rare_resources,
 		"building_id": market_building_id,
 		"building_name": String(market_building.get("name", market_building_id)),
 		"buy_rates": buy_rates,
@@ -12500,15 +12507,26 @@ static func _town_market_state(town: Dictionary) -> Dictionary:
 	}
 
 static func _market_buy_resources(state: Dictionary) -> Array:
-	var result := NORMAL_MARKET_RESOURCE_KEYS.duplicate()
-	result.append_array(state.get("import_resources", []))
-	return result
+	return MARKET_RESOURCE_KEYS.duplicate() if bool(state.get("active", false)) else []
+
+## A market profile's rate adjustment for one resource; rare resources follow
+## the profile's wood and ore adjustment.
+static func _market_rate_adjustment(adjustments: Dictionary, resource_key: String) -> int:
+	if adjustments.has(resource_key):
+		return int(adjustments.get(resource_key, 0))
+	var total := 0
+	for common_key in NORMAL_MARKET_RESOURCE_KEYS:
+		total += int(adjustments.get(common_key, 0))
+	return int(round(float(total) / float(NORMAL_MARKET_RESOURCE_KEYS.size())))
+
+static func _market_value_scale(resource_key: String) -> float:
+	return float(MARKET_RESOURCE_VALUES.get(resource_key, 400)) / float(MARKET_RESOURCE_VALUES.get("wood", 400))
 
 static func bank_town_rare_imports(town: Dictionary, pool: Dictionary, cost: Dictionary, current_day: int, gold_reserve: int = 2000) -> Array:
 	# Bank only a selected legal project's shortage. Require funding for its full
 	# remaining import bill, ordinary cost and reserve before spending this week.
 	var state := _town_market_state(town)
-	var resources: Array = state.get("import_resources", [])
+	var resources: Array = state.get("rare_resources", [])
 	if resources.is_empty() or current_day < 1:
 		return []
 	var projected := pool.duplicate(true)
@@ -12536,19 +12554,22 @@ static func bank_town_rare_imports(town: Dictionary, pool: Dictionary, cost: Dic
 		quote = _market_quote_from_state(state, "buy", String(resource), amount)
 		_apply_resource_transaction_to_pool(pool, quote.cost, quote.gain)
 		usage.buy[resource] = int(usage.buy.get(resource, 0)) + amount
-		actions.append("%s imports %d %s for %d gold toward construction." % [_town_name(town), amount, String(resource).replace("_", " "), int(quote.gold_value)])
+		actions.append("%s buys %d %s for %d gold toward construction." % [_town_name(town), amount, String(resource).replace("_", " "), int(quote.gold_value)])
 	if not actions.is_empty():
 		town["market_usage"] = usage
 	return actions
 
+## Weekly per-town limits: wood and ore 6 bought and 8 sold, rare resources 2
+## and 3, plus the market profile's per-resource bonuses.
 static func _market_caps_for_profile(profile: Dictionary) -> Dictionary:
-	var buy_caps := _empty_market_usage_bucket(MARKET_BASE_BUY_CAP)
-	var sell_caps := _empty_market_usage_bucket(MARKET_BASE_SELL_CAP)
+	var buy_caps := {}
+	var sell_caps := {}
 	var buy_bonus: Dictionary = profile.get("buy_cap_bonus", {}) if profile.get("buy_cap_bonus", {}) is Dictionary else {}
 	var sell_bonus: Dictionary = profile.get("sell_cap_bonus", {}) if profile.get("sell_cap_bonus", {}) is Dictionary else {}
-	for resource_key in NORMAL_MARKET_RESOURCE_KEYS:
-		buy_caps[resource_key] += max(0, int(buy_bonus.get(resource_key, 0)))
-		sell_caps[resource_key] += max(0, int(sell_bonus.get(resource_key, 0)))
+	for resource_key in MARKET_RESOURCE_KEYS:
+		var common: bool = resource_key in NORMAL_MARKET_RESOURCE_KEYS
+		buy_caps[resource_key] = (MARKET_BASE_BUY_CAP if common else MARKET_RARE_BUY_CAP) + max(0, int(buy_bonus.get(resource_key, 0)))
+		sell_caps[resource_key] = (MARKET_BASE_SELL_CAP if common else MARKET_RARE_SELL_CAP) + max(0, int(sell_bonus.get(resource_key, 0)))
 	return {
 		"refresh_cadence": "weekly",
 		"buy_caps": buy_caps,
@@ -12652,7 +12673,7 @@ static func _town_market_quote(town: Dictionary, action_type: String, resource_k
 static func _market_quote_from_state(state: Dictionary, action_type: String, resource_key: String, amount: int) -> Dictionary:
 	if not bool(state.get("active", false)):
 		return {}
-	if resource_key not in NORMAL_MARKET_RESOURCE_KEYS and (action_type != "buy" or resource_key not in state.get("import_resources", [])):
+	if resource_key not in MARKET_RESOURCE_KEYS or action_type not in ["buy", "sell"]:
 		return {}
 	var normalized_amount = max(0, amount)
 	if normalized_amount <= 0:
@@ -12738,7 +12759,7 @@ static func _town_market_cost_coverage(town: Dictionary, pool: Dictionary, cost:
 		if deficit > 0:
 			var buy_quote := _market_quote_from_state(state, "buy", resource_key, deficit)
 			var buy_remaining := int(_market_cap_state_for_quote(town, state, buy_quote, current_day).get("remaining", deficit))
-			if (current_day > 0 or resource_key in state.get("import_resources", [])) and buy_remaining < deficit:
+			if (current_day > 0 or resource_key in state.get("rare_resources", [])) and buy_remaining < deficit:
 				market_cap_blockers.append("buy %s %d/%d" % [resource_key, buy_remaining, deficit])
 			else:
 				required_gold_total += deficit * int(state.get("buy_rates", {}).get(resource_key, 0))
@@ -12814,18 +12835,18 @@ static func _apply_market_cost_coverage(town: Dictionary, pool: Dictionary, cost
 			var buy_quote := _market_quote_from_state(state, "buy", resource_key, 1)
 			if buy_quote.is_empty() or int(pool.get("gold", 0)) < int(buy_quote.get("gold_value", 0)):
 				return actions
-			if current_day > 0 or resource_key in state.get("import_resources", []):
+			if current_day > 0 or resource_key in state.get("rare_resources", []):
 				var buy_cap := _market_cap_state_for_quote({"market_usage": local_usage}, state, buy_quote, current_day)
 				if int(buy_cap.get("remaining", 0)) <= 0:
 					return actions
 			_apply_resource_transaction_to_pool(pool, buy_quote.get("cost", {}), buy_quote.get("gain", {}))
-			if current_day > 0 or resource_key in state.get("import_resources", []):
+			if current_day > 0 or resource_key in state.get("rare_resources", []):
 				var buy_bucket: Dictionary = local_usage.get("buy", {})
 				buy_bucket[resource_key] = int(buy_bucket.get(resource_key, 0)) + 1
 				local_usage["buy"] = buy_bucket
 			deficit -= 1
 			actions.append("%s bought 1 %s for %d gold" % [_town_name(town), resource_key, int(buy_quote.get("gold_value", 0))])
-	if not actions.is_empty() and (current_day > 0 or not state.get("import_resources", []).is_empty()):
+	if not actions.is_empty() and (current_day > 0 or not state.get("rare_resources", []).is_empty()):
 		town["market_usage"] = local_usage
 	return actions
 

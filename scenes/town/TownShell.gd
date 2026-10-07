@@ -5594,7 +5594,7 @@ func _record_town_action_presentation(
 		if (
 			not (parts.size() == 4 or converting)
 			or action_type not in ["buy", "sell", "convert"]
-			or resource_id not in OverworldRules.NORMAL_MARKET_RESOURCE_KEYS
+			or resource_id not in OverworldRules.MARKET_RESOURCE_KEYS
 			or amount <= 0
 			or resource_deltas.size() != 2
 			or action_type == "buy" and (resource_delta != amount or gold_delta >= 0)

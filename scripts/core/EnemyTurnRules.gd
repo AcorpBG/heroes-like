@@ -1570,7 +1570,7 @@ static func _build_in_enemy_towns(
 
 static func _enemy_rare_import_target(session: SessionStateStoreScript.SessionData, town: Dictionary, treasury: Dictionary, controller: String, config: Dictionary) -> Dictionary:
 	var market: Dictionary = OverworldRulesScript.town_market_state(town)
-	var resources: Array = market.get("import_resources", [])
+	var resources: Array = market.get("rare_resources", [])
 	if resources.is_empty(): return {}
 	var best := {}
 	var score_context := _town_build_score_context(session, town, config, controller)

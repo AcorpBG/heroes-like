@@ -131,10 +131,9 @@ static func effect_lines(building: Dictionary, town: Dictionary, session = null)
 		lines.append("%s in town battles" % String(defense_effect.get("id", "defense ward")).replace("_", " ").capitalize())
 	var market_profile: Dictionary = building.get("market_profile", {}) if building.get("market_profile", {}) is Dictionary else {}
 	if not market_profile.is_empty():
-		lines.append("Resource exchange")
-		var rare_import: Dictionary = market_profile.get("rare_import", {}) if market_profile.get("rare_import", {}) is Dictionary else {}
-		if not rare_import.is_empty():
-			lines.append("Rare imports %s gold each, %d a week" % [Board.format_amount(int(rare_import.get("unit_gold", 0))), int(rare_import.get("weekly_cap", 0))])
+		lines.append("Trades every resource")
+		if int(market_profile.get("tier", 1)) >= 2:
+			lines.append("Better rates, larger weekly limits")
 	if bool(building.get("artifact_exchange", false)):
 		lines.append("Artifact trade, offers refresh weekly")
 	if String(building.get("id", "")) == HeroCommandRulesScript.HALL_BUILDING_ID:

@@ -4454,7 +4454,7 @@
         "sell_cap_bonus": {},
         "specialty_summary": "Resource exchange; upgraded brokers offer better rates and bulk trades."
       },
-      "description": "Buy and sell wood and ore for gold, or convert one into the other. Basic rates."
+      "description": "Buy, sell or convert any resource, rare ones included: rare resources cost twice as much. Basic rates."
     },
     {
       "id": "building_dev_trade_exchange",
@@ -4473,10 +4473,6 @@
       "market_profile": {
         "id": "trade_exchange",
         "tier": 2,
-        "rare_import": {
-          "unit_gold": 1200,
-          "weekly_cap": 5
-        },
         "buy_rate_adjustments": {
           "wood": -150,
           "ore": -150
@@ -4489,11 +4485,29 @@
           "wood",
           "ore"
         ],
-        "buy_cap_bonus": {},
-        "sell_cap_bonus": {},
+        "buy_cap_bonus": {
+          "wood": 2,
+          "ore": 2,
+          "aetherglass": 3,
+          "embergrain": 3,
+          "peatwax": 3,
+          "verdant_grafts": 3,
+          "brass_scrip": 3,
+          "memory_salt": 3
+        },
+        "sell_cap_bonus": {
+          "wood": 2,
+          "ore": 2,
+          "aetherglass": 2,
+          "embergrain": 2,
+          "peatwax": 2,
+          "verdant_grafts": 2,
+          "brass_scrip": 2,
+          "memory_salt": 2
+        },
         "specialty_summary": "Resource exchange; upgraded brokers offer better rates and bulk trades."
       },
-      "description": "Improved wood and ore rates and bulk trading. Import this town's two rare resources for 1,200 gold each, up to 5 of each per week. Buy only; unused allowance does not accumulate."
+      "description": "Better rates for every resource, bulk lots of wood and ore, and larger weekly limits: 8 bought and 10 sold of wood and ore, 5 of each rare resource."
     },
     {
       "id": "building_wayfarers_hall",

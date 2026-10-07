@@ -97,9 +97,9 @@
         "id": "fixture_common_weekly_market",
         "normal_market": true,
         "refresh_cadence": "weekly",
-        "buy_caps": {"wood": 6, "ore": 6},
-        "sell_caps": {"wood": 8, "ore": 8},
-        "restricted_buy_resource_ids": ["aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]
+        "buy_caps": {"wood": 6, "ore": 6, "aetherglass": 2, "embergrain": 2, "peatwax": 2, "verdant_grafts": 2, "brass_scrip": 2, "memory_salt": 2},
+        "sell_caps": {"wood": 8, "ore": 8, "aetherglass": 3, "embergrain": 3, "peatwax": 3, "verdant_grafts": 3, "brass_scrip": 3, "memory_salt": 3},
+        "restricted_buy_resource_ids": []
       }
     ],
     "faction_preferences": [

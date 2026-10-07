@@ -1,5 +1,7 @@
 # Economy Market And Faction Costs Report
 
+> Superseded 2026-10-07 by the owner decision that rare resources are fully tradeable (`docs/town-market.md`): town markets now buy, sell and convert every stockpile resource but gold under weekly caps. The common-resource-only statements below describe the April 2026 slice.
+
 Status: implemented bounded validation/report slice.
 Date: 2026-04-27.
 Slice: `economy-market-faction-costs-10184`.
