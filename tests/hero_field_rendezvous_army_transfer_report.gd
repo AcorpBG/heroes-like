@@ -68,12 +68,20 @@ func _direct_transfer_save_case() -> Dictionary:
 	var rendezvous: Dictionary = shell_snapshot.get("rendezvous", {}) if shell_snapshot.get("rendezvous", {}) is Dictionary else {}
 	if not bool(rendezvous.get("label_visible_in_tree", false)) \
 		or not bool(rendezvous.get("controls_visible_in_tree", false)) \
-		or not bool(rendezvous.get("order_focusable", false)) \
-		or not bool(rendezvous.get("transfer_focusable", false)) \
-		or int(rendezvous.get("order_count", 0)) < 4 \
-		or half_id not in rendezvous.get("action_ids", []):
+		or not bool(rendezvous.get("meet_focusable", false)) \
+		or reserve_id not in rendezvous.get("meet_hero_ids", []):
 		shell.queue_free()
-		return _fail("The compact Command-drawer rendezvous selector was not visible and focusable.", rendezvous)
+		return _fail("The Command drawer did not offer a focusable Meet button for the reserve.", rendezvous)
+	rendezvous = shell.call("validation_open_hero_exchange", reserve_id)
+	var exchange: Dictionary = rendezvous.get("exchange", {}) if rendezvous.get("exchange", {}) is Dictionary else {}
+	var exchange_sides: Dictionary = exchange.get("sides", {}) if exchange.get("sides", {}) is Dictionary else {}
+	if not bool(rendezvous.get("exchange_open", false)) \
+		or String(exchange_sides.get("left", {}).get("hero_id", "")) != active_id \
+		or String(exchange_sides.get("right", {}).get("hero_id", "")) != reserve_id \
+		or exchange_sides.get("left", {}).get("army", [])[0] != [unit_id, 6] \
+		or int(exchange.get("focusable_cells", 0)) <= 0:
+		shell.queue_free()
+		return _fail("The hero meeting screen was not open, populated and focusable.", rendezvous)
 	shell.queue_free()
 	await get_tree().process_frame
 
@@ -108,7 +116,7 @@ func _direct_transfer_save_case() -> Dictionary:
 		"remote_transfer_rejected": true,
 		"bidirectional_actions": true,
 		"matching_stack_merge": true,
-		"command_selector_focusable": true,
+		"exchange_screen_focusable": true,
 		"save_resume_preserved": true,
 	}
 
@@ -146,12 +154,11 @@ func _cached_route_case() -> Dictionary:
 		return _fail("Cached route did not dispatch the hero destination descriptor.", result)
 	var post_snapshot: Dictionary = shell.call("validation_snapshot")
 	var post_rendezvous: Dictionary = post_snapshot.get("rendezvous", {}) if post_snapshot.get("rendezvous", {}) is Dictionary else {}
-	var chrome: Dictionary = post_snapshot.get("chrome", {}) if post_snapshot.get("chrome", {}) is Dictionary else {}
 	if String(post_snapshot.get("active_context_type", "")) != "rendezvous" \
-		or String(chrome.get("active_drawer", "")) != "command" \
-		or not bool(post_rendezvous.get("controls_visible_in_tree", false)):
+		or not bool(post_rendezvous.get("exchange_open", false)) \
+		or String(post_rendezvous.get("exchange_partner_id", "")) != reserve_id:
 		shell.queue_free()
-		return _fail("Cached rendezvous did not hand off to the live transfer controls.", post_snapshot)
+		return _fail("Cached rendezvous did not open the hero meeting screen.", post_snapshot)
 	shell.queue_free()
 	await get_tree().process_frame
 	return {
@@ -159,7 +166,7 @@ func _cached_route_case() -> Dictionary:
 		"route_validation_mode": "cached_prevalidated",
 		"cached_execution_mode": "destination_interaction_fast_path",
 		"interaction_dispatch_mode": "destination_descriptor",
-		"command_handoff": true,
+		"meeting_screen_handoff": true,
 	}
 
 func _fixture(reserve_position: Vector2i) -> Dictionary:

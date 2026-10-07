@@ -26698,8 +26698,6 @@ def validate_hero_command(errors: list[str]) -> None:
             ("HeroActions", "VBoxContainer"),
             ("Rendezvous", "Label"),
             ("RendezvousControls", "HBoxContainer"),
-            ("RendezvousOrders", "OptionButton"),
-            ("RendezvousTransfer", "Button"),
         ],
     )
 
@@ -26726,9 +26724,10 @@ def validate_hero_command(errors: list[str]) -> None:
         "OverworldRules.get_hero_actions",
         "OverworldRules.switch_active_hero",
         "func _rebuild_rendezvous_actions",
-        "func _on_rendezvous_transfer_pressed",
+        "func _on_hero_exchange_order_requested",
         "OverworldRules.perform_rendezvous_action",
-        "OverworldRules.get_rendezvous_actions",
+        "HeroCommandRules.field_exchange_state",
+        'preload("res://scenes/overworld/HeroExchangeScreen.gd")',
         'route == "rendezvous"',
         "_hero_actions",
         "_heroes_label",
@@ -26804,7 +26803,7 @@ def validate_hero_command(errors: list[str]) -> None:
         "matching_stack_merge",
         "cached_prevalidated",
         "destination_interaction_fast_path",
-        "command_selector_focusable",
+        "exchange_screen_focusable",
         "save_resume_preserved",
         "SessionStateStore.SAVE_VERSION",
     ):
@@ -26822,7 +26821,7 @@ def validate_hero_command(errors: list[str]) -> None:
         "movement_deficit_preserved",
         "immediate_bonus_update",
         "troop_orders_preserved",
-        "compact_selector_focusable",
+        "exchange_screen_focusable",
         "stale_order_rejected",
         "invalid_order_rejected",
         "save_resume_preserved",
@@ -26841,7 +26840,7 @@ def validate_hero_command(errors: list[str]) -> None:
         "stale_duplicate_rejected",
         "invalid_orders_rejected",
         "troop_and_artifact_orders_preserved",
-        "compact_selector_focusable",
+        "exchange_screen_focusable",
         "save_resume_preserved",
         "SessionStateStore.SAVE_VERSION",
     ):

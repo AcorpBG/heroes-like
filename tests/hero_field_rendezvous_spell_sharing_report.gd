@@ -50,18 +50,16 @@ func _sharing_ui_save_case() -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	session = shell.get("_session")
-	shell.call("validation_open_command_drawer")
+	var rendezvous: Dictionary = shell.call("validation_open_hero_exchange", reserve_id)
 	await get_tree().process_frame
-	var snapshot: Dictionary = shell.call("validation_snapshot")
-	var rendezvous: Dictionary = snapshot.get("rendezvous", {}) if snapshot.get("rendezvous", {}) is Dictionary else {}
-	var ui_action_ids: Array = rendezvous.get("action_ids", []) if rendezvous.get("action_ids", []) is Array else []
-	if not bool(rendezvous.get("controls_visible_in_tree", false)) \
-		or not bool(rendezvous.get("order_focusable", false)) \
-		or not bool(rendezvous.get("transfer_focusable", false)) \
-		or active_action_id not in ui_action_ids \
-		or reserve_action_id not in ui_action_ids:
+	var exchange: Dictionary = rendezvous.get("exchange", {}) if rendezvous.get("exchange", {}) is Dictionary else {}
+	var sides: Dictionary = exchange.get("sides", {}) if exchange.get("sides", {}) is Dictionary else {}
+	if not bool(rendezvous.get("exchange_open", false)) \
+		or int(exchange.get("focusable_cells", 0)) <= 0 \
+		or ACTIVE_SPELL_ID not in sides.get("left", {}).get("teachable", []) \
+		or RESERVE_SPELL_ID not in sides.get("right", {}).get("teachable", []):
 		shell.queue_free()
-		return _fail("Spell teaching was not reachable in the compact rendezvous selector.", rendezvous)
+		return _fail("Spell teaching was not reachable on the hero meeting screen.", rendezvous)
 	shell.queue_free()
 	await get_tree().process_frame
 
@@ -125,7 +123,7 @@ func _sharing_ui_save_case() -> Dictionary:
 		"stale_duplicate_rejected": true,
 		"invalid_orders_rejected": true,
 		"troop_and_artifact_orders_preserved": true,
-		"compact_selector_focusable": true,
+		"exchange_screen_focusable": true,
 		"save_resume_preserved": true,
 	}
 

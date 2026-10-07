@@ -17,6 +17,9 @@ const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemL
 const ArmyStackBarScript = preload("res://scenes/shared/ArmyStackBar.gd")
 const HeroSheetScript = preload("res://scenes/shared/HeroSheet.gd")
 var _hero_sheet: Control
+const HeroExchangeScreenScript = preload("res://scenes/overworld/HeroExchangeScreen.gd")
+var _hero_exchange: Control
+var _hero_exchange_partner_id := ""
 const HeroLevelUpDialogScript = preload("res://scenes/shared/HeroLevelUpDialog.gd")
 var _hero_level_up_dialog: ConfirmationDialog
 var _level_up_retry_pending := false
@@ -125,8 +128,6 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _artifact_action_cue: Label = %ArtifactActionCue
 @onready var _rendezvous_label: Label = %Rendezvous
 @onready var _rendezvous_controls: Container = %RendezvousControls
-@onready var _rendezvous_orders: OptionButton = %RendezvousOrders
-@onready var _rendezvous_transfer_button: Button = %RendezvousTransfer
 @onready var _open_command_button: Button = %OpenCommand
 @onready var _open_frontier_button: Button = %OpenFrontier
 @onready var _close_command_button: Button = %CloseCommand
@@ -642,6 +643,8 @@ func _input(event: InputEvent) -> void:
 		return
 	if is_instance_valid(_hero_sheet) and _hero_sheet.visible:
 		return
+	if is_instance_valid(_hero_exchange) and _hero_exchange.visible:
+		return
 	if is_instance_valid(_turn_presenter):
 		if event.is_action_pressed("ui_cancel") or event.is_action_pressed("ui_accept"): _turn_presenter.skip_playback()
 		if not (event is InputEventMouse): get_viewport().set_input_as_handled()
@@ -959,6 +962,8 @@ func _overworld_gameplay_movement_blocked_reason() -> String:
 		return "scout_inspection_open"
 	if is_instance_valid(_hero_sheet) and _hero_sheet.visible:
 		return "hero_sheet_open"
+	if is_instance_valid(_hero_exchange) and _hero_exchange.visible:
+		return "hero_exchange_open"
 	if _session == null:
 		return "missing_session"
 	if _session.game_state != "overworld":
@@ -1224,6 +1229,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	if is_instance_valid(_hero_sheet) and _hero_sheet.visible:
+		get_viewport().set_input_as_handled()
+		return
+	if is_instance_valid(_hero_exchange) and _hero_exchange.visible:
 		get_viewport().set_input_as_handled()
 		return
 	if _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():
@@ -2142,9 +2150,7 @@ func _on_context_action_pressed(action_id: String) -> void:
 		return
 	var dispatch_started_usec := _debug_phase_begin("context_action_dispatch")
 	if action_id == "open_rendezvous":
-		_set_active_drawer("command")
-		_sync_context_drawers()
-		call_deferred("_configure_overworld_keyboard_focus", true)
+		_open_hero_exchange("")
 		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id})
 		return
 	if action_id == "advance_route":
@@ -2288,35 +2294,59 @@ func _refresh_army_management() -> void:
 	_army_management_initialized = true
 	_army_management.configure(holders, not active_hero.is_empty())
 
-func _on_rendezvous_order_selected(index: int) -> void:
-	if index < 0 or index >= _rendezvous_orders.item_count:
-		_rendezvous_transfer_button.disabled = true
-		_rendezvous_transfer_button.tooltip_text = "No rendezvous order is selected."
-		return
-	var action = _rendezvous_orders.get_item_metadata(index)
-	_rendezvous_transfer_button.disabled = not (action is Dictionary) or String(action.get("id", "")) == ""
-	_rendezvous_transfer_button.tooltip_text = String(action.get("summary", "Apply the selected rendezvous order.")) if action is Dictionary else "No rendezvous order is selected."
+## Opens the hero meeting screen with a commander sharing the active hero's
+## tile (`partner_id` empty: the first one). Every exchange order the screen
+## emits is committed in _on_hero_exchange_order_requested.
+func _open_hero_exchange(partner_id: String = "", return_control: Control = null) -> bool:
+	if _session == null or _session.game_state != "overworld":
+		return false
+	var state := HeroCommandRules.field_exchange_state(_session, partner_id)
+	if state.is_empty():
+		return false
+	_hero_exchange_partner_id = String(state.get("partner_id", ""))
+	if not is_instance_valid(_hero_exchange):
+		_hero_exchange = HeroExchangeScreenScript.new()
+		_hero_exchange.name = "HeroExchange"
+		add_child(_hero_exchange)
+		_hero_exchange.order_requested.connect(_on_hero_exchange_order_requested)
+		_hero_exchange.partner_requested.connect(_on_hero_exchange_partner_requested)
+		_hero_exchange.closed.connect(_on_hero_exchange_closed)
+	if _active_drawer != "":
+		_set_active_drawer("")
+		_sync_context_drawers()
+	_hero_exchange.open_exchange(state, return_control)
+	return true
 
-func _on_rendezvous_transfer_pressed() -> void:
-	var selected := _rendezvous_orders.selected
-	if selected < 0 or selected >= _rendezvous_orders.item_count:
-		return
-	var action = _rendezvous_orders.get_item_metadata(selected)
-	if not (action is Dictionary):
-		return
-	var result := OverworldRules.perform_rendezvous_action(_session, String(action.get("id", "")))
+func _on_hero_exchange_order_requested(action_id: String) -> void:
+	var result := OverworldRules.perform_rendezvous_action(_session, action_id)
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
 	_last_turn_resolution_text = ""
-	_record_result_feedback("transfer", result, "Troops transferred.")
+	_record_result_feedback("transfer", result, "Exchange complete.")
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
-		_select_hero_tile()
-	_set_active_drawer("command")
 	var resolution := _handle_session_resolution()
 	if bool(resolution.get("handled", false)):
+		if is_instance_valid(_hero_exchange):
+			_hero_exchange.close_exchange()
 		return
+	var state := HeroCommandRules.field_exchange_state(_session, _hero_exchange_partner_id)
+	if state.is_empty():
+		_hero_exchange.close_exchange()
+		return
+	_hero_exchange.refresh_exchange(state, result)
+
+func _on_hero_exchange_partner_requested(hero_id: String) -> void:
+	var state := HeroCommandRules.field_exchange_state(_session, hero_id)
+	if state.is_empty():
+		return
+	_hero_exchange_partner_id = String(state.get("partner_id", ""))
+	_hero_exchange.refresh_exchange(state)
+
+func _on_hero_exchange_closed() -> void:
+	_select_hero_tile()
 	_refresh()
+	call_deferred("_configure_overworld_keyboard_focus", true)
 
 func _on_spell_action_pressed(action_id: String) -> void:
 	if not _viewing_hero_level():
@@ -2490,10 +2520,11 @@ func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_sta
 		AppRouter.go_to_town()
 		return
 	if route == "rendezvous":
-		_set_active_drawer("command")
+		# Walking onto a friendly commander opens the meeting screen, as in HoMM.
 		_select_hero_tile()
 		_refresh()
-		call_deferred("_configure_overworld_keyboard_focus", true)
+		if not _open_hero_exchange(String(result.get("rendezvous_hero_id", ""))):
+			call_deferred("_configure_overworld_keyboard_focus", true)
 		if debug_started:
 			_debug_finish_path_command()
 		return
@@ -5346,37 +5377,47 @@ func _on_town_rail_pressed(x: int, y: int, level: int = -1) -> void:
 	_sync_roster_pressed_states()
 
 func _rebuild_rendezvous_actions() -> void:
-	_rendezvous_orders.clear()
+	# One "Meet" button per commander sharing the active hero's tile; each opens
+	# the hero meeting screen (HeroExchangeScreen) instead of an order list.
 	var reserve_heroes := HeroCommandRules.field_rendezvous_heroes(_session)
-	var actions := OverworldRules.get_rendezvous_actions(_session)
 	var has_rendezvous := not reserve_heroes.is_empty()
 	_rendezvous_label.visible = has_rendezvous
-	_rendezvous_controls.visible = has_rendezvous and not actions.is_empty()
+	_rendezvous_controls.visible = has_rendezvous
+	var partner_ids := []
+	for hero_value in reserve_heroes:
+		if hero_value is Dictionary:
+			partner_ids.append(String(hero_value.get("id", "")))
+	var existing_ids := []
+	for child in _rendezvous_controls.get_children():
+		existing_ids.append(String(child.get_meta("hero_id", "")))
 	if not has_rendezvous:
 		_rendezvous_label.text = "Rendezvous"
 		_rendezvous_label.tooltip_text = ""
-		_rendezvous_transfer_button.disabled = true
+	else:
+		_rendezvous_label.text = "Rendezvous"
+		_rendezvous_label.tooltip_text = HeroCommandRules.describe_field_rendezvous(_session)
+	if existing_ids == partner_ids:
 		return
-	var names := []
+	for child in _rendezvous_controls.get_children():
+		_rendezvous_controls.remove_child(child)
+		child.queue_free()
 	for hero_value in reserve_heroes:
-		if hero_value is Dictionary:
-			names.append(String(hero_value.get("name", "Commander")))
-	_rendezvous_label.text = "Rendezvous | %s" % ", ".join(names)
-	_rendezvous_label.tooltip_text = HeroCommandRules.describe_field_rendezvous(_session)
-	if actions.is_empty():
-		_rendezvous_label.text += " | No assets to exchange"
-		_rendezvous_transfer_button.disabled = true
-		return
-	for action_value in actions:
-		if not (action_value is Dictionary):
+		if not (hero_value is Dictionary):
 			continue
-		var action: Dictionary = action_value
-		_rendezvous_orders.add_item(String(action.get("label", "Exchange assets")))
-		var index := _rendezvous_orders.item_count - 1
-		_rendezvous_orders.set_item_metadata(index, action.duplicate(true))
-		_rendezvous_orders.set_item_tooltip(index, String(action.get("summary", "")))
-	_rendezvous_orders.select(0)
-	_on_rendezvous_order_selected(0)
+		var hero_id := String(hero_value.get("id", ""))
+		var hero_name := String(hero_value.get("name", "Commander"))
+		var button := Button.new()
+		button.name = "Meet_%s" % hero_id
+		button.text = "Meet %s" % hero_name.get_slice(" ", 0)
+		button.tooltip_text = "Meet %s to exchange troops, artifacts and spells." % hero_name
+		button.icon = _load_roster_icon(String(ContentService.get_hero_art(hero_id).get("portrait", "")))
+		button.expand_icon = true
+		button.add_theme_constant_override("icon_max_width", 26)
+		button.set_meta("hero_id", hero_id)
+		FrontierVisualKit.apply_button(button, "secondary", 120.0, 36.0, 14)
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.pressed.connect(func(): _open_hero_exchange(hero_id, button))
+		_rendezvous_controls.add_child(button)
 
 func _rebuild_context_actions() -> void:
 	var actions := _current_context_actions()
@@ -9159,6 +9200,7 @@ func _configure_overworld_keyboard_focus(force: bool = false) -> void:
 	if is_instance_valid(_hero_level_up_dialog) and _hero_level_up_dialog.visible: return
 	if is_instance_valid(_resource_reward_dialog) and _resource_reward_dialog.visible: return
 	if is_instance_valid(_scout_dialog) and _scout_dialog.visible: return
+	if is_instance_valid(_hero_exchange) and _hero_exchange.visible: return
 	if not is_inside_tree() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()) or (_end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible):
 		return
 	if _artifact_acquired_input_blocker != null and _artifact_acquired_input_blocker.visible:
@@ -9180,8 +9222,7 @@ func _configure_overworld_keyboard_focus(force: bool = false) -> void:
 		_close_command_button,
 		_close_frontier_button,
 		_hero_actions,
-		_rendezvous_orders,
-		_rendezvous_transfer_button,
+		_rendezvous_controls,
 		_spell_actions,
 		_specialty_actions,
 		_artifact_actions,
@@ -11927,24 +11968,32 @@ func _validation_control_surfaces(container: Node) -> Array:
 	return surfaces
 
 func _validation_rendezvous_surface() -> Dictionary:
-	var action_ids := []
-	for index in range(_rendezvous_orders.item_count):
-		var metadata = _rendezvous_orders.get_item_metadata(index)
-		if metadata is Dictionary:
-			action_ids.append(String(metadata.get("id", "")))
+	var meet_hero_ids := []
+	var meet_focusable := true
+	for child in _rendezvous_controls.get_children():
+		if child is Button:
+			meet_hero_ids.append(String(child.get_meta("hero_id", "")))
+			meet_focusable = meet_focusable and child.focus_mode != Control.FOCUS_NONE and not child.disabled
+	var exchange_open := is_instance_valid(_hero_exchange) and _hero_exchange.visible
 	return {
 		"label_visible": _rendezvous_label.visible,
 		"label_visible_in_tree": _rendezvous_label.is_visible_in_tree(),
 		"label_text": _rendezvous_label.text,
 		"controls_visible": _rendezvous_controls.visible,
 		"controls_visible_in_tree": _rendezvous_controls.is_visible_in_tree(),
-		"order_count": _rendezvous_orders.item_count,
-		"action_ids": action_ids,
-		"selected_action_id": String(_rendezvous_orders.get_item_metadata(_rendezvous_orders.selected).get("id", "")) if _rendezvous_orders.selected >= 0 and _rendezvous_orders.get_item_metadata(_rendezvous_orders.selected) is Dictionary else "",
-		"order_focusable": _rendezvous_orders.focus_mode != Control.FOCUS_NONE,
-		"transfer_focusable": _rendezvous_transfer_button.focus_mode != Control.FOCUS_NONE,
-		"transfer_disabled": _rendezvous_transfer_button.disabled,
+		"meet_hero_ids": meet_hero_ids,
+		"meet_focusable": meet_focusable and not meet_hero_ids.is_empty(),
+		"exchange_open": exchange_open,
+		"exchange_partner_id": _hero_exchange_partner_id if exchange_open else "",
+		"exchange": _hero_exchange.validation_snapshot() if exchange_open else {},
 	}
+
+func validation_open_hero_exchange(partner_id: String = "") -> Dictionary:
+	_open_hero_exchange(partner_id)
+	return _validation_rendezvous_surface()
+
+func validation_hero_exchange() -> Control:
+	return _hero_exchange if is_instance_valid(_hero_exchange) else null
 
 func validation_open_command_drawer() -> Dictionary:
 	_set_active_drawer("command")
