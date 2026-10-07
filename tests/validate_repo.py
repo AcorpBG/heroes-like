@@ -39887,6 +39887,11 @@ def validate_ai_hero_model(errors: list[str]) -> None:
         "func _market_cover",
         "func _position_seen",
         "func _store_explored",
+        "func _guard_fight_value",
+        "func _expected_loss_value",
+        "func _passage_value",
+        "func _idle_fight",
+        "func _wait_by_home",
         '"ai_hero_reinforced"',
         '"ai_heroes_met"',
         '"ai_town_captured"',
@@ -39899,6 +39904,7 @@ def validate_ai_hero_model(errors: list[str]) -> None:
         "_check_town_orders_pay_real_costs",
         "_check_market_trades_like_the_player",
         "_check_hire_with_hero_in_doorway",
+        "_check_expansion_on_walled_map",
     ):
         ensure(required_token in report_text, errors, f"AI player rules report is missing case: {required_token}")
     memory_text = AI_KNOWN_WORLD_MEMORY_REPORT_SCRIPT_PATH.read_text(encoding="utf-8") if AI_KNOWN_WORLD_MEMORY_REPORT_SCRIPT_PATH.exists() else ""

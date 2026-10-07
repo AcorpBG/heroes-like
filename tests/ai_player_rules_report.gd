@@ -16,6 +16,20 @@ const PLAYER_HERO_ID := "hero_lyra"
 const DAYS := 16
 ## Days a hero may stand on one tile outside its towns before it counts as stuck.
 const MAX_STALLED_DAYS := 4
+## The map of the owner's 2026-10-07 playthrough, regenerated from its seed.
+## There the computer player never left its starting zone: by day 29 it had
+## explored 486 of 1296 tiles, held 6 sites and its main hero had stood idle
+## for 11 days, because every way out ran past a guard it scored below zero
+## and idle lesser heroes stood in the only exit of the main hero's dead end.
+const WALLED_MAP_SEED := "579873210"
+const WALLED_MAP_HERO_ID := "hero_caelen"
+const WALLED_MAP_DAYS := 28
+## With the human idle at home the old scoring reproduced that game here
+## (486 tiles, 2 guards, 6 sites, a 14-day stall); the hero model now explores
+## about 645 tiles, beats 6 guards and holds 15 sites by day 29.
+const WALLED_MAP_MIN_EXPLORED := 560
+const WALLED_MAP_MIN_GUARDS := 4
+const WALLED_MAP_MIN_SITES := 10
 
 var _failed := false
 
@@ -74,21 +88,9 @@ func _run() -> void:
 			BattleAutoResolveRulesScript.resolve_active_battle(session)
 			if session.battle.is_empty() and String(session.scenario_status) == "in_progress":
 				session.game_state = "overworld"
-		var after := _hero_positions(session, controller)
-		for placement_id in after.keys():
-			if positions.has(placement_id):
-				var before: Vector2i = positions[placement_id]
-				var now: Vector2i = after[placement_id]
-				hero_steps += maxi(absi(now.x - before.x), absi(now.y - before.y))
-				hero_days += 1
-				# A hero holding its own town's gate may wait; elsewhere a hero
-				# that never moves is stuck.
-				if now == before and not _at_own_town(session, controller, now):
-					still_days[placement_id] = int(still_days.get(placement_id, 0)) + 1
-				else:
-					still_days[placement_id] = 0
-				if int(still_days[placement_id]) > int(longest_stall.days):
-					longest_stall = {"hero": placement_id, "days": int(still_days[placement_id]), "tile": [now.x, now.y]}
+		var moved := _track_stalls(session, controller, positions, still_days, longest_stall)
+		hero_steps += int(moved.steps)
+		hero_days += int(moved.hero_days)
 		days.append({"day": int(session.day), "ms": elapsed, "ai_ms": ai_ms, "ai_phases": ai_phases, "heroes": _hero_brief(session, controller), "gold": int(_state(session, controller).get("treasury", {}).get("gold", 0))})
 		if String(session.scenario_status) != "in_progress":
 			break
@@ -123,6 +125,9 @@ func _run() -> void:
 	var doorway_hire := _check_hire_with_hero_in_doorway(session, controller)
 	if _failed:
 		return
+	var walled_map := _check_expansion_on_walled_map()
+	if _failed:
+		return
 
 	var payload := {
 		"ok": true,
@@ -134,6 +139,7 @@ func _run() -> void:
 		"save_round_trip": save_check,
 		"market": market,
 		"doorway_hire": doorway_hire,
+		"walled_map_expansion": walled_map,
 		"captured_mines": captured_mines,
 		"guard_fights": fights,
 		"hero_tiles_per_day": float(hero_steps) / float(maxi(1, hero_days)),
@@ -228,9 +234,9 @@ func _run_perf(size_class_id: String, day_count: int) -> void:
 	_cleanup()
 	get_tree().quit(0)
 
-func _start_session(size_class_id: String = "homm3_small", player_count: int = 2):
+func _start_session(size_class_id: String = "homm3_small", player_count: int = 2, seed: String = SEED, hero_id: String = PLAYER_HERO_ID):
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
-		SEED,
+		seed,
 		"",
 		"",
 		player_count,
@@ -239,7 +245,7 @@ func _start_session(size_class_id: String = "homm3_small", player_count: int = 2
 		size_class_id,
 		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
 		PLAYER_FACTION_ID,
-		PLAYER_HERO_ID
+		hero_id
 	)
 	var setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY)
 	if not bool(setup.get("ok", false)):
@@ -550,11 +556,85 @@ func _check_hire_with_hero_in_doorway(session, controller: String) -> Dictionary
 		return {}
 	return {"doorway_hero": doorway_id, "hired": hired, "in_doorway": in_doorway}
 
-func _at_own_town(session, controller: String, tile: Vector2i) -> bool:
+## Moves each hero made in a day, and how long each has stood still. A hero
+## holding its own town's gate, or waiting by it for recruits, may stand; in
+## the field one that never moves is stuck.
+func _track_stalls(session, controller: String, positions: Dictionary, still_days: Dictionary, longest_stall: Dictionary) -> Dictionary:
+	var steps := 0
+	var hero_days := 0
+	var after := _hero_positions(session, controller)
+	for placement_id in after.keys():
+		if not positions.has(placement_id):
+			continue
+		var before: Vector2i = positions[placement_id]
+		var now: Vector2i = after[placement_id]
+		steps += maxi(absi(now.x - before.x), absi(now.y - before.y))
+		hero_days += 1
+		if now == before and not _by_own_town(session, controller, now):
+			still_days[placement_id] = int(still_days.get(placement_id, 0)) + 1
+		else:
+			still_days[placement_id] = 0
+		if int(still_days[placement_id]) > int(longest_stall.days):
+			longest_stall["hero"] = placement_id
+			longest_stall["days"] = int(still_days[placement_id])
+			longest_stall["tile"] = [now.x, now.y]
+	return {"steps": steps, "hero_days": hero_days}
+
+## The owner's walled map with the human idle at home: the computer player has
+## to fight its way past the guards around its start and work the wider map,
+## and no hero may stand idle in the field.
+func _check_expansion_on_walled_map() -> Dictionary:
+	ContentService.clear_generated_scenario_drafts()
+	var session = _start_session("homm3_small", 2, WALLED_MAP_SEED, WALLED_MAP_HERO_ID)
+	if session == null:
+		return {}
+	if session.scenario_id != "native_h3maped_71045e86_skirmish":
+		_fail("Seed %s no longer generates the owner's map: %s" % [WALLED_MAP_SEED, session.scenario_id])
+		return {}
+	# The AI's tavern offers are seeded from the session id; fix it so the run
+	# repeats.
+	session.session_id = "ai-player-rules-walled-%s" % WALLED_MAP_SEED
+	var controller := _ai_controller(session)
+	_fortify_idle_human(session)
+	var neutral_before := _unresolved_neutral_ids(session)
+	var still_days := {}
+	var longest_stall := {"hero": "", "days": 0}
+	for _day in range(WALLED_MAP_DAYS):
+		var positions := _hero_positions(session, controller)
+		OverworldRules.end_turn(session)
+		if not session.battle.is_empty():
+			BattleAutoResolveRulesScript.resolve_active_battle(session)
+			if session.battle.is_empty() and String(session.scenario_status) == "in_progress":
+				session.game_state = "overworld"
+		_track_stalls(session, controller, positions, still_days, longest_stall)
+		if String(session.scenario_status) != "in_progress":
+			break
+	var state := _state(session, controller)
+	var sites := 0
+	for node in session.overworld.get("resource_nodes", []):
+		if node is Dictionary and PlayerRules.resource_controller_id(node) == controller:
+			sites += 1
+	var result := {
+		"seed": WALLED_MAP_SEED,
+		"day": int(session.day),
+		"explored_tiles": AiHeroRulesScript.explored_tile_count(state),
+		"guards_defeated": int(_guard_fight_evidence(session, neutral_before, []).get("guards_defeated", 0)),
+		"sites": sites,
+		"longest_stall": longest_stall,
+		"heroes": _hero_brief(session, controller),
+	}
+	print("%s_WALLED %s" % [REPORT_ID, JSON.stringify(result)])
+	if int(result.explored_tiles) < WALLED_MAP_MIN_EXPLORED or int(result.guards_defeated) < WALLED_MAP_MIN_GUARDS or sites < WALLED_MAP_MIN_SITES:
+		_fail("On the owner's walled map the computer player stayed boxed in: %s" % JSON.stringify(result))
+	elif int(longest_stall.days) >= MAX_STALLED_DAYS:
+		_fail("On the owner's walled map an AI hero stood idle in the field for %d days: %s" % [int(longest_stall.days), JSON.stringify(result)])
+	return result
+
+func _by_own_town(session, controller: String, tile: Vector2i) -> bool:
 	for town in session.overworld.get("towns", []):
 		if town is Dictionary and String(town.get("owner", "")) == "enemy" and PlayerRules.town_controller_id(town) == controller:
 			var entrance := LevelRules.town_entrance(town)
-			if int(entrance.get("x", -1)) == tile.x and int(entrance.get("y", -1)) == tile.y:
+			if maxi(absi(int(entrance.get("x", -1)) - tile.x), absi(int(entrance.get("y", -1)) - tile.y)) <= AiHeroRulesScript.HOME_WAIT_RADIUS:
 				return true
 	return false
 

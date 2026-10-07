@@ -975,7 +975,7 @@ static func apply_resolved_commander_aftermath(
 			match outcome_id:
 				COMMANDER_OUTCOME_DEFEATED:
 					recovery_days = COMMANDER_RECOVERY_DAYS_DEFEATED
-					summary = "%s is routed and cannot lead another raid for %d day%s." % [
+					summary = "%s is routed and will not return for %d day%s." % [
 						commander_display_name(entry),
 						recovery_days,
 						"" if recovery_days == 1 else "s",
@@ -3272,6 +3272,9 @@ static func _visit_building_by_raid(
 	if index < 0 or index >= nodes.size():
 		return {"encounter": raid, "state": state, "event_message": ""}
 	var node: Dictionary = nodes[index]
+	# The human's rule: some buildings serve only seasoned heroes.
+	if int(raid.get("enemy_commander_state", {}).get("level", 1)) < VisitBuildings.required_level(site):
+		return {"encounter": raid, "state": state, "event_message": ""}
 	var choice_id := ""
 	var options := VisitBuildings.choices(site)
 	if not options.is_empty() and options[0] is Dictionary:

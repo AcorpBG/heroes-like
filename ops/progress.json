@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "balance-embercourt-convoy-rate-20261007",
-  "currentSliceId": "balance-embercourt-convoy-rate-20261007",
-  "currentSliceNotes": "COMPLETED 2026-10-07. Owner playtest: the Convoy Charter service paid 1,200 gold for 3 wood + 3 ore (200 each), worse than any market sell rate (260 floor, about 290 Marketplace, 380 Trade Exchange). Its reward is now 2,700 gold (450 each): above the best sell rate including Trade Exchange bulk lots (about 420) and below every buy rate, so buying materials to convoy them never profits. Exchange services no longer repeat their cost in the summary line (TownDevelopmentRules). Validation: town_faction_mechanics_regression 185/185 (real Town UI pays +2,700), town_building_panel_report, validate_repo unchanged.",
+  "currentSlice": "ai-hero-expansion-20261007",
+  "currentSliceId": "ai-hero-expansion-20261007",
+  "currentSliceNotes": "COMPLETED 2026-10-07. Owner playtest 2026-10-07 (seed 579873210, won on day 32): the computer player explored 486 of 1296 tiles, held 6 sites and its main hero stood 11 days in a dead end. Causes: guards scored -4x their power (negative even at 2-3x), no value for ground a guard opens or for sites in its zone, idle lesser heroes filling the only exit, and guard-zone tiles on object bodies being enterable. AiHeroRules now values guards by reward, zone contents and passage less a Lanchester loss estimate, judges previewed fights by actual losses, gives idle heroes a second look at dismissed fights and then sends them to wait by their home town, and keeps heroes off blocked zone tiles; visit buildings are valued once in gold and need the hero level and price; AI auto-resolve wins count; the routed-commander text no longer says raid. ai_player_rules_report replays the owner's map: 625 tiles, 7 guards, 16 sites, no idle stalls by day 29 (old code 486/2/6 with a 14-day stall). Large perf run median 1.2 s, max 3.0 s (was 0.8/2.3) with twice the fights. validate_repo unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Embercourt supply convoy beats the market sell rate",
-  "currentSliceUpdatedAt": "2026-10-07T23:30:00Z",
+  "currentSliceTitle": "AI heroes clear guards and leave their starting zone",
+  "currentSliceUpdatedAt": "2026-10-08T00:30:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -114207,6 +114207,19 @@
         "docs/common-town-building-template.md"
       ],
       "notes": "Owner playtest: the Convoy Charter service paid 1,200 gold for 3 wood + 3 ore (200 each), worse than any market sell rate (260 floor, about 290 Marketplace, 380 Trade Exchange). Its reward is now 2,700 gold (450 each): above the best sell rate including Trade Exchange bulk lots (about 420) and below every buy rate, so buying materials to convoy them never profits. Exchange services no longer repeat their cost in the summary line (TownDevelopmentRules). Validation: town_faction_mechanics_regression 185/185 (real Town UI pays +2,700), town_building_panel_report, validate_repo unchanged."
+    },
+    {
+      "id": "ai-hero-expansion-20261007",
+      "title": "AI heroes clear guards and leave their starting zone",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ai_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Owner playtest 2026-10-07 (seed 579873210, won on day 32): the computer player explored 486 of 1296 tiles, held 6 sites and its main hero stood 11 days in a dead end. Causes: guards scored -4x their power (negative even at 2-3x), no value for ground a guard opens or for sites in its zone, idle lesser heroes filling the only exit, and guard-zone tiles on object bodies being enterable. AiHeroRules now values guards by reward, zone contents and passage less a Lanchester loss estimate, judges previewed fights by actual losses, gives idle heroes a second look at dismissed fights and then sends them to wait by their home town, and keeps heroes off blocked zone tiles; visit buildings are valued once in gold and need the hero level and price; AI auto-resolve wins count; the routed-commander text no longer says raid. ai_player_rules_report replays the owner's map: 625 tiles, 7 guards, 16 sites, no idle stalls by day 29 (old code 486/2/6 with a 14-day stall). Large perf run median 1.2 s, max 3.0 s (was 0.8/2.3) with twice the fights. validate_repo unchanged."
     }
   ],
   "project": "heroes-like",

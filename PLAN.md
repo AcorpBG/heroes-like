@@ -62,6 +62,10 @@ Rules:
 
 `ai-raid-director-removal-20261007` (completed, follow-up of `ai-plays-by-player-rules-20261007`): the raid director nothing live called is removed from `EnemyAdventureRules`/`EnemyTurnRules` with its unit-level tests; the save migration, the AI site seizure and the multi-level path surfaces the RMG validation tools use stay. The headless harness raid cases (town and site defense, regroup, pressure coverage, objective targeting) are rewritten for heroes, and a computer player's own hero in a town's doorway no longer blocks hiring there. Open owner decision: the now inert Border Warden pillage resistance and `DifficultyRules` enemy pressure and raid knobs. See `docs/ai-plays-by-player-rules.md`.
 
+### AI heroes clear guards and leave their start
+
+`ai-hero-expansion-20261007` (completed, owner playtest fix): in the owner's playthrough the computer player never left its starting zone. Guards it beat two or three times over scored below zero, nothing counted the ground a guard opens, idle lesser heroes stood in the only exit of the main hero's dead end, and heroes could step onto object bodies inside guard zones. Guards are now worth their reward, what stands in their zone and the ground behind them, less a Lanchester loss estimate, and a previewed fight must still pay with the losses the battle shows; an idle hero takes a second look at dismissed fights, then waits by its home town. Visit buildings are valued in gold once and only when the hero meets their level and price. `ai_player_rules_report` replays the owner's map from its seed. See `docs/ai-plays-by-player-rules.md`.
+
 ### Embercourt supply convoy rate
 
 `balance-embercourt-convoy-rate-20261007` (completed, owner playtest fix): the Convoy Charter's weekly supply convoy pays 2,700 gold for 3 wood + 3 ore (450 each), better than any market sell rate and below every buy rate, instead of 1,200 gold, which lost to the market.
