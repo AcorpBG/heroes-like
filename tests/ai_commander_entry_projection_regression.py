@@ -9,7 +9,7 @@ import re
 import subprocess
 import tempfile
 
-from ai_path_context_read_regression import instrument
+from gdscript_read_instrumentation import instrument
 from generated_town_order_profile import ROOT, OUTPUT, run_probe
 
 REFERENCE = '597ea8503c42ca59ad2954c4748bc8a48ac06b1e'
@@ -32,7 +32,14 @@ func check(value: bool, label: String) -> void:
 func projected(session, faction: String, roster, hero: String) -> Dictionary:
 	if current.has_method("_normalize_commander_roster_entry"):
 		return current._normalize_commander_roster_entry(session,faction,roster,hero)
-	return current._commander_roster_entry(current.normalize_commander_roster(session,faction,roster),hero)
+	return roster_entry(current.normalize_commander_roster(session,faction,roster),hero)
+func roster_entry(roster: Variant, hero: String) -> Dictionary:
+	if hero=="" or not (roster is Array):
+		return {}
+	for entry in roster:
+		if entry is Dictionary and String(entry.get("roster_hero_id","")) == hero:
+			return entry
+	return {}
 func compare(session, faction: String, roster, hero: String, encounter: Dictionary, label: String) -> Dictionary:
 	# to_dict deeply detaches all mutable fields; compare every value without
 	# repeatedly stringifying a complete Large world solely for this assertion.
@@ -40,7 +47,7 @@ func compare(session, faction: String, roster, hero: String, encounter: Dictiona
 	var inputs := JSON.stringify([roster,encounter])
 	var old_roster: Array = original.normalize_commander_roster(session,faction,roster)
 	check(old_roster==current.normalize_commander_roster(session,faction,roster),label+": complete full roster")
-	var old_entry: Dictionary = original._commander_roster_entry(old_roster,hero)
+	var old_entry: Dictionary = roster_entry(old_roster,hero)
 	check(old_entry==projected(session,faction,roster,hero),label+": exact projected entry")
 	original.measured_reads.clear()
 	current.measured_reads.clear()
@@ -182,10 +189,10 @@ def main():
             (work/(name+'.gd')).write_text(instrument(source,methods=METHODS,terrain=False))
         (work/'probe.gd').write_text(SCRIPT)
         scene = work/'probe.tscn'
-        scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="CommanderEntry" type="Node"]\nscript = ExtResource("1")\n' % (work/'probe.gd').relative_to(ROOT))
-        env = dict(os.environ,XDG_DATA_HOME=str(out/'data'),COMMANDER_ENTRY_ORIGINAL='res://'+str((work/'original.gd').relative_to(ROOT)),COMMANDER_ENTRY_CURRENT='res://'+str((work/'current.gd').relative_to(ROOT)),COMMANDER_ENTRY_SAVE=str(out/'input_save.json') if saved else '',COMMANDER_ENTRY_REQUIRE_PROJECTION='1' if args.require_projection else '0')
+        scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="CommanderEntry" type="Node"]\nscript = ExtResource("1")\n' % (work/'probe.gd').relative_to(ROOT).as_posix())
+        env = dict(os.environ,XDG_DATA_HOME=str(out/'data'),COMMANDER_ENTRY_ORIGINAL='res://'+(work/'original.gd').relative_to(ROOT).as_posix(),COMMANDER_ENTRY_CURRENT='res://'+(work/'current.gd').relative_to(ROOT).as_posix(),COMMANDER_ENTRY_SAVE=str(out/'input_save.json') if saved else '',COMMANDER_ENTRY_REQUIRE_PROJECTION='1' if args.require_projection else '0')
         with (out/'runtime.log').open('w') as log:
-            code = run_probe(['godot4','--headless','--path',str(ROOT),'--audio-driver','Dummy','--accessibility','disabled','res://'+str(scene.relative_to(ROOT))],env,log)
+            code = run_probe(['godot4','--headless','--path',str(ROOT),'--audio-driver','Dummy','--accessibility','disabled','res://'+scene.relative_to(ROOT).as_posix()],env,log)
     lines = (out/'runtime.log').read_text().splitlines()
     marker = 'AI_COMMANDER_ENTRY_PROJECTION '
     reports = [json.loads(line[len(marker):]) for line in lines if line.startswith(marker)]

@@ -533,7 +533,7 @@ static func _ensure_starting_hero(session: SessionStateStoreScript.SessionData, 
 	if entries.is_empty():
 		return {}
 	var town: Dictionary = entries[0].get("town", {})
-	if not _town_entrance_free(session, town):
+	if not _town_entrance_free(session, town, controller):
 		return {}
 	var offer := ai_tavern_offer_ids(session, state, controller)
 	if offer.is_empty():
@@ -972,7 +972,7 @@ static func _hire_hero(session: SessionStateStoreScript.SessionData, context: Di
 	var best_power := -1.0
 	for entry in _turn_rules()._owned_town_entries(session, controller):
 		var town: Dictionary = entry.get("town", {})
-		if not HeroCommandRulesScript.town_has_hall(town) or not _town_entrance_free(session, town):
+		if not HeroCommandRulesScript.town_has_hall(town) or not _town_entrance_free(session, town, controller):
 			continue
 		if int(town.get("last_hire_day", 0)) == int(session.day):
 			continue
@@ -1087,12 +1087,17 @@ static func _roster_progression_seed(state: Dictionary, hero_id: String) -> Dict
 			return commander if commander is Dictionary else {}
 	return {}
 
-static func _town_entrance_free(session: SessionStateStoreScript.SessionData, town: Dictionary) -> bool:
+## Whether nothing stands in the town's doorway. With `own_controller` set, that
+## player's own heroes there do not count: they are in the town, and a hire
+## joins them there, as the human's hires join heroes visiting a town.
+static func _town_entrance_free(session: SessionStateStoreScript.SessionData, town: Dictionary, own_controller: String = "") -> bool:
 	var entrance := LevelRules.town_entrance(town)
 	var resolved := _resolved_lookup(session)
 	for entry in session.overworld.get("encounters", []):
 		if entry is Dictionary and not resolved.has(String(entry.get("placement_id", ""))) and LevelRules.same_level(entry, entrance) \
 				and int(entry.get("x", -1)) == int(entrance.get("x", -2)) and int(entry.get("y", -1)) == int(entrance.get("y", -2)):
+			if own_controller != "" and is_ai_hero(entry) and PlayerRules.raid_controller_id(entry) == own_controller:
+				continue
 			return false
 	for hero in session.overworld.get("player_heroes", []):
 		var position: Dictionary = hero.get("position", {}) if hero is Dictionary and hero.get("position", {}) is Dictionary else {}

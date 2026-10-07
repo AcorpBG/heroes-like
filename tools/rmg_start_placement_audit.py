@@ -28,7 +28,6 @@ const Store = preload("res://scripts/core/SessionStateStore.gd")
 const MapView = preload("res://scenes/overworld/OverworldMapView.gd")
 const Levels = preload("res://scripts/core/OverworldLevelRules.gd")
 const Ai = preload("res://scripts/core/EnemyAdventureRules.gd")
-const Turns = preload("res://scripts/core/EnemyTurnRules.gd")
 const Heroes = preload("res://scripts/core/HeroCommandRules.gd")
 const Battles = preload("res://scripts/core/BattleRules.gd")
 const AutoBattle = preload("res://scripts/core/BattleAutoResolveRules.gd")
@@ -309,10 +308,6 @@ func exercise_level_interactions() -> Dictionary:
 	var collected_before: Dictionary = session.to_dict()
 	var rejected: Dictionary = Rules._resolve_destination_descriptor_interaction(session, {"kind": "resource", "placement_id": resource.placement_id})
 	checks["placement_id_cannot_bypass_layer"] = not bool(rejected.get("ok", true)) and session.to_dict() == collected_before
-	var fake_raid := {"placement_id": "layer_guard_probe", "x": int(resource.x), "y": int(resource.y), "level": 1, "target_kind": "resource", "target_placement_id": resource.placement_id}
-	Ai._resolve_arrived_target(session, fake_raid, {}, "faction_mireclaw")
-	checks["enemy_arrival_cannot_claim_other_layer"] = session.to_dict() == collected_before
-	checks["exploration_identity_is_level_aware"] = Ai.exploration_target_id(tile, 0) != Ai.exploration_target_id(tile, 1) and Ai._exploration_target_tile_from_id(Ai.exploration_target_id(tile, 1)) == tile and Ai._exploration_target_level(Ai.exploration_target_id(tile, 1)) == 1
 	var fingerprint := Ai._path_distance_resource_fingerprint(session)
 	resource["level"] = 1
 	checks["ai_cache_detects_same_xy_layer_change"] = Ai._path_distance_resource_fingerprint(session) != fingerprint
@@ -334,8 +329,6 @@ func exercise_level_interactions() -> Dictionary:
 	var defense: Dictionary = Battles.create_resource_defense_payload(session, String(resource.placement_id))
 	checks["resource_defense_preserves_level"] = not defense.is_empty() and Levels.level_of(defense.position) == 1
 	checks["missing_terrain_layer_is_blocked"] = Rules.tile_is_blocked(session, tile.x, tile.y, 9)
-	var anchors := [Vector2i(2, 2), Vector3i(9, 9, 1)]
-	checks["ai_objective_proximity_is_layer_local"] = Ai._objective_proximity_bonus_from_tiles(anchors, 2, 2, 0) == 45 and Ai._objective_proximity_bonus_from_tiles(anchors, 2, 2, 1) == 0 and Ai._objective_proximity_bonus_from_tiles(anchors, 9, 9, 1) == 45
 	return checks
 
 func exercise_level_isolation() -> bool:
@@ -374,15 +367,6 @@ func exercise_level_isolation() -> bool:
 	ok = ok and above.resource_blocked.has("3,3") and not below.resource_blocked.has("3,3")
 	var path: Dictionary = Ai._path_plan_toward(fixture, Vector2i(4, 4), [Vector2i(4, 5)], "under_encounter", "")
 	ok = ok and path.next_step == Vector2i(4, 5) and int(path.goal_distance) == 1
-	var points: Array = Turns._open_spawn_points(fixture, {"spawn_points": [{"x": 2, "y": 2}, {"x": 2, "y": 2, "level": 1}]})
-	ok = ok and points == [{"x": 2, "y": 2}]
-	var source := {"x": 4, "y": 4, "radius": 3}
-	var catalog := [{"target_kind": "resource", "target_id": "above", "target_tile": Vector2i(4, 4)}, {"target_kind": "resource", "target_id": "below", "target_tile": Vector2i(4, 4), "level": 1}]
-	var records: Array = Ai._current_enemy_visible_target_records_for_source(fixture, {}, "faction_mireclaw", source, catalog)
-	ok = ok and records.size() == 1 and records[0].target_id == "above"
-	source["level"] = 1
-	records = Ai._current_enemy_visible_target_records_for_source(fixture, {}, "faction_mireclaw", source, catalog)
-	ok = ok and records.size() == 1 and records[0].target_id == "below" and records[0].level == 1
 	fixture.overworld.towns.append({"placement_id": "enemy_sight_source", "town_id": "town_duskfen", "owner": "enemy", "x": 2, "y": 3})
 	ok = ok and not Ai._player_hero_currently_visible_to_enemy_faction(fixture, fixture.overworld.hero, "faction_mireclaw")
 	fixture.overworld.towns[-1]["level"] = 1
@@ -548,8 +532,7 @@ LEVEL_RUNTIME_CHECKS = {
     "main_map_matches_hero_level", "minimap_matches_hero_level", "hero_is_on_own_map",
     "hero_fog_own_level", "production_save_restore", "saved_position_level",
     "saved_all_fog_levels", "saved_surface_unchanged", "spatial_fixture",
-    "placement_id_cannot_bypass_layer", "enemy_arrival_cannot_claim_other_layer",
-    "exploration_identity_is_level_aware", "ai_cache_detects_same_xy_layer_change",
+    "placement_id_cannot_bypass_layer", "ai_cache_detects_same_xy_layer_change",
     "stationing_rejects_other_layer", "stationing_accepts_own_entrance",
     "missing_terrain_layer_is_blocked", "battle_native_encounter_exists",
     "battle_real_descriptor_handoff", "battle_payload_preserves_level",
@@ -558,7 +541,6 @@ LEVEL_RUNTIME_CHECKS = {
     "two_level_end_turns_complete", "two_level_end_turns_deterministic",
     "end_turn_preserves_object_levels",
     "ai_native_town_doorway_egress",
-    "ai_objective_proximity_is_layer_local",
     "town_assault_preserves_entrance_level", "resource_defense_preserves_level",
 } | {f"stale_{kind}_route_nonmutating" for kind in ("resource", "artifact", "encounter", "town", "hero", "open")}
 LEVEL_TOGGLE_CHECKS = {
@@ -620,7 +602,7 @@ def main():
             script.write_text(PROBE)
             scene = work / "probe.tscn"
             scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="Audit" type="Node"]\nscript = ExtResource("1")\n' % script.relative_to(ROOT))
-            env = dict(os.environ, XDG_DATA_HOME=str(out / "data"), HEROES_RMG_AUDIT_OUTPUT=str(out), HEROES_RMG_AUDIT_RENDER="1" if args.render else "0", HEROES_RMG_AUDIT_ENTRANCE="1" if args.require_entrance_starts else "0", HEROES_RMG_AUDIT_LEVELS="1" if args.require_level_runtime else "0", HEROES_RMG_AUDIT_RESOLUTION=args.resolution, HEROES_PROFILE_LOG="0")
+            env = dict(os.environ, XDG_DATA_HOME=str(out / "data"), APPDATA=str(out / "data"), LOCALAPPDATA=str(out / "data"), HEROES_RMG_AUDIT_OUTPUT=str(out), HEROES_RMG_AUDIT_RENDER="1" if args.render else "0", HEROES_RMG_AUDIT_ENTRANCE="1" if args.require_entrance_starts else "0", HEROES_RMG_AUDIT_LEVELS="1" if args.require_level_runtime else "0", HEROES_RMG_AUDIT_RESOLUTION=args.resolution, HEROES_PROFILE_LOG="0")
             cmd = [shutil.which("godot4") or "godot", "--path", str(ROOT), "--audio-driver", "Dummy", "--accessibility", "disabled", "--resolution", args.resolution, "res://" + str(scene.relative_to(ROOT))]
             cmd = ["dbus-run-session", "--", "xvfb-run", "-a", "-s", "-screen 0 2200x1200x24"] + cmd if args.render else cmd + ["--headless"]
             with (out / "runtime.log").open("w") as log:

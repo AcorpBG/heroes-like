@@ -26,16 +26,12 @@ func _run() -> void:
 	var ai_case := _ai_claim_case()
 	if ai_case.is_empty():
 		return
-	var ai_route_case := _ai_route_claim_case()
-	if ai_route_case.is_empty():
-		return
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"report_id": REPORT_ID,
 		"player_case": player_case,
 		"ineligible_case": ineligible_case,
 		"ai_case": ai_case,
-		"ai_route_case": ai_route_case,
 		"save_version": SessionStateStore.SAVE_VERSION,
 		"runtime_policy": {
 			"thornwake_dwelling_table_live": true,
@@ -209,58 +205,6 @@ func _ai_claim_case() -> Dictionary:
 		"persistent_control": true,
 		"captured_artifact_tracked": true,
 		"public_event_boundary": true,
-	}
-
-func _ai_route_claim_case() -> Dictionary:
-	var session = _session(NINEFOLD_SCENARIO_ID)
-	EnemyTurnRules.normalize_enemy_states(session)
-	EnemyAdventureRules.normalize_all_commander_rosters(session)
-	_set_node_controller(session, NINEFOLD_PLACEMENT_ID, "player")
-	var state := _enemy_state(session, AI_FACTION_ID)
-	var roster: Array = state.get("commander_roster", []) if state.get("commander_roster", []) is Array else []
-	if roster.is_empty():
-		_fail("Ninefold Thornwake has no commander roster for route dwelling execution.")
-		return {}
-	var node_result := _resource_node_result(session, NINEFOLD_PLACEMENT_ID)
-	var node: Dictionary = node_result.get("node", {})
-	var raid := _raid_fixture(session, node, roster[0], "dwelling_reward_route_ai_raid", "town")
-	var army_before: Dictionary = raid.get("enemy_army", {})
-	var cudgels_before := _stack_count(army_before.get("stacks", []), CUDGEL_ID)
-	var callers_before := _stack_count(army_before.get("stacks", []), CALLER_ID)
-	var secured := EnemyAdventureRules._secure_opportunistic_route_resource(
-		session,
-		{"faction_id": AI_FACTION_ID, "label": "Graftroot Concord"},
-		raid,
-		state,
-		AI_FACTION_ID,
-		int(node_result.get("index", -1)),
-		node,
-		ContentService.get_resource_site(GREENBRANCH_SITE_ID)
-	)
-	var reward: Dictionary = secured.get("artifact_reward", {}) if secured.get("artifact_reward", {}) is Dictionary else {}
-	var secured_raid: Dictionary = secured.get("encounter", {}) if secured.get("encounter", {}) is Dictionary else {}
-	var commander: Dictionary = secured_raid.get("enemy_commander_state", {}) if secured_raid.get("enemy_commander_state", {}) is Dictionary else {}
-	var army_after: Dictionary = secured_raid.get("enemy_army", {}) if secured_raid.get("enemy_army", {}) is Dictionary else {}
-	var secured_node: Dictionary = _resource_node_result(session, NINEFOLD_PLACEMENT_ID).get("node", {})
-	if not bool(secured.get("resolved", false)) \
-			or not bool(reward.get("applied", false)) \
-			or String(reward.get("artifact_id", "")) != ARTIFACT_ID \
-			or ARTIFACT_ID not in ArtifactRules.owned_artifact_ids(commander) \
-			or String(secured_node.get("artifact_reward_id", "")) != ARTIFACT_ID \
-			or String(secured_node.get("collected_by_faction_id", "")) != AI_FACTION_ID:
-		_fail("Thornwake opportunistic dwelling claim did not apply the artifact reward: %s" % JSON.stringify(secured))
-		return {}
-	if _stack_count(army_after.get("stacks", []), CUDGEL_ID) != cudgels_before + 2 \
-			or _stack_count(army_after.get("stacks", []), CALLER_ID) != callers_before + 1:
-		_fail("Thornwake opportunistic dwelling claim displaced recruits: %s" % JSON.stringify(army_after))
-		return {}
-	return {
-		"artifact_id": ARTIFACT_ID,
-		"route_claim_resolved": true,
-		"commander_rewarded": true,
-		"claim_recruits_preserved": true,
-		"persistent_control": true,
-		"provenance_preserved": true,
 	}
 
 func _session(scenario_id: String):

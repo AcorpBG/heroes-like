@@ -21,6 +21,7 @@ const Rules = preload("res://scripts/core/OverworldRules.gd")
 const Players = preload("res://scripts/core/PlayerIdentityRules.gd")
 const Turns = preload("res://scripts/core/EnemyTurnRules.gd")
 const Ai = preload("res://scripts/core/EnemyAdventureRules.gd")
+const AiHeroes = preload("res://scripts/core/AiHeroRules.gd")
 const Battles = preload("res://scripts/core/BattleRules.gd")
 const AutoBattle = preload("res://scripts/core/BattleAutoResolveRules.gd")
 const Selection = preload("res://scripts/core/ScenarioSelectRules.gd")
@@ -122,8 +123,14 @@ func exercise(session, generated: Dictionary, count: int, computer_teams: int) -
 		var one = clone(session)
 		var id := Players.controller_id(config)
 		var before: Array = one.overworld.enemy_states.duplicate(true)
-		var result: Dictionary = Turns.run_enemy_town_economy_turn(one, id)
-		checks["economy_changes_only_selected_player"] = checks["economy_changes_only_selected_player"] and bool(result.get("ok", false))
+		# One computer player's day, written back the way EnemyTurnRules.run_enemy_turn does.
+		AiHeroes.clear_shared_surfaces()
+		var result: Dictionary = AiHeroes.run_faction_turn(one, config, Turns._find_state(one.overworld.enemy_states, id), false)
+		AiHeroes.clear_shared_surfaces()
+		var index := Turns._find_state_index(one.overworld.enemy_states, id)
+		checks["economy_changes_only_selected_player"] = checks["economy_changes_only_selected_player"] and index >= 0 and result.get("state") is Dictionary
+		if index >= 0 and result.get("state") is Dictionary:
+			one.overworld.enemy_states[index] = Turns._latest_enemy_state(one, id, result.state)
 		var changed := false
 		for previous in before:
 			var key := Players.controller_id(previous)
@@ -139,31 +146,33 @@ func exercise(session, generated: Dictionary, count: int, computer_teams: int) -
 	var second_result: Dictionary = Rules.end_turn(second)
 	checks["full_turn_deterministic"] = first_result == second_result and first.to_dict() == second.to_dict()
 	checks["full_turn_keeps_all_opponents"] = first.overworld.enemy_states.size() == count - 1
-	checks["task_boards_keep_player_ownership"] = true
-	var task_count := 0
-	for state in first.overworld.enemy_states:
-		for task in state.get("hero_task_state", {}).get("tasks", []):
-			task_count += 1
-			checks["task_boards_keep_player_ownership"] = checks["task_boards_keep_player_ownership"] and Players.task_controller_id(task) == Players.controller_id(state) and String(task.get("owner_faction_id", "")) == String(state.faction_id)
-	checks["task_boards_keep_player_ownership"] = checks["task_boards_keep_player_ownership"] and task_count > 0
-	checks["task_count"] = task_count
+	# Every computer player is granted a start hero on its first turn.
+	var heroes: Array = AiHeroes.active_hero_entries(first).duplicate(true)
+	checks["ai_heroes_keep_player_ownership"] = true
+	checks["spawn_ids_and_commanders_are_player_owned"] = true
+	var heroes_by_controller := {}
+	var hero_ids := {}
+	for hero in heroes:
+		var controller := Players.raid_controller_id(hero)
+		var owner_config := {}
+		for config in configs:
+			if Players.controller_id(config) == controller:
+				owner_config = config
+		var placement := String(hero.get("placement_id", ""))
+		var owned: bool = not owner_config.is_empty() and String(hero.get("spawned_by_faction_id", "")) == String(owner_config.get("faction_id", ""))
+		checks["ai_heroes_keep_player_ownership"] = checks["ai_heroes_keep_player_ownership"] and owned and placement.begins_with(controller + "_hero_")
+		checks["spawn_ids_and_commanders_are_player_owned"] = checks["spawn_ids_and_commanders_are_player_owned"] and owned and placement != "" and not hero_ids.has(placement)
+		hero_ids[placement] = true
+		heroes_by_controller[controller] = int(heroes_by_controller.get(controller, 0)) + 1
+	for config in configs:
+		checks["ai_heroes_keep_player_ownership"] = checks["ai_heroes_keep_player_ownership"] and int(heroes_by_controller.get(Players.controller_id(config), 0)) > 0
+	checks["spawn_ids_and_commanders_are_player_owned"] = checks["spawn_ids_and_commanders_are_player_owned"] and not heroes.is_empty()
+	checks["hero_count"] = heroes.size()
+	checks["spawn_evidence"] = heroes
 	var next_first: Dictionary = Rules.end_turn(first)
 	var next_second: Dictionary = Rules.end_turn(second)
 	checks["second_turn_keeps_deterministic_player_state"] = next_first == next_second and first.to_dict() == second.to_dict() and first.overworld.enemy_states.size() == count - 1
-	checks["spawn_ids_and_commanders_are_player_owned"] = true
-	var hosts = clone(session)
-	var host_ids := {}
-	for config in configs:
-		var id := Players.controller_id(config)
-		var state: Dictionary = Turns._find_state(hosts.overworld.enemy_states, id)
-		state["pressure"] = 999
-		var spawn: Dictionary = Turns._spawn_raid(hosts, config, state)
-		var placement := String(spawn.get("placement_id", ""))
-		var raid: Dictionary = Ai._find_encounter_by_placement(hosts, placement).get("encounter", {})
-		checks["spawn_ids_and_commanders_are_player_owned"] = checks["spawn_ids_and_commanders_are_player_owned"] and bool(spawn.get("ok", false)) and not raid.is_empty() and not host_ids.has(placement) and Players.raid_controller_id(raid) == id and String(raid.get("spawned_by_faction_id", "")) == String(config.get("faction_id", ""))
-		host_ids[placement] = true
-	checks["spawn_evidence"] = hosts.overworld.get("encounters", []).filter(func(record): return Players.raid_controller_id(record) != "")
-	checks["runtime_faction_fields_are_content_ids"] = valid_faction_fields(hosts.to_dict()) and valid_faction_fields(first.to_dict())
+	checks["runtime_faction_fields_are_content_ids"] = valid_faction_fields(first.to_dict())
 	return checks
 
 func valid_faction_fields(value) -> bool:
@@ -187,14 +196,17 @@ func exercise_ownership(source, case_id: String) -> Dictionary:
 	var id := Players.controller_id(config)
 	var friendly = clone(source)
 	friendly.overworld.players[0].team_id = String(config.team_id)
-	var descriptors: Array = Ai._target_candidate_descriptors(friendly, config, true)
-	checks["allied_human_towns_and_heroes_are_not_targets"] = true
-	for target in descriptors:
-		if target.get("target_kind", "") == "hero":
-			checks["allied_human_towns_and_heroes_are_not_targets"] = false
-		elif target.get("target_kind", "") == "town":
-			var target_town: Dictionary = Rules._find_town_by_placement(friendly, String(target.get("target_placement_id", ""))).get("town", {})
-			checks["allied_human_towns_and_heroes_are_not_targets"] = checks["allied_human_towns_and_heroes_are_not_targets"] and String(target_town.get("owner", "")) != "player"
+	var context: Dictionary = AiHeroes._new_context(friendly, config, Turns._find_state(friendly.overworld.enemy_states, id))
+	# Control: the same towns are attack candidates while the human is not allied.
+	var hostile_context: Dictionary = AiHeroes._new_context(session, config, Turns._find_state(session.overworld.enemy_states, id))
+	checks["allied_human_towns_and_heroes_are_not_targets"] = AiHeroes._hostile_heroes(friendly, id).is_empty()
+	var human_towns := 0
+	for index in range(friendly.overworld.towns.size()):
+		if String(friendly.overworld.towns[index].get("owner", "")) != "player":
+			continue
+		human_towns += 1
+		checks["allied_human_towns_and_heroes_are_not_targets"] = checks["allied_human_towns_and_heroes_are_not_targets"] and AiHeroes._town_candidate(friendly, context, {}, index, 1.0e9).is_empty() and not AiHeroes._town_candidate(session, hostile_context, {}, index, 1.0e9).is_empty()
+	checks["allied_human_towns_and_heroes_are_not_targets"] = checks["allied_human_towns_and_heroes_are_not_targets"] and human_towns > 0
 	var sibling := ""
 	for other in configs:
 		if other.faction_id == config.faction_id and Players.controller_id(other) != id:
@@ -213,9 +225,11 @@ func exercise_ownership(source, case_id: String) -> Dictionary:
 	var pos: Dictionary = session.overworld.hero_position
 	session.overworld.resource_nodes = [{"placement_id": "identity_mine", "site_id": "site_ridge_quarry", "x": int(pos.x), "y": int(pos.y), "collected": false}]
 	var state: Dictionary = Turns._find_state(session.overworld.enemy_states, id)
-	state.pressure = 999
-	var spawn: Dictionary = Turns._spawn_raid(session, config, state)
-	var raid: Dictionary = Ai._find_encounter_by_placement(session, String(spawn.get("placement_id", ""))).get("encounter", {}).duplicate(true)
+	var roster: Array = state.get("commander_roster", [])
+	var roster_commander: Dictionary = roster[0].get("commander_state", {}).duplicate(true) if not roster.is_empty() else {}
+	var hero: Dictionary = Ai.ensure_raid_army({"placement_id": id + "_identity_hero", "encounter_id": AiHeroes.AI_HERO_ENCOUNTER_ID, "spawned_by_faction_id": String(config.faction_id), "spawned_by_player_id": id, "x": int(pos.x), "y": int(pos.y), "enemy_commander_state": roster_commander}, session)
+	session.overworld.encounters.append(hero)
+	var raid: Dictionary = hero.duplicate(true)
 	raid.merge({"target_kind": "resource", "target_placement_id": "identity_mine", "target_reason_codes": ["site_defense", "defend_front"]}, true)
 	var claimed: Dictionary = Ai._secure_resource_target(session, raid, state, id, config)
 	var node: Dictionary = session.overworld.resource_nodes[0]
@@ -227,13 +241,24 @@ func exercise_ownership(source, case_id: String) -> Dictionary:
 	for other in configs:
 		var other_id := Players.controller_id(other)
 		checks["allied_sites_are_not_attack_targets"] = checks["allied_sites_are_not_attack_targets"] and Ai._resource_node_contestable_by_faction(node, site, other_id, session) == not Players.allied(session, id, other_id)
-	var defense_raid: Dictionary = claimed.get("encounter", raid).duplicate(true)
-	defense_raid.merge({"target_kind": "resource", "target_placement_id": "identity_mine", "target_reason_codes": ["site_defense", "defend_front"]}, true)
-	var defended: Dictionary = Ai._defend_resource_target(session, defense_raid, claimed.get("state", state), id)
+	# Old saves can still hold a commander stationed at a site. Station the
+	# claiming hero the way those saves did: its army and commander move onto
+	# the node and the host itself is resolved.
+	var stationed: Dictionary = claimed.get("encounter", raid)
+	var defender_army: Dictionary = stationed.get("enemy_army", {}).duplicate(true)
+	var defender_strength: int = Rules._army_strength_value(defender_army.get("stacks", []))
+	var stationed_commander: Dictionary = Ai.sync_commander_army_continuity(stationed.get("enemy_commander_state", {}), defender_army, "resource_defense:identity_mine")
 	node = session.overworld.resource_nodes[0]
+	var front: Dictionary = node.get("front", {}) if node.get("front", {}) is Dictionary else {}
+	front["state"] = "defend"
+	front.merge(Players.identity_fields(session, id), true)
+	front.merge({"last_defended_day": int(session.day), "defense_until_day": int(session.day) + 3, "source": "strategic_ai_resource_defense"}, true)
+	node.merge({"front": front, "ai_defended_by_faction_id": String(config.faction_id), "ai_defended_by_player_id": id, "ai_defended_day": int(session.day), "ai_defense_until_day": int(session.day) + 3, "ai_defense_rating": defender_strength, "ai_defense_reinforced_strength": defender_strength, "ai_defender_army": defender_army, "ai_defender_commander_state": stationed_commander, "ai_defender_roster_hero_id": String(stationed_commander.get("roster_hero_id", ""))}, true)
+	Ai.sync_commander_state_to_roster(session, id, stationed_commander, Ai.COMMANDER_STATUS_ACTIVE, "resource_defense:identity_mine", -1, Ai.COMMANDER_OUTCOME_SITE_DEFENDED)
+	session.overworld.resolved_encounters.append(String(hero.placement_id))
 	Rules.normalize_overworld_state(session)
 	node = session.overworld.resource_nodes[0]
-	checks["resource_defender_survives_normalization"] = not String(defended.get("event_message", "")).is_empty() and Players.defender_controller_id(node) == id and not Ai._active_resource_defender_entry(session, node, id).is_empty() and Ai._active_resource_defender_entry(session, node, sibling).is_empty()
+	checks["resource_defender_survives_normalization"] = Players.defender_controller_id(node) == id and not Ai._active_resource_defender_entry(session, node, id).is_empty() and Ai._active_resource_defender_entry(session, node, sibling).is_empty()
 	var commander_only: Dictionary = node.duplicate(true)
 	commander_only.erase("ai_defended_by_player_id")
 	checks["defender_commander_identity_precedes_faction"] = Players.defender_controller_id(commander_only) == id and Rules._resource_node_has_live_ai_defender(session, commander_only, site) and Players.defender_controller_id({"ai_defender_commander_state": null, "ai_defended_by_faction_id": "legacy"}) == "legacy"
@@ -304,7 +329,7 @@ CHECKS = {
     "battle_resume_completes_deterministically",
     "legacy_generated_save_keeps_pooled_history", "legacy_generated_resume_turn_matches",
     "runtime_faction_fields_are_content_ids",
-    "task_boards_keep_player_ownership", "second_turn_keeps_deterministic_player_state",
+    "ai_heroes_keep_player_ownership", "second_turn_keeps_deterministic_player_state",
     "allied_human_towns_and_heroes_are_not_targets",
     "defender_commander_identity_precedes_faction", "human_resource_retake_remembers_actual_player",
     "public_controller_label_uses_faction_and_player",
@@ -346,7 +371,7 @@ def main():
         script.write_text(PROBE.replace("__LEGACY_BRIDGE__", "res://" + str(legacy_script.relative_to(ROOT))))
         scene = Path(temp) / "probe.tscn"
         scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="Probe" type="Node"]\nscript = ExtResource("1")\n' % script.relative_to(ROOT))
-        env = dict(os.environ, XDG_DATA_HOME=str(out / "data"), HEROES_PLAYERS_OUTPUT=str(out), HEROES_PROFILE_LOG="0")
+        env = dict(os.environ, XDG_DATA_HOME=str(out / "data"), APPDATA=str(out / "data"), LOCALAPPDATA=str(out / "data"), HEROES_PLAYERS_OUTPUT=str(out), HEROES_PROFILE_LOG="0")
         cmd = [shutil.which("godot4") or "godot", "--headless", "--path", str(ROOT), "--accessibility", "disabled", "--audio-driver", "Dummy", "res://" + str(scene.relative_to(ROOT))]
         with (out / "runtime.log").open("w") as log:
             run = subprocess.Popen(cmd, env=env, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT)

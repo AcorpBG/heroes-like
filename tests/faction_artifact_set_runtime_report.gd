@@ -1,6 +1,7 @@
 extends Node
 
 const SessionDataScript = preload("res://scripts/core/SessionStateStore.gd")
+const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
 const REPORT_ID := "FACTION_ARTIFACT_SET_RUNTIME_REPORT"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const CASES := {
@@ -129,12 +130,14 @@ func _validate_case(set_id: String, spec: Dictionary) -> Dictionary:
 	_sync_player_hero(session, hero)
 	var placements: Dictionary = spec.get("placements", {})
 	var placement_rows: Array = []
-	var first_node := {}
+	# Computer players' heroes want the set's pieces like any artifact.
+	var first_node: Dictionary = _artifact_node_result(session, String(placements.keys()[0])).get("node", {}) if not placements.is_empty() else {}
+	var ai_value := _ai_hero_artifact_value(session, String(spec.get("faction_id", "")), first_node)
+	if ai_value <= 0.0:
+		return {"ok": false, "failure": "ai", "set_id": set_id, "ai_value": ai_value}
 	for placement_id in placements:
 		var node_result := _artifact_node_result(session, placement_id)
 		var node: Dictionary = node_result.get("node", {})
-		if first_node.is_empty():
-			first_node = node.duplicate(true)
 		if int(node_result.get("index", -1)) < 0 or String(node.get("artifact_id", "")) != String(placements[placement_id]):
 			return {"ok": false, "failure": "placement", "set_id": set_id, "placement_id": placement_id, "node": node}
 		var collect := OverworldRules._collect_artifact_node_result(session, node_result, false)
@@ -158,17 +161,6 @@ func _validate_case(set_id: String, spec: Dictionary) -> Dictionary:
 			or String(insignia.get("alt_text", "")).strip_edges() == "":
 		return {"ok": false, "failure": "insignia", "set_id": set_id, "insignia": insignia}
 
-	var ai := EnemyAdventureRules.artifact_target_valuation_breakdown(
-		session,
-		{"faction_id": spec.get("faction_id", "")},
-		first_node,
-		Vector2i(int(first_node.get("x", 0)), int(first_node.get("y", 0))),
-		String(spec.get("faction_id", "")),
-		0
-	)
-	if int(ai.get("final_priority", 0)) <= 0 or String(ai.get("set_id", "")) != set_id or not bool(ai.get("faction_affinity_match", false)) or "set_progress" not in ai.get("reason_codes", []):
-		return {"ok": false, "failure": "ai", "set_id": set_id, "ai": ai}
-
 	var payload: Dictionary = session.to_dict()
 	var restored = SessionDataScript.SessionData.new()
 	restored.from_dict(payload.duplicate(true))
@@ -187,7 +179,7 @@ func _validate_case(set_id: String, spec: Dictionary) -> Dictionary:
 			"bonuses": spec.get("bonuses", {}),
 			"full_set_complete": true,
 			"active_threshold_count": 2,
-			"ai_set_progress_positive": true,
+			"ai_hero_wants_artifact": true,
 			"save_round_trip_exact": true,
 			"insignia_region_x": int(region.get("x", -1)),
 		},
@@ -337,6 +329,20 @@ func _atlas_has_transparency() -> bool:
 			minimum_alpha = minf(minimum_alpha, alpha)
 			maximum_alpha = maxf(maximum_alpha, alpha)
 	return minimum_alpha <= 0.01 and maximum_alpha >= 0.95
+
+## The value a computer player's hero puts on picking up this artifact
+## (AiHeroRules._candidate, as its daily errand choice reads it). A guarded
+## artifact is worth its guard's fight.
+func _ai_hero_artifact_value(session, faction_id: String, node: Dictionary) -> float:
+	var guard: Dictionary = EnemyAdventureRules._artifact_guard_encounter_for_node(session, node)
+	if not guard.is_empty():
+		return AiHeroRulesScript._guarded_object_value(session, guard, {})
+	var nodes: Array = session.overworld.get("artifact_nodes", [])
+	for index in range(nodes.size()):
+		if nodes[index] is Dictionary and String(nodes[index].get("placement_id", "")) == String(node.get("placement_id", "")):
+			var candidate: Dictionary = AiHeroRulesScript._candidate(session, {"controller": faction_id, "state": {"treasury": {}}}, {}, {"kind": AiHeroRulesScript.STOP_ARTIFACT, "index": index}, 0.0, {})
+			return float(candidate.get("value", 0.0))
+	return 0.0
 
 func _fail(message: String, original_window_size: Vector2i) -> void:
 	get_window().size = original_window_size

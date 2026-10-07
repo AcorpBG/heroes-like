@@ -47,8 +47,8 @@ const NORMAL_MARKET_RESOURCE_KEYS := ["wood", "ore"]
 ## Every stockpile resource but gold trades at a town market: buy, sell or
 ## convert, rare resources included (owner decision, 2026-10-07).
 const MARKET_RESOURCE_KEYS := ["wood", "ore", "aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]
-## Gold value per unit in the economy's valuation (EnemyTurnRules._resource_value):
-## rare resources are worth twice wood or ore, so their market prices are too.
+## Gold value per unit at the market: rare resources are worth twice wood or
+## ore. Computer players trade through the same quotes.
 const MARKET_RESOURCE_VALUES := {"wood": 400, "ore": 400, "aetherglass": 800, "embergrain": 800, "peatwax": 800, "verdant_grafts": 800, "brass_scrip": 800, "memory_salt": 800}
 const MARKET_BASE_BUY_CAP := 6
 const MARKET_BASE_SELL_CAP := 8

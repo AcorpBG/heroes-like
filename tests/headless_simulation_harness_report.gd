@@ -403,8 +403,8 @@ func _assert_live_ai_town_governor_build_execution(live_town_governor_case: Dict
 	if int(summary.get("built_after_count", 0)) <= int(summary.get("built_before_count", 0)):
 		_fail("Live strategic AI town-governor build count did not increase: %s" % summary)
 		return false
-	if String(summary.get("recruit_unit_id", "")) == "" or int(summary.get("recruit_count_projected", 0)) <= 0:
-		_fail("Live strategic AI town-governor recruitment projection is missing: %s" % summary)
+	if String(summary.get("recruit_unit_id", "")) == "" or int(summary.get("recruit_count", 0)) <= 0:
+		_fail("Live strategic AI town-governor recruitment is missing: %s" % summary)
 		return false
 	if int(summary.get("town_build_event_count", 0)) < 1 or int(summary.get("town_recruit_event_count", 0)) < 1:
 		_fail("Live strategic AI town-governor execution is missing build/recruit events: %s" % summary)
@@ -412,7 +412,8 @@ func _assert_live_ai_town_governor_build_execution(live_town_governor_case: Dict
 	if int(summary.get("recruit_destination_event_count", 0)) < 1:
 		_fail("Live strategic AI town-governor execution is missing recruitment destination evidence: %s" % summary)
 		return false
-	if int(summary.get("garrison_count_after", 0)) <= int(summary.get("garrison_count_before", 0)) and int(summary.get("recruit_pool_after", 0)) == int(summary.get("recruit_pool_before", 0)):
+	# Recruits land in the garrison (or march out with a visiting hero).
+	if int(summary.get("garrison_creatures_after", 0)) == int(summary.get("garrison_creatures_before", 0)) and int(summary.get("recruit_pool_after", 0)) == int(summary.get("recruit_pool_before", 0)):
 		_fail("Live strategic AI town-governor execution did not mutate recruits or garrison: %s" % summary)
 		return false
 	var treasury_delta: Dictionary = evidence.get("treasury_delta", {}) if evidence.get("treasury_delta", {}) is Dictionary else {}
@@ -441,11 +442,8 @@ func _assert_live_ai_multi_scenario_pressure_coverage(multi_scenario_case: Dicti
 	if int(summary.get("scenario_count", 0)) < 5 or int(summary.get("faction_case_count", 0)) < 9:
 		_fail("Multi-scenario strategic AI pressure coverage is too narrow: %s" % summary)
 		return false
-	if int(summary.get("launched_faction_count", 0)) != int(summary.get("faction_case_count", -1)):
-		_fail("Multi-scenario strategic AI pressure coverage did not launch for every faction: %s" % summary)
-		return false
-	if int(summary.get("target_assignment_event_count", 0)) < int(summary.get("faction_case_count", 0)):
-		_fail("Multi-scenario strategic AI pressure coverage is missing target assignment events: %s" % summary)
+	if int(summary.get("fielded_faction_count", 0)) != int(summary.get("faction_case_count", -1)):
+		_fail("Multi-scenario strategic AI pressure coverage did not field a hero for every faction: %s" % summary)
 		return false
 	if String(summary.get("prismhearth_controller_town_id", "")) != "halo_spire" or String(summary.get("prismhearth_controlling_faction_id", "")) != "faction_mireclaw":
 		_fail("Prismhearth occupied Halo Spire did not remain a Mireclaw AI base: %s" % summary)
@@ -459,25 +457,17 @@ func _assert_live_ai_multi_scenario_pressure_coverage(multi_scenario_case: Dicti
 			_fail("Multi-scenario strategic AI pressure coverage missed scenario: %s" % required_id)
 			return false
 	var faction_cases: Array = evidence.get("faction_cases", []) if evidence.get("faction_cases", []) is Array else []
-	var saw_prismhearth := false
 	for row in faction_cases:
 		if not (row is Dictionary):
 			continue
-		if int(row.get("owned_base_count", 0)) <= 0 or not bool(row.get("launched", false)):
-			_fail("Multi-scenario strategic AI pressure coverage has an unlaunched faction row: %s" % row)
+		if int(row.get("owned_base_count", 0)) <= 0 or not bool(row.get("fielded", false)) or int(row.get("hero_count", 0)) <= 0:
+			_fail("Multi-scenario strategic AI pressure coverage has a faction without a working hero: %s" % row)
 			return false
-		if String(row.get("scenario_id", "")) == "prismhearth-watch" and String(row.get("faction_id", "")) == "faction_mireclaw":
-			var town: Dictionary = row.get("controller_town", {}) if row.get("controller_town", {}) is Dictionary else {}
-			if String(town.get("placement_id", "")) == "halo_spire" and String(town.get("controlling_faction_id", "")) == "faction_mireclaw":
-				saw_prismhearth = true
-	if not saw_prismhearth:
-		_fail("Multi-scenario strategic AI pressure coverage did not include Prismhearth Halo Spire controller evidence.")
-		return false
 	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
-	if "ai_target_assigned" not in event_types:
-		_fail("Multi-scenario strategic AI pressure coverage missing ai_target_assigned event evidence: %s" % event_types)
+	if "ai_hero_hired" not in event_types:
+		_fail("Multi-scenario strategic AI pressure coverage missing ai_hero_hired event evidence: %s" % event_types)
 		return false
-	if String(evidence.get("save_policy", "")) != "hero_task_state_live_persist_no_save_migration":
+	if String(evidence.get("save_policy", "")) != "ai_heroes_hired_from_owned_towns":
 		_fail("Multi-scenario strategic AI pressure coverage save policy changed: %s" % evidence)
 		return false
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
@@ -496,13 +486,7 @@ func _assert_live_ai_multi_scenario_objective_targeting(objective_targeting_case
 		_fail("Multi-scenario strategic AI objective targeting is too narrow: %s" % summary)
 		return false
 	if int(summary.get("objective_targeted_count", 0)) != int(summary.get("faction_case_count", -1)):
-		_fail("Multi-scenario strategic AI objective targeting missed an objective/priority front: %s" % summary)
-		return false
-	if int(summary.get("target_assignment_event_count", 0)) < int(summary.get("faction_case_count", 0)):
-		_fail("Multi-scenario strategic AI objective targeting is missing assignment events: %s" % summary)
-		return false
-	if int(summary.get("priority_reason_count", 0)) < int(summary.get("faction_case_count", 0)):
-		_fail("Multi-scenario strategic AI objective targeting lacks compact reason coverage: %s" % summary)
+		_fail("Multi-scenario strategic AI objective targeting missed the human's town: %s" % summary)
 		return false
 	var scenario_ids := []
 	for row in evidence.get("scenarios", []):
@@ -516,32 +500,10 @@ func _assert_live_ai_multi_scenario_objective_targeting(objective_targeting_case
 	for row in faction_cases:
 		if not (row is Dictionary):
 			continue
-		if not bool(row.get("objective_targeted", false)):
-			_fail("Multi-scenario strategic AI objective targeting has a non-objective row: %s" % row)
+		if not bool(row.get("objective_targeted", false)) or String(row.get("town_id", "")) == "":
+			_fail("Multi-scenario strategic AI objective targeting has a hero that left the human's town alone: %s" % row)
 			return false
-		if int(row.get("target_assignment_event_count", 0)) < 1:
-			_fail("Multi-scenario strategic AI objective targeting row missed assignment event: %s" % row)
-			return false
-		var target_id := String(row.get("target_placement_id", ""))
-		var accepted_ids: Array = row.get("priority_target_ids", []) if row.get("priority_target_ids", []) is Array else []
-		var reason_codes: Array = row.get("target_reason_codes", []) if row.get("target_reason_codes", []) is Array else []
-		if target_id == "":
-			_fail("Multi-scenario strategic AI objective targeting row has no target id: %s" % row)
-			return false
-		if not bool(row.get("priority_hit", false)) and not bool(row.get("siege_hit", false)) and not bool(row.get("objective_reason", false)):
-			_fail("Multi-scenario strategic AI objective targeting row lacks priority/siege/objective evidence: %s" % row)
-			return false
-		if reason_codes.is_empty():
-			_fail("Multi-scenario strategic AI objective targeting row lacks reason codes: %s" % row)
-			return false
-		if target_id not in accepted_ids and not bool(row.get("objective_reason", false)):
-			_fail("Multi-scenario strategic AI objective targeting selected outside accepted targets without objective reason: %s" % row)
-			return false
-	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
-	if "ai_target_assigned" not in event_types:
-		_fail("Multi-scenario strategic AI objective targeting missing ai_target_assigned event evidence: %s" % event_types)
-		return false
-	if String(evidence.get("save_policy", "")) != "hero_task_state_live_persist_no_save_migration":
+	if String(evidence.get("save_policy", "")) != "raid_hosts_from_old_saves_become_ai_heroes":
 		_fail("Multi-scenario strategic AI objective targeting save policy changed: %s" % evidence)
 		return false
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
@@ -556,33 +518,30 @@ func _assert_live_ai_regroup_retreat(live_regroup_case: Dictionary) -> bool:
 		return false
 	var summary: Dictionary = live_regroup_case.get("summary", {}) if live_regroup_case.get("summary", {}) is Dictionary else {}
 	var evidence: Dictionary = live_regroup_case.get("evidence", {}) if live_regroup_case.get("evidence", {}) is Dictionary else {}
-	if String(summary.get("target_id", "")) != "river_free_company" or String(summary.get("regroup_town_id", "")) != "duskfen_bastion":
-		_fail("Live strategic AI regroup/retreat used unexpected target/town ids: %s" % summary)
+	if String(summary.get("regroup_town_id", "")) != "duskfen_bastion":
+		_fail("Live strategic AI regroup/retreat did not gather troops at Duskfen: %s" % summary)
 		return false
-	if not bool(summary.get("regroup_needed_before", false)):
-		_fail("Live strategic AI regroup/retreat fixture was not understrength before the turn: %s" % summary)
+	if not bool(summary.get("reinforced_before_fighting", false)):
+		_fail("Live strategic AI regroup/retreat hero fought before gathering its troops: %s" % summary)
 		return false
 	if int(summary.get("after_strength", 0)) <= int(summary.get("before_strength", 0)):
-		_fail("Live strategic AI regroup/retreat did not increase raid strength: %s" % summary)
+		_fail("Live strategic AI regroup/retreat did not increase hero strength: %s" % summary)
 		return false
 	if int(summary.get("garrison_after", 9999)) >= int(summary.get("garrison_before", 0)):
 		_fail("Live strategic AI regroup/retreat did not pull from town garrison: %s" % summary)
 		return false
-	if String(summary.get("resource_controller_after", "")) == "faction_mireclaw":
-		_fail("Live strategic AI regroup/retreat captured the offensive target instead of retreating: %s" % summary)
-		return false
-	if int(summary.get("target_assignment_event_count", 0)) < 1 or int(summary.get("regroup_event_count", 0)) < 1:
-		_fail("Live strategic AI regroup/retreat is missing assignment/regroup events: %s" % summary)
+	if int(summary.get("regroup_event_count", 0)) < 1:
+		_fail("Live strategic AI regroup/retreat is missing the reinforcement event: %s" % summary)
 		return false
 	var raid: Dictionary = evidence.get("raid", {}) if evidence.get("raid", {}) is Dictionary else {}
-	if String(raid.get("last_regroup_town_id", "")) != "duskfen_bastion":
-		_fail("Live strategic AI regroup/retreat did not record Duskfen: %s" % raid)
+	if not bool(raid.get("ai_hero", false)):
+		_fail("Live strategic AI regroup/retreat host did not play as an enemy hero: %s" % raid)
 		return false
-	if String(evidence.get("save_policy", "")) != "hero_task_state_live_persist_no_save_migration":
+	if String(evidence.get("save_policy", "")) != "raid_hosts_from_old_saves_become_ai_heroes":
 		_fail("Live strategic AI regroup/retreat save policy changed: %s" % evidence)
 		return false
 	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
-	if "ai_target_assigned" not in event_types or "ai_raid_regrouped" not in event_types:
+	if "ai_hero_reinforced" not in event_types:
 		_fail("Live strategic AI regroup/retreat missing event type evidence: %s" % event_types)
 		return false
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
@@ -651,28 +610,20 @@ func _assert_live_ai_town_defense_retask(live_defense_case: Dictionary) -> bool:
 	if String(summary.get("town_id", "")) != "duskfen_bastion" or String(summary.get("previous_target_id", "")) != "river_free_company":
 		_fail("Live strategic AI town-defense retask used unexpected town/previous target ids: %s" % summary)
 		return false
-	if bool(summary.get("regroup_needed_before", true)):
-		_fail("Live strategic AI town-defense fixture should not need regroup: %s" % summary)
+	if not bool(summary.get("town_threatened", false)):
+		_fail("Live strategic AI town-defense fixture did not threaten the town: %s" % summary)
 		return false
-	if int(summary.get("target_assignment_event_count", 0)) < 1:
-		_fail("Live strategic AI town-defense retask is missing assignment event evidence: %s" % summary)
+	if not bool(summary.get("held_gate", false)) or String(summary.get("hero_goal_kind", "")) != "town_own" or String(summary.get("hero_goal_id", "")) != "duskfen_bastion":
+		_fail("Live strategic AI town-defense hero did not hold Duskfen's gate: %s" % summary)
 		return false
 	if String(summary.get("resource_controller_after", "")) == "faction_mireclaw":
 		_fail("Live strategic AI town-defense retask captured the old resource target: %s" % summary)
 		return false
 	var raid: Dictionary = evidence.get("raid", {}) if evidence.get("raid", {}) is Dictionary else {}
-	if String(raid.get("target_kind", "")) != "town" or String(raid.get("target_placement_id", "")) != "duskfen_bastion":
-		_fail("Live strategic AI town-defense retask raid did not defend Duskfen: %s" % raid)
+	if not bool(raid.get("ai_hero", false)):
+		_fail("Live strategic AI town-defense host did not play as an enemy hero: %s" % raid)
 		return false
-	var reason_codes: Array = evidence.get("target_reason_codes", []) if evidence.get("target_reason_codes", []) is Array else []
-	if "town_defense" not in reason_codes or "front_stabilization" not in reason_codes:
-		_fail("Live strategic AI town-defense retask missed reason code evidence: %s" % reason_codes)
-		return false
-	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
-	if "ai_target_assigned" not in event_types:
-		_fail("Live strategic AI town-defense retask missing assignment event type evidence: %s" % event_types)
-		return false
-	if String(evidence.get("save_policy", "")) != "hero_task_state_live_persist_no_save_migration":
+	if String(evidence.get("save_policy", "")) != "raid_hosts_from_old_saves_become_ai_heroes":
 		_fail("Live strategic AI town-defense retask save policy changed: %s" % evidence)
 		return false
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
@@ -691,10 +642,7 @@ func _assert_live_ai_multi_scenario_town_defense_retask(multi_defense_case: Dict
 		_fail("Multi-scenario strategic AI town-defense retask coverage is too narrow: %s" % summary)
 		return false
 	if int(summary.get("retasked_faction_count", 0)) != int(summary.get("faction_case_count", -1)):
-		_fail("Multi-scenario strategic AI town-defense retask did not retask every faction case: %s" % summary)
-		return false
-	if int(summary.get("target_assignment_event_count", 0)) < int(summary.get("faction_case_count", 0)):
-		_fail("Multi-scenario strategic AI town-defense retask lacks assignment events: %s" % summary)
+		_fail("Multi-scenario strategic AI town-defense retask did not hold every threatened town: %s" % summary)
 		return false
 	var scenario_ids := []
 	for row in evidence.get("scenarios", []):
@@ -708,36 +656,13 @@ func _assert_live_ai_multi_scenario_town_defense_retask(multi_defense_case: Dict
 	for row in faction_cases:
 		if not (row is Dictionary):
 			continue
-		if not bool(row.get("retasked", false)):
-			_fail("Multi-scenario strategic AI town-defense retask has an unretasked faction row: %s" % row)
+		if not bool(row.get("retasked", false)) or not bool(row.get("town_threatened", false)) or not bool(row.get("held_gate", false)):
+			_fail("Multi-scenario strategic AI town-defense row did not hold its threatened town: %s" % row)
 			return false
-		if bool(row.get("regroup_needed_before", true)):
-			_fail("Multi-scenario strategic AI town-defense retask fixture was understrength: %s" % row)
+		if String(row.get("hero_goal_kind", "")) != "town_own" or String(row.get("hero_goal_id", "")) != String(row.get("town_id", "-")):
+			_fail("Multi-scenario strategic AI town-defense row went somewhere else: %s" % row)
 			return false
-		var cleared_defense_lifecycle := String(row.get("target_kind", "")) == "" \
-				and String(row.get("target_placement_id", "")) == "" \
-				and int(row.get("target_assignment_event_count", 0)) > 0
-		if not cleared_defense_lifecycle and (String(row.get("target_kind", "")) != "town" or String(row.get("target_placement_id", "")) != String(row.get("town_id", ""))):
-			_fail("Multi-scenario strategic AI town-defense row targeted the wrong front: %s" % row)
-			return false
-		if not bool(row.get("previous_target_preserved", false)):
-			_fail("Multi-scenario strategic AI town-defense row lost previous target metadata: %s" % row)
-			return false
-		var reason_codes: Array = row.get("target_reason_codes", []) if row.get("target_reason_codes", []) is Array else []
-		if not cleared_defense_lifecycle and ("town_defense" not in reason_codes or "front_stabilization" not in reason_codes):
-			_fail("Multi-scenario strategic AI town-defense row missed reason codes: %s" % row)
-			return false
-		if int(row.get("target_assignment_event_count", 0)) < 1:
-			_fail("Multi-scenario strategic AI town-defense row missed assignment event: %s" % row)
-			return false
-		if String(row.get("resource_controller_after", "")) == String(row.get("faction_id", "")):
-			_fail("Multi-scenario strategic AI town-defense row captured the old target: %s" % row)
-			return false
-	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
-	if "ai_target_assigned" not in event_types:
-		_fail("Multi-scenario strategic AI town-defense retask missing ai_target_assigned event evidence: %s" % event_types)
-		return false
-	if String(evidence.get("save_policy", "")) != "hero_task_state_live_persist_no_save_migration":
+	if String(evidence.get("save_policy", "")) != "raid_hosts_from_old_saves_become_ai_heroes":
 		_fail("Multi-scenario strategic AI town-defense retask save policy changed: %s" % evidence)
 		return false
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
@@ -752,38 +677,24 @@ func _assert_live_ai_resource_site_defense(live_resource_defense_case: Dictionar
 		return false
 	var summary: Dictionary = live_resource_defense_case.get("summary", {}) if live_resource_defense_case.get("summary", {}) is Dictionary else {}
 	var evidence: Dictionary = live_resource_defense_case.get("evidence", {}) if live_resource_defense_case.get("evidence", {}) is Dictionary else {}
-	if String(summary.get("target_id", "")) != "river_free_company" or String(summary.get("previous_target_id", "")) != "river_signal_post":
-		_fail("Live strategic AI resource-site defense used unexpected target/previous ids: %s" % summary)
+	if String(summary.get("target_id", "")) != "river_free_company":
+		_fail("Live strategic AI resource-site defense used an unexpected site: %s" % summary)
 		return false
-	if bool(summary.get("regroup_needed_before", true)):
-		_fail("Live strategic AI resource-site defense fixture should not need regroup: %s" % summary)
+	if String(summary.get("controller_after", "")) != "faction_mireclaw" or int(summary.get("retaken_day", 0)) <= 0:
+		_fail("Live strategic AI resource-site defense did not take the lost site back: %s" % summary)
 		return false
-	if int(summary.get("target_assignment_event_count", 0)) < 1 or int(summary.get("site_defense_event_count", 0)) < 1:
-		_fail("Live strategic AI resource-site defense is missing assignment/defense event evidence: %s" % summary)
-		return false
-	if String(summary.get("defense_controller_after", "")) != "faction_mireclaw":
-		_fail("Live strategic AI resource-site defense did not keep the defended site under Mireclaw control: %s" % summary)
-		return false
-	if String(summary.get("previous_controller_after", "")) == "faction_mireclaw":
-		_fail("Live strategic AI resource-site defense captured the abandoned offensive target: %s" % summary)
+	if int(summary.get("site_seizure_event_count", 0)) < 1:
+		_fail("Live strategic AI resource-site defense is missing the seizure event: %s" % summary)
 		return false
 	var raid: Dictionary = evidence.get("raid", {}) if evidence.get("raid", {}) is Dictionary else {}
-	if String(raid.get("target_kind", "")) != "resource" or String(raid.get("target_placement_id", "")) != "river_free_company":
-		_fail("Live strategic AI resource-site defense raid did not defend Free Company: %s" % raid)
-		return false
-	var reason_codes: Array = evidence.get("target_reason_codes", []) if evidence.get("target_reason_codes", []) is Array else []
-	if "site_defense" not in reason_codes or "defend_front" not in reason_codes or "front_stabilization" not in reason_codes:
-		_fail("Live strategic AI resource-site defense missed reason code evidence: %s" % reason_codes)
-		return false
-	var defense_node: Dictionary = evidence.get("defense_node", {}) if evidence.get("defense_node", {}) is Dictionary else {}
-	if String(defense_node.get("ai_defended_by_faction_id", "")) != "faction_mireclaw" or int(defense_node.get("ai_defended_day", 0)) <= 0:
-		_fail("Live strategic AI resource-site defense missing durable defense node state: %s" % defense_node)
+	if not bool(raid.get("ai_hero", false)):
+		_fail("Live strategic AI resource-site defense host did not play as an enemy hero: %s" % raid)
 		return false
 	var event_types: Array = evidence.get("event_types", []) if evidence.get("event_types", []) is Array else []
-	if "ai_target_assigned" not in event_types or "ai_site_defended" not in event_types:
+	if "ai_site_seized" not in event_types:
 		_fail("Live strategic AI resource-site defense missing event type evidence: %s" % event_types)
 		return false
-	if String(evidence.get("save_policy", "")) != "hero_task_state_live_persist_no_save_migration":
+	if String(evidence.get("save_policy", "")) != "raid_hosts_from_old_saves_become_ai_heroes":
 		_fail("Live strategic AI resource-site defense save policy changed: %s" % evidence)
 		return false
 	var leak_tokens: Array = evidence.get("public_event_leak_tokens", []) if evidence.get("public_event_leak_tokens", []) is Array else []
@@ -801,8 +712,8 @@ func _assert_live_ai_town_retake_assault(live_retake_case: Dictionary) -> bool:
 	if String(summary.get("town_id", "")) != "duskfen_bastion":
 		_fail("Live strategic AI town-retake assault used unexpected town id: %s" % summary)
 		return false
-	if String(summary.get("selector_target_kind", "")) != "town" or String(summary.get("selector_target_id", "")) != "duskfen_bastion":
-		_fail("Live strategic AI town-retake selector did not prefer Duskfen: %s" % summary)
+	if String(summary.get("hero_goal_kind", "")) != "town_hostile" or String(summary.get("hero_goal_id", "")) != "duskfen_bastion":
+		_fail("Live strategic AI town-retake hero did not choose Duskfen: %s" % summary)
 		return false
 	if String(summary.get("battle_attacker_id", "")) != "headless_live_retake_duskfen_bastion":
 		_fail("Live strategic AI town-retake battle was not started by the enemy hero: %s" % summary)

@@ -275,19 +275,46 @@ func _stationed_resource_defender_session():
 	raid["goal_x"] = 2
 	raid["goal_y"] = 3
 	raid = EnemyAdventureRules.ensure_raid_army(raid, session)
-	var encounters: Array = session.overworld.get("encounters", [])
-	encounters.append(raid)
-	session.overworld["encounters"] = encounters
-	for _turn_index in range(8):
-		var advance_result := EnemyAdventureRules.advance_raids(session, config, ENEMY_FACTION_ID, state)
-		state = advance_result.get("state", state)
-		if String(_resource_by_placement(session, RESOURCE_PLACEMENT_ID).get("ai_defender_roster_hero_id", "")) == "hero_vaska":
-			break
+	_station_legacy_resource_defender(session, raid)
 	var defended := _resource_by_placement(session, RESOURCE_PLACEMENT_ID)
 	if String(defended.get("ai_defender_roster_hero_id", "")) != "hero_vaska":
 		_fail("Resource fixture did not station the production commander at the target site.", defended)
 		return null
 	return session
+
+## Saves from before computer players fielded heroes can hold a commander
+## stationed at a site it defends. The player's assault on that site must still
+## report its victory, so the fixture stations one the way those saves held it.
+func _station_legacy_resource_defender(session, raid: Dictionary) -> void:
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	for index in range(nodes.size()):
+		var node = nodes[index]
+		if not (node is Dictionary) or String(node.get("placement_id", "")) != RESOURCE_PLACEMENT_ID:
+			continue
+		var army: Dictionary = raid.get("enemy_army", {}).duplicate(true)
+		var strength := EnemyAdventureRules.raid_strength(raid)
+		var station_id := "resource_defense:%s" % RESOURCE_PLACEMENT_ID
+		var front: Dictionary = node.get("front", {}) if node.get("front", {}) is Dictionary else {}
+		front["state"] = "defend"
+		front["faction_id"] = ENEMY_FACTION_ID
+		front["last_defended_day"] = int(session.day)
+		front["defense_until_day"] = maxi(int(front.get("defense_until_day", 0)), int(session.day) + 3)
+		front["source"] = "strategic_ai_resource_defense"
+		node["front"] = front
+		node["ai_defended_by_faction_id"] = ENEMY_FACTION_ID
+		node["ai_defended_by_player_id"] = ""
+		node["ai_defended_day"] = int(session.day)
+		node["ai_defense_until_day"] = int(session.day) + 3
+		node["ai_defense_rating"] = strength
+		node["ai_defense_reinforced_strength"] = strength
+		node["ai_defender_army"] = army
+		var commander: Dictionary = EnemyAdventureRules.sync_commander_army_continuity(raid.get("enemy_commander_state", {}), army, station_id)
+		node["ai_defender_commander_state"] = commander
+		node["ai_defender_roster_hero_id"] = String(commander.get("roster_hero_id", ""))
+		nodes[index] = node
+		session.overworld["resource_nodes"] = nodes
+		EnemyAdventureRules.sync_commander_state_to_roster(session, ENEMY_FACTION_ID, commander, EnemyAdventureRules.COMMANDER_STATUS_ACTIVE, station_id, -1, EnemyAdventureRules.COMMANDER_OUTCOME_SITE_DEFENDED)
+		return
 
 func _defense_retask_raid(session) -> Dictionary:
 	var raid := {

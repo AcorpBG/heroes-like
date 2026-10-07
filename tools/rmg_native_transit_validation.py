@@ -22,10 +22,8 @@ const Levels = preload("res://scripts/core/OverworldLevelRules.gd")
 const Transit = preload("res://scripts/core/NativeTransitRules.gd")
 const Heroes = preload("res://scripts/core/HeroCommandRules.gd")
 const Ai = preload("res://scripts/core/EnemyAdventureRules.gd")
-const Turns = preload("res://scripts/core/EnemyTurnRules.gd")
 const AutoBattle = preload("res://scripts/core/BattleAutoResolveRules.gd")
 const Battles = preload("res://scripts/core/BattleRules.gd")
-const Players = preload("res://scripts/core/PlayerIdentityRules.gd")
 const Selection = preload("res://scripts/core/ScenarioSelectRules.gd")
 func _ready() -> void:
 	call_deferred("run")
@@ -162,12 +160,8 @@ func run() -> void:
 			broken.native_transit.target_placement_id = "missing_gate"
 			trip.checks["missing_peer_fails_validation"] = not Transit.validate(invalid.overworld.resource_nodes).is_empty()
 			trip.checks.merge(exercise_exit_safety(source, gate))
-			trip["ai"] = exercise_ai(source, gate, egress)
-			trip.checks["ai_uses_exact_native_destination"] = bool(trip.ai.get("exact_destination", false))
-			trip.checks["ai_transit_preserves_treasury_and_node"] = bool(trip.ai.get("unchanged_rewards", false))
-			trip.checks["ai_gate_path_is_reachable"] = bool(trip.ai.get("path_reachable", false))
-			trip.checks["full_ai_advance_uses_gate"] = bool(trip.ai.get("full_advance_used_gate", false))
-			trip.checks["ai_routes_to_real_target_through_gate"] = bool(trip.ai.get("strategic", {}).get("ok", false))
+			# Computer heroes do not cross levels yet (docs/ai-plays-by-player-rules.md,
+			# known gaps), so AI transit is not validated here.
 			report.trips.append(trip)
 		if OS.get_environment("HEROES_TRANSIT_RENDER") == "1":
 			report["visual"] = await exercise_visual(source, gates[1], out)
@@ -718,12 +712,9 @@ func exercise_portal_representative(source, gate: Dictionary, shape: String) -> 
 	var options := Transit.destinations(node)
 	var destination: Dictionary = options[0]
 	var expected_exit := Transit.point(destination.exit)
-	var evidence_gate := gate.duplicate(true)
-	evidence_gate.native_transit["exit"] = destination.exit.duplicate(true)
-	evidence_gate.native_transit["target_placement_id"] = destination.target_placement_id
-	var ai := exercise_ai(source, evidence_gate, approach, String(destination.target_placement_id))
-	var checks := {"ai_exact_selected_destination": bool(ai.get("exact_destination", false)), "ai_no_claim_rewards": bool(ai.get("unchanged_rewards", false)), "ai_real_approach_path": bool(ai.get("path_reachable", false)), "ai_full_advance_uses_gate": bool(ai.get("full_advance_used_gate", false))}
-	checks["ai_routes_to_real_target_through_gate"] = bool(ai.get("strategic", {}).get("ok", false))
+	# Computer heroes do not cross levels yet (docs/ai-plays-by-player-rules.md,
+	# known gaps), so AI transit is not validated here.
+	var checks := {}
 	var left: Dictionary = Rules.try_move(session, approach.x - entry.x, approach.y - entry.y) if approach.x >= 0 else {}
 	var movement_before := int(session.overworld.movement.current)
 	var arrived: Dictionary = Rules.try_move(session, entry.x - approach.x, entry.y - approach.y) if bool(left.get("ok", false)) else {}
@@ -743,7 +734,7 @@ func exercise_portal_representative(source, gate: Dictionary, shape: String) -> 
 		var combat_choice: Dictionary = Rules.perform_context_action(defended, "native_transit:" + String(destination.target_placement_id))
 		checks["paid_choice_enters_hostile_exit_without_second_charge"] = bool(combat_choice.get("ok", false)) and String(combat_choice.get("route", "")) == "battle" and String(defended.battle.get("resolved_key", "")) == "portal_choice_hostile_probe" and int(defended.overworld.movement.current) == paid_movement and Transit.point(defended.overworld.hero_position) == expected_exit
 	checks["real_approach_then_saved_choice_spends_one_total"] = bool(left.get("ok", false)) and bool(arrived.get("ok", false)) and resumed != null and Transit.point(resumed.overworld.hero_position) == expected_exit and int(resumed.overworld.movement.current) == movement_before - 1
-	return {"shape": shape, "placement_id": gate.placement_id, "checks": checks, "ai": ai, "left": left, "arrived": arrived, "chosen": chosen}
+	return {"shape": shape, "placement_id": gate.placement_id, "checks": checks, "left": left, "arrived": arrived, "chosen": chosen}
 
 func exercise_portal_visual(source, gates: Array, out: String) -> Dictionary:
 	var gate: Dictionary = gates[0]
@@ -843,108 +834,6 @@ func exercise_exit_safety(source, gate: Dictionary) -> Dictionary:
 			checks["exit_%s_blocks_without_spending" % blocker_kind] = not bool(result.get("ok", false)) and int(session.overworld.movement.current) == before and Transit.point(session.overworld.hero_position) == Transit.point(gate.native_transit.entry)
 	return checks
 
-func exercise_ai(source, gate: Dictionary, approach: Vector2i, target_exit_id: String = "") -> Dictionary:
-	var session = clone(source)
-	for encounter in session.overworld.encounters:
-		session.overworld.resolved_encounters.append(String(encounter.placement_id))
-	var config: Dictionary = Turns._enemy_faction_configs_for_session(session)[0]
-	var id := Players.controller_id(config)
-	var state: Dictionary = Turns._find_state(session.overworld.enemy_states, id)
-	state.pressure = 999
-	var spawn: Dictionary = Turns._spawn_raid(session, config, state)
-	var raid: Dictionary = Ai._find_encounter_by_placement(session, String(spawn.get("placement_id", ""))).get("encounter", {})
-	var entry := Transit.point(gate.native_transit.entry)
-	var exit := Transit.point(gate.native_transit.exit)
-	# Move a real spawned commander beside a real gate, not an invented route.
-	raid.merge({"x": approach.x, "y": approach.y, "level": entry.z}, true)
-	Rules.normalize_overworld_state(session)
-	var strategic := exercise_strategic_ai(session, gate, approach, raid, config, state)
-	var plan: Dictionary = Ai._path_plan_toward(session, approach, [Vector2i(entry.x, entry.y)], String(raid.placement_id), id)
-	raid.merge({"target_kind": "resource", "target_placement_id": String(gate.placement_id), "target_x": entry.x, "target_y": entry.y, "goal_x": entry.x, "goal_y": entry.y, "goal_distance": 1}, true)
-	if target_exit_id != "":
-		raid["native_transit_target_exit_id"] = target_exit_id
-	var marching = clone(session)
-	var marched: Dictionary = Ai.advance_raids(marching, config, id, state.duplicate(true), {"only_placement_ids": [String(raid.placement_id)]})
-	var marched_raid: Dictionary = Ai._find_encounter_by_placement(marching, String(raid.placement_id)).get("encounter", {})
-	raid.merge({"x": entry.x, "y": entry.y, "target_kind": "resource", "target_placement_id": String(gate.placement_id), "target_x": entry.x, "target_y": entry.y, "arrived": true}, true)
-	Rules.invalidate_spatial_lookup(session)
-	Rules._refresh_blocked_tile_index(session)
-	var before_treasury: Dictionary = state.get("treasury", {}).duplicate(true)
-	var before_node: Dictionary = Rules._find_resource_node_by_placement(session, String(gate.placement_id)).node.duplicate(true)
-	var result: Dictionary = Ai._resolve_arrived_target(session, raid, state, id, config)
-	var updated: Dictionary = result.get("encounter", {})
-	return {"exact_destination": result.has("native_transit") and Transit.point(updated) == exit, "unchanged_rewards": result.get("state", {}).get("treasury", {}) == before_treasury and Rules._find_resource_node_by_placement(session, String(gate.placement_id)).node == before_node, "path_reachable": int(plan.get("goal_distance", 9999)) == 1, "result": result, "plan": plan, "full_advance_used_gate": String(marched_raid.get("native_transit_last_exit_id", "")) == String(gate.native_transit.target_placement_id), "full_advance_raid": marched_raid, "full_advance": marched, "strategic": strategic}
-
-func exercise_strategic_ai(source, gate: Dictionary, approach: Vector2i, source_raid: Dictionary, config: Dictionary, source_state: Dictionary) -> Dictionary:
-	var session = clone(source)
-	var raid: Dictionary = Ai._find_encounter_by_placement(session, String(source_raid.placement_id)).encounter
-	var id := Players.controller_id(config)
-	var context: Dictionary = Ai._path_distance_surface_context(session, String(raid.placement_id), id, Levels.level_of(raid))
-	var exit := Transit.point(gate.native_transit.exit)
-	var chosen := {}
-	var chosen_kind := "resource"
-	var plan := {}
-	# Keep real package targets, coordinates and terrain. Select an actual
-	# contestable objective whose shortest route starts through this endpoint.
-	for node in session.overworld.resource_nodes:
-		if Transit.is_native(node) or Levels.level_of(node) != exit.z:
-			continue
-		var site: Dictionary = ContentService.get_resource_site(String(node.get("site_id", "")))
-		if not Ai._resource_node_contestable_by_faction(node, site, id, session):
-			continue
-		var goal: Vector2i = Ai._resource_interaction_tile(node)
-		var candidate: Dictionary = Ai._native_navigation_plan(context, approach, [goal], exit.z)
-		var link: Dictionary = candidate.get("native_transit", {})
-		if int(candidate.get("goal_distance", 9999)) > 1 and int(candidate.get("goal_distance", 9999)) < 9999 and String(link.get("source_placement_id", "")) == String(gate.placement_id) and String(link.get("target_placement_id", "")) == String(gate.native_transit.target_placement_id):
-			chosen = node
-			plan = candidate
-			break
-	if chosen.is_empty():
-		for node in session.overworld.artifact_nodes:
-			if bool(node.get("collected", false)) or Levels.level_of(node) != exit.z:
-				continue
-			var goal := Vector2i(int(node.x), int(node.y))
-			var candidate: Dictionary = Ai._native_navigation_plan(context, approach, [goal], exit.z)
-			var link: Dictionary = candidate.get("native_transit", {})
-			if int(candidate.get("goal_distance", 9999)) > 1 and String(link.get("source_placement_id", "")) == String(gate.placement_id) and String(link.get("target_placement_id", "")) == String(gate.native_transit.target_placement_id):
-				chosen = node
-				chosen_kind = "artifact"
-				plan = candidate
-				break
-	if chosen.is_empty():
-		# A redundant gate need not be the optimal route to an existing reward.
-		# Exercise a real, passable exploration goal beyond it instead; never
-		# relocate content or force the planner to select a worse route.
-		for delta in Ai.PATH_MOVEMENT_DELTAS:
-			var goal := Vector2i(exit.x + delta.x, exit.y + delta.y)
-			var candidate: Dictionary = Ai._native_navigation_plan(context, approach, [goal], exit.z)
-			var link: Dictionary = candidate.get("native_transit", {})
-			if int(candidate.get("goal_distance", 9999)) > 1 and String(link.get("source_placement_id", "")) == String(gate.placement_id) and String(link.get("target_placement_id", "")) == String(gate.native_transit.target_placement_id) and not Rules.tile_is_blocked(session, goal.x, goal.y, exit.z) and not Rules.tile_has_route_interaction(session, goal.x, goal.y, exit.z):
-				chosen = {"placement_id": "explore:%d:%d:%d" % [goal.x, goal.y, exit.z], "x": goal.x, "y": goal.y, "level": exit.z}
-				chosen_kind = "explore"
-				plan = candidate
-				break
-	if chosen.is_empty():
-		return {"ok": false, "error": "no_real_distal_object_or_exploration_target", "context_ok": bool(context.get("native_navigation", {}).get("ok", false)), "link_count": context.get("native_navigation", {}).get("links", []).size()}
-	var goal: Vector2i = Ai._resource_interaction_tile(chosen)
-	raid.merge({"target_kind": chosen_kind, "target_placement_id": String(chosen.placement_id), "target_x": goal.x, "target_y": goal.y, "goal_x": goal.x, "goal_y": goal.y, "goal_distance": int(plan.goal_distance)}, true)
-	var valid: bool = Ai._raid_target_valid(session, raid)
-	var refreshed: Dictionary = Ai._refresh_target(session, raid.duplicate(true), id)
-	var save_id := "strategic_" + String(gate.placement_id)
-	var saved: Dictionary = SaveService.save_runtime_file_session(session, save_id)
-	var resumed = SaveService.restore_session_from_summary(SaveService.inspect_save_file(save_id))
-	var resumed_raid: Dictionary = Ai._find_encounter_by_placement(resumed, String(raid.placement_id)).encounter if resumed != null else {}
-	var saved_target: bool = bool(saved.get("ok", false)) and String(resumed_raid.get("target_placement_id", "")) == String(chosen.placement_id) and Levels.level_of(resumed_raid) == Levels.level_of(raid)
-	var advanced: Dictionary = Ai.advance_raids(resumed, config, id, source_state.duplicate(true), {"only_placement_ids": [String(raid.placement_id)]}) if resumed != null else {}
-	var moved: Dictionary = Ai._find_encounter_by_placement(resumed, String(raid.placement_id)).get("encounter", {}) if resumed != null else {}
-	var used: bool = String(moved.get("native_transit_last_exit_id", "")) == String(gate.native_transit.target_placement_id)
-	var at_entry := raid.duplicate(true)
-	var entry := Transit.point(gate.native_transit.entry)
-	at_entry.merge({"x": entry.x, "y": entry.y, "level": entry.z, "native_transit_target_exit_id": String(gate.native_transit.target_placement_id)}, true)
-	var preserved: Dictionary = Ai._secure_native_passage_target(session, at_entry, source_state.duplicate(true), id, gate, true)
-	var retains: bool = preserved.has("native_transit") and String(preserved.get("encounter", {}).get("target_placement_id", "")) == String(chosen.placement_id)
-	return {"ok": valid and int(refreshed.get("goal_distance", 9999)) == int(plan.goal_distance) and saved_target and used and retains, "target_id": chosen.placement_id, "target_kind": chosen_kind, "target_level": Levels.level_of(chosen), "plan": plan, "valid": valid, "refreshed_distance": refreshed.get("goal_distance"), "save_keeps_target": saved_target, "advance_uses_selected_gate": used, "waypoint_retains_goal": retains, "moved_raid": moved, "advance": advanced}
-
 func exercise_visual(source, gate: Dictionary, out: String) -> Dictionary:
 	var session = clone(source)
 	for encounter in session.overworld.encounters:
@@ -984,11 +873,8 @@ TRIP_CHECKS = (
     "arrival_includes_travel_for_one_step", "zero_movement_cannot_return",
     "missing_peer_fails_validation",
     "production_save_preserves_transit_and_fog",
-    "ai_routes_to_real_target_through_gate",
     "exit_body_blocks_without_spending", "exit_hero_blocks_without_spending",
-    "hostile_exit_enters_battle_with_one_step", "ai_uses_exact_native_destination",
-    "ai_transit_preserves_treasury_and_node", "ai_gate_path_is_reachable",
-    "full_ai_advance_uses_gate",
+    "hostile_exit_enters_battle_with_one_step",
 )
 
 
@@ -1065,7 +951,7 @@ def portal_failures(report, expected_ends, representatives_only=False):
     if len(representatives) != len(expected_shapes) or {r.get("shape") for r in representatives} != expected_shapes:
         failed.append("missing_portal_shape_gameplay_evidence")
     for representative in representatives:
-        keys = ["ai_exact_selected_destination", "ai_no_claim_rewards", "ai_real_approach_path", "ai_full_advance_uses_gate", "ai_routes_to_real_target_through_gate", "production_save_keeps_position_contracts_and_fog", "real_approach_then_saved_choice_spends_one_total"]
+        keys = ["production_save_keeps_position_contracts_and_fog", "real_approach_then_saved_choice_spends_one_total"]
         if representative.get("shape") in multi_exit_shapes:
             keys.append("paid_choice_enters_hostile_exit_without_second_charge")
         for key in keys:
@@ -1116,7 +1002,7 @@ def main():
     parser.add_argument("--baseline-session", type=Path, help="Compare immutable source objects, terrain and native hash to a retained performance save")
     parser.add_argument("--render", action="store_true")
     parser.add_argument("--portal-case", choices=tuple(PORTAL_CASES))
-    parser.add_argument("--representatives-only", action="store_true", help="Only portal-shape AI/real-approach/production-save checks, explicitly not every endpoint trip")
+    parser.add_argument("--representatives-only", action="store_true", help="Only portal-shape real-approach/production-save checks, explicitly not every endpoint trip")
     parser.add_argument("--journey-only", action="store_true", help="Continuous post-guard walks from the actual starting town through turns, passages and production saves; not endpoint or battle coverage")
     parser.add_argument("--resolution", choices=("1280x720", "2048x1079"), default="1280x720")
     args = parser.parse_args()
@@ -1150,7 +1036,7 @@ def main():
         script.write_text(PROBE)
         scene = Path(temp) / "probe.tscn"
         scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="Probe" type="Node"]\nscript = ExtResource("1")\n' % script.relative_to(ROOT))
-        env = dict(os.environ, XDG_DATA_HOME=str(out / "data"), HEROES_TRANSIT_OUTPUT=str(out), HEROES_PROFILE_LOG="0", HEROES_TRANSIT_LEGACY=str(args.legacy_session.resolve()) if args.legacy_session else "", HEROES_TRANSIT_RENDER="1" if args.render else "0", HEROES_TRANSIT_RESOLUTION=args.resolution, HEROES_TRANSIT_PORTAL_CASE=args.portal_case or "", HEROES_TRANSIT_REPRESENTATIVES_ONLY="1" if args.representatives_only else "0")
+        env = dict(os.environ, XDG_DATA_HOME=str(out / "data"), APPDATA=str(out / "data"), LOCALAPPDATA=str(out / "data"), HEROES_TRANSIT_OUTPUT=str(out), HEROES_PROFILE_LOG="0", HEROES_TRANSIT_LEGACY=str(args.legacy_session.resolve()) if args.legacy_session else "", HEROES_TRANSIT_RENDER="1" if args.render else "0", HEROES_TRANSIT_RESOLUTION=args.resolution, HEROES_TRANSIT_PORTAL_CASE=args.portal_case or "", HEROES_TRANSIT_REPRESENTATIVES_ONLY="1" if args.representatives_only else "0")
         env["HEROES_TRANSIT_JOURNEY_ONLY"] = "1" if args.journey_only else "0"
         cmd = [shutil.which("godot4") or "godot", "--path", str(ROOT), "--accessibility", "disabled", "--audio-driver", "Dummy", "--resolution", args.resolution, "res://" + str(scene.relative_to(ROOT))]
         cmd = ["dbus-run-session", "--", "xvfb-run", "-a", "-s", "-screen 0 2200x1200x24"] + cmd if args.render else cmd + ["--headless"]

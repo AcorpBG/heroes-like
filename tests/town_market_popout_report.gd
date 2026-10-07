@@ -13,7 +13,6 @@ extends Node
 const TownShellScene = preload("res://scenes/town/TownShell.tscn")
 const Board = preload("res://scripts/core/TownConstructionBoard.gd")
 const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRules.gd")
-const EnemyTurnRulesScript = preload("res://scripts/core/EnemyTurnRules.gd")
 const CAPTURE_DIR := "res://.artifacts/town_market_popout"
 const TAVERN_ID := "building_wayfarers_hall"
 const MARKET_ID := "building_market_square"
@@ -127,9 +126,8 @@ func _check_rare_rules() -> Dictionary:
 	for town_value in ContentService.load_json("res://content/towns.json").get("items", []):
 		for building_id in [MARKET_ID, EXCHANGE_ID]:
 			markets.append(_market_fixture(building_id, String(town_value.get("id", ""))))
-	# The market values match the AI's resource valuation, so neither side sees a cheaper rare.
-	for resource_id in OverworldRules.MARKET_RESOURCE_KEYS:
-		_check(failures, int(OverworldRules.MARKET_RESOURCE_VALUES.get(resource_id, 0)) == EnemyTurnRulesScript._resource_value({resource_id: 1}), "%s market value %s differs from the AI valuation %d" % [resource_id, OverworldRules.MARKET_RESOURCE_VALUES.get(resource_id, 0), EnemyTurnRulesScript._resource_value({resource_id: 1})])
+	# Computer players trade through these same quotes (ai_player_rules_report),
+	# so neither side sees a cheaper rare.
 	var empty := {"week": 1, "buy": {}, "sell": {}}
 	var stock := {"gold": 100000}
 	for resource_id in OverworldRules.MARKET_RESOURCE_KEYS:

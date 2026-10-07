@@ -79,7 +79,7 @@ class NativeTransitValidationTests(unittest.TestCase):
         for source, target in (("a", "b"), ("b", "a")):
             gates.append({"placement_id": source, "h3m_type_id": 45, "native_transit": {"destinations": [{"target_placement_id": target}]}})
             ends.append({"placement_id": source, "checks": dict.fromkeys(("legacy_exact_group_restore", "not_authored_local_offset", "missing_destination_fails_validation"), True), "trips": [{"target_placement_id": target, "checks": dict.fromkeys(("context_action_reaches_exact_exit", "one_movement_no_claim_or_reward", "save_roundtrip_keeps_position_group_and_fog", "occupied_exit_rejected_without_cost"), True)}]})
-        representative = {"shape": "45:1", "checks": dict.fromkeys(("ai_exact_selected_destination", "ai_no_claim_rewards", "ai_real_approach_path", "ai_full_advance_uses_gate", "ai_routes_to_real_target_through_gate", "production_save_keeps_position_contracts_and_fog", "real_approach_then_saved_choice_spends_one_total"), True)}
+        representative = {"shape": "45:1", "checks": dict.fromkeys(("production_save_keeps_position_contracts_and_fog", "real_approach_then_saved_choice_spends_one_total"), True)}
         return {"checks": {"disk_package_roundtrip": True, "native_navigation_field_unit_edges": True}, "gates": gates, "portals": {"contract_errors": [], "legacy_errors": [], "ends": ends, "representatives": [representative]}}
 
     def test_portal_checks_and_full_source_destination_coverage_required(self):

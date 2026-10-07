@@ -1,5 +1,7 @@
 extends Node
 
+const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
+
 const REPORT_ID := "ARTIFACT_RARE_RESOURCE_INCOME_RUNTIME_REPORT"
 const SCENARIO_ID := "river-pass"
 const RARE_RESOURCE_IDS := [
@@ -75,28 +77,10 @@ func _run() -> void:
 		if not _assert_exact_rare_income("player end turn", incremental_delta, resource_id):
 			return
 
-		var treasury := {}
-		var captured_income := EnemyTurnRules._apply_empire_income(
-			artifact_session,
-			[],
-			treasury,
-			{"captured_artifact_ids": [artifact_id]}
-		)
-		if not _assert_exact_rare_income("strategic AI captured income", captured_income, resource_id):
-			return
-		if not _assert_exact_rare_income("strategic AI treasury", treasury, resource_id):
-			return
-
-		var valuation := EnemyAdventureRules.artifact_target_valuation_breakdown(
-			artifact_session,
-			{"faction_id": faction_id},
-			{"placement_id": "rare_income_probe", "artifact_id": artifact_id, "x": 0, "y": 0},
-			Vector2i.ZERO,
-			faction_id,
-			0
-		)
-		if valuation.is_empty() or "daily_rare_income" not in valuation.get("runtime_surfaces", []) or "economy" not in valuation.get("role_buckets", []) or not bool(valuation.get("faction_affinity_match", false)):
-			_fail("Strategic AI valuation omitted faction rare income for %s: %s" % [artifact_id, valuation])
+		# A computer player collects the same daily income from an artifact its
+		# hero carries.
+		var captured_income := _ai_hero_artifact_income(artifact_session, faction_id, hero.get("artifacts", {}))
+		if not _assert_exact_rare_income("strategic AI hero income", captured_income, resource_id):
 			return
 
 		case_reports.append(
@@ -105,7 +89,6 @@ func _run() -> void:
 				"resource_id": resource_id,
 				"player_daily_delta": int(incremental_delta.get(resource_id, 0)),
 				"strategic_ai_daily_delta": int(captured_income.get(resource_id, 0)),
-				"runtime_surfaces": valuation.get("runtime_surfaces", []),
 				"effect_summary": effect_summary,
 			}
 		)
@@ -126,6 +109,27 @@ func _run() -> void:
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+## What an AI hero carrying these artifacts adds to its player's daily income
+## (AiHeroRules.faction_daily_income), net of the player's other income.
+func _ai_hero_artifact_income(session, faction_id: String, artifacts: Dictionary) -> Dictionary:
+	var without: Dictionary = AiHeroRulesScript.faction_daily_income(session, faction_id)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append({
+		"placement_id": "rare_income_ai_hero",
+		"encounter_id": AiHeroRulesScript.AI_HERO_ENCOUNTER_ID,
+		"spawned_by_faction_id": faction_id,
+		"x": 0,
+		"y": 0,
+		"enemy_army": {"stacks": []},
+		"enemy_commander_state": {"name": "Rare Income Fixture Hero", "level": 1, "artifacts": artifacts.duplicate(true), "specialties": []},
+		AiHeroRulesScript.AI_HERO_KEY: {"hero_id": "", "movement": {"current": 0, "max": 0}, "goal": {}},
+	})
+	session.overworld["encounters"] = encounters
+	var with_hero: Dictionary = AiHeroRulesScript.faction_daily_income(session, faction_id)
+	encounters.pop_back()
+	session.overworld["encounters"] = encounters
+	return _subtract_resources(with_hero, without)
 
 func _fixture_hero(artifact_id: String) -> Dictionary:
 	var equipped := {}

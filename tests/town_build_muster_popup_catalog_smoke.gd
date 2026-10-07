@@ -1,7 +1,6 @@
 extends Node
 
 const TownShellScene = preload("res://scenes/town/TownShell.tscn")
-const EnemyTurnRulesScript = preload("res://scripts/core/EnemyTurnRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const CAPTURE_DIR := "res://.artifacts/town_build_muster_popup_catalog"
@@ -207,15 +206,9 @@ func _run_auxiliary_case(case: Dictionary) -> Dictionary:
 	var art: Dictionary = ContentService.get_building_art(building_id)
 	var icon_path := TownRules.building_icon_path(building_id)
 	var icon: Texture2D = load(icon_path)
-	var ai_candidates: Array = EnemyTurnRulesScript._enemy_town_build_candidates(
-		session,
-		town,
-		0,
-		resources,
-		{"faction_id": String(case.get("faction_id", ""))},
-		String(case.get("faction_id", ""))
-	)
-	var ai_candidate := _row_by_key(ai_candidates, "building_id", building_id)
+	# Computer players weigh the same build options and status checks
+	# (AiHeroRules._build_choice).
+	var ai_build_option: bool = building_id in OverworldRules.get_town_build_options(town, int(session.day)) 		and bool(OverworldRules.get_town_build_status(town, building_id).get("buildable", false))
 	var shell = TownShellScene.instantiate()
 	add_child(shell)
 	await get_tree().process_frame
@@ -259,8 +252,7 @@ func _run_auxiliary_case(case: Dictionary) -> Dictionary:
 		building_data_exact
 		and not build_action.is_empty()
 		and not bool(build_action.get("disabled", true))
-		and not ai_candidate.is_empty()
-		and float(ai_candidate.get("final_score", 0.0)) > 0.0
+		and ai_build_option
 		and art_exact
 		and bool(build_result.get("ok", false))
 		and building_id in built_town.get("built_buildings", [])
@@ -282,7 +274,7 @@ func _run_auxiliary_case(case: Dictionary) -> Dictionary:
 		"unit_id": unit_id,
 		"building_data_exact": building_data_exact,
 		"build_action_ready": not build_action.is_empty() and not bool(build_action.get("disabled", true)),
-		"ai_score": float(ai_candidate.get("final_score", 0.0)),
+		"ai_build_option": ai_build_option,
 		"art_exact": art_exact,
 		"build_ok": bool(build_result.get("ok", false)),
 		"build_message": build_result.get("message", ""),

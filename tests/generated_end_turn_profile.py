@@ -121,7 +121,7 @@ def main():
                 owner_path = 'scripts/core/EnemyAdventureRules.gd'
                 source = (ROOT/owner_path).read_text()
                 sources[owner_path] = hashlib.sha256(source.encode()).hexdigest()
-                from ai_path_context_read_regression import instrument
+                from gdscript_read_instrumentation import instrument
                 source = 'class_name EnemyAdventureRules\n'+instrument(source)
                 overworld_path = 'scripts/core/OverworldRules.gd'
                 overworld = (ROOT/overworld_path).read_text()

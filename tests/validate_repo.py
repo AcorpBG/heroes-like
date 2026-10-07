@@ -137,6 +137,12 @@ SPELL_RULES_PATH = ROOT / "scripts" / "core" / "SpellRules.gd"
 ANIMATION_CUE_CATALOG_RULES_PATH = ROOT / "scripts" / "core" / "AnimationCueCatalog.gd"
 ENEMY_TURN_RULES_PATH = ROOT / "scripts" / "core" / "EnemyTurnRules.gd"
 ENEMY_ADVENTURE_RULES_PATH = ROOT / "scripts" / "core" / "EnemyAdventureRules.gd"
+AI_HERO_RULES_PATH = ROOT / "scripts" / "core" / "AiHeroRules.gd"
+ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-ai-town-development-runway-report.md"
+ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-ai-town-start-economy-report.md"
+AI_PLAYER_RULES_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_player_rules_report.gd"
+AI_PLAYER_RULES_REPORT_SCENE_PATH = ROOT / "tests" / "ai_player_rules_report.tscn"
+AI_KNOWN_WORLD_MEMORY_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_known_world_memory_report.gd"
 MAIN_MENU_SCENE_PATH = ROOT / "scenes" / "menus" / "MainMenu.tscn"
 CAMPAIGN_ARC_EMBLEM_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "campaign_arc_emblem_runtime_report.gd"
 CAMPAIGN_ARC_EMBLEM_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "campaign_arc_emblem_runtime_report.tscn"
@@ -645,15 +651,9 @@ ACTIVE_SCENARIO_TOWN_ECONOMY_SOURCE_ROUTE_REPORT_DOC_PATH = ROOT / "docs" / "eco
 ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_town_start_economy_report.gd"
 ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_town_start_economy_report.tscn"
 ACTIVE_SCENARIO_TOWN_START_ECONOMY_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-town-start-economy-report.md"
-ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_ai_town_start_economy_report.gd"
-ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_ai_town_start_economy_report.tscn"
-ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-ai-town-start-economy-report.md"
 ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_town_development_runway_report.gd"
 ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_town_development_runway_report.tscn"
 ACTIVE_SCENARIO_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-development-runway-report.md"
-ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_ai_town_development_runway_report.gd"
-ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCENE_PATH = ROOT / "tests" / "active_scenario_ai_town_development_runway_report.tscn"
-ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-ai-town-development-runway-report.md"
 ACTIVE_SCENARIO_RESOURCE_AVAILABILITY_MATRIX_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_scenario_resource_availability_matrix_report.py"
 ACTIVE_SCENARIO_RESOURCE_AVAILABILITY_MATRIX_REPORT_DOC_PATH = ROOT / "docs" / "economy-active-scenario-resource-availability-matrix-report.md"
 TOWN_UNIT_TIER_RUNTIME_SURFACE_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_unit_tier_runtime_surface_report.gd"
@@ -709,66 +709,26 @@ BATTLE_CONTROLLER_BOARD_NAVIGATION_SMOKE_SCRIPT_PATH = ROOT / "tests" / "battle_
 AI_HERO_TASK_NORMALIZER_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_state_normalizer_preservation_report.gd"
 AI_HERO_TASK_NORMALIZER_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_state_normalizer_preservation_report.tscn"
 AI_HERO_TASK_NORMALIZER_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-report.md"
-AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_live_adoption_gate_report.gd"
-AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_live_adoption_gate_report.tscn"
-AI_HERO_TASK_LIVE_ADOPTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-live-hero-task-adoption-gate-report.md"
 AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_live_turn_execution_report.gd"
 AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_live_turn_execution_report.tscn"
 AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-live-turn-execution-report.md"
-AI_HERO_TASK_LIVE_TARGET_SELECTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_live_target_selection_report.gd"
-AI_HERO_TASK_LIFECYCLE_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_lifecycle_reconciliation_report.gd"
-AI_HERO_TASK_LIFECYCLE_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_lifecycle_reconciliation_report.tscn"
-AI_HERO_TASK_LIFECYCLE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-task-lifecycle-reconciliation-report.md"
-AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_actor_lifecycle_report.gd"
-AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_actor_lifecycle_report.tscn"
-AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-task-actor-lifecycle-report.md"
-AI_HERO_TASK_RESUMPTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_resumption_report.gd"
-AI_HERO_TASK_RESUMPTION_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_resumption_report.tscn"
-AI_HERO_TASK_RESUMPTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-task-resumption-report.md"
-AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_spawn_commander_selection_report.gd"
-AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_spawn_commander_selection_report.tscn"
-AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-spawn-commander-selection-report.md"
-AI_HERO_TASK_RETASK_CANCELLATION_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_retask_cancellation_report.gd"
-AI_HERO_TASK_RETASK_CANCELLATION_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_retask_cancellation_report.tscn"
-AI_HERO_TASK_RETASK_CANCELLATION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-task-retask-cancellation-report.md"
-AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_encounter_objective_report.gd"
-AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_encounter_objective_report.tscn"
 AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-encounter-objective-task-board-report.md"
 AI_ENCOUNTER_ARRIVAL_RISK_GATING_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-encounter-arrival-risk-gating-report.md"
-AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_artifact_objective_report.gd"
-AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_artifact_objective_report.tscn"
 AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-artifact-task-board-report.md"
 AI_GUARDED_OBJECT_CLAIM_ROUTING_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-guarded-object-claim-routing-report.md"
 AI_ARTIFACT_EQUIPMENT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-artifact-equipment-report.md"
 AI_ADVENTURE_OBJECTIVE_PROGRESSION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-adventure-objective-progression-report.md"
-AI_HERO_TASK_HERO_HUNT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_hero_hunt_report.gd"
-AI_HERO_TASK_HERO_HUNT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_hero_hunt_report.tscn"
 AI_HERO_TASK_HERO_HUNT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-hunt-task-board-report.md"
 AI_HERO_INTERCEPT_RISK_GATING_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-intercept-risk-gating-report.md"
-AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.gd"
-AI_RAID_REGROUP_RETREAT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_raid_regroup_retreat_report.tscn"
-AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-raid-regroup-retreat-report.md"
 AI_MULTI_SCENARIO_RECRUITMENT_DELIVERY_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_multi_scenario_recruitment_delivery_report.gd"
 AI_MULTI_SCENARIO_RECRUITMENT_DELIVERY_REPORT_SCENE_PATH = ROOT / "tests" / "ai_multi_scenario_recruitment_delivery_report.tscn"
 AI_MULTI_SCENARIO_RECRUITMENT_DELIVERY_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-multi-scenario-recruitment-delivery-report.md"
-AI_LOCAL_RECRUITMENT_SUPPORT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-local-recruitment-support-report.md"
-AI_ADVENTURE_SPELL_EXECUTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "magic_ai_valuation_casting_hooks_report.gd"
-AI_ADVENTURE_SPELL_EXECUTION_REPORT_SCENE_PATH = ROOT / "tests" / "magic_ai_valuation_casting_hooks_report.tscn"
-AI_ADVENTURE_SPELL_EXECUTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-adventure-spell-execution-report.md"
-AI_SCOUTING_SPELL_EXECUTION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-scouting-spell-execution-report.md"
-AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_town_defense_retask_report.gd"
-AI_TOWN_DEFENSE_RETASK_REPORT_SCENE_PATH = ROOT / "tests" / "ai_town_defense_retask_report.tscn"
-AI_TOWN_DEFENSE_RETASK_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-defense-retask-report.md"
 AI_TOWN_DEFENSE_ARRIVAL_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-defense-arrival-report.md"
 AI_TOWN_DEFENDER_LIFECYCLE_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-defender-lifecycle-report.md"
-AI_TOWN_RETAKE_ASSAULT_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_town_retake_assault_report.gd"
-AI_TOWN_RETAKE_ASSAULT_REPORT_SCENE_PATH = ROOT / "tests" / "ai_town_retake_assault_report.tscn"
 AI_TOWN_RETAKE_ASSAULT_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-town-retake-assault-report.md"
 AI_RAID_ASSAULT_GROUPING_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_raid_assault_grouping_report.gd"
 AI_RAID_ASSAULT_GROUPING_REPORT_SCENE_PATH = ROOT / "tests" / "ai_raid_assault_grouping_report.tscn"
 AI_RAID_ASSAULT_GROUPING_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-raid-assault-grouping-report.md"
-AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCRIPT_PATH = ROOT / "tests" / "ai_raid_movement_path_plan_reuse_regression.gd"
-AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCENE_PATH = ROOT / "tests" / "ai_raid_movement_path_plan_reuse_regression.tscn"
 AI_COMMANDER_ASSAULT_CONSOLIDATION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-commander-assault-consolidation-report.md"
 NATIVE_RMG_HOMM3_GATE_REPORT_SCRIPT_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.gd"
 NATIVE_RMG_HOMM3_GATE_REPORT_SCENE_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.tscn"
@@ -3853,22 +3813,14 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
         "_run_generated_neutral_town_capture_case",
         "MIN_GENERATED_PACKAGE_NEUTRAL_CAPTURE_COMPLETION_DAY",
         "MIN_GENERATED_PACKAGE_PLAYER_COMPLETION_DAY",
-        "MIN_GENERATED_PACKAGE_ENEMY_COMPLETION_DAY",
         "pacing_floor_ok",
         "source_adoption_policy",
         "minimal_required_resource_coverage",
         "secured_source_count",
-        "generated_enemy_town_development_runway",
-        "generated_package_enemy_town_development_runway_v1",
         "pacing_floor_case_count",
         "source_adoption_policy_case_count",
         "secured_source_count_total",
-        "_assert_generated_enemy_town_development_runway",
-        "_run_generated_enemy_town_case",
-        "_secure_enemy_development_sources",
         "same_day_guard_case_count",
-        "rare_treasury_tracked_case_count",
-        "selected_recruitment_case_count",
         "missing_player_resource_sources",
         "unique_faction_count",
         "unique_town_template_count",
@@ -26439,12 +26391,8 @@ def validate_difficulty_integration(errors: list[str]) -> None:
         ensure(required_token in hero_command_text, errors, f"HeroCommandRules.gd is missing required difficulty token: {required_token}")
 
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
-    for required_token in ("DifficultyRulesScript.adjust_enemy_pressure_gain", "DifficultyRulesScript.adjust_raid_threshold"):
+    for required_token in ("DifficultyRulesScript.adjust_raid_threshold",):
         ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing required difficulty token: {required_token}")
-
-    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
-    for required_token in ("DifficultyRulesScript.normalize_session", "DifficultyRulesScript.scale_raid_pillage"):
-        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing required difficulty token: {required_token}")
 
     battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -26559,9 +26507,6 @@ def validate_hero_progression(errors: list[str]) -> None:
 
     battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
     ensure("HeroProgressionRulesScript.aggregate_bonuses" in battle_text, errors, "BattleRules.gd must merge specialty bonuses into battle hero payloads")
-
-    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
-    ensure("HeroProgressionRulesScript.scale_raid_pillage" in enemy_adventure_text, errors, "EnemyAdventureRules.gd must apply raid-resistance specialties")
 
     campaign_text = CAMPAIGN_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -39322,14 +39267,12 @@ def validate_overworld_commitment_summary_fallback_elision(errors: list[str]) ->
 
 
 def validate_enemy_empire_management(errors: list[str]) -> None:
-    recruitment_prep_report_path = ROOT / "tests" / "ai_planned_task_recruitment_prep_report.gd"
     required_paths = (
         SESSION_STATE_PATH,
         OVERWORLD_RULES_PATH,
         ENEMY_TURN_RULES_PATH,
         ENEMY_ADVENTURE_RULES_PATH,
         BATTLE_RULES_PATH,
-        recruitment_prep_report_path,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing enemy empire-management file: {path.relative_to(ROOT)}")
@@ -39349,85 +39292,20 @@ def validate_enemy_empire_management(errors: list[str]) -> None:
         '"posture": "probing"',
         '"captured_artifact_ids": []',
         "EnemyAdventureRulesScript.normalize_raid_armies",
-        "OverworldRulesScript.town_income",
         "OverworldRulesScript.town_weekly_growth",
-        "OverworldRulesScript.town_battle_readiness",
-        "OverworldRulesScript.town_pressure_output",
-        "OverworldRulesScript.can_afford_cost_with_town_market",
-        "OverworldRulesScript.apply_market_cost_coverage",
-        "OverworldRulesScript.get_town_build_options",
-        "func _run_empire_cycle",
-        "func _build_in_enemy_towns",
-        "func _reinforce_enemy_forces",
-        "func _apply_reinforcement_to_raid",
-        "func _desired_town_strength",
-        "func _empire_town_pressure_bonus",
         "func _public_posture_label",
-        "func _captured_artifact_income",
-        "func _captured_artifact_pressure_bonus",
     ):
         ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing required empire-management token: {required_token}")
-    ensure(
-        "OverworldRulesScript.town_reinforcement_quality" in enemy_turn_text
-        or "OverworldRulesScript.town_development_metrics" in enemy_turn_text,
-        errors,
-        "EnemyTurnRules.gd must consume shared town reinforcement/development metrics",
-    )
+    ai_hero_text = AI_HERO_RULES_PATH.read_text(encoding="utf-8") if AI_HERO_RULES_PATH.exists() else ""
     for required_token in (
-        "var development_metrics: Dictionary = OverworldRulesScript.town_development_metrics(town, session)",
-        "OverworldRulesScript.town_front_state(session, town, development_metrics)",
-        "OverworldRulesScript.town_front_state(session, town, current_metrics)",
-        'town_build_profile_count("town_front_development_metrics_reused")',
-        '"planned_recruitment_profile_owner": "town_build"',
-        "_planned_recruitment_profile_count",
-        'context["normalized_commander_roster"] = normalized_commander_roster',
-        '"destination_commander_roster_loaded"',
-        '"destination_commander_roster_shared_between_scorers"',
-        '"destination_commander_roster_invalidated"',
-        "destination_type: String = \"\"",
-        'destination_type in ["rebuild", "planned", "emergency"]',
-        '"destination_best_raid_retained"',
-        '"destination_best_raid_invalidated"',
-        'String(destination.get("type", ""))',
-        "func _town_build_raid_capacity_available",
-        'build_phase_context.has("raid_capacity_available")',
-        '"raid_capacity_loaded"',
-        '"raid_capacity_reused"',
+        "overworld_rules.town_income(town, session)",
+        "overworld_rules.get_town_build_options(town, int(session.day))",
+        "func _govern_towns",
+        "func _build_in_towns",
+        "func _recruit_in_towns",
+        "func faction_daily_income",
     ):
-        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing strategic AI context reuse token: {required_token}")
-    if recruitment_prep_report_path.exists():
-        recruitment_prep_report_text = recruitment_prep_report_path.read_text(encoding="utf-8")
-        for required_token in (
-            "recruit_destination_commander_roster_context_reuse",
-            "recruit_destination_commander_roster_invalidation_and_retention",
-            '"rebuild_scoring_exact": true',
-            '"planned_scoring_exact": true',
-            '"full_destination_exact": true',
-            '"scoring_authority_exact": true',
-            '"fresh_current_rescore_exact": true',
-            '"bounded_roster_retained": true',
-            "town_build_raid_capacity_context_reuse",
-            '"below_capacity_fresh_vs_shared_candidates_exact": true',
-            '"at_capacity_fresh_vs_shared_candidates_exact": true',
-            '"candidate_order_and_selection_exact": true',
-            '"load_once_reuse_once_across_two_towns": true',
-            '"fresh_after_active_host_add_remove": true',
-            '"fresh_after_capital_max_slot_mutation": true',
-            '"single_town_direct_authority_exact": true',
-            '"commander_transfer_retention_cases"',
-            '"destination_best_raid_retained"',
-            '"destination_best_raid_invalidated"',
-            '"two_town_best_raid_values_distinct": true',
-            '"candidate_probe_fields_evicted": true',
-            '"destination_arrays_scores_reasons_order_exact": true',
-            '"garrison_treasury_town_market_events_authority_exact": true',
-            'EnemyTurnRules._invalidate_recruit_destination_field_cache(destination_context, "planned")',
-            'EnemyTurnRules._invalidate_recruit_destination_field_cache(destination_context, "rebuild")',
-            'EnemyTurnRules._invalidate_recruit_destination_field_cache(destination_context, "raid")',
-            "for retention_case in retention_cases",
-            'retained_context.get("best_raid", {}) != fresh_raid_after',
-        ):
-            ensure(required_token in recruitment_prep_report_text, errors, f"AI planned-task recruitment prep report is missing commander-roster context token: {required_token}")
+        ensure(required_token in ai_hero_text, errors, f"AiHeroRules.gd is missing required empire-management token: {required_token}")
     for required_token in (
         "precomputed_development_metrics: Dictionary = {}",
         'precomputed_development_metrics.get("logistics", {})',
@@ -39441,11 +39319,7 @@ def validate_enemy_empire_management(errors: list[str]) -> None:
     for required_token in (
         "func normalize_raid_armies",
         "func ensure_raid_army",
-        "func visible_raid_count",
         "func raid_strength",
-        "func desired_raid_strength",
-        "func raid_pillage_weight",
-        "func describe_contestation",
     ):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing required empire-management token: {required_token}")
 
@@ -39502,28 +39376,21 @@ def validate_enemy_strategic_contestation(errors: list[str]) -> None:
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
         '"target_kind": "resource"',
-        '"target_kind": "artifact"',
-        '"target_kind": "encounter"',
-        "func _resolve_arrived_target",
         "func _secure_resource_target",
-        "func _secure_artifact_target",
-        "func _contest_encounter_target",
-        "func _append_resource_target_descriptor",
-        "func _project_resource_target_descriptor",
-        "func _append_artifact_target_descriptor",
-        "func _project_artifact_target_descriptor",
-        "func _append_encounter_target_descriptor",
-        "func _project_encounter_target_descriptor",
-        "func _append_hero_target_descriptors",
-        "func _project_hero_target_descriptor",
-        "func _encounter_staging_tiles",
-        "func _resource_target_priority",
-        "func _artifact_target_priority",
-        "func _encounter_target_priority",
-        "contested_by_faction_id",
-        "collected_by_faction_id",
     ):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing strategic-targeting token: {required_token}")
+
+    ai_hero_text = AI_HERO_RULES_PATH.read_text(encoding="utf-8") if AI_HERO_RULES_PATH.exists() else ""
+    for required_token in (
+        '"kind": "resource"',
+        '"kind": "artifact"',
+        '"kind": "encounter"',
+        "func _claim_resource",
+        "func _take_artifact",
+        "func _fight_neutral",
+        "PlayerRules.set_resource_controller(node, session, controller)",
+    ):
+        ensure(required_token in ai_hero_text, errors, f"AiHeroRules.gd is missing strategic-targeting token: {required_token}")
 
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
     for scenario_id, scenario in scenarios.items():
@@ -39547,31 +39414,6 @@ def validate_enemy_strategic_contestation(errors: list[str]) -> None:
                 if objective_pressure_present:
                     break
         ensure(objective_pressure_present, errors, f"Scenario {scenario_id} must author at least one objective that strategic enemy contestation can pressure")
-
-    pressure_report_script = ROOT / "tests" / "faction_scenario_ai_pressure_report.gd"
-    pressure_report_scene = ROOT / "tests" / "faction_scenario_ai_pressure_report.tscn"
-    ensure(pressure_report_script.exists(), errors, "Missing faction scenario AI pressure report script")
-    ensure(pressure_report_scene.exists(), errors, "Missing faction scenario AI pressure report scene")
-    if pressure_report_script.exists():
-        pressure_report_text = pressure_report_script.read_text(encoding="utf-8")
-        for required_token in (
-            "FACTION_SCENARIO_AI_PRESSURE_REPORT",
-            "ninefold_mireclaw_marsh_claim",
-            "bog_drum_crossing",
-            "dwelling_bogbell_croft",
-            "priority_resource_targets",
-            '"rank": index + 1',
-            "top scores=",
-            "commander_role_public_leak_check",
-        ):
-            ensure(required_token in pressure_report_text, errors, f"Faction scenario AI pressure report is missing token: {required_token}")
-    if pressure_report_scene.exists():
-        pressure_scene_text = pressure_report_scene.read_text(encoding="utf-8")
-        ensure(
-            "faction_scenario_ai_pressure_report.gd" in pressure_scene_text,
-            errors,
-            "Faction scenario AI pressure scene is not wired to its report script",
-        )
 
     ninefold = scenarios.get("ninefold-confluence", {})
     mireclaw_config = next(
@@ -39723,18 +39565,15 @@ def validate_overworld_logistics_sites(errors: list[str]) -> None:
 
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "OverworldRulesScript.controlled_resource_site_income",
-        "OverworldRulesScript.controlled_resource_site_pressure_bonus",
-        "OverworldRulesScript.player_resource_site_pressure_guard",
         "OverworldRulesScript.apply_controlled_resource_site_musters",
     ):
         ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing logistics-site turn token: {required_token}")
+    ai_hero_text = AI_HERO_RULES_PATH.read_text(encoding="utf-8") if AI_HERO_RULES_PATH.exists() else ""
+    ensure("overworld_rules.controlled_resource_site_income(session, controller)" in ai_hero_text, errors, "AiHeroRules.gd must pay computer players their controlled-site income")
 
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
         "func _resource_node_contestable_by_faction",
-        "func _resource_site_strategic_value",
-        "func _resource_site_pressure_value",
         "func _recruit_payload_value",
         "_resource_node_contestable_by_faction(node, site, faction_id, session)",
         "_resource_site_claim_rewards(site)",
@@ -39771,16 +39610,9 @@ def validate_overworld_route_security_escort(errors: list[str]) -> None:
         '"response_security_rating"',
         '"response_commander_id"',
         "breaks its escorted logistics route",
-        "escort_strength",
     ):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing escort-route contest token: {required_token}")
 
-    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
-    ensure(
-        "OverworldRulesScript.player_resource_site_pressure_guard" in enemy_turn_text,
-        errors,
-        "EnemyTurnRules.gd must continue routing escorted site pressure guard through the shared overworld boundary",
-    )
 
 
 def validate_overworld_content_foundation(errors: list[str]) -> None:
@@ -40026,55 +39858,6 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
         ensure('"site_id": "site_wood_wagon"' not in runtime_metadata_text, errors, "Runtime metadata pickup fixture must not retain the now-persistent Wood Wagon oracle")
 
 
-def validate_overworld_object_ai_valuation_route_effects(errors: list[str]) -> None:
-    required_paths = (
-        ENEMY_ADVENTURE_RULES_PATH,
-        ROOT / "tests" / "ai_overworld_object_valuation_route_effects_report.gd",
-        ROOT / "tests" / "ai_overworld_object_valuation_route_effects_report.tscn",
-        ROOT / "docs" / "overworld-object-ai-valuation-route-effects-report.md",
-    )
-    for path in required_paths:
-        ensure(path.exists(), errors, f"Missing overworld object AI valuation route-effects file: {path.relative_to(ROOT)}")
-    if not all(path.exists() for path in required_paths):
-        return
-
-    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
-    for required_token in (
-        "func neutral_encounter_object_route_pressure_report",
-        "func neutral_encounter_object_valuation_breakdown",
-        '"object_metadata_value"',
-        '"priority_without_object_metadata"',
-        '"priority_with_object_metadata"',
-        '"route_effect_status"',
-        '"shape_mask_contract"',
-        '"body_tiles_overlap_visit_offsets"',
-        "target_public_reason",
-        "commander_role_public_leak_check",
-    ):
-        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing overworld object AI valuation token: {required_token}")
-
-    report_text = (ROOT / "tests" / "ai_overworld_object_valuation_route_effects_report.gd").read_text(encoding="utf-8")
-    for required_token in (
-        "AI_OVERWORLD_OBJECT_VALUATION_ROUTE_EFFECTS_REPORT",
-        "river_pass_reed_totemists",
-        "river_pass_hollow_mire",
-        "commander_role_public_leak_check",
-        "body_tiles_overlap_visit_offsets",
-        "SCORE_LEAK_TOKENS",
-    ):
-        ensure(required_token in report_text, errors, f"AI overworld object valuation report is missing token: {required_token}")
-
-    doc_text = (ROOT / "docs" / "overworld-object-ai-valuation-route-effects-report.md").read_text(encoding="utf-8")
-    for required_text in (
-        "Status: implementation evidence.",
-        "No renderer import",
-        "No save migration",
-        "`wood` remains canonical",
-        "Internal scores stay report/tooling-only",
-    ):
-        ensure(required_text in doc_text, errors, f"Overworld object AI valuation report doc is missing required boundary text: {required_text}")
-
-
 def validate_ai_hero_task_state_normalizer_preservation(errors: list[str]) -> None:
     for path in (
         AI_HERO_TASK_NORMALIZER_REPORT_SCRIPT_PATH,
@@ -40129,59 +39912,61 @@ def validate_ai_hero_task_state_normalizer_preservation(errors: list[str]) -> No
             ensure(required_text in doc_text, errors, f"AI hero task-state normalizer report doc is missing required boundary text: {required_text}")
 
 
-def validate_ai_hero_task_live_adoption_gate(errors: list[str]) -> None:
-    for path in (
-        AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCRIPT_PATH,
-        AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCENE_PATH,
-        AI_HERO_TASK_LIVE_ADOPTION_REPORT_DOC_PATH,
-    ):
-        ensure(path.exists(), errors, f"Missing AI hero task live adoption gate file: {path.relative_to(ROOT)}")
+def validate_ai_hero_model(errors: list[str]) -> None:
+    """Computer players act only through AI heroes and towns (docs/ai-plays-by-player-rules.md)."""
+    for path in (AI_HERO_RULES_PATH, AI_PLAYER_RULES_REPORT_SCRIPT_PATH, AI_PLAYER_RULES_REPORT_SCENE_PATH, AI_KNOWN_WORLD_MEMORY_REPORT_SCRIPT_PATH):
+        ensure(path.exists(), errors, f"Missing AI hero model file: {path.relative_to(ROOT)}")
+    ai_hero_text = AI_HERO_RULES_PATH.read_text(encoding="utf-8") if AI_HERO_RULES_PATH.exists() else ""
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
-    for required_token in (
-        "func ai_hero_task_live_adoption_gate_report",
-        "func ai_hero_task_live_adoption_gate_public_leak_check",
-        "AI_HERO_TASK_LIVE_ADOPTION_GATE_REPORT",
-        "live_hero_task_adoption_gate_report_only",
-        "no_live_hero_task_behavior_adoption",
-        "no_hero_task_state_write_no_save_migration",
-        "task_schema_writer",
-        "route_actor_execution",
-        "save_resume_live_tasks",
-        "manual_pacing_review",
+    ensure("AiHeroRulesScript.run_faction_turn(" in enemy_turn_text, errors, "The enemy turn must run computer players through AiHeroRules")
+    for removed in (
+        "func advance_raids",
+        "func assign_target",
+        "func choose_target",
+        "func _spawn_raid",
+        "func run_enemy_town_economy_turn",
+        "func group_nearby_raids_for_town_assault",
+        "func refresh_enemy_known_world_memory",
     ):
-        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing live adoption gate token: {required_token}")
-    if AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCRIPT_PATH.exists():
-        report_text = AI_HERO_TASK_LIVE_ADOPTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "AI_HERO_TASK_LIVE_ADOPTION_GATE_REPORT",
-            "AI_HERO_TASK_STATE_BOUNDARY_REPORT",
-            "AI_HERO_TASK_STATE_NORMALIZER_PRESERVATION_REPORT",
-            "AI_COMMANDER_ROLE_ADOPTION_BOUNDARY_REPORT",
-            "live_hero_task_adoption_gate_report_only",
-            "no_live_hero_task_behavior_adoption",
-            "no_hero_task_state_write_no_save_migration",
-            "task_schema_writer",
-            "live_target_selection",
-            "route_actor_execution",
-            "save_resume_live_tasks",
-            "manual_pacing_review",
-            "durable_event_log",
-        ):
-            ensure(required_token in report_text, errors, f"AI hero task live adoption gate report is missing token: {required_token}")
-    if AI_HERO_TASK_LIVE_ADOPTION_REPORT_DOC_PATH.exists():
-        doc_text = AI_HERO_TASK_LIVE_ADOPTION_REPORT_DOC_PATH.read_text(encoding="utf-8")
-        for required_text in (
-            "Status: implementation evidence.",
-            "AI_HERO_TASK_LIVE_ADOPTION_GATE_REPORT",
-            "does not adopt live hero task behavior",
-            "No save migration",
-            "SAVE_VERSION",
-            "`wood` remains canonical",
-            "live target selection",
-            "route and actor execution",
-            "save/resume proof",
-        ):
-            ensure(required_text in doc_text, errors, f"AI hero task live adoption gate doc is missing required boundary text: {required_text}")
+        ensure(removed not in enemy_turn_text and removed not in enemy_adventure_text, errors, f"The raid director must stay removed; computer players act through heroes: {removed}")
+    for required_token in (
+        "func migrate_legacy_raids",
+        "func normalize_ai_heroes",
+        "func _town_threatened",
+        "func _resource_candidate",
+        "func _encounter_candidate",
+        "func _town_candidate",
+        "func _meet_candidate",
+        "func _exploration_candidate",
+        "func _hire_hero",
+        "func _town_entrance_free",
+        "func _recruit_in_towns",
+        "func _build_in_towns",
+        "func _market_cover",
+        "func _position_seen",
+        "func _store_explored",
+        '"ai_hero_reinforced"',
+        '"ai_heroes_met"',
+        '"ai_town_captured"',
+    ):
+        ensure(required_token in ai_hero_text, errors, f"AiHeroRules.gd is missing hero-model token: {required_token}")
+    report_text = AI_PLAYER_RULES_REPORT_SCRIPT_PATH.read_text(encoding="utf-8") if AI_PLAYER_RULES_REPORT_SCRIPT_PATH.exists() else ""
+    for required_token in (
+        "_check_legacy_migration",
+        "_check_save_round_trip",
+        "_check_town_orders_pay_real_costs",
+        "_check_market_trades_like_the_player",
+        "_check_hire_with_hero_in_doorway",
+    ):
+        ensure(required_token in report_text, errors, f"AI player rules report is missing case: {required_token}")
+    memory_text = AI_KNOWN_WORLD_MEMORY_REPORT_SCRIPT_PATH.read_text(encoding="utf-8") if AI_KNOWN_WORLD_MEMORY_REPORT_SCRIPT_PATH.exists() else ""
+    for required_token in (
+        "_known_world_memory_survives_normalization",
+        "_scouting_hero_does_not_hunt_hidden_hero",
+        "_scouting_hero_uncovers_new_ground",
+    ):
+        ensure(required_token in memory_text, errors, f"AI known-world memory report is missing case: {required_token}")
 
 
 def validate_ai_hero_task_live_turn_execution(errors: list[str]) -> None:
@@ -40189,25 +39974,12 @@ def validate_ai_hero_task_live_turn_execution(errors: list[str]) -> None:
         AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCRIPT_PATH,
         AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCENE_PATH,
         AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_DOC_PATH,
-        AI_HERO_TASK_LIVE_TARGET_SELECTION_REPORT_SCRIPT_PATH,
     ):
         ensure(path.exists(), errors, f"Missing AI hero task live turn execution file: {path.relative_to(ROOT)}")
-    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
     for required_token in (
-        "EnemyAdventureRulesScript.advance_raids(session, config, faction_id, state)",
-        "_spawn_raid(session, config, state)",
-        "EnemyAdventureRulesScript.assign_target(",
-    ):
-        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing live turn execution token: {required_token}")
-    for required_token in (
-        "func ai_hero_task_live_target_selection_plan",
-        "func _ai_hero_task_live_plan_from_task",
-        "func _ai_hero_task_live_target_reserved",
-        "precomputed_candidate: Dictionary = {}",
         "func _secure_resource_target",
         '"ai_site_seized"',
-        '"live_target_selection"',
         '"commander_memory"',
     ):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing live turn execution token: {required_token}")
@@ -40229,15 +40001,6 @@ def validate_ai_hero_task_live_turn_execution(errors: list[str]) -> None:
             "save_version_after",
         ):
             ensure(required_token in report_text, errors, f"AI hero task live turn execution report is missing token: {required_token}")
-    if AI_HERO_TASK_LIVE_TARGET_SELECTION_REPORT_SCRIPT_PATH.exists():
-        report_text = AI_HERO_TASK_LIVE_TARGET_SELECTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "precomputed_resource_target_view_semantics_match",
-            "full_breakdown_retained",
-            "live_breakdown_recomputed",
-            "semantic_fields",
-        ):
-            ensure(required_token in report_text, errors, f"AI hero task live target-selection report is missing token: {required_token}")
     if AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_DOC_PATH.exists():
         doc_text = AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_DOC_PATH.read_text(encoding="utf-8")
         for required_text in (
@@ -40251,1081 +40014,16 @@ def validate_ai_hero_task_live_turn_execution(errors: list[str]) -> None:
         ):
             ensure(required_text in doc_text, errors, f"AI hero task live turn execution doc is missing required text: {required_text}")
 
-def validate_ai_hero_task_lifecycle_reconciliation(errors: list[str]) -> None:
-    for path in (
-        AI_HERO_TASK_LIFECYCLE_REPORT_SCRIPT_PATH,
-        AI_HERO_TASK_LIFECYCLE_REPORT_SCENE_PATH,
-        AI_HERO_TASK_LIFECYCLE_REPORT_DOC_PATH,
-    ):
-        ensure(path.exists(), errors, f"Missing AI hero task lifecycle reconciliation file: {path.relative_to(ROOT)}")
-    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
-    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
-    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8") if BATTLE_RULES_PATH.exists() else ""
-    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8") if BATTLE_RULES_PATH.exists() else ""
-    for required_token in (
-        "func _ai_hero_task_reconcile_live_tasks_for_faction",
-        "func _ai_hero_task_reconciled_live_task",
-        "invalid_task_expired",
-        "invalid_target_missing",
-        "invalid_target_resolved",
-        "invalid_controller_changed",
-    ):
-        ensure(required_token in enemy_adventure_text or required_token in enemy_turn_text, errors, f"AI hero task lifecycle implementation is missing token: {required_token}")
-    if AI_HERO_TASK_LIFECYCLE_REPORT_SCRIPT_PATH.exists():
-        report_text = AI_HERO_TASK_LIFECYCLE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "AI_HERO_TASK_LIFECYCLE_RECONCILIATION_REPORT",
-            "saved_tasks_reused_only_while_current_and_open",
-            "river_pass_saved_tasks_reconcile_before_reuse",
-            "saved_hero_task",
-            "invalid_task_expired",
-            "invalid_target_missing",
-            "hero_task_state_live_persist_no_save_migration",
-        ):
-            ensure(required_token in report_text, errors, f"AI hero task lifecycle report is missing token: {required_token}")
-    if AI_HERO_TASK_LIFECYCLE_REPORT_DOC_PATH.exists():
-        doc_text = AI_HERO_TASK_LIFECYCLE_REPORT_DOC_PATH.read_text(encoding="utf-8")
-        for required_text in (
-            "Strategic AI Hero Task Lifecycle Reconciliation Report",
-            "implementation evidence",
-            "saved_tasks_reused_only_while_current_and_open",
-            "No save migration",
-        ):
-            ensure(required_text in doc_text, errors, f"AI hero task lifecycle doc is missing required text: {required_text}")
-
-def validate_ai_hero_task_actor_lifecycle(errors: list[str]) -> None:
-    for path in (
-        AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_SCRIPT_PATH,
-        AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_SCENE_PATH,
-        AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_DOC_PATH,
-    ):
-        ensure(path.exists(), errors, f"Missing AI hero task actor lifecycle file: {path.relative_to(ROOT)}")
-    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
-    for required_token in (
-        "func _ai_hero_task_reconcile_actor",
-        "invalid_actor_missing",
-        "invalid_actor_recovering",
-        "invalid_actor_rebuilding",
-        "commander_can_deploy(entry)",
-    ):
-        ensure(required_token in enemy_adventure_text, errors, f"AI hero task actor lifecycle implementation is missing token: {required_token}")
-    if AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_SCRIPT_PATH.exists():
-        report_text = AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT",
-            "saved_tasks_require_live_deployable_commander_actors",
-            "river_pass_saved_tasks_require_deployable_commander_actor",
-            "invalid_actor_missing",
-            "invalid_actor_recovering",
-            "invalid_actor_rebuilding",
-            "hero_task_state_live_persist_no_save_migration",
-        ):
-            ensure(required_token in report_text, errors, f"AI hero task actor lifecycle report is missing token: {required_token}")
-    if AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_DOC_PATH.exists():
-        doc_text = AI_HERO_TASK_ACTOR_LIFECYCLE_REPORT_DOC_PATH.read_text(encoding="utf-8")
-        for required_text in (
-            "Strategic AI Hero Task Actor Lifecycle Report",
-            "implementation evidence",
-            "saved_tasks_require_live_deployable_commander_actors",
-            "No save migration",
-        ):
-            ensure(required_text in doc_text, errors, f"AI hero task actor lifecycle doc is missing required text: {required_text}")
-
-def validate_ai_hero_task_resumption(errors: list[str]) -> None:
-    for path in (
-        AI_HERO_TASK_RESUMPTION_REPORT_SCRIPT_PATH,
-        AI_HERO_TASK_RESUMPTION_REPORT_SCENE_PATH,
-        AI_HERO_TASK_RESUMPTION_REPORT_DOC_PATH,
-    ):
-        ensure(path.exists(), errors, f"Missing AI hero task resumption file: {path.relative_to(ROOT)}")
-    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
-    for required_token in (
-        'status not in ["planned", "reserved", "active", "suspended"]',
-        'status == "suspended"',
-        '_ai_hero_task_with_lifecycle(task, "planned", "valid")',
-        "invalid_task_expired",
-    ):
-        ensure(required_token in enemy_adventure_text, errors, f"AI hero task resumption implementation is missing token: {required_token}")
-    if AI_HERO_TASK_RESUMPTION_REPORT_SCRIPT_PATH.exists():
-        report_text = AI_HERO_TASK_RESUMPTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "AI_HERO_TASK_RESUMPTION_REPORT",
-            "suspended_saved_tasks_reactivate_before_target_reuse",
-            "river_pass_suspended_tasks_resume_for_deployable_commanders",
-            "saved_hero_task",
-            "invalid_task_expired",
-            "hero_task_state_live_persist_no_save_migration",
-        ):
-            ensure(required_token in report_text, errors, f"AI hero task resumption report is missing token: {required_token}")
-    if AI_HERO_TASK_RESUMPTION_REPORT_DOC_PATH.exists():
-        doc_text = AI_HERO_TASK_RESUMPTION_REPORT_DOC_PATH.read_text(encoding="utf-8")
-        for required_text in (
-            "Strategic AI Hero Task Resumption Report",
-            "implementation evidence",
-            "suspended_saved_tasks_reactivate_before_target_reuse",
-            "No save migration",
-        ):
-            ensure(required_text in doc_text, errors, f"AI hero task resumption doc is missing required text: {required_text}")
-
-def validate_ai_hero_task_spawn_commander_selection(errors: list[str]) -> None:
-    for path in (
-        AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_SCRIPT_PATH,
-        AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_SCENE_PATH,
-        AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_DOC_PATH,
-    ):
-        ensure(path.exists(), errors, f"Missing AI hero task spawn commander selection file: {path.relative_to(ROOT)}")
-    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
-    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
-    for required_token in (
-        "select_raid_commander_roster_hero_id_for_spawn",
-        "_ai_hero_task_spawn_saved_plan_for_actor",
-        "_spawn_saved_task_commander_candidate_beats",
-        "saved_task_priority",
-        "return _best_goal_tile_with_path_context(path_context, origin_pos, goal_tiles)",
-    ):
-        ensure(required_token in enemy_adventure_text, errors, f"AI hero task spawn commander selection implementation is missing token: {required_token}")
-    ensure(
-        "select_raid_commander_roster_hero_id_for_spawn" in enemy_turn_text,
-        errors,
-        "Enemy raid spawning does not use saved-task-aware commander selection.",
-    )
-    strategic_planner_path = ROOT / "tests" / "ai_hero_task_strategic_planner_report.gd"
-    ensure(strategic_planner_path.exists(), errors, "Missing strategic planner descriptor/projection report owner.")
-    planner_report_text = strategic_planner_path.read_text(encoding="utf-8") if strategic_planner_path.exists() else ""
-    for required_token in (
-        "_target_descriptor_projection_parity_case",
-        '"source_bucket_identities": source_bucket_identities',
-        '["town", "resource", "artifact", "encounter", "delivery", "hero"]',
-        '"descriptor_hidden_unreachable_artifact"',
-        '"river_pass_riverwatch_hold_rare_exchange"',
-        "var delivery_source_position := Vector2i(-1, -1)",
-        "var origins := [",
-        "var unreachable_goal := Vector2i(5, 0)",
-        'var fixture_map: Array = session.overworld.get("map", []).duplicate(true)',
-        "for delta in EnemyAdventureRules.PATH_MOVEMENT_DELTAS:",
-        'map_row[neighbor.x] = "rock"',
-        "OverworldRules.terrain_id_is_passable(terrain_id)",
-        'session.overworld["map"] = fixture_map',
-        'EnemyAdventureRules._path_distance_with_context(path_context, origin_pos, [unreachable_goal]) != 9999',
-        '_descriptor_for_identity(all_descriptors, "artifact", "descriptor_unreachable_artifact").is_empty()',
-        '_candidate_has_target(unreachable_projected, "artifact", "descriptor_unreachable_artifact")',
-        'delivery_source_position = Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))',
-        'known_world_memory["schema_version"] = 1',
-        'known_world_memory["scouted_targets"] = [{',
-        '"target_kind": "resource"',
-        '"target_id": "river_free_company"',
-        '"x": delivery_source_position.x',
-        '"y": delivery_source_position.y',
-        '"expires_day": int(session.day) + 3',
-        '"source_kind": "descriptor_fixture"',
-        'EnemyAdventureRules._enemy_target_scouted(session, MIRECLAW, "resource", "river_free_company")',
-        'defeat_config["siege_target_placement_id"] = ""',
-        'int(siege_descriptor.get("priority", -1)) != 320',
-        'int(victory_descriptor.get("priority", -1)) != 220',
-        'get("priority", -1)) != 260',
-        "_legacy_target_candidates_control(session, config, origin_pos, include_unscouted, path_context)",
-        "EnemyAdventureRules._target_candidates_from_descriptors(session, config, origin_pos, descriptors, path_context)",
-        'JSON.stringify(wrapper) != JSON.stringify(projected)',
-        "EnemyAdventureRules._ai_hero_task_planner_candidates_from_origins(",
-        'int(planner_profile.get("enumeration_count", 0)) != 0',
-        'int(planner_profile.get("projection_count", 0)) != origins.size()',
-        'int(public_profile.get("enumeration_count", 0)) != 1',
-        "var legacy_public_plan := _legacy_plan_enemy_hero_task_board_control",
-        'JSON.stringify(selected_tasks) != JSON.stringify(legacy_selected_tasks)',
-        'JSON.stringify(all_descriptors) != detached_json',
-        'JSON.stringify(rebuilt_descriptors) == detached_json',
-        '"selected_tasks": selected_tasks',
-        '"whole_ordered_payload_parity": true',
-        '"descriptor_deep_detach": true',
-        '"new_invocation_rebuilt_after_mutation": true',
-    ):
-        ensure(required_token in planner_report_text, errors, f"Strategic planner descriptor/projection owner is missing token: {required_token}")
-    planner_case_match = re.search(
-        r"func _target_descriptor_projection_parity_case\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _descriptor_identities\()",
-        planner_report_text,
-        re.DOTALL,
-    )
-    ensure(planner_case_match is not None, errors, "Could not isolate strategic planner descriptor/projection case.")
-    if planner_case_match is not None:
-        planner_case = planner_case_match.group("body")
-        ordered_tokens = (
-            "var origins := [",
-            "var delivery_source_position := Vector2i(-1, -1)",
-            'delivery_source_position = Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))',
-            "var unreachable_goal := Vector2i(5, 0)",
-            'var fixture_map: Array = session.overworld.get("map", []).duplicate(true)',
-            "for delta in EnemyAdventureRules.PATH_MOVEMENT_DELTAS:",
-            'map_row[neighbor.x] = "rock"',
-            "OverworldRules.terrain_id_is_passable(terrain_id)",
-            'session.overworld["map"] = fixture_map',
-            'known_world_memory["schema_version"] = 1',
-            'known_world_memory["scouted_targets"] = [{',
-            'known_world_memory["player_hero_sightings"] = [{',
-            "_update_enemy_state(session, fixture_state)",
-            'EnemyAdventureRules._enemy_target_scouted(session, MIRECLAW, "resource", "river_free_company")',
-            'var path_context := EnemyAdventureRules._path_distance_surface_context(session, "", MIRECLAW)',
-            'EnemyAdventureRules._path_distance_with_context(path_context, origin_pos, [unreachable_goal]) != 9999',
-            "known_descriptors: Array = EnemyAdventureRules._target_candidate_descriptors(session, config, false)",
-            "all_descriptors: Array = EnemyAdventureRules._target_candidate_descriptors(session, config, true)",
-            "var source_bucket_identities := _legacy_source_bucket_identities(session, config)",
-            "JSON.stringify(source_bucket_identities) != JSON.stringify(expected_source_bucket_identities)",
-            "var siege_descriptor :=",
-            "var defeat_config :=",
-            "for include_unscouted in [false, true]:",
-            "var projected_planner: Array =",
-            "var public_plan := EnemyAdventureRules.plan_enemy_hero_task_board",
-            "var legacy_public_plan := _legacy_plan_enemy_hero_task_board_control",
-            "var detached_json := JSON.stringify(all_descriptors)",
-            "var rebuilt_descriptors: Array =",
-            "var rebuilt_wrapper: Array =",
-        )
-        positions = [planner_case.find(token) for token in ordered_tokens]
-        ensure(all(position >= 0 for position in positions) and positions == sorted(positions), errors, "Strategic planner descriptor case lost enumerate/parity/profile/detach/rebuild order.")
-        ensure(planner_case.count("_update_enemy_state(session, fixture_state)") == 1, errors, "Strategic planner scouting and hero memories must use one enemy-state update.")
-        ensure(planner_case.count('var path_context := EnemyAdventureRules._path_distance_surface_context(session, "", MIRECLAW)') == 1, errors, "Strategic planner unreachable fixture must build one fresh shared path context.")
-        ensure(planner_case.count('EnemyAdventureRules._path_distance_with_context(path_context, origin_pos, [unreachable_goal]) != 9999') == 1, errors, "Strategic planner unreachable fixture must use one both-origin distance gate.")
-        for forbidden_token in ("erase(\"", "normalize", "sort()", "sort_custom"):
-            ensure(forbidden_token not in planner_case, errors, f"Strategic planner descriptor parity case must not normalize or erase payload authority: {forbidden_token}")
-        for forbidden_token in (
-            "_enemy_target_currently_visible",
-            'delivery_source_position = Vector2i(0, 4)',
-            'if include_unscouted',
-            '"Unreachable water-tile artifact',
-            'terrain_id == "water"',
-            'erase("descriptor_unreachable_artifact")',
-        ):
-            ensure(forbidden_token not in planner_case, errors, f"Strategic planner delivery fixture must not bypass scouting through visibility, fixed coordinates, or include_unscouted: {forbidden_token}")
-
-    for bucket_token in (
-        '"01_siege_target": ["riverwatch_hold"]',
-        '"02_defeat_objective_towns": ["riverwatch_hold"]',
-        '"03_victory_objective_towns": ["duskfen_bastion"]',
-        '"04_player_towns": ["riverwatch_hold"]',
-        '"05_neutral_towns": ["duskfen_bastion"]',
-        '"06_resource_nodes": ["north_wood", "midway_shrine", "southern_ore", "eastern_cache", "river_signal_post", "river_free_company", "river_sanctum", "riverwatch_embergrain_granary", "duskfen_bastion_peatwax_front", "river_pass_riverwatch_hold_rare_exchange", "river_pass_duskfen_bastion_rare_exchange", "duskfen_bastion_development_source_support"]',
-        '"07_artifact_nodes": ["trailsinger_cache", "warcrest_ruin", "quarry_tally_cache", "bastion_vault", "descriptor_hidden_unreachable_artifact", "descriptor_unreachable_artifact"]',
-        '"08_encounters": ["river_pass_ghoul_grove", "river_pass_hollow_mire", "river_pass_reed_totemists"]',
-        '"09_delivery_interceptions": ["river_free_company"]',
-        '"10_known_player_heroes": ["hero_lyra"]',
-    ):
-        ensure(bucket_token in planner_report_text, errors, f"Strategic planner independent source-bucket oracle is missing exact ordered identities: {bucket_token}")
-    legacy_materializer_match = re.search(
-        r"func _legacy_target_candidates_control\(.*?\n(?P<body>.*?)(?=\nfunc _legacy_append_town_candidate\()",
-        planner_report_text,
-        re.DOTALL,
-    )
-    ensure(legacy_materializer_match is not None, errors, "Could not isolate independent pre-refactor candidate materializer.")
-    if legacy_materializer_match is not None:
-        legacy_materializer = legacy_materializer_match.group("body")
-        for forbidden_token in (
-            "_target_candidate_descriptors",
-            "_target_candidates_from_descriptors",
-            "EnemyAdventureRules._target_candidates(",
-            "EnemyAdventureRules._ai_hero_task_planner_candidates_from_origins(",
-        ):
-            ensure(forbidden_token not in legacy_materializer, errors, f"Independent legacy candidate control depends on the new descriptor/projection path: {forbidden_token}")
-        legacy_source_order = (
-            "_legacy_append_town_candidate(session, candidates, seen, siege_target_id",
-            'for objective in objectives.get("defeat", []):',
-            'for objective in objectives.get("victory", []):',
-            'if String(town.get("owner", "neutral")) != "player":',
-            'if String(town.get("owner", "neutral")) != "neutral":',
-            'for node in session.overworld.get("resource_nodes", []):',
-            'for node in session.overworld.get("artifact_nodes", []):',
-            'for encounter in session.overworld.get("encounters", []):',
-            "_legacy_append_delivery_interception_candidates",
-            "_legacy_hero_target_candidates",
-        )
-        legacy_positions = [legacy_materializer.find(token) for token in legacy_source_order]
-        ensure(all(position >= 0 for position in legacy_positions) and legacy_positions == sorted(legacy_positions), errors, "Independent legacy materializer lost exact pre-refactor ten-source order.")
-    legacy_planner_match = re.search(
-        r"func _legacy_planner_candidates_from_origins_control\(.*?\n(?P<body>.*?)(?=\nfunc _legacy_target_candidates_control\()",
-        planner_report_text,
-        re.DOTALL,
-    )
-    ensure(legacy_planner_match is not None, errors, "Could not isolate independent legacy multi-origin planner control.")
-    if legacy_planner_match is not None:
-        legacy_planner = legacy_planner_match.group("body")
-        ensure("_legacy_target_candidates_control(" in legacy_planner, errors, "Legacy planner control does not consume the independent materializer.")
-        for forbidden_token in ("_target_candidate_descriptors", "_target_candidates_from_descriptors"):
-            ensure(forbidden_token not in legacy_planner, errors, f"Legacy planner control depends on new descriptor helper: {forbidden_token}")
-    legacy_plan_match = re.search(
-        r"func _legacy_plan_enemy_hero_task_board_control\(.*?\n(?P<body>.*?)(?=\nfunc _legacy_planner_candidates_from_origins_control\()",
-        planner_report_text,
-        re.DOTALL,
-    )
-    ensure(legacy_plan_match is not None, errors, "Could not isolate independent selected-task planner control.")
-    if legacy_plan_match is not None:
-        legacy_plan = legacy_plan_match.group("body")
-        ensure("_legacy_planner_candidates_from_origins_control(" in legacy_plan, errors, "Legacy selected-task control does not consume independent candidate materialization.")
-        for forbidden_token in ("_target_candidate_descriptors", "_target_candidates_from_descriptors", "plan_enemy_hero_task_board("):
-            ensure(forbidden_token not in legacy_plan, errors, f"Legacy selected-task control depends on current descriptor planner: {forbidden_token}")
-    legacy_controls_match = re.search(
-        r"func _legacy_plan_enemy_hero_task_board_control\(.*?(?=\nfunc _planner_fit_context_preserves_candidate_scores\()",
-        planner_report_text,
-        re.DOTALL,
-    )
-    ensure(legacy_controls_match is not None, errors, "Could not isolate the complete independent legacy control block.")
-    if legacy_controls_match is not None:
-        legacy_controls = legacy_controls_match.group(0)
-        for helper_name in (
-            "normalize_commander_roster",
-            "commander_roster_for_faction",
-            "ai_hero_task_apply_reservations",
-            "priority_target_bonus",
-            "target_is_objective_anchor",
-            "resource_target_score_breakdown",
-            "artifact_target_valuation_breakdown",
-            "neutral_encounter_object_valuation_breakdown",
-        ):
-            ensure(
-                f"EnemyAdventureRules.{helper_name}(" in legacy_controls,
-                errors,
-                f"Independent legacy control does not explicitly dispatch helper through EnemyAdventureRules: {helper_name}",
-            )
-            ensure(
-                re.search(rf"(?<![\w.]){re.escape(helper_name)}\(", legacy_controls) is None,
-                errors,
-                f"Independent legacy control retains an unqualified Node call that will fail at runtime: {helper_name}",
-            )
-
-    descriptor_match = re.search(
-        r"static func _target_candidate_descriptors\(.*?\n(?P<body>.*?)(?=\n\nstatic func _target_candidates_from_descriptors\()",
-        enemy_adventure_text,
-        re.DOTALL,
-    )
-    ensure(descriptor_match is not None, errors, "Could not isolate ordered target descriptor enumeration.")
-    if descriptor_match is not None:
-        descriptor_body = descriptor_match.group("body")
-        ordered_sources = (
-            "_append_town_target_descriptor(session, descriptors, seen, siege_target_id, 320",
-            'for objective in objectives.get("defeat", []):',
-            'for objective in objectives.get("victory", []):',
-            'if String(town.get("owner", "neutral")) != "player":',
-            'if String(town.get("owner", "neutral")) != "neutral":',
-            "for node in session.overworld.get(\"resource_nodes\", []):",
-            "for node in session.overworld.get(\"artifact_nodes\", []):",
-            "for encounter in session.overworld.get(\"encounters\", []):",
-            "_append_delivery_interception_target_descriptors",
-            "_append_hero_target_descriptors",
-        )
-        source_positions = [descriptor_body.find(token) for token in ordered_sources]
-        ensure(all(position >= 0 for position in source_positions) and source_positions == sorted(source_positions), errors, "Target descriptor enumeration lost its exact ten-source order.")
-        ensure("return descriptors" in descriptor_body, errors, "Target descriptor enumeration does not return the ordered surface.")
-    projection_match = re.search(
-        r"static func _target_candidates_from_descriptors\(.*?\n(?P<body>.*?)(?=\n\nstatic func _append_town_target_descriptor\()",
-        enemy_adventure_text,
-        re.DOTALL,
-    )
-    ensure(projection_match is not None, errors, "Could not isolate target descriptor projection.")
-    if projection_match is not None:
-        projection_body = projection_match.group("body")
-        for family in ("town", "resource", "artifact", "encounter", "delivery", "hero"):
-            ensure(f'"{family}":' in projection_body, errors, f"Target descriptor projection is missing family: {family}")
-        for required_token in ("origin_pos", "path_context", "_path_distance_surface_context", "return candidates"):
-            ensure(required_token in projection_body, errors, f"Target descriptor projection is missing origin-sensitive token: {required_token}")
-    for required_token in (
-        '"town": town.duplicate(true)',
-        '"node": node.duplicate(true)',
-        '"site": site.duplicate(true)',
-        '"encounter": encounter.duplicate(true)',
-        '"delivery_state": delivery_state.duplicate(true)',
-        '"hero": hero.duplicate(true)',
-    ):
-        ensure(required_token in enemy_adventure_text, errors, f"Target descriptor surface is missing deep-detached source payload: {required_token}")
-
-    best_spawn_match = re.search(
-        r"static func _best_open_spawn_point\(.*?\n(?P<body>.*?)(?=\n\nstatic func _apply_generated_multi_town_front_distribution\()",
-        enemy_turn_text,
-        re.DOTALL,
-    )
-    ensure(best_spawn_match is not None, errors, "Could not isolate best-open-spawn descriptor lifecycle.")
-    if best_spawn_match is not None:
-        best_spawn_body = best_spawn_match.group("body")
-        first_erase = best_spawn_body.find('spawn_scan_context.erase("target_candidate_descriptors")')
-        points_load = best_spawn_body.find("var points := _launch_decision_open_spawn_points")
-        empty_return = best_spawn_body.find("if points.is_empty():")
-        point_loop = best_spawn_body.find("for index in range(points.size()):")
-        final_erase = best_spawn_body.rfind('spawn_scan_context.erase("target_candidate_descriptors")')
-        final_return = best_spawn_body.rfind("return best")
-        ensure(0 <= first_erase < points_load < empty_return < point_loop < final_erase < final_return, errors, "Best-open-spawn descriptor cache is not invalidated on entry, no-points, and exit boundaries.")
-        ensure(best_spawn_body.count('spawn_scan_context.erase("target_candidate_descriptors")') == 2, errors, "Best-open-spawn descriptor lifecycle must have exactly entry and successful-exit erasures.")
-    for required_token in (
-        "static func _spawn_scan_target_descriptors",
-        '"target_descriptor_enumeration_reused"',
-        '"target_descriptor_enumeration_count"',
-        '"target_descriptor_count"',
-        '"target_descriptor_projection_count"',
-        '"target_descriptor_projection_ms"',
-        "EnemyAdventureRulesScript._target_candidates_from_descriptors(",
-    ):
-        ensure(required_token in enemy_turn_text, errors, f"Spawn descriptor profile/cache implementation is missing token: {required_token}")
-    if AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_SCRIPT_PATH.exists():
-        report_text = AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT",
-            "saved_tasks_influence_live_commander_deployment",
-            "spawn_prefers_tarn_saved_task_over_sable_rotation",
-            "recovering_saved_task_actor_does_not_override_rotation",
-            "saved_hero_task",
-            "hero_task_state_live_persist_no_save_migration",
-            "best_goal_tile_reuses_one_path_context",
-            "spawn_launch_policy_context_reuses_phase_local_capital_and_front",
-            "_target_descriptor_spawn_sweep_reuse_case",
-            "spawn_sweep_lazily_enumerates_once_projects_three_points_and_invalidates",
-            'config["spawn_points"] = [{"x": 7, "y": 1}, {"x": 7, "y": 3}, {"x": 8, "y": 4}]',
-            '"target_candidate_descriptors": [{"family": "stale_fixture"}]',
-            'int(counts.get("target_descriptor_enumeration_count", 0)) != 1',
-            'int(counts.get("target_descriptor_enumeration_reused", 0)) != 2',
-            'int(counts.get("target_descriptor_projection_count", 0)) != 3',
-            'scan_context.has("target_candidate_descriptors")',
-            'no_points_context.has("target_candidate_descriptors")',
-            "EnemyTurnRules._spawn_point_candidate(",
-            'JSON.stringify(selected) != JSON.stringify(expected)',
-            'int(next_counts.get("target_descriptor_enumeration_count", 0)) != 1',
-            '"selected_spawn_payload_exact": true',
-        ):
-            ensure(required_token in report_text, errors, f"AI hero task spawn commander selection report is missing token: {required_token}")
-        spawn_case_match = re.search(
-            r"func _target_descriptor_spawn_sweep_reuse_case\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _launch_policy_context_reuse_case\()",
-            report_text,
-            re.DOTALL,
-        )
-        ensure(spawn_case_match is not None, errors, "Could not isolate spawn descriptor sweep report case.")
-        if spawn_case_match is not None:
-            spawn_case = spawn_case_match.group("body")
-            ordered_tokens = (
-                'var scan_context := {"target_candidate_descriptors":',
-                "EnemyTurnRules._spawn_profile_begin(true)",
-                "var selected: Dictionary = EnemyTurnRules._best_open_spawn_point",
-                "var profile := EnemyTurnRules._spawn_profile_finish()",
-                "if scan_context.has(\"target_candidate_descriptors\"):",
-                "var no_points_context :=",
-                'no_points_config["spawn_points"] = []',
-                "var resources: Array =",
-                "var next_context := scan_context",
-                "var next_selected := EnemyTurnRules._best_open_spawn_point",
-            )
-            positions = [spawn_case.find(token) for token in ordered_tokens]
-            ensure(all(position >= 0 for position in positions) and positions == sorted(positions), errors, "Spawn descriptor report lost entry/sweep/exit/no-points/mutation/next-sweep order.")
-            for forbidden_token in ("normalize", 'erase("target_candidate_descriptors")', "_target_candidate_descriptors("):
-                ensure(forbidden_token not in spawn_case, errors, f"Spawn descriptor report must observe production cache lifecycle without normalizing or directly erasing/enumerating: {forbidden_token}")
-    if AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_DOC_PATH.exists():
-        doc_text = AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_DOC_PATH.read_text(encoding="utf-8")
-        for required_text in (
-            "Strategic AI Spawn Commander Selection Report",
-            "implementation evidence",
-            "saved_tasks_influence_live_commander_deployment",
-            "No save migration",
-        ):
-            ensure(required_text in doc_text, errors, f"AI hero task spawn commander selection doc is missing required text: {required_text}")
-
-def validate_ai_known_world_memory_candidate_compatibility(errors: list[str]) -> None:
-    report_path = ROOT / "tests" / "ai_known_world_memory_report.gd"
-    ensure(report_path.exists(), errors, "Missing AI known-world memory report owner.")
-    report_text = report_path.read_text(encoding="utf-8") if report_path.exists() else ""
-    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
-    refresh_match = re.search(
-        r"static func refresh_enemy_known_world_memory\(.*?\n(?P<body>.*?)(?=\nstatic func )",
-        enemy_adventure_text,
-        re.S,
-    )
-    ensure(refresh_match is not None, errors, "Could not isolate production known-world refresh lifecycle.")
-    refresh_body = refresh_match.group("body") if refresh_match else ""
-    refresh_order = (
-        '"sight_source_enumeration_count": 1',
-        '"target_catalog_enumeration_count": 1',
-        "var sight_sources := _enemy_hero_sighting_sources(session, config, faction_id)",
-        'catalog_profile["sight_source_count"] = sight_sources.size()',
-        "var target_catalog := _enemy_visible_target_catalog(session, config, faction_id)",
-        'catalog_profile["target_catalog_count"] = target_catalog.size()',
-        "var records := _current_enemy_player_hero_sighting_records(",
-        "sight_sources,",
-        "var target_records := _current_enemy_scouted_target_records(",
-        "target_catalog,",
-        "var updated_state := state.duplicate(true)",
-        "var merged_sightings := _merge_enemy_hero_sighting_record_arrays(",
-        "var merged_targets := _merge_enemy_scouted_target_record_arrays(",
-        "_sync_enemy_state_known_world_memory(session, faction_id, updated_state.get(\"known_world_memory\", {}))",
-        '"target_catalog_profile": catalog_profile.duplicate(true)',
-    )
-    refresh_positions = [refresh_body.find(token) for token in refresh_order]
-    ensure(
-        all(position >= 0 for position in refresh_positions) and refresh_positions == sorted(refresh_positions),
-        errors,
-        "Production known-world refresh lost source/catalog enumeration, fresh projection, merge, sync, or detached-profile order.",
-    )
-    ensure(refresh_body.count("_enemy_hero_sighting_sources(") == 1, errors, "Known-world refresh must enumerate sight sources exactly once.")
-    ensure(refresh_body.count("_enemy_visible_target_catalog(") == 1, errors, "Known-world refresh must enumerate the target catalog exactly once.")
-    for forbidden_token in (
-        'session.flags["known_world_target_catalog"',
-        'session.overworld["known_world_target_catalog"',
-        'state["known_world_target_catalog"',
-        '"catalog_day"',
-        '"catalog_session_id"',
-        "normalize_overworld_state",
-        "schema_version =",
-    ):
-        ensure(forbidden_token not in refresh_body, errors, f"Known-world catalog reuse must remain invocation-local without cache/schema/behavior mutation: {forbidden_token}")
-    for forbidden_token in (
-        "KNOWN_WORLD_TARGET_CATALOG_CACHE",
-        "_known_world_target_catalog_cache",
-        '"known_world_target_catalog_day"',
-        '"known_world_target_catalog_session_id"',
-    ):
-        ensure(forbidden_token not in enemy_adventure_text, errors, f"Known-world catalog must not add global/day/session cache state: {forbidden_token}")
-
-    catalog_match = re.search(
-        r"static func _enemy_visible_target_catalog\(.*?\n(?P<body>.*?)(?=\nstatic func )",
-        enemy_adventure_text,
-        re.S,
-    )
-    ensure(catalog_match is not None, errors, "Could not isolate production known-world target catalog.")
-    catalog_body = catalog_match.group("body") if catalog_match else ""
-    catalog_order = (
-        'for town_value in session.overworld.get("towns", []):',
-        'if owner != "player" and owner != "neutral":',
-        '"target_kind": "town"',
-        'for node_value in session.overworld.get("resource_nodes", []):',
-        "if not _resource_node_contestable_by_faction(node, site, faction_id, session):",
-        '"target_kind": "resource"',
-        'for node_value in session.overworld.get("artifact_nodes", []):',
-        'if bool(node.get("collected", false)):',
-        '"target_kind": "artifact"',
-        'for encounter_value in session.overworld.get("encounters", []):',
-        "if _encounter_is_pressure_host_candidate(encounter, faction_id, resolved_encounters):",
-        "if OverworldRulesScript.is_encounter_resolved(session, encounter):",
-        '"target_kind": "encounter"',
-    )
-    catalog_positions = [catalog_body.find(token) for token in catalog_order]
-    ensure(
-        all(position >= 0 for position in catalog_positions) and catalog_positions == sorted(catalog_positions),
-        errors,
-        "Production known-world catalog lost exact town/resource/artifact/encounter order or exclusions.",
-    )
-    ensure(catalog_body.rstrip().endswith("return LevelRules.canonical_spatial_records(catalog)"), errors, "Production known-world catalog must return its invocation-local ordered catalog with canonical spatial levels.")
-    catalog_anchor_order = (
-        "var objective_anchor_surface := _objective_anchor_surface(session)",
-        'var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", [])',
-        'for town_value in session.overworld.get("towns", []):',
-        '_artifact_target_priority(session, node, objective_anchor_tiles)',
-        '_encounter_target_priority(session, encounter, objective_anchor_tiles, objective_anchor_surface)',
-        "return LevelRules.canonical_spatial_records(catalog)",
-    )
-    catalog_anchor_positions = [catalog_body.rfind(token) if token == "return LevelRules.canonical_spatial_records(catalog)" else catalog_body.find(token) for token in catalog_anchor_order]
-    ensure(
-        all(position >= 0 for position in catalog_anchor_positions) and catalog_anchor_positions == sorted(catalog_anchor_positions),
-        errors,
-        "Production known-world catalog lost one invocation-local objective-anchor surface before exact artifact/encounter priority reuse.",
-    )
-    ensure(catalog_body.count("_objective_anchor_surface(") == 1, errors, "Known-world catalog must materialize its objective-anchor surface exactly once.")
-    ensure("ContentService.get_scenario(" not in catalog_body, errors, "Known-world catalog must not rematerialize generated scenarios outside its one anchor surface.")
-
-    anchor_surface_match = re.search(
-        r"static func _objective_anchor_surface\(.*?\n(?P<body>.*?)(?=\nstatic func )",
-        enemy_adventure_text,
-        re.S,
-    )
-    ensure(anchor_surface_match is not None, errors, "Could not isolate production objective-anchor surface.")
-    anchor_surface_text = anchor_surface_match.group(0) if anchor_surface_match else ""
-    anchor_surface_order = (
-        '"town_placement_ids": []',
-        '"flag_ids": []',
-        '"tiles": []',
-        "ContentService.get_scenario_readonly(session.scenario_id)",
-        'for bucket in ["victory", "defeat"]:',
-        "placement_id not in town_placement_ids",
-        'String(objective.get("type", "")) == "flag_true"',
-        "flag_id not in flag_ids",
-        'for town_value in session.overworld.get("towns", []):',
-        "tiles.append(_objective_world_tile(town, true))",
-        'for encounter_value in session.overworld.get("encounters", []):',
-        "_encounter_is_objective_anchor_from_surface",
-        "return surface",
-    )
-    anchor_surface_positions = [anchor_surface_text.rfind(token) if token == "return surface" else anchor_surface_text.find(token) for token in anchor_surface_order]
-    ensure(
-        all(position >= 0 for position in anchor_surface_positions) and anchor_surface_positions == sorted(anchor_surface_positions),
-        errors,
-        "Objective-anchor surface lost exact scenario/objective/town/encounter first-seen ordering.",
-    )
-    for forbidden_token in ("static var", "session.flags", "session.overworld[", "sort", "sort_custom", "call_deferred", "await "):
-        ensure(forbidden_token not in anchor_surface_text, errors, f"Objective-anchor surface must remain detached, ordered, synchronous, and invocation-local: {forbidden_token}")
-    for required_text in (
-        "preloaded_objective_anchor_tiles: Variant = null",
-        "_objective_proximity_bonus_from_tiles(preloaded_objective_anchor_tiles",
-        "else _objective_proximity_bonus(session",
-        "preloaded_objective_anchor_surface: Variant = null",
-        "_encounter_is_objective_anchor_from_surface(encounter, preloaded_objective_anchor_surface)",
-        "else _encounter_is_objective_anchor(session, encounter)",
-    ):
-        ensure(required_text in enemy_adventure_text, errors, f"Objective-anchor priority reuse lost exact preloaded-or-legacy fallback behavior: {required_text}")
-
-    descriptor_match = re.search(
-        r"static func _target_candidate_descriptors\(.*?\n(?P<body>.*?)(?=\nstatic func )",
-        enemy_adventure_text,
-        re.S,
-    )
-    ensure(descriptor_match is not None, errors, "Could not isolate production target-descriptor catalog.")
-    descriptor_body = descriptor_match.group("body") if descriptor_match else ""
-    descriptor_anchor_order = (
-        "var scenario = ContentService.get_scenario_readonly(session.scenario_id)",
-        "var objective_anchor_surface := _objective_anchor_surface(session, scenario)",
-        'var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", [])',
-        'var objective_town_ids: Array = objective_anchor_surface.get("town_placement_ids", [])',
-        "_town_started_enemy_in_scenario(scenario",
-        "_artifact_target_priority(session, node, objective_anchor_tiles)",
-        "_encounter_target_priority(session, encounter, objective_anchor_tiles, objective_anchor_surface, resolved_lookup)",
-        "_append_delivery_interception_target_descriptors",
-        "_append_hero_target_descriptors",
-        "return descriptors",
-    )
-    descriptor_anchor_positions = [descriptor_body.find(token) for token in descriptor_anchor_order]
-    ensure(
-        all(position >= 0 for position in descriptor_anchor_positions) and descriptor_anchor_positions == sorted(descriptor_anchor_positions),
-        errors,
-        "Target-descriptor catalog lost exact one-scenario/one-anchor surface reuse and family order.",
-    )
-    ensure(descriptor_body.count("ContentService.get_scenario_readonly(") == 1, errors, "Target-descriptor catalog must access the generated scenario read-only exactly once.")
-    ensure(descriptor_body.count("_objective_anchor_surface(") == 1, errors, "Target-descriptor catalog must materialize the objective-anchor surface exactly once.")
-    for forbidden_token in ("_town_started_enemy(session", "_town_is_objective_anchor(session", "static var", "session.flags", "call_deferred", "await "):
-        ensure(forbidden_token not in descriptor_body, errors, f"Target-descriptor objective reuse must remain exact, synchronous, and invocation-local: {forbidden_token}")
-    for helper_name in ("_append_town_target_descriptor", "_append_encounter_target_descriptor"):
-        helper_match = re.search(rf"static func {helper_name}\(.*?\n(?P<body>.*?)(?=\nstatic func )", enemy_adventure_text, re.S)
-        ensure(helper_match is not None, errors, f"Could not isolate objective-aware descriptor helper {helper_name}.")
-        helper_text = helper_match.group(0) if helper_match else ""
-        ensure("preloaded_objective_anchor_surface: Variant = null" in helper_text, errors, f"{helper_name} lost optional invocation-local objective surface.")
-        ensure("if preloaded_objective_anchor_surface is Dictionary" in helper_text, errors, f"{helper_name} lost exact preloaded-or-direct fallback.")
-
-    projection_surface_match = re.search(
-        r"static func _target_candidates_from_descriptors\(.*?\n(?P<body>.*?)(?=\nstatic func )",
-        enemy_adventure_text,
-        re.S,
-    )
-    ensure(projection_surface_match is not None, errors, "Could not isolate target projection objective surface.")
-    projection_surface_text = projection_surface_match.group(0) if projection_surface_match else ""
-    projection_surface_order = (
-        "preloaded_objective_anchor_surface: Variant = null",
-        "var objective_anchor_surface: Dictionary = (",
-        "else _objective_anchor_surface(session)",
-        'var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", [])',
-        "_project_town_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context, objective_anchor_tiles)",
-        "_project_resource_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context, objective_anchor_tiles)",
-        "_project_artifact_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context, objective_anchor_tiles)",
-        "_project_encounter_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context)",
-        "return candidates",
-    )
-    projection_surface_positions = [projection_surface_text.find(token) for token in projection_surface_order]
-    ensure(
-        all(position >= 0 for position in projection_surface_positions) and projection_surface_positions == sorted(projection_surface_positions),
-        errors,
-        "Target projection lost one invocation-local objective surface with exact family projection order.",
-    )
-    for forbidden_token in ('descriptor["objective_anchor_surface"]', 'descriptor["objective_anchor_tiles"]', 'descriptor["objective_proximity_bonus"]', "static var", "session.flags"):
-        ensure(forbidden_token not in projection_surface_text, errors, f"Objective reuse must not alter detached descriptor payloads or create persistent cache authority: {forbidden_token}")
-
-    planner_projection_match = re.search(
-        r"static func _ai_hero_task_planner_candidates_from_origins\(.*?\n(?P<body>.*?)(?=\nstatic func )",
-        enemy_adventure_text,
-        re.S,
-    )
-    ensure(planner_projection_match is not None, errors, "Could not isolate planner multi-origin objective surface reuse.")
-    planner_projection_body = planner_projection_match.group("body") if planner_projection_match else ""
-    planner_projection_order = (
-        "var objective_anchor_surface := _objective_anchor_surface(session)",
-        "for origin_value in origins:",
-        "_target_candidates_from_descriptors(",
-        "path_context,",
-        "objective_anchor_surface",
-    )
-    planner_projection_positions = [planner_projection_body.rfind(token) if token == "objective_anchor_surface" else planner_projection_body.find(token) for token in planner_projection_order]
-    ensure(
-        all(position >= 0 for position in planner_projection_positions) and planner_projection_positions == sorted(planner_projection_positions),
-        errors,
-        "Planner must build one objective surface before fresh per-origin projections.",
-    )
-    ensure(planner_projection_body.count("_objective_anchor_surface(") == 1, errors, "Planner multi-origin projection must enumerate objective anchors exactly once.")
-
-    planner_origins_match = re.search(
-        r"static func _ai_hero_task_planner_origins\(.*?\n(?P<body>.*?)(?=\nstatic func )",
-        enemy_adventure_text,
-        re.S,
-    )
-    ensure(planner_origins_match is not None, errors, "Could not isolate planner origin ranking.")
-    planner_origins_body = planner_origins_match.group("body") if planner_origins_match else ""
-    for required_token in (
-        "var objective_anchor_surface := _objective_anchor_surface(session)",
-        'var objective_anchor_tiles: Array = objective_anchor_surface.get("tiles", [])',
-        'var objective_town_ids: Array = objective_anchor_surface.get("town_placement_ids", [])',
-        'var objective_anchor := String(town.get("placement_id", "")) in objective_town_ids',
-        "var objective_proximity_bonus := _objective_proximity_bonus_from_tiles(objective_anchor_tiles, x, y, LevelRules.level_of(town))",
-        "_town_strategic_priority_bonus(session, town, faction_id, objective_anchor, objective_proximity_bonus)",
-    ):
-        ensure(required_token in planner_origins_body, errors, f"Planner origin ranking lost exact invocation-local objective reuse: {required_token}")
-    ensure("_town_is_objective_anchor(" not in planner_origins_body and "_objective_proximity_bonus(session" not in planner_origins_body, errors, "Planner origin ranking must not rematerialize generated objective state per town.")
-    ensure("HEROES_LARGE_RMG_PLAN_STAGE_PROFILE" not in enemy_adventure_text and "LARGE_RMG_PLAN_STAGE" not in enemy_adventure_text, errors, "Temporary Large RMG planner stage diagnostics must not ship.")
-
-    for required_text in (
-        "preloaded_base_value: Variant = null",
-        "preloaded_objective_value: Variant = null",
-        "preloaded_baseline_priority: Variant = null",
-        "preloaded_objective_anchor: Variant = null",
-        "preloaded_objective_proximity_bonus: Variant = null",
-        "if preloaded_base_value is int else _artifact_target_priority(session, node)",
-        "if preloaded_objective_value is int else _objective_proximity_bonus(session",
-        "if preloaded_objective_anchor is bool else _encounter_is_objective_anchor(session, encounter)",
-        "if preloaded_baseline_priority is int else _encounter_target_priority(session, encounter)",
-        "if preloaded_objective_proximity_bonus is int else _objective_proximity_bonus(session",
-    ):
-        ensure(required_text in enemy_adventure_text, errors, f"Objective-aware projection breakdown lost exact preloaded-or-legacy fallback: {required_text}")
-
-    target_projection_match = re.search(
-        r"static func _current_enemy_scouted_target_records\(.*?\n(?P<body>.*?)(?=\nstatic func )",
-        enemy_adventure_text,
-        re.S,
-    )
-    ensure(target_projection_match is not None, errors, "Could not isolate production known-world target projection.")
-    target_projection_body = target_projection_match.group("body") if target_projection_match else ""
-    for required_token in (
-        "preloaded_sources: Variant = null",
-        "preloaded_target_catalog: Variant = null",
-        "projection_profile: Variant = null",
-        "var sources: Array = preloaded_sources if preloaded_sources is Array else _enemy_hero_sighting_sources",
-        "var target_catalog: Array = preloaded_target_catalog if preloaded_target_catalog is Array else _enemy_visible_target_catalog",
-        'profile["target_source_projection_count"] = int(profile.get("target_source_projection_count", 0)) + 1',
-        'profile["target_catalog_projection_count"] = int(profile.get("target_catalog_projection_count", 0)) + target_catalog.size()',
-        "_current_enemy_visible_target_records_for_source(",
-        'record.erase("_source_distance")',
-        'record.erase("_source_priority")',
-    ):
-        ensure(required_token in target_projection_body or required_token in target_projection_match.group(0), errors, f"Production known-world target projection lost exact preloaded/fresh behavior: {required_token}")
-
-    hero_projection_match = re.search(
-        r"static func _current_enemy_player_hero_sighting_records\(.*?\n(?P<body>.*?)(?=\nstatic func )",
-        enemy_adventure_text,
-        re.S,
-    )
-    ensure(hero_projection_match is not None, errors, "Could not isolate production known-world hero projection.")
-    hero_projection_text = hero_projection_match.group(0) if hero_projection_match else ""
-    for required_token in (
-        "preloaded_sources: Variant = null",
-        "projection_profile: Variant = null",
-        'profile["hero_source_projection_count"] = int(profile.get("hero_source_projection_count", 0)) + sources.size()',
-        'profile["hero_source_comparison_count"] = int(profile.get("hero_source_comparison_count", 0)) + 1',
-        "if best_source.is_empty() or distance < best_distance:",
-    ):
-        ensure(required_token in hero_projection_text, errors, f"Production known-world hero projection lost exact source reuse/tie behavior: {required_token}")
-
-    parity_match = re.search(
-        r"func _known_world_target_catalog_projection_parity\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )",
-        report_text,
-        re.S,
-    )
-    ensure(parity_match is not None, errors, "AI known-world report is missing the focused catalog/projection parity case.")
-    parity_body = parity_match.group("body") if parity_match else ""
-    parity_order = (
-        "_configure_known_world_catalog_fixture(session)",
-        "var initial_control := _legacy_known_world_projection_control",
-        "var initial_current := _current_known_world_projection_snapshot",
-        "var fixture_authority_before_detach: Dictionary = session.to_dict()",
-        "var raw_detached_sources: Array = EnemyAdventureRules._enemy_hero_sighting_sources(session, config, MIRECLAW)",
-        "var raw_detached_catalog: Array = EnemyAdventureRules._enemy_visible_target_catalog(session, config, MIRECLAW)",
-        'if raw_detached_sources.is_empty() or raw_detached_sources != initial_control.get("sources", []):',
-        'if raw_detached_catalog.is_empty() or raw_detached_catalog != initial_control.get("catalog", []):',
-        'raw_detached_sources[0]["x"] = 99',
-        'raw_detached_catalog[0]["target_label"] = "mutated detached catalog"',
-        "if session.to_dict() != fixture_authority_before_detach:",
-        "if _current_known_world_projection_snapshot(session, config, MIRECLAW) != initial_control:",
-        "var initial_refresh := EnemyAdventureRules.refresh_enemy_known_world_memory",
-        "_move_known_world_catalog_fixture(session)",
-        "var moved_control := _legacy_known_world_projection_control",
-        "var moved_refresh := EnemyAdventureRules.refresh_enemy_known_world_memory",
-        "_remove_known_world_catalog_fixture_entries(session)",
-        "var removed_control := _legacy_known_world_projection_control",
-        "var removed_refresh := EnemyAdventureRules.refresh_enemy_known_world_memory",
-        "_disable_known_world_catalog_sources(session)",
-        "session.day = int(session.day) + 8",
-        "var expiry_control := _legacy_known_world_projection_control",
-        "var expiry_refresh := EnemyAdventureRules.refresh_enemy_known_world_memory",
-        "if int(SessionStateStore.SAVE_VERSION) != save_version_before:",
-    )
-    parity_positions = [parity_body.find(token) for token in parity_order]
-    ensure(
-        all(position >= 0 for position in parity_positions) and parity_positions == sorted(parity_positions),
-        errors,
-        "Known-world parity case lost fixture/detach/refresh/movement/removal/expiry/save order.",
-    )
-    for required_token in (
-        '"catalog_enemy_town_a"',
-        '"catalog_enemy_town_b"',
-        '"catalog_commander_source"',
-        '"catalog_resource_source"',
-        '"town:catalog_player_town"',
-        '"town:catalog_neutral_town"',
-        '"resource:catalog_resource_target"',
-        '"artifact:catalog_artifact_target"',
-        '"encounter:catalog_encounter_target"',
-        '"town:catalog_inactive_town"',
-        '"resource:catalog_resource_source"',
-        '"resource:catalog_resource_collected"',
-        '"artifact:catalog_artifact_collected"',
-        '"encounter:catalog_commander_source"',
-        '"encounter:catalog_encounter_resolved"',
-        "initial_current != initial_control",
-        "moved_current != moved_control or moved_current == initial_control",
-        "removed_current != removed_control",
-        "_known_world_target_source_tie_exact",
-        "_known_world_nonmemory_authority",
-        "_legacy_known_world_expected_memory_control",
-    ):
-        ensure(required_token in parity_body, errors, f"Known-world focused parity case is missing exact behavior: {required_token}")
-    ensure(parity_body.count("EnemyAdventureRules.refresh_enemy_known_world_memory(") == 4, errors, "Known-world focused lifecycle must perform exactly four real refreshes.")
-    detach_prefix = parity_body[:parity_body.find("var expected_memory :=")]
-    ensure("var fixture_authority_before_detach := session.to_dict()" not in detach_prefix, errors, "Known-world detach authority capture must use an explicit Dictionary type, not inferred Variant typing.")
-    ensure("raw_detached_sources" in detach_prefix and "raw_detached_catalog" in detach_prefix, errors, "Known-world detach proof must use raw production source/catalog returns.")
-    ensure("raw_detached_sources: Array = initial_current" not in detach_prefix and "raw_detached_catalog: Array = initial_current" not in detach_prefix, errors, "Known-world detach proof must not source its mutation rows from the already-detached snapshot.")
-    ensure(not re.search(r"raw_detached_(?:sources|catalog).*duplicate", detach_prefix), errors, "Known-world raw detach captures must not duplicate before nested mutation.")
-    ensure("if not raw_detached_sources.is_empty()" not in detach_prefix and "if not raw_detached_catalog.is_empty()" not in detach_prefix, errors, "Known-world detach mutation must be fail-closed, not conditionally skipped for empty raw surfaces.")
-
-    anchor_case_match = re.search(
-        r"func _objective_anchor_catalog_reuse_parity\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )",
-        report_text,
-        re.S,
-    )
-    ensure(anchor_case_match is not None, errors, "AI known-world report is missing objective-anchor catalog reuse parity.")
-    anchor_case_body = anchor_case_match.group("body") if anchor_case_match else ""
-    anchor_case_order = (
-        "var authority_before: Dictionary = session.to_dict()",
-        "var legacy_surface := _legacy_objective_anchor_surface_control(session)",
-        "var current_surface: Dictionary = EnemyAdventureRules._objective_anchor_surface(session)",
-        "if current_surface != legacy_surface:",
-        "_legacy_objective_proximity_bonus_control",
-        "EnemyAdventureRules._objective_proximity_bonus_from_tiles",
-        "EnemyAdventureRules._artifact_target_priority(session, artifact_value, anchor_tiles)",
-        "EnemyAdventureRules._artifact_target_priority(session, artifact_value)",
-        "EnemyAdventureRules._encounter_target_priority(session, encounter_value, anchor_tiles, current_surface)",
-        "EnemyAdventureRules._encounter_target_priority(session, encounter_value)",
-        "var raw_surface: Dictionary = EnemyAdventureRules._objective_anchor_surface(session)",
-        'raw_town_ids[0] = "mutated_detached_town"',
-        "raw_tiles[0] = Vector2i(99, 99)",
-        "if session.to_dict() != authority_before",
-        'town["x"] = int(town.get("x", 0)) + 1',
-        "var moved_control := _legacy_objective_anchor_surface_control(session)",
-        "var moved_current: Dictionary = EnemyAdventureRules._objective_anchor_surface(session)",
-        "var duplicate_surface: Dictionary = EnemyAdventureRules._objective_anchor_surface(session, duplicate_scenario)",
-        'var no_anchor_surface: Dictionary = EnemyAdventureRules._objective_anchor_surface(session, {"objectives": {"victory": [], "defeat": []}})',
-    )
-    anchor_case_positions = [anchor_case_body.find(token) for token in anchor_case_order]
-    ensure(
-        all(position >= 0 for position in anchor_case_positions) and anchor_case_positions == sorted(anchor_case_positions),
-        errors,
-        "Objective-anchor focused case lost independent parity, priority, raw detach, mutation rebuild, duplicate, or no-anchor order.",
-    )
-    ensure("if not raw_" not in anchor_case_body and ".duplicate(" not in anchor_case_body, errors, "Objective-anchor raw detach proof must be unconditional and must not duplicate production returns before mutation.")
-    for required_helper in (
-        "func _legacy_objective_anchor_surface_control",
-        "func _legacy_town_objective_anchor_control",
-        "func _legacy_encounter_objective_anchor_control",
-        "func _legacy_objective_proximity_bonus_control",
-    ):
-        ensure(required_helper in report_text, errors, f"Known-world report is missing independent objective-anchor legacy control: {required_helper}")
-    legacy_anchor_match = re.search(
-        r"func _legacy_objective_anchor_surface_control\(.*?\n(?P<body>.*?)(?=\nfunc _legacy_known_world_sight_sources_control)",
-        report_text,
-        re.S,
-    )
-    ensure(legacy_anchor_match is not None, errors, "Could not isolate independent objective-anchor legacy controls.")
-    legacy_anchor_text = legacy_anchor_match.group(0) if legacy_anchor_match else ""
-    for forbidden_token in (
-        "EnemyAdventureRules._objective_anchor_surface",
-        "EnemyAdventureRules._objective_proximity_bonus_from_tiles",
-        "EnemyAdventureRules._town_is_objective_anchor",
-        "EnemyAdventureRules._encounter_is_objective_anchor",
-    ):
-        ensure(forbidden_token not in legacy_anchor_text, errors, f"Independent objective-anchor control must not call optimized production helpers: {forbidden_token}")
-
-    legacy_match = re.search(
-        r"func _legacy_known_world_projection_control\(.*?\n(?P<body>.*?)(?=\nfunc _fail)",
-        report_text,
-        re.S,
-    )
-    ensure(legacy_match is not None, errors, "AI known-world report is missing its independent copied legacy control block.")
-    legacy_text = legacy_match.group(0) if legacy_match else ""
-    for required_token in (
-        "func _legacy_known_world_sight_sources_control",
-        "func _legacy_known_world_active_raid_control",
-        "func _legacy_known_world_target_catalog_control",
-        "func _legacy_known_world_visible_records_for_source_control",
-        "func _legacy_known_world_append_visible_record_control",
-        "func _legacy_known_world_target_records_control",
-        "func _legacy_known_world_hero_records_control",
-        "func _legacy_known_world_expected_memory_control",
-        "func _legacy_known_world_merge_hero_records_control",
-        "func _legacy_known_world_merge_target_records_control",
-        "func _legacy_known_world_normalize_hero_records_control",
-        "func _legacy_known_world_normalize_target_records_control",
-        'for town_value in session.overworld.get("towns", []):',
-        'for node_value in session.overworld.get("resource_nodes", []):',
-        'for node_value in session.overworld.get("artifact_nodes", []):',
-        'for encounter_value in session.overworld.get("encounters", []):',
-        "EnemyAdventureRules._resource_node_contestable_by_faction",
-        "EnemyAdventureRules._encounter_is_pressure_host_candidate",
-        "OverworldRules.is_encounter_resolved",
-        "best_source.is_empty() or distance < best_distance",
-    ):
-        ensure(required_token in legacy_text, errors, f"Independent known-world legacy control is missing copied behavior: {required_token}")
-    for forbidden_token in (
-        "EnemyAdventureRules._enemy_hero_sighting_sources(",
-        "EnemyAdventureRules._enemy_visible_target_catalog(",
-        "EnemyAdventureRules._current_enemy_visible_target_records_for_source(",
-        "EnemyAdventureRules._current_enemy_scouted_target_records(",
-        "EnemyAdventureRules._current_enemy_player_hero_sighting_records(",
-        "_current_known_world_projection_snapshot(",
-        'erase("known_world_target_catalog")',
-        'session.flags["known_world_target_catalog"',
-    ):
-        ensure(forbidden_token not in legacy_text, errors, f"Independent known-world legacy control must not call catalog/project/cache implementation: {forbidden_token}")
-
-    refresh_exact_match = re.search(
-        r"func _known_world_refresh_exact\(.*?\n(?P<body>.*?)(?=\nfunc )",
-        report_text,
-        re.S,
-    )
-    ensure(refresh_exact_match is not None, errors, "AI known-world report is missing exact refresh/profile authority gates.")
-    refresh_exact_body = refresh_exact_match.group("body") if refresh_exact_match else ""
-    for required_check in (
-        '"updated_memory_exact"',
-        '"live_memory_exact"',
-        '"returned_state_exact"',
-        '"nonmemory_authority_exact"',
-        '"sighting_count_exact"',
-        '"scouted_target_count_exact"',
-        '"source_enumeration_once"',
-        '"catalog_enumeration_once"',
-        '"source_count_exact"',
-        '"catalog_count_exact"',
-        '"hero_projection_fresh_exact"',
-        '"hero_comparison_fresh_exact"',
-        '"target_projection_fresh_exact"',
-        '"catalog_projection_fresh_exact"',
-    ):
-        ensure(required_check in refresh_exact_body, errors, f"Known-world refresh authority/profile gate is missing: {required_check}")
-    ensure("normalize" not in refresh_exact_body and "erase(" not in refresh_exact_body, errors, "Known-world exact refresh oracle must not normalize or erase observed values.")
-    helper_match = re.search(
-        r"func _hero_target_candidates_for_origin\(session, origin_pos: Vector2i, config: Dictionary\) -> Array:\n(?P<body>.*?)(?=\nfunc )",
-        report_text,
-        re.S,
-    )
-    ensure(helper_match is not None, errors, "AI known-world report is missing its typed current candidate compatibility helper.")
-    helper_body = helper_match.group("body") if helper_match else ""
-    for required_token in (
-        "var hero_candidates: Array = []",
-        "var candidates: Array = EnemyAdventureRules._target_candidates(session, config, origin_pos, false)",
-        "for candidate in candidates:",
-        'String(candidate.get("target_kind", "")) != "hero"',
-        "hero_candidates.append(candidate.duplicate(true))",
-        "return hero_candidates",
-    ):
-        ensure(required_token in helper_body, errors, f"AI known-world candidate compatibility helper is missing exact behavior: {required_token}")
-    ensure(
-        helper_body.count("EnemyAdventureRules._target_candidates(") == 1,
-        errors,
-        "AI known-world candidate compatibility helper must materialize the current candidate surface exactly once.",
-    )
-    sighting_match = re.search(
-        r"func _hero_targets_require_ai_sighting\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _hero_target_candidates_for_origin)",
-        report_text,
-        re.S,
-    )
-    ensure(sighting_match is not None, errors, "AI known-world report is missing the isolated hero-sighting compatibility case.")
-    sighting_body = sighting_match.group("body") if sighting_match else ""
-    ensure(
-        sighting_body.count("_hero_target_candidates_for_origin(session, Vector2i(7, 2), config)") == 3,
-        errors,
-        "AI known-world hero-sighting case must use the compatibility helper for hidden, visible, and remembered candidates.",
-    )
-    for candidate_name in ("hidden_candidates", "visible_candidates", "remembered_candidates"):
-        ensure(
-            f"var {candidate_name}: Array = _hero_target_candidates_for_origin" in sighting_body,
-            errors,
-            f"AI known-world hero-sighting candidate must remain explicitly typed: {candidate_name}",
-        )
-    ensure(
-        "EnemyAdventureRules._hero_target_candidates(" not in report_text,
-        errors,
-        "AI known-world report must not call the removed private hero-candidate wrapper.",
-    )
-    ensure(
-        report_text.count("_hero_target_candidates_for_origin(") == 4,
-        errors,
-        "AI known-world report must keep one compatibility helper definition and exactly three consumers.",
-    )
-
-def validate_ai_hero_task_retask_cancellation(errors: list[str]) -> None:
-    for path in (
-        AI_HERO_TASK_RETASK_CANCELLATION_REPORT_SCRIPT_PATH,
-        AI_HERO_TASK_RETASK_CANCELLATION_REPORT_SCENE_PATH,
-        AI_HERO_TASK_RETASK_CANCELLATION_REPORT_DOC_PATH,
-    ):
-        ensure(path.exists(), errors, f"Missing AI hero task retask cancellation file: {path.relative_to(ROOT)}")
-    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
-    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
-    for required_token in (
-        "_ai_hero_task_same_live_assignment",
-        '"cancelled_by_retask"',
-        '"invalidated_by_task_id"',
-        '"task_status"] = "cancelled"',
-        '"town_defense" in reason_codes',
-    ):
-        ensure(required_token in enemy_adventure_text, errors, f"AI hero task retask cancellation implementation is missing token: {required_token}")
-    ensure(
-        '"cancelled_by_retask"' in enemy_turn_text,
-        errors,
-        "Enemy task-state normalizer does not accept cancelled_by_retask.",
-    )
-    if AI_HERO_TASK_RETASK_CANCELLATION_REPORT_SCRIPT_PATH.exists():
-        report_text = AI_HERO_TASK_RETASK_CANCELLATION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "AI_HERO_TASK_RETASK_CANCELLATION_REPORT",
-            "retasked_commanders_cancel_previous_open_task",
-            "town_defense_retask_cancels_previous_resource_task",
-            "cancelled_by_retask",
-            "invalidated_by_task_id",
-            "hero_task_state_live_persist_no_save_migration",
-        ):
-            ensure(required_token in report_text, errors, f"AI hero task retask cancellation report is missing token: {required_token}")
-    if AI_HERO_TASK_RETASK_CANCELLATION_REPORT_DOC_PATH.exists():
-        doc_text = AI_HERO_TASK_RETASK_CANCELLATION_REPORT_DOC_PATH.read_text(encoding="utf-8")
-        for required_text in (
-            "Strategic AI Task Retask Cancellation Report",
-            "implementation evidence",
-            "retasked_commanders_cancel_previous_open_task",
-            "No save migration",
-        ):
-            ensure(required_text in doc_text, errors, f"AI hero task retask cancellation doc is missing required text: {required_text}")
-
 def validate_ai_hero_task_encounter_objective(errors: list[str]) -> None:
     for path in (
-        AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_SCRIPT_PATH,
-        AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_SCENE_PATH,
         AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_DOC_PATH,
     ):
         ensure(path.exists(), errors, f"Missing AI hero task encounter objective file: {path.relative_to(ROOT)}")
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
     for required_token in (
-        'target_kind not in ["resource", "town", "artifact", "encounter", "hero", "regroup"]',
         'match target_kind:',
         '"encounter":',
-        "func encounter_arrival_ready_report",
-        "func redirect_encounter_objective_for_risk",
-        "func ai_active_front_support_target_selection_plan",
-        "func _active_front_support_candidate",
-        "func _active_front_committed_support_strength",
-        "func _raid_grouping_target_view",
-        "_encounter_guard_strength",
-        "func _ai_hero_task_reconciled_encounter_task",
-        'elif "active_front_support" in reason_codes:',
         'String(reservation.get("reservation_scope", "")) == "exclusive_target"',
         "OverworldRulesScript.is_encounter_resolved(session, encounter)",
         '_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")',
@@ -41336,31 +40034,6 @@ def validate_ai_hero_task_encounter_objective(errors: list[str]) -> None:
         errors,
         "Enemy task-state normalizer does not accept target_kind encounter.",
     )
-    if AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_SCRIPT_PATH.exists():
-        report_text = AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT",
-            "objective_front_encounters_use_saved_task_continuity_arrival_risk_gating_and_active_front_support",
-            "objective_front_encounter_assigns_reuses_and_closes_task",
-            "weak_encounter_objective_regroups_before_clear",
-            "active_front_support_groups_for_encounter_objective",
-            "active_front_support",
-            "supporting_front_placement_id",
-            "support_committed_strength",
-            "overcommit_plan_empty_after_support",
-            "support_task_class",
-            "support_reservation_scope",
-            "leader_saved_plan_preserved",
-            "ai_raid_grouped",
-            "encounter_risk_regroup",
-            "encounter_risk_staging",
-            "gathering strength for guarded site",
-            "causeway_levee_cutters",
-            "saved_hero_task",
-            "invalid_target_missing",
-            "hero_task_state_live_persist_no_save_migration",
-        ):
-            ensure(required_token in report_text, errors, f"AI hero task encounter objective report is missing token: {required_token}")
     if AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_DOC_PATH.exists():
         doc_text = AI_HERO_TASK_ENCOUNTER_OBJECTIVE_REPORT_DOC_PATH.read_text(encoding="utf-8")
         for required_text in (
@@ -41394,26 +40067,18 @@ def validate_ai_hero_task_encounter_objective(errors: list[str]) -> None:
 
 def validate_ai_hero_task_artifact_objective(errors: list[str]) -> None:
     for path in (
-        AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH,
-        AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCENE_PATH,
         AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_DOC_PATH,
     ):
         ensure(path.exists(), errors, f"Missing AI hero task artifact objective file: {path.relative_to(ROOT)}")
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
     for required_token in (
-        'target_kind not in ["resource", "town", "artifact", "encounter", "hero", "regroup"]',
-        "func _ai_hero_task_reconciled_artifact_task",
         '"artifact":',
         "ArtifactRulesScript.describe_artifact",
         "ArtifactRulesScript.claim_artifact",
         "sync_commander_state_to_roster",
         "ai_artifact_secured",
-        "collected_by_faction_id",
         "_artifact_guard_encounter_for_node",
-        "_redirect_claim_to_guard_encounter",
-        "_resume_guarded_claim_after_guard_clear",
-        "_guarded_claim_resume_target",
         '_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")',
     ):
         ensure(required_token in enemy_adventure_text, errors, f"AI hero task artifact objective implementation is missing token: {required_token}")
@@ -41422,27 +40087,6 @@ def validate_ai_hero_task_artifact_objective(errors: list[str]) -> None:
         errors,
         "Enemy task-state normalizer does not accept target_kind artifact.",
     )
-    if AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH.exists():
-        report_text = AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT",
-            "artifact_targets_use_saved_task_continuity_and_guarded_claim_routing",
-            "artifact_relic_assigns_reuses_and_closes_task",
-            "guarded_artifact_claim_resumes_and_secures_after_guard_clear",
-            "guard_clearance",
-            "guard_cleared",
-            "guarded_artifact_claim",
-            "warcrest_ruin",
-            "saved_hero_task",
-            "invalid_target_missing",
-            "invalid_target_resolved",
-            "artifact_warcrest_pennon",
-            "equipped_artifact_id",
-            "artifact_bonus_attack",
-            "artifact_event_type",
-            "hero_task_state_live_persist_no_save_migration",
-        ):
-            ensure(required_token in report_text, errors, f"AI hero task artifact objective report is missing token: {required_token}")
     if AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_DOC_PATH.exists():
         doc_text = AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_DOC_PATH.read_text(encoding="utf-8")
         for required_text in (
@@ -41475,31 +40119,18 @@ def validate_ai_hero_task_artifact_objective(errors: list[str]) -> None:
 
 def validate_ai_artifact_equipment(errors: list[str]) -> None:
     for path in (
-        AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH,
-        AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCENE_PATH,
         AI_ARTIFACT_EQUIPMENT_REPORT_DOC_PATH,
     ):
         ensure(path.exists(), errors, f"Missing AI artifact equipment file: {path.relative_to(ROOT)}")
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
-    report_text = AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8") if AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH.exists() else ""
     for required_token in (
         "ArtifactRulesScript.normalize_hero_artifacts",
         "ArtifactRulesScript.claim_artifact",
-        "ArtifactRulesScript.artifact_equip_runtime_report",
         "sync_commander_state_to_roster",
         "ai_artifact_secured",
         '"artifact_secured"',
     ):
         ensure(required_token in enemy_adventure_text, errors, f"AI artifact equipment implementation is missing token: {required_token}")
-    for required_token in (
-        "artifact_warcrest_pennon",
-        "battle_attack",
-        "battle_initiative",
-        "_roster_commander_state",
-        "ai_public_event_log_boundary_report",
-        "ai_artifact_secured",
-    ):
-        ensure(required_token in report_text, errors, f"AI artifact equipment report is missing token: {required_token}")
     if AI_ARTIFACT_EQUIPMENT_REPORT_DOC_PATH.exists():
         doc_text = AI_ARTIFACT_EQUIPMENT_REPORT_DOC_PATH.read_text(encoding="utf-8")
         for required_text in (
@@ -41516,7 +40147,6 @@ def validate_ai_artifact_equipment(errors: list[str]) -> None:
 def validate_ai_adventure_objective_progression(errors: list[str]) -> None:
     for path in (
         AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCRIPT_PATH,
-        AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH,
         AI_ADVENTURE_OBJECTIVE_PROGRESSION_REPORT_DOC_PATH,
     ):
         ensure(path.exists(), errors, f"Missing AI adventure objective progression file: {path.relative_to(ROOT)}")
@@ -41529,7 +40159,6 @@ def validate_ai_adventure_objective_progression(errors: list[str]) -> None:
         "COMMANDER_OUTCOME_TOWN_DEFENDED",
         "strategic_successes",
         "func _record_adventure_objective_success",
-        "advance_commander_record(commander_state, COMMANDER_OUTCOME_TOWN_DEFENDED)",
     ):
         ensure(required_token in enemy_adventure_text, errors, f"AI adventure objective progression implementation is missing token: {required_token}")
     live_report_text = AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8") if AI_HERO_TASK_LIVE_TURN_EXECUTION_REPORT_SCRIPT_PATH.exists() else ""
@@ -41541,15 +40170,6 @@ def validate_ai_adventure_objective_progression(errors: list[str]) -> None:
         "_assert_progression",
     ):
         ensure(required_token in live_report_text, errors, f"AI live turn report is missing objective progression token: {required_token}")
-    artifact_report_text = AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8") if AI_HERO_TASK_ARTIFACT_OBJECTIVE_REPORT_SCRIPT_PATH.exists() else ""
-    for required_token in (
-        "vaska_progress_before",
-        "vaska_progress_normalized",
-        "COMMANDER_OUTCOME_ARTIFACT_SECURED",
-        "strategic_successes",
-        "_assert_progression",
-    ):
-        ensure(required_token in artifact_report_text, errors, f"AI artifact objective report is missing progression token: {required_token}")
     if AI_ADVENTURE_OBJECTIVE_PROGRESSION_REPORT_DOC_PATH.exists():
         doc_text = AI_ADVENTURE_OBJECTIVE_PROGRESSION_REPORT_DOC_PATH.read_text(encoding="utf-8")
         for required_text in (
@@ -41567,8 +40187,6 @@ def validate_ai_adventure_objective_progression(errors: list[str]) -> None:
 
 def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
     for path in (
-        AI_HERO_TASK_HERO_HUNT_REPORT_SCRIPT_PATH,
-        AI_HERO_TASK_HERO_HUNT_REPORT_SCENE_PATH,
         AI_HERO_TASK_HERO_HUNT_REPORT_DOC_PATH,
     ):
         ensure(path.exists(), errors, f"Missing AI hero task hero hunt file: {path.relative_to(ROOT)}")
@@ -41576,26 +40194,14 @@ def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
     battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8") if BATTLE_RULES_PATH.exists() else ""
     for required_token in (
-        'target_kind not in ["resource", "town", "artifact", "encounter", "hero", "regroup"]',
-        "func _player_hero_snapshot_for_task",
-        "func _hero_target_goal_tiles",
-        "RAID_RISK_SUPPORT_STALL_DAYS",
-        "func _retire_risk_stalled_raid_to_rebuild",
-        "func _ai_hero_task_reconciled_hero_task",
         '"hero":',
-        '"hero_hunt"',
-        '"exposed_hero"',
     ):
         ensure(required_token in enemy_adventure_text, errors, f"AI hero task hero hunt implementation is missing token: {required_token}")
     for required_token in (
         '["resource", "town", "artifact", "encounter", "hero", "regroup", "commander", "front"]',
-        "func _hero_intercept_ready_report",
-        "redirect_hero_intercept_for_risk",
-        "hero_intercept_delay_until_day",
         "invalid_battle_defeat",
         "invalid_battle_withdrawal",
         "battle_stalemate",
-        "func _hero_intercept_candidate_score",
     ):
         ensure(required_token in enemy_turn_text, errors, f"AI hero task hero hunt normalizer/intercept implementation is missing token: {required_token}")
     ensure(
@@ -41611,35 +40217,6 @@ def validate_ai_hero_task_hero_hunt(errors: list[str]) -> None:
         "invalid_battle_withdrawal",
     ):
         ensure(required_token in battle_rules_text, errors, f"AI battle task outcome lifecycle is missing token: {required_token}")
-    if AI_HERO_TASK_HERO_HUNT_REPORT_SCRIPT_PATH.exists():
-        report_text = AI_HERO_TASK_HERO_HUNT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "AI_HERO_TASK_HERO_HUNT_REPORT",
-            "hero_targets_use_saved_task_continuity",
-            "hero_targets_use_saved_task_continuity_with_intercept_risk_gating",
-            "hero_targets_use_saved_task_continuity_with_intercept_risk_gating_and_support_grouping",
-            "hero_targets_use_saved_task_continuity_with_intercept_risk_gating_support_grouping_and_stall_withdrawal",
-            "hero_targets_use_saved_task_continuity_with_intercept_risk_gating_support_grouping_stall_withdrawal_and_battle_outcome_lifecycle",
-            "hero_hunt_assigns_reuses_follows_and_resolves_task_from_battle_outcome",
-            "weak_hero_hunt_regroups_before_intercept",
-            "hero_intercept_arbitration_prefers_ready_high_value_hunt",
-            "ready_high_value_hero_sable",
-            "hero_hunt_support_groups_before_intercept",
-            "stale_unsupported_hero_hunt_retires_to_rebuild",
-            "invalid_battle_defeat",
-            "active_front_support",
-            "ai_raid_grouped",
-            "risk_support_timeout",
-            "invalid_actor_rebuilding",
-            "hero_hunt_risk_regroup",
-            "hero_hunt_risk_shadow",
-            "stalking stronger hero",
-            "saved_hero_task",
-            "invalid_target_missing",
-            "hero_intercept",
-            "hero_task_state_live_persist_no_save_migration",
-        ):
-            ensure(required_token in report_text, errors, f"AI hero task hero hunt report is missing token: {required_token}")
     if AI_HERO_TASK_HERO_HUNT_REPORT_DOC_PATH.exists():
         doc_text = AI_HERO_TASK_HERO_HUNT_REPORT_DOC_PATH.read_text(encoding="utf-8")
         for required_text in (
@@ -41804,26 +40381,16 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "town_build_event_count",
         "recruit_destination_event_count",
         "ai_town_built",
-        "_town_governor_report_for_town",
-        "_town_build_signal",
-        "_town_defense_retask_raid_seed",
         "_first_controller_town_signal_for_faction",
         "_first_commander_hero_id_for_faction",
         "_first_resource_node_signal_for_harness",
-        "_resource_defense_retask_raid_seed",
-        "_set_resource_defense_front",
-        "_resource_defense_signal",
         "_town_retake_assault_raid_seed",
         "_town_assault_grouping_raid_seed",
         "grouping_event_count",
         "joined_column_id",
         "battle_context_type",
         "battle_town_id",
-        "front_stabilization",
         "site_defense",
-        "ai_site_defended",
-        "ai_defended_by_faction_id",
-        "_understrength_regroup_raid_seed",
         "regroup_event_count",
         "garrison_before",
         "garrison_after",
@@ -41837,17 +40404,12 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "_recruitment_delivery_raid_seed",
         "_first_recruit_unit_id_for_faction",
         "_owned_controller_town_count_for_faction",
-        "_active_raid_signals_for_faction",
         "_town_controller_faction_id_for_harness",
-        "_objective_targeting_raid_seed",
-        "_prime_objective_priority_targets_for_harness",
-        "_placement_target_signal_for_harness",
         "prismhearth-watch",
         "glassroad-sundering",
         "glassfen-breakers",
         "bogbound-oath",
         "ninefold-confluence",
-        "halo_spire",
         "controlling_faction_id",
         "scenario_count",
         "faction_case_count",
@@ -41858,7 +40420,6 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "priority_reason_count",
         "priority_target_ids",
         "objective_targeted",
-        "objective_reason",
         "initial_goal_distance",
         "final_goal_distance",
         "target_assignment_event_count",
@@ -41866,7 +40427,6 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "hero_units_after",
         "strategic_ai_recruitment_coverage_scenario_ids",
         "public_event_leak_tokens",
-        "hero_task_state_live_persist_no_save_migration",
         "EnemyTurnRules.run_enemy_turn(session)",
         "OverworldRules.end_turn(session)",
         "BattleAutoplayBalanceHarnessRulesScript.build_difficulty_sweep_report",
@@ -41962,13 +40522,9 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "scenario_count",
         "faction_case_count",
         "retasked_faction_count",
-        "launched_faction_count",
         "delivered_faction_count",
         "objective_targeted_count",
-        "priority_reason_count",
-        "priority_target_ids",
         "objective_targeted",
-        "objective_reason",
         "resource_fronts_seized",
         "route_records",
         "turns_simulated",
@@ -41981,10 +40537,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "recruit_destination_event_count",
         "ai_town_built",
         "town_defense",
-        "front_stabilization",
         "site_defense",
-        "ai_site_defended",
-        "ai_defended_by_faction_id",
         "battle_context_type",
         "battle_town_id",
         "joined_column_id",
@@ -41992,8 +40545,6 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "regroup_event_count",
         "garrison_before",
         "garrison_after",
-        "last_regroup_town_id",
-        "ai_raid_regrouped",
         "town_recruit_event_count",
         "hero_reinforcement_event_count",
         "ai_town_recruited",
@@ -42006,11 +40557,9 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
         "before_strength",
         "initial_goal_distance",
         "final_goal_distance",
-        "target_assignment_event_count",
         "site_seizure_event_count",
         "private_hero_goals",
         "public_event_leak_tokens",
-        "hero_task_state_live_persist_no_save_migration",
         "battle_autoplay_difficulty_sweep_v1",
         "report_only_launch_difficulty_balance_probe",
         "no_observed_effect",
@@ -42161,316 +40710,8 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
             ensure(required_text in difficulty_sweep_doc_text, errors, f"Headless battle difficulty sweep harness doc is missing required text: {required_text}")
 
 
-def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
-    for path in (
-        AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH,
-        AI_RAID_REGROUP_RETREAT_REPORT_SCENE_PATH,
-        AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH,
-    ):
-        ensure(path.exists(), errors, f"Missing AI raid regroup/retreat file: {path.relative_to(ROOT)}")
-    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
-    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
-    for required_token in (
-        "raid_regroup_needed",
-        "_redirect_understrength_raid_to_regroup",
-        "_redirect_unreachable_raid_target",
-        "_nearest_regroup_town",
-        "_regroup_raid_at_town",
-        "func _ai_hero_task_reconciled_regroup_task",
-        '"invalid_route_unreachable"',
-        '"route_unreachable"',
-        '"regroup_route_recovery"',
-        '"rebuild_host"',
-        '"regroup":',
-        '_ai_hero_task_finish_live_assignment(session, faction_id, raid, "completed", "valid")',
-        "_transfer_town_garrison_to_raid",
-        "_clear_regroup_target",
-        "_resource_guard_encounter_for_node",
-        "_redirect_claim_to_guard_encounter",
-        "_resume_guarded_claim_after_guard_clear",
-        "_guarded_claim_resume_target",
-        '"ai_raid_regrouped"',
-        '"regroup"',
-        '"regroup_understrength"',
-        '"army_consolidation"',
-        '"town_defense"',
-        'raid["target_public_importance"] = "high"',
-        '"target_public_importance": "high"',
-    ):
-        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing raid regroup/retreat token: {required_token}")
-    ensure(
-        '["resource", "town", "artifact", "encounter", "hero", "regroup", "commander", "front"]' in enemy_turn_text,
-        errors,
-        "Enemy task-state normalizer does not accept target_kind regroup.",
-    )
-    for required_token in (
-        "static func _active_front_support_launch_ready_report",
-        '"active_front_support_candidate_surface"',
-        '"active_front_support_candidate_surface_complete"',
-        '"active_front_candidate_surface_point_reused"',
-        '"active_front_candidate_surface_consumed"',
-        '"active_front_support_no_active_front_skip"',
-        '"active_front_support_path_context_loaded"',
-        '"active_front_support_path_context_reused"',
-        "var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context, level)",
-        '"ready_saved_task_no_prepared_commander_skip"',
-        '"spawn_spell_projection_roster_reused"',
-    ):
-        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing active-front launch-surface reuse token: {required_token}")
-    for required_token in (
-        "static func _ai_commander_task_fit_context",
-        "static func _ai_commander_task_fit_bonus_from_context",
-        "_target_candidates_from_descriptors(",
-        'current_placement_id.begins_with("__active_front_support_probe:")',
-        "virtual_probe_path_context",
-        "if step_index > 0:",
-    ):
-        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing task-planner context reuse token: {required_token}")
-    if AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH.exists():
-        report_text = AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "AI_RAID_REGROUP_RETREAT_REPORT",
-            "understrength_raids_retreat_guarded_claims_retarget_and_unreachable_routes_recover",
-            "river_pass_understrength_raid_regroups_at_duskfen",
-            "guarded_resource_claim_resumes_and_secures_after_guard_clear",
-            "valid_resource_target_unreachable_reroutes_to_regroup",
-            "guarded_resource_claim",
-            "route_unreachable",
-            "regroup_route_recovery",
-            "invalid_route_unreachable",
-            "guard_clearance",
-            "guard_cleared",
-            "saved_hero_task",
-            "invalid_target_missing",
-            "invalid_controller_changed",
-            "task_status_counts",
-            "ai_raid_regrouped",
-            "ai_target_assigned",
-            "last_regroup_town_id",
-            "resource_controller_after",
-            "save_version_before",
-            "save_version_after",
-            "launch_surface_candidate_match",
-            "launch_surface_all_origin_payloads_match",
-            "launch_surface_context_isolated",
-            "launch_surface_points_reused",
-            "launch_surface_consumed",
-            "post_consumption_recomputed",
-            "active_front_support_skips_empty_front_probe_construction",
-            "active_front_support_stops_after_first_empty_plan",
-            "active_front_support_empty_plan_remaining_probe_skipped",
-            "legacy_candidate_empty",
-            "remaining_probes_skipped",
-            "no_active_front_skip_count",
-            "commander_probes_loaded",
-            "path_context_loaded",
-            "path_context_reused",
-            "shared_spawn_path_context_loaded",
-            "shared_spawn_path_context_reused",
-            "launch_surface_path_context_loaded",
-            "launch_surface_path_context_reused",
-            "launch_surface_shared_spawn_path_context_loaded",
-            "launch_surface_shared_spawn_path_context_reused",
-            "virtual_path_context_legacy_match",
-        ):
-            ensure(required_token in report_text, errors, f"AI raid regroup/retreat report is missing token: {required_token}")
-    if AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH.exists():
-        doc_text = AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH.read_text(encoding="utf-8")
-        for required_text in (
-            "Strategic AI Raid Regroup Retreat Report",
-            "strategic-ai-raid-regroup-retreat-20260523-10184",
-            "strategic-ai-regroup-task-board-10184",
-            "understrength raids retreat",
-            "target_kind: regroup",
-            "Duskfen Bastion",
-            "No full strategic AI quality claim",
-        ):
-            ensure(required_text in doc_text, errors, f"AI raid regroup/retreat doc is missing required text: {required_text}")
-
-
-def validate_ai_local_recruitment_support(errors: list[str]) -> None:
-    ensure(AI_LOCAL_RECRUITMENT_SUPPORT_REPORT_DOC_PATH.exists(), errors, "AI local recruitment support doc is missing")
-    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
-    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
-    town_governor_report_text = (ROOT / "tests" / "ai_town_governor_pressure_report.gd").read_text(encoding="utf-8")
-    for required_token in (
-        "raid_reinforcement_route_distance",
-        "phase_route_context_cache",
-        "raid_route_contexts",
-        "planned_saved_plans_by_town",
-        "planned_path_context",
-        "supply_distance",
-        "supply_distance >= 9999",
-        "score -= float(supply_distance * 10)",
-    ):
-        ensure(
-            required_token in enemy_turn_text or required_token in enemy_adventure_text,
-            errors,
-            f"AI local recruitment support implementation is missing token: {required_token}",
-        )
-    for required_token in (
-        "report_duskfen_local_raid",
-        "report_duskfen_remote_raid",
-        "nearby raid support",
-        "supply_distance",
-    ):
-        ensure(required_token in town_governor_report_text, errors, f"AI town governor pressure report is missing local support token: {required_token}")
-    if AI_LOCAL_RECRUITMENT_SUPPORT_REPORT_DOC_PATH.exists():
-        doc_text = AI_LOCAL_RECRUITMENT_SUPPORT_REPORT_DOC_PATH.read_text(encoding="utf-8")
-        for required_text in (
-            "Strategic AI Local Recruitment Support Report",
-            "strategic-ai-local-recruitment-support-10184",
-            "route/locality",
-            "unreachable hosts are skipped",
-            "No save migration",
-            "No new strategic-AI production-ready claim",
-        ):
-            ensure(required_text in doc_text, errors, f"AI local recruitment support doc is missing required text: {required_text}")
-
-
-def validate_ai_adventure_spell_execution(errors: list[str]) -> None:
-    for path in (
-        AI_ADVENTURE_SPELL_EXECUTION_REPORT_SCRIPT_PATH,
-        AI_ADVENTURE_SPELL_EXECUTION_REPORT_SCENE_PATH,
-        AI_ADVENTURE_SPELL_EXECUTION_REPORT_DOC_PATH,
-    ):
-        ensure(path.exists(), errors, f"Missing AI adventure spell execution file: {path.relative_to(ROOT)}")
-    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
-    report_text = AI_ADVENTURE_SPELL_EXECUTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8") if AI_ADVENTURE_SPELL_EXECUTION_REPORT_SCRIPT_PATH.exists() else ""
-    for required_token in (
-        "RAID_ADVENTURE_SPELL_MAX_MOVEMENT_STEPS",
-        "_maybe_cast_raid_adventure_movement_spell",
-        "SpellRulesScript.cast_overworld_spell",
-        "ai_adventure_spell_cast",
-        '"valuation_with_enemy_movement_and_scouting_spell_executors"',
-        "_hero_starting_spell_ids",
-    ):
-        ensure(required_token in enemy_adventure_text, errors, f"AI adventure spell execution implementation is missing token: {required_token}")
-    for required_token in (
-        "_run_adventure_executor_case",
-        "adventure_spell_executor_raid",
-        "spell_trailglyph",
-        "ai_adventure_spell_cast",
-        "last_adventure_spell_id",
-        "mana_after",
-    ):
-        ensure(required_token in report_text, errors, f"AI adventure spell execution report is missing token: {required_token}")
-    if AI_ADVENTURE_SPELL_EXECUTION_REPORT_DOC_PATH.exists():
-        doc_text = AI_ADVENTURE_SPELL_EXECUTION_REPORT_DOC_PATH.read_text(encoding="utf-8")
-        for required_text in (
-            "Strategic AI Adventure Spell Execution Report",
-            "strategic-ai-adventure-spell-execution-10184",
-            "Enemy commander spellbooks preserve authored overworld spells",
-            "ai_adventure_spell_cast",
-            "No save migration",
-            "No broad strategic-AI production-ready claim",
-        ):
-            ensure(required_text in doc_text, errors, f"AI adventure spell execution doc is missing required text: {required_text}")
-
-
-def validate_ai_scouting_spell_execution(errors: list[str]) -> None:
-    for path in (
-        AI_ADVENTURE_SPELL_EXECUTION_REPORT_SCRIPT_PATH,
-        AI_ADVENTURE_SPELL_EXECUTION_REPORT_SCENE_PATH,
-        AI_SCOUTING_SPELL_EXECUTION_REPORT_DOC_PATH,
-    ):
-        ensure(path.exists(), errors, f"Missing AI scouting spell execution file: {path.relative_to(ROOT)}")
-    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
-    report_text = AI_ADVENTURE_SPELL_EXECUTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8") if AI_ADVENTURE_SPELL_EXECUTION_REPORT_SCRIPT_PATH.exists() else ""
-    for required_token in (
-        "RAID_ADVENTURE_SCOUTING_MEMORY_DAYS",
-        "RAID_ADVENTURE_SCOUTED_TARGET_PRIORITY_BONUS",
-        "_maybe_cast_raid_adventure_scouting_spell",
-        "_record_enemy_scouting_reveal",
-        "known_world_memory",
-        "enemy_scouting",
-        "_enemy_scouted_target_priority_bonus",
-        "SpellRulesScript.cast_overworld_spell",
-    ):
-        ensure(required_token in enemy_adventure_text, errors, f"AI scouting spell execution implementation is missing token: {required_token}")
-    for required_token in (
-        "_run_adventure_scouting_executor_case",
-        "adventure_spell_scouting_raid",
-        "spell_survey_chain",
-        "last_adventure_scout_spell_id",
-        "known_world_memory",
-        "resource:midway_shrine",
-        "enemy_scouting",
-        "scouting_executor",
-    ):
-        ensure(required_token in report_text, errors, f"AI scouting spell execution report is missing token: {required_token}")
-    if AI_SCOUTING_SPELL_EXECUTION_REPORT_DOC_PATH.exists():
-        doc_text = AI_SCOUTING_SPELL_EXECUTION_REPORT_DOC_PATH.read_text(encoding="utf-8")
-        for required_text in (
-            "Strategic AI Scouting Spell Execution Report",
-            "strategic-ai-scouting-spell-execution-10184",
-            "known_world_memory.scouted_targets",
-            "enemy_scouting",
-            "spell_survey_chain",
-            "No save migration",
-            "No full enemy fog-of-war parity claim",
-            "No broad strategic-AI production-ready claim",
-        ):
-            ensure(required_text in doc_text, errors, f"AI scouting spell execution doc is missing required text: {required_text}")
-
-
-def validate_ai_town_defense_retask(errors: list[str]) -> None:
-    for path in (
-        AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH,
-        AI_TOWN_DEFENSE_RETASK_REPORT_SCENE_PATH,
-        AI_TOWN_DEFENSE_RETASK_REPORT_DOC_PATH,
-    ):
-        ensure(path.exists(), errors, f"Missing AI town defense retask file: {path.relative_to(ROOT)}")
-    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
-    for required_token in (
-        "_redirect_raid_to_threatened_town_defense",
-        "_best_threatened_defense_town",
-        "_known_player_threat_position_for_ai",
-        '"town_defense"',
-        '"front_stabilization"',
-        '"defending threatened town"',
-        'raid["town_defense_started_day"]',
-        'raid["town_defense_front_id"]',
-        "stabilizing owned town under player threat",
-        "String(town.get(\"owner\", \"neutral\")) == \"enemy\"",
-    ):
-        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing town defense retask token: {required_token}")
-    if AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH.exists():
-        report_text = AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "AI_TOWN_DEFENSE_RETASK_REPORT",
-            "active_raids_defend_threatened_owned_town_fronts",
-            "river_pass_active_raid_defends_stabilizing_duskfen",
-            "duskfen_bastion",
-            "river_free_company",
-            "stationed_town_defender_releases_when_front_clears",
-            "live_town_defense_retask_rotation_no_save_migration",
-            "active_raids_defend_threatened_owned_town_fronts_without_overcommitting_and_release_cleared_defenders",
-            "town_defense",
-            "front_stabilization",
-            "ai_target_assigned",
-            "hero_task_state_live_persist_no_save_migration",
-            "save_version_before",
-            "save_version_after",
-        ):
-            ensure(required_token in report_text, errors, f"AI town defense retask report is missing token: {required_token}")
-    if AI_TOWN_DEFENSE_RETASK_REPORT_DOC_PATH.exists():
-        doc_text = AI_TOWN_DEFENSE_RETASK_REPORT_DOC_PATH.read_text(encoding="utf-8")
-        for required_text in (
-            "Strategic AI Town Defense Retask Report",
-            "strategic-ai-town-defense-retask-20260523-10184",
-            "active enemy raid hosts",
-            "Duskfen",
-            "strategic-ai-town-defender-rotation-10184",
-            "Stationed town defenders release back to the commander roster when the defended front is cleared",
-            "No broad strategic AI quality claim",
-        ):
-            ensure(required_text in doc_text, errors, f"AI town defense retask doc is missing required text: {required_text}")
-
-
 def validate_ai_town_defense_arrival(errors: list[str]) -> None:
     for path in (
-        AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH,
         AI_TOWN_DEFENSE_ARRIVAL_REPORT_DOC_PATH,
     ):
         ensure(path.exists(), errors, f"Missing AI town defense arrival file: {path.relative_to(ROOT)}")
@@ -42478,11 +40719,9 @@ def validate_ai_town_defense_arrival(errors: list[str]) -> None:
     battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8") if BATTLE_RULES_PATH.exists() else ""
     overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8") if OVERWORLD_RULES_PATH.exists() else ""
     for required_token in (
-        "_defend_town_target",
         '"ai_town_defended"',
         '"ai_defender_commander_state"',
         '"ai_defense_rating"',
-        '"garrison_reinforced"',
         '"town_defense:%s"',
         "sync_commander_state_to_roster",
         "COMMANDER_STATUS_ACTIVE",
@@ -42505,20 +40744,6 @@ def validate_ai_town_defense_arrival(errors: list[str]) -> None:
         '"defend"',
     ):
         ensure(required_token in overworld_rules_text, errors, f"OverworldRules.gd is missing town defense arrival persistence token: {required_token}")
-    if AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH.exists():
-        report_text = AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "ai_town_defended",
-            "garrison_strength_before",
-            "garrison_strength_after",
-            "stationed_commander_id",
-            "front_active_after_defense",
-            "front_mode_after_defense",
-            "town_assault_enemy_commander_id",
-            "unit_bog_brute",
-            "BattleRules.create_town_assault_payload",
-        ):
-            ensure(required_token in report_text, errors, f"AI town defense arrival report coverage is missing token: {required_token}")
     if AI_TOWN_DEFENSE_ARRIVAL_REPORT_DOC_PATH.exists():
         doc_text = AI_TOWN_DEFENSE_ARRIVAL_REPORT_DOC_PATH.read_text(encoding="utf-8")
         for required_text in (
@@ -42534,7 +40759,6 @@ def validate_ai_town_defense_arrival(errors: list[str]) -> None:
 
 def validate_ai_town_defender_lifecycle(errors: list[str]) -> None:
     for path in (
-        AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH,
         AI_TOWN_DEFENDER_LIFECYCLE_REPORT_DOC_PATH,
     ):
         ensure(path.exists(), errors, f"Missing AI town defender lifecycle file: {path.relative_to(ROOT)}")
@@ -42552,21 +40776,6 @@ def validate_ai_town_defender_lifecycle(errors: list[str]) -> None:
         "active[defender_roster_hero_id] = defender_entry",
     ):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing town defender lifecycle token: {required_token}")
-    if AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH.exists():
-        report_text = AI_TOWN_DEFENSE_RETASK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "stationed_commander_status",
-            "stationed_active_placement_id",
-            "replacement_selection_while_stationed",
-            "released_commander_status",
-            "defender_metadata_cleared_after_expiry",
-            "stationed_town_defender_releases_when_front_clears",
-            "defender_metadata_cleared",
-            "EnemyAdventureRules.select_raid_commander_roster_hero_id",
-            "EnemyAdventureRules.COMMANDER_STATUS_ACTIVE",
-            "EnemyAdventureRules.COMMANDER_STATUS_AVAILABLE",
-        ):
-            ensure(required_token in report_text, errors, f"AI town defender lifecycle report coverage is missing token: {required_token}")
     if AI_TOWN_DEFENDER_LIFECYCLE_REPORT_DOC_PATH.exists():
         doc_text = AI_TOWN_DEFENDER_LIFECYCLE_REPORT_DOC_PATH.read_text(encoding="utf-8")
         for required_text in (
@@ -42585,31 +40794,16 @@ def validate_ai_town_defender_lifecycle(errors: list[str]) -> None:
 
 def validate_ai_town_retake_assault(errors: list[str]) -> None:
     for path in (
-        AI_TOWN_RETAKE_ASSAULT_REPORT_SCRIPT_PATH,
-        AI_TOWN_RETAKE_ASSAULT_REPORT_SCENE_PATH,
         AI_TOWN_RETAKE_ASSAULT_REPORT_DOC_PATH,
     ):
         ensure(path.exists(), errors, f"Missing AI town retake assault file: {path.relative_to(ROOT)}")
     harness_text = (ROOT / "tests" / "support" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
-    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "func ai_live_town_retake_target_selection_plan",
-        "ai_live_town_retake_target_selection_plan(session, config, raid, preloaded_path_context)",
-        "func _redirect_fragile_raid_for_known_target_risk",
-        "func _town_assault_advance_risk_report",
-        "func _hero_intercept_advance_risk_report",
-        "_redirect_fragile_raid_for_known_target_risk(session, config, encounter, faction_id)",
         '"retake_front"',
-        "live retake front town target selection",
         "retaking captured town",
     ):
         ensure(required_token in enemy_adventure_text, errors, f"Enemy adventure rules are missing town retake assault token: {required_token}")
-    for required_token in (
-        "func _town_assault_candidate_score",
-        "func _enemy_config_for_faction",
-    ):
-        ensure(required_token in enemy_turn_text, errors, f"Enemy turn rules are missing town assault arbitration token: {required_token}")
     for required_token in (
         '"strategic_ai_live_town_retake_assault"',
         "func _strategic_ai_live_town_retake_assault",
@@ -42619,36 +40813,8 @@ def validate_ai_town_retake_assault(errors: list[str]) -> None:
         "battle_context_type",
         "battle_town_id",
         "town_defense",
-        "hero_task_state_live_persist_no_save_migration",
     ):
         ensure(required_token in harness_text, errors, f"Headless harness is missing town retake assault token: {required_token}")
-    if AI_TOWN_RETAKE_ASSAULT_REPORT_SCRIPT_PATH.exists():
-        report_text = AI_TOWN_RETAKE_ASSAULT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "AI_TOWN_RETAKE_ASSAULT_REPORT",
-            "enemy_retake_front_town_targets_queue_battles_with_proactive_risk_regroup",
-            "live_town_retake_assault_proactive_risk_no_save_migration",
-            "river_pass_retake_front_queues_town_defense_battle",
-            "town_assault_arbitration_prefers_ready_strategic_target",
-            "ready_strategic_duskfen_sable",
-            "weak_retake_front_stages_before_town_battle",
-            "weak_retake_front_regroups_before_marching",
-            "proactive_risk_case",
-            "risk_regroup_redoubt",
-            "assault_risk_regroup",
-            "assault_risk_staging",
-            "staging stronger assault",
-            "duskfen_bastion",
-            "town_defense",
-            "ai_target_assigned",
-            "EnemyAdventureRules.ai_live_town_retake_target_selection_plan",
-            "live_selector_target_id",
-            "EnemyTurnRules.run_enemy_turn",
-            "hero_task_state_live_persist_no_save_migration",
-            "save_version_before",
-            "save_version_after",
-        ):
-            ensure(required_token in report_text, errors, f"AI town retake assault report is missing token: {required_token}")
     if AI_TOWN_RETAKE_ASSAULT_REPORT_DOC_PATH.exists():
         doc_text = AI_TOWN_RETAKE_ASSAULT_REPORT_DOC_PATH.read_text(encoding="utf-8")
         for required_text in (
@@ -42687,75 +40853,18 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
         AI_RAID_ASSAULT_GROUPING_REPORT_SCRIPT_PATH,
         AI_RAID_ASSAULT_GROUPING_REPORT_SCENE_PATH,
         AI_RAID_ASSAULT_GROUPING_REPORT_DOC_PATH,
-        AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCRIPT_PATH,
-        AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCENE_PATH,
         AI_COMMANDER_ASSAULT_CONSOLIDATION_REPORT_DOC_PATH,
     ):
         ensure(path.exists(), errors, f"Missing AI raid assault grouping file: {path.relative_to(ROOT)}")
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "func group_nearby_raids_for_town_assault",
-        "func _best_nearby_assault_support_raid_index",
-        "func _merged_raid_army_payload",
         "commanderless_support_column",
-        "grouped_commander_support_count",
-        "func _release_grouped_support_commander_to_rebuild_roster",
         "COMMANDER_STATUS_AVAILABLE",
         '"ai_raid_grouped"',
-        '"army_consolidation"',
         "sync_commander_army_continuity",
-        "post_move_grouping_result",
         "func _path_plan_toward",
-        '"initial_path_plan_ms"',
-        '"step_path_plan_ms"',
     ):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing raid assault grouping token: {required_token}")
-    commitment_match = re.search(
-        r"static func _raid_has_immediate_field_objective_commitment\([\s\S]*?(?=\nstatic func )",
-        enemy_adventure_text,
-    )
-    ensure(commitment_match is not None, errors, "EnemyAdventureRules.gd is missing the near-field objective commitment helper.")
-    if commitment_match is not None:
-        commitment_body = commitment_match.group(0)
-        for required_token in (
-            'String(raid.get("target_kind", "")) not in ["resource", "artifact", "encounter"]',
-            "if not _raid_target_valid(session, raid):",
-            'var goal_distance := int(raid.get("goal_distance", 9999))',
-            "goal_distance >= 0 and goal_distance <= RAID_BATTLE_PRESSURE_FIELD_OBJECTIVE_COMMITMENT_DISTANCE",
-        ):
-            ensure(required_token in commitment_body, errors, f"Near-field objective commitment helper is missing fail-closed token: {required_token}")
-        for forbidden_token in (
-            '"town"',
-            '"hero"',
-            '"regroup"',
-            '"explore"',
-            "return true",
-        ):
-            ensure(forbidden_token not in commitment_body, errors, f"Near-field objective commitment helper broadened beyond valid immediate field objectives: {forbidden_token}")
-    preempt_match = re.search(
-        r"static func _maybe_preempt_for_battle_pressure_floor\([\s\S]*?(?=\nstatic func )",
-        enemy_adventure_text,
-    )
-    ensure(preempt_match is not None, errors, "EnemyAdventureRules.gd is missing battle-pressure-floor preemption.")
-    if preempt_match is not None:
-        preempt_body = preempt_match.group(0)
-        ordered_tokens = (
-            'if current_kind not in ["resource", "regroup", "explore", "encounter", "artifact"]:',
-            "if raid_regroup_needed(raid, config, faction_id):",
-            "if _raid_has_immediate_field_objective_commitment(session, raid):",
-            "var active_count := _active_raid_count_for_faction(session, faction_id)",
-        )
-        ordered_positions = [preempt_body.find(token) for token in ordered_tokens]
-        ensure(
-            all(position >= 0 for position in ordered_positions) and ordered_positions == sorted(ordered_positions),
-            errors,
-            "Battle-pressure preemption must preserve regroup authority before gating valid immediate field objectives and active-pressure selection.",
-        )
-        ensure(
-            preempt_body.count("_raid_has_immediate_field_objective_commitment(session, raid)") == 1,
-            errors,
-            "Battle-pressure preemption must consult the near-field commitment helper exactly once.",
-        )
     harness_text = (ROOT / "tests" / "support" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
     for required_token in (
         '"strategic_ai_live_raid_assault_grouping"',
@@ -42768,14 +40877,12 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
         "active_after",
         "leader_strength_after",
         "support_strength_before",
-        "hero_task_state_live_persist_no_save_migration",
     ):
         ensure(required_token in harness_text, errors, f"Headless harness is missing raid assault grouping token: {required_token}")
     if AI_RAID_ASSAULT_GROUPING_REPORT_SCRIPT_PATH.exists():
         report_text = AI_RAID_ASSAULT_GROUPING_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
         for required_token in (
             "AI_RAID_ASSAULT_GROUPING_REPORT",
-            "nearby_same_town_raids_group_before_assault",
             "river_pass_nearby_raids_group_for_town_assault",
             "grouping_support_column",
             "river_pass_commander_raids_group_for_town_assault",
@@ -42790,138 +40897,14 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
             "ai_heroes_met",
             "commanderless_support_column",
             "EnemyTurnRules.run_enemy_turn",
-            "hero_task_state_live_persist_no_save_migration",
             "save_version_before",
             "save_version_after",
-            "var all_candidates: Array = EnemyAdventureRules._target_candidates(",
-            'String(candidate_value.get("target_kind", "")) == "resource"',
-            'String(candidate_value.get("target_placement_id", "")) == "owned_corridor_site"',
-            "candidates.append(candidate_value.duplicate(true))",
-            "battle_pressure_near_field_objective_commitment",
-            "near_resource_commitment",
-            "near_artifact_commitment",
-            "near_encounter_commitment",
-            "EnemyAdventureRules._raid_has_immediate_field_objective_commitment(session, refreshed)",
-            "if retained != refreshed:",
-            'distant_resource["goal_distance"] = 2',
-            'String(preempted.get("target_kind", "")) != "town"',
-            'String(preempted.get("target_placement_id", "")) != "riverwatch_hold"',
-            '"battle_pressure_floor" not in preempt_reason_codes',
-            "invalid_resource_rejected",
-            "explore_rejected",
         ):
             ensure(required_token in report_text, errors, f"AI raid assault grouping report is missing token: {required_token}")
         ensure(
             "EnemyAdventureRules._append_resource_candidate(" not in report_text,
             errors,
             "AI raid assault grouping report must use the retained ordered target-candidate compatibility wrapper.",
-        )
-        commitment_case_match = re.search(
-            r"func _near_field_objective_commitment_survives_battle_pressure\(\) -> Dictionary:[\s\S]*?(?=\nfunc )",
-            report_text,
-        )
-        ensure(commitment_case_match is not None, errors, "AI raid assault grouping report is missing the focused near-field commitment case.")
-        if commitment_case_match is not None:
-            commitment_case = commitment_case_match.group(0)
-            ordered_tokens = (
-                "var refreshed: Dictionary = EnemyAdventureRules._refresh_target",
-                "if not EnemyAdventureRules._raid_target_valid(session, refreshed)",
-                "if not EnemyAdventureRules._raid_has_immediate_field_objective_commitment(session, refreshed):",
-                "var retained := EnemyAdventureRules.assign_target",
-                "if retained != refreshed:",
-                "var artifact_probe := refreshed.duplicate(true)",
-                "var encounter_probe := refreshed.duplicate(true)",
-                "var distant_session = _long_range_pressure_session(false)",
-                "if EnemyAdventureRules._raid_has_immediate_field_objective_commitment(distant_session, distant_refreshed):",
-                "var preempted := EnemyAdventureRules.assign_target",
-                "var invalid_resource := refreshed.duplicate(true)",
-                "if EnemyAdventureRules._raid_has_immediate_field_objective_commitment(session, invalid_resource):",
-                "var explore_probe := refreshed.duplicate(true)",
-                "if EnemyAdventureRules._raid_has_immediate_field_objective_commitment(session, explore_probe):",
-            )
-            ordered_positions = [commitment_case.find(token) for token in ordered_tokens]
-            ensure(
-                all(position >= 0 for position in ordered_positions) and ordered_positions == sorted(ordered_positions),
-                errors,
-                "Focused near-field commitment case must prove valid exact retention, all allowed families, distance-two preemption, and invalid/non-field rejection in order.",
-            )
-            for forbidden_token in (
-                "RAID_BATTLE_PRESSURE_FLOOR_DAY =",
-                "RAID_BATTLE_PRESSURE_FLOOR_MIN_ACTIVE_RAIDS =",
-                "RAID_BATTLE_PRESSURE_FIELD_OBJECTIVE_COMMITMENT_DISTANCE =",
-                "session.day = 7",
-                "get_tree().create_timer",
-            ):
-                ensure(forbidden_token not in commitment_case, errors, f"Focused near-field commitment case weakens production timing or pressure policy: {forbidden_token}")
-    if AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCRIPT_PATH.exists():
-        path_plan_text = AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "AI_RAID_MOVEMENT_PATH_PLAN_REUSE_REGRESSION",
-            "open_goal",
-            "blocked_goal_approach",
-            "blocked_origin_exit",
-            "multiple_goal",
-            "unreachable_blocked_corner",
-            "goal_origin_field_reused_across_steps",
-            "assignment_path_context_matches_direct_paths",
-            "observer_visibility_surface_fingerprint_same_day_exact",
-            "resource_controller_add_remove_exact",
-            "town_owner_faction_add_remove_exact",
-            "resource_controller_added_primary",
-            "resource_controller_removed_primary",
-            "town_controller_added_primary",
-            "town_controller_removed_primary",
-            "faction_embercourt",
-            "hidden_control_nonblocking",
-            "sheltered_control_nonblocking",
-            "second_observer_isolated",
-            "warm_fresh_parity_exact",
-            "inverse_context_reuse_exact",
-            "_path_distance_surface_cache_key",
-            "_path_distance_hero_fingerprint",
-            "hero_blocked_indices",
-            "context_identity_reuse_exact",
-            "observer_cache_keys_distinct",
-            "observer_context_identity_distinct",
-            "second_observer_context_reused_across_primary_mutations",
-            "open_distance4_blocked_distance6_exact",
-            "baseline_open_distance4",
-            "resource_blocked_distance6",
-            "town_blocked_distance6",
-            "context_rebuilt_after_exact_key_eviction",
-            "hero_fingerprint_reuse_exact",
-            "full_plan_reuse_exact",
-            "SaveService.validation_summary_cache_snapshot()",
-            "SettingsService.settings.duplicate(true)",
-            "_observer_authority_file_states",
-            "live_three_step_raid_uses_shared_path_plan",
-            "_path_plan_toward",
-            "distance_field_cache",
-            "target_path_context_ms",
-            "target_town_defense_redirect_ms",
-            "target_resource_defense_redirect_ms",
-            "ai_raid_moved",
-            "get_tree().quit(1)",
-        ):
-            ensure(required_token in path_plan_text, errors, f"AI raid movement path-plan reuse regression is missing token: {required_token}")
-        for required_token in (
-            "var assignment_path_context := _path_distance_surface_context(",
-            "_redirect_understrength_raid_to_regroup(session, config, encounter, faction_id, assignment_path_context)",
-            "_redirect_raid_to_threatened_town_defense(session, config, encounter, faction_id, assignment_path_context)",
-            "_redirect_raid_to_threatened_resource_defense(session, config, encounter, faction_id, assignment_path_context)",
-            "assign_target(session, config, encounter, assignment_path_context)",
-            "_redirect_unreachable_raid_target(session, config, encounter, faction_id, assignment_path_context)",
-            "_path_distance_hero_fingerprint(session, observer_faction_id)",
-            "blocked_for_observer_flag",
-            "_player_hero_currently_visible_to_enemy_faction(session, hero, observer_faction_id, sighting_sources)",
-        ):
-            ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing active-raid assignment path-context reuse token: {required_token}")
-    if AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCENE_PATH.exists():
-        path_plan_scene_text = AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCENE_PATH.read_text(encoding="utf-8")
-        ensure(
-            "ai_raid_movement_path_plan_reuse_regression.gd" in path_plan_scene_text,
-            errors,
-            "AI raid movement path-plan reuse scene is not wired to its script.",
         )
     if AI_RAID_ASSAULT_GROUPING_REPORT_DOC_PATH.exists():
         doc_text = AI_RAID_ASSAULT_GROUPING_REPORT_DOC_PATH.read_text(encoding="utf-8")
@@ -46643,7 +44626,7 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
     for token in (
         'const REPORT_ID := "SIX_FACTION_COMMAND_REGALIA_RUNTIME_REPORT"',
         "OverworldRules.collect_active_artifact(session)",
-        "EnemyAdventureRules.artifact_target_valuation_breakdown(",
+        "AiHeroRulesScript._candidate(session",
         "ArtifactRules.aggregate_bonuses(equipped_hero)",
         "restored.from_dict(payload.duplicate(true))",
         'int(payload.get("save_version", -1)) == 9',
@@ -46666,7 +44649,7 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
         "OverworldRules._collect_artifact_node_result(session, node_result, false)",
         "ArtifactRules.aggregate_bonuses(equipped_hero)",
-        "EnemyAdventureRules.artifact_target_valuation_breakdown(",
+        "AiHeroRulesScript._candidate(session",
         "restored.from_dict(payload.duplicate(true))",
         "restored.to_dict() != payload",
         'ArtifactRules.artifact_set_insignia_state("set_missing").is_empty()',
@@ -56585,7 +54568,7 @@ def validate_overworld_route_closed_feedback(errors: list[str]) -> None:
         return text[start:] if end < 0 else text[start:end]
 
     enemy_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
-    for name in ("_secure_opportunistic_route_resource", "_secure_resource_target"):
+    for name in ("_secure_resource_target",):
         start = enemy_text.find(f"static func {name}")
         end = enemy_text.find("\nstatic func ", start + 1)
         block = enemy_text[start:] if end < 0 else enemy_text[start:end]
@@ -63922,10 +61905,6 @@ def validate_town_frontline_reinforcement_delivery(errors: list[str]) -> None:
     for required_token in ('"delivery_manifest"', "The convoy bound for %s is scattered."):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing convoy-disruption token: {required_token}")
 
-    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
-    for required_token in ("OverworldRulesScript.town_logistics_state(session, town)", '"delivery_count"'):
-        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing reinforcement-line AI token: {required_token}")
-
 
 def validate_convoy_interception_clash_slice(errors: list[str]) -> None:
     required_paths = (SESSION_STATE_PATH, OVERWORLD_RULES_PATH, ENEMY_ADVENTURE_RULES_PATH, BATTLE_RULES_PATH)
@@ -63952,13 +61931,7 @@ def validate_convoy_interception_clash_slice(errors: list[str]) -> None:
 
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "func _append_delivery_interception_target_descriptors",
-        "func _project_delivery_interception_target_descriptor",
-        "func _delivery_town_candidate",
-        "func _delivery_hero_candidate",
         '"delivery_intercept_node_placement_id"',
-        '"delivery_intercept_target_kind"',
-        "OverworldRulesScript.delivery_interception_context_for_encounter",
     ):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing convoy-hunt token: {required_token}")
 
@@ -63990,10 +61963,6 @@ def validate_hostile_empire_personality(errors: list[str]) -> None:
         "EnemyAdventureRulesScript.public_strategy_summary",
         "func _raid_threshold_for_strategy",
         "func _max_active_raids_for_strategy",
-        "func _launch_policy_context",
-        "launch_policy_capital_state_reused",
-        "launch_policy_front_state_reused",
-        "func _recruit_priority",
         "Charter columns are pushing measured strikes down the lanes",
         "Warbands are spilling forward in staggered packs",
         "Compact sorties are testing the frontier behind relay screens",
@@ -64003,12 +61972,8 @@ def validate_hostile_empire_personality(errors: list[str]) -> None:
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
         "func enemy_strategy",
-        "func strategy_target_weight",
-        "func priority_target_bonus",
         "func public_strategy_summary",
-        "func target_site_family",
         "func target_is_objective_anchor",
-        "func _weighted_priority",
         '"priority_target_placement_ids"',
         '"strategy_overrides"',
     ):
@@ -64105,7 +62070,6 @@ def validate_late_game_capital_escalation(errors: list[str]) -> None:
         "func _faction_capital_state",
         "func _faction_capital_state_from_towns",
         "func _capital_watch_summary",
-        "func _empire_capital_pressure_bonus",
         "OverworldRulesScript.town_capital_project_state",
         "OverworldRulesScript.town_strategic_role",
         "raid_threshold_reduction",
@@ -64117,7 +62081,6 @@ def validate_late_game_capital_escalation(errors: list[str]) -> None:
 
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "func _town_strategic_priority_bonus",
         "OverworldRulesScript.town_strategic_role",
         "OverworldRulesScript.town_capital_project_state",
     ):
@@ -64516,15 +62479,16 @@ def validate_town_defense_battle_flow(errors: list[str]) -> None:
     session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
     ensure("const SAVE_VERSION := 9" in session_text, errors, "Town-defense battle flow must preserve save version 9")
 
-    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
+    ai_hero_text = AI_HERO_RULES_PATH.read_text(encoding="utf-8") if AI_HERO_RULES_PATH.exists() else ""
     for required_token in (
-        "func _queue_town_defense_battle",
+        "func _attack_town",
+        "func _start_player_battle",
         '"type": "town_defense"',
-        "BattleRulesScript.create_battle_payload",
-        "session.game_state = \"battle\"",
-        "func _town_defense_candidate",
+        "_battle_rules().create_battle_payload(session, entry)",
+        'session.game_state = "battle"',
+        "ai_town_defense_battle_queued",
     ):
-        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing required town-defense token: {required_token}")
+        ensure(required_token in ai_hero_text, errors, f"AiHeroRules.gd is missing required town-defense token: {required_token}")
 
     battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -73395,7 +71359,6 @@ def validate_runtime_market_cap_persistence(errors: list[str]) -> None:
     doc_text = RUNTIME_MARKET_CAP_REPORT_DOC_PATH.read_text(encoding="utf-8") if RUNTIME_MARKET_CAP_REPORT_DOC_PATH.exists() else ""
     overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
     town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
-    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
 
     for required_token in (
         "RUNTIME_MARKET_CAP_PERSISTENCE_REPORT",
@@ -73430,7 +71393,8 @@ def validate_runtime_market_cap_persistence(errors: list[str]) -> None:
     ):
         ensure(required_token in overworld_rules_text, errors, f"Overworld market cap runtime is missing token {required_token}")
     ensure("_max_market_affordable_count(session" in town_rules_text, errors, "Town recruitment readiness must pass the session into cap-aware market affordability")
-    ensure("can_afford_cost_with_town_market(town, treasury, cost, int(session.day))" in enemy_turn_text, errors, "Enemy town build readiness must use cap-aware market affordability")
+    ai_hero_text = AI_HERO_RULES_PATH.read_text(encoding="utf-8") if AI_HERO_RULES_PATH.exists() else ""
+    ensure("_normalize_town_market_usage_state(" in ai_hero_text and "town_rules.market_trade_quote(market, usage" in ai_hero_text, errors, "Computer players must trade through the capped town market quotes")
     for required_text in (
         "Economy Runtime Market Cap Persistence Report",
         "economy-runtime-market-cap-persistence-20260524-10184",
@@ -73848,38 +71812,15 @@ def validate_active_scenario_town_start_economy(errors: list[str]) -> None:
 
 
 def validate_active_scenario_ai_town_start_economy(errors: list[str]) -> None:
-    ensure(ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_SCRIPT_PATH.exists(), errors, "Active scenario AI town start economy report script is missing")
-    ensure(ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_SCENE_PATH.exists(), errors, "Active scenario AI town start economy report scene is missing")
     ensure(ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_DOC_PATH.exists(), errors, "Active scenario AI town start economy report doc is missing")
-    if not ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_SCRIPT_PATH.exists():
-        return
-    script_text = ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-    scene_text = ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_SCENE_PATH.read_text(encoding="utf-8") if ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_SCENE_PATH.exists() else ""
     doc_text = ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_DOC_PATH.read_text(encoding="utf-8") if ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT_DOC_PATH.exists() else ""
-    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
+    ai_hero_text = AI_HERO_RULES_PATH.read_text(encoding="utf-8") if AI_HERO_RULES_PATH.exists() else ""
     scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "ACTIVE_SCENARIO_AI_TOWN_START_ECONOMY_REPORT",
-        "active_scenario_ai_town_start_economy_report_v1",
-        "MIN_EARLY_BUILDS_PER_TOWN",
-        "ScenarioFactory.create_session",
-        "EnemyTurnRules.run_enemy_town_economy_turn",
-        "OverworldRules.get_town_build_status",
-        "common_spend_case_count",
-        "same_day_guard_case_count",
-        "full_treasury_case_count",
-        "without injected source capture",
-    ):
-        ensure(required_token in script_text, errors, f"Active scenario AI town start economy report is missing token {required_token}")
-    ensure("res://tests/active_scenario_ai_town_start_economy_report.gd" in scene_text, errors, "Active scenario AI town start economy scene must load its report script")
-    ensure("ActiveScenarioAiTownStartEconomyReport" in scene_text, errors, "Active scenario AI town start economy scene must expose a named report node")
-    for required_token in (
-        "static func run_enemy_town_economy_turn",
-        "_apply_empire_income(session, town_entries, treasury, state)",
-        "_build_in_enemy_towns(session, town_entries, towns, treasury, faction_id, config)",
+        "func _build_in_towns",
         'town["last_build_day"] = int(session.day)',
     ):
-        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules AI town start economy support is missing token {required_token}")
+        ensure(required_token in ai_hero_text, errors, f"AiHeroRules AI town start economy support is missing token {required_token}")
     for required_token in (
         "_seed_enemy_town_starting_treasuries",
         "development_balance",
@@ -74676,87 +72617,10 @@ def validate_active_scenario_town_development_runway(errors: list[str]) -> None:
 
 
 def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> None:
-    ensure(ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCRIPT_PATH.exists(), errors, "Active scenario AI town development runway report script is missing")
-    ensure(ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCENE_PATH.exists(), errors, "Active scenario AI town development runway report scene is missing")
     ensure(ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH.exists(), errors, "Active scenario AI town development runway report doc is missing")
-    if not ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCRIPT_PATH.exists():
-        return
-
-    script_text = ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-    scene_text = ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCENE_PATH.read_text(encoding="utf-8") if ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_SCENE_PATH.exists() else ""
     doc_text = ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH.read_text(encoding="utf-8") if ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT_DOC_PATH.exists() else ""
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
     overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
-    for required_token in (
-        "ACTIVE_SCENARIO_AI_TOWN_DEVELOPMENT_RUNWAY_REPORT",
-        "active_scenario_ai_town_development_runway_report_v1",
-        "ScenarioFactory.create_session",
-        "EnemyTurnRules.run_enemy_town_economy_turn",
-        "EnemyTurnRules.town_governor_pressure_report",
-        "OverworldRules.tile_is_blocked",
-        "OverworldRules.tile_is_actionable_route_destination",
-        "OverworldRules.tile_step_cuts_blocked_corner",
-        "DELAYED_SOURCE_ROUTE_STEPS_PER_DAY",
-        "DELAYED_GUARDED_SOURCE_EXTRA_DAYS",
-        "_run_delayed_source_replay",
-        "_development_source_schedule",
-        "_apply_due_development_sources",
-        "active_scenario_ai_town_delayed_source_replay_v1",
-        "same_day_second_build_blocked",
-        "rare_treasury_tracked",
-        "governor_report_seen",
-        "rare_spend_observed",
-        "full_session_case_count",
-        "full_session_used",
-        "delayed_source_replay_case_count",
-        "delayed_source_replay_completed_count",
-        "delayed_source_replay_ok",
-        "delayed_source_save_resume_case_count",
-        "delayed_source_save_resume_completed_count",
-        "DELAYED_SOURCE_SAVE_RESUME_SLOT",
-        "SaveService.save_runtime_manual_session",
-        "SaveService.restore_manual_session",
-        "_delayed_source_save_resume_checkpoint",
-        "EnemyTurnRules.town_recruitment_pressure_report",
-        "SIGNATURE_TIER_COUNT",
-        "seven_tier_recruitment_case_count",
-        "seven_tier_recruitment_candidate_count",
-        "affordable_recruitment_case_count",
-        "MIN_FACTION_COVERAGE",
-        "unique_faction_count",
-        "covered_faction_ids",
-        "unique_ladder_faction_count",
-        "covered_ladder_faction_ids",
-        "_ai_recruitment_evidence",
-        "active_scenario_ai_town_recruitment_surface_v1",
-        "ladder_faction_id",
-        "MIN_COMPLETION_DAY",
-        "same_day_guard_after_restore",
-        "source_state_preserved",
-        "treasury_state_preserved",
-        "resume_target_overworld",
-        "scenario_resource_node_count",
-        "scenario_encounter_count",
-        "scenario_enemy_state_count",
-        "secured_daily_income",
-        "source_adoption_policy",
-        "minimal_required_resource_coverage",
-        "source_adoption_policy_case_count",
-        "pacing_floor_case_count",
-        "campaign_pacing_floor_case_count",
-        "skirmish_pacing_floor_case_count",
-        "completion_day_min",
-        "completion_day_max",
-        "ACTIVE_SCENARIO_AI_TOWN_RUNWAY_ONLY",
-        "campaign_scenario_count",
-        "skirmish_scenario_count",
-        "campaign_enemy_town_case_count",
-        "skirmish_enemy_town_case_count",
-        "campaign_completed_case_count",
-        "skirmish_completed_case_count",
-    ):
-        ensure(required_token in script_text, errors, f"Active scenario AI town development runway report is missing token {required_token}")
-    ensure("res://tests/active_scenario_ai_town_development_runway_report.gd" in scene_text, errors, "Active scenario AI town development runway scene must load its report script")
     for required_text in (
         "Economy Active Scenario AI Town Development Runway Report",
         "economy-active-scenario-ai-town-development-runway-20260524-10184",
@@ -74792,9 +72656,9 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
     ensure("const TRACKED_RESOURCES := [" in enemy_turn_text, errors, "EnemyTurnRules must visibly declare tracked enemy treasury resources")
     for resource_id in ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS:
         ensure(f'"{resource_id}"' in enemy_turn_text, errors, f"EnemyTurnRules must preserve enemy treasury resource {resource_id}")
-    ensure('resources.get("aetherglass", 0)) * 800' in enemy_turn_text and 'resources.get("memory_salt", 0)) * 800' in enemy_turn_text, errors, "EnemyTurnRules resource valuation must include rare resources")
-    ensure("get_town_build_options(town, int(session.day)" in enemy_turn_text, errors, "EnemyTurnRules must pass the current day into town build selection")
-    ensure('town["last_build_day"] = int(session.day)' in enemy_turn_text, errors, "EnemyTurnRules must stamp last_build_day after AI town construction")
+    ai_hero_text = AI_HERO_RULES_PATH.read_text(encoding="utf-8") if AI_HERO_RULES_PATH.exists() else ""
+    ensure("get_town_build_options(town, int(session.day)" in ai_hero_text, errors, "Computer players must pass the current day into town build selection")
+    ensure('town["last_build_day"] = int(session.day)' in ai_hero_text, errors, "Computer players must stamp last_build_day after AI town construction")
     ensure("restricted_resource_blockers" in overworld_rules_text, errors, "Town market cost coverage must expose restricted rare-resource blockers")
 
     resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
@@ -75653,7 +73517,7 @@ def validate_overworld_resource_assault_victory_return_feedback(errors: list[str
     ensure(report_text.count('AppRouter.consume_battle_resolution_overworld_presentation("overworld")') == 1, errors, "Resource-assault stale control must consume exactly once outside live Overworld scenes")
     ensure(report_text.count('session = SessionState.set_active_session(session)') == 2, errors, "Resource-assault live rows and fail-closed controls must retain active SessionState authority")
     ensure(report_text.find('var control_shell := OVERWORLD_SCENE.instantiate()') < report_text.find('var authority_after_ready_control: Dictionary = control_session.to_dict()') < report_text.find('var pending: Dictionary = AppRouter.arm_battle_resolution_overworld_presentation(outcome)') < report_text.find('var shell := OVERWORLD_SCENE.instantiate()'), errors, "Resource-assault report must capture unarmed ready authority before arming and constructing the routed shell")
-    ensure('EnemyAdventureRules.advance_raids(session, config, ENEMY_FACTION_ID, state)' in report_text and 'String(defended.get("ai_defender_roster_hero_id", "")) != "hero_vaska"' in report_text and 'OverworldRules.collect_active_resource(session)' in report_text, errors, "Resource-assault report must station a real strategic-AI defender before entering the production resource collector")
+    ensure('_station_legacy_resource_defender(session, raid)' in report_text and 'String(defended.get("ai_defender_roster_hero_id", "")) != "hero_vaska"' in report_text and 'OverworldRules.collect_active_resource(session)' in report_text, errors, "Resource-assault report must station a strategic-AI site defender before entering the production resource collector")
     ensure("session.flags[" not in report_text and "create_resource_defense_payload" not in report_text, errors, "Resource-assault report must not synthesize save-backed presentation state or bypass the live collection action")
     ensure('res://tests/overworld_resource_assault_victory_return_feedback_report.gd' in scene_text, errors, "Resource-assault return focused scene must load its exact report script")
 
@@ -80733,11 +78597,10 @@ def validate_six_great_work_charter_races(errors: list[str]) -> None:
 
     scenario_rules_text = (ROOT / "scripts" / "core" / "ScenarioRules.gd").read_text(encoding="utf-8")
     content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
-    enemy_adventure_text = (ROOT / "scripts" / "core" / "EnemyAdventureRules.gd").read_text(encoding="utf-8")
     for token in ('"building_built_in_player_town"', '"building_ids"', '_town_has_objective_building(building_town, building_id)'):
         ensure(token in scenario_rules_text, errors, f"Construction objective authority is missing {token}")
     ensure('"building_built_in_player_town"' in content_service_text and "building_index.has(objective_building_id)" in content_service_text, errors, "Content validation must reject unknown Great-Work town or building ids")
-    ensure('"building_built_in_player_town"' in enemy_adventure_text, errors, "Strategic AI must retain Great-Work town objective targeting")
+    ensure('"building_built_in_player_town"' in AI_HERO_RULES_PATH.read_text(encoding="utf-8"), errors, "Strategic AI must retain Great-Work town objective targeting")
 
     smoke_text = smoke_script_path.read_text(encoding="utf-8")
     runner_text = smoke_runner_path.read_text(encoding="utf-8")
@@ -81004,11 +78867,10 @@ def validate_six_twin_command_field_councils(errors: list[str]) -> None:
 
     scenario_rules_text = (ROOT / "scripts/core/ScenarioRules.gd").read_text(encoding="utf-8")
     content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
-    enemy_adventure_text = (ROOT / "scripts/core/EnemyAdventureRules.gd").read_text(encoding="utf-8")
     for token in ('"hero_stationed_at_player_town"', '"hero_ids"', '"town_placement_ids"', "_hero_stationing_progress", "position_matches", "town_controlled"):
         ensure(token in scenario_rules_text, errors, f"Twin Command stationing authority is missing {token}")
     ensure('"hero_stationed_at_player_town"' in content_service_text and "hero_index.has(stationed_hero_id)" in content_service_text and "stationed_placement_id not in town_placement_ids" in content_service_text, errors, "Twin Command content validation must reject missing heroes and towns")
-    ensure('"hero_stationed_at_player_town"' in enemy_adventure_text, errors, "Strategic AI must retain Twin Command objective-town targeting")
+    ensure('"hero_stationed_at_player_town"' in AI_HERO_RULES_PATH.read_text(encoding="utf-8"), errors, "Strategic AI must retain Twin Command objective-town targeting")
     smoke_text = smoke_script_path.read_text(encoding="utf-8")
     runner_text = smoke_runner_path.read_text(encoding="utf-8")
     for token in ("TWIN_COMMAND_FIELD_COUNCILS_SMOKE", "ScenarioFactory.create_session", "TownRulesScript.hire_hero_at_active_town", "HeroCommandRulesScript.transfer_town_stack", "TownRulesScript.switch_active_hero_at_town", "BattleRulesScript.create_battle_payload", "OverworldRules.capture_town_by_placement", "missing_partner_control", "wrong_town_control", "enemy_owned_town_control", "wrong_hero_control", "paired_station", "scoped_dependency", "scenario_victory", "save_round_trip_exact", "single_consolidated_smoke"):
@@ -81086,12 +78948,11 @@ def validate_six_relief_route_convoy_runs(errors: list[str]) -> None:
     overworld_text = (ROOT / "scripts/core/OverworldRules.gd").read_text(encoding="utf-8")
     scenario_rules_text = (ROOT / "scripts/core/ScenarioRules.gd").read_text(encoding="utf-8")
     content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
-    enemy_text = (ROOT / "scripts/core/EnemyAdventureRules.gd").read_text(encoding="utf-8")
     for token in ("delivery_completion_counts", "last_delivery_target_id", "last_delivery_manifest", "_record_successful_reserve_delivery"):
         ensure(token in overworld_text, errors, f"Relief-route delivery authority is missing {token}")
     ensure('"reserve_delivery_completed"' in scenario_rules_text and '"resource_site_placement_ids"' in scenario_rules_text and "_reserve_delivery_progress" in scenario_rules_text, errors, "Scenario rules must retain exact relay receipt evaluation and scoped dependencies")
     ensure('"reserve_delivery_completed"' in content_service_text and "delivery_site_placement_id not in resource_placement_ids" in content_service_text, errors, "Content validation must reject missing relay delivery objectives")
-    ensure('"reserve_delivery_completed"' in enemy_text, errors, "Strategic AI must retain relief objective-town targeting")
+    ensure('"reserve_delivery_completed"' in AI_HERO_RULES_PATH.read_text(encoding="utf-8"), errors, "Strategic AI must retain relief objective-town targeting")
     smoke_text = smoke_script_path.read_text(encoding="utf-8")
     runner_text = smoke_runner_path.read_text(encoding="utf-8")
     for token in ("RELIEF_ROUTE_CONVOY_RUNS_SMOKE", "ScenarioFactory.create_session", "_collect_resource_node_result", "_issue_resource_site_response", "_resource_site_delivery_interception", "BattleRulesScript.create_battle_payload", "wrong_site_control", "wrong_target_control", "delivery_receipt", "scoped_dependency", "scenario_victory", "save_round_trip_exact", "single_consolidated_smoke"):
@@ -83048,31 +80909,19 @@ def main() -> int:
     validate_overworld_logistics_sites(errors)
     validate_overworld_route_security_escort(errors)
     validate_overworld_content_foundation(errors)
-    validate_overworld_object_ai_valuation_route_effects(errors)
     validate_ai_hero_task_state_normalizer_preservation(errors)
-    validate_ai_hero_task_live_adoption_gate(errors)
+    validate_ai_hero_model(errors)
     validate_ai_hero_task_live_turn_execution(errors)
-    validate_ai_hero_task_lifecycle_reconciliation(errors)
-    validate_ai_hero_task_actor_lifecycle(errors)
-    validate_ai_hero_task_resumption(errors)
-    validate_ai_hero_task_spawn_commander_selection(errors)
-    validate_ai_known_world_memory_candidate_compatibility(errors)
-    validate_ai_hero_task_retask_cancellation(errors)
     validate_ai_hero_task_encounter_objective(errors)
     validate_ai_hero_task_artifact_objective(errors)
     validate_ai_artifact_equipment(errors)
     validate_ai_adventure_objective_progression(errors)
     validate_ai_hero_task_hero_hunt(errors)
     validate_headless_strategic_ai_live_turn_harness(errors)
-    validate_ai_town_defense_retask(errors)
     validate_ai_town_defense_arrival(errors)
     validate_ai_town_defender_lifecycle(errors)
     validate_ai_town_retake_assault(errors)
     validate_ai_raid_assault_grouping(errors)
-    validate_ai_raid_regroup_retreat(errors)
-    validate_ai_local_recruitment_support(errors)
-    validate_ai_adventure_spell_execution(errors)
-    validate_ai_scouting_spell_execution(errors)
     validate_overworld_object_route_effect_authoring(errors)
     validate_six_gate_charter_road(errors)
     validate_fourteen_marks_accordfall(errors)

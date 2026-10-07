@@ -6,6 +6,7 @@ const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
+const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
 
 const REPORT_SCHEMA_ID := "balance_regression_report_suite_v1"
 const REPORT_ID := "BALANCE_REGRESSION_REPORT_SUITE"
@@ -348,6 +349,8 @@ static func _battle_outcome_distribution(input_config: Dictionary) -> Dictionary
 	)
 
 static func _ai_objective_pressure(input_config: Dictionary) -> Dictionary:
+	# What computer players go after on their first day: the errand each of
+	# their heroes chose (AiHeroRules) and the towns they hold.
 	var sample_scenarios: Array = input_config.get("ai_pressure_scenarios", ["river-pass", "prismhearth-watch"])
 	var cases := []
 	var warnings := []
@@ -360,34 +363,31 @@ static func _ai_objective_pressure(input_config: Dictionary) -> Dictionary:
 			continue
 		var session = ScenarioFactoryScript.create_session(scenario_id, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
 		OverworldRules.normalize_overworld_state(session)
+		var turn_result: Dictionary = EnemyTurnRules.run_enemy_turn(session)
+		if not bool(turn_result.get("ok", false)):
+			warnings.append("%s enemy turn failed." % scenario_id)
 		var enemy_configs: Array = scenario.get("enemy_factions", []) if scenario.get("enemy_factions", []) is Array else []
 		for config in enemy_configs:
 			if not (config is Dictionary):
 				continue
 			var faction_id := String(config.get("faction_id", ""))
-			var origin := _enemy_origin(config)
-			var resource_report := EnemyAdventureRules.resource_pressure_report(session, config, origin, faction_id, 5)
-			var chosen := EnemyAdventureRules.choose_target(session, config, origin)
-			var governor := EnemyTurnRules.town_governor_pressure_report(session, config, faction_id)
-			var top_target_ids := []
-			for target in resource_report.get("targets", []):
-				if target is Dictionary:
-					top_target_ids.append(String(target.get("placement_id", "")))
-			if top_target_ids.is_empty() and session.overworld.get("resource_nodes", []).size() > 0:
-				warnings.append("%s/%s produced no resource pressure targets." % [scenario_id, faction_id])
+			var hero_goals := []
+			for entry in AiHeroRulesScript.active_hero_entries(session, faction_id):
+				var goal: Dictionary = entry.get(AiHeroRulesScript.AI_HERO_KEY, {}).get("goal", {})
+				hero_goals.append("%s:%s" % [String(goal.get("kind", "none")), String(goal.get("id", ""))])
+			hero_goals.sort()
+			var town_count: int = EnemyTurnRules._owned_town_count(session, faction_id)
+			if hero_goals.is_empty() and town_count > 0:
+				warnings.append("%s/%s fielded no hero." % [scenario_id, faction_id])
 			cases.append({
 				"scenario_id": scenario_id,
 				"faction_id": faction_id,
-				"origin": origin,
-				"resource_target_count": int(resource_report.get("target_count", 0)),
-				"top_resource_target_ids": top_target_ids,
-				"chosen_target_kind": String(chosen.get("target_kind", "")),
-				"chosen_target_placement_id": String(chosen.get("target_placement_id", "")),
-				"town_governor_town_count": int(governor.get("town_count", 0)),
+				"hero_count": hero_goals.size(),
+				"hero_goals": hero_goals,
+				"town_count": town_count,
 				"pressure_signature": _signature_for({
-					"resource_targets": top_target_ids,
-					"chosen": _target_signal(chosen),
-					"town_count": int(governor.get("town_count", 0)),
+					"hero_goals": hero_goals,
+					"town_count": town_count,
 				}),
 			})
 	var status := "pass"
@@ -520,19 +520,6 @@ static func _random_map_config(seed: String) -> Dictionary:
 			"guard_strength_profile": "core_low",
 			"faction_ids": ["faction_embercourt", "faction_mireclaw", "faction_sunvault"],
 		},
-	}
-
-static func _enemy_origin(config: Dictionary) -> Dictionary:
-	var spawn_points: Array = config.get("spawn_points", []) if config.get("spawn_points", []) is Array else []
-	if not spawn_points.is_empty() and spawn_points[0] is Dictionary:
-		return {"x": int(spawn_points[0].get("x", 0)), "y": int(spawn_points[0].get("y", 0))}
-	return {"x": 0, "y": 0}
-
-static func _target_signal(target: Dictionary) -> Dictionary:
-	return {
-		"target_kind": String(target.get("target_kind", "")),
-		"target_placement_id": String(target.get("target_placement_id", "")),
-		"target_id": String(target.get("target_id", "")),
 	}
 
 static func _save_payload_signal(payload: Dictionary) -> Dictionary:

@@ -1,6 +1,7 @@
 extends Node
 
 const SessionDataScript = preload("res://scripts/core/SessionStateStore.gd")
+const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
 const REPORT_ID := "SIX_FACTION_COMMAND_REGALIA_RUNTIME_REPORT"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const CASES := {
@@ -91,17 +92,8 @@ func _runtime_case(artifact_id: String, expected: Dictionary) -> Dictionary:
 	if not placement_exact:
 		return {"ok": false, "artifact_id": artifact_id, "failure": "placement", "node": node}
 
-	var ai_breakdown := EnemyAdventureRules.artifact_target_valuation_breakdown(
-		session,
-		{"faction_id": expected.get("faction_id", "")},
-		node,
-		Vector2i(int(expected.get("x", 0)), int(expected.get("y", 0))),
-		String(expected.get("faction_id", "")),
-		0
-	)
-	var ai_exact: bool = int(ai_breakdown.get("final_priority", 0)) > 0 \
-		and bool(ai_breakdown.get("faction_affinity_match", false)) \
-		and not (ai_breakdown.get("runtime_surfaces", []) as Array).is_empty()
+	# Computer players' heroes want the regalia like any artifact.
+	var ai_exact: bool = _ai_hero_artifact_value(session, String(expected.get("faction_id", "")), node) > 0.0
 
 	var hero: Dictionary = session.overworld.get("hero", {}).duplicate(true)
 	hero["artifacts"] = ArtifactRules.normalize_hero_artifacts({})
@@ -253,6 +245,20 @@ func _finish_town_case(shell: Node, result: Dictionary) -> Dictionary:
 		shell.queue_free()
 		await get_tree().process_frame
 	return result
+
+## The value a computer player's hero puts on picking up this artifact
+## (AiHeroRules._candidate, as its daily errand choice reads it). A guarded
+## artifact is worth its guard's fight.
+func _ai_hero_artifact_value(session, faction_id: String, node: Dictionary) -> float:
+	var guard: Dictionary = EnemyAdventureRules._artifact_guard_encounter_for_node(session, node)
+	if not guard.is_empty():
+		return AiHeroRulesScript._guarded_object_value(session, guard, {})
+	var nodes: Array = session.overworld.get("artifact_nodes", [])
+	for index in range(nodes.size()):
+		if nodes[index] is Dictionary and String(nodes[index].get("placement_id", "")) == String(node.get("placement_id", "")):
+			var candidate: Dictionary = AiHeroRulesScript._candidate(session, {"controller": faction_id, "state": {"treasury": {}}}, {}, {"kind": AiHeroRulesScript.STOP_ARTIFACT, "index": index}, 0.0, {})
+			return float(candidate.get("value", 0.0))
+	return 0.0
 
 func _fail(message: String, original_window_size: Vector2i) -> void:
 	get_window().size = original_window_size

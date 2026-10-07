@@ -92,17 +92,10 @@ RMG_SCENES = [
     "save_transactional_commit_regression",
     "save_summary_deferred_payload_report",
     "ai_known_world_memory_report",
-    "ai_town_defense_retask_report",
-    "ai_planned_task_recruitment_prep_report",
+    "ai_player_rules_report",
     "ai_hero_task_live_turn_execution_report",
     "ai_hero_task_state_normalizer_preservation_report",
-    "ai_raid_movement_path_plan_reuse_regression",
     "ai_raid_assault_grouping_report",
-    "ai_commander_role_state_report",
-    "ai_commander_role_adoption_boundary_report",
-    "ai_commander_role_turn_transcript_report",
-    "ai_hero_task_spawn_commander_selection_report",
-    "strategic_ai_emergency_defense_commander_fit_report",
 ]
 # These existing tests deliberately make the authoritative writer fail and
 # assert rollback/retry/route safety. Only their exact domain issue is expected;
@@ -303,12 +296,7 @@ def main() -> int:
                 completed = True
             elif line.startswith(marker + " {"):
                 payload = json.loads(line[len(marker) + 1:])
-                if name == "strategic_ai_emergency_defense_commander_fit_report":
-                    # This existing scene asserts its full harness case, whose
-                    # authoritative result uses status, not an ok field.
-                    completed = payload.get("status") == "pass" and payload.get("subsystem_id") == "strategic_ai_emergency_defense_commander_fit"
-                else:
-                    completed = bool(payload.get("ok", False))
+                completed = bool(payload.get("ok", False))
         row = {"test": name, "ok": process.returncode == 0 and completed and not errors, "returncode": process.returncode, "completion_marker": completed, "runtime_errors": errors, "expected_injected_issues": expected_issues, "rendered": rendered, "wall_s": round(monotonic() - started, 3)}
         rows.append(row)
         print(json.dumps(row), flush=True)

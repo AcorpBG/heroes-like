@@ -9,7 +9,7 @@ import re
 import subprocess
 import tempfile
 
-from ai_path_context_read_regression import instrument
+from gdscript_read_instrumentation import instrument
 from generated_town_order_profile import ROOT, OUTPUT, run_probe
 
 REFERENCE = '34396ac4029725dc8f66e23324986e908a9a5e15'

@@ -10,7 +10,7 @@ Owner feedback, 2026-10-07: enemy "raids" feel wrong; the AI should play like a 
 
 ## Model now (`scripts/core/AiHeroRules.gd`)
 
-`EnemyTurnRules.run_enemy_turn` calls `AiHeroRules.run_faction_turn` for every computer player. The legacy raid director code is still in `EnemyAdventureRules`/`EnemyTurnRules` but nothing live calls it.
+`EnemyTurnRules.run_enemy_turn` calls `AiHeroRules.run_faction_turn` for every computer player. The raid director is removed (2026-10-07). What is left in `EnemyAdventureRules` serves heroes and old saves: commander roster records, raid army normalization for the save migration, the site seizure `_secure_resource_target` and the AI event records. Its multi-level path surfaces are not used in play; the RMG transit and start placement validation tools plan journeys with them, and they are the starting point for heroes that cross levels. `EnemyTurnRules` keeps the turn loop, enemy state normalization and the threat summaries.
 
 ### Heroes
 
@@ -41,9 +41,10 @@ A guard's zone works as it does for the human: anything inside it is reached by 
 
 ### Towns and economy
 
-- Each day: build a Tavern while the faction needs heroes, hire, recruit, then build. Recruits are bought at real cost from real availability into the garrison (highest tier first). One build per town per day, through the player's build status check and cost: the affordable building with the best value for its price (two weeks of troops from a dwelling, upgrades, two weeks of income, spells, buildings it opens up). A town that musters little favors dwellings.
+- Each day: build a Tavern while the faction needs heroes, hire, recruit, then build. A hire appears at the town even when one of the faction's own heroes stands in the doorway: that hero is in the town, as with the human's visiting heroes. Recruits are bought at real cost from real availability into the garrison (highest tier first). One build per town per day, through the player's build status check and cost: the affordable building with the best value for its price (two weeks of troops from a dwelling, upgrades, two weeks of income, spells, buildings it opens up). A town that musters little favors dwellings.
 - When a build or a recruit order is short, a town with a market trades for the difference with the human's quotes (`TownRules.market_trade_quote`, which covers every resource including rares): spare wood and ore convert first, then other spare resources, gold buys the rest, spare resources sell when gold is short, and the weekly usage and caps are recorded the same way as the human's orders.
 - Income is the human's: owned towns, controlled sites and artifacts. Generated native maps give computer players the same opening stockpile the human gets. No pillage, no abstract siege capture, no pressure-driven spawns. Difficulty only changes what `DifficultyRules` defines for the enemy side (battle knobs).
+- Enemy pressure is still read by scenario conditions, the command risk forecast and battle outcome adjustments, but nothing raises it any more: each computer turn resets it to 0.
 
 ## Save migration
 
@@ -65,14 +66,16 @@ Searches use flat byte masks per level: static blocking and site stops are built
 ## Tests
 
 - `tests/ai_player_rules_report.gd/.tscn`: a small generated skirmish played 16 days. An AI hero captures mines, AI heroes beat guards through auto-resolve, an AI town builds and recruits with the treasury actually reduced, wood and rare purchases match the human's market quotes, no raid entities or raid wording exist, heroes walk more than two tiles a day and none stands still away from its towns for four days, a legacy raid migrates (level and troops kept; a commanderless column's troops go to the garrison) and the state survives a save round trip. `HEROES_AI_RULES_PERF_SIZE`/`HEROES_AI_RULES_PERF_DAYS` switch it to a timing run; `HEROES_AI_RULES_CAPTURE_DIR` (with a window) saves an overworld capture of the strongest AI hero.
-- Raid-model AI scenes are updated to hero behavior: live turn execution, task state boundary (relay retake), known-world memory (scouting instead of exploration raids), assault grouping (column joins a hero, lesser hero hands troops to the main hero, also after walking), multi-scenario recruitment delivery (recruits reach hero armies via the garrison) and the strategic AI KPI generated-map probe (heroes fielded and objectives taken).
-- `HeadlessSimulationHarnessRules` cases that passed before are converted the same way: live turn, route progression, town build and recruit over three days, town retake assault, assault grouping and recruitment delivery.
+- Raid-model AI scenes are updated to hero behavior: live turn execution, known-world memory (scouting instead of exploration raids), assault grouping (column joins a hero, lesser hero hands troops to the main hero, also after walking), multi-scenario recruitment delivery (recruits reach hero armies via the garrison) and the strategic AI KPI generated-map probe (heroes fielded and objectives taken).
+- `HeadlessSimulationHarnessRules` cases are all hero cases now: live turn, route progression, town build and recruit over three days, town retake assault, assault grouping and recruitment delivery, plus the rewritten raid cases: every enemy faction of each authored scenario fields a working hero (pressure coverage); a strong hero assaults the human town (objective targeting); an understrength hero reinforces from its garrison before fighting (regroup); the main hero holds the gate of a threatened town (town defense, single and multi-scenario); a lost site is retaken (resource-site defense). The fixtures pin the session id, because the AI tavern offers are seeded from it and it otherwise comes from the start time.
+- The raid director's unit-level tests (task board, commander roles, raid regroup and defense retasks, adventure spells, empire economy runways, raid path plan reuse) were deleted with it. `tests/validate_repo.py` `validate_ai_hero_model` pins the hero-model owners and keeps the raid entry points out.
 
 ## Known gaps
 
 - Heroes stay on their map level: native two-level transit is not used yet. AI heroes do not use boats, shipyards or whirlpools yet; water stays impassable for them even though the human can sail (`docs/water-travel.md`).
-- Heroes do not plan around scenario objectives; they only value what is on the map.
-- The legacy raid director code and its unit-level tests remain in `EnemyAdventureRules`/`EnemyTurnRules`; nothing live calls them. Removing them is a follow-up.
-- `HeadlessSimulationHarnessRules` cases that still describe raid behavior (town-defense and resource-defense retasks, regroup and retreat, multi-scenario pressure coverage and objective targeting) failed before this change and still fail; they need rewriting for heroes.
-- Border Warden's raid pillage bonus no longer has anything to apply to; its summary now only mentions scouting. DifficultyRules enemy pressure and raid knobs are unused.
-- A hero standing in a town's doorway blocks hiring in that town until it moves.
+- Heroes do not plan around scenario objectives; they only value what is on the map. Three `validate_repo` pins for objective types (Great Work, Twin Command, relief routes) look for that in `AiHeroRules` and fail until it exists.
+- Heroes do not cast adventure spells (movement or scouting), do not hunt the human's reinforcement convoys and do not send convoys of their own.
+- All factions share one decision model. The per-faction strategy weights and priority targets in scenario enemy configs are not read.
+- Artifacts are valued flat: set pieces and faction regalia are worth no more to the faction they belong to.
+- Skipping the fight preview at a 3x power margin can still lose a fight; a harness run saw a hero lose to the guard it did not preview.
+- Inert until the owner decides (keep, retarget or remove): Border Warden's `raid_pillage_resistance` and `HeroProgressionRules.scale_raid_pillage`, and the `DifficultyRules` enemy pressure and raid knobs (`enemy_pressure_bonus`, `raid_threshold_offset`, `raid_pillage_multiplier` and their adjust/scale functions). Two forecasts still read them, the public pressure gain (`OverworldRules._public_enemy_pressure_gain`) and the raid threshold in the command risk forecast (`EnemyTurnRules._raid_threshold_for_strategy`), and neither predicts anything real now.

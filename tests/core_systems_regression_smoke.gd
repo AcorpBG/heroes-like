@@ -1,5 +1,6 @@
 extends Node
 
+const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
 const SCENARIO_ID := "river-pass"
 const DIFFICULTY_ID := "normal"
 # River Pass (9x5) lies wholly inside its town and hero sight, so the fog
@@ -667,7 +668,6 @@ func _run_hostile_commander_recovery_regression() -> bool:
 		get_tree().quit(1)
 		return false
 	var first_deployments := int(raid.get("enemy_commander_state", {}).get("deployments", 0))
-	var first_desired_strength := EnemyAdventureRules.desired_raid_strength(raid)
 
 	var engage_result := OverworldRules.try_move(session, 1, 0)
 	if String(engage_result.get("route", "")) != "battle" or session.battle.is_empty():
@@ -733,67 +733,25 @@ func _run_hostile_commander_recovery_regression() -> bool:
 		get_tree().quit(1)
 		return false
 
-	_set_enemy_pressure(restored, "faction_mireclaw", 10)
-	var raid_count_before := EnemyTurnRules.active_raid_count(restored, "faction_mireclaw")
-	EnemyTurnRules.run_enemy_turn(restored)
-	if EnemyTurnRules.active_raid_count(restored, "faction_mireclaw") != raid_count_before:
+	# A defeated hero sits out its recovery: its faction's tavern does not offer
+	# it again until the recovery day, then hires it back with its record.
+	var restored_state := _enemy_state_by_faction(restored, "faction_mireclaw")
+	if roster_hero_id in AiHeroRulesScript._tavern_pool(restored, restored_state, "faction_mireclaw"):
 		push_error("Core systems smoke: hostile commander returned from defeat before the recovery rule elapsed.")
 		get_tree().quit(1)
 		return false
-
 	restored.day = recovery_day
-	_set_enemy_pressure(restored, "faction_mireclaw", 10)
-	_limit_enemy_rebuild_capacity(restored, "faction_mireclaw")
-	var return_result := EnemyTurnRules.run_enemy_turn(restored)
-	if String(return_result.get("message", "")) == "":
-		push_error("Core systems smoke: hostile commander recovery turn produced no feedback.")
+	if roster_hero_id not in AiHeroRulesScript._tavern_pool(restored, restored_state, "faction_mireclaw"):
+		push_error("Core systems smoke: recovered hostile commander did not become eligible to be hired again.")
 		get_tree().quit(1)
 		return false
-	var returned_raid := _active_enemy_raid_by_roster_hero(restored, "faction_mireclaw", roster_hero_id)
-	if returned_raid.is_empty():
-		push_error("Core systems smoke: recovered hostile commander did not become eligible for a later raid.")
-		get_tree().quit(1)
-		return false
-	if String(returned_raid.get("enemy_commander_state", {}).get("name", "")) != commander_name:
+	var returning_state := AiHeroRulesScript._roster_progression_seed(restored_state, roster_hero_id)
+	if String(returning_state.get("name", "")) != commander_name:
 		push_error("Core systems smoke: recovered hostile commander returned without preserving identity.")
 		get_tree().quit(1)
 		return false
-	if int(returned_raid.get("enemy_commander_state", {}).get("deployments", 0)) <= first_deployments:
-		push_error("Core systems smoke: recovered hostile commander did not carry repeat-deployment record into the next raid.")
-		get_tree().quit(1)
-		return false
-	if EnemyAdventureRules.desired_raid_strength(returned_raid) <= first_desired_strength:
-		push_error("Core systems smoke: repeat hostile commander deployment did not raise future raid threat demand.")
-		get_tree().quit(1)
-		return false
-	if EnemyAdventureRules.commander_veterancy_label(returned_raid.get("enemy_commander_state", {})) == "":
-		push_error("Core systems smoke: recovered hostile commander returned without a visible veterancy label.")
-		get_tree().quit(1)
-		return false
-	var returned_army := EnemyAdventureRules.commander_army_continuity(returned_raid.get("enemy_commander_state", {}))
-	if int(returned_army.get("current_strength", 0)) <= 0:
-		push_error("Core systems smoke: recovered hostile commander returned without any rebuilt army strength.")
-		get_tree().quit(1)
-		return false
-	if EnemyAdventureRules.raid_strength(returned_raid) != int(returned_army.get("current_strength", 0)):
-		push_error("Core systems smoke: returning raid strength did not match the commander's rebuilt army continuity.")
-		get_tree().quit(1)
-		return false
-	if (
-		int(returned_army.get("current_strength", 0)) < int(returned_army.get("base_strength", 0))
-		and EnemyAdventureRules.commander_army_brief(returned_raid.get("enemy_commander_state", {})) == ""
-	):
-		push_error("Core systems smoke: recovered hostile commander returned without a visible rebuild or scar hint.")
-		get_tree().quit(1)
-		return false
-	var returning_brief := EnemyAdventureRules.commander_memory_brief(returned_raid.get("enemy_commander_state", {}))
-	if "returns to Riverwatch Hold" not in returning_brief:
-		push_error("Core systems smoke: recovered hostile commander did not surface repeat target memory on the returning raid: brief=%s memory=%s raid_target=%s." % [returning_brief, EnemyAdventureRules.commander_target_memory(returned_raid.get("enemy_commander_state", {})), String(returned_raid.get("target_placement_id", ""))])
-		get_tree().quit(1)
-		return false
-	var public_memory := EnemyAdventureRules.raid_commander_memory_summaries([returned_raid], 1)
-	if public_memory.is_empty() or "Riverwatch Hold" not in String(public_memory[0]):
-		push_error("Core systems smoke: public commander-memory summaries did not expose the repeated target pressure.")
+	if int(returning_state.get("deployments", 0)) < first_deployments:
+		push_error("Core systems smoke: recovered hostile commander lost its deployment record.")
 		get_tree().quit(1)
 		return false
 	return true
@@ -865,7 +823,6 @@ func _run_hostile_commander_field_victory_regression() -> bool:
 		push_error("Core systems smoke: field-victory setup could not register the hostile commander deployment.")
 		get_tree().quit(1)
 		return false
-	var desired_before := EnemyAdventureRules.desired_raid_strength(raid)
 
 	var engage_result := OverworldRules.try_move(session, 1, 0)
 	if String(engage_result.get("route", "")) != "battle" or session.battle.is_empty():
@@ -931,25 +888,9 @@ func _run_hostile_commander_field_victory_regression() -> bool:
 		push_error("Core systems smoke: hostile commander field victory did not surface a scarred-host hint.")
 		get_tree().quit(1)
 		return false
-	if EnemyAdventureRules.desired_raid_strength(updated_raid) <= desired_before:
-		push_error("Core systems smoke: hostile commander field victory did not raise active raid threat demand.")
-		get_tree().quit(1)
-		return false
 	var record_summary := EnemyAdventureRules.commander_record_summary(updated_state)
 	if "win" not in record_summary:
 		push_error("Core systems smoke: hostile commander field victory did not surface its battle record summary.")
-		get_tree().quit(1)
-		return false
-	var enemy_config := _enemy_config(session, "faction_mireclaw")
-	var baseline_plan := EnemyAdventureRules.choose_target(session, enemy_config, {"x": 7, "y": 1}, {})
-	var repeat_rival_state := EnemyAdventureRules.record_rivalry(updated_state, "hero", active_hero_id, active_hero_name)
-	var biased_plan := EnemyAdventureRules.choose_target(session, enemy_config, {"x": 7, "y": 1}, repeat_rival_state)
-	if String(baseline_plan.get("target_placement_id", "")) == String(biased_plan.get("target_placement_id", "")):
-		push_error("Core systems smoke: commander rivalry memory did not change later raid targeting.")
-		get_tree().quit(1)
-		return false
-	if String(biased_plan.get("target_kind", "")) != "hero" or String(biased_plan.get("target_placement_id", "")) != active_hero_id:
-		push_error("Core systems smoke: commander rivalry memory did not bias later raid targeting toward the repeated opposing hero.")
 		get_tree().quit(1)
 		return false
 
@@ -3317,12 +3258,6 @@ func _run_enemy_town_assault_regression() -> bool:
 		push_error("Core systems smoke: frontier watch did not surface the occupied-town pacification watch.")
 		get_tree().quit(1)
 		return false
-	var enemy_config := _enemy_config(session, "faction_mireclaw")
-	var retake_plan := EnemyAdventureRules.choose_target(session, enemy_config, {"x": 7, "y": 1}, {})
-	if String(retake_plan.get("target_kind", "")) != "town" or String(retake_plan.get("target_placement_id", "")) != "duskfen_bastion":
-		push_error("Core systems smoke: hostile target scoring did not bias back toward the newly lost town.")
-		get_tree().quit(1)
-		return false
 	var restored: Variant = SessionState.new_session_data()
 	restored.from_dict(session.to_dict())
 	OverworldRules.normalize_overworld_state(restored)
@@ -4657,13 +4592,12 @@ func _register_raid_commander_deployment(
 		var state = states[index]
 		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
 			continue
-		updated_roster = EnemyAdventureRules.record_commander_deployment(
-			session,
-			faction_id,
-			roster_hero_id,
-			state.get("commander_roster", []),
-			placement_id
-		)
+		for entry in EnemyAdventureRules.commander_roster_for_faction(session, faction_id):
+			if entry is Dictionary and String(entry.get("roster_hero_id", "")) == roster_hero_id:
+				var deployed := EnemyAdventureRules.advance_commander_record(entry.get("commander_state", {}), EnemyAdventureRules.COMMANDER_OUTCOME_DEPLOYED)
+				EnemyAdventureRules.sync_commander_state_to_roster(session, faction_id, deployed, EnemyAdventureRules.COMMANDER_STATUS_ACTIVE, placement_id, 0, EnemyAdventureRules.COMMANDER_OUTCOME_DEPLOYED)
+		updated_roster = EnemyAdventureRules.commander_roster_for_faction(session, faction_id)
+		state = _enemy_state_by_faction(session, faction_id)
 		state["commander_roster"] = updated_roster
 		states[index] = state
 		break

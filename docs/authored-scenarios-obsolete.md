@@ -35,15 +35,14 @@ The lists come from every test and `tests/validate_repo.py` function that names 
 
 Under `tests/`, with their `.tscn` runners. Their subject is the authored roster: batch and campaign smokes, chapter viability, roster economy and AI runways, and balance of authored encounter placements.
 
+Four AI tests that were on this list were deleted on 2026-10-07 with the raid director and empire cycle they ran (`docs/ai-plays-by-player-rules.md`): `active_scenario_ai_town_development_runway_report.gd`, `active_scenario_ai_town_start_economy_report.gd`, `ai_glassroad_defense_proof_report.gd` and `faction_scenario_ai_pressure_report.gd`.
+
 ```text
-active_scenario_ai_town_development_runway_report.gd
-active_scenario_ai_town_start_economy_report.gd
 active_scenario_rare_economy_access_report.gd
 active_scenario_resource_availability_matrix_report.py
 active_scenario_town_development_runway_report.gd
 active_scenario_town_economy_source_route_report.gd
 active_scenario_town_start_economy_report.gd
-ai_glassroad_defense_proof_report.gd
 battle_active_cohort_queue_clear_regression.gd
 battle_active_medium_sample_pressure_regression.gd
 battle_active_outcome_diversity_clear_regression.gd
@@ -85,7 +84,6 @@ eight_commanders_proving_roads_smoke.gd
 eighteen_campaign_finale_nemeses_smoke.gd
 eightfold_guarded_reliquary_march_report.gd
 embercourt_charter_bastion_counterseal_chapter_report.gd
-faction_scenario_ai_pressure_report.gd
 field_mastery_convocations_smoke.gd
 field_muster_commission_skirmishes_smoke.gd
 final_nine_faction_campaigns_smoke.gd

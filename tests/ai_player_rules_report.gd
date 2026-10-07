@@ -120,6 +120,9 @@ func _run() -> void:
 	var market := _check_market_trades_like_the_player(session, controller)
 	if _failed:
 		return
+	var doorway_hire := _check_hire_with_hero_in_doorway(session, controller)
+	if _failed:
+		return
 
 	var payload := {
 		"ok": true,
@@ -130,6 +133,7 @@ func _run() -> void:
 		"town_orders": economy,
 		"save_round_trip": save_check,
 		"market": market,
+		"doorway_hire": doorway_hire,
 		"captured_mines": captured_mines,
 		"guard_fights": fights,
 		"hero_tiles_per_day": float(hero_steps) / float(maxi(1, hero_days)),
@@ -458,7 +462,7 @@ func _check_town_orders_pay_real_costs(session, controller: String) -> Dictionar
 			other["last_hire_day"] = int(session.day)
 	var built_before: Array = town.get("built_buildings", []).duplicate()
 	var recruits_before: Dictionary = town.get("available_recruits", {}).duplicate()
-	var context: Dictionary = AiHeroRulesScript._new_context(session, EnemyTurnRules._enemy_config_for_faction(session, controller), state)
+	var context: Dictionary = AiHeroRulesScript._new_context(session, _ai_config(session, controller), state)
 	var result: Dictionary = AiHeroRulesScript._govern_towns(session, context)
 	town = _first_ai_town(session, controller)
 	var built_after: Array = town.get("built_buildings", [])
@@ -498,6 +502,54 @@ func _check_town_orders_pay_real_costs(session, controller: String) -> Dictionar
 			return {}
 	return {"built": new_buildings, "recruited": recruited, "heroes_hired": hired, "spent": spent}
 
+## A hero of the faction standing in its town's doorway is in that town: the
+## town still hires, and the new hero joins it there, as the human's do.
+func _check_hire_with_hero_in_doorway(session, controller: String) -> Dictionary:
+	var state := _state(session, controller)
+	state["treasury"] = {"gold": 30000, "wood": 60, "ore": 60}
+	var town := _first_ai_town(session, controller)
+	if not HeroCommandRules.town_has_hall(town):
+		town["built_buildings"] = town.get("built_buildings", []) + [HeroCommandRules.HALL_BUILDING_ID]
+	town["last_hire_day"] = 0
+	var entrance := LevelRules.town_entrance(town)
+	var heroes := AiHeroRulesScript.active_hero_entries(session, controller)
+	if heroes.is_empty():
+		_fail("The computer player has no hero to stand in its doorway.")
+		return {}
+	# One hero left, standing in the doorway: the faction wants more.
+	var doorway_id := String(heroes[0].get("placement_id", ""))
+	var kept := []
+	for entry in session.overworld.get("encounters", []):
+		if AiHeroRulesScript.is_ai_hero(entry) and PlayerRules.raid_controller_id(entry) == controller and String(entry.get("placement_id", "")) != doorway_id:
+			continue
+		if String(entry.get("placement_id", "")) == doorway_id:
+			entry["x"] = int(entrance.get("x", 0))
+			entry["y"] = int(entrance.get("y", 0))
+			entry["level"] = LevelRules.level_of(entrance)
+		kept.append(entry)
+	session.overworld["encounters"] = kept
+	OverworldRules.invalidate_spatial_lookup(session)
+	if AiHeroRulesScript.desired_hero_count(session, controller) <= 1:
+		_fail("The doorway fixture does not want a second hero.")
+		return {}
+	var context: Dictionary = AiHeroRulesScript._new_context(session, _ai_config(session, controller), state)
+	var result: Dictionary = AiHeroRulesScript._govern_towns(session, context)
+	var hired := []
+	for event in result.get("events", []):
+		if event is Dictionary and String(event.get("event_type", "")) == "ai_hero_hired":
+			hired.append(String(event.get("actor_id", "")))
+	if hired.is_empty():
+		_fail("A town did not hire while its own hero stood in the doorway: %s" % JSON.stringify(result))
+		return {}
+	var in_doorway := []
+	for entry in AiHeroRulesScript.active_hero_entries(session, controller):
+		if int(entry.get("x", -1)) == int(entrance.get("x", -2)) and int(entry.get("y", -1)) == int(entrance.get("y", -2)):
+			in_doorway.append(String(entry.get("placement_id", "")))
+	if doorway_id not in in_doorway or String(hired[0]) not in in_doorway:
+		_fail("The hired hero and the doorway hero must both stand in the town: %s" % JSON.stringify(in_doorway))
+		return {}
+	return {"doorway_hero": doorway_id, "hired": hired, "in_doorway": in_doorway}
+
 func _at_own_town(session, controller: String, tile: Vector2i) -> bool:
 	for town in session.overworld.get("towns", []):
 		if town is Dictionary and String(town.get("owner", "")) == "enemy" and PlayerRules.town_controller_id(town) == controller:
@@ -524,9 +576,16 @@ func _hero_brief(session, controller: String) -> Array:
 		])
 	return rows
 
+## The computer player's faction config, as the enemy turn reads it.
+func _ai_config(session, controller: String) -> Dictionary:
+	for config in EnemyTurnRules._enemy_faction_configs_for_session(session):
+		if config is Dictionary and PlayerRules.controller_id(config) == controller:
+			return config
+	return {}
+
 func _plan_brief(session, controller: String) -> Array:
 	var rows := []
-	var context: Dictionary = AiHeroRulesScript._new_context(session, EnemyTurnRules._enemy_config_for_faction(session, controller), _state(session, controller))
+	var context: Dictionary = AiHeroRulesScript._new_context(session, _ai_config(session, controller), _state(session, controller))
 	for entry in AiHeroRulesScript.active_hero_entries(session, controller):
 		var plan: Dictionary = AiHeroRulesScript._choose_plan(session, context, entry)
 		rows.append({"hero": AiHeroRulesScript.hero_name(entry), "at": [int(entry.x), int(entry.y)], "move": entry.get("ai_hero", {}).get("movement", {}), "avoid": entry.get("ai_hero", {}).get("avoid", {}), "plan": {"kind": plan.get("kind", ""), "id": plan.get("id", ""), "distance": plan.get("distance", -1), "value": plan.get("value", 0), "path": plan.get("path", []).size()}})

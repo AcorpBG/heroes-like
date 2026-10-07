@@ -1,5 +1,7 @@
 extends Node
 
+const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
+
 const REPORT_ID := "ARTIFACT_PICKUP_SOURCE_EXECUTION_REPORT"
 const TABLE_ID := "artifact_source_pickup_caches_common"
 const MIRE_SCENARIO_ID := "mireford-skirmish"
@@ -24,11 +26,8 @@ func _run() -> void:
 	var player_case := _player_claim_and_save_case()
 	if player_case.is_empty():
 		return
-	var ai_case := _ai_claim_case(false)
+	var ai_case := _ai_claim_case()
 	if ai_case.is_empty():
-		return
-	var ai_route_case := _ai_claim_case(true)
-	if ai_route_case.is_empty():
 		return
 	var fixed_case := _fixed_pickup_case()
 	if fixed_case.is_empty():
@@ -39,7 +38,6 @@ func _run() -> void:
 		"materialization_case": materialization_case,
 		"player_case": player_case,
 		"ai_case": ai_case,
-		"ai_route_case": ai_route_case,
 		"fixed_case": fixed_case,
 		"save_version": SessionStateStore.SAVE_VERSION,
 	})])
@@ -114,7 +112,9 @@ func _player_claim_and_save_case() -> Dictionary:
 		"save_resume_preserved": true,
 	}
 
-func _ai_claim_case(opportunistic_route: bool) -> Dictionary:
+## A computer player's hero picks the cache up through the hero model's own
+## pickup (AiHeroRules._take_artifact), as it does on the map.
+func _ai_claim_case() -> Dictionary:
 	var session = _session(MIRE_SCENARIO_ID)
 	EnemyTurnRules.normalize_enemy_states(session)
 	EnemyAdventureRules.normalize_all_commander_rosters(session)
@@ -125,52 +125,38 @@ func _ai_claim_case(opportunistic_route: bool) -> Dictionary:
 		return {}
 	var node_result := _artifact_node_result(session, MIRE_PLACEMENT_ID)
 	var node: Dictionary = node_result.get("node", {})
-	var raid := {
-		"placement_id": "pickup_route_raid" if opportunistic_route else "pickup_target_raid",
+	var host := {
+		"placement_id": "pickup_ai_hero",
 		"encounter_id": "encounter_mire_raid",
 		"spawned_by_faction_id": AI_FACTION_ID,
-		"target_kind": "town" if opportunistic_route else "artifact",
-		"target_placement_id": "highwater_bridgehead" if opportunistic_route else MIRE_PLACEMENT_ID,
-		"target_x": int(node.get("x", 0)),
-		"target_y": int(node.get("y", 0)),
-		"goal_x": int(node.get("x", 0)),
-		"goal_y": int(node.get("y", 0)),
 		"x": int(node.get("x", 0)),
 		"y": int(node.get("y", 0)),
 		"enemy_commander_state": roster[0].get("commander_state", {}).duplicate(true),
-		"target_reason_codes": ["pickup_source_execution_fixture"],
 	}
-	raid = EnemyAdventureRules.ensure_raid_army(raid, session)
-	var config := _enemy_config(MIRE_SCENARIO_ID, AI_FACTION_ID)
-	var secured := EnemyAdventureRules._secure_opportunistic_route_artifact(
-		session,
-		config,
-		raid,
-		state,
-		AI_FACTION_ID,
-		int(node_result.get("index", -1)),
-		node
-	) if opportunistic_route else EnemyAdventureRules._secure_artifact_target(
-		session,
-		raid,
-		state,
-		AI_FACTION_ID,
-		config
-	)
-	var secured_raid: Dictionary = secured.get("encounter", {}) if secured.get("encounter", {}) is Dictionary else {}
-	var commander: Dictionary = secured_raid.get("enemy_commander_state", {}) if secured_raid.get("enemy_commander_state", {}) is Dictionary else {}
+	host = EnemyAdventureRules.ensure_raid_army(host, session)
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(host)
+	session.overworld["encounters"] = encounters
+	# The host plays as a hero, as every computer army now does.
+	AiHeroRulesScript.normalize_ai_heroes(session, AI_FACTION_ID)
+	var hero_index := -1
+	for index in range(session.overworld.encounters.size()):
+		if String(session.overworld.encounters[index].get("placement_id", "")) == "pickup_ai_hero":
+			hero_index = index
+	if hero_index < 0 or not AiHeroRulesScript.is_ai_hero(session.overworld.encounters[hero_index]):
+		_fail("The pickup fixture host did not play as an AI hero.")
+		return {}
+	var context: Dictionary = AiHeroRulesScript._new_context(session, _enemy_config(MIRE_SCENARIO_ID, AI_FACTION_ID), state)
+	var taken: Dictionary = AiHeroRulesScript._take_artifact(session, context, hero_index, {"index": int(node_result.get("index", -1))})
+	var hero: Dictionary = session.overworld.encounters[hero_index]
+	var commander: Dictionary = hero.get("enemy_commander_state", {}) if hero.get("enemy_commander_state", {}) is Dictionary else {}
 	var secured_node: Dictionary = _artifact_node_result(session, MIRE_PLACEMENT_ID).get("node", {})
-	if not bool(secured_node.get("collected", false)) \
-			or String(secured_node.get("collected_by_faction_id", "")) != AI_FACTION_ID \
-			or not _assert_materialized_node(secured_node, MIRE_SCENARIO_ID, MIRE_PLACEMENT_ID, BOOTS_ID) \
-			or BOOTS_ID not in ArtifactRules.owned_artifact_ids(commander) \
-			or not _artifact_equipped(commander, BOOTS_ID) \
-			or BOOTS_ID not in state.get("captured_artifact_ids", []):
-		_fail("AI pickup claim did not preserve provenance, ownership, and equipment: %s" % JSON.stringify(secured))
+	if not bool(secured_node.get("collected", false)) 			or String(secured_node.get("collected_by_faction_id", "")) != AI_FACTION_ID 			or not _assert_materialized_node(secured_node, MIRE_SCENARIO_ID, MIRE_PLACEMENT_ID, BOOTS_ID) 			or BOOTS_ID not in ArtifactRules.owned_artifact_ids(commander) 			or not _artifact_equipped(commander, BOOTS_ID):
+		_fail("AI pickup claim did not preserve provenance, ownership, and equipment: %s" % JSON.stringify(taken))
 		return {}
 	return {
 		"artifact_id": BOOTS_ID,
-		"claim_mode": "opportunistic_route" if opportunistic_route else "assigned_target",
+		"claim_mode": "ai_hero_pickup",
 		"auto_equipped": true,
 		"provenance_preserved": true,
 	}
