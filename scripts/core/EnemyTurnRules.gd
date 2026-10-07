@@ -13,7 +13,7 @@ const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRule
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
 # Computer-player state AiHeroRules keeps between days.
-const AI_PLAYER_STATE_KEYS := ["ai_start_hero_granted", "ai_opening_granted", "ai_tavern", "ai_hero_counter"]
+const AI_PLAYER_STATE_KEYS := ["ai_start_hero_granted", "ai_opening_granted", "ai_tavern", "ai_hero_counter", "ai_explored"]
 static var SpellRulesScript: Variant = load("res://scripts/core/SpellRules.gd")
 static var TownRulesScript: Variant = load("res://scripts/core/TownRules.gd")
 static var BattleRulesScript: Variant = load("res://scripts/core/BattleRules.gd")
@@ -132,7 +132,7 @@ static func normalize_enemy_states(session: SessionStateStoreScript.SessionData)
 	session.overworld["enemy_states"] = normalized_states
 	EnemyAdventureRulesScript.normalize_raid_armies(session)
 	# Older saves carry raid hosts; they continue as heroes (or disband).
-	AiHeroRulesScript.normalize_ai_heroes(session)
+	AiHeroRulesScript.migrate_legacy_raids(session)
 	EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
 
 static func _normalize_rebuild_pressure_request(value: Variant, current_day: int) -> Dictionary:

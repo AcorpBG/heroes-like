@@ -97,6 +97,9 @@ func _run() -> void:
 		return _fail("Raid entities or raid wording remain: %s" % JSON.stringify(raid_check))
 	if hero_days > 0 and float(hero_steps) / float(hero_days) < 2.0:
 		return _fail("AI heroes barely move (%d tiles over %d hero-days)." % [hero_steps, hero_days])
+	var save_check := _check_save_round_trip(session, controller)
+	if _failed:
+		return
 	var economy := _check_town_orders_pay_real_costs(session, controller)
 	if _failed:
 		return
@@ -108,6 +111,7 @@ func _run() -> void:
 		"days_played": days.size(),
 		"migration": migration,
 		"town_orders": economy,
+		"save_round_trip": save_check,
 		"captured_mines": captured_mines,
 		"guard_fights": fights,
 		"hero_tiles_per_day": float(hero_steps) / float(maxi(1, hero_days)),
@@ -225,7 +229,7 @@ func _check_legacy_migration(session, controller: String) -> Dictionary:
 	var garrison_before := _headcount(town.get("garrison", []))
 	encounters.append({
 		"placement_id": "%s_raid_1" % controller,
-		"encounter_id": "encounter_mire_raid",
+		"encounter_id": "encounter_blackbranch_reavers",
 		"x": int(entrance.get("x", 0)) + 2,
 		"y": int(entrance.get("y", 0)),
 		"difficulty": "pressure",
@@ -248,7 +252,12 @@ func _check_legacy_migration(session, controller: String) -> Dictionary:
 		"enemy_army": {"id": "column", "name": "Support Column", "stacks": [{"unit_id": "unit_mire_slinger", "count": 9}]},
 	})
 	session.overworld["encounters"] = encounters
+	# A save from before computer players fielded heroes carries no migration mark.
+	session.overworld.erase(AiHeroRulesScript.MIGRATION_KEY)
 	EnemyTurnRules.normalize_enemy_states(session)
+	if int(session.overworld.get(AiHeroRulesScript.MIGRATION_KEY, 0)) != AiHeroRulesScript.MIGRATION_VERSION:
+		_fail("The raid migration did not record its version.")
+		return {}
 	var converted := {}
 	var column_resolved := false
 	for entry in session.overworld.get("encounters", []):
@@ -274,6 +283,46 @@ func _check_legacy_migration(session, controller: String) -> Dictionary:
 		_fail("Disbanded column troops must return to the town garrison (%d -> %d)." % [garrison_before, garrison_after])
 		return {}
 	return {"converted_hero": String(converted.get("placement_id", "")), "column_troops_returned": 9}
+
+## Heroes, their armies, movement and private goals survive a save restore,
+## and every one still leads troops.
+func _check_save_round_trip(session, controller: String) -> Dictionary:
+	var before := {}
+	for entry in AiHeroRulesScript.active_hero_entries(session, controller):
+		before[String(entry.get("placement_id", ""))] = _hero_signature(entry)
+	var restored: Dictionary = SaveService._normalize_restore_result(session.to_dict())
+	var loaded = restored.get("session", null)
+	if not bool(restored.get("ok", false)) or loaded == null:
+		_fail("Save restore failed: %s" % String(restored.get("message", "")))
+		return {}
+	OverworldRules.normalize_overworld_state(loaded)
+	var after := {}
+	for entry in AiHeroRulesScript.active_hero_entries(loaded, controller):
+		if _headcount(entry.get("enemy_army", {}).get("stacks", [])) <= 0:
+			_fail("A restored AI hero leads no troops: %s" % JSON.stringify(entry))
+			return {}
+		after[String(entry.get("placement_id", ""))] = _hero_signature(entry)
+	if JSON.stringify(before) != JSON.stringify(after) or before.is_empty():
+		_fail("AI heroes changed across a save restore: %s -> %s" % [JSON.stringify(before), JSON.stringify(after)])
+		return {}
+	return {"heroes": before.size()}
+
+func _hero_signature(entry: Dictionary) -> String:
+	var block: Dictionary = entry.get("ai_hero", {})
+	var movement: Dictionary = block.get("movement", {})
+	var goal: Dictionary = block.get("goal", {})
+	var commander: Dictionary = entry.get("enemy_commander_state", {})
+	return "%s|%d,%d|%d|%d/%d|%s:%s|lv%d" % [
+		String(block.get("hero_id", "")),
+		int(entry.get("x", 0)),
+		int(entry.get("y", 0)),
+		_headcount(entry.get("enemy_army", {}).get("stacks", [])),
+		int(movement.get("current", 0)),
+		int(movement.get("max", 0)),
+		String(goal.get("kind", "")),
+		String(goal.get("id", "")),
+		int(commander.get("level", 1)),
+	]
 
 ## Town orders on a controlled day: the build and recruits come out of the
 ## faction treasury at their listed prices.

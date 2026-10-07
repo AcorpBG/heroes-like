@@ -10,27 +10,29 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	var case_report := _river_pass_live_targets_execute_on_enemy_turn()
+	var case_report := _river_pass_live_heroes_take_player_sites()
 	if case_report.is_empty():
 		return
-	var route_case_report := _river_pass_route_pickup_preserves_live_target()
-	if route_case_report.is_empty():
+	var movement_case_report := _river_pass_heroes_spend_movement_points()
+	if movement_case_report.is_empty():
 		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_status": "live_target_selection_turn_execution_persists_task_board",
-		"behavior_policy": "run_enemy_turn_executes_and_completes_live_commander_resource_tasks",
-		"save_policy": "hero_task_state_live_persist_no_save_migration",
+		"schema_status": "live_enemy_turn_runs_ai_heroes",
+		"behavior_policy": "run_enemy_turn_moves_ai_heroes_and_claims_sites_under_player_rules",
+		"save_policy": "raid_hosts_from_old_saves_become_ai_heroes",
 		"case": case_report,
-		"route_case": route_case_report,
+		"movement_case": movement_case_report,
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
 
-func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
+## Two commanders' hosts from an older save stand on sites the human holds.
+## They load as heroes and take both sites on the enemy turn.
+func _river_pass_live_heroes_take_player_sites() -> Dictionary:
 	var session = _base_session()
 	var config := _enemy_config()
 	var state := _enemy_state(session)
@@ -46,6 +48,11 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 	encounters.append(_strong_raid_seed(session, config, "hero_vaska", "live_turn_vaska_free_company", {"x": 0, "y": 4}))
 	encounters.append(_strong_raid_seed(session, config, "hero_sable", "live_turn_sable_signal_post", {"x": 2, "y": 3}))
 	session.overworld["encounters"] = encounters
+	_load_as_old_save(session)
+	_assert_ai_hero(_encounter(session, "live_turn_vaska_free_company"), "Vaska")
+	_assert_ai_hero(_encounter(session, "live_turn_sable_signal_post"), "Sable")
+	if _failed:
+		return {}
 	EnemyAdventureRules.normalize_all_commander_rosters(session)
 	var vaska_progress_before := _commander_progress_snapshot(session, "hero_vaska")
 	var sable_progress_before := _commander_progress_snapshot(session, "hero_sable")
@@ -56,21 +63,15 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 		return {}
 	var vaska := _encounter(session, "live_turn_vaska_free_company")
 	var sable := _encounter(session, "live_turn_sable_signal_post")
-	_assert_continued_after_resource(vaska, "river_free_company", "Vaska turn raid")
-	_assert_continued_after_resource(sable, "river_signal_post", "Sable companion turn raid")
-	if _failed:
-		return {}
 	var free_company_after := _resource_controller(session, "river_free_company")
 	var signal_post_after := _resource_controller(session, "river_signal_post")
 	if free_company_after != MIRECLAW:
-		_fail("Free Company was not seized by live-turn raid: before=%s after=%s" % [free_company_before, free_company_after])
+		_fail("Free Company was not taken by an enemy hero: before=%s after=%s" % [free_company_before, free_company_after])
 		return {}
 	if signal_post_after != MIRECLAW:
-		_fail("Signal Post was not seized by companion live-turn raid: before=%s after=%s" % [signal_post_before, signal_post_after])
+		_fail("Signal Post was not taken by an enemy hero: before=%s after=%s" % [signal_post_before, signal_post_after])
 		return {}
 	var event_types := _event_types(result.get("events", []))
-	_assert_event(result.get("events", []), "ai_target_assigned", "river_free_company")
-	_assert_event(result.get("events", []), "ai_target_assigned", "river_signal_post")
 	_assert_event(result.get("events", []), "ai_site_seized", "river_free_company")
 	_assert_event(result.get("events", []), "ai_site_seized", "river_signal_post")
 	_assert_site_transition_event(result.get("events", []), "river_free_company", "player", MIRECLAW)
@@ -79,8 +80,13 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 	_assert_site_route_closure_event(result.get("events", []), "river_signal_post", false)
 	if _failed:
 		return {}
-	var task_board := _assert_live_task_board(session)
-	if _failed:
+	# Heroes keep their plans to themselves: no raid targets, no task board.
+	for hero in [vaska, sable]:
+		if String(hero.get("target_kind", "")) != "" or String(hero.get("target_placement_id", "")) != "":
+			_fail("An enemy hero exposed a raid-style target: %s" % JSON.stringify(hero))
+			return {}
+	if _enemy_state(session).has("hero_task_state"):
+		_fail("The live turn wrote a raid task board: %s" % JSON.stringify(_enemy_state(session).get("hero_task_state", {})))
 		return {}
 	var vaska_progress_after := _commander_progress_snapshot(session, "hero_vaska")
 	var sable_progress_after := _commander_progress_snapshot(session, "hero_sable")
@@ -89,7 +95,6 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 	if _failed:
 		return {}
 	EnemyTurnRules.normalize_enemy_states(session)
-	var normalized_task_board := _assert_live_task_board(session)
 	var vaska_progress_normalized := _commander_progress_snapshot(session, "hero_vaska")
 	var sable_progress_normalized := _commander_progress_snapshot(session, "hero_sable")
 	_assert_progression(vaska_progress_before, vaska_progress_normalized, EnemyAdventureRules.COMMANDER_OUTCOME_RESOURCE_SECURED, "normalized Vaska")
@@ -103,19 +108,11 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 	if _public_event_leaks(public_log.get("public_events", [])):
 		return {}
 	return {
-		"case_id": "river_pass_live_target_turn_seizes_reserved_resource_fronts",
+		"case_id": "river_pass_live_heroes_take_player_sites",
 		"free_company_before": free_company_before,
 		"free_company_after": free_company_after,
 		"signal_post_before": signal_post_before,
 		"signal_post_after": signal_post_after,
-		"vaska_target_id": String(vaska.get("target_placement_id", "")),
-		"sable_target_id": String(sable.get("target_placement_id", "")),
-		"vaska_completed_target_id": String(vaska.get("previous_completed_target_placement_id", "")),
-		"sable_completed_target_id": String(sable.get("previous_completed_target_placement_id", "")),
-		"vaska_continued": bool(vaska.get("post_objective_continuation", false)),
-		"sable_continued": bool(sable.get("post_objective_continuation", false)),
-		"vaska_arrived": bool(vaska.get("arrived", false)),
-		"sable_arrived": bool(sable.get("arrived", false)),
 		"event_types": event_types,
 		"vaska_progress_before": vaska_progress_before,
 		"vaska_progress_after": vaska_progress_after,
@@ -124,76 +121,54 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 		"sable_progress_after": sable_progress_after,
 		"sable_progress_normalized": sable_progress_normalized,
 		"public_event_count": int(public_log.get("public_event_count", 0)),
-		"task_board": task_board,
-		"normalized_task_board": normalized_task_board,
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
 
-func _river_pass_route_pickup_preserves_live_target() -> Dictionary:
+## Raid hosts crept one tile a day. A hero gets the human's daily movement
+## points, spends one per step, and starts every day with a full budget.
+func _river_pass_heroes_spend_movement_points() -> Dictionary:
 	var session = _base_session()
 	var config := _enemy_config()
-	var state := _enemy_state(session)
-	state["pressure"] = 0
-	_update_enemy_state(session, state)
 	_set_player_position(session, {"x": 12, "y": 12})
-	_set_resource_controller(session, "river_free_company", "player")
-	var raid := _strong_raid_seed(session, config, "hero_vaska", "route_pickup_vaska_ghoul_grove", {"x": 0, "y": 4})
-	raid["target_kind"] = "encounter"
-	raid["target_placement_id"] = "river_pass_ghoul_grove"
-	raid["target_label"] = "Ghoul Grove"
-	raid["target_x"] = 3
-	raid["target_y"] = 1
-	raid["goal_x"] = 3
-	raid["goal_y"] = 1
-	raid["target_public_reason"] = "objective front"
-	raid["target_reason_codes"] = ["site_contested", "objective_front"]
-	raid["target_public_importance"] = "high"
-	raid["target_debug_reason"] = "fixture route target should survive opportunistic pickup"
 	var encounters: Array = session.overworld.get("encounters", [])
-	encounters.append(raid)
+	encounters.append(_strong_raid_seed(session, config, "hero_vaska", "movement_vaska", {"x": 7, "y": 3}))
 	session.overworld["encounters"] = encounters
-	EnemyAdventureRules.normalize_all_commander_rosters(session)
-	var progress_before := _commander_progress_snapshot(session, "hero_vaska")
-
-	var result := EnemyAdventureRules.advance_raids(session, config, MIRECLAW, _enemy_state(session))
-	var route_raid := _encounter(session, "route_pickup_vaska_ghoul_grove")
-	if String(_resource_controller(session, "river_free_company")) != MIRECLAW:
-		_fail("Route pickup did not claim river_free_company while marching: %s" % JSON.stringify(result))
-		return {}
-	if String(route_raid.get("target_kind", "")) != "encounter" or String(route_raid.get("target_placement_id", "")) != "river_pass_ghoul_grove":
-		_fail("Route pickup replaced the assigned encounter target: %s" % JSON.stringify(route_raid))
-		return {}
-	if String(route_raid.get("previous_completed_target_placement_id", "")) != "":
-		_fail("Route pickup should not finish the live encounter task: %s" % JSON.stringify(route_raid))
-		return {}
-	if String(route_raid.get("last_opportunistic_pickup_placement_id", "")) != "river_free_company":
-		_fail("Route pickup marker missing from raid state: %s" % JSON.stringify(route_raid))
-		return {}
-	_assert_event(result.get("events", []), "ai_site_seized", "river_free_company")
-	_assert_site_transition_event(result.get("events", []), "river_free_company", "player", MIRECLAW)
+	_load_as_old_save(session)
+	var hero := _encounter(session, "movement_vaska")
+	_assert_ai_hero(hero, "Vaska")
 	if _failed:
 		return {}
-	var progress_after := _commander_progress_snapshot(session, "hero_vaska")
-	_assert_progression(progress_before, progress_after, EnemyAdventureRules.COMMANDER_OUTCOME_RESOURCE_SECURED, "route pickup Vaska")
-	if _failed:
+	var expected_max := HeroCommandRules.movement_max_for_hero(hero.get("enemy_commander_state", {}).merged({"base_movement": int(ContentService.get_hero("hero_vaska").get("base_movement", 10))}), "normal")
+	var start := Vector2i(int(hero.get("x", 0)), int(hero.get("y", 0)))
+	var result := EnemyTurnRules.run_enemy_turn(session)
+	if not bool(result.get("ok", false)):
+		_fail("Enemy turn failed: %s" % JSON.stringify(result))
 		return {}
-	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(result.get("events", []), 8)
-	if not bool(public_log.get("ok", false)):
-		_fail("Route pickup public event boundary failed: %s" % JSON.stringify(public_log))
+	hero = _encounter(session, "movement_vaska")
+	var movement: Dictionary = hero.get("ai_hero", {}).get("movement", {})
+	var moved := maxi(absi(int(hero.get("x", 0)) - start.x), absi(int(hero.get("y", 0)) - start.y))
+	if int(movement.get("max", 0)) != expected_max or expected_max <= 1:
+		_fail("Hero movement budget should match the human's rule (%d): %s" % [expected_max, JSON.stringify(movement)])
 		return {}
-	if _public_event_leaks(public_log.get("public_events", [])):
+	if int(movement.get("current", 0)) >= int(movement.get("max", 0)):
+		_fail("The hero spent no movement on its turn: %s" % JSON.stringify(hero))
+		return {}
+	if moved <= 1:
+		_fail("The hero moved %d tile(s); heroes walk as far as their movement points allow." % moved)
 		return {}
 	return {
-		"case_id": "river_pass_route_pickup_keeps_assigned_encounter_target",
-		"route_pickup_target_id": String(route_raid.get("last_opportunistic_pickup_placement_id", "")),
-		"active_target_kind": String(route_raid.get("target_kind", "")),
-		"active_target_id": String(route_raid.get("target_placement_id", "")),
-		"arrived": bool(route_raid.get("arrived", false)),
-		"resource_controller_after": _resource_controller(session, "river_free_company"),
-		"progress_before": progress_before,
-		"progress_after": progress_after,
-		"public_event_count": int(public_log.get("public_event_count", 0)),
+		"case_id": "river_pass_heroes_spend_movement_points",
+		"movement": movement,
+		"tiles_moved": moved,
 	}
+
+func _load_as_old_save(session) -> void:
+	session.overworld.erase("ai_heroes_version")
+	EnemyTurnRules.normalize_enemy_states(session)
+
+func _assert_ai_hero(entry: Dictionary, label: String) -> void:
+	if not (entry.get("ai_hero", null) is Dictionary):
+		_fail("%s's raid host did not load as an enemy hero: %s" % [label, JSON.stringify(entry)])
 
 func _raid_seed(session, config: Dictionary, roster_hero_id: String, placement_id: String, origin: Dictionary) -> Dictionary:
 	var raid := {
@@ -347,19 +322,6 @@ func _commander_progress_snapshot(session, roster_hero_id: String) -> Dictionary
 	_fail("Could not find commander progress for %s" % roster_hero_id)
 	return {}
 
-func _assert_continued_after_resource(raid: Dictionary, completed_target_id: String, label: String) -> void:
-	if String(raid.get("previous_completed_target_kind", "")) != "resource" or String(raid.get("previous_completed_target_placement_id", "")) != completed_target_id:
-		_fail("%s did not preserve completed resource target %s: %s" % [label, completed_target_id, JSON.stringify(raid)])
-		return
-	if not bool(raid.get("post_objective_continuation", false)):
-		_fail("%s did not continue after securing resource %s: %s" % [label, completed_target_id, JSON.stringify(raid)])
-		return
-	if String(raid.get("target_placement_id", "")) == completed_target_id or String(raid.get("target_kind", "")) == "":
-		_fail("%s did not receive a fresh target after completed resource %s: %s" % [label, completed_target_id, JSON.stringify(raid)])
-		return
-	if bool(raid.get("arrived", false)):
-		_fail("%s should be marching toward the continuation target, not idling arrived: %s" % [label, JSON.stringify(raid)])
-
 func _assert_event(events: Variant, event_type: String, target_id: String) -> void:
 	if not (events is Array):
 		_fail("Events payload is not an array for %s/%s" % [event_type, target_id])
@@ -422,62 +384,6 @@ func _event_types(events: Variant) -> Array:
 				types.append(event_type)
 	types.sort()
 	return types
-
-func _assert_live_task_board(session) -> Dictionary:
-	for state in session.overworld.get("enemy_states", []):
-		if not (state is Dictionary) or String(state.get("faction_id", "")) != MIRECLAW:
-			continue
-		if not state.has("hero_task_state"):
-			_fail("Live turn execution did not persist hero_task_state.")
-			return {}
-		var task_state: Dictionary = state.get("hero_task_state", {}) if state.get("hero_task_state", {}) is Dictionary else {}
-		var tasks: Array = task_state.get("tasks", []) if task_state.get("tasks", []) is Array else []
-		var completed := {}
-		var active_count := 0
-		for task_value in tasks:
-			if not (task_value is Dictionary):
-				continue
-			var task: Dictionary = task_value
-			if _task_record_leaks(task):
-				return {}
-			if String(task.get("task_status", "")) == "active":
-				active_count += 1
-			if String(task.get("task_status", "")) == "completed":
-				completed[String(task.get("actor_id", ""))] = String(task.get("target_id", ""))
-		if String(completed.get("hero_vaska", "")) != "river_free_company":
-			_fail("Vaska's completed live task was not persisted: %s" % JSON.stringify(task_state))
-			return {}
-		if String(completed.get("hero_sable", "")) != "river_signal_post":
-			_fail("Sable's completed live task was not persisted: %s" % JSON.stringify(task_state))
-			return {}
-		return {
-			"schema_version": int(task_state.get("schema_version", 0)),
-			"planner_epoch": int(task_state.get("planner_epoch", 0)),
-			"task_count": tasks.size(),
-			"active_task_count": active_count,
-			"completed_tasks": completed,
-		}
-	_fail("Could not find Mireclaw enemy state for live task board inspection.")
-	return {}
-
-func _task_record_leaks(task: Dictionary) -> bool:
-	var forbidden_tokens := [
-		"actor_label",
-		"target_label",
-		"target_x",
-		"target_y",
-		"target_score",
-		"target_debug_reason",
-		"resource_score_breakdown",
-		"final_priority",
-		"actor_active_placement_id",
-		"last_seen_day",
-	]
-	for token in forbidden_tokens:
-		if task.has(token):
-			_fail("Persisted live task kept report-only field %s: %s" % [token, JSON.stringify(task)])
-			return true
-	return false
 
 func _public_event_leaks(public_events: Variant) -> bool:
 	if not (public_events is Array):

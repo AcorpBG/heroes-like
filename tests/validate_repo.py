@@ -22270,7 +22270,7 @@ def validate_overworld_event_dispatch_observation_context_reuse(errors: list[str
                 'String(observation_context.get("local_pressure", ""))',
                 'String(observation_context.get("management_watch", ""))',
                 'String(observation_context.get("defense_watch", ""))',
-                'return "No urgent raid, convoy, or town-management warning is visible."',
+                'return "No urgent enemy, convoy, or town-management warning is visible."',
                 'return " | ".join(parts.slice(0, min(3, parts.size())))',
             ),
         ),
@@ -39469,8 +39469,8 @@ def validate_enemy_strategic_contestation(errors: list[str]) -> None:
 
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "EnemyAdventureRulesScript.advance_raids(session, config, faction_id, state)",
-        "EnemyAdventureRulesScript.describe_contestation",
+        "AiHeroRulesScript.run_faction_turn(session, config, state, should_apply_weekly_growth, profile_enabled)",
+        "_visible_raids_for_faction(session, faction_id)",
         '"captured_artifact_ids": _normalize_string_array',
     ):
         ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing strategic-turn token: {required_token}")
@@ -63972,7 +63972,7 @@ def validate_hostile_empire_personality(errors: list[str]) -> None:
         "launch_policy_capital_state_reused",
         "launch_policy_front_state_reused",
         "func _recruit_priority",
-        "Charter columns are pushing measured raids down the lanes",
+        "Charter columns are pushing measured strikes down the lanes",
         "Warbands are spilling forward in staggered packs",
         "Compact sorties are testing the frontier behind relay screens",
     ):

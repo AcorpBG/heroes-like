@@ -960,6 +960,8 @@ static func _battle_name(
 			if opposing_commander_name != "":
 				return "%s intercepts %s" % [opposing_commander_name, hero_name]
 			return "%s intercepts %s" % [String(encounter.get("name", encounter.get("id", "Enemy army"))), hero_name]
+	if opposing_commander_name != "" and encounter_placement.get("ai_hero", null) is Dictionary:
+		return "Battle with %s" % opposing_commander_name
 	if opposing_commander_name != "" and String(encounter.get("spawned_by_faction_id", encounter_placement.get("spawned_by_faction_id", ""))) != "":
 		return "%s's %s" % [opposing_commander_name, String(encounter.get("name", encounter.get("id", "Battle")))]
 	return String(encounter.get("name", encounter.get("id", "Battle")))
