@@ -1429,20 +1429,9 @@ static func _enemy_operational_lines(session: SessionStateStoreScript.SessionDat
 		var label := String(config.get("label", ""))
 		if label == "":
 			label = String(ContentService.get_faction(faction_id).get("name", faction_id))
-		var base_pressure: int = max(
-			0,
-			int(config.get("pressure_per_day", 0)) + int(config.get("pressure_per_enemy_town", 0))
-		)
-		var scaled_pressure := DifficultyRulesScript.adjust_enemy_pressure_gain(session, base_pressure)
-		var raid_threshold := DifficultyRulesScript.adjust_raid_threshold(session, max(1, int(config.get("raid_threshold", 1))))
-		var max_raids: int = max(1, int(config.get("max_active_raids", 1)))
+		# Computer players field heroes and build towns under the same rules.
 		var strategy_summary: String = EnemyAdventureRulesScript.public_strategy_summary(config, faction_id)
-		var line := "Enemy posture: %s | +%d pressure/day | raids at %d | up to %d active raids" % [
-			label,
-			scaled_pressure,
-			raid_threshold,
-			max_raids,
-		]
+		var line := "Enemy posture: %s | heroes and towns under the same rules" % label
 		if strategy_summary != "":
 			line = "%s | %s" % [line, strategy_summary]
 		var priority_labels := _priority_target_labels(scenario, config)
@@ -1543,7 +1532,7 @@ static func _reinforcement_risk_summary(scenario: Dictionary) -> String:
 	if delayed_objectives:
 		parts.append("unresolved objectives invite fresh hosts")
 	if raid_driven or pressure_driven:
-		parts.append("raid pressure accelerates counterstrokes")
+		parts.append("enemy hero activity accelerates counterstrokes")
 	if capture_driven:
 		parts.append("captured towns can trigger immediate pushback")
 	return " | ".join(parts)

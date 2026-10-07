@@ -9926,7 +9926,7 @@ static func public_strategy_summary(config: Dictionary, faction_id: String) -> S
 				return "Priorities: hold towns, reinforce outposts, and grind forward on siege lanes"
 			return "Priorities: stabilize the line, defend charter assets, and press key crossings"
 		"faction_mireclaw":
-			return "Priorities: cut logistics sites, chase exposed heroes, and keep raids rolling"
+			return "Priorities: cut logistics sites, chase exposed heroes, and keep their heroes on the move"
 		"faction_sunvault":
 			return "Priorities: secure relays and shrines, then align focused pushes on objectives"
 		"faction_thornwake":
@@ -9934,7 +9934,7 @@ static func public_strategy_summary(config: Dictionary, faction_id: String) -> S
 		"faction_brasshollow":
 			return "Priorities: secure mines, stage siege engines, and exhaust resource fronts"
 		"faction_veilmourn":
-			return "Priorities: scout hidden routes, mark weak backs, and raid through fog lanes"
+			return "Priorities: scout hidden routes, mark weak backs, and strike through fog lanes"
 		_:
 			return "Priorities: pressure objectives while contesting frontier assets"
 
@@ -18090,7 +18090,7 @@ static func _secure_resource_target(
 	var message = "%s seizes %s." % [_raid_name(updated_raid), String(site.get("name", "the site"))]
 	TurnPlayback.action(session, updated_raid, "seizes a resource site")
 	if not spoils.is_empty():
-		message = "%s seizes %s and strips %s." % [
+		message = "%s claims %s and collects %s." % [
 			_raid_name(updated_raid),
 			String(site.get("name", "the site")),
 			_describe_resource_set(spoils),

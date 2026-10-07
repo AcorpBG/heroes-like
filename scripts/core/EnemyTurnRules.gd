@@ -489,13 +489,14 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 	for config in configs:
 		if not (config is Dictionary):
 			continue
+		# Only what a player could know: the rival's stance, its capital and the
+		# heroes currently in sight.
 		var faction_id = PlayerRules.controller_id(config)
 		var state = _find_state(session.overworld.get("enemy_states", []), faction_id)
 		var front_state := _faction_front_state(session, faction_id)
-		var threshold = _raid_threshold_for_strategy(session, config, faction_id)
 		var line_parts = [
 			String(config.get("label", faction_id)),
-			_public_posture_label(state, threshold, PlayerRules.faction_id(session, faction_id)),
+			_public_posture_label(state, 0, PlayerRules.faction_id(session, faction_id)),
 		]
 		var strategy_summary = EnemyAdventureRulesScript.public_strategy_summary(config, faction_id)
 		if strategy_summary != "":
@@ -503,63 +504,17 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 		var capital_watch = _capital_watch_summary(_faction_capital_state(session, faction_id))
 		if capital_watch != "":
 			line_parts.append(capital_watch)
-
-		var visible_raids = EnemyAdventureRulesScript.visible_raid_count(session, faction_id)
-		if visible_raids > 0:
-			line_parts.append("Known raids %d" % visible_raids)
-		elif active_raid_count(session, faction_id) > 0:
-			line_parts.append("Raid hosts are moving beyond the fog")
-
-		var siege_target_id = String(config.get("siege_target_placement_id", ""))
-		if siege_target_id != "":
-			var siege_progress = int(state.get("siege_progress", 0))
-			if siege_progress > 0:
-				line_parts.append(
-					"Siege %d/%d" % [siege_progress, max(1, int(config.get("siege_capture_progress", 1)))]
-				)
-
-		var focus = EnemyAdventureRulesScript.describe_focus(session, faction_id, true)
-		if focus != "":
-			line_parts.append(focus)
+		var visible_heroes := _visible_raids_for_faction(session, faction_id)
+		var hero_names = EnemyAdventureRulesScript.raid_commander_summaries(visible_heroes, 2)
+		if not hero_names.is_empty():
+			var sighting: String = "Heroes sighted %s" % ", ".join(hero_names)
+			var hidden_count: int = max(0, visible_heroes.size() - hero_names.size())
+			if hidden_count > 0:
+				sighting += " (+%d more)" % hidden_count
+			line_parts.append(sighting)
 		var front_summary := String(front_state.get("summary", ""))
 		if front_summary != "":
 			line_parts.append(front_summary)
-		var commander_recovery = EnemyAdventureRulesScript.public_commander_recovery_summary(
-			session,
-			faction_id,
-			state.get("commander_roster", [])
-		)
-		if commander_recovery != "":
-			line_parts.append(commander_recovery)
-		var commander_rebuild = EnemyAdventureRulesScript.public_commander_rebuild_summary(
-			session,
-			faction_id,
-			state.get("commander_roster", [])
-		)
-		if commander_rebuild != "":
-			line_parts.append(commander_rebuild)
-		var visible_commanders = EnemyAdventureRulesScript.raid_commander_summaries(
-			_visible_raids_for_faction(session, faction_id),
-			2
-		)
-		if not visible_commanders.is_empty():
-			var commander_summary: String = "Commanders sighted %s" % ", ".join(visible_commanders)
-			var hidden_count: int = max(0, EnemyAdventureRulesScript.visible_raid_count(session, faction_id) - visible_commanders.size())
-			if hidden_count > 0:
-				commander_summary += " (+%d more)" % hidden_count
-			line_parts.append(commander_summary)
-		var commander_memory = EnemyAdventureRulesScript.raid_commander_memory_summaries(
-			_visible_raids_for_faction(session, faction_id),
-			2
-		)
-		if not commander_memory.is_empty():
-			line_parts.append("Command memory %s" % ", ".join(commander_memory))
-		var contestation = EnemyAdventureRulesScript.describe_contestation(session, faction_id, true)
-		if contestation != "":
-			line_parts.append(contestation)
-		var relic_summary = _captured_artifact_summary(state)
-		if relic_summary != "":
-			line_parts.append(relic_summary)
 		lines.append(" | ".join(line_parts))
 
 	return "\n".join(lines)
@@ -5050,7 +5005,7 @@ static func _public_posture_label(state: Dictionary, raid_threshold: int, factio
 		"raiding":
 			match faction_id:
 				"faction_embercourt":
-					return "Charter columns are pushing measured raids down the lanes"
+					return "Charter columns are pushing measured strikes down the lanes"
 				"faction_mireclaw":
 					return "Warbands are spilling forward in staggered packs"
 				"faction_sunvault":
@@ -5060,8 +5015,8 @@ static func _public_posture_label(state: Dictionary, raid_threshold: int, factio
 				"faction_brasshollow":
 					return "Contract columns are rolling engines toward production sites"
 				"faction_veilmourn":
-					return "Black-sail raiders are slipping through fog lanes toward weak backs"
-			return "Field hosts are driving raids into the frontier"
+					return "Black-sail crews are slipping through fog lanes toward weak backs"
+			return "Enemy heroes are driving into the frontier"
 		"massing":
 			if int(state.get("pressure", 0)) >= raid_threshold * 2:
 				match faction_id:
@@ -5094,6 +5049,12 @@ static func _public_posture_label(state: Dictionary, raid_threshold: int, factio
 			return "War bands are massing for another strike"
 		"collapsed":
 			return "The hostile empire has lost its strongholds"
+		"attacking":
+			return "Enemy heroes are on the attack"
+		"expanding":
+			return "Enemy heroes are claiming the countryside"
+		"building":
+			return "Enemy towns are building up their strength"
 		_:
 			match faction_id:
 				"faction_embercourt":
@@ -7240,10 +7201,6 @@ static func _capital_watch_summary(capital_state: Dictionary) -> String:
 	var active_labels = capital_state.get("active_project_labels", [])
 	if active_labels is Array and not active_labels.is_empty():
 		var parts = ["Capital watch: %s online" % ", ".join(active_labels)]
-		if int(capital_state.get("pressure_bonus", 0)) > 0:
-			parts.append("pressure +%d" % int(capital_state.get("pressure_bonus", 0)))
-		if int(capital_state.get("max_active_raids_bonus", 0)) > 0:
-			parts.append("raid slots +%d" % int(capital_state.get("max_active_raids_bonus", 0)))
 		if int(capital_state.get("support_gap", 0)) > 0:
 			parts.append("logistics gaps %d" % int(capital_state.get("support_gap", 0)))
 		if int(capital_state.get("recovery_pressure", 0)) > 0:
@@ -7787,7 +7744,7 @@ static func _apply_discount(cost: Variant, discount_percent: int) -> Dictionary:
 
 static func _normalize_posture(value: Variant) -> String:
 	var posture = String(value)
-	if posture in ["probing", "massing", "raiding", "fortifying", "reorganizing", "collapsed"]:
+	if posture in ["probing", "massing", "raiding", "fortifying", "reorganizing", "collapsed", "attacking", "expanding", "building"]:
 		return posture
 	return "probing"
 

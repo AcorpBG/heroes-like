@@ -98,7 +98,7 @@ const SPECIALTIES := [
 		"icon_region": [168, 0, 28, 28],
 		"icon_description": "A tall lantern watchtower flanked by two uneven boundary stakes.",
 		"max_rank": 2,
-		"summary": "+1 scouting radius and enemy raids pillage 15% fewer resources per rank.",
+		"summary": "+1 scouting radius per rank.",
 		"bonuses": {
 			"scouting_radius": 1,
 			"raid_pillage_resistance": 0.15,

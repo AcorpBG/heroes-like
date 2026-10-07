@@ -4545,7 +4545,7 @@ static func describe_visibility_panel(session: SessionStateStoreScript.SessionDa
 	if controlled_outposts > 0:
 		lines.append("- Held outposts %d | Frontier relays extend sight beyond commander scout rings." % controlled_outposts)
 	if controlled_scouting > 0:
-		lines.append("- Held scout structures %d | Watch sites widen route certainty before raids close." % controlled_scouting)
+		lines.append("- Held scout structures %d | Watch sites widen route certainty before enemy heroes close in." % controlled_scouting)
 	if controlled_shrines > 0:
 		lines.append("- Held shrines %d | Sanctums keep spell routes open across the frontier." % controlled_shrines)
 	for hero in session.overworld.get("player_heroes", []):
@@ -4611,7 +4611,7 @@ static func describe_context(session: SessionStateStoreScript.SessionData) -> St
 				terrain,
 			]
 		_:
-			return "Open Ground\nTerrain %s | No immediate site action.\nUse the movement controls to scout, consolidate towns, or intercept raids." % terrain
+			return "Open Ground\nTerrain %s | No immediate site action.\nUse the movement controls to scout, consolidate towns, or intercept enemy heroes." % terrain
 
 static func _terrain_name_at(session: SessionStateStoreScript.SessionData, x: int, y: int) -> String:
 	var terrain := _terrain_id_at(session, x, y)
@@ -4965,7 +4965,7 @@ static func _defense_readiness_pressure_parts(threat_state: Dictionary, front: D
 		if int(threat_state.get("visible_pressuring", 0)) == 1 and pressuring is Array and not pressuring.is_empty():
 			parts.append("%s at the approaches" % String(pressuring[0]))
 		else:
-			parts.append("%d raid hosts at the approaches" % int(threat_state.get("visible_pressuring", 0)))
+			parts.append("%d enemy heroes at the approaches" % int(threat_state.get("visible_pressuring", 0)))
 	if int(threat_state.get("visible_marching", 0)) > 0:
 		var marching: Array = threat_state.get("marching_commanders", [])
 		var distance: int = max(1, int(threat_state.get("nearest_goal_distance", 9999)))
@@ -4976,7 +4976,7 @@ static func _defense_readiness_pressure_parts(threat_state: Dictionary, front: D
 				"" if distance == 1 else "s",
 			])
 		else:
-			parts.append("%d raid hosts marching" % int(threat_state.get("visible_marching", 0)))
+			parts.append("%d enemy heroes marching" % int(threat_state.get("visible_marching", 0)))
 	if bool(threat_state.get("hidden_targeting", false)):
 		parts.append("hostile movement beyond the fog")
 	if int(threat_state.get("siege_progress", 0)) > 0:
@@ -5001,7 +5001,7 @@ static func _defense_readiness_warning_why(
 	if objective_anchor:
 		return "This front anchors an objective while control, recruitment, income, and defense tempo stay exposed."
 	if has_pressure:
-		return "Raid pressure can become control loss, recruitment disruption, convoy loss, or siege risk."
+		return "Enemy heroes can take the town, disrupt recruitment, cut convoys or lay siege."
 	if logistics_alert:
 		return "Route and economy pressure weakens readiness, recruitment, convoy support, and recovery."
 	if recovery_alert:
@@ -5009,7 +5009,7 @@ static func _defense_readiness_warning_why(
 	if capital_alert:
 		return "The capital chain needs linked support before its civic and defense gains are safe."
 	if low_readiness:
-		return "Low readiness leaves the garrison brittle if a raid reaches the walls."
+		return "Low readiness leaves the garrison brittle if an enemy hero reaches the walls."
 	return "Control, income, recruitment, and route cover remain stable while the watch holds."
 
 static func _defense_readiness_next_step(
@@ -5022,9 +5022,9 @@ static func _defense_readiness_next_step(
 	readiness: int
 ) -> String:
 	if has_pressure and low_readiness:
-		return "Recruit reserves or build readiness, then intercept the nearest raid if movement allows."
+		return "Recruit reserves or build readiness, then intercept the nearest enemy hero if movement allows."
 	if has_pressure:
-		return "Intercept the raid before ending the day, or hold reserves if this town must anchor the front."
+		return "Intercept the enemy hero before ending the day, or hold reserves if this town must anchor the front."
 	if logistics_alert or recovery_alert:
 		return "Send a town response order or intercept the route blocker before ending the day."
 	if capital_alert:
@@ -5665,7 +5665,7 @@ static func _event_feed_why_line(
 	if enemy_activity_summary.strip_edges() != "":
 		return "Enemy moves can close routes, contest sites, or add town pressure before your next turn."
 	if lower.find("convoy") >= 0 or lower.find("escort") >= 0 or lower.find("route") >= 0:
-		return "Route orders move reinforcements and may need protection from active raids."
+		return "Route orders move reinforcements and may need protection from enemy heroes."
 	if recent_events != "":
 		return "Scenario pulses can open rewards, spawn counterforces, or advance objective stakes."
 	if lower.find("claim") >= 0 or lower.find("control") >= 0 or lower.find("captur") >= 0:
@@ -5709,7 +5709,7 @@ static func _event_feed_watch_line_from_observation_context(observation_context:
 	if defense_watch != "No exposed town or route-defense warning is visible.":
 		parts.append("Defense readiness: %s" % defense_watch)
 	if parts.is_empty():
-		return "No urgent raid, convoy, or town-management warning is visible."
+		return "No urgent enemy, convoy, or town-management warning is visible."
 	return " | ".join(parts.slice(0, min(3, parts.size())))
 
 static func describe_route_interception_surface(
@@ -5811,7 +5811,7 @@ static func _selected_route_interception_surface(
 				"" if int(response_state.get("remaining_days", 0)) == 1 else "s",
 				"" if impact == "" else " (%s)" % impact,
 			],
-			"Active response orders protect economy links, convoy movement, and nearby control pressure before raids resolve.",
+			"Active response orders protect economy links, convoy movement, and nearby control pressure before enemy heroes arrive.",
 			"Use the protected lane to intercept a hostile host or keep moving toward the next objective.",
 			"%s response active" % String(site.get("name", "Route")),
 			"normal"
@@ -5876,12 +5876,12 @@ static func _convoy_interception_surface(
 	var cue := "Convoy: %s to %s" % [site_name, target_label]
 	var importance := "normal"
 	if bool(interception.get("blocks_delivery", false)):
-		var blocker := String(interception.get("encounter_name", "Raid host"))
+		var blocker := String(interception.get("encounter_name", "Enemy army"))
 		next_step = "Break %s before ending the day or the convoy stays intercepted." % blocker
 		cue = "Convoy blocked: %s" % blocker
 		importance = "high"
 	elif bool(interception.get("active", false)):
-		var hunter := String(interception.get("encounter_name", "Raid host"))
+		var hunter := String(interception.get("encounter_name", "Enemy army"))
 		next_step = "Intercept %s or reinforce %s before the convoy lane closes." % [
 			hunter,
 			target_label,
@@ -5893,7 +5893,7 @@ static func _convoy_interception_surface(
 		]
 		importance = "high" if int(interception.get("goal_distance", 9999)) <= 1 else "normal"
 	elif selected:
-		next_step = "Hold this route response or move to intercept raids before they reach %s." % target_label
+		next_step = "Hold this route response or move to intercept enemy heroes before they reach %s." % target_label
 		cue = "Convoy active: %s" % target_label
 	return _route_interception_payload("convoy", affected, why, next_step, cue, importance)
 
@@ -5904,7 +5904,7 @@ static func _convoy_interception_why(target_kind: String, target_label: String) 
 		"hero":
 			return "Those reserves change the field army's next battle odds and the route choices it can survive."
 		"raid":
-			return "Those reserves help answer the raid directly before it turns pressure into losses."
+			return "Those reserves help answer the enemy directly before it turns pressure into losses."
 		_:
 			return "Convoys turn controlled sites into practical economy, army, and objective tempo."
 
@@ -5954,7 +5954,7 @@ static func _raid_interception_surface(
 	var affected := describe_encounter_pressure(session, encounter)
 	var why := _raid_interception_why(target_kind, target_label, objective_anchor)
 	var next_step := "Select the hostile contact or a route-response site before ending the day."
-	var cue := "Raid: %s toward %s" % [encounter_name, target_label]
+	var cue := "Enemy: %s toward %s" % [encounter_name, target_label]
 	var importance := "normal"
 	if selected:
 		next_step = "Enter battle now if this route pressure matters more than another site order."
@@ -5967,11 +5967,11 @@ static func _raid_interception_surface(
 		cue = "Intercept: %s" % encounter_name
 	elif bool(encounter.get("arrived", false)) or goal_distance <= 0:
 		next_step = "Break %s now or it can turn pressure into control, convoy, or objective losses." % encounter_name
-		cue = "Raid arrived: %s" % encounter_name
+		cue = "Enemy arrived: %s" % encounter_name
 		importance = "high"
 	elif goal_distance <= 2:
 		next_step = "Move to intercept %s before it reaches %s." % [encounter_name, target_label]
-		cue = "Raid close: %s %d tile%s out" % [
+		cue = "Enemy close: %s %d tile%s out" % [
 			encounter_name,
 			goal_distance,
 			"" if goal_distance == 1 else "s",
@@ -5983,17 +5983,17 @@ static func _raid_interception_why(target_kind: String, target_label: String, ob
 	var objective_clause := " It is tied to objective pressure." if objective_anchor else ""
 	match target_kind:
 		"town":
-			return "Town raids threaten control, recruitment, income, and defense readiness at %s.%s" % [target_label, objective_clause]
+			return "Enemy attacks threaten control, recruitment, income, and defense readiness at %s.%s" % [target_label, objective_clause]
 		"resource":
-			return "Site raids threaten linked economy, route response, convoy support, and town logistics at %s.%s" % [target_label, objective_clause]
+			return "Enemy attacks threaten linked economy, route response, convoy support, and town logistics at %s.%s" % [target_label, objective_clause]
 		"hero":
 			return "Hero hunts can force a field battle and pin the army away from route and objective work.%s" % objective_clause
 		"artifact":
-			return "Artifact raids can deny a field upgrade before the hero reaches it.%s" % objective_clause
+			return "Enemy heroes can deny a field upgrade before the hero reaches it.%s" % objective_clause
 		"encounter":
-			return "Raid pressure on this guard can lock a route and delay objective progress.%s" % objective_clause
+			return "Enemy pressure on this guard can lock a route and delay objective progress.%s" % objective_clause
 		_:
-			return "Raid pressure can become economy, control, convoy, or objective loss if ignored.%s" % objective_clause
+			return "Enemy pressure can become economy, control, convoy, or objective loss if ignored.%s" % objective_clause
 
 static func _event_feed_convoy_line(session: SessionStateStoreScript.SessionData) -> String:
 	for node_value in session.overworld.get("resource_nodes", []):
@@ -9142,7 +9142,7 @@ static func _resource_site_delivery_target_label(
 		"town":
 			return "frontline town"
 		"raid":
-			return "raid host"
+			return "enemy army"
 		_:
 			return "frontline"
 
@@ -9275,7 +9275,7 @@ static func _resource_site_delivery_interception(
 			"encounter_name": encounter_display_name(encounter),
 			"summary": "",
 		}
-	var encounter_name := String(best.get("encounter_name", "Raid host"))
+	var encounter_name := String(best.get("encounter_name", "Enemy army"))
 	var target_label := String(delivery_state.get("target_label", "the front"))
 	if bool(best.get("active", false)):
 		if bool(best.get("blocks_delivery", false)):
@@ -9401,10 +9401,10 @@ static func _resource_site_delivery_line(
 	var interception: Dictionary = _resource_site_delivery_interception(session, node, site)
 	if bool(interception.get("active", false)):
 		if bool(interception.get("blocks_delivery", false)):
-			parts.append("%s blocks the route" % String(interception.get("encounter_name", "Raid host")))
+			parts.append("%s blocks the route" % String(interception.get("encounter_name", "Enemy army")))
 		else:
 			parts.append("%s %d tile%s out" % [
-				String(interception.get("encounter_name", "Raid host")),
+				String(interception.get("encounter_name", "Enemy army")),
 				int(interception.get("goal_distance", 0)),
 				"" if int(interception.get("goal_distance", 0)) == 1 else "s",
 			])
@@ -13097,7 +13097,7 @@ static func _town_pressure_label(town: Dictionary) -> String:
 		"faction_embercourt":
 			return "Frontier leverage"
 		"faction_mireclaw":
-			return "Raid pressure"
+			return "Enemy heroes"
 		"faction_sunvault":
 			return "Relay reach"
 		"faction_thornwake":
@@ -14782,14 +14782,14 @@ static func _command_briefing_pressure_line(session: SessionStateStoreScript.Ses
 	if local_summary != "":
 		return "Pressure watch: %s" % local_summary
 	if scenario.is_empty():
-		return "Pressure watch: No hostile lane is confirmed yet. Push scouts forward before the first raid window opens."
+		return "Pressure watch: No hostile lane is confirmed yet. Push scouts forward before rival heroes take the field."
 	var operational_lines: Array = _scenario_enemy_operational_lines(session, scenario)
 	if not operational_lines.is_empty():
 		var line := String(operational_lines[0])
 		if line.begins_with("Enemy posture: "):
 			return "Pressure watch: %s" % line.trim_prefix("Enemy posture: ")
 		return "Pressure watch: %s" % line
-	return "Pressure watch: No hostile lane is confirmed yet. Push scouts forward before the first raid window opens."
+	return "Pressure watch: No hostile lane is confirmed yet. Push scouts forward before rival heroes take the field."
 
 static func _command_briefing_orders_line(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
 	var context_actions := get_context_actions(session)
@@ -15476,7 +15476,7 @@ static func _command_risk_town_items(
 		if include_details:
 			var threat_clauses := []
 			if int(threat_state.get("visible_pressuring", 0)) > 0:
-				threat_clauses.append("%d known raid host%s already press the approaches" % [
+				threat_clauses.append("%d known enemy force%s already press the approaches" % [
 					int(threat_state.get("visible_pressuring", 0)),
 					"" if int(threat_state.get("visible_pressuring", 0)) == 1 else "s",
 				])
@@ -15662,10 +15662,10 @@ static func _command_risk_posture_items(session: SessionStateStoreScript.Session
 			"key": "posture:%s" % faction_id,
 			"severity": severity,
 			"gate": false,
-			"summary": "%s raid window opening" % label,
+			"summary": "%s is gathering strength" % label,
 		}
 		if include_details:
-			item["detail"] = "%s sits at %d/%d pressure with %d/%d active raids. %s posture makes another host likely if the day ends without reducing pressure." % [
+			item["detail"] = "%s sits at %d/%d pressure with %d/%d heroes in the field. %s posture makes another attack likely if the day ends without reducing pressure." % [
 				label,
 				current_pressure,
 				threshold,

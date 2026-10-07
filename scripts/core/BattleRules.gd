@@ -945,7 +945,7 @@ static func _battle_name(
 		if town_name != "":
 			if opposing_commander_name != "":
 				return "%s assaults %s" % [opposing_commander_name, town_name]
-			return "%s at %s" % [String(encounter.get("name", encounter.get("id", "Raid"))), town_name]
+			return "%s at %s" % [String(encounter.get("name", encounter.get("id", "Enemy army"))), town_name]
 	if _is_resource_assault_context(battle_context):
 		var site_name := String(battle_context.get("resource_site_name", ""))
 		if site_name != "":
@@ -959,7 +959,7 @@ static func _battle_name(
 		if hero_name != "":
 			if opposing_commander_name != "":
 				return "%s intercepts %s" % [opposing_commander_name, hero_name]
-			return "%s intercepts %s" % [String(encounter.get("name", encounter.get("id", "Raid"))), hero_name]
+			return "%s intercepts %s" % [String(encounter.get("name", encounter.get("id", "Enemy army"))), hero_name]
 	if opposing_commander_name != "" and String(encounter.get("spawned_by_faction_id", encounter_placement.get("spawned_by_faction_id", ""))) != "":
 		return "%s's %s" % [opposing_commander_name, String(encounter.get("name", encounter.get("id", "Battle")))]
 	return String(encounter.get("name", encounter.get("id", "Battle")))
@@ -11383,7 +11383,7 @@ static func _sync_enemy_force_from_battle(session: SessionStateStoreScript.Sessi
 	var encounter = encounter_result.get("encounter", {})
 	encounter["enemy_army"] = {
 		"id": String(encounter.get("enemy_army", {}).get("id", encounter.get("encounter_id", "encounter_army"))),
-		"name": String(encounter.get("enemy_army", {}).get("name", "Raid Host")),
+		"name": String(encounter.get("enemy_army", {}).get("name", "Enemy Army")),
 		"stacks": _battle_survivor_stacks(
 			session,
 			"enemy",
@@ -11734,7 +11734,7 @@ static func _enemy_commander_exit_reaction(session: SessionStateStoreScript.Sess
 		commander_name = String(commander_state.get("name", "The hostile commander"))
 	match outcome_id:
 		EnemyAdventureRulesScript.COMMANDER_OUTCOME_PURSUIT_VICTORY:
-			return "%s orders a hard pursuit and keeps the raid moving." % commander_name
+			return "%s orders a hard pursuit and keeps the army moving." % commander_name
 		EnemyAdventureRulesScript.COMMANDER_OUTCOME_CAPITULATION:
 			return "%s banks the surrender terms and regroups the host in good order." % commander_name
 		EnemyAdventureRulesScript.COMMANDER_OUTCOME_ROUT_VICTORY:

@@ -142,7 +142,8 @@ static func _mark_resolved(session: SessionStateStoreScript.SessionData, placeme
 ## their troops return to the nearest town of their controller.
 static func normalize_ai_heroes(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var report := {"converted": 0, "disbanded": 0}
-	if session == null:
+	# A battle in progress still refers to its armies as they are.
+	if session == null or not session.battle.is_empty():
 		return report
 	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
 	var resolved := _resolved_lookup(session)
@@ -187,8 +188,15 @@ static func _convert_legacy_host(session: SessionStateStoreScript.SessionData, e
 	var converted := entry.duplicate(true)
 	converted["legacy_encounter_id"] = String(entry.get("encounter_id", ""))
 	converted["encounter_id"] = AI_HERO_ENCOUNTER_ID
-	for key in ["difficulty", "commanderless_support_column", "delivery_intercept_node_placement_id", "battle_context"]:
+	for key in ["difficulty", "commanderless_support_column", "delivery_intercept_node_placement_id", "battle_context", "arrived"]:
 		converted.erase(key)
+	# Raid targets told the human's forecasts where a host was heading; a hero's
+	# goal is its own business.
+	for key in converted.keys():
+		for prefix in ["target_", "goal_", "regroup_", "guarded_claim_", "blocked_route_", "supporting_front_", "support_"]:
+			if String(key).begins_with(prefix):
+				converted.erase(key)
+				break
 	var army: Dictionary = converted.get("enemy_army", {}) if converted.get("enemy_army", {}) is Dictionary else {}
 	army["name"] = "%s's army" % hero_name(converted)
 	converted["enemy_army"] = army
@@ -302,6 +310,8 @@ static func run_faction_turn(
 	# current one.
 	state = context.state
 	state["posture"] = "attacking" if battle_started else _posture(session, controller)
+	# Abstract pressure no longer drives anything; clear what older saves held.
+	state["pressure"] = 0
 	return _turn_result(state, messages, events, profile_enabled, phases, started)
 
 static func _turn_result(state: Dictionary, messages: Array, events: Array, profile_enabled: bool, phases: Dictionary, started: int) -> Dictionary:
@@ -419,7 +429,7 @@ static func _ensure_starting_hero(session: SessionStateStoreScript.SessionData, 
 	var town: Dictionary = entries[0].get("town", {})
 	if not _town_entrance_free(session, town):
 		return {}
-	var offer := tavern_offer(session, state, controller)
+	var offer := ai_tavern_offer_ids(session, state, controller)
 	if offer.is_empty():
 		return {}
 	var hero_id := String(offer[0])
@@ -665,7 +675,7 @@ static func build_in_town(session: SessionStateStoreScript.SessionData, context:
 
 ## Two faction heroes per week, drawn like the human's tavern. Heroes already
 ## on the map, in the human's command or recovering from defeat are skipped.
-static func tavern_offer(session: SessionStateStoreScript.SessionData, state: Dictionary, controller: String) -> Array:
+static func ai_tavern_offer_ids(session: SessionStateStoreScript.SessionData, state: Dictionary, controller: String) -> Array:
 	var week := HeroCommandRulesScript.tavern_week(session)
 	var pool := _tavern_pool(session, state, controller)
 	var stored = state.get("ai_tavern", {})
@@ -711,7 +721,7 @@ static func _tavern_pool(session: SessionStateStoreScript.SessionData, state: Di
 
 static func _cheapest_offer_cost(session: SessionStateStoreScript.SessionData, state: Dictionary, controller: String) -> Dictionary:
 	var best := {}
-	for hero_id in tavern_offer(session, state, controller):
+	for hero_id in ai_tavern_offer_ids(session, state, controller):
 		var cost := HeroCommandRulesScript.hero_recruit_cost(ContentService.get_hero(String(hero_id)))
 		if best.is_empty() or int(cost.get("gold", 0)) < int(best.get("gold", 0)):
 			best = cost
@@ -723,7 +733,7 @@ static func _hire_hero(session: SessionStateStoreScript.SessionData, context: Di
 	var treasury: Dictionary = state.treasury
 	if active_hero_count(session, controller) >= HeroCommandRulesScript.HERO_LIMIT:
 		return {}
-	var offer := tavern_offer(session, state, controller)
+	var offer := ai_tavern_offer_ids(session, state, controller)
 	if offer.is_empty():
 		return {}
 	var best_town := {}
@@ -749,7 +759,7 @@ static func _hire_hero(session: SessionStateStoreScript.SessionData, context: Di
 	if choice == "":
 		return {}
 	var cost := HeroCommandRulesScript.hero_recruit_cost(ContentService.get_hero(choice))
-	var hired := _create_hero(session, context, best_town, choice, [])
+	var hired := _create_hero(session, context, best_town, choice)
 	if hired.is_empty():
 		return {}
 	_turn_rules()._spend_from_pool(treasury, cost)
@@ -765,18 +775,25 @@ static func _hire_hero(session: SessionStateStoreScript.SessionData, context: Di
 		session.overworld["towns"] = towns
 	return {"messages": [], "events": [hired.get("event", {})]}
 
-## Creates the hero through the human's hero builder, standing in the town
-## entrance with any given troops and whatever the garrison can hand over.
-static func _create_hero(session: SessionStateStoreScript.SessionData, context: Dictionary, town: Dictionary, hero_id: String, stacks: Array) -> Dictionary:
+## Creates the hero through the human's hire path, standing in the town
+## entrance. A start hero leads the faction's start army; a tavern hire comes
+## with this week's offered level and army, exactly as the human's would.
+static func _create_hero(session: SessionStateStoreScript.SessionData, context: Dictionary, town: Dictionary, hero_id: String, start_stacks: Array = []) -> Dictionary:
 	var controller := String(context.controller)
 	var state: Dictionary = context.state
 	var template := ContentService.get_hero(hero_id)
 	if template.is_empty():
 		return {}
 	var position := LevelRules.town_entrance(town)
-	var hero := _build_hired_hero(template, position)
-	var army_stacks: Array = hero.get("army", {}).get("stacks", []) if hero.get("army", {}) is Dictionary else []
-	army_stacks = _merge_stacks_into(army_stacks, stacks).get("stacks", army_stacks)
+	var hero := {}
+	if not start_stacks.is_empty():
+		hero = HeroCommandRulesScript.build_recruited_hero(template, position, AI_DIFFICULTY, 1, {"id": "%s_army" % hero_id, "name": "Field Army", "stacks": start_stacks})
+	else:
+		var offer := HeroCommandRulesScript.tavern_offer(session, hero_id)
+		hero = HeroCommandRulesScript.build_recruited_hero(template, position, AI_DIFFICULTY, int(offer.get("level", 1)), offer.get("army", {}))
+	if hero.is_empty():
+		return {}
+	var army_stacks: Array = hero.get("army", {}).get("stacks", []).duplicate(true) if hero.get("army", {}) is Dictionary else []
 	var roster_seed := _roster_progression_seed(state, hero_id)
 	var seed := hero.duplicate(true)
 	if not roster_seed.is_empty() and int(roster_seed.get("level", 1)) > int(seed.get("level", 1)):
@@ -830,12 +847,6 @@ static func _create_hero(session: SessionStateStoreScript.SessionData, context: 
 		"target_y": int(town.get("y", 0)),
 	}, "%s hires %s at %s." % [String(context.config.get("label", controller)), hero_name(entry), _turn_rules()._town_name(town)], ["hero_hired"])
 	return {"entry": entry, "event": event}
-
-## Shared hero creation. Hiring for the AI goes through the same builder as the
-## human's tavern so changes to starting heroes apply to both.
-static func _build_hired_hero(template: Dictionary, position: Dictionary) -> Dictionary:
-	var hero_id := String(template.get("id", ""))
-	return HeroCommandRulesScript.build_hero_from_template(template, position, {"id": "%s_army" % hero_id, "name": "Field Army", "stacks": []}, AI_DIFFICULTY)
 
 static func _roster_progression_seed(state: Dictionary, hero_id: String) -> Dictionary:
 	for entry in state.get("commander_roster", []):
@@ -900,7 +911,7 @@ static func _recruit_in_towns(session: SessionStateStoreScript.SessionData, cont
 				"unit_id": unit_id,
 				"unit_label": String(ContentService.get_unit(unit_id).get("name", unit_id)),
 				"recruit_count": count,
-				"destination": {"type": "garrison"},
+				"destination": {"type": "garrison", "public_reason": "the garrison", "reason_codes": ["garrison"]},
 			})
 			if not event.is_empty():
 				events.append(event)
@@ -1353,10 +1364,9 @@ static func _follow_plan(session: SessionStateStoreScript.SessionData, context: 
 	var movement: Dictionary = block.get("movement", {})
 	var path: Array = plan.get("path", [])
 	var level := LevelRules.level_of(entry)
+	# The goal stays private to the AI (no raid-style target fields that the
+	# human's threat forecasts would read).
 	block["goal"] = {"kind": String(plan.get("kind", "")), "id": String(plan.get("id", ""))}
-	entry["target_kind"] = _legacy_target_kind(String(plan.get("kind", "")))
-	entry["target_placement_id"] = String(plan.get("id", ""))
-	var destination_blocked := bool(plan.get("destination_blocked", false))
 	if path.is_empty():
 		entry[AI_HERO_KEY] = block
 		_store_entry(session, index, entry)
@@ -1379,21 +1389,11 @@ static func _follow_plan(session: SessionStateStoreScript.SessionData, context: 
 			arrived = true
 	block["movement"] = movement
 	entry[AI_HERO_KEY] = block
-	entry["goal_distance"] = 0 if arrived else maxi(0, path.size())
-	entry["arrived"] = arrived
 	_store_entry(session, index, entry)
 	_overworld_rules().invalidate_spatial_lookup(session)
 	if not arrived:
 		return {"arrived": false}
 	return _interact(session, context, index, plan)
-
-static func _legacy_target_kind(kind: String) -> String:
-	match kind:
-		"town_own", "town_neutral", "town_hostile":
-			return "town"
-		"ai_hero":
-			return "encounter"
-	return kind
 
 ## Whether the hero must act from the neighbouring tile. Like the human, a hero
 ## ends its route on a town doorway or a site's visit tile even where that tile

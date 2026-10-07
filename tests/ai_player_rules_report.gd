@@ -290,6 +290,15 @@ func _check_town_orders_pay_real_costs(session, controller: String) -> Dictionar
 		var unit_id := String(stack.get("unit_id", ""))
 		recruits[unit_id] = int(recruits.get(unit_id, 0)) + 10
 	town["available_recruits"] = recruits
+	# Town orders for a fresh day: nothing built or hired here yet today. Other
+	# towns of the faction sit this one out so every cost lands on this town.
+	town["last_build_day"] = 0
+	town["last_hire_day"] = 0
+	for other in session.overworld.get("towns", []):
+		if other is Dictionary and other != town and String(other.get("owner", "")) == "enemy" and PlayerRules.town_controller_id(other) == controller:
+			other["available_recruits"] = {}
+			other["last_build_day"] = int(session.day)
+			other["last_hire_day"] = int(session.day)
 	var built_before: Array = town.get("built_buildings", []).duplicate()
 	var recruits_before: Dictionary = town.get("available_recruits", {}).duplicate()
 	var context: Dictionary = AiHeroRulesScript._new_context(session, EnemyTurnRules._enemy_config_for_faction(session, controller), state)

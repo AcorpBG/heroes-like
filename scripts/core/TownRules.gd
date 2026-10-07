@@ -440,7 +440,7 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	var occupation_state: Dictionary = OverworldRulesScript.town_occupation_state(session, town)
 	if threat_lines.is_empty():
-		lines.append("- No hostile raid hosts are currently aligned on %s." % _town_name(town))
+		lines.append("- No hostile heroes are known to be marching on %s." % _town_name(town))
 		lines.append("- Defense readiness: %s" % OverworldRulesScript.describe_town_defense_readiness_warning(session, town))
 		if bool(front_state.get("active", false)):
 			lines.append("- Front watch: %s" % String(front_state.get("summary", "")))
@@ -2968,7 +2968,7 @@ static func _town_pressure_label(town: Dictionary) -> String:
 		"faction_embercourt":
 			return "Frontier leverage"
 		"faction_mireclaw":
-			return "Raid pressure"
+			return "Enemy heroes"
 		"faction_sunvault":
 			return "Relay reach"
 		"faction_thornwake":
@@ -3172,9 +3172,9 @@ static func _town_frontier_outlook_line(
 		if visible_pressuring == 1 and pressuring_commanders is Array and not pressuring_commanders.is_empty():
 			clauses.append("%s already presses the approaches" % String(pressuring_commanders[0]))
 		else:
-			var pressure_clause: String = "%d known raid host%s already press the approaches" % [
+			var pressure_clause: String = "%d known enemy hero%s already press the approaches" % [
 				visible_pressuring,
-				"" if visible_pressuring == 1 else "s",
+				"" if visible_pressuring == 1 else "es",
 			]
 			if pressuring_commanders is Array and not pressuring_commanders.is_empty():
 				var shown_pressuring = pressuring_commanders.slice(0, min(2, pressuring_commanders.size()))
@@ -3189,7 +3189,7 @@ static func _town_frontier_outlook_line(
 					"" if max(1, nearest_goal_distance) == 1 else "s",
 				])
 			else:
-				var marching_clause: String = "%d known host%s can reach in %d day%s" % [
+				var marching_clause: String = "%d known enemy force%s can reach in %d day%s" % [
 					visible_marching,
 					"" if visible_marching == 1 else "s",
 					max(1, nearest_goal_distance),
@@ -3200,7 +3200,7 @@ static func _town_frontier_outlook_line(
 					marching_clause += " (%s)" % ", ".join(shown_marching)
 				clauses.append(marching_clause)
 		else:
-			var distant_clause: String = "%d known host%s are marching on the lane" % [
+			var distant_clause: String = "%d known enemy force%s are marching on the lane" % [
 				visible_marching,
 				"" if visible_marching == 1 else "s",
 			]
@@ -3220,7 +3220,7 @@ static func _town_frontier_outlook_line(
 		clauses.append(String(occupation_state.get("summary", "")))
 	if clauses.is_empty():
 		var battlefront_summary := String(battlefront.get("summary", "The approaches currently favor the defenders."))
-		return "No public raid lane is aligned on %s. %s" % [_town_name(town), battlefront_summary]
+		return "No known enemy hero is heading for %s. %s" % [_town_name(town), battlefront_summary]
 	return "; ".join(clauses)
 
 static func _town_dispatch_readiness_line(
@@ -3321,6 +3321,15 @@ static func _stationed_reserve_count(session: SessionStateStoreScript.SessionDat
 			reserve_count += 1
 	return reserve_count
 
+const ENEMY_HERO_WATCH_RADIUS := 10
+
+## Tiles between a computer player's hero and the town, or a large number for
+## anything else (other armies, other levels).
+static func _enemy_hero_distance_to_town(encounter: Dictionary, town: Dictionary) -> int:
+	if not (encounter.get("ai_hero", null) is Dictionary) or int(encounter.get("level", 0)) != int(town.get("level", 0)):
+		return 1 << 20
+	return maxi(absi(int(encounter.get("x", 0)) - int(town.get("x", 0))), absi(int(encounter.get("y", 0)) - int(town.get("y", 0))))
+
 static func _town_threat_lines(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
 	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var threat_lines := []
@@ -3346,12 +3355,17 @@ static func _town_threat_lines(session: SessionStateStoreScript.SessionData, tow
 				continue
 			if String(encounter.get("spawned_by_faction_id", "")) != faction_id:
 				continue
-			if String(encounter.get("target_placement_id", "")) != town_placement_id:
+			# An enemy hero's plans are hidden; a sighted hero close to the walls
+			# is the threat a player can see.
+			var hero_distance := _enemy_hero_distance_to_town(encounter, town)
+			if String(encounter.get("target_placement_id", "")) != town_placement_id and hero_distance > ENEMY_HERO_WATCH_RADIUS:
 				continue
 			if resolved_encounters is Array and String(encounter.get("placement_id", "")) in resolved_encounters:
 				continue
 			var is_public: bool = EnemyAdventureRulesScript._raid_is_public(session, encounter)
-			var is_pressuring := bool(encounter.get("arrived", false)) or int(encounter.get("goal_distance", 9999)) <= 0
+			if hero_distance <= ENEMY_HERO_WATCH_RADIUS and not is_public:
+				continue
+			var is_pressuring := bool(encounter.get("arrived", false)) or int(encounter.get("goal_distance", 9999)) <= 0 or hero_distance <= 2
 			var commander_name := String(OverworldRulesScript.encounter_commander_threat_label(encounter))
 			if is_public:
 				if is_pressuring:
@@ -3403,9 +3417,9 @@ static func _town_threat_lines(session: SessionStateStoreScript.SessionData, tow
 			if visible_pressuring == 1 and not pressuring_commanders.is_empty():
 				clauses.append("%s presses the approaches" % String(pressuring_commanders[0]))
 			else:
-				var pressure_clause: String = "%d known raid host%s press the approaches" % [
+				var pressure_clause: String = "%d known enemy hero%s press the approaches" % [
 					visible_pressuring,
-					"" if visible_pressuring == 1 else "s",
+					"" if visible_pressuring == 1 else "es",
 				]
 				if not pressuring_commanders.is_empty():
 					pressure_clause += " (%s)" % ", ".join(pressuring_commanders.slice(0, min(2, pressuring_commanders.size())))
@@ -3414,7 +3428,7 @@ static func _town_threat_lines(session: SessionStateStoreScript.SessionData, tow
 			if visible_marching == 1 and not marching_commanders.is_empty():
 				clauses.append("%s is marching on the town" % String(marching_commanders[0]))
 			else:
-				var marching_clause: String = "%d known host%s are marching on the town" % [
+				var marching_clause: String = "%d known enemy force%s are marching on the town" % [
 					visible_marching,
 					"" if visible_marching == 1 else "s",
 				]
