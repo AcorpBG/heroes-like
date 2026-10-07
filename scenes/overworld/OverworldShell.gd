@@ -9685,7 +9685,10 @@ func _hover_tile_order_cue(tile: Vector2i) -> String:
 		order = "select Recover Artifact" if adjacent else "select route"
 	if not _encounter_at(tile.x, tile.y).is_empty():
 		order = "select Enter Battle" if adjacent else "select route"
-	if order == "select route" and OverworldRules.hero_route_tile_blocked(_session, tile.x, tile.y):
+	# Same rule as routing: a blocked tile can still end a route when it holds an
+	# actionable destination (a site on an object body, a free boat).
+	if order == "select route" and OverworldRules.hero_route_tile_blocked(_session, tile.x, tile.y) \
+			and not OverworldRules.hero_route_destination(_session, tile.x, tile.y):
 		return "Hover order: blocked; %s" % movement_line
 	if order == "select route" and _is_adjacent_move_target(hero_pos, tile):
 		order = "select March"

@@ -10,6 +10,15 @@ const TOWN_ASSET_IDS := [
 	"town_faction_veilmourn",
 	"town_identity_riverwatch",
 ]
+const HERO_SILHOUETTE_MODEL := "painted_bounds_grounded_actor_dual_alpha_edge"
+const OBJECT_SILHOUETTE_MODEL := "eight_direction_alpha_silhouette_outline"
+# Towns: 3/5/5-cell ground mask in a five-by-three footprint, art fitted into a
+# five-by-five envelope capped at 4.80 x 4.35 tiles (docs/overworld-town-scale.md).
+const TOWN_LOGICAL_FOOTPRINT := {"width": 5, "height": 3}
+const TOWN_VISUAL_FOOTPRINT := {"width": 5, "height": 5}
+const TOWN_WIDTH_CAP_TILES := 4.80
+const TOWN_HEIGHT_CAP_TILES := 4.35
+const TOWN_GROUND_CLEARANCE_TILES := 0.18
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -108,7 +117,7 @@ func _semantic_scale_exact(rows: Array) -> bool:
 		"pickup": 0.56,
 		"waypoint": 0.78,
 		"service": 0.82,
-		"hero": 0.86,
+		"hero": 1.0,
 		"encounter": 0.88,
 		"blocker": 0.92,
 		"landmark": 0.94,
@@ -125,7 +134,9 @@ func _semantic_scale_exact(rows: Array) -> bool:
 		var should_outline := row_id not in ["decoration", "blocker"]
 		if bool(row.get("interactive_silhouette", false)) != should_outline:
 			return false
-		if should_outline and String(row.get("silhouette_model", "")) != "eight_direction_alpha_silhouette_outline":
+		# Heroes use the shared actor style's dual alpha edge; objects keep the eight-direction outline.
+		var expected_silhouette := HERO_SILHOUETTE_MODEL if row_id == "hero" else OBJECT_SILHOUETTE_MODEL
+		if should_outline and String(row.get("silhouette_model", "")) != expected_silhouette:
 			return false
 		if row_id == "decoration" and not is_equal_approx(float(row.get("visible_alpha", 0.0)), 0.82):
 			return false
@@ -144,22 +155,44 @@ func _town_rows(map_view: Node) -> Array:
 			"aspect_preserved": bool(payload.get("town_aspect_preserved", false)),
 			"logical_footprint": payload.get("logical_footprint", {}),
 			"visual_footprint": payload.get("visual_footprint", {}),
-			"grounded": bool(payload.get("painted_bottom_grounded_exact", false)),
+			"grounded": _town_entrance_grounded(map_view, asset_id, bool(payload.get("painted_bottom_grounded_exact", false))),
 			"contained": bool(payload.get("sprite_silhouette_contained_in_footprint", false)),
 		})
 	return rows
+
+# Art with a registered doorway puts that doorway on the shared entrance ground
+# line (roots, wheels and pilings may reach below it); legacy art puts its painted
+# bottom there.
+func _town_entrance_grounded(map_view: Node, asset_id: String, painted_bottom_grounded: bool) -> bool:
+	var manifest: Dictionary = map_view.get("_overworld_art_manifest")
+	var gate: Array = manifest.get("object_assets", {}).get(asset_id, {}).get("town_entrance_anchor_px", [])
+	if gate.size() != 2:
+		return painted_bottom_grounded
+	var texture = map_view.call("_object_texture_for_asset", asset_id)
+	if not (texture is Texture2D):
+		return false
+	var tile := 100.0
+	var footprint := Rect2(Vector2.ZERO, Vector2(TOWN_VISUAL_FOOTPRINT["width"], TOWN_VISUAL_FOOTPRINT["height"]) * tile)
+	var pose: Dictionary = map_view.call("_town_sprite_draw_payload", asset_id, texture, footprint, tile)
+	var drawn: Rect2 = pose.get("draw_rect", Rect2())
+	var source: Rect2 = pose.get("source_rect", Rect2())
+	if source.size.x <= 0.0 or source.size.y <= 0.0:
+		return false
+	var rendered_gate: Vector2 = drawn.position + (Vector2(float(gate[0]), float(gate[1])) - source.position) / source.size * drawn.size
+	var entrance := Vector2(footprint.get_center().x, footprint.end.y - TOWN_GROUND_CLEARANCE_TILES * tile)
+	return rendered_gate.distance_to(entrance) < 0.01
 
 func _town_scale_exact(rows: Array) -> bool:
 	if rows.size() != TOWN_ASSET_IDS.size():
 		return false
 	for row_value in rows:
 		var row: Dictionary = row_value
-		if float(row.get("painted_width_tiles", 0.0)) > 2.9001 \
-			or float(row.get("painted_height_tiles", 0.0)) > 3.7201 \
+		if float(row.get("painted_width_tiles", 0.0)) > TOWN_WIDTH_CAP_TILES + 0.0001 \
+			or float(row.get("painted_height_tiles", 0.0)) > TOWN_HEIGHT_CAP_TILES + 0.0001 \
 			or not bool(row.get("aspect_preserved", false)) \
 			or not is_equal_approx(float(row.get("source_aspect", 0.0)), float(row.get("draw_aspect", -1.0))) \
-			or row.get("logical_footprint", {}) != {"width": 3, "height": 2} \
-			or row.get("visual_footprint", {}) != {"width": 3, "height": 4} \
+			or row.get("logical_footprint", {}) != TOWN_LOGICAL_FOOTPRINT \
+			or row.get("visual_footprint", {}) != TOWN_VISUAL_FOOTPRINT \
 			or not bool(row.get("grounded", false)) \
 			or not bool(row.get("contained", false)):
 			return false

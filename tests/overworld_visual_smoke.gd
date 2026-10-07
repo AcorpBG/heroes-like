@@ -236,28 +236,25 @@ func _run() -> void:
 	if not await _assert_diagonal_movement_contract(shell, map_node):
 		return
 
-	var start = OverworldRules.hero_position(SessionState.ensure_active_session())
-	var map_size = OverworldRules.derive_map_size(SessionState.ensure_active_session())
-	var directions = [
-		Vector2i.RIGHT,
-		Vector2i.DOWN,
-		Vector2i.UP,
-		Vector2i.LEFT,
-	]
+	var move_session = SessionState.ensure_active_session()
+	var start: Vector2i = OverworldRules.hero_position(move_session)
+	var target: Vector2i = _orthogonal_open_tile(move_session, start, shell)
+	if target.x < 0:
+		var move_origin := _orthogonal_move_origin(move_session, shell)
+		if move_origin.x >= 0:
+			start = move_origin
+			_set_active_hero_position(move_session, start)
+			OverworldRules.refresh_fog_of_war(move_session)
+			shell.call("validation_select_tile", start.x, start.y)
+			target = _orthogonal_open_tile(move_session, start, shell)
 
 	var moved = false
-	for direction in directions:
-		var target: Vector2i = start + direction
-		if target.x < 0 or target.y < 0 or target.x >= map_size.x or target.y >= map_size.y:
-			continue
-		if OverworldRules.tile_is_blocked(SessionState.ensure_active_session(), target.x, target.y):
-			continue
+	if target.x >= 0:
+		# Map orders are explicit: the first press arms the move, the second commits.
+		shell._on_map_tile_pressed(target)
 		shell._on_map_tile_pressed(target)
 		await get_tree().process_frame
-		var end = OverworldRules.hero_position(SessionState.ensure_active_session())
-		if end != start:
-			moved = true
-			break
+		moved = OverworldRules.hero_position(SessionState.ensure_active_session()) == target
 
 	if not moved:
 		push_error("Overworld smoke: unable to advance the hero through the visual map shell.")
@@ -761,7 +758,7 @@ func _assert_overworld_command_check_cue_contract(shell: Node) -> bool:
 	var solo_button := hero_actions.get_child(0) as Button if hero_actions.get_child_count() == 1 else null
 	if (
 		String(heroes_label.text) != solo_expected_visible
-		or not _label_text_fits_width(heroes_label)
+		or not _label_text_fits_width_if_visible(heroes_label)
 		or solo_button == null
 		or not bool(solo_button.get_meta("active", false))
 		or not (solo_button.icon is Texture2D)
@@ -820,7 +817,7 @@ func _assert_overworld_command_check_cue_contract(shell: Node) -> bool:
 			has_caelen_button = true
 		if child is Label:
 			has_placeholder_label = true
-	if String(heroes_label.text) != reserve_expected_visible or not _label_text_fits_width(heroes_label) or hero_actions.get_child_count() != 2 or not has_caelen_button or has_placeholder_label:
+	if String(heroes_label.text) != reserve_expected_visible or not _label_text_fits_width_if_visible(heroes_label) or hero_actions.get_child_count() != 2 or not has_caelen_button or has_placeholder_label:
 		push_error("Overworld smoke: reserve Hero command rail is clipped, missing its live button, or retained a placeholder. label=%s width=%s actions=%s" % [heroes_label.text, heroes_label.size.x, action_surfaces])
 		get_tree().quit(1)
 		return false
@@ -842,6 +839,11 @@ func _label_text_fits_width(label: Label) -> bool:
 	var font := label.get_theme_font("font")
 	var font_size := label.get_theme_font_size("font_size")
 	return font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x <= label.size.x + 0.5
+
+# The scenery-first rail hides the Heroes label and shows the roster as portrait
+# buttons; a hidden label cannot clip.
+func _label_text_fits_width_if_visible(label: Label) -> bool:
+	return not label.is_visible_in_tree() or _label_text_fits_width(label)
 
 func _assert_overworld_specialty_check_cue_contract(shell: Node) -> bool:
 	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_perform_specialty_action"):
@@ -1097,7 +1099,12 @@ func _assert_130_scale_footer_containment(shell: Control, map_cue: Label) -> boo
 	var shell_rect := shell_panel.get_global_rect()
 	var footer_rect := command_band.get_global_rect()
 	var footer_surfaces: Array[Control] = [status_chip, cue_chip, orders_panel, system_panel]
-	var system_controls: Array[Control] = [save_status, end_turn, save_slot, save_button, settings_button, menu_button]
+	# Named save files replaced the numbered slot picker; Save opens the save-file browser.
+	var system_controls: Array[Control] = [save_status, end_turn, save_button, settings_button, menu_button]
+	if save_slot.is_visible_in_tree():
+		push_error("Overworld smoke: retired save slot picker is visible in the system footer at %d percent scale." % SettingsService.ui_scale_percent())
+		get_tree().quit(1)
+		return false
 	if not root_rect.encloses(shell_rect) or not shell_rect.encloses(footer_rect):
 		push_error("Overworld smoke: shell/footer escaped the logical root at %d percent scale. root=%s shell=%s footer=%s." % [SettingsService.ui_scale_percent(), root_rect, shell_rect, footer_rect])
 		get_tree().quit(1)
@@ -1569,7 +1576,9 @@ func _assert_end_turn_readiness_confirmation_contract(shell: Node) -> bool:
 			"Push toward Claim Duskfen Bastion",
 			"Primary order:",
 			"Confirmation:",
-			"A route order is available before ending the day.",
+			# The previous contract reselects the hero's own tile, which stays an
+			# exact target inside the town footprint, so no route order is armed.
+			"Movement remains before ending the day.",
 			"Spend check:",
 			"unspent move will not carry over",
 			"End turn forecast:",
@@ -1793,13 +1802,26 @@ func _assert_diagonal_movement_contract(shell: Node, map_node: Node) -> bool:
 
 	_set_active_hero_position(session, start)
 	OverworldRules.refresh_fog_of_war(session)
+	var click_target: Vector2i = _diagonal_open_tile(session, start, shell)
+	if click_target.x < 0:
+		var click_origin: Vector2i = _diagonal_click_origin(session, shell)
+		if click_origin.x >= 0:
+			start = click_origin
+			_set_active_hero_position(session, start)
+			OverworldRules.refresh_fog_of_war(session)
+			click_target = _diagonal_open_tile(session, start, shell)
 	shell.call("validation_select_tile", start.x, start.y)
-	var click_target: Vector2i = _diagonal_open_tile(session, start)
 	if click_target.x < 0:
 		push_error("Overworld smoke: could not find an adjacent diagonal tile for click movement coverage.")
 		get_tree().quit(1)
 		return false
 	var movement_before_click := int(session.overworld.get("movement", {}).get("current", 0))
+	# Map orders are explicit: the first press arms the route, the second commits.
+	shell._on_map_tile_pressed(click_target)
+	if OverworldRules.hero_position(session) != start:
+		push_error("Overworld smoke: first diagonal map click moved before the order was confirmed. target=%s" % click_target)
+		get_tree().quit(1)
+		return false
 	shell._on_map_tile_pressed(click_target)
 	await get_tree().process_frame
 	var click_finish: Vector2i = OverworldRules.hero_position(session)
@@ -1829,23 +1851,20 @@ func _assert_save_resume_clarity_contract(shell: Node) -> bool:
 	var empty_snapshot: Dictionary = shell.call("validation_snapshot")
 	var empty_surface: Dictionary = empty_snapshot.get("save_surface", {}) if empty_snapshot.get("save_surface", {}) is Dictionary else {}
 	var empty_summary: Dictionary = empty_surface.get("slot_summary", {}) if empty_surface.get("slot_summary", {}) is Dictionary else {}
+	# Named save files replaced the slot picker: the footer reads "Save files" and
+	# Save opens the file browser; the legacy Manual 1 slot stays inspectable.
 	if (
 		save_button == null
 		or save_button.disabled
-		or String(empty_snapshot.get("save_status_visible_text", "")) != "M1 empty"
-		or String(empty_snapshot.get("save_status_visible_text", "")).contains("lock")
+		or String(empty_snapshot.get("save_status_visible_text", "")) != "Save files"
 		or String(empty_summary.get("validity", "")) != "missing"
 		or bool(empty_summary.get("valid", true))
 		or bool(empty_summary.get("loadable", true))
 		or String(empty_summary.get("status_text", "")) != "Empty slot."
-		or not String(empty_snapshot.get("save_status_tooltip_text", "")).contains("Selected slot:")
-		or not String(empty_snapshot.get("save_status_tooltip_text", "")).contains("Manual 1")
-		or not String(empty_snapshot.get("save_status_tooltip_text", "")).contains("Integrity: Empty slot")
-		or not String(empty_snapshot.get("save_status_tooltip_text", "")).contains("Load state: Blocked")
-		or not String(empty_snapshot.get("save_status_tooltip_text", "")).contains("Status: Empty slot.")
+		or not String(empty_snapshot.get("save_status_tooltip_text", "")).contains("Save opens the named-file browser")
 		or SessionState.ensure_active_session().to_dict() != empty_session_authority
 	):
-		push_error("Overworld smoke: canonical empty Manual 1 is not presented as an enabled, truthful empty slot. status=%s summary=%s tooltip=%s save_disabled=%s" % [empty_snapshot.get("save_status_visible_text", ""), empty_summary, empty_snapshot.get("save_status_tooltip_text", ""), save_button.disabled if save_button != null else true])
+		push_error("Overworld smoke: empty Manual 1 is not presented as an enabled, truthful empty save surface. status=%s summary=%s tooltip=%s save_disabled=%s" % [empty_snapshot.get("save_status_visible_text", ""), empty_summary, empty_snapshot.get("save_status_tooltip_text", ""), save_button.disabled if save_button != null else true])
 		get_tree().quit(1)
 		return false
 	var save_result: Dictionary = shell.call("validation_save_to_selected_slot")
@@ -1864,8 +1883,9 @@ func _assert_save_resume_clarity_contract(shell: Node) -> bool:
 		return false
 	var summary: Dictionary = save_result.get("summary", {}) if save_result.get("summary", {}) is Dictionary else {}
 	var save_surface: Dictionary = snapshot.get("save_surface", {}) if snapshot.get("save_surface", {}) is Dictionary else {}
-	if String(snapshot.get("save_status_visible_text", "")) != "M1 ready":
-		push_error("Overworld smoke: saving the canonical empty Manual 1 did not refresh its compact status to ready. status=%s" % snapshot.get("save_status_visible_text", ""))
+	if String(snapshot.get("save_status_visible_text", "")) != "Save files" \
+			or not bool(summary.get("loadable", false)):
+		push_error("Overworld smoke: saving the empty Manual 1 did not leave a loadable slot behind the save surface. status=%s summary=%s" % [snapshot.get("save_status_visible_text", ""), summary])
 		get_tree().quit(1)
 		return false
 	if not _assert_text_contains_all(
@@ -1980,11 +2000,25 @@ func _assert_wireframe_contract(shell: Node) -> bool:
 			return false
 	if not _assert_decluttered_right_shell(shell, sidebar_shell, command_spine, action_panel, [context_actions, specialty_actions, spell_actions, artifact_actions]):
 		return false
-	for chip in [resource_chip, status_chip, cue_chip]:
+	for chip in [status_chip, cue_chip]:
 		if not _is_descendant_of(chip, command_band):
-			push_error("Overworld smoke: resources, date, and map cue must live inside the footer ribbon.")
+			push_error("Overworld smoke: date and map cue must live inside the footer ribbon.")
 			get_tree().quit(1)
 			return false
+	# All resources sit in their own thin edge strip between the map and the
+	# command footer (docs/overworld-all-resource-icons.md).
+	var resource_rect := resource_chip.get_global_rect()
+	if (
+		_is_descendant_of(resource_chip, command_band)
+		or not resource_chip.is_visible_in_tree()
+		or resource_rect.intersects(map_rect)
+		or resource_rect.intersects(footer_rect)
+		or resource_rect.position.y < map_rect.end.y - 1.0
+		or resource_rect.end.y > footer_rect.position.y + 1.0
+	):
+		push_error("Overworld smoke: resources must live in the edge strip between the map and the footer ribbon. resources=%s map=%s footer=%s" % [resource_rect, map_rect, footer_rect])
+		get_tree().quit(1)
+		return false
 	return true
 
 func _assert_object_economy_ui_contract(shell: Node) -> bool:
@@ -2002,11 +2036,13 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
 
+	# Only mines produce; Wood Wagon is a one-time pickup and outposts pay no
+	# claim or daily income (docs/pickups-and-income-sites.md).
 	var wood: Dictionary = shell.call("validation_select_tile", 1, 0)
 	if not _assert_text_contains_all(
-		"River Pass wood persistent economy UI",
+		"River Pass wood one-time pickup UI",
 		[String(wood.get("context_summary", "")), String(wood.get("selected_tile_rail_text", ""))],
-		["Persistent economy site", "Resource Site", "Class: Pickup", "Cadence: persistent control", "capture/ownership", "income"]
+		["Pickup/cache", "Resource Site", "Class: Pickup", "Cadence: one-time", "Economy: one-time 150 gold, 2 wood"]
 	):
 		return false
 	var signal_post: Dictionary = shell.call("validation_select_tile", 2, 3)
@@ -2021,10 +2057,8 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 			"Transit/support object",
 			"Faction Outpost",
 			"Unclaimed",
-			"Daily",
 			"support response",
 			"Control: Unclaimed; capture flips control.",
-			"Economy: claim 50 gold, daily 20 gold",
 			"Route: Linked Riverwatch Hold",
 		]
 	):
@@ -2042,7 +2076,7 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 	if not _assert_text_contains_all(
 		"River Pass wood hover tooltip",
 		[String(wood_hover.get("map_tooltip", ""))],
-		["Wood Wagon", "Persistent economy site", "Daily 1 wood"]
+		["Wood Wagon", "Pickup/cache", "one-time 150 gold, 2 wood"]
 	):
 		return false
 	var signal_state: Dictionary = shell.call("validation_resource_site_state", "river_signal_post")
@@ -2058,9 +2092,7 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 			"Transit/support object",
 			"Cadence: persistent control",
 			"capture/ownership",
-			"income",
 			"Control unclaimed",
-			"claim 50 gold, daily 20 gold",
 			"Linked Riverwatch Hold",
 		]
 	):
@@ -2080,7 +2112,7 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 		"resource site post-action recap",
 		signal_snapshot,
 		"resource_site",
-		["Ember Signal Post", "Affected:", "Why it matters:", "Next:", "daily", "route"]
+		["Ember Signal Post", "Affected:", "Why it matters:", "Next:", "route"]
 	):
 		return false
 	session.overworld["resources"] = original_resources
@@ -2099,16 +2131,15 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 			String(free_company.get("map_tooltip", "")),
 			String(free_company.get("primary_action", {}).get("summary", "")),
 		],
+		# Dwellings are hired at the site, tier 1 free; holding one adds town
+		# growth (docs/creature-dwellings.md).
 		[
-			"Persistent recruit site",
 			"Neutral Dwelling",
 			"Recruit Source: Riverwatch Free Company Yard | Faction-linked muster",
-			"Ready: +3 Ember Archer (T2 Ranged, 85 gold), +5 River Guard (T1 Melee, 60 gold)",
-			"Weekly: +1 River Guard (T1 Melee, 60 gold) to nearest held town",
+			"Hire 7 River Guard a week, free",
+			"Weekly: +7 River Guard (T1 Melee, free) hired here",
 			"Cadence: persistent control | Control unclaimed",
-			"Support: Dispatch Relief",
-			"140 gold ready",
-			"Why: Capture adds field recruits, feeds weekly musters, keeps local pay flowing.",
+			"Why: Hire here each week; holding it adds +1 weekly growth for its creature in your towns.",
 		]
 	):
 		return false
@@ -2182,6 +2213,8 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
 
+	# The Embergrain rare mine's 3x2 body (entry 0,1) blocks 1,1, so the route
+	# passes 2,1 (docs/unified-rare-mines.md).
 	var reachable: Dictionary = shell.call("validation_select_tile", 1, 0)
 	if not _assert_route_decision_fields(
 		"reachable route decision",
@@ -2189,7 +2222,7 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 		"reachable",
 		"move/collect",
 		2,
-		["Route:", "Wood Wagon", "Move/collect", "2 steps", "reachable today", "Move", "Next step:", "1,1", "1 step remains", "Decision Brief", "Affected:", "Objective:", "Why it matters:", "Next:"]
+		["Route:", "Wood Wagon", "Move/collect", "2 steps", "reachable today", "Move", "Next step:", "2,1", "1 step remains", "Decision Brief", "Affected:", "Objective:", "Why it matters:", "Next:"]
 	):
 		return false
 	if not _assert_text_contains_all(
@@ -2201,7 +2234,7 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 			String(reachable.get("map_tooltip", "")),
 			String(reachable.get("primary_action", {}).get("summary", "")),
 		],
-		["Wood Wagon", "Route:", "2 step", "Move", "reachable today", "Next step:", "1,1"]
+		["Wood Wagon", "Route:", "2 step", "Move", "reachable today", "Next step:", "2,1"]
 	):
 		return false
 
@@ -2316,7 +2349,7 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 			interceptor_profile = profile_value
 			break
 	if String(interceptor_profile.get("hero_id", "")) != "hero_vaska" \
-		or String(interceptor_profile.get("sprite_asset_id", "")) != "hero_faction_mireclaw" \
+		or String(interceptor_profile.get("sprite_asset_id", "")) != "hero_signature_vaska" \
 		or not bool(interceptor_profile.get("uses_commander_sprite", false)) \
 		or not is_equal_approx(float(interceptor_profile.get("visible_extent_tiles", 0.0)), 0.88):
 		push_error("Overworld smoke: strategic raid did not retain its exact Mireclaw commander presentation. profile=%s" % interceptor_profile)
@@ -2324,8 +2357,8 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 		return false
 	var hostile_marker: Dictionary = interceptor_profile.get("hostile_marker_profile", {})
 	if String(interceptor_profile.get("hostile_treatment", "")) != "painted_hostile_silhouette_without_arrows" \
-			or int(hostile_marker.get("flank_chevron_count", 0)) != 2 \
-			or int(hostile_marker.get("threat_notch_count", 0)) != 1 \
+			or int(hostile_marker.get("flank_chevron_count", -1)) != 0 \
+			or int(hostile_marker.get("threat_notch_count", -1)) != 0 \
 			or bool(hostile_marker.get("continuous_ring", true)) \
 			or not is_zero_approx(float(hostile_marker.get("interior_fill_alpha", -1.0))) \
 			or not bool(hostile_marker.get("contained_in_tile", false)):
@@ -2502,7 +2535,7 @@ func _assert_route_target_handoff_contract(shell: Node) -> bool:
 			"reachable today",
 			"Route step:",
 			"Next step:",
-			"1,1",
+			"2,1",
 			"Why it matters:",
 			"Next:",
 			"Move",
@@ -2927,6 +2960,11 @@ func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
 		return false
 	if not _assert_action_feedback("spell cast feedback cue", cast_snapshot, "cast", ["Cast:", "Waystride restores"]):
 		return false
+	# The cast presentation blocks map orders until it ends; skip it as Esc does
+	# so later contracts can issue orders.
+	var cast_map_view = shell.get_node_or_null("%Map")
+	if cast_map_view != null and cast_map_view.has_method("dismiss_spell_cast_presentation"):
+		cast_map_view.call("dismiss_spell_cast_presentation")
 
 	session.overworld["fog"] = original_fog
 	session.overworld["hero"] = original_hero
@@ -3164,13 +3202,41 @@ func _assert_remembered_owned_town_remote_entry(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	var town_tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
-	var remote_tile := _remote_memory_tile_for_town(session, town_tile)
-	if remote_tile.x < 0:
-		push_error("Overworld smoke: could not find a remote hero tile outside the owned town scout ring.")
+	var mapped_wood_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 0)
+	if not bool(mapped_wood_presentation.get("visible", false)) or not _assert_art_sprite(mapped_wood_presentation, "mapobj_wood_wagon", false):
+		push_error("Overworld smoke: mapped pickup did not stay normally visible under permanent explored fog. presentation=%s" % mapped_wood_presentation)
 		get_tree().quit(1)
 		return false
-	_set_active_hero_position(session, remote_tile)
-	OverworldRules.refresh_fog_of_war(session)
+	# Owned towns are entered on arrival; from afar the town is an Advance to
+	# Town route. River Pass seals Riverwatch's entry behind the Ghoul Grove
+	# guard, the rare mine body, the Rare Exchange and the river, so this check
+	# lifts guards and sites from the session and restores them afterwards.
+	var original_encounters = session.overworld.get("encounters", []).duplicate(true)
+	var original_resource_nodes = session.overworld.get("resource_nodes", []).duplicate(true)
+	session.overworld["encounters"] = []
+	session.overworld["resource_nodes"] = []
+	OverworldRules.invalidate_spatial_lookup(session)
+	OverworldRules._refresh_blocked_tile_index(session)
+	shell.call("_refresh")
+	var selection: Dictionary = {}
+	var route_decision: Dictionary = {}
+	var remote_tile := Vector2i(-1, -1)
+	for candidate_value in _remote_memory_tiles_for_town(session, town_tile):
+		var candidate: Vector2i = candidate_value
+		_set_active_hero_position(session, candidate)
+		OverworldRules.refresh_fog_of_war(session)
+		shell.call("_refresh")
+		# Reselect so the town route is rebuilt from the moved hero.
+		shell.call("validation_select_tile", candidate.x, candidate.y)
+		selection = shell.call("validation_select_tile", town_tile.x, town_tile.y)
+		route_decision = selection.get("selected_route_decision", {}) if selection.get("selected_route_decision", {}) is Dictionary else {}
+		if String(selection.get("primary_action_id", "")) == "advance_route" and bool(route_decision.get("reachable_today", false)):
+			remote_tile = candidate
+			break
+	if remote_tile.x < 0:
+		push_error("Overworld smoke: could not find a remote hero tile with a route to the owned town today.")
+		get_tree().quit(1)
+		return false
 	if not OverworldRules.is_tile_explored(session, town_tile.x, town_tile.y):
 		push_error("Overworld smoke: the previously scouted owned town was not preserved as explored.")
 		get_tree().quit(1)
@@ -3179,11 +3245,8 @@ func _assert_remembered_owned_town_remote_entry(shell: Node) -> bool:
 		push_error("Overworld smoke: HoMM-style fog should keep the explored owned town visible after moving away.")
 		get_tree().quit(1)
 		return false
-	var selection: Dictionary = shell.call("validation_select_tile", town_tile.x, town_tile.y)
-	var route_decision: Dictionary = selection.get("selected_route_decision", {}) if selection.get("selected_route_decision", {}) is Dictionary else {}
-	var town_handoff: Dictionary = selection.get("town_entry_handoff", {}) if selection.get("town_entry_handoff", {}) is Dictionary else {}
-	if String(selection.get("primary_action_id", "")) != "advance_route" or String(route_decision.get("action_kind", "")) != "town" or town_handoff.is_empty():
-		push_error("Overworld smoke: explored remote owned town did not expose an Advance to Town route with entry handoff. snapshot=%s" % selection)
+	if String(route_decision.get("action_kind", "")) != "move/town" or String(route_decision.get("action_label", "")) != "Advance to Town":
+		push_error("Overworld smoke: explored remote owned town did not expose an Advance to Town route. snapshot=%s" % selection)
 		get_tree().quit(1)
 		return false
 	if String(selection.get("context_summary", "")).find("Remembered Town") >= 0:
@@ -3199,13 +3262,14 @@ func _assert_remembered_owned_town_remote_entry(shell: Node) -> bool:
 		return false
 	if not _assert_marker_style(presentation, "town", false):
 		return false
-	var mapped_wood_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 0)
-	if not bool(mapped_wood_presentation.get("visible", false)) or not _assert_art_sprite(mapped_wood_presentation, "lumber_wagon", false):
-		push_error("Overworld smoke: mapped pickup did not stay normally visible under permanent explored fog. presentation=%s" % mapped_wood_presentation)
+	# Advancing arrives at the entrance; entering is the next order, Visit Town.
+	var advance_result: Dictionary = shell.call("validation_perform_primary_action")
+	if not bool(advance_result.get("ok", false)) or OverworldRules.hero_position(session) != town_tile:
+		push_error("Overworld smoke: remote owned town route did not arrive at the town entrance. result=%s hero=%s" % [advance_result, OverworldRules.hero_position(session)])
 		get_tree().quit(1)
 		return false
 	var visit_result: Dictionary = shell.call("validation_perform_primary_action")
-	if String(session.game_state) != "town" or not bool(visit_result.get("ok", false)):
+	if String(visit_result.get("action_id", "")) != "visit_town" or String(session.game_state) != "town" or not bool(visit_result.get("ok", false)):
 		push_error("Overworld smoke: explored owned town primary action did not route into town management. result=%s state=%s" % [visit_result, session.game_state])
 		get_tree().quit(1)
 		return false
@@ -3214,6 +3278,10 @@ func _assert_remembered_owned_town_remote_entry(shell: Node) -> bool:
 		push_error("Overworld smoke: remote town route activated the wrong town. active=%s expected=%s" % [active_town, town])
 		get_tree().quit(1)
 		return false
+	session.overworld["encounters"] = original_encounters
+	session.overworld["resource_nodes"] = original_resource_nodes
+	OverworldRules.invalidate_spatial_lookup(session)
+	OverworldRules._refresh_blocked_tile_index(session)
 	return true
 
 func _assert_explored_terrain_presentation(shell: Node, remembered_tile: Vector2i, remembered_presentation: Dictionary) -> bool:
@@ -3249,6 +3317,28 @@ func _assert_explored_terrain_presentation(shell: Node, remembered_tile: Vector2
 
 	var session = SessionState.ensure_active_session()
 	var unexplored_tile := _first_unexplored_tile(session)
+	var original_fog: Dictionary = {}
+	if unexplored_tile.x < 0:
+		# Hero and town scouting can explore all of a small map; hide one tile
+		# away from the hero and the town for the shroud check, then restore.
+		var corner := Vector2i(-1, -1)
+		var hero_tile: Vector2i = OverworldRules.hero_position(session)
+		var fog_map_size: Vector2i = OverworldRules.derive_map_size(session)
+		for y in range(fog_map_size.y):
+			for x in range(fog_map_size.x):
+				var tile := Vector2i(x, y)
+				if corner.x < 0 and tile != remembered_tile and maxi(abs(tile.x - hero_tile.x), abs(tile.y - hero_tile.y)) >= 2:
+					corner = tile
+		if corner.x >= 0:
+			original_fog = session.overworld.get("fog", {}).duplicate(true)
+			var hidden_fog: Dictionary = original_fog.duplicate(true)
+			for key in ["visible_tiles", "explored_tiles"]:
+				var rows: Array = hidden_fog.get(key, [])
+				if corner.y < rows.size() and rows[corner.y] is Array and corner.x < rows[corner.y].size():
+					rows[corner.y][corner.x] = false
+			session.overworld["fog"] = hidden_fog
+			shell.call("_refresh")
+			unexplored_tile = _first_unexplored_tile(session)
 	if unexplored_tile.x < 0:
 		push_error("Overworld smoke: could not find an unexplored tile to guard hidden fog presentation.")
 		get_tree().quit(1)
@@ -3295,6 +3385,9 @@ func _assert_explored_terrain_presentation(shell: Node, remembered_tile: Vector2
 		push_error("Overworld smoke: unexplored terrain did not expose the exact contained identity-silent fog shroud at %s. presentation=%s" % [unexplored_tile, unexplored_presentation])
 		get_tree().quit(1)
 		return false
+	if not original_fog.is_empty():
+		session.overworld["fog"] = original_fog
+		shell.call("_refresh")
 	return true
 
 func _assert_marker_readability_contract(shell: Node) -> bool:
@@ -3641,13 +3734,15 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 		get_tree().quit(1)
 		return false
 	if expected_kind == "town":
-		if int(readability.get("footprint_width_tiles", 0)) != 3 or int(readability.get("footprint_height_tiles", 0)) != 2:
-			push_error("Overworld smoke: town marker must present as a 3x2 footprint. presentation=%s" % presentation)
+		# Marker readability caps grounding footprints at 3x3; the town contract is
+		# reported by its own presentation payload.
+		var town_presentation: Dictionary = presentation.get("town_presentation", {})
+		if int(town_presentation.get("footprint_width_tiles", 0)) != 5 or int(town_presentation.get("footprint_height_tiles", 0)) != 3:
+			push_error("Overworld smoke: town marker must present as a 5x3 footprint. presentation=%s" % presentation)
 			get_tree().quit(1)
 			return false
-		var town_presentation: Dictionary = presentation.get("town_presentation", {})
-		if not bool(town_presentation.get("has_town_footprint", false)) or String(town_presentation.get("presentation_model", "")) != "aspect_preserved_town_in_3x4_visual_envelope_3x2_logical_bottom_middle_entry":
-			push_error("Overworld smoke: town presentation metadata does not expose the 3x2 model. presentation=%s" % presentation)
+		if not bool(town_presentation.get("has_town_footprint", false)) or String(town_presentation.get("presentation_model", "")) != "aspect_preserved_town_in_5x5_visual_envelope_5x3_ground_bottom_middle_entry":
+			push_error("Overworld smoke: town presentation metadata does not expose the 5x3 model. presentation=%s" % presentation)
 			get_tree().quit(1)
 			return false
 		if String(town_presentation.get("entry_role", "")) != "bottom_middle_visit_approach" or not bool(town_presentation.get("entry_is_visit_tile", false)):
@@ -3666,8 +3761,8 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 		if String(town_presentation.get("owner_pennant_model", "")) != "paired_small_entrance_control_flags" \
 			or int(town_presentation.get("owner_pennant_count", 0)) != 2 \
 			or String(town_presentation.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline" \
-			or float(town_presentation.get("sprite_silhouette_width_factor", 0.0)) < 0.010 \
-			or float(town_presentation.get("sprite_silhouette_visible_alpha", 0.0)) < 0.879 \
+			or float(town_presentation.get("sprite_silhouette_width_factor", 0.0)) < 0.0029 \
+			or float(town_presentation.get("sprite_silhouette_visible_alpha", 0.0)) < 0.299 \
 			or float(town_presentation.get("sprite_silhouette_memory_alpha", 0.0)) < 0.779 \
 			or String(owner_pennant.get("model", "")) != "paired_small_entrance_control_flags" \
 			or int(owner_pennant.get("flag_count", 0)) != 2 \
@@ -3785,7 +3880,7 @@ func _assert_town_grounding_correction(readability: Dictionary, presentation: Di
 		push_error("Overworld smoke: town still reports foreground base occlusion pads. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
-	if String(readability.get("town_grounding_model", "")) != "painted_town_contact_edge_without_base_ellipse" or String(readability.get("town_footprint_cue_model", "")) != "no_visible_helper_cues_3x2_contract":
+	if String(readability.get("town_grounding_model", "")) != "painted_town_contact_edge_without_base_ellipse" or String(readability.get("town_footprint_cue_model", "")) != "no_visible_helper_cues_tapered_5x3_contract":
 		push_error("Overworld smoke: town grounding metadata does not describe the no-ellipse presentation. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
@@ -3798,8 +3893,8 @@ func _assert_town_grounding_correction(readability: Dictionary, presentation: Di
 		push_error("Overworld smoke: town presentation payload still exposes the removed ellipse/underlay/shadow treatment. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
-	if String(town_presentation.get("footprint_cue_model", "")) != "no_visible_helper_cues_3x2_contract":
-		push_error("Overworld smoke: town footprint cue metadata does not describe the cue-free 3x2 contract. presentation=%s" % presentation)
+	if String(town_presentation.get("footprint_cue_model", "")) != "no_visible_helper_cues_tapered_5x3_contract":
+		push_error("Overworld smoke: town footprint cue metadata does not describe the cue-free 5x3 contract. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
 	if bool(town_presentation.get("visible_helper_cues", true)) or bool(town_presentation.get("footprint_helper_glyphs", true)) or bool(town_presentation.get("entry_apron_cue", true)) or bool(town_presentation.get("entry_wedge_cue", true)) or bool(town_presentation.get("gate_cue", true)) or bool(town_presentation.get("helper_circle_cue", true)):
@@ -3853,7 +3948,7 @@ func _assert_town_non_entry_footprint(shell: Node, entry_presentation: Dictionar
 	var town_presentation: Dictionary = entry_presentation.get("town_presentation", {})
 	var blocked_cells: Array = town_presentation.get("blocked_footprint_cells", [])
 	if blocked_cells.is_empty():
-		push_error("Overworld smoke: town 3x2 footprint did not expose any blocked non-entry cells. presentation=%s" % entry_presentation)
+		push_error("Overworld smoke: town 5x3 footprint did not expose any blocked non-entry cells. presentation=%s" % entry_presentation)
 		get_tree().quit(1)
 		return false
 	for cell_value in blocked_cells:
@@ -3937,7 +4032,7 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: original runtime terrain did not retain inactive local-reference metadata separately from its source basis. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if not String(grass_terrain.get("texture_path", "")).begins_with("res://art/overworld/runtime/terrain_tiles/base/grass_") or String(grass_terrain.get("homm3_runtime_asset_source_basis", "")) != "generated_grastl_replacement_trial_20260503" or int(grass_terrain.get("homm3_expected_frame_count", 0)) != 79:
+	if not String(grass_terrain.get("texture_path", "")).begins_with("res://art/overworld/runtime/terrain_tiles/base_generated_v2/grass") or String(grass_terrain.get("homm3_runtime_asset_source_basis", "")) != "generated_grastl_replacement_trial_20260503" or int(grass_terrain.get("homm3_expected_frame_count", 0)) != 79:
 		push_error("Overworld smoke: grass terrain is not resolving the original bank while preserving inactive grastl reference metadata. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
@@ -3991,7 +4086,8 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	var town_presentation: Dictionary = shell.call("validation_tile_presentation", town_tile.x, town_tile.y)
-	if not _assert_art_sprite(town_presentation, "town_identity_riverwatch", false):
+	# Named towns share their faction's overworld design (docs/overworld-town-scale.md).
+	if not _assert_art_sprite(town_presentation, "town_faction_embercourt", false):
 		return false
 	var encounter_tile := _first_visible_encounter_tile(session)
 	if encounter_tile.x < 0:
@@ -4002,15 +4098,25 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 	if not _assert_art_sprite(encounter_presentation, "mapobj_neutral_encounter_river_pass_ghoul_grove_stack", false):
 		return false
 	var wood_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 0)
-	if not _assert_art_sprite(wood_presentation, "lumber_wagon", false):
+	if not _assert_art_sprite(wood_presentation, "mapobj_wood_wagon", false):
 		return false
+	# North Wood (1,0) lies in Riverwatch Hold's tapered 5x3 rear row, so it
+	# draws compactly at the town's edge.
 	var wood_resource_layout: Dictionary = wood_presentation.get("resource_draw_layout", {})
-	if String(wood_resource_layout.get("model", "")) != "ordinary_resource_footprint" \
-			or bool(wood_resource_layout.get("town_footprint_colocated", true)) \
-			or not is_equal_approx(float(wood_resource_layout.get("extent_factor", 0.0)), 1.0) \
-			or not is_equal_approx(float(wood_resource_layout.get("visible_extent_cap_tiles", -1.0)), 0.0) \
-			or _focus_rect_from_payload(wood_resource_layout.get("draw_rect", {})) != _focus_rect_from_payload(wood_resource_layout.get("footprint_rect", {})):
-		push_error("Overworld smoke: ordinary standalone resource presentation was compacted by the town-adjunct layout. presentation=%s" % wood_presentation)
+	if String(wood_resource_layout.get("model", "")) != "compact_outward_edge_town_footprint_resource" \
+			or not bool(wood_resource_layout.get("town_footprint_colocated", false)) \
+			or not bool(wood_resource_layout.get("contained_in_footprint_tile", false)):
+		push_error("Overworld smoke: resource inside a town footprint did not use the town-adjunct layout. presentation=%s" % wood_presentation)
+		get_tree().quit(1)
+		return false
+	var standalone_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 3)
+	var standalone_resource_layout: Dictionary = standalone_presentation.get("resource_draw_layout", {})
+	if String(standalone_resource_layout.get("model", "")) != "ordinary_resource_footprint" \
+			or bool(standalone_resource_layout.get("town_footprint_colocated", true)) \
+			or not is_equal_approx(float(standalone_resource_layout.get("extent_factor", 0.0)), 1.0) \
+			or not is_equal_approx(float(standalone_resource_layout.get("visible_extent_cap_tiles", -1.0)), 0.0) \
+			or _focus_rect_from_payload(standalone_resource_layout.get("draw_rect", {})) != _focus_rect_from_payload(standalone_resource_layout.get("footprint_rect", {})):
+		push_error("Overworld smoke: ordinary standalone resource presentation was compacted by the town-adjunct layout. presentation=%s" % standalone_presentation)
 		get_tree().quit(1)
 		return false
 	var rare_exchange_authority_before: Dictionary = session.to_dict()
@@ -4033,7 +4139,7 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 			or not is_equal_approx(float(rare_exchange_layout.get("extent_factor", 0.0)), 0.64) \
 			or not is_equal_approx(float(rare_exchange_layout.get("visible_extent_cap_tiles", 0.0)), 0.56) \
 			or String(rare_exchange_layout.get("edge_anchor", "")) != "bottom_right" \
-			or rare_exchange_layout.get("cell_offset", {}) != {"x": 2, "y": 1} \
+			or rare_exchange_layout.get("cell_offset", {}) != {"x": 3, "y": 2} \
 			or not bool(rare_exchange_layout.get("contained_in_footprint_tile", false)) \
 			or not rare_exchange_footprint_rect.encloses(rare_exchange_draw_rect) \
 			or not is_equal_approx(rare_exchange_draw_rect.size.x, rare_exchange_footprint_rect.size.x * 0.64) \
@@ -4050,17 +4156,19 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		return false
 	var town_structure_authority_before: Dictionary = session.to_dict()
 	var town_structure_original_fog: Dictionary = session.overworld.get("fog", {}).duplicate(true)
+	# Rare mines share one 3x2 building per resource (docs/unified-rare-mines.md);
+	# both sit one row behind their town's entry in its 5x3 footprint.
 	var town_structure_cases := [
 		{
 			"tile": Vector2i(0, 1),
-			"asset_id": "mapobj_embergrain_warm_granary",
-			"footprint": {"width": 2, "height": 3},
+			"asset_id": "mapobj_rare_embergrain_mine",
+			"footprint": {"width": 3, "height": 2},
 			"requires_controlled_reveal": false,
 		},
 		{
 			"tile": Vector2i(8, 1),
-			"asset_id": "mapobj_peatwax_reed_yard",
-			"footprint": {"width": 2, "height": 2},
+			"asset_id": "mapobj_rare_peatwax_mine",
+			"footprint": {"width": 3, "height": 2},
 			"requires_controlled_reveal": true,
 		},
 	]
@@ -4087,15 +4195,15 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 				or not bool(structure_layout.get("town_footprint_colocated", false)) \
 				or not is_equal_approx(float(structure_layout.get("extent_factor", 0.0)), 0.64) \
 				or not is_equal_approx(float(structure_layout.get("visible_extent_cap_tiles", 0.0)), 0.56) \
-				or String(structure_layout.get("edge_anchor", "")) != "top_right" \
-				or structure_layout.get("cell_offset", {}) != {"x": 1, "y": 0} \
+				or String(structure_layout.get("edge_anchor", "")) != "bottom_right" \
+				or structure_layout.get("cell_offset", {}) != {"x": 2, "y": 1} \
 				or not bool(structure_layout.get("contained_in_footprint_tile", false)) \
 				or not structure_footprint_rect.encloses(structure_draw_rect) \
 				or not is_equal_approx(structure_draw_rect.size.x, structure_footprint_rect.size.x * 0.64) \
 				or not is_equal_approx(structure_draw_rect.size.y, structure_footprint_rect.size.y * 0.64) \
 				or not is_equal_approx(structure_draw_rect.end.x, structure_footprint_rect.end.x) \
-				or not is_equal_approx(structure_draw_rect.position.y, structure_footprint_rect.position.y):
-			push_error("Overworld smoke: town-adjunct multi-tile structure did not use exact compact top-right presentation geometry. case=%s presentation=%s" % [town_structure_case, structure_presentation])
+				or not is_equal_approx(structure_draw_rect.end.y, structure_footprint_rect.end.y):
+			push_error("Overworld smoke: town-adjunct multi-tile structure did not use exact compact bottom-right presentation geometry. case=%s presentation=%s" % [town_structure_case, structure_presentation])
 			get_tree().quit(1)
 			return false
 		var repeated_structure_presentation: Dictionary = shell.call("validation_tile_presentation", structure_tile.x, structure_tile.y)
@@ -4123,12 +4231,12 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 			or not bool(generated_supply_layout.get("town_footprint_colocated", false)) \
 			or not is_equal_approx(float(generated_supply_layout.get("extent_factor", 0.0)), 0.64) \
 			or not is_equal_approx(float(generated_supply_layout.get("visible_extent_cap_tiles", 0.0)), 0.56) \
-			or String(generated_supply_layout.get("edge_anchor", "")) != "top_left" \
-			or generated_supply_layout.get("cell_offset", {}) != {"x": 0, "y": 0} \
+			or String(generated_supply_layout.get("edge_anchor", "")) != "bottom_left" \
+			or generated_supply_layout.get("cell_offset", {}) != {"x": 1, "y": 1} \
 			or not generated_supply_footprint_rect.encloses(generated_supply_draw_rect) \
 			or not is_equal_approx(generated_supply_draw_rect.position.x, generated_supply_footprint_rect.position.x) \
-			or not is_equal_approx(generated_supply_draw_rect.position.y, generated_supply_footprint_rect.position.y):
-		push_error("Overworld smoke: Generated Town Supply Cache did not resolve as the exact compact top-left mapped cache sprite. presentation=%s" % generated_supply_presentation)
+			or not is_equal_approx(generated_supply_draw_rect.end.y, generated_supply_footprint_rect.end.y):
+		push_error("Overworld smoke: Generated Town Supply Cache did not resolve as the exact compact bottom-left mapped cache sprite. presentation=%s" % generated_supply_presentation)
 		get_tree().quit(1)
 		return false
 	var repeated_generated_supply_presentation: Dictionary = shell.call("validation_tile_presentation", generated_supply_tile.x, generated_supply_tile.y)
@@ -4175,10 +4283,9 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 
 func _assert_water_tile_bank(shell: Node, session) -> bool:
 	var authority_before: Dictionary = session.to_dict()
+	# Water draws from the generated map-space raster material (art/overworld/manifest.json).
 	var base_paths := [
-		"res://art/overworld/runtime/terrain_tiles/base/water_deep.png",
-		"res://art/overworld/runtime/terrain_tiles/base/water_current.png",
-		"res://art/overworld/runtime/terrain_tiles/base/water_blocked.png",
+		"res://art/overworld/runtime/terrain_tiles/base_generated_v2/water.png",
 	]
 	var edge_paths := [
 		"res://art/overworld/runtime/terrain_tiles/edges/water_edge_n.png",
@@ -4186,10 +4293,15 @@ func _assert_water_tile_bank(shell: Node, session) -> bool:
 		"res://art/overworld/runtime/terrain_tiles/edges/water_edge_s.png",
 		"res://art/overworld/runtime/terrain_tiles/edges/water_edge_w.png",
 	]
+	var expected_sizes := {}
+	for path_value in base_paths:
+		expected_sizes[path_value] = Vector2(256.0, 256.0)
+	for path_value in edge_paths:
+		expected_sizes[path_value] = Vector2(64.0, 64.0)
 	for path_value in base_paths + edge_paths:
 		var path := String(path_value)
 		var texture := load(path) as Texture2D
-		if not ResourceLoader.exists(path, "Texture2D") or texture == null or texture.get_size() != Vector2(64.0, 64.0):
+		if not ResourceLoader.exists(path, "Texture2D") or texture == null or texture.get_size() != expected_sizes[path_value]:
 			push_error("Overworld smoke: painterly water tile-bank texture is missing or malformed: %s." % path)
 			get_tree().quit(1)
 			return false
@@ -4426,28 +4538,28 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	var town_center: Dictionary = town.get("sprite_center_tiles", {})
-	if float(town.get("visible_extent_tiles", 0.0)) > 3.7201 \
+	if float(town.get("visible_extent_tiles", 0.0)) > 4.8001 \
 		or not is_equal_approx(float(town.get("visible_extent_fraction_of_footprint_depth", 0.0)), 1.24) \
-		or float(town.get("painted_width_tiles", 0.0)) > 2.9001 \
-		or float(town.get("painted_height_tiles", 0.0)) > 3.7201 \
-		or not is_equal_approx(float(town.get("town_width_cap_tiles", 0.0)), 2.90) \
-		or not is_equal_approx(float(town.get("town_height_cap_tiles", 0.0)), 3.72) \
+		or float(town.get("painted_width_tiles", 0.0)) > 4.8001 \
+		or float(town.get("painted_height_tiles", 0.0)) > 4.3501 \
+		or not is_equal_approx(float(town.get("town_width_cap_tiles", 0.0)), 4.80) \
+		or not is_equal_approx(float(town.get("town_height_cap_tiles", 0.0)), 4.35) \
 		or not bool(town.get("town_aspect_preserved", false)) \
 		or not bool(town.get("town_vertical_landmark_fit", false)) \
 		or float(town.get("town_to_hero_extent_ratio", 0.0)) <= 3.0 \
 		or float(town.get("town_to_largest_other_object_extent_ratio", 0.0)) <= 2.0 \
 		or not is_equal_approx(float(town.get("source_aspect", 0.0)), float(town.get("draw_aspect", -1.0))) \
-		or town.get("visual_footprint", {}) != {"width": 3, "height": 4} \
-		or town.get("logical_footprint", {}) != {"width": 3, "height": 2} \
+		or town.get("visual_footprint", {}) != {"width": 5, "height": 5} \
+		or town.get("logical_footprint", {}) != {"width": 5, "height": 3} \
 		or not is_equal_approx(float(town.get("painted_bottom_clearance_tiles", 0.0)), 0.18) \
 		or not bool(town.get("painted_bottom_grounded_exact", false)) \
 		or not bool(town.get("sprite_contained_in_footprint", false)) \
 		or String(town.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline" \
 		or float(town.get("sprite_silhouette_width_px", 0.0)) < 0.55 \
 		or not bool(town.get("sprite_silhouette_contained_in_footprint", false)) \
-		or not is_equal_approx(float(town_center.get("x", 0.0)), 1.5) \
+		or not is_equal_approx(float(town_center.get("x", 0.0)), 2.5) \
 		or float(town_center.get("y", 0.0)) <= 0.0 \
-		or float(town_center.get("y", 0.0)) >= 4.0:
+		or float(town_center.get("y", 0.0)) >= 5.0:
 		push_error("Overworld smoke: town art no longer owns the bounded top of the shared world-scale hierarchy. payload=%s" % town)
 		get_tree().quit(1)
 		return false
@@ -4462,7 +4574,8 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 			"footprint": {"width": 1, "height": 1},
 			"passable": true,
 			"visitable": true,
-			"map_roles": ["small_reward", "build_resource", "counter_capture_target"],
+			# A one-time pickup since only mines produce (docs/pickups-and-income-sites.md).
+			"map_roles": ["small_reward", "build_resource"],
 		}
 		or String(authored_pickup.get("semantic_scale_class", "")) != "loose_pickup"
 		or not is_equal_approx(float(authored_pickup.get("visible_extent_tiles", 0.0)), 0.56)
@@ -5291,7 +5404,7 @@ func _assert_art_sprite(presentation: Dictionary, expected_asset_id: String, rem
 			push_error("Overworld smoke: town sprite still reports placement bed or shadow/backdrop treatment. presentation=%s" % presentation)
 			get_tree().quit(1)
 			return false
-		if String(art.get("town_sprite_grounding_model", "")) != "painted_town_contact_edge_without_base_ellipse" or String(art.get("town_footprint_cue_model", "")) != "no_visible_helper_cues_3x2_contract":
+		if String(art.get("town_sprite_grounding_model", "")) != "painted_town_contact_edge_without_base_ellipse" or String(art.get("town_footprint_cue_model", "")) != "no_visible_helper_cues_tapered_5x3_contract":
 			push_error("Overworld smoke: town art metadata does not expose the corrected footprint grounding model. presentation=%s" % presentation)
 			get_tree().quit(1)
 			return false
@@ -5340,20 +5453,26 @@ func _first_player_town(session) -> Dictionary:
 			return town_value
 	return {}
 
-func _remote_memory_tile_for_town(session, town_tile: Vector2i) -> Vector2i:
+# Farthest first. Hero and town vision now cover most of this small map, so
+# remote means a non-adjacent tile rather than one outside the scout ring.
+func _remote_memory_tiles_for_town(session, town_tile: Vector2i) -> Array:
 	var map_size := OverworldRules.derive_map_size(session)
-	var scout_radius := HeroCommandRules.scouting_radius_for_hero(session.overworld.get("hero", {}))
-	for y in range(map_size.y - 1, -1, -1):
-		for x in range(map_size.x - 1, -1, -1):
+	var tiles := []
+	for y in range(map_size.y):
+		for x in range(map_size.x):
 			var tile := Vector2i(x, y)
-			if abs(tile.x - town_tile.x) + abs(tile.y - town_tile.y) <= scout_radius:
+			if abs(tile.x - town_tile.x) + abs(tile.y - town_tile.y) < 3:
 				continue
 			if OverworldRules.tile_is_blocked(session, tile.x, tile.y):
 				continue
-			if not _town_at(session, tile).is_empty():
+			if not _town_at(session, tile).is_empty() or _tile_has_fixture_object(session, tile):
 				continue
-			return tile
-	return Vector2i(-1, -1)
+			if not OverworldRules.guard_engagement_encounter_at_tile(session, tile.x, tile.y).is_empty():
+				continue
+			tiles.append(tile)
+	tiles.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+		return abs(a.x - town_tile.x) + abs(a.y - town_tile.y) > abs(b.x - town_tile.x) + abs(b.y - town_tile.y))
+	return tiles
 
 func _first_unexplored_tile(session) -> Vector2i:
 	var map_size := OverworldRules.derive_map_size(session)
@@ -5404,7 +5523,52 @@ func _two_step_diagonal_origin(session) -> Vector2i:
 				return origin
 	return Vector2i(-1, -1)
 
-func _diagonal_open_tile(session, start: Vector2i) -> Vector2i:
+# Stay on the adventure map: objects, town footprints and guard zones open
+# other scenes.
+func _orthogonal_open_tile(session, start: Vector2i, shell: Node) -> Vector2i:
+	var map_size: Vector2i = OverworldRules.derive_map_size(session)
+	for direction in [Vector2i.RIGHT, Vector2i.DOWN, Vector2i.UP, Vector2i.LEFT]:
+		var tile: Vector2i = start + direction
+		if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
+			continue
+		if OverworldRules.tile_is_blocked(session, tile.x, tile.y) or _tile_has_fixture_object(session, tile):
+			continue
+		if not shell.call("_town_footprint_selection", tile).is_empty():
+			continue
+		if not OverworldRules.guard_engagement_encounter_at_tile(session, tile.x, tile.y).is_empty():
+			continue
+		return tile
+	return Vector2i(-1, -1)
+
+func _orthogonal_move_origin(session, shell: Node) -> Vector2i:
+	var map_size: Vector2i = OverworldRules.derive_map_size(session)
+	for y in range(map_size.y):
+		for x in range(map_size.x):
+			var origin := Vector2i(x, y)
+			if OverworldRules.tile_is_blocked(session, origin.x, origin.y) or _tile_has_fixture_object(session, origin):
+				continue
+			if not OverworldRules.is_tile_explored(session, origin.x, origin.y):
+				continue
+			var target := _orthogonal_open_tile(session, origin, shell)
+			if target.x >= 0 and OverworldRules.is_tile_explored(session, target.x, target.y):
+				return origin
+	return Vector2i(-1, -1)
+
+func _diagonal_click_origin(session, shell: Node) -> Vector2i:
+	var map_size: Vector2i = OverworldRules.derive_map_size(session)
+	for y in range(map_size.y):
+		for x in range(map_size.x):
+			var origin := Vector2i(x, y)
+			if OverworldRules.tile_is_blocked(session, origin.x, origin.y) or _tile_has_fixture_object(session, origin):
+				continue
+			if not OverworldRules.is_tile_explored(session, origin.x, origin.y):
+				continue
+			var target := _diagonal_open_tile(session, origin, shell)
+			if target.x >= 0 and OverworldRules.is_tile_explored(session, target.x, target.y):
+				return origin
+	return Vector2i(-1, -1)
+
+func _diagonal_open_tile(session, start: Vector2i, shell: Node = null) -> Vector2i:
 	var map_size: Vector2i = OverworldRules.derive_map_size(session)
 	for offset in [Vector2i(-1, -1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(1, 1)]:
 		var tile: Vector2i = start + offset
@@ -5414,11 +5578,19 @@ func _diagonal_open_tile(session, start: Vector2i) -> Vector2i:
 			continue
 		if _tile_has_fixture_object(session, tile):
 			continue
+		# A town's footprint selects the town, and stepping into a guard's
+		# engagement zone starts its battle.
+		if shell != null and not shell.call("_town_footprint_selection", tile).is_empty():
+			continue
+		if not OverworldRules.guard_engagement_encounter_at_tile(session, tile.x, tile.y).is_empty():
+			continue
+		if OverworldRules.tile_step_cuts_blocked_corner(session, start, tile):
+			continue
 		return tile
 	return Vector2i(-1, -1)
 
 func _tile_has_fixture_object(session, tile: Vector2i) -> bool:
-	for collection_name in ["towns", "resource_sites", "artifacts", "encounters"]:
+	for collection_name in ["towns", "resource_nodes", "artifact_nodes", "encounters"]:
 		for entry in session.overworld.get(collection_name, []):
 			if entry is Dictionary and int(entry.get("x", -1)) == tile.x and int(entry.get("y", -1)) == tile.y:
 				return true

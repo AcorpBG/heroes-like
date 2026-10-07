@@ -1,21 +1,55 @@
 """Focused classification, raster provenance and reward-band invariants."""
 import json
+import os
 from pathlib import Path
+import shutil
 import subprocess
 import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
+VSWHERE = Path(os.environ.get('ProgramFiles(x86)', 'C:/Program Files (x86)')) / 'Microsoft Visual Studio/Installer/vswhere.exe'
+
+
+def _msvc_vcvars64():
+    if os.name != 'nt' or not VSWHERE.is_file():
+        return None
+    install = subprocess.run([str(VSWHERE), '-latest', '-products', '*', '-requires', 'Microsoft.VisualStudio.Component.VC.Tools.x86.x64', '-property', 'installationPath'], capture_output=True, text=True).stdout.strip()
+    vcvars = Path(install) / 'VC/Auxiliary/Build/vcvars64.bat' if install else None
+    return vcvars if vcvars and vcvars.is_file() else None
+
+
+def _build_probe(code, tmp):
+    """Compile a standalone probe with a c++ driver, or with MSVC on Windows like the native build."""
+    include = ROOT / 'src/gdextension/include'
+    compiler = next((name for name in ('c++', 'g++', 'clang++') if shutil.which(name)), None)
+    if compiler:
+        executable = Path(tmp) / 'probe'
+        subprocess.run([compiler, '-std=c++17', '-I', str(include), '-x', 'c++', '-', '-o', str(executable)], input=code, text=True, check=True)
+        return executable
+    vcvars = _msvc_vcvars64()
+    if vcvars is None:
+        raise unittest.SkipTest('no C++ compiler: needs a c++ driver, or the Visual Studio C++ build tools on Windows')
+    source, executable, script = Path(tmp) / 'probe.cpp', Path(tmp) / 'probe.exe', Path(tmp) / 'build.bat'
+    source.write_text(code)
+    # vcvars64 can leave a nonzero errorlevel on success, so only the compiler result counts.
+    script.write_text('\n'.join([
+        '@echo off',
+        f'call "{vcvars}" >nul 2>&1',
+        f'cl /nologo /std:c++17 /EHsc /I "{include}" "{source.name}" /Fe"{executable.name}"',
+        '',
+    ]), newline='\r\n')
+    subprocess.run(['cmd', '/d', '/c', str(script)], cwd=tmp, check=True, stdout=subprocess.DEVNULL)
+    return executable
 
 
 class ExplorationContract(unittest.TestCase):
     def test_shared_classifier_matches_original_art_inventory(self):
         manifest = json.loads((ROOT / 'art/overworld/native_scenery.json').read_text())
         types = sorted(map(int, manifest['source_types']))
-        code = '#include "runtime_object_classification.hpp"\n#include <iostream>\nint main(){for(int i=0;i<256;++i)if(std::string(aurelion::runtime_object_kind(i))=="decorative_obstacle")std::cout<<i<<"\\n";}\n'
+        code = '#include "runtime_object_classification.hpp"\n#include <iostream>\n#include <string>\nint main(){for(int i=0;i<256;++i)if(std::string(aurelion::runtime_object_kind(i))=="decorative_obstacle")std::cout<<i<<"\\n";}\n'
         with tempfile.TemporaryDirectory(prefix='heroes-scenery-classifier-') as tmp:
-            executable = Path(tmp) / 'probe'
-            subprocess.run(['c++', '-std=c++17', '-I', str(ROOT / 'src/gdextension/include'), '-x', 'c++', '-', '-o', str(executable)], input=code, text=True, check=True)
+            executable = _build_probe(code, tmp)
             actual = list(map(int, subprocess.check_output([str(executable)], text=True).split()))
         self.assertEqual(actual, types)
         self.assertTrue({116,121,126,127,128,130,131,132,133,151,153,158,206,208,209,211}.issubset(types))
@@ -41,7 +75,8 @@ class ExplorationContract(unittest.TestCase):
     def test_random_artifact_bands_are_populated_and_distinct(self):
         registry = json.loads((ROOT / 'content/random_map_object_eligibility.json').read_text())
         bands = registry['artifact_rarities_by_source_type']
-        self.assertEqual(bands, {'66':'common','67':'uncommon','68':'rare','69':'epic'})
+        # Corpse (22) and Shipwreck Survivor (86) give an uncommon artifact (docs/pickups-and-income-sites.md).
+        self.assertEqual(bands, {'22':'uncommon','66':'common','67':'uncommon','68':'rare','69':'epic','86':'uncommon'})
         artifacts = json.loads((ROOT / 'content/artifacts.json').read_text())['items']
         for source, rarity in bands.items():
             candidates = {a['id'] for a in artifacts if a['rarity'] == rarity}
@@ -83,7 +118,11 @@ class ExplorationContract(unittest.TestCase):
             self.assertFalse(obj['interaction']['remains_after_visit'])
             self.assertEqual(set(site['rewards']), {row['native_resource_id']})
             self.assertFalse(site.get('persistent_control') or site.get('control_income') or site.get('resource_outputs'))
-        for site_id in ['site_wood_wagon', 'site_ore_crates', 'site_aetherglass_lens_house', 'site_peatwax_reed_yard', 'site_embergrain_warm_granary', 'site_memory_salt_pan', 'site_reef_coin_assay']:
+        # Only mines produce (docs/pickups-and-income-sites.md); Wood Wagon and Ore Crates are plain one-time pickups.
+        for site_id in ['site_wood_wagon', 'site_ore_crates']:
+            site = sites[site_id]
+            self.assertFalse(site.get('persistent_control') or site.get('control_income') or site.get('resource_outputs'), site_id)
+        for site_id in ['site_brightwood_sawmill', 'site_ridge_quarry', 'site_aetherglass_lens_house', 'site_peatwax_reed_yard', 'site_embergrain_warm_granary', 'site_memory_salt_pan', 'site_reef_coin_assay']:
             self.assertTrue(sites[site_id]['persistent_control'], site_id)
 
     def test_live_site_contracts_not_stale_object_summaries_decide_eligibility(self):

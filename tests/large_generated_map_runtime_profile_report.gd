@@ -10,8 +10,13 @@ const PROFILE_ENV := "HEROES_PROFILE_LOG"
 # Player/team and native transit sidecars change the package fingerprint, not
 # the source map identity. The retained 2,961 source objects/terrain are checked
 # by tools/rmg_native_transit_validation.py --portal-case large_profile.
-const EXPECTED_MATERIALIZED_SIGNATURE := "79238f15"
-const EXPECTED_NATIVE_MAP_HASH := "fnv1a32:c2520619"
+# The fingerprint hashes the whole translated package, so runtime translation
+# changes (pickups, dwellings, visit buildings, transit objects) move it too.
+const EXPECTED_MATERIALIZED_SIGNATURE := "bc2931ff"
+# Final H3M payload plus player faction/hero. Player-facing catalog maps send
+# monster strength normal since 2026-09-18 (weak, the old implicit setting, still
+# reproduces fnv1a32:c2520619 for this seed).
+const EXPECTED_NATIVE_MAP_HASH := "fnv1a32:c07a0276"
 const COMMAND_LIMIT_MS := 5000.0
 const END_TURN_LIMIT_MS := 15000.0
 var _previous_profile_env := ""
@@ -252,14 +257,21 @@ func _profile_adjacent_move(shell: Node, session) -> Dictionary:
 		if OverworldRules.tile_is_blocked(session, target.x, target.y):
 			continue
 		shell.validation_reset_profile()
+		# Map orders are explicit: the first press only arms the route preview and
+		# pressing the same tile again commits the move.
 		var started := Time.get_ticks_usec()
+		shell.call("_on_map_tile_pressed", target)
+		var select_ms := _elapsed_ms(started)
+		var moved_on_select := OverworldRules.hero_position(session) != origin
 		shell.call("_on_map_tile_pressed", target)
 		var wall_ms := _elapsed_ms(started)
 		await get_tree().process_frame
 		return {
-			"ok": OverworldRules.hero_position(session) == target,
+			"ok": not moved_on_select and OverworldRules.hero_position(session) == target,
 			"from": {"x": origin.x, "y": origin.y},
 			"to": {"x": target.x, "y": target.y},
+			"moved_on_select": moved_on_select,
+			"select_ms": select_ms,
 			"wall_ms": wall_ms,
 			"profile": shell.validation_profile_snapshot(),
 		}

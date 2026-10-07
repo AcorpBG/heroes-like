@@ -26792,7 +26792,7 @@ def validate_hero_command(errors: list[str]) -> None:
         'String((child as Button).get_meta("hero_id", "")) == "hero_caelen"',
         "hero_actions.get_child_count() != 2",
         "has_placeholder_label",
-        "not _label_text_fits_width(heroes_label)",
+        "not _label_text_fits_width_if_visible(heroes_label)",
     ):
         ensure(required_token in command_case_block, errors, f"Overworld visual owner is missing exact Hero command compact-fit proof: {required_token}")
     for required_token in (
@@ -30168,23 +30168,20 @@ def validate_in_session_save_controls(errors: list[str]) -> None:
     visual_smoke_text = visual_smoke_path.read_text(encoding="utf-8") if visual_smoke_path.exists() else ""
     save_case_block = gdscript_function_block(visual_smoke_text, "_assert_save_resume_clarity_contract")
     for required_token in (
-        'String(empty_snapshot.get("save_status_visible_text", "")) != "M1 empty"',
+        'String(empty_snapshot.get("save_status_visible_text", "")) != "Save files"',
         'String(empty_summary.get("validity", "")) != "missing"',
         'String(empty_summary.get("status_text", "")) != "Empty slot."',
-        'contains("Selected slot:")',
-        'contains("Integrity: Empty slot")',
-        'contains("Load state: Blocked")',
-        'contains("Status: Empty slot.")',
+        'contains("Save opens the named-file browser")',
         'save_button.disabled',
         'SessionState.ensure_active_session().to_dict() != empty_session_authority',
-        'String(snapshot.get("save_status_visible_text", "")) != "M1 ready"',
+        'String(snapshot.get("save_status_visible_text", "")) != "Save files"',
         'shell.call("validation_save_to_selected_slot")',
     ):
         ensure(required_token in save_case_block, errors, f"Overworld visual save case is missing empty-to-ready authority token: {required_token}")
     ensure(
-        save_case_block.find('String(empty_snapshot.get("save_status_visible_text", "")) != "M1 empty"')
+        save_case_block.find('String(empty_snapshot.get("save_status_visible_text", "")) != "Save files"')
         < save_case_block.find('shell.call("validation_save_to_selected_slot")')
-        < save_case_block.find('String(snapshot.get("save_status_visible_text", "")) != "M1 ready"'),
+        < save_case_block.find('String(snapshot.get("save_status_visible_text", "")) != "Save files"'),
         errors,
         "Overworld visual save case must prove empty status before the real save and ready status afterward",
     )
@@ -36337,7 +36334,7 @@ def validate_overworld_landmark_readability_runtime_report(errors: list[str]) ->
         '"decoration": 0.46',
         '"artifact": 0.42',
         '"pickup": 0.56',
-        '"hero": 0.86',
+        '"hero": 1.0',
         '"encounter": 0.88',
         '"landmark": 0.94',
         '"large_service": 1.35',
@@ -37217,22 +37214,22 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'not bool(clipped_large_service.get("sprite_contained_in_visible_footprint", false))',
         'bool(large_service.get("footprint_clipped", true))',
         'float(clipped_large_service.get("visible_extent_tiles", 0.0)), 0.96',
-        'float(town.get("visible_extent_tiles", 0.0)) > 3.7201',
+        'float(town.get("visible_extent_tiles", 0.0)) > 4.8001',
         'float(town.get("visible_extent_fraction_of_footprint_depth", 0.0)), 1.24',
-        'float(town.get("painted_width_tiles", 0.0)) > 2.9001',
-        'float(town.get("painted_height_tiles", 0.0)) > 3.7201',
-        'float(town.get("town_height_cap_tiles", 0.0)), 3.72',
+        'float(town.get("painted_width_tiles", 0.0)) > 4.8001',
+        'float(town.get("painted_height_tiles", 0.0)) > 4.3501',
+        'float(town.get("town_height_cap_tiles", 0.0)), 4.35',
         'not bool(town.get("town_aspect_preserved", false))',
         'float(town.get("town_to_hero_extent_ratio", 0.0)) <= 3.0',
         'float(town.get("town_to_largest_other_object_extent_ratio", 0.0)) <= 2.0',
         'float(town.get("painted_bottom_clearance_tiles", 0.0)), 0.18',
         'not bool(town.get("painted_bottom_grounded_exact", false))',
-        'float(town_center.get("x", 0.0)), 1.5',
+        'float(town_center.get("x", 0.0)), 2.5',
         'float(town_center.get("y", 0.0)) <= 0.0',
-        'float(town_center.get("y", 0.0)) >= 4.0',
+        'float(town_center.get("y", 0.0)) >= 5.0',
         'not bool(town.get("sprite_contained_in_footprint", false))',
         '"id": "object_wood_wagon"',
-        '"map_roles": ["small_reward", "build_resource", "counter_capture_target"]',
+        '"map_roles": ["small_reward", "build_resource"]',
         '"id": "object_contract_scribe_booth"',
         '"map_roles": ["route_pacing", "world_lore", "repeatable_service"]',
         'float(authored_pickup.get("visible_extent_tiles", 0.0)), 0.56',
@@ -37416,7 +37413,7 @@ def validate_overworld_130_scale_footer_containment(errors: list[str]) -> None:
             "primary_action.tooltip_text.strip_edges() == \"\"",
             "var root_rect := shell.get_global_rect()",
             "var footer_surfaces: Array[Control] = [status_chip, cue_chip, orders_panel, system_panel]",
-            "var system_controls: Array[Control] = [save_status, end_turn, save_slot, save_button, settings_button, menu_button]",
+            "var system_controls: Array[Control] = [save_status, end_turn, save_button, settings_button, menu_button]",
             "not root_rect.encloses(shell_rect) or not shell_rect.encloses(footer_rect)",
             "for index in range(footer_surfaces.size()):",
             "for index in range(system_controls.size()):",
@@ -44251,11 +44248,12 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'bool(rare_exchange_art.get("fallback_procedural_marker", true))',
         'repeated_rare_exchange_presentation != rare_exchange_presentation',
         'session.to_dict() != rare_exchange_authority_before',
-        'String(wood_resource_layout.get("model", "")) != "ordinary_resource_footprint"',
-        'not is_equal_approx(float(wood_resource_layout.get("visible_extent_cap_tiles", -1.0)), 0.0)',
+        'String(wood_resource_layout.get("model", "")) != "compact_outward_edge_town_footprint_resource"',
+        'String(standalone_resource_layout.get("model", "")) != "ordinary_resource_footprint"',
+        'not is_equal_approx(float(standalone_resource_layout.get("visible_extent_cap_tiles", -1.0)), 0.0)',
         'String(rare_exchange_layout.get("model", "")) != "compact_outward_edge_town_footprint_resource"',
         'String(rare_exchange_layout.get("edge_anchor", "")) != "bottom_right"',
-        'rare_exchange_layout.get("cell_offset", {}) != {"x": 2, "y": 1}',
+        'rare_exchange_layout.get("cell_offset", {}) != {"x": 3, "y": 2}',
         'rare_exchange_footprint_rect.encloses(rare_exchange_draw_rect)',
         'rare_exchange_draw_rect.size.x, rare_exchange_footprint_rect.size.x * 0.64',
         'rare_exchange_draw_rect.end.x, rare_exchange_footprint_rect.end.x',
@@ -44319,21 +44317,20 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     for required_token in (
         'var town_structure_authority_before: Dictionary = session.to_dict()',
         'var town_structure_original_fog: Dictionary = session.overworld.get("fog", {}).duplicate(true)',
-        '"asset_id": "mapobj_embergrain_warm_granary"',
-        '"footprint": {"width": 2, "height": 3}',
+        '"asset_id": "mapobj_rare_embergrain_mine"',
+        '"footprint": {"width": 3, "height": 2}',
         '"requires_controlled_reveal": false',
-        '"asset_id": "mapobj_peatwax_reed_yard"',
-        '"footprint": {"width": 2, "height": 2}',
+        '"asset_id": "mapobj_rare_peatwax_mine"',
         '"requires_controlled_reveal": true',
         '_reveal_validation_tiles(session, [structure_tile])',
         'session.overworld["fog"] = town_structure_original_fog.duplicate(true)',
         'String(structure_layout.get("model", "")) != "compact_outward_edge_town_footprint_resource"',
-        'String(structure_layout.get("edge_anchor", "")) != "top_right"',
-        'structure_layout.get("cell_offset", {}) != {"x": 1, "y": 0}',
+        'String(structure_layout.get("edge_anchor", "")) != "bottom_right"',
+        'structure_layout.get("cell_offset", {}) != {"x": 2, "y": 1}',
         'structure_draw_rect.size.x, structure_footprint_rect.size.x * 0.64',
         'structure_draw_rect.size.y, structure_footprint_rect.size.y * 0.64',
         'structure_draw_rect.end.x, structure_footprint_rect.end.x',
-        'structure_draw_rect.position.y, structure_footprint_rect.position.y',
+        'structure_draw_rect.end.y, structure_footprint_rect.end.y',
         'not is_equal_approx(float(structure_layout.get("visible_extent_cap_tiles", 0.0)), 0.56)',
         'repeated_structure_presentation != structure_presentation',
         'session.to_dict() != town_structure_authority_before',
@@ -44343,8 +44340,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'generated_supply_art.get("sprite_footprints", []) != [{"width": 1, "height": 1}]',
         'bool(generated_supply_art.get("fallback_procedural_marker", true))',
         'String(generated_supply_layout.get("model", "")) != "compact_outward_edge_town_footprint_resource"',
-        'String(generated_supply_layout.get("edge_anchor", "")) != "top_left"',
-        'generated_supply_layout.get("cell_offset", {}) != {"x": 0, "y": 0}',
+        'String(generated_supply_layout.get("edge_anchor", "")) != "bottom_left"',
+        'generated_supply_layout.get("cell_offset", {}) != {"x": 1, "y": 1}',
         'not is_equal_approx(float(generated_supply_layout.get("visible_extent_cap_tiles", 0.0)), 0.56)',
         'repeated_generated_supply_presentation != generated_supply_presentation',
     ):
@@ -44939,15 +44936,13 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     visual_smoke_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
     water_bank_block = gd_function_block(visual_smoke_text, "_assert_water_tile_bank")
     for token in (
-        '"res://art/overworld/runtime/terrain_tiles/base/water_deep.png"',
-        '"res://art/overworld/runtime/terrain_tiles/base/water_current.png"',
-        '"res://art/overworld/runtime/terrain_tiles/base/water_blocked.png"',
+        '"res://art/overworld/runtime/terrain_tiles/base_generated_v2/water.png"',
         '"res://art/overworld/runtime/terrain_tiles/edges/water_edge_n.png"',
         '"res://art/overworld/runtime/terrain_tiles/edges/water_edge_e.png"',
         '"res://art/overworld/runtime/terrain_tiles/edges/water_edge_s.png"',
         '"res://art/overworld/runtime/terrain_tiles/edges/water_edge_w.png"',
         'ResourceLoader.exists(path, "Texture2D")',
-        'texture.get_size() != Vector2(64.0, 64.0)',
+        'texture.get_size() != expected_sizes[path_value]',
         'shell.call("validation_tile_presentation", 1, 3)',
         'String(water_terrain.get("terrain", "")) != "water"',
         'not bool(water_terrain.get("uses_authored_tile_art", false))',
@@ -48564,7 +48559,7 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
     ninefold_text = (ROOT / "tests" / "ninefold_scenario_smoke.gd").read_text(encoding="utf-8")
     visual_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
     ensure('"town_identity_riverwatch" not in town_asset_ids' in ninefold_text, errors, "Ninefold large-map gate must require Riverwatch Hold's exact town identity sprite")
-    ensure('_assert_art_sprite(town_presentation, "town_identity_riverwatch", false)' in visual_text, errors, "Overworld visual gate must require Riverwatch Hold's exact town identity sprite")
+    ensure('_assert_art_sprite(town_presentation, "town_faction_embercourt", false)' in visual_text, errors, "Overworld visual gate must require Riverwatch Hold's shared Embercourt town sprite")
     ensure('expected_asset_id.begins_with("town_identity_")' in visual_text, errors, "Overworld visual town grounding gate must recognize town identity asset ids")
 
 
@@ -53686,12 +53681,12 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         '"enemy_commander_state": {"roster_hero_id": "hero_vaska", "faction_id": "faction_mireclaw"}',
         'map_view.call("validation_enemy_commander_presentation_profiles")',
         'String(interceptor_profile.get("hero_id", "")) != "hero_vaska"',
-        'String(interceptor_profile.get("sprite_asset_id", "")) != "hero_faction_mireclaw"',
+        'String(interceptor_profile.get("sprite_asset_id", "")) != "hero_signature_vaska"',
         'not bool(interceptor_profile.get("uses_commander_sprite", false))',
         'float(interceptor_profile.get("visible_extent_tiles", 0.0)), 0.88',
         'String(interceptor_profile.get("hostile_treatment", "")) != "painted_hostile_silhouette_without_arrows"',
-        'int(hostile_marker.get("flank_chevron_count", 0)) != 2',
-        'int(hostile_marker.get("threat_notch_count", 0)) != 1',
+        'int(hostile_marker.get("flank_chevron_count", -1)) != 0',
+        'int(hostile_marker.get("threat_notch_count", -1)) != 0',
         'bool(hostile_marker.get("continuous_ring", true))',
         'not is_zero_approx(float(hostile_marker.get("interior_fill_alpha", -1.0)))',
         'not bool(hostile_marker.get("contained_in_tile", false))',

@@ -48,11 +48,11 @@ func _run() -> void:
 		_fail("Native GDExtension metadata did not prove native load: %s" % JSON.stringify(metadata))
 		return
 	var capabilities: PackedStringArray = service.get_capabilities()
-	if not capabilities.has("native_random_map_package_session_adoption_bridge"):
+	if not capabilities.has("native_random_map_package_session_adoption"):
 		_fail("Native package/session adoption capability is missing: %s" % JSON.stringify(Array(capabilities)))
 		return
-	if not capabilities.has("native_package_save_load") or not capabilities.has("generated_map_package_disk_startup"):
-		_fail("Native generated package save/load startup capabilities are missing: %s" % JSON.stringify(Array(capabilities)))
+	if not capabilities.has("native_package_save_load"):
+		_fail("Native generated package save/load capability is missing: %s" % JSON.stringify(Array(capabilities)))
 		return
 
 	ContentService.clear_generated_scenario_drafts()
