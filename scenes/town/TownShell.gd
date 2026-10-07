@@ -40,6 +40,23 @@ const TOWN_MANAGEMENT_TAB_STATE_STYLES := [
 	&"tab_unselected",
 	&"tab_disabled",
 ]
+# Session entries the consequence stamp does not hash: large package and map
+# data that no town order changes, and the action recaps an order itself
+# writes, which the consequence signature never reads.
+const CONSEQUENCE_STAMP_SKIPPED_KEYS := [
+	"map",
+	"terrain_layers",
+	"map_objects",
+	"package_source_objects_by_id",
+	"package_source_object_ids",
+	"native_random_map_runtime_scenario_record",
+	"generated_random_map_provenance",
+	"generated_random_map_replay_metadata",
+	"native_random_map_package_session_adoption",
+	"last_town_action_recap",
+	"last_overworld_action_recap",
+	"last_battle_action_recap",
+]
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 
 @onready var _banner_panel: PanelContainer = %Banner
@@ -301,6 +318,11 @@ var _validation_management_tab_focus_handoff_count := 0
 var _validation_management_tab_boundary_retain_count := 0
 var _last_management_tab_change_result: Dictionary = {}
 var _unit_art_textures: Dictionary = {}
+var _validation_muster_card_rebuild_count := 0
+var _validation_town_entity_build_count := 0
+var _validation_consequence_signature_reuse_count := 0
+var _remembered_consequence_signature_entry := {}
+var _validation_muster_card_update_count := 0
 var _unit_art_texture_missing: Dictionary = {}
 var _save_written_cue_presenter: SystemSaveWrittenCuePresenter
 var _load_resumed_cue_presenter: SystemLoadResumedCuePresenter
@@ -609,8 +631,7 @@ func _fit_building_popout() -> void:
 	_town_catalog_panel.custom_minimum_size.y = clampf(content.get_combined_minimum_size().y + chrome + 8.0, 480.0, cap)
 
 func _on_building_recruit_requested(unit_id: String, count: int) -> void:
-	_on_recruit_action_pressed(unit_id, count)
-	_refresh_building_information()
+	_commit_recruit_order(unit_id, count, true)
 
 func _on_building_hire_requested(hero_id: String) -> void:
 	_on_tavern_action_pressed("hire_hero:%s" % hero_id)
@@ -803,16 +824,80 @@ func _prepare_build_read_context(action_id: String) -> Dictionary:
 	OverworldRules.end_normalized_read_scope(_session)
 	return {"selected": selected, "before": before, "action": action}
 
-func _prepare_order_read_context(action_id: String) -> Dictionary:
+func _prepare_order_read_context(action_id: String, lane: String = "") -> Dictionary:
 	# The signature and catalog share many town/world reads. Their cache lives
 	# only for this synchronous preflight and MUST end before the order mutates.
 	OverworldRules.begin_normalized_read_scope(_session)
 	TownRules.begin_read_scope(_session)
-	var before := TownRules.town_action_consequence_signature(_session)
-	var action := _validation_action_for_id(action_id)
+	var before := _remembered_consequence_signature()
+	if before.is_empty():
+		before = TownRules.town_action_consequence_signature(_session)
+	var action := _order_action_for_id(action_id, lane) if lane != "" else _validation_action_for_id(action_id)
 	TownRules.end_read_scope(_session)
 	OverworldRules.end_normalized_read_scope(_session)
 	return {"before": before, "action": action}
+
+## The enabled action with this id from one order lane. Action ids carry their
+## lane prefix, so this matches _validation_action_for_id without building
+## every other lane's actions.
+func _order_action_for_id(action_id: String, lane: String) -> Dictionary:
+	var actions: Array = TownRules.get_recruit_actions(_session) if lane == "recruit" else validation_action_catalog().get(lane, [])
+	for action in actions:
+		if not (action is Dictionary) or bool(action.get("disabled", false)) or String(action.get("id", "")) != action_id:
+			continue
+		var result: Dictionary = action.duplicate(true)
+		result["lane"] = lane
+		return result
+	return {}
+
+## The consequence signature read right after an order is the next order's
+## "before" while nothing has changed since. The stamp hashes the session's
+## mutable state (every overworld entry except the static map package data,
+## the flags and the day); any change, including direct edits, misses.
+func _remember_consequence_signature(signature: Dictionary) -> void:
+	_remembered_consequence_signature_entry = {} if signature.is_empty() else {
+		"stamp": _consequence_state_stamp(),
+		"signature": signature.duplicate(true),
+	}
+
+## Reads the current consequence signature while a refresh's read scope still
+## holds the town reads it shares, so even the first order after entering the
+## town or after another order skips a cold preflight read.
+func _prime_consequence_signature() -> void:
+	if _session == null or TownRules.get_active_town(_session).is_empty():
+		return
+	if not _remembered_consequence_signature_entry.is_empty() and _remembered_consequence_signature_entry.get("stamp", []) == _consequence_state_stamp():
+		return
+	_remember_consequence_signature(TownRules.town_action_consequence_signature(_session))
+
+func _remembered_consequence_signature() -> Dictionary:
+	if _remembered_consequence_signature_entry.is_empty() or _session == null:
+		return {}
+	if _remembered_consequence_signature_entry.get("stamp", []) != _consequence_state_stamp():
+		_remembered_consequence_signature_entry = {}
+		return {}
+	_validation_consequence_signature_reuse_count += 1
+	return (_remembered_consequence_signature_entry.get("signature", {}) as Dictionary).duplicate(true)
+
+func _consequence_state_stamp() -> Array:
+	var stamp := [
+		_session.get_instance_id(),
+		String(_session.session_id),
+		String(_session.scenario_id),
+		String(_session.hero_id),
+		String(_session.difficulty),
+		String(_session.launch_mode),
+		String(_session.game_state),
+		String(_session.scenario_status),
+		int(_session.day),
+	]
+	for source in [_session.flags, _session.overworld]:
+		for key in source.keys():
+			if String(key) in CONSEQUENCE_STAMP_SKIPPED_KEYS:
+				continue
+			stamp.append(String(key))
+			stamp.append(hash(source[key]))
+	return stamp
 
 func _read_action_consequence_signature() -> Dictionary:
 	OverworldRules.begin_normalized_read_scope(_session)
@@ -823,17 +908,54 @@ func _read_action_consequence_signature() -> Dictionary:
 	return signature
 
 func _on_recruit_action_pressed(action_id: String, count: int = -1) -> void:
+	_commit_recruit_order(action_id, count, false)
+
+## One recruit order from the Muster Hall, a dwelling popout or the order rail.
+## The preflight reads close before the order mutates; everything after it only
+## reads the new state, so the recap, the town refresh, the open popout and the
+## presentation share one read scope instead of recomputing the same rules.
+func _commit_recruit_order(action_id: String, count: int, refresh_popout: bool) -> void:
+	var profile_started := ProfileLogScript.begin_usec()
+	var phase_started := profile_started
+	var buckets := {}
 	var full_action_id := "recruit:%s" % action_id
-	var context := _prepare_order_read_context(full_action_id)
+	var context := _prepare_order_read_context(full_action_id, "recruit")
 	var before: Dictionary = context.before
 	var action: Dictionary = context.action
-	var result := TownRules.recruit_active_town(_session, action_id, count)
-	_record_town_action_result("recruit", full_action_id, action, result, before)
+	buckets["prepare"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
+	# The preflight scope just runtime-normalized this session.
+	var result := TownRules.recruit_active_town(_session, action_id, count, true)
+	buckets["rules"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
+	OverworldRules.begin_normalized_read_scope(_session)
+	TownRules.begin_read_scope(_session)
+	var after := TownRules.town_action_consequence_signature(_session) if bool(result.get("ok", false)) else {}
+	_remember_consequence_signature(after)
+	_record_town_action_result("recruit", full_action_id, action, result, before, after)
+	buckets["recap"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
 	_invalidate_active_town_entity_cache("recruit", ["town", "economy", "hero_army"])
 	if _handle_session_resolution():
+		TownRules.end_read_scope(_session)
+		OverworldRules.end_normalized_read_scope(_session)
 		return
 	_refresh()
-	_record_town_action_presentation("recruit", full_action_id, action, result, before)
+	buckets["refresh"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
+	if refresh_popout:
+		_refresh_building_information()
+	buckets["popout"] = ProfileLogScript.elapsed_ms(phase_started)
+	phase_started = ProfileLogScript.begin_usec()
+	_record_town_action_presentation("recruit", full_action_id, action, result, before, after)
+	TownRules.end_read_scope(_session)
+	OverworldRules.end_normalized_read_scope(_session)
+	buckets["presentation"] = ProfileLogScript.elapsed_ms(phase_started)
+	ProfileLogScript.emit_general("town", "action", "recruit_commit", ProfileLogScript.elapsed_ms(profile_started), buckets, {
+		"action_id": full_action_id,
+		"result_ok": bool(result.get("ok", false)),
+		"surface": "building_popout" if refresh_popout else ("muster" if _town_catalog_mode == "muster" else "order"),
+	}, _session)
 
 func _on_market_action_pressed(action_id: String) -> void:
 	var context := _prepare_order_read_context(action_id)
@@ -1170,6 +1292,11 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	_transfer_label.tooltip_text = String(view_state.get("transfer_tooltip_text", ""))
 	_set_compact_label(_response_label, String(view_state.get("response_visible_text", "")), 2)
 	_response_label.tooltip_text = String(view_state.get("response_tooltip_text", ""))
+	# The open Muster Hall and Town Log use this label as a section caption; an
+	# order made there must not replace it with the hidden readiness copy.
+	var response_caption := _open_catalog_response_caption()
+	if response_caption != "":
+		_response_label.text = response_caption
 	_set_compact_label(_study_label, String(view_state.get("study_visible_text", "")), 2)
 	_study_label.tooltip_text = String(view_state.get("study_tooltip_text", ""))
 	_set_compact_label(_spellbook_label, String(view_state.get("spellbook_text", "")), 2)
@@ -1181,6 +1308,8 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	var dispatch_text := String(view_state.get("dispatch_text", ""))
 	var order_target: Dictionary = view_state.get("order_target", {}) if view_state.get("order_target", {}) is Dictionary else {}
 	var town_context_surface: Dictionary = view_state.get("town_context_surface", {}) if view_state.get("town_context_surface", {}) is Dictionary else {}
+	if not town_context_surface.is_empty() and _event_label.visible and not bool(town_context_surface.get("save_context_included", true)):
+		town_context_surface = _town_action_context_surface(dispatch_text)
 	if town_context_surface.is_empty():
 		_set_compact_label(_event_label, "%s\n%s" % [String(order_target.get("visible_text", "")), dispatch_text], 2)
 		_event_label.tooltip_text = _join_tooltip_sections([
@@ -1211,6 +1340,9 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	else:
 		_refresh_management_tab_cues()
 	buckets["tabs"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
+	_prime_consequence_signature()
+	buckets["order_preflight_prime"] = ProfileLogScript.elapsed_ms(section_started)
 	TownRules.end_read_scope(_session)
 	OverworldRules.end_normalized_read_scope(_session)
 	var rules_read_cache := OverworldRules.validation_last_normalized_read_scope_cache_profile()
@@ -1509,6 +1641,17 @@ func _rebuild_current_action_surfaces(view_state: Dictionary, minimal: bool) -> 
 		_rebuild_response_actions(view_state.get("response_actions", []))
 		_rebuild_artifact_actions(view_state.get("artifact_actions", []))
 
+func _open_catalog_response_caption() -> String:
+	if not _town_catalog_is_open():
+		return ""
+	match _town_catalog_mode:
+		"muster":
+			return "Upgrade stationed troops"
+		"log":
+			return "Hero training and town services"
+		_:
+			return ""
+
 func _open_town_catalog_lanes() -> Array:
 	# Mirrors the lanes _open_town_catalog populates for each dialog mode.
 	if not _town_catalog_is_open():
@@ -1572,6 +1715,7 @@ func _active_town_entity_view_state(town: Dictionary, minimal: bool = false) -> 
 	var build_started := ProfileLogScript.begin_usec()
 	var view_state := _build_active_town_entity_view_state(minimal)
 	var build_ms := ProfileLogScript.elapsed_ms(build_started)
+	_validation_town_entity_build_count += 1
 	bucket[cache_key] = {
 		"signature": signature,
 		"view_state": view_state.duplicate(true),
@@ -1637,7 +1781,7 @@ func _refresh_active_town_dynamic_view_state(view_state: Dictionary, town: Dicti
 	view_state["departure"] = departure
 	var dispatch_text := _cached_dispatch_dynamic(String(view_state.get("dispatch_text", "")), departure, town)
 	view_state["dispatch_text"] = dispatch_text
-	view_state["town_context_surface"] = {} if minimal else _town_action_context_surface(dispatch_text)
+	view_state["town_context_surface"] = {} if minimal else _town_action_context_surface(dispatch_text, _event_label.visible)
 	if not minimal:
 		view_state["hero_actions"] = _duplicate_action_array(view_state.get("hero_actions", []))
 		view_state["specialty_actions"] = _duplicate_action_array(view_state.get("specialty_actions", []))
@@ -2482,7 +2626,7 @@ func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 	_last_departure_confirmation = departure.duplicate(true)
 	var order_target := TownRules.town_order_target_handoff(_session)
 	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
-	var town_context_surface := {} if minimal else _town_action_context_surface(dispatch_text)
+	var town_context_surface := {} if minimal else _town_action_context_surface(dispatch_text, _event_label.visible)
 	build_buckets["readiness_and_descriptions"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
 	var view_state := {
@@ -2690,7 +2834,13 @@ func _town_economy_context_signature() -> String:
 		"active_hero_level": int(hero.get("level", 0)),
 		"active_hero_command": _duplicate_dictionary(hero.get("command", {})),
 	}
-	return JSON.stringify(context).sha256_text()
+	# Every refresh hashes all sites and encounters. Their binary encoding hashes
+	# several times faster than a key-sorted JSON text; equal bytes still mean
+	# equal state, and a reordered but equal state only costs one rebuild.
+	var hashing := HashingContext.new()
+	hashing.start(HashingContext.HASH_SHA256)
+	hashing.update(var_to_bytes(context))
+	return hashing.finish().hex_encode()
 
 func _hero_roster_cache_signature() -> String:
 	# Durable hero state only. Movement and map position change on every overworld
@@ -3874,17 +4024,20 @@ func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
 	var destination_summary := String(HeroCommandRules.town_recruitment_destination(_session, TownRules.get_active_town(_session)).summary)
 	if _town_catalog_mode == "muster":
 		_town_catalog_subtitle_label.text = destination_summary
+	var actions = actions_override if actions_override is Array and _catalog_rows_are_complete(actions_override, "unit_id") else TownRules.get_muster_catalog(_session)
+	var resources: Dictionary = _session.overworld.get("resources", {}) if _session.overworld.get("resources", {}) is Dictionary else {}
+	if _update_recruit_cards_in_place(actions, resources, destination_summary):
+		return
+	_validation_muster_card_rebuild_count += 1
 	for child in _recruit_actions.get_children():
 		_recruit_actions.remove_child(child)
 		child.queue_free()
 
-	var actions = actions_override if actions_override is Array and _catalog_rows_are_complete(actions_override, "unit_id") else TownRules.get_muster_catalog(_session)
 	if actions.is_empty():
 		_recruit_actions.add_child(_make_placeholder_label("No recruits waiting"))
 		return
 
 	# The same recruit cards as the dwelling popouts, in a compact two-up grid.
-	var resources: Dictionary = _session.overworld.get("resources", {}) if _session.overworld.get("resources", {}) is Dictionary else {}
 	for action in actions:
 		if not (action is Dictionary):
 			continue
@@ -3895,6 +4048,29 @@ func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
 		_recruit_actions.add_child(card)
 	if _town_catalog_mode == "muster":
 		call_deferred("_fit_building_popout")
+
+## After an order the Muster Hall usually lists the same creatures: update
+## their cards in place (reserve, price, stores, slider, button) instead of
+## re-creating every portrait, stat grid and ability line. A different line-up
+## or price falls back to a full rebuild.
+func _update_recruit_cards_in_place(actions: Array, resources: Dictionary, destination_summary: String) -> bool:
+	var cards := _recruit_actions.get_children()
+	if actions.is_empty() or cards.size() != actions.size():
+		return false
+	var models := []
+	for index in range(actions.size()):
+		var action_value: Variant = actions[index]
+		var card: Node = cards[index]
+		if not (action_value is Dictionary) or not (card is TownRecruitCardScript) or card.is_queued_for_deletion():
+			return false
+		var model := TownBuildingPanelScript.recruit_card(action_value)
+		if String(model.get("unit_id", "")) != String(card.unit_id) or model.get("unit_cost", {}) != card.card_model().get("unit_cost", {}):
+			return false
+		models.append(model)
+	for index in range(actions.size()):
+		cards[index].update_state(models[index], resources, _catalog_muster_tooltip(actions[index], destination_summary))
+	_validation_muster_card_update_count += 1
+	return true
 
 func _catalog_muster_tooltip(action: Dictionary, destination_summary: String = "") -> String:
 	var unit_cost := TownRules._describe_resources(action.get("unit_cost", {}))
@@ -5380,13 +5556,14 @@ func _record_town_action_result(
 	action_id: String,
 	action: Dictionary,
 	result: Dictionary,
-	before: Dictionary
+	before: Dictionary,
+	after: Dictionary = {}
 ) -> void:
 	var profile_started := ProfileLogScript.begin_usec()
 	_last_message = String(result.get("message", ""))
 	OverworldRules.begin_normalized_read_scope(_session)
 	TownRules.begin_read_scope(_session)
-	_last_action_recap = TownRules.build_town_action_recap(_session, lane, action_id, action, result, before)
+	_last_action_recap = TownRules.build_town_action_recap(_session, lane, action_id, action, result, before, after)
 	TownRules.end_read_scope(_session)
 	OverworldRules.end_normalized_read_scope(_session)
 	if bool(_last_action_recap.get("active", false)):
@@ -5413,13 +5590,14 @@ func _record_town_action_presentation(
 	action_id: String,
 	action: Dictionary,
 	result: Dictionary,
-	before: Dictionary
+	before: Dictionary,
+	after_signature: Dictionary = {}
 ) -> void:
 	if lane not in ["build", "recruit", "response", "market", "study", "tavern", "specialty", "transfer"] or not bool(result.get("ok", false)):
 		return
 	if _town_stage_view == null or not _town_stage_view.has_method("present_town_action"):
 		return
-	var after := _read_action_consequence_signature()
+	var after := after_signature.duplicate() if not after_signature.is_empty() else _read_action_consequence_signature()
 	if lane == "study":
 		after["known_spell_ids"] = _town_active_known_spell_ids()
 	elif lane == "tavern":
@@ -6032,7 +6210,11 @@ func _texture_from_path(path: String):
 func _set_compact_label(label: Label, full_text: String, max_lines: int) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines)
 
-func _town_action_context_surface(dispatch_text: String = "") -> Dictionary:
+## `include_save_context` adds the "Saving now" lines, which build a detached
+## copy of the whole session. Town refreshes pass it only while the event
+## strip that shows this tooltip is visible; _refresh() completes a cached
+## surface that lacks it once the strip shows, and snapshots always include it.
+func _town_action_context_surface(dispatch_text: String = "", include_save_context: bool = true) -> Dictionary:
 	if _last_action_recap.is_empty():
 		return {}
 	var latest_action := String(_last_action_recap.get("happened", "")).strip_edges()
@@ -6054,7 +6236,7 @@ func _town_action_context_surface(dispatch_text: String = "") -> Dictionary:
 		visible,
 		_short_text(_strip_sentence(next_step).trim_suffix("."), 36),
 	]
-	var save_surface := _town_save_surface_for_context(true)
+	var save_surface := _town_save_surface_for_context(true) if include_save_context else {}
 	var save_lines := []
 	var save_check := String(save_surface.get("save_check", "")).strip_edges()
 	var save_recap := String(save_surface.get("current_save_recap", "")).strip_edges()
@@ -6081,6 +6263,7 @@ func _town_action_context_surface(dispatch_text: String = "") -> Dictionary:
 		"next_step": next_step,
 		"handoff_check": handoff_check,
 		"source": "town_action_recap",
+		"save_context_included": include_save_context,
 	}
 
 func _town_save_surface_for_context(force_surface: bool) -> Dictionary:

@@ -16,17 +16,68 @@ static func faction_id(town: Dictionary) -> String:
 static func is_current(town: Dictionary) -> bool:
 	return int(ContentService.get_town(String(town.get("town_id", ""))).get("development_version", 0)) == 1
 
+## Town screens ask for the active stages and requirement checks hundreds of
+## times per refresh (every build status, growth, income and tier check). The
+## answers depend only on the town template, the built list and authored
+## content, so they are memoized by those and dropped whenever the content
+## cache reloads. Callers get copies.
+static var _active_memo := {}
+static var _satisfied_memo := {}
+static var _memo_sources := []
+
+static func _sync_memo_sources() -> void:
+	var sources := [
+		ContentService.get_content_revision(),
+		ContentService.load_json(ContentService.BUILDINGS_PATH),
+		ContentService.load_json(ContentService.TOWNS_PATH),
+		data(),
+	]
+	if _memo_sources.size() != sources.size() or _memo_sources[0] != sources[0] or not is_same(_memo_sources[1], sources[1]) or not is_same(_memo_sources[2], sources[2]) or not is_same(_memo_sources[3], sources[3]):
+		_active_memo = {}
+		_satisfied_memo = {}
+		_memo_sources = sources
+
 static func satisfies(built: Array, required: String) -> bool:
+	return _satisfied_ids(built).has(required)
+
+## Every building a built list satisfies: each built stage and the stages it
+## upgraded from.
+static func _satisfied_ids(built: Array) -> Dictionary:
+	_sync_memo_sources()
+	var key_parts := PackedStringArray()
+	for id in built:
+		key_parts.append(String(id))
+	var key := "|".join(key_parts)
+	if _satisfied_memo.has(key):
+		return _satisfied_memo[key]
+	var ids := {}
 	for id in built:
 		var cursor := String(id)
-		var seen := {}
-		while cursor != "" and not seen.has(cursor):
-			if cursor == required: return true
-			seen[cursor] = true
+		while cursor != "" and not ids.has(cursor):
+			ids[cursor] = true
 			cursor = String(ContentService.get_building(cursor).get("upgrade_from", ""))
-	return false
+	if _satisfied_memo.size() > 512:
+		_satisfied_memo = {}
+	_satisfied_memo[key] = ids
+	return ids
 
 static func active_buildings(town: Dictionary) -> Array:
+	_sync_memo_sources()
+	var built_value: Variant = town.get("built_buildings", [])
+	var key_parts := PackedStringArray([String(town.get("town_id", ""))])
+	if built_value is Array:
+		for value in built_value:
+			key_parts.append(String(value))
+	var key := "|".join(key_parts)
+	if _active_memo.has(key):
+		return (_active_memo[key] as Array).duplicate()
+	var active := _compute_active_buildings(town)
+	if _active_memo.size() > 256:
+		_active_memo = {}
+	_active_memo[key] = active.duplicate()
+	return active
+
+static func _compute_active_buildings(town: Dictionary) -> Array:
 	var template := ContentService.get_town(String(town.get("town_id", "")))
 	var result: Array = []
 	var mapping: Dictionary = data().get("migration", {}).get(faction_id(town), {})

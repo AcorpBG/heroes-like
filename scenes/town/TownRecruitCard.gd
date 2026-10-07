@@ -20,18 +20,29 @@ var max_button: Button
 var _title: Label
 var _card: Dictionary = {}
 var _resources: Dictionary = {}
+var _compact := false
+var _portrait: TextureRect
+var _order: VBoxContainer
+var _growth: Label
+var _each: HBoxContainer
+var _cost: HBoxContainer
+var _reason: Label
+var _trade: Button
 
 ## `card` is a TownBuildingPanel recruit card. Compact cards (Muster Hall) use
 ## a smaller portrait and short stat names so two fit side by side.
 func configure(card: Dictionary, resources: Dictionary, compact: bool = false, portrait_tooltip: String = "") -> void:
 	_card = card.duplicate(true)
 	_resources = resources.duplicate(true)
+	_compact = compact
 	unit_id = String(card.get("unit_id", ""))
 	name = "Recruit_%s" % unit_id
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	for child in get_children():
 		remove_child(child)
 		child.queue_free()
+	_reason = null
+	_trade = null
 	var max_now := int(card.get("max_now", 0))
 	Widgets.apply_card(self, "green" if max_now > 0 else "ink", 10 if compact else 12)
 	var row := HBoxContainer.new()
@@ -46,6 +57,7 @@ func configure(card: Dictionary, resources: Dictionary, compact: bool = false, p
 	portrait.tooltip_text = portrait_tooltip
 	portrait.mouse_filter = Control.MOUSE_FILTER_PASS if portrait_tooltip != "" else Control.MOUSE_FILTER_IGNORE
 	row.add_child(portrait)
+	_portrait = portrait
 
 	var info := VBoxContainer.new()
 	info.name = "Info"
@@ -97,14 +109,17 @@ func configure(card: Dictionary, resources: Dictionary, compact: bool = false, p
 	order.custom_minimum_size = Vector2(200 if compact else 230, 0)
 	order.add_theme_constant_override("separation", 4 if compact else 6)
 	row.add_child(order)
-	var growth := "%d available · +%d per week" % [int(card.get("available", 0)), int(card.get("weekly_growth", 0))]
-	order.add_child(Widgets.label(growth, "body", 13 if compact else 14))
+	_order = order
+	_growth = Widgets.label(_growth_text(card), "body", 13 if compact else 14)
+	order.add_child(_growth)
 	var each := HBoxContainer.new()
 	each.name = "Each"
 	each.add_theme_constant_override("separation", 6)
 	each.add_child(Widgets.label("Each", "muted", 12 if compact else 13))
-	each.add_child(Widgets.cost_row(card.get("unit_cost", {}), _resources, 1, 13 if compact else 14))
+	_cost = Widgets.cost_row(card.get("unit_cost", {}), _resources, 1, 13 if compact else 14)
+	each.add_child(_cost)
 	order.add_child(each)
+	_each = each
 	var amount_row := HBoxContainer.new()
 	amount_row.add_theme_constant_override("separation", 6)
 	order.add_child(amount_row)
@@ -139,23 +154,70 @@ func configure(card: Dictionary, resources: Dictionary, compact: bool = false, p
 	order.add_child(recruit_button)
 	slider.value_changed.connect(func(_value): _sync_button())
 	_sync_button()
-	if max_now <= 0:
-		var reason := Widgets.label(String(card.get("status_detail", "")), "muted", 12)
-		reason.name = "Reason"
-		reason.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		reason.custom_minimum_size = Vector2(order.custom_minimum_size.x, 0)
-		reason.max_lines_visible = 2 if compact else -1
-		reason.tooltip_text = reason.text
-		reason.mouse_filter = Control.MOUSE_FILTER_PASS
-		order.add_child(reason)
-		if int(card.get("market_max", 0)) > 0:
-			var trade := Button.new()
-			trade.name = "TradeButton"
-			trade.text = "Trade for it"
-			trade.tooltip_text = "Open the market to exchange for the missing resources."
-			FrontierVisualKit.apply_button(trade, "secondary", 140, 30, 13)
-			trade.pressed.connect(func(): trade_requested.emit())
-			order.add_child(trade)
+	_add_blocked_rows()
+
+## Applies a new reserve, price and stores to this card after an order, in
+## place: the portrait, stats and abilities stay; the reserve line, cost row,
+## amount slider, Recruit button and blocked reason update exactly as
+## configure() would draw them. Returns false for another creature or an
+## unconfigured card, which then needs configure().
+func update_state(card: Dictionary, resources: Dictionary, portrait_tooltip: String = "") -> bool:
+	if _order == null or String(card.get("unit_id", "")) != unit_id:
+		return false
+	_card = card.duplicate(true)
+	_resources = resources.duplicate(true)
+	var max_now := int(card.get("max_now", 0))
+	Widgets.apply_card(self, "green" if max_now > 0 else "ink", 10 if _compact else 12)
+	_portrait.tooltip_text = portrait_tooltip
+	_portrait.mouse_filter = Control.MOUSE_FILTER_PASS if portrait_tooltip != "" else Control.MOUSE_FILTER_IGNORE
+	_growth.text = _growth_text(card)
+	var cost := Widgets.cost_row(card.get("unit_cost", {}), _resources, 1, 13 if _compact else 14)
+	_each.remove_child(_cost)
+	_cost.queue_free()
+	_each.add_child(cost)
+	_cost = cost
+	slider.max_value = max(max_now, 0)
+	slider.value = max_now
+	slider.editable = max_now > 0
+	max_button.disabled = max_now <= 0
+	recruit_button.set_meta("catalog_status", String(card.get("status", "")))
+	_sync_button()
+	for node in [_reason, _trade]:
+		if node != null:
+			_order.remove_child(node)
+			node.queue_free()
+	_reason = null
+	_trade = null
+	_add_blocked_rows()
+	return true
+
+func _growth_text(card: Dictionary) -> String:
+	return "%d available · +%d per week" % [int(card.get("available", 0)), int(card.get("weekly_growth", 0))]
+
+func _add_blocked_rows() -> void:
+	if int(_card.get("max_now", 0)) > 0:
+		return
+	var reason := Widgets.label(String(_card.get("status_detail", "")), "muted", 12)
+	reason.name = "Reason"
+	reason.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	reason.custom_minimum_size = Vector2(_order.custom_minimum_size.x, 0)
+	reason.max_lines_visible = 2 if _compact else -1
+	reason.tooltip_text = reason.text
+	reason.mouse_filter = Control.MOUSE_FILTER_PASS
+	_order.add_child(reason)
+	_reason = reason
+	if int(_card.get("market_max", 0)) > 0:
+		var trade := Button.new()
+		trade.name = "TradeButton"
+		trade.text = "Trade for it"
+		trade.tooltip_text = "Open the market to exchange for the missing resources."
+		FrontierVisualKit.apply_button(trade, "secondary", 140, 30, 13)
+		trade.pressed.connect(func(): trade_requested.emit())
+		_order.add_child(trade)
+		_trade = trade
+
+func card_model() -> Dictionary:
+	return _card
 
 func amount() -> int:
 	return int(slider.value) if slider != null else 0
