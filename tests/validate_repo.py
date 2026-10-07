@@ -16581,8 +16581,10 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
     ensure("var _compact_system_panel_style := StyleBoxEmpty.new()" in battle_shell_text, errors, "Battle compact system row must remove only the decorative panel frame with one local empty style")
     ensure(len(re.findall(r"^\t_system_body_label\.visible = not _compact_layout_active$", battle_shell_text, flags=re.MULTILINE)) == 2, errors, "Battle save-failure surfaces must keep the supplemental system summary hidden in compact mode")
     ensure(battle_shell_text.count("_system_body_label.visible = not _compact_layout_active and not status_lines.is_empty()") == 1, errors, "Battle ordinary save summary must stay visible only in wide mode when content exists")
+    # Battle entry blanks its not-yet-built save status for the first frame only.
+    battle_shell_text_outside_entry_save_bar = re.sub(r"func _apply_entry_save_bar_labels\(\) -> void:.*?(?=\nfunc )", "", battle_shell_text, flags=re.DOTALL)
     for forbidden_token in ("_system_body_label.text = \"\"", "_system_body_label.tooltip_text = \"\"", "status_lines.clear()", "status_lines.erase("):
-        ensure(forbidden_token not in battle_shell_text, errors, f"Battle compact layout must preserve the full supplemental save summary behind the existing tooltip rather than deleting it via {forbidden_token}")
+        ensure(forbidden_token not in battle_shell_text_outside_entry_save_bar, errors, f"Battle compact layout must preserve the full supplemental save summary behind the existing tooltip rather than deleting it via {forbidden_token}")
     action_guide_setter_match = re.search(r"func _set_battle_action_guide\(full_text: String\) -> void:(?P<body>.*?)(?=\nfunc )", battle_shell_text, flags=re.DOTALL)
     ensure(action_guide_setter_match is not None, errors, "BattleShell must own one compact-only fitted ActionGuide setter")
     if action_guide_setter_match is not None:
@@ -27794,7 +27796,9 @@ def validate_battle_timing_tab_compact_summary(errors: list[str]) -> None:
     shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
     scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
     smoke_text = board_smoke_path.read_text(encoding="utf-8")
-    refresh_helper = function_block(shell_text, "_refresh")
+    # The Timing tab is part of the Tactical Details refresh that _refresh() runs.
+    ensure("_refresh_tactical_detail_surfaces(action_confirmation, buckets)" in function_block(shell_text, "_refresh"), errors, "Battle refresh must keep refreshing the Tactical Details Timing tab")
+    refresh_helper = function_block(shell_text, "_refresh_tactical_detail_surfaces")
     ensure(refresh_helper, errors, "Could not isolate Battle refresh for Timing compact summary")
     refresh_order = tuple(refresh_helper.find(token) for token in (
         "var spell_timing_board := BattleRules.describe_spell_timing_board(_session)",
@@ -53051,12 +53055,16 @@ def validate_active_play_load_resumed_cue_playback(errors: list[str]) -> None:
     expected_targets = {
         "overworld": ("_save_status_label", "\t_render_state()\n\t_apply_responsive_layout()\n\t_present_load_resumed_cue()"),
         "town": ("_save_status_label", "\t_refresh(true)\n\t_present_load_resumed_cue()"),
-        "battle": ("_system_body_label", "\t_refresh()\n\tif _handle_battle_resolution(initial_result):\n\t\treturn\n\t_present_load_resumed_cue()"),
+        "battle": ("_system_body_label", "\t_refresh(true)\n\t_entry_first_refresh_deferred_save_surface = _entry_pending_surfaces.has(\"save_bar\")\n\tAppRouter.call_after_scene_presented(_complete_entry_secondary_surfaces.bind(true))\n\tif _handle_battle_resolution(initial_result):\n\t\treturn\n\t_entry_load_resumed_cue_pending = true"),
         "scenario_outcome": ("_save_status_label", "\t_refresh()\n\t_present_load_resumed_cue()"),
     }
     for surface, text in shell_texts.items():
         if surface == "battle":
             ensure('_refresh()\n\t\t\tif bool(completed.get("entry_playback",false)): _present_load_resumed_cue()' in text, errors, "Enemy-first battle entry must consume the shared load cue after playback and authoritative refresh")
+            # Ordinary entry presents the cue once its deferred save bar is built.
+            entry_surfaces_match = re.search(r"func _complete_entry_secondary_surfaces\([^\n]*\) -> void:(?P<body>.*?)(?=\nfunc )", text, flags=re.DOTALL)
+            entry_surfaces_body = entry_surfaces_match.group("body") if entry_surfaces_match is not None else ""
+            ensure(0 <= entry_surfaces_body.find("_refresh_save_slot_picker()") < entry_surfaces_body.find("_present_load_resumed_cue()"), errors, "Battle entry must consume the shared load cue after its deferred save bar refresh")
         target, ordered_consume = expected_targets[surface]
         for token in (
             'const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemLoadResumedCuePresenter.gd")',

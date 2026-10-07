@@ -16,6 +16,7 @@ const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const BattleAutoResolveRulesScript = preload("res://scripts/core/BattleAutoResolveRules.gd")
 const SystemSaveWrittenCuePresenterScript = preload("res://scenes/shared/SystemSaveWrittenCuePresenter.gd")
 const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemLoadResumedCuePresenter.gd")
+const BattleArtPrewarmScript = preload("res://scripts/ui/BattleArtPrewarm.gd")
 
 const UI_ART_BATTLE_INITIATIVE_BAR := "res://art/ui/runtime/battle/initiative_bar.png"
 const UI_ART_BATTLE_COMBAT_LOG_PANEL := "res://art/ui/runtime/battle/combat_log_panel.png"
@@ -187,6 +188,19 @@ var _last_refresh_intent_forecast_battle_hash := 0
 # The session and battle as the last refresh normalized them; see _refresh().
 var _normalized_battle_session = null
 var _normalized_battle_snapshot: Dictionary = {}
+# Entry leaves what the first battle frame does not show (the collapsed Tactical
+# Details sidebar, the hidden action-guide copy, and the save bar status, which
+# inspects stored saves) until the battle is on screen. The battle-reading parts
+# are built together in the first frame after that, keeping their target-state
+# upkeep in one frame as a full refresh does; the save bar follows a frame later.
+# Any full refresh before then builds them all.
+const ENTRY_DEFERRED_SURFACES := ["tactical_details", "action_guide", "save_bar"]
+var _entry_pending_surfaces: Array = []
+var _entry_load_resumed_cue_pending := false
+var _entry_first_refresh_deferred_save_surface := false
+var _entry_secondary_surfaces_completed_count := 0
+var _entry_secondary_surface_buckets := {}
+var _save_surface_build_count := 0
 
 func _ready() -> void:
 	_confirm_order_button = Button.new()
@@ -270,7 +284,8 @@ func _ready() -> void:
 		return
 
 	phase_started = ProfileLogScript.begin_usec()
-	OverworldRules.normalize_overworld_state(_session)
+	# The router hands over a normalized overworld; normalize only if it changed.
+	OverworldRules.normalize_overworld_state_for_runtime(_session)
 	buckets["normalize_overworld"] = ProfileLogScript.elapsed_ms(phase_started)
 	if _session.scenario_status != "in_progress":
 		AppRouter.go_to_scenario_outcome()
@@ -307,10 +322,12 @@ func _ready() -> void:
 		_checkpoint_consumed_tactical_briefing()
 		buckets["briefing_autosave"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
-	_refresh()
+	_refresh(true)
+	_entry_first_refresh_deferred_save_surface = _entry_pending_surfaces.has("save_bar")
+	AppRouter.call_after_scene_presented(_complete_entry_secondary_surfaces.bind(true))
 	if _handle_battle_resolution(initial_result):
 		return
-	_present_load_resumed_cue()
+	_entry_load_resumed_cue_pending = true
 	buckets["first_refresh"] = ProfileLogScript.elapsed_ms(phase_started)
 	ProfileLogScript.emit_general("battle", "entry", "battle_ready", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(true), _session)
 	call_deferred("_configure_battle_keyboard_focus", true)
@@ -344,6 +361,7 @@ func _configure_battle_info_tab_accessibility() -> void:
 	_sync_battle_info_tab_tooltip()
 
 func _on_battle_info_tab_changed(tab: int) -> void:
+	_complete_entry_secondary_surfaces()
 	if _validation_battle_info_tab_resetting:
 		_last_battle_info_tab_index = tab
 		return
@@ -1804,7 +1822,10 @@ func _complete_battle_exit_animation_handoff(route_target: String) -> void:
 	else:
 		_last_battle_resolution_routed = _route_checkpointed_battle_resolution()
 
-func _refresh() -> void:
+## defer_entry_surfaces leaves what the first frame does not show to
+## _complete_entry_secondary_surfaces(); only the entry's first refresh uses it.
+## The Tactical Details sidebar is deferred only while it is collapsed.
+func _refresh(defer_entry_surfaces: bool = false) -> void:
 	if _spell_targeting_id != "" or not _pending_board_order.is_empty():
 		var battle_hash := hash(_session.battle) if _session != null else 0
 		if _spell_targeting_id != "" and (_session == null or _spell_targeting_hash != battle_hash):
@@ -1839,12 +1860,17 @@ func _refresh() -> void:
 	_refresh_action_buttons()
 	_refresh_speed_buttons()
 	buckets["actions"] = ProfileLogScript.elapsed_ms(section_started)
+	_entry_pending_surfaces.clear()
+	if defer_entry_surfaces:
+		_entry_pending_surfaces = ENTRY_DEFERRED_SURFACES.duplicate()
+		if _sidebar_shell_panel.visible:
+			_entry_pending_surfaces.erase("tactical_details")
 	section_started = ProfileLogScript.begin_usec()
-	_refresh_save_slot_picker()
+	if _entry_pending_surfaces.has("save_bar"):
+		_apply_entry_save_bar_labels()
+	else:
+		_refresh_save_slot_picker()
 	buckets["save_surface"] = ProfileLogScript.elapsed_ms(section_started)
-	section_started = ProfileLogScript.begin_usec()
-	_refresh_battle_tab_cues()
-	buckets["tabs"] = ProfileLogScript.elapsed_ms(section_started)
 
 	section_started = ProfileLogScript.begin_usec()
 	_header_label.text = BattleRules.describe_header(_session)
@@ -1885,6 +1911,29 @@ func _refresh() -> void:
 	_set_compact_label(_briefing_label, _tactical_briefing_text, 4)
 	_briefing_panel.visible = false
 	buckets["header_context_payload"] = ProfileLogScript.elapsed_ms(section_started)
+	if not _entry_pending_surfaces.has("tactical_details"):
+		_refresh_tactical_detail_surfaces(action_confirmation, buckets)
+	section_started = ProfileLogScript.begin_usec()
+	# Keyboard focus reads the forecast, so it is part of every refresh.
+	var intent_forecast := BattleRules.intent_forecast_payload(_session)
+	_last_refresh_intent_forecast = intent_forecast
+	_last_refresh_intent_forecast_battle_hash = hash(_session.battle)
+	_action_guide.visible = false
+	if not _entry_pending_surfaces.has("action_guide"):
+		_refresh_action_guide_surface(intent_forecast, action_confirmation)
+	_battle_board_view.set_battle_state(_session)
+	buckets["surface_and_board"] = ProfileLogScript.elapsed_ms(section_started)
+	if _briefing_consumption_autosave_failure_pending:
+		_apply_briefing_consumption_autosave_failure_surface(false)
+	ProfileLogScript.emit_general("battle", "refresh", "battle_refresh", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false), _session)
+	call_deferred("_configure_battle_keyboard_focus", false)
+
+## The Tactical Details sidebar (tabs, commanders, initiative, focus, spells,
+## timing) and the hidden situation and army rows.
+func _refresh_tactical_detail_surfaces(action_confirmation: Dictionary, buckets: Dictionary) -> void:
+	var section_started := ProfileLogScript.begin_usec()
+	_refresh_battle_tab_cues()
+	buckets["tabs"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
 	var risk_board := BattleRules.describe_risk_readiness_board(_session)
 	var risk_check := _battle_risk_check_cue_surface(risk_board, action_confirmation)
@@ -1976,22 +2025,32 @@ func _refresh() -> void:
 			spell_timing_board,
 		])
 		call_deferred("_refit_battle_timing_visible_surface")
+	buckets["effects_timing"] = ProfileLogScript.elapsed_ms(section_started)
+	section_started = ProfileLogScript.begin_usec()
+	var player_lines = BattleRules.roster_lines(_session.battle, "player")
+	var enemy_lines = BattleRules.roster_lines(_session.battle, "enemy")
+	_set_compact_label(_player_roster, "\n".join(player_lines) if not player_lines.is_empty() else "No survivors remain.", 6)
+	_set_compact_label(_enemy_roster, "\n".join(enemy_lines) if not enemy_lines.is_empty() else "Enemy resistance has collapsed.", 6)
+	buckets["rosters"] = ProfileLogScript.elapsed_ms(section_started)
+
+## The action guide label stays hidden; its copy feeds the order panel tooltip.
+func _refresh_action_guide_surface(intent_forecast: Dictionary, action_confirmation: Dictionary) -> void:
 	var target_handoff := BattleRules.target_handoff_cue_payload(_session)
 	var position_check := _battle_position_check_cue_surface()
 	var objective_check := BattleRules.objective_check_cue_payload(_session)
-	var intent_forecast := BattleRules.intent_forecast_payload(_session)
-	_last_refresh_intent_forecast = intent_forecast
-	_last_refresh_intent_forecast_battle_hash = hash(_session.battle)
-	_action_guide.visible = false
+	# Only a payload without its own copy falls back to the action surface.
+	var action_surface_text := ""
+	if not intent_forecast.has("visible_text") or not target_handoff.has("tooltip_text"):
+		action_surface_text = BattleRules.describe_action_surface(_session)
 	_set_battle_action_guide(
 		"%s\n%s\n%s" % [
-			String(intent_forecast.get("visible_text", BattleRules.describe_action_surface(_session))),
+			String(intent_forecast.get("visible_text", action_surface_text)),
 			String(position_check.get("visible_text", "")),
 			String(objective_check.get("visible_text", "")),
 		]
 	)
 	_action_guide.tooltip_text = _join_tooltip_sections([
-		String(target_handoff.get("tooltip_text", BattleRules.describe_action_surface(_session))),
+		String(target_handoff.get("tooltip_text", action_surface_text)),
 		String(intent_forecast.get("tooltip_text", "")),
 		String(position_check.get("tooltip_text", "")),
 		String(objective_check.get("tooltip_text", "")),
@@ -2000,19 +2059,81 @@ func _refresh() -> void:
 	if action_confirmation_tooltip != "":
 		_action_guide.tooltip_text = "%s\n\n%s" % [_action_guide.tooltip_text, action_confirmation_tooltip]
 	_action_panel.tooltip_text = _action_guide.tooltip_text
-	_battle_board_view.set_battle_state(_session)
-	buckets["surface_and_board"] = ProfileLogScript.elapsed_ms(section_started)
 
-	section_started = ProfileLogScript.begin_usec()
-	var player_lines = BattleRules.roster_lines(_session.battle, "player")
-	var enemy_lines = BattleRules.roster_lines(_session.battle, "enemy")
-	_set_compact_label(_player_roster, "\n".join(player_lines) if not player_lines.is_empty() else "No survivors remain.", 6)
-	_set_compact_label(_enemy_roster, "\n".join(enemy_lines) if not enemy_lines.is_empty() else "Enemy resistance has collapsed.", 6)
-	buckets["rosters"] = ProfileLogScript.elapsed_ms(section_started)
-	if _briefing_consumption_autosave_failure_pending:
-		_apply_briefing_consumption_autosave_failure_surface(false)
-	ProfileLogScript.emit_general("battle", "refresh", "battle_refresh", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false), _session)
-	call_deferred("_configure_battle_keyboard_focus", false)
+## The first frame's save bar: final button labels, and no status lines until
+## _refresh_save_slot_picker() has read the stored saves.
+func _apply_entry_save_bar_labels() -> void:
+	var labels := SaveService.in_session_action_labels(_session)
+	var selected_slot := int(labels.get("selected_slot", SaveService.get_selected_manual_slot()))
+	for index in range(_save_slot_picker.get_item_count()):
+		if _save_slot_picker.get_item_id(index) == selected_slot:
+			_save_slot_picker.select(index)
+			break
+	_system_body_label.text = ""
+	_system_body_label.visible = false
+	_save_button.text = "Save" if _compact_layout_active else String(labels.get("save_button_label", "Save Battle"))
+	_menu_button.text = "Menu" if _compact_layout_active else String(labels.get("menu_button_label", "Main Menu"))
+
+## Builds the surfaces the entry's first refresh deferred. Called with
+## split_frames once the battle is on screen, it leaves the save bar to the next
+## frame; called without it (opening the sidebar, switching its tab, validation)
+## it builds everything at once. During entry playback the refresh that ends it
+## builds them.
+func _complete_entry_secondary_surfaces(split_frames: bool = false) -> void:
+	if _entry_pending_surfaces.is_empty() and not _entry_load_resumed_cue_pending and _entry_secondary_surfaces_completed_count > 0:
+		return
+	if not is_inside_tree() or _session == null or _session.battle.is_empty():
+		return
+	if _action_playback_in_progress or _battle_exit_handoff_in_progress:
+		return
+	while not _entry_pending_surfaces.is_empty():
+		var part := String(_entry_pending_surfaces.pop_front())
+		var section_started := ProfileLogScript.begin_usec()
+		match part:
+			"tactical_details":
+				_refresh_tactical_detail_surfaces(BattleRules.action_readiness_confirmation_payload(_session), _entry_secondary_surface_buckets)
+			"action_guide":
+				var intent_forecast := _last_refresh_intent_forecast
+				if intent_forecast.is_empty() or _last_refresh_intent_forecast_battle_hash != hash(_session.battle):
+					intent_forecast = BattleRules.intent_forecast_payload(_session)
+				_refresh_action_guide_surface(intent_forecast, BattleRules.action_readiness_confirmation_payload(_session))
+			"save_bar":
+				_refresh_save_slot_picker()
+				if _briefing_consumption_autosave_failure_pending:
+					_apply_briefing_consumption_autosave_failure_surface(false)
+		_entry_secondary_surface_buckets[part] = ProfileLogScript.elapsed_ms(section_started)
+		if split_frames and not _entry_pending_surfaces.is_empty() and String(_entry_pending_surfaces[0]) == "save_bar":
+			var next_part := _complete_entry_secondary_surfaces.bind(true)
+			if not get_tree().process_frame.is_connected(next_part):
+				get_tree().process_frame.connect(next_part, CONNECT_ONE_SHOT)
+			return
+	if _entry_load_resumed_cue_pending:
+		_entry_load_resumed_cue_pending = false
+		_present_load_resumed_cue()
+	# The board has drawn and holds its own art references by now.
+	BattleArtPrewarmScript.release()
+	_entry_secondary_surfaces_completed_count += 1
+	if not _entry_secondary_surface_buckets.is_empty():
+		var total := 0.0
+		for part in ENTRY_DEFERRED_SURFACES:
+			total += float(_entry_secondary_surface_buckets.get(part, 0.0))
+		ProfileLogScript.emit_general("battle", "entry", "battle_entry_secondary_surfaces", total, _entry_secondary_surface_buckets.duplicate(), _battle_profile_metadata(false), _session)
+		_entry_secondary_surface_buckets = {}
+
+func validation_entry_surfaces_snapshot() -> Dictionary:
+	return {
+		"first_refresh_deferred_save_surface": _entry_first_refresh_deferred_save_surface,
+		"secondary_surfaces_pending": not _entry_pending_surfaces.is_empty(),
+		"pending_surfaces": _entry_pending_surfaces.duplicate(),
+		"load_resumed_cue_pending": _entry_load_resumed_cue_pending,
+		"secondary_surfaces_completed_count": _entry_secondary_surfaces_completed_count,
+		"save_surface_build_count": _save_surface_build_count,
+		"action_guide_text": _action_guide.text,
+		"active_focus_text": _active_label.text,
+		"save_button_text": _save_button.text,
+		"menu_button_text": _menu_button.text,
+		"system_body_text": _system_body_label.text,
+	}
 
 func _set_battle_status_text(full_text: String) -> void:
 	_status_label.text = full_text
@@ -3204,6 +3325,7 @@ func _refresh_save_slot_picker() -> void:
 	if _save_slot_picker.get_item_count() <= 0:
 		return
 
+	_save_surface_build_count += 1
 	var surface := AppRouter.active_save_surface({}, false)
 	var selected_slot := SaveService.get_selected_manual_slot()
 	for index in range(_save_slot_picker.get_item_count()):
@@ -3258,6 +3380,7 @@ func _refresh_save_slot_picker() -> void:
 	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 
 func validation_snapshot() -> Dictionary:
+	_complete_entry_secondary_surfaces()
 	if _session != null and _session.battle.is_empty() and _battle_board_view != null and _battle_board_view.has_method("set_battle_state"):
 		_battle_board_view.set_battle_state(_session)
 	var active_stack := BattleRules.get_active_stack(_session.battle)
@@ -3494,6 +3617,7 @@ func _battle_enemy_hero_id() -> String:
 	return String(hero.get("id", "")) if hero is Dictionary else ""
 
 func validation_reset_battle_info_tab_navigation_state() -> Dictionary:
+	_complete_entry_secondary_surfaces()
 	_validation_battle_info_tab_resetting = true
 	_battle_tabs.current_tab = 0
 	_last_battle_info_tab_index = _battle_tabs.current_tab
@@ -3506,6 +3630,7 @@ func validation_reset_battle_info_tab_navigation_state() -> Dictionary:
 	return validation_battle_info_tab_navigation_snapshot()
 
 func validation_battle_info_tab_navigation_snapshot() -> Dictionary:
+	_complete_entry_secondary_surfaces()
 	var tab_bar := _battle_tabs.get_tab_bar()
 	var viewport := get_viewport()
 	var focus_owner := viewport.gui_get_focus_owner() if viewport != null else null
@@ -3530,6 +3655,7 @@ func validation_battle_info_tab_navigation_snapshot() -> Dictionary:
 	}
 
 func validation_briefing_consumption_autosave_snapshot() -> Dictionary:
+	_complete_entry_secondary_surfaces()
 	var viewport := get_viewport()
 	var focus_owner := viewport.gui_get_focus_owner() if viewport != null else null
 	var briefing_first_line := ""
@@ -4143,6 +4269,7 @@ func _apply_responsive_layout() -> void:
 	_action_panel.tooltip_text = _action_guide_source_text
 
 func _on_tactical_details_pressed() -> void:
+	_complete_entry_secondary_surfaces()
 	if _compact_layout_active:
 		return
 	get_node("/root/ContextualHelp").dismiss()

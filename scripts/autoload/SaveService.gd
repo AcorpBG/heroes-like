@@ -224,11 +224,14 @@ func save_runtime_selected_manual_session(session: SessionStateStoreScript.Sessi
 func save_runtime_manual_session(session: SessionStateStoreScript.SessionData, slot: int = 1) -> Dictionary:
 	return _save_runtime_session(session, SLOT_TYPE_MANUAL, slot)
 
+## cache_summary stores the written save's summary for later inspections even
+## when the result does not include it.
 func save_runtime_autosave_session(
 	session: SessionStateStoreScript.SessionData,
-	include_summary: bool = true
+	include_summary: bool = true,
+	cache_summary: bool = false
 ) -> Dictionary:
-	return _save_runtime_session(session, SLOT_TYPE_AUTOSAVE, 1, include_summary)
+	return _save_runtime_session(session, SLOT_TYPE_AUTOSAVE, 1, include_summary, "", cache_summary)
 
 func save_manual_session(payload: Dictionary, slot: int = 1) -> String:
 	if payload.is_empty():
@@ -686,6 +689,17 @@ func _invalidate_latest_loadable_summary() -> void:
 
 func summary_recency_timestamp(summary: Dictionary) -> float:
 	return _summary_sort_timestamp(summary)
+
+## The in-session save bar's button labels, without inspecting stored saves or
+## copying the session. build_in_session_save_surface() returns the same labels.
+func in_session_action_labels(session: SessionStateStoreScript.SessionData, manual_slot: int = -1) -> Dictionary:
+	var selected_slot := _normalize_manual_slot(manual_slot if manual_slot > 0 else _selected_manual_slot)
+	var current_target := _resume_target_for_session(session)
+	return {
+		"selected_slot": selected_slot,
+		"save_button_label": _in_session_save_label(current_target, selected_slot),
+		"menu_button_label": _return_to_menu_label(current_target, session),
+	}
 
 func build_current_session_save_context(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	# Action tooltips consume current-session copy, not a list of stored saves.
@@ -1815,11 +1829,13 @@ func _save_runtime_session(
 	slot_type: String,
 	slot: int = 1,
 	include_summary: bool = true,
-	save_file_name: String = ""
+	save_file_name: String = "",
+	cache_summary: bool = false
 ) -> Dictionary:
 	var profile := {
 		"slot_type": slot_type,
 		"include_summary": include_summary,
+		"cache_summary": cache_summary,
 		"scenario_id": session.scenario_id if session != null else "",
 		"generated_random_map": bool(session.flags.get("generated_random_map", false)) if session != null else false,
 		"session_metadata": ProfileLogScript.session_metadata(session),
@@ -1924,7 +1940,7 @@ func _save_runtime_session(
 			path = _save_payload(autosave_payload, _autosave_path(), SLOT_TYPE_AUTOSAVE, saved_payload, profile, payload_is_prepared)
 			_runtime_save_profile_step(profile, "write_payload_done")
 			cache_slot_id = SLOT_TYPE_AUTOSAVE
-			if path != "" and include_summary:
+			if path != "" and (include_summary or cache_summary):
 				_runtime_save_profile_step(profile, "summary_cache_store_start")
 				var summary_cache_started := ProfileLogScript.begin_usec()
 				_store_runtime_summary_cache(saved_payload, SLOT_TYPE_AUTOSAVE, cache_slot_id, path, authoritative_resume_target, profile)

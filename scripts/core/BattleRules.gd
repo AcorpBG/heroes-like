@@ -1644,35 +1644,42 @@ static func movement_intent_for_destination(
 ) -> Dictionary:
 	var active_stack = get_active_stack(battle)
 	var destination := _hex_cell(q, r) if _hex_in_bounds(q, r) else {}
-	var intent := _movement_intent_skeleton(battle, active_stack, destination)
+	var refusal := ""
+	var refusal_blocks := true
+	var legal_destination := {}
 	if battle.is_empty():
-		intent["message"] = "Move hex click: no battle is active."
-		return intent
-	if active_stack.is_empty():
-		intent["message"] = "Move hex click: no stack is ready to move."
-		return intent
-	if String(active_stack.get("side", "")) != "player":
-		intent["message"] = "It is not the player's turn."
-		return intent
-	if destination.is_empty():
-		intent["blocked"] = true
-		intent["message"] = "Move hex click blocked: that hex is outside the battlefield."
-		return intent
-	var legal_destination := (
-		_legal_destination_from_preloaded(preloaded_legal_destinations, q, r)
-		if preloaded_legal_destinations is Array
-		else _legal_destination_for_stack(battle, active_stack, destination)
-	)
-	if legal_destination.is_empty():
-		intent["blocked"] = true
-		intent["message"] = "Move hex click blocked: %s is not a legal move destination for %s." % [
-			_hex_label(destination),
-			_stack_label(active_stack),
-		]
-		return intent
+		refusal = "Move hex click: no battle is active."
+		refusal_blocks = false
+	elif active_stack.is_empty():
+		refusal = "Move hex click: no stack is ready to move."
+		refusal_blocks = false
+	elif String(active_stack.get("side", "")) != "player":
+		refusal = "It is not the player's turn."
+		refusal_blocks = false
+	elif destination.is_empty():
+		refusal = "Move hex click blocked: that hex is outside the battlefield."
+	else:
+		legal_destination = (
+			_legal_destination_from_preloaded(preloaded_legal_destinations, q, r)
+			if preloaded_legal_destinations is Array
+			else _legal_destination_for_stack(battle, active_stack, destination)
+		)
+		if legal_destination.is_empty():
+			refusal = "Move hex click blocked: %s is not a legal move destination for %s." % [
+				_hex_label(destination),
+				_stack_label(active_stack),
+			]
+	# Only a refusal describes the requested hex. A legal move is described from
+	# its legal destination, so the skeleton is built once per intent.
+	if refusal != "":
+		var refused := _movement_intent_skeleton(battle, active_stack, destination)
+		if refusal_blocks:
+			refused["blocked"] = true
+		refused["message"] = refusal
+		return refused
 
 	destination = legal_destination
-	intent = _movement_intent_skeleton(battle, active_stack, destination)
+	var intent := _movement_intent_skeleton(battle, active_stack, destination)
 	intent["action"] = "move"
 	intent["label"] = "Move"
 	intent["movable"] = true
@@ -1774,7 +1781,7 @@ static func _movement_intent_skeleton(battle: Dictionary, active_stack: Dictiona
 	var q := int(destination.get("q", -1)) if not destination.is_empty() else -1
 	var r := int(destination.get("r", -1)) if not destination.is_empty() else -1
 	var steps := int(destination.get("steps", 0)) if not destination.is_empty() else 0
-	var target_setup := _movement_target_setup_for_destination(battle, active_stack, destination)
+	var target_setup := _movement_target_setup_for_destination(battle, active_stack, destination, selected_legality)
 	return {
 		"action": "",
 		"label": "",
@@ -1819,7 +1826,14 @@ static func _movement_destination_phrase(destination: Dictionary) -> String:
 		phrase = "%s (%s)" % [phrase, _step_count_label(steps)]
 	return phrase
 
-static func _movement_target_setup_for_destination(battle: Dictionary, active_stack: Dictionary, destination: Dictionary) -> Dictionary:
+## current_legality is the active stack's legality against the selected target
+## when the caller already has it; otherwise it is computed here.
+static func _movement_target_setup_for_destination(
+	battle: Dictionary,
+	active_stack: Dictionary,
+	destination: Dictionary,
+	current_legality: Dictionary = {}
+) -> Dictionary:
 	var result := {
 		"after_move_hex_distance": -1,
 		"after_move_attackable": false,
@@ -1834,7 +1848,8 @@ static func _movement_target_setup_for_destination(battle: Dictionary, active_st
 	if String(selected_target.get("side", "")) == String(active_stack.get("side", "")):
 		return result
 
-	var current_legality := _attack_legality_for_target(active_stack, selected_target, battle)
+	if current_legality.is_empty():
+		current_legality = _attack_legality_for_target(active_stack, selected_target, battle)
 	var current_distance := int(current_legality.get("hex_distance", -1))
 	var projected_stack := active_stack.duplicate(true)
 	projected_stack[STACK_HEX_KEY] = _normalize_hex_cell(destination)

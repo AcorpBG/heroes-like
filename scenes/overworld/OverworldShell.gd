@@ -21,6 +21,7 @@ const HeroExchangeScreenScript = preload("res://scenes/overworld/HeroExchangeScr
 var _hero_exchange: Control
 var _hero_exchange_partner_id := ""
 const HeroLevelUpDialogScript = preload("res://scenes/shared/HeroLevelUpDialog.gd")
+const BattleArtPrewarmScript = preload("res://scripts/ui/BattleArtPrewarm.gd")
 var _hero_level_up_dialog: ConfirmationDialog
 var _level_up_retry_pending := false
 
@@ -3361,6 +3362,8 @@ func _begin_battle_approach(source: String) -> bool:
 		"route_step_count": int(_hero_movement_presentation.get("route_step_count", 0)),
 	}
 	_set_battle_approach_input_blocker(true)
+	# The board's unit art loads in the background while the hero walks.
+	BattleArtPrewarmScript.request_for_battle(_session.battle)
 	# Starts the walk on the map and drains the portrait bar with it.
 	_refresh_selected_route_preview("battle_approach")
 	var walk_sec: float = _map_view.hero_movement_remaining_sec() if _map_view.has_method("hero_movement_remaining_sec") else 0.0

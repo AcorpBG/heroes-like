@@ -5,6 +5,8 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const TownRulesScript = preload("res://scripts/core/TownRules.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
+const SceneTransitionCoverScript = preload("res://scripts/ui/SceneTransitionCover.gd")
+const BattleArtPrewarmScript = preload("res://scripts/ui/BattleArtPrewarm.gd")
 
 const MAIN_MENU_SCENE := "res://scenes/menus/MainMenu.tscn"
 const SCENARIO_OUTCOME_SCENE := "res://scenes/results/ScenarioOutcomeShell.tscn"
@@ -128,8 +130,12 @@ var _scenario_outcome_last_result := {}
 var _scenario_outcome_last_route := {}
 var _scenario_outcome_last_runtime_issue := {}
 var _validation_scenario_outcome_routing_suppressed := false
+var _transition_cover = null
 
 func _ready() -> void:
+	_transition_cover = SceneTransitionCoverScript.new()
+	_transition_cover.name = "SceneTransitionCover"
+	add_child(_transition_cover)
 	# Native window close requests must pass through the same transactional save
 	# boundary as the menu Exit command. Explicit SceneTree.quit() calls used by
 	# headless harnesses remain unaffected. One OS close reaches this node as
@@ -1244,9 +1250,18 @@ func go_to_battle(skip_required_save: bool = false) -> Dictionary:
 		)
 		return _battle_entry_last_result.duplicate(true)
 
+	# Board art decodes on worker threads while the checkpoint is written.
+	var prewarm_started := ProfileLogScript.begin_usec()
+	BattleArtPrewarmScript.request_for_battle(session.battle)
+	buckets["art_prewarm_request"] = ProfileLogScript.elapsed_ms(prewarm_started)
 	var pre_route_game_state := String(session.game_state)
 	var state_started := ProfileLogScript.begin_usec()
+	# Only the game state changes here, so an overworld normalized before the
+	# handoff stays normalized: the checkpoint and battle shell can trust it.
+	var normalized_before_handoff := OverworldRules.is_runtime_session_normalized(session)
 	session.game_state = "battle"
+	if normalized_before_handoff:
+		OverworldRules.mark_runtime_normalized_transition_state(session)
 	buckets["state_handoff"] = ProfileLogScript.elapsed_ms(state_started)
 	var autosave_result := {}
 	if skip_required_save:
@@ -1255,10 +1270,14 @@ func go_to_battle(skip_required_save: bool = false) -> Dictionary:
 	else:
 		_battle_entry_save_attempt_count += 1
 		var save_started := ProfileLogScript.begin_usec()
-		autosave_result = _autosave_active_session(session, false)
+		# Cache the checkpoint's summary from the written payload, so the battle
+		# save bar does not parse the file it just wrote.
+		autosave_result = _autosave_active_session(session, false, true)
 		buckets["save_before_transition"] = ProfileLogScript.elapsed_ms(save_started)
 		if not bool(autosave_result.get("ok", false)):
 			session.game_state = pre_route_game_state
+			if normalized_before_handoff:
+				OverworldRules.mark_runtime_normalized_transition_state(session)
 			_battle_entry_save_failure_count += 1
 			_battle_entry_runtime_issue_count += 1
 			_battle_entry_last_runtime_issue = RuntimeIssueLog.emit_error(
@@ -2139,15 +2158,23 @@ func _change_scene(scene_path: String) -> void:
 		AmbientAudio.stop_overworld_ambient("scene_change")
 	_reconcile_pending_load_resumed_scene(scene_path)
 	_reconcile_pending_battle_resolution_overworld_scene(scene_path)
+	if scene_path != BATTLE_SCENE:
+		BattleArtPrewarmScript.release()
 	var packed_scene := _packed_scene_for_route(scene_path)
+	# The outgoing scene leaves the tree now; the incoming one joins at the next
+	# scene flush. Keep the last frame on screen in between.
+	if _transition_cover != null:
+		_transition_cover.arm(scene_path)
 	if packed_scene != null:
 		var packed_error := get_tree().change_scene_to_packed(packed_scene)
 		if packed_error != OK:
+			_cancel_transition_cover()
 			_clear_pending_load_resumed_presentation()
 			_clear_pending_battle_resolution_overworld_presentation()
 			push_error("Failed to change scene to %s (error %d)." % [scene_path, packed_error])
 		return
 	if not ResourceLoader.exists(scene_path):
+		_cancel_transition_cover()
 		_clear_pending_load_resumed_presentation()
 		_clear_pending_battle_resolution_overworld_presentation()
 		push_error("Scene file is missing: %s" % scene_path)
@@ -2155,9 +2182,40 @@ func _change_scene(scene_path: String) -> void:
 
 	var error := get_tree().change_scene_to_file(scene_path)
 	if error != OK:
+		_cancel_transition_cover()
 		_clear_pending_load_resumed_presentation()
 		_clear_pending_battle_resolution_overworld_presentation()
 		push_error("Failed to change scene to %s (error %d)." % [scene_path, error])
+
+func _cancel_transition_cover() -> void:
+	if _transition_cover != null:
+		_transition_cover.cancel()
+
+func scene_transition_cover_active() -> bool:
+	return _transition_cover != null and _transition_cover.is_covering()
+
+## Calls target in the first frame after the current scene is on screen: once
+## the transition cover has cleared, or once a frame has been drawn when no
+## cover is up. A target whose object is freed first is skipped.
+func call_after_scene_presented(target: Callable) -> void:
+	if scene_transition_cover_active():
+		_transition_cover.released.connect(func(_scene_path: String): _call_next_frame(target), CONNECT_ONE_SHOT)
+	elif DisplayServer.get_name() != "headless":
+		RenderingServer.frame_post_draw.connect(func(): _call_next_frame(target), CONNECT_ONE_SHOT)
+	else:
+		_call_next_frame(target)
+
+func _call_next_frame(target: Callable) -> void:
+	get_tree().process_frame.connect(func():
+		if target.is_valid():
+			target.call()
+	, CONNECT_ONE_SHOT)
+
+func validation_set_transition_cover_mode(mode: String) -> void:
+	_transition_cover.validation_set_mode(mode)
+
+func validation_transition_cover_snapshot() -> Dictionary:
+	return _transition_cover.validation_snapshot()
 
 func _reconcile_pending_battle_resolution_overworld_scene(scene_path: String) -> void:
 	if _pending_battle_resolution_overworld_presentation.is_empty():
@@ -2188,11 +2246,12 @@ func _packed_scene_for_route(scene_path: String) -> PackedScene:
 
 func _autosave_active_session(
 	session: SessionStateStoreScript.SessionData,
-	include_summary: bool = true
+	include_summary: bool = true,
+	cache_summary: bool = false
 ) -> Dictionary:
 	if session == null or session.scenario_id == "":
 		return {"ok": false, "message": "", "summary": {}}
-	return SaveService.save_runtime_autosave_session(session, include_summary)
+	return SaveService.save_runtime_autosave_session(session, include_summary, cache_summary)
 
 func _record_transition_autosave_intent(
 	session: SessionStateStoreScript.SessionData,

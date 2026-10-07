@@ -4363,6 +4363,10 @@ func _prepare_profile_session_identity(scene_path: String) -> void:
 func _settle_frames(frame_count: int) -> void:
 	for _frame in range(frame_count):
 		await get_tree().process_frame
+	# Captures show the scene, not the transition cover fading over it.
+	var deadline := Time.get_ticks_msec() + 2000
+	while AppRouter.scene_transition_cover_active() and Time.get_ticks_msec() < deadline:
+		await get_tree().process_frame
 
 func _current_scene_path() -> String:
 	var current := get_tree().current_scene

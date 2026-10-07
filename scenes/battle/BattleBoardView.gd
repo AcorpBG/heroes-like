@@ -2338,6 +2338,30 @@ func _terrain_texture_id(terrain_id: String) -> String:
 func _terrain_texture_path_for(texture_id: String) -> String:
 	return String(TERRAIN_TEXTURE_PATHS.get(texture_id, ""))
 
+## Every texture the board loads for this battle's terrain and stacks, so the
+## entry can load them in the background before the first board draw.
+static func art_texture_paths_for_battle(battle: Dictionary) -> PackedStringArray:
+	var paths := PackedStringArray()
+	if battle.is_empty():
+		return paths
+	var terrain_id := String(battle.get("terrain", "plains")).strip_edges().to_lower()
+	if terrain_id == "":
+		terrain_id = "plains"
+	var terrain_path := String(TERRAIN_TEXTURE_PATHS.get(String(TERRAIN_TEXTURE_ALIASES.get(terrain_id, terrain_id)), ""))
+	if terrain_path != "":
+		paths.append(terrain_path)
+	var stacks: Variant = battle.get("stacks", [])
+	for stack in (stacks if stacks is Array else []):
+		var unit_id := String(stack.get("unit_id", "")) if stack is Dictionary else ""
+		if unit_id == "":
+			continue
+		var animation := ContentService.get_unit_animation(unit_id)
+		var art := ContentService.get_unit_art(unit_id)
+		for path in [String(animation.get("pose_sheet", animation.get("sprite_sheet", ""))), String(art.get("battle_standee", "")), String(art.get("battle_icon", ""))]:
+			if path != "" and not paths.has(path):
+				paths.append(path)
+	return paths
+
 func _unit_battle_icon_for_stack(stack: Dictionary) -> Texture2D:
 	var unit_id := String(stack.get("unit_id", ""))
 	if unit_id == "":
