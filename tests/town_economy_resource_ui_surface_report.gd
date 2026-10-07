@@ -157,7 +157,7 @@ func _run_faction_case(faction: Dictionary) -> Dictionary:
 	var blocked_market_actions: Array = blocked_catalog.get("market", []) if blocked_catalog.get("market", []) is Array else []
 	_assert_town_shell_resource_surface(blocked_snapshot, rare_id, false, case_errors)
 	var blocked_economy_plan := _assert_player_economy_readability_surface(blocked_snapshot, rare_id, target_rare_cost_ids, false, case_errors)
-	_assert_common_only_market_actions(blocked_market_actions, case_errors)
+	_assert_market_resource_actions(blocked_market_actions, case_errors)
 	_assert_blocked_rare_build_action(blocked_action, rare_id, target_rare_cost_ids, target_cost, case_errors)
 
 	for target_rare_id in target_rare_cost_ids:
@@ -385,7 +385,8 @@ func _assert_ready_rare_build_action(action: Dictionary, rare_id: String, rare_c
 	if bool(action.get("market_coverable", false)):
 		errors.append("Directly affordable rare-cost build action should not require market coverage.")
 
-func _assert_common_only_market_actions(actions: Array, errors: Array) -> void:
+## Town markets trade every stockpile resource but gold (owner, 2026-10-07).
+func _assert_market_resource_actions(actions: Array, errors: Array) -> void:
 	if actions.is_empty():
 		errors.append("TownShell market actions were empty for a town with a built market square.")
 	for action_value in actions:
@@ -395,8 +396,8 @@ func _assert_common_only_market_actions(actions: Array, errors: Array) -> void:
 		var parts := action_id.split(":")
 		if parts.size() >= 3 and String(parts[0]) == "market":
 			var resource_id := String(parts[2])
-			if resource_id not in ["wood", "ore"]:
-				errors.append("Normal town market exposed non-common resource %s in %s." % [resource_id, action_id])
+			if resource_id not in OverworldRules.MARKET_RESOURCE_KEYS:
+				errors.append("Town market exposed unknown resource %s in %s." % [resource_id, action_id])
 
 func _assert_same_day_build_lockout(
 	build_result: Dictionary,

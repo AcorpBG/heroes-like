@@ -1,5 +1,7 @@
 # Economy Town Resource UI Surface Report
 
+> Updated 2026-10-07: town markets now trade every stockpile resource but gold, rare resources included, under weekly caps (`docs/town-market.md`). The common-resource only market statements below describe the May 2026 slice; the report now accepts any market resource.
+
 Status: implementation evidence.
 
 Slice: `economy-town-resource-ui-surface-20260524-10184`

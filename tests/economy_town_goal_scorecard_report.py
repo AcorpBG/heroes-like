@@ -958,8 +958,10 @@ def add_runtime_checks(checks: list[dict[str, Any]]) -> dict[str, Any]:
     market_cap_runtime_ok = (
         market_cap_runtime.get("ok") is True
         and market_cap_runtime.get("schema") == "runtime_market_cap_persistence_report_v1"
-        and set(str(value) for value in policy.get("normal_market_resource_ids", [])) == {"wood", "ore"}
-        and policy.get("rare_resource_buying_enabled") is False
+        # Owner decision 2026-10-07: town markets trade every stockpile resource
+        # but gold, rare resources included, under weekly caps.
+        and set(str(value) for value in policy.get("normal_market_resource_ids", [])) == {"wood", "ore", "aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"}
+        and policy.get("rare_resource_buying_enabled") is True
         and str(policy.get("refresh_cadence", "")) == "weekly"
         and str(policy.get("usage_storage", "")) == "town.market_usage"
         and market_cap_runtime.get("save_resume", {}).get("ok") is True

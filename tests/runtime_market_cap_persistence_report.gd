@@ -37,7 +37,7 @@ func _run() -> void:
 	var initial := _market_snapshot(session, "initial")
 	_assert_action_state(initial, "market:buy:wood:1", false, 6, "initial buy wood")
 	_assert_action_state(initial, "market:sell:ore:1", false, 8, "initial sell ore")
-	_assert_common_only(initial)
+	_assert_capped_resources(initial)
 	if _failed:
 		return
 
@@ -86,8 +86,8 @@ func _run() -> void:
 		"town_placement_id": PLAYER_TOWN,
 		"market_building_id": MARKET_BUILDING,
 		"policy": {
-			"normal_market_resource_ids": ["wood", "ore"],
-			"rare_resource_buying_enabled": false,
+			"normal_market_resource_ids": OverworldRules.MARKET_RESOURCE_KEYS,
+			"rare_resource_buying_enabled": true,
 			"refresh_cadence": "weekly",
 			"usage_storage": "town.market_usage",
 			"save_version_bump": false,
@@ -104,7 +104,7 @@ func _run() -> void:
 		"smuggler_profile": smuggler_case,
 		"caveats": [
 			"Fixture seeds stockpiles to isolate market cap behavior.",
-			"Normal markets remain common-resource only; rare-resource sourcing remains tied to authored income, sites, and high-tier costs.",
+			"Owner decision 2026-10-07: town markets trade every stockpile resource but gold, rare resources included, each under its own weekly cap.",
 			"AI projected market affordability uses the same cap-aware readiness helpers, but this report focuses on live player exchange mutation and save continuity.",
 		],
 	}
@@ -185,7 +185,7 @@ func _run_smuggler_profile_case() -> Dictionary:
 		if action.is_empty() or bool(action.get("disabled", true)):
 			_fail("Smuggler profile is missing ready flexible bulk action %s: %s" % [action_id, before])
 			return {}
-	_assert_common_only(before)
+	_assert_capped_resources(before)
 	_assert_contains(String(before.get("panel", "")), "Smugglers Flotilla", "smuggler exchange panel")
 	_assert_contains(String(before.get("panel", "")), "captured cargo", "smuggler specialty panel")
 	if _failed:
@@ -396,14 +396,15 @@ func _assert_action_state(snapshot: Dictionary, action_id: String, disabled: boo
 	if int(action.get("cap_remaining", -1)) != remaining:
 		_fail("%s expected cap_remaining=%d for %s, got %s" % [label, remaining, action_id, action])
 
-func _assert_common_only(snapshot: Dictionary) -> void:
+## Every market resource may trade, rare ones included, but only under a weekly cap.
+func _assert_capped_resources(snapshot: Dictionary) -> void:
 	for action_value in snapshot.get("actions", []):
 		if not (action_value is Dictionary):
 			continue
 		var action_id := String(action_value.get("id", ""))
 		var parts := action_id.split(":")
-		if parts.size() >= 3 and String(parts[2]) not in ["wood", "ore"]:
-			_fail("Market exposed non-common resource action %s" % action_id)
+		if parts.size() >= 3 and (String(parts[2]) not in OverworldRules.MARKET_RESOURCE_KEYS or int(action_value.get("cap_limit", 0)) <= 0):
+			_fail("Market exposed an uncapped or unknown resource action %s" % action_id)
 			return
 
 func _assert_ok(label: String, result: Dictionary) -> void:
