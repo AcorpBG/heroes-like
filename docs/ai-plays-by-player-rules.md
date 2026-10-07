@@ -2,36 +2,77 @@
 
 Owner feedback, 2026-10-07: enemy "raids" feel wrong; the AI should play like a human with real heroes that take mines, improve towns and fight map guards under the same rules as the player.
 
-## Current model (before this change)
+## Model before this change
 
 - `EnemyTurnRules.run_enemy_turn` ran an "empire cycle" per computer player: income, weekly musters, town builds (with an AI-only pacing floor), a hero task board, raid reinforcement, abstract pressure gain, raid launches and an abstract siege counter.
 - Enemy armies on the map were raid encounters (`session.overworld.encounters` entries with `spawned_by_faction_id`), spawned at towns once a pressure counter crossed a threshold. Their armies came from encounter templates such as "Mireclaw Raid", led by a commander from the faction roster.
-- `EnemyAdventureRules.advance_raids` moved each raid one tile per day (`RAID_BASE_MOVEMENT_STEPS = 1`), chose targets through a large planner, "broke" neutral guards and dwelling guards by comparing strength numbers without losses, pillaged the player's treasury on arrival, and could capture towns through a siege counter without a battle.
+- `EnemyAdventureRules.advance_raids` moved each raid one tile per day, chose targets through a large planner, "broke" neutral and dwelling guards by comparing strength numbers without losses, pillaged the player's treasury on arrival, and could capture towns through a siege counter.
 
-## Target model
+## Model now (`scripts/core/AiHeroRules.gd`)
 
-- Enemy power on the map is heroes. An AI hero is still stored as an encounter entry (so map rendering, fog, battles against the player, saves and turn playback keep working), marked by an `ai_hero` block: daily movement, home town and current goal. Its hero record is `enemy_commander_state`; its army is `enemy_army`, made of real troops.
-- Heroes are hired from a tavern in an owned town (needs the Tavern building, the player's hero limit and the template's gold cost, weekly offer of two faction heroes). Every computer player starts with one hero and its faction's default starting army, like the human.
-- Each AI hero spends movement points tile by tile (1 point per step, `HeroCommandRules.movement_max_for_hero` at normal difficulty). Pathing uses the player's blocking rules: impassable terrain and water, object bodies, towns; neutral guard zones and armies stop a route and can only be entered to fight.
-- Target choice is a simple utility score: value of the object for the faction (resources it is short of count more), divided by days of travel, filtered by a strength check. Candidates: resource pickups, mines and other claimable sites, dwellings, artifacts, neutral guards and wandering armies the hero can beat, neutral towns, player heroes and player towns when strong enough, and its own towns to pick up troops or to defend when a hostile hero is near.
-- Fights with neutral guards, dwelling guards and neutral town garrisons run through the player's auto-resolve: a disposable battle session with the AI hero on the attacking side and `BattleAutoResolveRules.resolve_active_battle`. Losses, experience and rewards come from that battle. A lost battle removes the hero.
-- Attacks on player heroes and towns start a normal battle the human plays (`hero_intercept` / `town_defense` contexts), exactly as raids did.
-- Towns: one build per town per day with the existing build scoring (the AI-only pacing floor is gone; the Tavern comes first while the faction has fewer than two heroes), recruits bought at real cost from real availability into the garrison, and heroes in town take the garrison along.
-- Economy: income from owned towns, controlled sites and hero artifacts, exactly like the player. No pillage, no abstract siege capture, no pressure-driven spawns. Difficulty keeps only the battle knobs DifficultyRules defines for the enemy side.
+`EnemyTurnRules.run_enemy_turn` calls `AiHeroRules.run_faction_turn` for every computer player. The legacy raid director code is still in `EnemyAdventureRules`/`EnemyTurnRules` but nothing live calls it.
 
-## Reused player rules
+### Heroes
 
-- `HeroCommandRules.build_hero_from_template` (shared hero builder; Agent E's starting army and level change belongs in the shared hire path), `movement_max_for_hero`, `army_addition_plan`, `HERO_LIMIT`, `hero_recruit_cost`.
-- `OverworldRules` terrain passability, body blocking, guard engagement tiles, town income, controlled site income and weekly growth.
-- `BattleRules.create_battle_payload` and `BattleAutoResolveRules.resolve_active_battle` for every AI fight.
-- Existing site claim, dwelling hire, artifact and town service code paths in `EnemyAdventureRules` / `EnemyTownServices` for the actual object effects (rewards, controller change, recruits, spells, equipment).
+- An AI hero is an encounter entry (so map rendering, fog, battles against the human, saves and turn playback keep working) with an `ai_hero` block: hero id, movement `{current, max}`, home town, hire day, private goal and a short avoid list. Its hero record is `enemy_commander_state`; its army is `enemy_army`, made of real troops. The encounter template (`encounter_mire_raid`) only supplies battle settings; battles are called "Battle with <hero>".
+- Every computer player starts with one hero and its faction's default starting army, like the human. More heroes are hired in a town with a Tavern through the shared hire path (`HeroCommandRules.tavern_offer` + `build_recruited_hero`), paying the template's gold cost, up to `HERO_LIMIT`. Wanted heroes: 1 + min(towns, 2), plus one from day 14.
+- Movement uses the human's rules: `movement_max_for_hero` at normal difficulty, one point per tile, full budget each day. Pathing is an 8-way search with the overworld corner rule; water and rock are impassable, object bodies block, town doorways and site visit tiles can be stood on. Guard zones, armies and heroes end a route. A site that holds nothing more for the hero (a picked-up cache, its own mine) can be walked across.
+- Knowledge is fog-honest. Each computer player keeps an explored map (`ai_explored`, base64 bitsets per level). Its towns see as far as the human's (`OverworldRules.TOWN_VISION_RADIUS`), its heroes their scouting radius along every step. Map objects count once explored; human heroes and rival AI heroes only while in sight. With nothing worth doing in reach, a hero walks to the nearest unexplored frontier.
+
+### Choosing what to do
+
+Each decision is a utility score: value / (1 + distance / daily movement), with a bonus for keeping yesterday's goal. Values are gold equivalents.
+
+- Resource pickups, mines and other claimable sites (resources the faction is short of count 1.8x), dwellings (a week of troops) and visit buildings.
+- Artifacts.
+- Neutral guards and wandering armies the hero beats with a 1.5x power margin, valued by what they guard. Before setting out to fight a guard or a rival hero, the hero runs the same auto-resolve on a scratch session and goes only when it wins and keeps at least half its strength; otherwise it leaves that target for three days.
+- Neutral towns (power margin 1.4x over the garrison), human towns (1.4x over garrison plus defending hero), human heroes in sight (1.3x).
+- Its own towns: the main hero collects the garrison, a lesser hero picks it up to carry it out when the main hero is more than a day's march away, and a hostile hero near the town makes it urgent.
+- Its own main hero: a lesser hero walks over and hands its troops to the main hero, keeping one creature of its weakest kind. A hand-over is worth at most what a modest site is worth (600), so lesser heroes finish their own errands first.
+
+Lesser heroes act before the main hero each day, so troops they hand over are with the main hero when it acts. The strongest hero is the main army: it takes the garrison when it visits a town (unless the town is threatened) and holds the gate of a town a hostile hero can reach. A lesser hero near the main hero leaves all but its weakest stack in a town for it.
+
+A guard's zone works as it does for the human: anything inside it is reached by fighting the guard first. A fight that leaves the guard standing sends the hero back to the tile it attacked from, and a hero hemmed in by a zone fights its way out when the odds are at least even.
+
+### Fights
+
+- Neutral guards, dwelling guards, neutral town garrisons and rival AI heroes are fought with the human's auto-resolve: a disposable battle session (`BattleRules.create_battle_payload`, `BattleAutoResolveRules.resolve_active_battle`) with the AI hero on the attacking side. Survivors, experience, artifacts and rewards come from that battle. A lost battle removes the hero; a stalemate keeps both armies.
+- Attacks on human heroes and towns start a normal battle the human plays (`hero_intercept` / `town_defense`). A hero that wins a town assault captures the town and stays on the map as a hero.
+
+### Towns and economy
+
+- Each day: build a Tavern while the faction needs heroes, hire, recruit, then build. Recruits are bought at real cost from real availability into the garrison (highest tier first). One build per town per day, through the player's build status check and cost: the affordable building with the best value for its price (two weeks of troops from a dwelling, upgrades, two weeks of income, spells, buildings it opens up). A town that musters little favors dwellings.
+- When a build or a recruit order is short, a town with a market trades for the difference with the human's quotes (`TownRules.market_trade_quote`, which covers every resource including rares): spare wood and ore convert first, then other spare resources, gold buys the rest, spare resources sell when gold is short, and the weekly usage and caps are recorded the same way as the human's orders.
+- Income is the human's: owned towns, controlled sites and artifacts. Generated native maps give computer players the same opening stockpile the human gets. No pillage, no abstract siege capture, no pressure-driven spawns. Difficulty only changes what `DifficultyRules` defines for the enemy side (battle knobs).
 
 ## Save migration
 
-`EnemyTurnRules.normalize_enemy_states` converts every live raid encounter with a commander into an AI hero: it keeps position, army and commander, gets the hero template's movement and a fresh goal, and its encounter template switches to the generic field army. Commanderless raid columns are disbanded and their troops return to the nearest town of their controller (or vanish if it owns none). Old pressure, raid counters and task boards stay in the state but no longer drive anything.
+- `EnemyTurnRules.normalize_enemy_states` runs `AiHeroRules.migrate_legacy_raids` once per save (`overworld.ai_heroes_version = 1`; new sessions are created with the marker). It is skipped while a battle is pending, because the battle refers to its armies as they are.
+- A raid host with a commander becomes a hero: it keeps position, army, level and experience, gets the template's movement and a fresh goal, and drops every raid target field. A commanderless column joins a hero of its side within 3 tiles; troops that do not fit go to the side's nearest town garrison (or are lost if it owns none).
+- Each computer turn also converts any host a scenario script placed later. Old pressure, raid counters and task boards stay in the enemy state but no longer drive anything.
 
-## Test plan
+## Player-facing text
 
-- New `tests/ai_player_rules_report.gd/.tscn`: a small generated skirmish played for several days; asserts an AI hero captures a mine, an AI hero fights a guard through auto-resolve, an AI town builds and recruits with the treasury actually reduced, and no raid entities exist (including a migrated legacy raid).
-- Existing AI scenes that encode the raid model are updated to the hero behavior; scenes that test general rules stay.
-- `large_generated_map_runtime_profile_report` end-turn timing before and after (its pre-existing signature failure is unrelated).
+"Raid" no longer appears in player-facing text: threat lines, briefings, town threat summaries, battle names and enemy activity summaries talk about enemy heroes and armies.
+
+## Performance
+
+Searches use flat byte masks per level: static blocking and site stops are built once per enemy turn and shared by all computer players; armies, guards and heroes are added per search. The search radius is three days of movement (seven when nothing is in reach). Fight previews are skipped at a 3x margin and the previewed battle is reused for the fight.
+
+- `large_generated_map_runtime_profile_report`, one end turn: the rules part went from 1782 ms (raid model) to 903 ms; the whole confirm is dominated by the autosave (3991 ms before, 3779 ms after).
+- `AI_PLAYER_RULES_REPORT` perf mode, `homm3_large`, three computer players, 21 days: the AI part of an end turn is 0.4 to 1.6 s on most days and 4.2 s at most (a day with five fight previews and five battles), against `END_TURN_LIMIT_MS` 15000. A preview costs 0.1 to 0.4 s with large armies, which is the main cost to watch.
+
+## Tests
+
+- `tests/ai_player_rules_report.gd/.tscn`: a small generated skirmish played 16 days. An AI hero captures mines, AI heroes beat guards through auto-resolve, an AI town builds and recruits with the treasury actually reduced, wood and rare purchases match the human's market quotes, no raid entities or raid wording exist, heroes walk more than two tiles a day and none stands still away from its towns for four days, a legacy raid migrates (level and troops kept; a commanderless column's troops go to the garrison) and the state survives a save round trip. `HEROES_AI_RULES_PERF_SIZE`/`HEROES_AI_RULES_PERF_DAYS` switch it to a timing run; `HEROES_AI_RULES_CAPTURE_DIR` (with a window) saves an overworld capture of the strongest AI hero.
+- Raid-model AI scenes are updated to hero behavior: live turn execution, task state boundary (relay retake), known-world memory (scouting instead of exploration raids), assault grouping (column joins a hero, lesser hero hands troops to the main hero, also after walking), multi-scenario recruitment delivery (recruits reach hero armies via the garrison) and the strategic AI KPI generated-map probe (heroes fielded and objectives taken).
+- `HeadlessSimulationHarnessRules` cases that passed before are converted the same way: live turn, route progression, town build and recruit over three days, town retake assault, assault grouping and recruitment delivery.
+
+## Known gaps
+
+- Heroes stay on their map level: native two-level transit is not used yet. Boats are not used (water is impassable for everyone for now).
+- Heroes do not plan around scenario objectives; they only value what is on the map.
+- The legacy raid director code and its unit-level tests remain in `EnemyAdventureRules`/`EnemyTurnRules`; nothing live calls them. Removing them is a follow-up.
+- `HeadlessSimulationHarnessRules` cases that still describe raid behavior (town-defense and resource-defense retasks, regroup and retreat, multi-scenario pressure coverage and objective targeting) failed before this change and still fail; they need rewriting for heroes.
+- Border Warden's raid pillage bonus no longer has anything to apply to; its summary now only mentions scouting. DifficultyRules enemy pressure and raid knobs are unused.
+- A hero standing in a town's doorway blocks hiring in that town until it moves.
