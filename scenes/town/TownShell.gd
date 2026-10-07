@@ -531,6 +531,10 @@ func _populate_building_information(building_id: String) -> void:
 	_building_info_surface.configure(model)
 	call_deferred("_fit_building_popout")
 
+func _building_popout_needs_scroll() -> bool:
+	var content := _town_catalog_scroll.get_child(0) as Control if _town_catalog_scroll.get_child_count() > 0 else null
+	return content != null and content.get_combined_minimum_size().y > _town_catalog_scroll.size.y + 1.0
+
 ## Building popouts shrink to their content, up to the responsive cap, so a
 ## plain building does not open an empty sheet over the town.
 func _fit_building_popout() -> void:
@@ -586,6 +590,8 @@ func _open_town_catalog(mode: String) -> void:
 	if _domain_actions.get_index() > _recruit_actions.get_index():
 		_domain_actions.get_parent().move_child(_domain_actions, _recruit_actions.get_index())
 	_domain_actions.visible = mode in ["muster", "spells", "trade", "log", "building_info"]
+	# Building popouts carry their subtitle beside the painting.
+	_town_catalog_subtitle_label.visible = mode != "building_info"
 	_set_direct_dialog_surface_visibility(mode)
 	if mode == "muster":
 		var catalog := TownRules.get_muster_catalog(_session)
@@ -635,6 +641,7 @@ func _close_town_catalog(restore_focus: bool = true) -> void:
 		return
 	var focus_target := _town_catalog_previous_focus
 	_town_catalog_overlay.visible = false
+	_town_catalog_subtitle_label.visible = true
 	_hide_construction_screen()
 	_town_catalog_mode = ""
 	_town_stage_view.set_construction_preview("")
@@ -3276,6 +3283,8 @@ func validation_building_information_snapshot(building_id: String = "") -> Dicti
 		"icon_loaded": _building_info_surface != null and _building_info_surface.painting_loaded(),
 		"surface_visible": _building_info_surface != null and _building_info_surface.is_visible_in_tree(),
 		"panel": _building_info_surface.validation_snapshot() if _building_info_surface != null else {},
+		"scroll_needed": _building_popout_needs_scroll(),
+		"panel_size": _town_catalog_panel.size,
 		"hotspot": _town_stage_view.call("validation_building_hotspot_summary", expected_id) if _town_stage_view.has_method("validation_building_hotspot_summary") else {},
 	}
 

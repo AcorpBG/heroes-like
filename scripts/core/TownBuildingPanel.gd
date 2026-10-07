@@ -289,7 +289,7 @@ static func _tavern(session, resources: Dictionary) -> Dictionary:
 	for action in TownRulesScript.get_tavern_actions(session):
 		actions[String(action.get("id", ""))] = action
 	var heroes := []
-	for hero_id_value in HeroCommandRulesScript.recruitable_hero_ids(session):
+	for hero_id_value in HeroCommandRulesScript.tavern_offer_ids(session):
 		var hero_id := String(hero_id_value)
 		var card := hero_card(hero_id)
 		if card.is_empty():
@@ -308,7 +308,15 @@ static func _tavern(session, resources: Dictionary) -> Dictionary:
 		card["disabled"] = reason != "" or bool(actions.get(action_id, {}).get("disabled", true))
 		card["disabled_reason"] = reason
 		heroes.append(card)
-	return {"hero_count": count, "hero_limit": limit, "heroes": heroes}
+	var days := HeroCommandRulesScript.days_until_tavern_rotation(session)
+	return {
+		"hero_count": count,
+		"hero_limit": limit,
+		"heroes": heroes,
+		"offer_size": HeroCommandRulesScript.TAVERN_OFFER_SIZE,
+		"days_until_rotation": days,
+		"next_rotation_day": int(session.day) + days,
+	}
 
 ## Portrait, class and command profile of a hireable hero.
 static func hero_card(hero_id: String) -> Dictionary:

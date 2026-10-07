@@ -263,6 +263,8 @@ func _validate_roster_tavern_authority() -> bool:
 	if HeroCommandRules.HALL_BUILDING_ID not in buildings:
 		buildings.append(HeroCommandRules.HALL_BUILDING_ID)
 	town["built_buildings"] = buildings
+	# Taverns offer a weekly pair; place this case's hero in the week's offer.
+	session.overworld[HeroCommandRules.TAVERN_ROTATION_KEY] = {"week": HeroCommandRules.tavern_week(session), "hero_ids": [String(_active_case.get("hero_id", ""))]}
 	var authority_before: Dictionary = session.to_dict()
 	var hero_id := String(_active_case.get("hero_id", ""))
 	var recruitable: Array = HeroCommandRules.recruitable_hero_ids(session)

@@ -111,6 +111,8 @@ func run() -> void:
                 return
         var resources: Dictionary=normalized(session.overworld.resources)
         var count: int=session.overworld.player_heroes.size()
+        # Taverns offer a weekly pair; this art probe needs its exact hero offered.
+        session.overworld[HeroCommandRules.TAVERN_ROTATION_KEY]={"week":HeroCommandRules.tavern_week(session),"hero_ids":[hero_id]}
         var hire: Dictionary=TownRules.hire_hero_at_active_town(session,hero_id)
         check(bool(hire.get("ok",false)),hero_id+" normal paid tavern recruitment")
         actions.append({"hire":hire})

@@ -775,6 +775,8 @@ func _validate_tavern_recruitment_cases(cases: Array) -> Dictionary:
 			var resource_id := String(resource_id_value)
 			resources[resource_id] = int(cost.get(resource_id, 0)) + 1000
 		session.overworld["resources"] = resources
+		# Taverns offer a weekly pair; place this case's hero in the week's offer.
+		session.overworld[HeroCommandRules.TAVERN_ROTATION_KEY] = {"week": HeroCommandRules.tavern_week(session), "hero_ids": [hero_id]}
 		var before: Dictionary = session.to_dict()
 		var before_count: int = session.overworld.get("player_heroes", []).size()
 		var action_id := "hire_hero:%s" % hero_id

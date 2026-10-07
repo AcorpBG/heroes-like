@@ -27,7 +27,9 @@ const SHORT_AMOUNT := Color(1.0, 0.56, 0.46)
 const ASSISTED_SHORT_AMOUNT := Color(1.0, 0.68, 0.28)
 const BETTER_STAT := Color(0.62, 0.90, 0.45)
 const ASSISTED_BETTER_STAT := Color(0.45, 0.80, 1.0)
-const WIDE_LAYOUT := 900.0
+const SIDE_WIDTH := 372.0
+const SPELL_CARD_HEIGHT := 58.0
+const GRID_GAP := 8
 
 var _model: Dictionary = {}
 var _resources: Dictionary = {}
@@ -45,31 +47,37 @@ var _trade_button: Button
 var _painting: TextureRect
 var _description_label: Label
 var _effects_box: HFlowContainer
+var _subtitle_label: Label
+var _columns: HBoxContainer
 var _body: VBoxContainer
+var _side: VBoxContainer
+var _spell_note: Label
 var _spell_grid: GridContainer
 var _hero_grid: GridContainer
-var _level_note: Label
 
 func _init() -> void:
 	name = "BuildingInformation"
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	add_theme_constant_override("separation", 14)
+	add_theme_constant_override("separation", 12)
 	var identity := HBoxContainer.new()
 	identity.name = "BuildingIdentity"
 	identity.add_theme_constant_override("separation", 18)
 	add_child(identity)
 	_painting = TextureRect.new()
 	_painting.name = "BuildingPainting"
-	_painting.custom_minimum_size = Vector2(150, 150)
+	_painting.custom_minimum_size = Vector2(96, 96)
 	_painting.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_painting.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_painting.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	identity.add_child(_painting)
 	var copy := VBoxContainer.new()
 	copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	copy.add_theme_constant_override("separation", 6)
+	copy.add_theme_constant_override("separation", 4)
 	identity.add_child(copy)
-	_description_label = _label("", "body", 15)
+	_subtitle_label = _label("", "gold", 13)
+	_subtitle_label.name = "BuildingSubtitle"
+	copy.add_child(_subtitle_label)
+	_description_label = _label("", "body", 14)
 	_description_label.name = "BuildingDescription"
 	_description_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_description_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -79,11 +87,21 @@ func _init() -> void:
 	_effects_box.add_theme_constant_override("h_separation", 6)
 	_effects_box.add_theme_constant_override("v_separation", 6)
 	copy.add_child(_effects_box)
+	# The building's own orders take the main column and its upgrade line the
+	# side column, so popouts use the screen's width instead of scrolling.
+	_columns = HBoxContainer.new()
+	_columns.name = "Columns"
+	_columns.add_theme_constant_override("separation", 16)
+	add_child(_columns)
 	_body = VBoxContainer.new()
 	_body.name = "BuildingBody"
 	_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_body.add_theme_constant_override("separation", 14)
-	add_child(_body)
+	_body.add_theme_constant_override("separation", 12)
+	_columns.add_child(_body)
+	_side = VBoxContainer.new()
+	_side.name = "BuildingSide"
+	_side.add_theme_constant_override("separation", 8)
+	_columns.add_child(_side)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
@@ -97,6 +115,7 @@ func configure(model: Dictionary) -> void:
 		_guild_level = 0
 	_painting.texture = _texture(String(model.get("art_path", "")))
 	_painting.tooltip_text = "%s — original Town building painting" % String(model.get("name", ""))
+	_subtitle_label.text = String(model.get("subtitle", ""))
 	_description_label.text = String(model.get("description", ""))
 	_clear(_effects_box)
 	for line in model.get("effects", []):
@@ -123,6 +142,7 @@ func painting_loaded() -> bool:
 
 func _rebuild_body() -> void:
 	_clear(_body)
+	_clear(_side)
 	_recruit_sliders.clear()
 	_recruit_buttons.clear()
 	_recruit_counts.clear()
@@ -134,7 +154,7 @@ func _rebuild_body() -> void:
 	_trade_button = null
 	_spell_grid = null
 	_hero_grid = null
-	_level_note = null
+	_spell_note = null
 	match String(_model.get("kind", "")):
 		"dwelling":
 			_build_recruitment()
@@ -144,10 +164,16 @@ func _rebuild_body() -> void:
 			_build_tavern()
 	_build_services()
 	_build_upgrade()
+	var has_body := _body.get_child_count() > 0
+	var has_side := _side.get_child_count() > 0
+	_body.visible = has_body
+	_side.visible = has_side
+	_side.size_flags_horizontal = Control.SIZE_FILL if has_body else Control.SIZE_EXPAND_FILL
+	_side.custom_minimum_size.x = SIDE_WIDTH if has_body else 0.0
 	_apply_columns()
 	controls_changed.emit()
 
-func _section(title: String, note: String = "") -> VBoxContainer:
+func _section(title: String, note: String = "", parent: VBoxContainer = null) -> VBoxContainer:
 	var section := VBoxContainer.new()
 	section.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	section.add_theme_constant_override("separation", 8)
@@ -163,7 +189,7 @@ func _section(title: String, note: String = "") -> VBoxContainer:
 		note_label.tooltip_text = note
 		note_label.mouse_filter = Control.MOUSE_FILTER_PASS
 		header.add_child(note_label)
-	_body.add_child(section)
+	(parent if parent != null else _body).add_child(section)
 	return section
 
 # --- dwelling -------------------------------------------------------------------
@@ -194,7 +220,7 @@ func _recruit_card(card: Dictionary) -> PanelContainer:
 	panel.add_child(row)
 	var portrait := TextureRect.new()
 	portrait.name = "Portrait"
-	portrait.custom_minimum_size = Vector2(96, 124)
+	portrait.custom_minimum_size = Vector2(80, 104)
 	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	portrait.texture = _texture(String(card.get("portrait_path", "")))
@@ -202,12 +228,12 @@ func _recruit_card(card: Dictionary) -> PanelContainer:
 	row.add_child(portrait)
 	var info := VBoxContainer.new()
 	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	info.add_theme_constant_override("separation", 6)
+	info.add_theme_constant_override("separation", 4)
 	row.add_child(info)
 	var name_row := HBoxContainer.new()
 	name_row.add_theme_constant_override("separation", 8)
 	info.add_child(name_row)
-	name_row.add_child(_label(String(card.get("name", unit_id)), "title", 17))
+	name_row.add_child(_label(String(card.get("name", unit_id)), "title", 16))
 	name_row.add_child(_chip("Tier %s" % Board.roman(int(card.get("tier", 0))), "gold"))
 	name_row.add_child(_role_chip(String(card.get("role", "melee"))))
 	info.add_child(_unit_stat_grid(card, {}))
@@ -221,7 +247,7 @@ func _recruit_card(card: Dictionary) -> PanelContainer:
 		info.add_child(ability_label)
 	var order := VBoxContainer.new()
 	order.name = "Order"
-	order.custom_minimum_size = Vector2(250, 0)
+	order.custom_minimum_size = Vector2(230, 0)
 	order.add_theme_constant_override("separation", 6)
 	row.add_child(order)
 	order.add_child(_label("%d available · +%d per week" % [int(card.get("available", 0)), int(card.get("weekly_growth", 0))], "body", 14))
@@ -269,7 +295,7 @@ func _recruit_card(card: Dictionary) -> PanelContainer:
 	if max_now <= 0:
 		var reason := _label(String(card.get("status_detail", "")), "muted", 12)
 		reason.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		reason.custom_minimum_size = Vector2(250, 0)
+		reason.custom_minimum_size = Vector2(230, 0)
 		order.add_child(reason)
 		if int(card.get("market_max", 0)) > 0:
 			order.add_child(_trade_link("Trade for it"))
@@ -365,6 +391,7 @@ func _build_guild() -> void:
 	var note := "%s learns every spell of the built levels." % visitor if visitor != "" else "Heroes learn every spell of the built levels when they visit."
 	var section := _section("Spells", note)
 	section.name = "Spells"
+	_spell_note = section.get_child(0).get_child(1) as Label
 	var levels: Array = guild.get("levels", [])
 	if levels.is_empty():
 		section.add_child(_label("This town has no spell library.", "muted", 14))
@@ -390,13 +417,10 @@ func _build_guild() -> void:
 		button.pressed.connect(_on_guild_level_pressed.bind(number))
 		tabs.add_child(button)
 		_level_buttons.append(button)
-	_level_note = _label("", "muted", 13)
-	_level_note.name = "LevelNote"
-	section.add_child(_level_note)
 	_spell_grid = GridContainer.new()
 	_spell_grid.name = "SpellGrid"
-	_spell_grid.add_theme_constant_override("h_separation", 8)
-	_spell_grid.add_theme_constant_override("v_separation", 8)
+	_spell_grid.add_theme_constant_override("h_separation", GRID_GAP)
+	_spell_grid.add_theme_constant_override("v_separation", GRID_GAP)
 	section.add_child(_spell_grid)
 	_show_guild_level()
 
@@ -414,8 +438,13 @@ func _show_guild_level() -> void:
 	_spell_cards.clear()
 	var level := _guild_level_model(_guild_level)
 	var built := bool(level.get("built", false))
-	_level_note.text = ("%s · %d spells, taught to visiting heroes." % [String(level.get("building_name", "")), level.get("spells", []).size()]) if built else ("Build %s to teach these spells." % String(level.get("building_name", "")))
-	_level_note.add_theme_color_override("font_color", FrontierVisualKit.text_color("muted" if built else "gold"))
+	if _spell_note != null:
+		var guild: Dictionary = _model.get("guild", {})
+		var visitor := String(guild.get("visitor_name", ""))
+		var taught := ("%s learns every spell of the built levels." % visitor) if visitor != "" else "Heroes learn every spell of the built levels when they visit."
+		_spell_note.text = taught if built else "Build %s to teach these spells." % String(level.get("building_name", ""))
+		_spell_note.tooltip_text = _spell_note.text
+		_spell_note.add_theme_color_override("font_color", FrontierVisualKit.text_color("muted" if built else "gold"))
 	for spell in level.get("spells", []):
 		var card := _spell_card(spell, built)
 		_spell_grid.add_child(card)
@@ -434,6 +463,7 @@ func _spell_card(spell: Dictionary, built: bool) -> PanelContainer:
 	_apply_card(card, "ink" if built else "earth")
 	card.modulate = Color(1, 1, 1, 1) if built else Color(1, 1, 1, 0.6)
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	card.custom_minimum_size.y = SPELL_CARD_HEIGHT
 	card.tooltip_text = "%s — %s\n%s\n%s · %s · level %d · %d mana" % [String(spell.get("name", "")), String(spell.get("summary", "")), String(spell.get("description", "")), String(spell.get("school_name", "")), String(spell.get("context", "")), int(spell.get("tier", 0)), int(spell.get("mana", 0))]
 	card.mouse_filter = Control.MOUSE_FILTER_PASS
 	var row := HBoxContainer.new()
@@ -441,7 +471,7 @@ func _spell_card(spell: Dictionary, built: bool) -> PanelContainer:
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.add_child(row)
 	var icon := TextureRect.new()
-	icon.custom_minimum_size = Vector2(44, 44)
+	icon.custom_minimum_size = Vector2(38, 38)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -453,7 +483,7 @@ func _spell_card(spell: Dictionary, built: bool) -> PanelContainer:
 	copy.add_theme_constant_override("separation", 1)
 	copy.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(copy)
-	var title := _label(String(spell.get("name", "")), "title", 14)
+	var title := _label(String(spell.get("name", "")), "title", 13)
 	title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	copy.add_child(title)
 	var meta := _label("%d mana · %s · %s%s" % [int(spell.get("mana", 0)), String(spell.get("context", "")), String(spell.get("school_name", "")), " · known" if bool(spell.get("known", false)) else ""], "gold", 12)
@@ -469,11 +499,10 @@ func _spell_card(spell: Dictionary, built: bool) -> PanelContainer:
 func _build_tavern() -> void:
 	var tavern: Dictionary = _model.get("tavern", {})
 	var heroes: Array = tavern.get("heroes", [])
-	var section := _section("Heroes for hire", "Command %d of %d heroes · new heroes wait at the town entrance." % [int(tavern.get("hero_count", 0)), int(tavern.get("hero_limit", 0))])
+	var days := int(tavern.get("days_until_rotation", 7))
+	var arrival := "tomorrow" if days == 1 else "in %d days" % days
+	var section := _section("This week's heroes", "Command %d of %d · new heroes arrive %s (day %d)." % [int(tavern.get("hero_count", 0)), int(tavern.get("hero_limit", 0)), arrival, int(tavern.get("next_rotation_day", 0))])
 	section.name = "Heroes"
-	if heroes.is_empty():
-		section.add_child(_label("No heroes are looking for work.", "muted", 14))
-		return
 	_hero_grid = GridContainer.new()
 	_hero_grid.name = "HeroGrid"
 	_hero_grid.add_theme_constant_override("h_separation", 10)
@@ -481,6 +510,17 @@ func _build_tavern() -> void:
 	section.add_child(_hero_grid)
 	for hero in heroes:
 		_hero_grid.add_child(_hero_card(hero))
+	# Keep the weekly slots visible: a hired hero's place waits for next week.
+	for _slot in range(maxi(0, int(tavern.get("offer_size", 2)) - heroes.size())):
+		var empty := PanelContainer.new()
+		empty.name = "EmptySlot"
+		empty.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		empty.custom_minimum_size.y = 152
+		_apply_card(empty, "earth")
+		var note := _label("No hero waits here this week.\nThe next hero arrives on day %d." % int(tavern.get("next_rotation_day", 0)), "muted", 14)
+		note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		empty.add_child(note)
+		_hero_grid.add_child(empty)
 
 func _hero_card(hero: Dictionary) -> PanelContainer:
 	var hero_id := String(hero.get("hero_id", ""))
@@ -609,7 +649,7 @@ func _build_upgrade() -> void:
 		if String(_model.get("kind", "")) != "tavern":
 			_body.add_child(_label("This building has no upgrades.", "muted", 13))
 		return
-	var section := _section("Upgrade")
+	var section := _section("Upgrade", "", _side)
 	section.name = "Upgrade"
 	section.add_child(_stage_strip(upgrade))
 	var forgone: Array = upgrade.get("forgone_unit_names", [])
@@ -626,7 +666,11 @@ func _build_upgrade() -> void:
 	box.add_theme_constant_override("separation", 8)
 	panel.add_child(box)
 	box.add_child(_label(String(upgrade.get("next_name", "")), "title", 16))
-	var description := _wrapped(String(upgrade.get("next_description", "")), "body", 14)
+	var description := _wrapped(String(upgrade.get("next_description", "")), "body", 13)
+	description.max_lines_visible = 3
+	description.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	description.tooltip_text = description.text
+	description.mouse_filter = Control.MOUSE_FILTER_PASS
 	box.add_child(description)
 	var current_unit := String(upgrade.get("current_unit_id", ""))
 	var next_unit := String(upgrade.get("next_unit_id", ""))
@@ -658,7 +702,8 @@ func _build_upgrade() -> void:
 	_upgrade_button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_upgrade_button.disabled = String(upgrade.get("status", "")) != "ready"
 	_upgrade_button.tooltip_text = String(upgrade.get("status_detail", ""))
-	FrontierVisualKit.apply_button(_upgrade_button, "primary", 300, 38, 15)
+	_upgrade_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	FrontierVisualKit.apply_button(_upgrade_button, "primary", 220, 36, 14)
 	var next_id := String(upgrade.get("next_id", ""))
 	_upgrade_button.pressed.connect(func(): build_requested.emit(next_id))
 	buttons.add_child(_upgrade_button)
@@ -666,19 +711,24 @@ func _build_upgrade() -> void:
 		_trade_button = _trade_link("Trade for it")
 		buttons.add_child(_trade_button)
 
-func _stage_strip(upgrade: Dictionary) -> HBoxContainer:
-	var strip := HBoxContainer.new()
+func _stage_strip(upgrade: Dictionary) -> HFlowContainer:
+	var strip := HFlowContainer.new()
 	strip.name = "Stages"
-	strip.add_theme_constant_override("separation", 6)
+	strip.add_theme_constant_override("h_separation", 6)
+	strip.add_theme_constant_override("v_separation", 4)
 	var stages: Array = upgrade.get("stages", [])
 	for index in range(stages.size()):
 		var stage: Dictionary = stages[index]
+		# Each arrow travels with the stage it points to when the strip wraps.
+		var step := HBoxContainer.new()
+		step.add_theme_constant_override("separation", 6)
 		if index > 0:
-			strip.add_child(_label("→", "muted", 14))
+			step.add_child(_label("→", "muted", 14))
 		var done := bool(stage.get("done", false))
 		var chip := _chip(String(stage.get("name", "")) + (" · built" if done else (" · next" if bool(stage.get("next", false)) else "")), "gold" if done else ("teal" if bool(stage.get("next", false)) else "muted"))
 		chip.name = "Stage%d" % (index + 1)
-		strip.add_child(chip)
+		step.add_child(chip)
+		strip.add_child(step)
 	return strip
 
 func _unit_upgrade_compare(from_id: String, to_id: String) -> VBoxContainer:
@@ -690,7 +740,20 @@ func _unit_upgrade_compare(from_id: String, to_id: String) -> VBoxContainer:
 	box.add_child(_label("%s → %s" % [String(from_unit.get("name", from_id)), String(to_unit.get("name", to_id))], "gold", 14))
 	var before := {"attack": from_unit.get("attack", 0), "defense": from_unit.get("defense", 0), "min_damage": from_unit.get("min_damage", 0), "max_damage": from_unit.get("max_damage", 0), "hp": from_unit.get("hp", 0), "speed": from_unit.get("speed", 0), "initiative": from_unit.get("initiative", 0), "shots": from_unit.get("shots", 0)}
 	var after := {"attack": to_unit.get("attack", 0), "defense": to_unit.get("defense", 0), "min_damage": to_unit.get("min_damage", 0), "max_damage": to_unit.get("max_damage", 0), "hp": to_unit.get("hp", 0), "speed": to_unit.get("speed", 0), "initiative": to_unit.get("initiative", 0), "shots": to_unit.get("shots", 0) if bool(to_unit.get("ranged", false)) else 0}
-	box.add_child(_unit_stat_grid(after, before))
+	var gains := HFlowContainer.new()
+	gains.name = "Gains"
+	gains.add_theme_constant_override("h_separation", 12)
+	gains.add_theme_constant_override("v_separation", 2)
+	var stats := _unit_stat_grid(after, before)
+	for cell in stats.get_children():
+		var value := cell.get_node("Value") as Label
+		if value != null and value.text.contains("(+"):
+			stats.remove_child(cell)
+			gains.add_child(cell)
+	stats.queue_free()
+	if gains.get_child_count() == 0:
+		gains.add_child(_label("Same battle profile; new abilities.", "muted", 13))
+	box.add_child(gains)
 	return box
 
 # --- shared widgets -------------------------------------------------------------
@@ -829,11 +892,17 @@ func _clear(node: Node) -> void:
 		child.queue_free()
 
 func _apply_columns() -> void:
-	var wide := size.x >= WIDE_LAYOUT or size.x <= 0.0
+	var width := _body.size.x if _body.size.x > 0.0 else 800.0
 	if _spell_grid != null:
-		_spell_grid.columns = 3 if wide else 2
+		_spell_grid.columns = 3 if width >= 640.0 else 2
+		# Reserve the tallest level so switching levels never resizes the popout.
+		var most := 0
+		for level in _model.get("guild", {}).get("levels", []):
+			most = maxi(most, level.get("spells", []).size())
+		var rows := ceili(float(most) / float(_spell_grid.columns))
+		_spell_grid.custom_minimum_size.y = rows * SPELL_CARD_HEIGHT + maxi(0, rows - 1) * GRID_GAP
 	if _hero_grid != null:
-		_hero_grid.columns = 2 if wide else 1
+		_hero_grid.columns = 2 if width >= 640.0 else 1
 
 # --- validation -----------------------------------------------------------------
 

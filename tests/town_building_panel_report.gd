@@ -88,6 +88,7 @@ func _run_town(template_id: String, viewport_size: Vector2i) -> Dictionary:
 	# Dwelling: recruit a chosen amount, then build its upgrade from the popout.
 	var info: Dictionary = await _open(shell, ids.dwelling)
 	var panel: Dictionary = info.get("panel", {})
+	_no_scroll(failures, info, "dwelling")
 	_check(failures, bool(info.get("open", false)) and String(info.get("mode", "")) == "building_info", "dwelling popout open")
 	_check(failures, String(info.get("title", "")) == String(info.get("expected_title", "")), "dwelling title")
 	_check(failures, String(panel.get("kind", "")) == "dwelling", "dwelling kind %s" % panel.get("kind", ""))
@@ -109,6 +110,7 @@ func _run_town(template_id: String, viewport_size: Vector2i) -> Dictionary:
 	_check(failures, int(town_after.get("available_recruits", {}).get(base_unit, -1)) == 7, "reserve after recruit %s" % town_after.get("available_recruits", {}))
 	_check(failures, _army_count(SessionState.ensure_active_session(), base_unit) == army_before + 3, "army gained 3")
 	_check(failures, bool(info.get("open", false)) and int(recruit.get("max", 0)) == 7, "popout refreshed after recruit %s" % recruit)
+	_no_scroll(failures, info, "dwelling after recruit")
 	var upgrade: Dictionary = panel.get("upgrade", {})
 	_check(failures, bool(upgrade.get("has_line", false)) and String(upgrade.get("next_id", "")) == String(ids.dwelling_upgrade), "dwelling upgrade line %s" % upgrade)
 	_check(failures, String(upgrade.get("status", "")) == "ready" and bool(upgrade.get("button_enabled", false)), "dwelling upgrade ready %s" % upgrade)
@@ -119,6 +121,7 @@ func _run_town(template_id: String, viewport_size: Vector2i) -> Dictionary:
 	town_after = TownRules.get_active_town(SessionState.ensure_active_session())
 	_check(failures, String(ids.dwelling_upgrade) in town_after.get("built_buildings", []), "upgrade built")
 	info = await _open(shell, ids.dwelling_upgrade)
+	_no_scroll(failures, info, "upgraded dwelling")
 	panel = info.get("panel", {})
 	_check(failures, String(panel.get("kind", "")) == "dwelling" and bool(panel.get("upgrade", {}).get("complete", false)), "upgraded dwelling complete %s" % panel.get("upgrade", {}))
 	var troop_upgrade := false
@@ -129,6 +132,7 @@ func _run_town(template_id: String, viewport_size: Vector2i) -> Dictionary:
 
 	# Magic guild: five levels of spells, the built level first, the next level for tomorrow.
 	info = await _open(shell, ids.guild)
+	_no_scroll(failures, info, "guild")
 	panel = info.get("panel", {})
 	var levels: Array = panel.get("guild_levels", [])
 	_check(failures, String(panel.get("kind", "")) == "guild", "guild kind")
@@ -145,15 +149,33 @@ func _run_town(template_id: String, viewport_size: Vector2i) -> Dictionary:
 	await _capture(template_id, "guild", viewport_size)
 	view = shell.get("_building_info_surface")
 	_check(failures, bool(view.call("validation_show_guild_level", 3)), "guild level III tab")
+	await _frames(2)
+	_no_scroll(failures, shell.call("validation_building_information_snapshot", ids.guild), "guild level III")
 	var shown: Dictionary = view.call("validation_snapshot")
 	_check(failures, shown.get("spell_cards_shown", []).size() == levels[2].get("spell_ids", []).size(), "guild shows level III")
 	_check(failures, String(shown.get("upgrade", {}).get("status", "")) == "tomorrow" and not bool(shown.get("upgrade", {}).get("button_enabled", true)), "guild upgrade waits for tomorrow %s" % shown.get("upgrade", {}))
 
-	# Tavern: hireable heroes with portraits and stats; hiring adds a commander.
+	# Tavern: this week's two heroes; a hire leaves its place empty until next week.
 	info = await _open(shell, TAVERN_ID)
+	_no_scroll(failures, info, "tavern")
 	panel = info.get("panel", {})
 	var heroes: Array = panel.get("heroes", [])
-	_check(failures, String(panel.get("kind", "")) == "tavern" and not heroes.is_empty(), "tavern heroes %d" % heroes.size())
+	var live_session = SessionState.ensure_active_session()
+	var offer: Array = HeroCommandRules.tavern_offer_ids(live_session)
+	var pool: Array = HeroCommandRules.recruitable_hero_ids(live_session)
+	_check(failures, String(panel.get("kind", "")) == "tavern" and heroes.size() == 2, "tavern heroes %d" % heroes.size())
+	_check(failures, offer.size() == 2 and offer == HeroCommandRules.tavern_offer_ids(live_session) and pool.size() > 2, "weekly offer %s of %s" % [offer, pool])
+	_check(failures, heroes.map(func(hero): return String(hero.get("hero_id", ""))) == offer, "popout shows the weekly offer")
+	for hero_id_value in offer:
+		_check(failures, String(hero_id_value) in pool, "offered hero %s is hireable" % hero_id_value)
+	var outsider := ""
+	for hero_id_value in pool:
+		if hero_id_value not in offer:
+			outsider = String(hero_id_value)
+			break
+	var probe = SessionStateStore.new_session_data()
+	probe.from_dict(live_session.to_dict())
+	_check(failures, outsider != "" and not bool(TownRules.hire_hero_at_active_town(probe, outsider).get("ok", true)), "hero outside the weekly offer was hired")
 	await _capture(template_id, "tavern", viewport_size)
 	var hire_id := String(heroes[0].get("hero_id", "")) if not heroes.is_empty() else ""
 	var commanders := HeroCommandRules.player_hero_count(SessionState.ensure_active_session())
@@ -164,14 +186,23 @@ func _run_town(template_id: String, viewport_size: Vector2i) -> Dictionary:
 	await _frames(2)
 	_check(failures, HeroCommandRules.player_hero_count(SessionState.ensure_active_session()) == commanders + 1, "hero hired")
 	info = shell.call("validation_building_information_snapshot", TAVERN_ID)
-	_check(failures, _entry(info.get("panel", {}).get("heroes", []), "hero_id", hire_id).is_empty(), "hired hero left the tavern list")
+	_check(failures, _entry(info.get("panel", {}).get("heroes", []), "hero_id", hire_id).is_empty() and info.get("panel", {}).get("heroes", []).size() == 1, "hired hero left an empty place")
+	_check(failures, HeroCommandRules.tavern_offer_ids(SessionState.ensure_active_session()).size() == 1, "hired place refilled this week")
+	_no_scroll(failures, info, "tavern after hire")
+	var next_week = SessionStateStore.new_session_data()
+	next_week.from_dict(SessionState.ensure_active_session().to_dict())
+	next_week.day = 9
+	var next_offer: Array = HeroCommandRules.tavern_offer_ids(next_week)
+	_check(failures, next_offer.size() == 2 and hire_id not in next_offer, "next week offer %s" % [next_offer])
 
 	# Training, artifact exchange and market services.
 	info = await _open(shell, ids.training)
+	_no_scroll(failures, info, "training")
 	panel = info.get("panel", {})
 	var train_id := "town_train:%s" % ids.training
 	_check(failures, String(panel.get("kind", "")) == "training" and bool(_entry(panel.get("services", []), "id", train_id).get("enabled", false)), "training service %s" % [panel.get("services", [])])
 	info = await _open(shell, ids.artifacts)
+	_no_scroll(failures, info, "artifact exchange")
 	panel = info.get("panel", {})
 	var buy_count := 0
 	for service in panel.get("services", []):
@@ -179,12 +210,14 @@ func _run_town(template_id: String, viewport_size: Vector2i) -> Dictionary:
 			buy_count += 1
 	_check(failures, String(panel.get("kind", "")) == "artifact_exchange" and buy_count > 0, "artifact offers %d" % buy_count)
 	info = await _open(shell, ids.market)
+	_no_scroll(failures, info, "market")
 	panel = info.get("panel", {})
 	_check(failures, String(panel.get("kind", "")) == "market" and not _entry(panel.get("services", []), "id", "open:trade").is_empty(), "market hand-off")
 	_check(failures, bool(panel.get("upgrade", {}).get("has_line", false)), "market upgrade line")
 
 	# A plain building: description, effects and its next stage.
 	info = await _open(shell, ids.fort)
+	_no_scroll(failures, info, "fort")
 	panel = info.get("panel", {})
 	_check(failures, String(panel.get("kind", "")) == "building" and String(info.get("effects", "")).contains("Effects:"), "fort effects")
 	_check(failures, String(info.get("description", "")) == String(info.get("expected_description", "")), "fort description")
@@ -223,6 +256,9 @@ func _open(shell: Node, building_id: String) -> Dictionary:
 	shell.call("validation_activate_building_information", building_id)
 	await _frames(3)
 	return shell.call("validation_building_information_snapshot", building_id)
+
+func _no_scroll(failures: Array, info: Dictionary, label: String) -> void:
+	_check(failures, not bool(info.get("scroll_needed", true)), "%s popout needs a scrollbar (panel %s)" % [label, info.get("panel_size", Vector2.ZERO)])
 
 func _dismiss_presentation(shell: Node) -> void:
 	var stage = shell.get("_town_stage_view")

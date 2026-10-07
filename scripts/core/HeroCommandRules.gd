@@ -11,6 +11,8 @@ static var DifficultyRulesScript: Variant = load("res://scripts/core/DifficultyR
 const HALL_BUILDING_ID := "building_wayfarers_hall"
 const HOLDER_GARRISON := "garrison"
 const HERO_LIMIT := 4
+const TAVERN_OFFER_SIZE := 2
+const TAVERN_ROTATION_KEY := "tavern_rotation"
 const ARMY_SLOT_COUNT := 7
 const ARMY_SLOT_INDEX_KEY := "slot_index"
 const DEFAULT_RECRUIT_COST := {"gold": 1200}
@@ -587,7 +589,7 @@ static func get_tavern_actions(session: SessionStateStoreScript.SessionData, tow
 	if player_hero_count(session) >= HERO_LIMIT:
 		return actions
 
-	for hero_id in recruitable_hero_ids(session):
+	for hero_id in tavern_offer_ids(session):
 		var hero_template := ContentService.get_hero(hero_id)
 		if hero_template.is_empty():
 			continue
@@ -613,8 +615,9 @@ static func recruit_hero_at_town(session: SessionStateStoreScript.SessionData, t
 		return {"ok": false, "message": "Only controlled towns can hire new commanders."}
 	if not town_has_hall(town):
 		return {"ok": false, "message": "A Wayfarers Hall is required before a new commander can be hired."}
-	if hero_id not in recruitable_hero_ids(session):
-		return {"ok": false, "message": "That commander is not currently available for hire."}
+	var offer := tavern_offer_ids(session)
+	if hero_id not in offer:
+		return {"ok": false, "message": "That commander is not in this week's tavern."}
 	if player_hero_count(session) >= HERO_LIMIT:
 		return {"ok": false, "message": "The command limit has already been reached."}
 
@@ -631,6 +634,9 @@ static func recruit_hero_at_town(session: SessionStateStoreScript.SessionData, t
 		heroes = []
 	heroes.append(hero)
 	session.overworld["player_heroes"] = heroes
+	# The hired hero's tavern place stays empty until the next weekly draw.
+	offer.erase(hero_id)
+	session.overworld[TAVERN_ROTATION_KEY] = {"week": tavern_week(session), "hero_ids": offer}
 	normalize_session(session)
 	var town_name := String(ContentService.get_town(String(town.get("town_id", ""))).get("name", town.get("town_id", "the town")))
 	return {"ok": true, "message": "%s joins the command roster at %s." % [String(hero.get("name", hero_id)), town_name]}
@@ -1262,19 +1268,62 @@ static func hero_recruit_cost(hero_template: Dictionary) -> Dictionary:
 	var cost = hero_template.get("recruit_cost", DEFAULT_RECRUIT_COST)
 	return _normalize_resources(cost)
 
+## The two heroes every player tavern offers this week. A new pair is drawn
+## at the start of each week from the faction's hireable heroes; a hired
+## hero's place stays empty until then. Reading never changes the session.
+static func tavern_offer_ids(session: SessionStateStoreScript.SessionData) -> Array:
+	if session == null:
+		return []
+	var pool := recruitable_hero_ids(session)
+	var week := tavern_week(session)
+	var stored = session.overworld.get(TAVERN_ROTATION_KEY, {})
+	if stored is Dictionary and int(stored.get("week", -1)) == week and stored.get("hero_ids", []) is Array:
+		var kept := []
+		for hero_id_value in stored.get("hero_ids", []):
+			if String(hero_id_value) in pool:
+				kept.append(String(hero_id_value))
+		return kept
+	# Shuffle every hireable hero, controlled ones included, so a change in who
+	# is in command moves the weekly pair as little as possible.
+	var candidates := _tavern_candidate_ids(session)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash("%s|%s|tavern|%d" % [String(session.session_id), String(session.scenario_id), week])
+	for index in range(candidates.size() - 1, 0, -1):
+		var swap := rng.randi_range(0, index)
+		var held = candidates[index]
+		candidates[index] = candidates[swap]
+		candidates[swap] = held
+	var offer := []
+	for hero_id_value in candidates:
+		if String(hero_id_value) in pool:
+			offer.append(String(hero_id_value))
+			if offer.size() >= TAVERN_OFFER_SIZE:
+				break
+	return offer
+
+static func tavern_week(session: SessionStateStoreScript.SessionData) -> int:
+	return maxi(0, (int(session.day) - 1) / 7) if session != null else 0
+
+static func days_until_tavern_rotation(session: SessionStateStoreScript.SessionData) -> int:
+	return 7 - ((maxi(1, int(session.day)) - 1) % 7) if session != null else 7
+
 static func recruitable_hero_ids(session: SessionStateStoreScript.SessionData) -> Array:
+	var controlled := {}
+	if session != null:
+		for hero in session.overworld.get("player_heroes", []):
+			if hero is Dictionary:
+				controlled[String(hero.get("id", ""))] = true
+	return _tavern_candidate_ids(session).filter(func(hero_id): return not controlled.has(String(hero_id)))
+
+static func _tavern_candidate_ids(session: SessionStateStoreScript.SessionData) -> Array:
 	var recruitable := []
 	if session == null:
 		return recruitable
 	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var player_faction := ContentService.get_faction(String(scenario.get("player_faction_id", "")))
-	var controlled := {}
-	for hero in session.overworld.get("player_heroes", []):
-		if hero is Dictionary:
-			controlled[String(hero.get("id", ""))] = true
 	for hero_id_value in player_faction.get("hero_ids", []):
 		var hero_id := String(hero_id_value)
-		if hero_id == "" or controlled.has(hero_id):
+		if hero_id == "" or hero_id in recruitable:
 			continue
 		if not _hero_recruitable_for_scenario(hero_id, scenario):
 			continue
