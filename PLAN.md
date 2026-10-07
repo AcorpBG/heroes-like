@@ -30,6 +30,10 @@ Rules:
 
 `content-gold-only-unit-costs-20261006` (completed, owner-directed economy content): tier 1-6 units, base and upgraded, cost only gold; each faction's tier 7 costs gold plus its main rare resource, the only non-gold unit cost; no unit costs wood or ore, and neutral units follow the same tiers. Gold amounts are unchanged and faction resource pressure stays in building costs. `tests/validate_repo.py` enforces the rule. See `docs/economy-overhaul-foundation.md`.
 
+### Water travel and transit objects
+
+`feature-water-travel-20261007` (completed for the player, owner direction): HoMM3-style boats. Walking onto a free boat boards it and stepping onto open shore leaves it, each ending the day's movement; sailing heroes move only on water and visit water sites. Neutral shipyards build a boat at their dock for 1,000 gold and 10 wood; whirlpools throw a boat out at another whirlpool for half of the weakest stack. Random maps translate HoMM3 transit objects by meaning instead of a random transit pick: boats, shipyards and whirlpools become themselves, border guards, gates, garrisons and quest guards become terrain-matched pay-to-open gates, keymaster's tents are left off, and portals and subterranean gates keep their passage with matching art. Shipyards and whirlpools are never used as stand-ins for other HoMM3 sites. Gates ask before taking payment, and older saves are migrated once. Follow-up: AI heroes do not sail yet. See `docs/water-travel.md`.
+
 ### Town building popouts
 
 `ux-town-building-popouts-20261006` (completed, owner-directed UI): clicking a built Town building opens a popout made for it. Dwellings recruit with an amount slider and full creature stats, the magic guild shows its spells by level, the tavern lists hireable heroes with portraits and stats, markets, artifact exchanges and training buildings offer their orders, and every building shows its description, effect tags and upgrade line with cost and an Upgrade button. Orders run through the existing Town rules; opening a popout changes nothing. See `docs/town-building-popouts.md`.

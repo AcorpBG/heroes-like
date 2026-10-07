@@ -116,6 +116,36 @@ const ELDER_TREE_TYPE := 102
 # HoMM3 creature dwellings become one of our dwellings of the same tier
 # (docs/creature-dwellings.md). A dwelling of a town creature belongs to the
 # faction of the nearest town; a neutral creature's dwelling stays neutral.
+# HoMM3 transit objects by meaning (docs/water-travel.md). Boats become boat
+# entities and keymaster's tents are left off: gates open by payment, so no
+# key is needed. Border guards, gates, garrisons and quest guards become the
+# pay-to-open gate that suits their terrain; portals and subterranean gates
+# keep their native passage with matching art.
+const TYPE_BOAT := 8
+const TYPE_KEYMASTER := 10
+const TYPE_SHIPYARD := 87
+const TYPE_WHIRLPOOL := 111
+const TYPE_SUBTERRANEAN_GATE := 103
+const SKIPPED_TYPES := [TYPE_BOAT, TYPE_KEYMASTER]
+const GATE_TYPES := [9, 33, 212, 215, 219]
+const PORTAL_TYPES := [43, 44, 45]
+const TRANSIT_MEANING_TYPES := [8, 9, 10, 33, 43, 44, 45, 87, 103, 111, 212, 215, 219]
+const SHIPYARD_SITE := "site_shipyard"
+const WHIRLPOOL_SITE := "site_whirlpool"
+const PORTAL_SITE := "site_slipgate_mirror"
+const UNDERGATE_SITE := "site_basalt_undergate"
+const GATE_SITES := ["site_charter_bar_gate", "site_thorn_seal_gate", "site_brass_toll_arch", "site_reef_chain_boom", "site_frost_toll_bar", "site_ash_sluice_lock", "site_toll_chain_court", "site_root_lease_gate", "site_pressure_rail_stop"]
+const GATE_SITES_BY_TERRAIN := {
+	"grass": ["site_charter_bar_gate", "site_toll_chain_court", "site_thorn_seal_gate"],
+	"dirt": ["site_charter_bar_gate", "site_brass_toll_arch"],
+	"sand": ["site_toll_chain_court", "site_reef_chain_boom"],
+	"snow": ["site_frost_toll_bar"],
+	"swamp": ["site_thorn_seal_gate", "site_root_lease_gate", "site_reef_chain_boom"],
+	"rough": ["site_brass_toll_arch", "site_pressure_rail_stop", "site_charter_bar_gate"],
+	"underground": ["site_brass_toll_arch", "site_pressure_rail_stop"],
+	"lava": ["site_ash_sluice_lock"],
+}
+
 const TYPE_CREATURE_GENERATOR := 17
 const TYPE_MULTI_GENERATOR := 20
 const TYPE_REFUGEE_CAMP := 78
@@ -145,13 +175,23 @@ static var _dwelling_pool_cache: Dictionary = {}
 
 ## Returns the node the session should hold for a generated object, or an empty
 ## dictionary when this object type is not one of the translated reward types.
-static func resolve(object: Dictionary, towns: Array = []) -> Dictionary:
+static func resolve(object: Dictionary, towns: Array = [], terrain_rows: Array = []) -> Dictionary:
 	var type_id := int(object.get("h3m_type_id", -1))
 	var subtype := int(object.get("h3m_subtype", -1))
 	var key := String(object.get("placement_id", "")).strip_edges()
 	if type_id < 0 or key == "":
 		return {}
+	if type_id in GATE_TYPES:
+		return _node(object, _gate_site(object, key, terrain_rows), "resource_site", {})
+	if type_id in PORTAL_TYPES:
+		return _node(object, PORTAL_SITE, String(object.get("kind", "resource_site")), {})
 	match type_id:
+		TYPE_SHIPYARD:
+			return _node(object, SHIPYARD_SITE, "resource_site", {})
+		TYPE_WHIRLPOOL:
+			return _node(object, WHIRLPOOL_SITE, "resource_site", {})
+		TYPE_SUBTERRANEAN_GATE:
+			return _node(object, UNDERGATE_SITE, String(object.get("kind", "resource_site")), {})
 		TYPE_CREATURE_GENERATOR:
 			var level := int(H3M_DWELLING_LEVEL.get(subtype, 0))
 			if level <= 0:
@@ -247,6 +287,27 @@ static func _visit_building(object: Dictionary, key: String, type_id: int) -> Di
 	if String(object.get("native_authored_pool_id", "")) == "interactable_site":
 		return _node(object, _pick(_visit_fallback_sites(), key, "visit_fallback"), "resource_site", {})
 	return {}
+
+## Boats and keymaster's tents become no resource site.
+static func is_skipped(object: Dictionary) -> bool:
+	return int(object.get("h3m_type_id", -1)) in SKIPPED_TYPES
+
+## A HoMM3 boat's water tile, or {} for any other object.
+static func boat_tile(object: Dictionary) -> Dictionary:
+	if int(object.get("h3m_type_id", -1)) != TYPE_BOAT:
+		return {}
+	var visit: Dictionary = object.get("visit_tile", {}) if object.get("visit_tile", {}) is Dictionary else {}
+	var level := int(visit.get("level", object.get("level", 0)))
+	return {"x": int(visit.get("x", object.get("x", 0))), "y": int(visit.get("y", object.get("y", 0))), "level": level}
+
+static func _gate_site(object: Dictionary, key: String, terrain_rows: Array) -> String:
+	var options: Array = GATE_SITES
+	var x := int(object.get("x", -1))
+	var y := int(object.get("y", -1))
+	if int(object.get("level", 0)) == 0 and y >= 0 and y < terrain_rows.size() and terrain_rows[y] is Array and x >= 0 and x < terrain_rows[y].size():
+		var terrain := ContentService.normalize_terrain_id(String(terrain_rows[y][x]))
+		options = GATE_SITES_BY_TERRAIN.get(terrain, GATE_SITES)
+	return _pick(options, key, "gate")
 
 ## Our dwelling of this tier: the faction's when the faction has one, a
 ## neutral one otherwise, then the nearest tier that has one.

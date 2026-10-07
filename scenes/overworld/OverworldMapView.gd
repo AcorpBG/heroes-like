@@ -10,6 +10,7 @@ signal camera_changed
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
+const WaterTravelScript = preload("res://scripts/core/WaterTravelRules.gd")
 const Inspection := preload("res://scripts/ui/OverworldInspection.gd")
 var _interaction_highlights := false
 var _interaction_highlight_index: Dictionary = {}
@@ -301,6 +302,8 @@ const HERO_DEPTH_CUE_MODEL := "hero_foot_contact_shadow_with_boot_occlusion"
 const HERO_FIELD_LAYOUT_MODE := "full_tile_world_hero"
 const HERO_TOWN_FOOTPRINT_LAYOUT_MODE := "full_size_town_entrance_visitor"
 const HERO_FIELD_SPRITE_EXTENT_FACTOR := 1.0
+# Masthead position across the boat sprite's visible width (mapobj_water_boat).
+const BOAT_MASTHEAD_X := 0.482
 const HERO_SPRITE_LIFT_FACTOR := 0.50
 const HERO_GROUND_ANCHOR_Y_FACTOR := 0.72
 const HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR := 1.0
@@ -737,6 +740,7 @@ var _generated_decorative_bodies_by_tile: Dictionary = {}
 var _native_scenery_layers_by_tile: Dictionary = {}
 var _standalone_map_objects_by_tile: Dictionary = {}
 var _heroes_by_tile: Dictionary = {}
+var _boats_by_tile: Dictionary = {}
 var _decorative_object_asset_ids: Dictionary = {}
 var _generated_decorative_blocker_asset_ids_by_biome: Dictionary = {}
 var _generated_decorative_blocker_fallback_asset_ids: Array = []
@@ -3856,6 +3860,17 @@ func _draw_tile_dynamic_icon(tile: Vector2i, rect: Rect2) -> void:
 	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
 	if visible and _has_hero_at(tile) and not (_hero_movement_active and tile == _hero_tile):
 		_draw_hero_marker(rect, tile)
+	elif _boats_by_tile.has(_tile_key(tile)):
+		_draw_free_boat(rect, not visible)
+
+## An empty boat moored on its water tile (WaterTravelRules).
+func _draw_free_boat(rect: Rect2, remembered: bool) -> void:
+	var texture = _object_texture_for_asset(WaterTravelScript.BOAT_ASSET_ID)
+	if not (texture is Texture2D):
+		return
+	var extent := minf(rect.size.x, rect.size.y)
+	var ground := rect.position + Vector2(rect.size.x * 0.5, rect.size.y * 0.88)
+	_draw_actor_art(_actor_sprite_payload(WaterTravelScript.BOAT_ASSET_ID, texture, ground, maxf(16.0, extent * HERO_FIELD_SPRITE_EXTENT_FACTOR)), remembered)
 
 func _draw_hero_movement_presentation(board_rect: Rect2) -> void:
 	var draw_state := _hero_movement_draw_state(board_rect)
@@ -5270,7 +5285,8 @@ func _draw_hero_marker(rect: Rect2, tile: Vector2i, show_reserve_count: bool = t
 	_draw_hero_reserve_badge(rect, tile, show_reserve_count)
 
 func _draw_hero_sprite(hero: Dictionary, rect: Rect2, tile: Vector2i) -> bool:
-	var asset_id := _hero_sprite_asset_id(hero)
+	# A sailing hero shows as the boat under the hero's command pennant.
+	var asset_id := WaterTravelScript.BOAT_ASSET_ID if String(hero.get("boat_id", "")) != "" else _hero_sprite_asset_id(hero)
 	var texture = _object_texture_for_asset(asset_id)
 	if not (texture is Texture2D):
 		return false
@@ -5283,8 +5299,28 @@ func _draw_hero_sprite(hero: Dictionary, rect: Rect2, tile: Vector2i) -> bool:
 	var sprite_extent := maxf(16.0, extent * sprite_factor)
 	_draw_hero_command_pennant(_hero_command_pennant_profile(rect, bool(hero.get("is_active", false))))
 	_draw_actor_art(_actor_sprite_payload(asset_id, texture, ground_center + _moving_sprite_offset, sprite_extent), false)
+	if asset_id == WaterTravelScript.BOAT_ASSET_ID:
+		var boat_payload := _actor_sprite_payload(asset_id, texture, ground_center + _moving_sprite_offset, sprite_extent)
+		_draw_boat_masthead_flag(boat_payload.draw_rect, bool(hero.get("is_active", false)))
 	_draw_hero_foreground_contact(anchor)
 	return true
+
+## The owner's flag at the masthead tells a sailing hero's boat from an empty one.
+func _draw_boat_masthead_flag(boat_rect: Rect2, active: bool) -> void:
+	var top := boat_rect.position + Vector2(boat_rect.size.x * BOAT_MASTHEAD_X, boat_rect.size.y * 0.01)
+	var length := boat_rect.size.x * 0.30
+	var drop := boat_rect.size.y * 0.15
+	var owner_color := FrontierVisualKitScript.semantic_color("player", PLAYER_TOWN_COLOR)
+	var cloth := PackedVector2Array([
+		top,
+		top + Vector2(length, drop * 0.18),
+		top + Vector2(length * 0.72, drop * 0.5),
+		top + Vector2(length, drop * 0.82),
+		top + Vector2(0.0, drop),
+	])
+	var outline := maxf(1.2, boat_rect.size.x * 0.012)
+	_canvas_draw_colored_polygon(cloth, Color(owner_color.r, owner_color.g, owner_color.b, 0.96 if active else 0.82))
+	_canvas_draw_polyline(PackedVector2Array([cloth[0], cloth[1], cloth[2], cloth[3], cloth[4], cloth[0]]), MARKER_OUTLINE_COLOR, outline)
 
 func _hero_command_pennant_profile(rect: Rect2, active: bool) -> Dictionary:
 	var extent := minf(rect.size.x, rect.size.y)
@@ -11277,6 +11313,9 @@ func _stable_unit_fraction(stable_key: String) -> float:
 
 func _rebuild_hero_index() -> void:
 	_heroes_by_tile.clear()
+	_boats_by_tile.clear()
+	for boat_value in WaterTravelScript.free_boats(_session, _level):
+		_boats_by_tile[_tile_key(Vector2i(int(boat_value.get("x", -1)), int(boat_value.get("y", -1))))] = boat_value
 	for hero_value in HeroCommandRulesScript.hero_positions(_session):
 		if not (hero_value is Dictionary):
 			continue
@@ -11338,7 +11377,8 @@ func _enemy_commander_presentation_signature(encounters: Variant) -> int:
 func _hero_index_signature_for(session) -> int:
 	if session == null:
 		return 0
-	return _combine_cache_signature(_level, _placement_array_cache_signature(HeroCommandRulesScript.hero_positions(session), ["hero_id", "is_active"]))
+	var heroes := _placement_array_cache_signature(HeroCommandRulesScript.hero_positions(session), ["hero_id", "is_active", "boat_id"])
+	return _combine_cache_signature(_combine_cache_signature(_level, heroes), _placement_array_cache_signature(WaterTravelScript.boats(session), ["id", "hero_id"]))
 
 func _ensure_road_tile_payload(tile: Vector2i, overlay_id: String, road_id: String, role: String, source_tile: Dictionary = {}) -> void:
 	var key := _tile_key(tile)
@@ -12702,7 +12742,7 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 	if goal.x >= _map_size.x or goal.y >= _map_size.y:
 		_profile_path_recompute_details(detail_profile_enabled, start, goal, "goal_out_of_bounds", 0, 0, 0, 0)
 		return []
-	if OverworldRulesScript.tile_is_blocked(_session, goal.x, goal.y, _level):
+	if OverworldRulesScript.hero_route_tile_blocked(_session, goal.x, goal.y, _level):
 		_profile_path_recompute_details(detail_profile_enabled, start, goal, "goal_blocked", 0, 0, 1 if detail_profile_enabled else 0, 0)
 		return []
 	var queue: Array = [start]
@@ -12731,7 +12771,7 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 				blocked_tile_lookup_count += 1
 			if OverworldRulesScript.tile_step_cuts_blocked_corner(_session, current, next, _level):
 				continue
-			if OverworldRulesScript.tile_is_blocked(_session, next.x, next.y, _level):
+			if OverworldRulesScript.hero_route_tile_blocked(_session, next.x, next.y, _level):
 				continue
 			if next != goal and OverworldRulesScript.tile_has_route_interaction(_session, next.x, next.y, _level):
 				continue

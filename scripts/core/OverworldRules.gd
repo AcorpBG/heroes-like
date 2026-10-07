@@ -13,6 +13,11 @@ const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRu
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 const VisitBuildings = preload("res://scripts/core/VisitBuildingRules.gd")
+const WaterTravel = preload("res://scripts/core/WaterTravelRules.gd")
+const GeneratedRewards = preload("res://scripts/persistence/GeneratedRewardRules.gd")
+const GENERATED_TRANSIT_TRANSLATION_KEY := "generated_transit_translation_version"
+const GENERATED_TRANSIT_TRANSLATION_VERSION := 1
+const ROUTE_LOCK_CHOICE_ID := "open_route"
 const CreatureDwellings = preload("res://scripts/core/CreatureDwellingRules.gd")
 
 const FOG_KEY := "fog"
@@ -291,6 +296,8 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 	if not session.overworld.has("terrain_layers") or not (session.overworld.get("terrain_layers") is Dictionary) or session.overworld.get("terrain_layers", {}).is_empty():
 		session.overworld["terrain_layers"] = ContentService.get_terrain_layers_for_scenario(session.scenario_id)
 	_normalize_generated_runtime_materialization(session, scenario)
+	_migrate_generated_transit_meanings(session)
+	WaterTravel.normalize(session)
 	NativeTransit.normalize_legacy_session(session)
 	if not session.overworld.has("hero_position") or not (session.overworld.get("hero_position") is Dictionary):
 		session.overworld["hero_position"] = scenario.get("start", {"x": 0, "y": 0})
@@ -301,6 +308,53 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 
 	_normalize_scenario_state_rules(session)
 	_mark_runtime_normalized(session)
+
+## Older random-map saves picked a random transit object for HoMM3 boats,
+## shipyards, whirlpools, gates and portals. Translate them by meaning once:
+## boats become boats, shipyards and whirlpools get their sites, unopened gates
+## become a gate that suits their terrain, and portals keep their passage with
+## matching art. Opened gates stay open.
+static func _migrate_generated_transit_meanings(session: SessionStateStoreScript.SessionData) -> void:
+	if int(session.overworld.get(GENERATED_TRANSIT_TRANSLATION_KEY, 0)) >= GENERATED_TRANSIT_TRANSLATION_VERSION:
+		return
+	var sources: Variant = session.overworld.get("package_source_objects_by_id", {})
+	var nodes: Variant = session.overworld.get("resource_nodes", [])
+	if not (sources is Dictionary) or sources.is_empty() or not (nodes is Array):
+		session.overworld[GENERATED_TRANSIT_TRANSLATION_KEY] = GENERATED_TRANSIT_TRANSLATION_VERSION
+		return
+	var towns: Array = session.overworld.get("towns", []) if session.overworld.get("towns", []) is Array else []
+	var rows: Array = session.overworld.get("map", []) if session.overworld.get("map", []) is Array else []
+	var boats: Array = WaterTravel.boats(session).duplicate(true)
+	var kept := []
+	for node_value in nodes:
+		if not (node_value is Dictionary) or int(node_value.get("h3m_type_id", -1)) not in GeneratedRewards.TRANSIT_MEANING_TYPES:
+			kept.append(node_value)
+			continue
+		var node: Dictionary = node_value
+		var source: Dictionary = sources.get(String(node.get("placement_id", "")), node) if sources.get(String(node.get("placement_id", "")), node) is Dictionary else node
+		if GeneratedRewards.is_skipped(source):
+			var tile := GeneratedRewards.boat_tile(source)
+			if not tile.is_empty():
+				boats.append({"id": "boat_%s" % String(node.get("placement_id", "")), "x": int(tile.x), "y": int(tile.y), "level": int(tile.level), "hero_id": ""})
+			continue
+		if int(node.get("h3m_type_id", -1)) in GeneratedRewards.GATE_TYPES and bool(node.get("collected", false)):
+			kept.append(node)
+			continue
+		var translated := GeneratedRewards.resolve(source, towns, rows)
+		if translated.is_empty():
+			kept.append(node)
+			continue
+		if NativeTransit.is_native(node):
+			var reskinned: Dictionary = node.duplicate(true)
+			reskinned["site_id"] = translated.get("site_id", node.get("site_id", ""))
+			reskinned["object_id"] = translated.get("object_id", node.get("object_id", ""))
+			kept.append(reskinned)
+			continue
+		translated["collected"] = false
+		kept.append(translated)
+	session.overworld["resource_nodes"] = kept
+	session.overworld[WaterTravel.BOATS_KEY] = boats
+	session.overworld[GENERATED_TRANSIT_TRANSLATION_KEY] = GENERATED_TRANSIT_TRANSLATION_VERSION
 
 static func normalize_overworld_state_for_runtime(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
@@ -1064,10 +1118,12 @@ static func try_move_along_route(
 	movement["current"] = max(0, movement_left - reachable_steps)
 	session.overworld["movement"] = movement
 	HeroCommandRulesScript.commit_active_hero(session)
+	var water_messages := _apply_water_route_arrival(session, path, reachable_steps)
 	_reveal_route_fog(session, path.slice(1, reachable_steps + 1))
 	_mark_runtime_normalized(session)
 
 	var messages := ["Moved to %d,%d." % [final_tile.x, final_tile.y]]
+	messages.append_array(water_messages)
 	var reached_destination := final_tile == destination_tile
 	if not reached_destination:
 		messages.append("Route pauses with %d step%s remaining." % [
@@ -1121,6 +1177,33 @@ static func try_move_along_route(
 		}
 	)
 	return result
+
+## Boarding a free boat or stepping ashore from one ends the hero's movement
+## for the day, as in HoMM3; sailing on water moves the boat with the hero.
+static func _apply_water_route_arrival(session: SessionStateStoreScript.SessionData, path: Array, reachable_steps: int) -> Array:
+	if reachable_steps <= 0 or reachable_steps >= path.size():
+		return []
+	var level := hero_level(session)
+	var final_tile: Vector2i = path[reachable_steps]
+	var hero_name := String(session.overworld.get("hero", {}).get("name", "The hero"))
+	var messages := []
+	if WaterTravel.is_sailing(session):
+		if WaterTravel.is_water(session, final_tile.x, final_tile.y, level):
+			WaterTravel.follow_active_hero(session, final_tile, level)
+			return []
+		WaterTravel.disembark(session, path[reachable_steps - 1], level)
+		messages.append("%s goes ashore; the boat stays moored." % hero_name)
+	else:
+		var boat := WaterTravel.free_boat_at(session, final_tile, level)
+		if boat.is_empty():
+			return []
+		WaterTravel.embark(session, boat)
+		messages.append("%s boards the boat." % hero_name)
+	var movement: Dictionary = session.overworld.get("movement", {}) if session.overworld.get("movement", {}) is Dictionary else {}
+	movement["current"] = 0
+	session.overworld["movement"] = movement
+	HeroCommandRulesScript.commit_active_hero(session)
+	return messages
 
 static func _descriptor_matches_hero_level(session: SessionStateStoreScript.SessionData, descriptor: Dictionary) -> bool:
 	var level := hero_level(session)
@@ -1184,6 +1267,7 @@ static func execute_prevalidated_route(
 	movement["current"] = max(0, movement_after)
 	session.overworld["movement"] = movement
 	HeroCommandRulesScript.commit_active_hero(session)
+	var water_messages := _apply_water_route_arrival(session, path, reachable_steps)
 	_rules_profile_add_ms("execute_prevalidated_apply_movement_ms", apply_started_usec)
 	var route_fog_started_usec := _rules_profile_timer()
 	_reveal_route_fog(session, path.slice(1, reachable_steps + 1))
@@ -1191,6 +1275,7 @@ static func execute_prevalidated_route(
 	_mark_runtime_normalized(session)
 
 	var messages := ["Moved to %d,%d." % [final_tile.x, final_tile.y]]
+	messages.append_array(water_messages)
 	var reached_destination := final_tile == destination_tile
 	if not reached_destination:
 		messages.append("Route pauses with %d step%s remaining." % [
@@ -1387,6 +1472,24 @@ static func choose_resource_reward(session: SessionStateStoreScript.SessionData,
 		return {"ok": false, "message": "This chest is no longer being visited by that hero."}
 	return _collect_resource_node_result(session, node_result, true, 1, choice_id)
 
+static func _route_lock_prompt(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> Dictionary:
+	var site_name := String(site.get("name", "The gate"))
+	var price := _resource_site_visit_cost(site)
+	var price_text := _describe_resource_delta(price) if not price.is_empty() else "nothing"
+	var summary := String(site.get("summary", "")).strip_edges()
+	return {
+		"ok": true,
+		"route": "reward_choice",
+		"message": "%s blocks this passage. Pay %s to open it." % [site_name, price_text],
+		"reward_choice": {
+			"title": site_name,
+			"asset_id": "mapobj_" + String(node.get("object_id", "")).trim_prefix("object_"),
+			"context": _resource_reward_choice_context(session, node),
+			"instruction": "%s\nThis gate blocks the passage until someone pays to open it. It stays open for everyone." % summary if summary != "" else "This gate blocks the passage until someone pays to open it. It stays open for everyone.",
+			"choices": [{"id": ROUTE_LOCK_CHOICE_ID, "label": "%s · %s" % [String(site.get("action_label", "Open")), price_text]}],
+		},
+	}
+
 static func _resource_reward_choice_context(session: SessionStateStoreScript.SessionData, node: Dictionary) -> Dictionary:
 	return {
 		"hero_id": String(session.overworld.get("active_hero_id", "")),
@@ -1497,6 +1600,13 @@ static func _collect_resource_node_result(
 		if _resource_site_is_persistent(site):
 			return {"ok": false, "message": "This site is already under your control."}
 		return {"ok": false, "message": "This site has already been gathered."}
+	if bool(site.get("opens_route_on_claim", false)):
+		# A gate takes payment only after the player agrees to open it.
+		if reward_choice_id != ROUTE_LOCK_CHOICE_ID:
+			_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
+			_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
+			return _route_lock_prompt(session, node, site)
+		reward_choice_id = ""
 	var choice_rewards := {}
 	var choices := _resource_site_reward_choices(site)
 	if not choices.is_empty():
@@ -2033,12 +2143,16 @@ static func _visit_building_result(
 				"title": site_name,
 				"asset_id": String(site.get("overworld_sprite_asset_id", "")),
 				"context": _resource_reward_choice_context(session, node),
+				"instruction": String(site.get("public_text", VisitBuildings.summary(site))),
 				"choices": prompt_choices,
 			},
 		}
 	var effect := VisitBuildings.effects(site, choice_id)
 	if not options.is_empty() and effect.is_empty():
 		return {"ok": false, "message": "Choose one of the boons %s offers." % site_name}
+	var effect_blocker := _visit_effect_blocker(session, node, effect)
+	if effect_blocker != "":
+		return {"ok": false, "message": effect_blocker}
 	var price := VisitBuildings.cost(site, choice_id)
 	if not price.is_empty() and not _can_afford(session, price):
 		return {"ok": false, "message": "%s asks %s." % [site_name, _describe_resource_delta(price)]}
@@ -2057,6 +2171,37 @@ static func _visit_building_result(
 	result["interaction_result"] = _interactable_result_payload("resource_site", node, facts, {"contract_known": true, "blocks_changed": false, "body_tiles_changed": false})
 	return result
 
+## Why a visit effect cannot happen now, checked before anything is paid.
+static func _visit_effect_blocker(session: SessionStateStoreScript.SessionData, node: Dictionary, effect: Dictionary) -> String:
+	if bool(effect.get("build_boat", false)):
+		return WaterTravel.dock_blocker(session, node)
+	if bool(effect.get("whirlpool", false)) and not WaterTravel.is_sailing(session):
+		return "Only a boat can sail into a whirlpool."
+	return ""
+
+static func _whirlpool_throw(session: SessionStateStoreScript.SessionData, node: Dictionary) -> Array:
+	var messages := []
+	var army: Dictionary = session.overworld.get("army", {}) if session.overworld.get("army", {}) is Dictionary else {}
+	var stacks: Array = army.get("stacks", []).duplicate(true) if army.get("stacks", []) is Array else []
+	var loss := WaterTravel.whirlpool_losses(stacks)
+	if not loss.is_empty():
+		var index := int(loss.index)
+		stacks[index]["count"] = int(stacks[index].get("count", 0)) - int(loss.lost)
+		army["stacks"] = stacks
+		session.overworld["army"] = army
+		messages.append("The current drags away %d %s." % [int(loss.lost), String(ContentService.get_unit(String(loss.unit_id)).get("name", loss.unit_id))])
+	var exit := WaterTravel.whirlpool_exit(session, node, func(tile: Vector2i, level: int) -> bool: return _blocked_tile_index(session, level).has(_tile_key(tile)))
+	if exit.is_empty():
+		messages.append("No other whirlpool lets the boat out; it spins back where it entered.")
+	else:
+		var tile := Vector2i(int(exit.x), int(exit.y))
+		_set_active_hero_position(session, tile, int(exit.level))
+		WaterTravel.follow_active_hero(session, tile, int(exit.level))
+		_reveal_route_fog(session, [tile])
+		messages.append("The whirlpool throws the boat out at another whirlpool.")
+	HeroCommandRulesScript.commit_active_hero(session)
+	return messages
+
 static func _apply_visit_effects(
 	session: SessionStateStoreScript.SessionData,
 	node: Dictionary,
@@ -2064,6 +2209,11 @@ static func _apply_visit_effects(
 	effect: Dictionary
 ) -> Array:
 	var messages := []
+	if bool(effect.get("build_boat", false)):
+		var failure := WaterTravel.build_boat(session, node)
+		messages.append(failure if failure != "" else "Shipwrights launch a boat at the dock.")
+	if bool(effect.get("whirlpool", false)):
+		messages.append_array(_whirlpool_throw(session, node))
 	var gains = effect.get("resources", {})
 	if gains is Dictionary and not gains.is_empty():
 		_add_resources(session, gains)
@@ -3304,6 +3454,33 @@ static func tile_has_route_interaction(session: SessionStateStoreScript.SessionD
 static func tile_is_actionable_route_destination(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	return tile_has_route_interaction(session, x, y, level)
 
+## Route blocking for the active hero. A walking hero treats water as blocked;
+## a sailing hero moves only on open water (WaterTravelRules).
+static func hero_route_tile_blocked(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
+	if not WaterTravel.is_sailing(session):
+		return tile_is_blocked(session, x, y, level)
+	level = OverworldLevelRulesScript.query_level(session, level)
+	if not WaterTravel.is_water(session, x, y, level):
+		return true
+	if not WaterTravel.free_boat_at(session, Vector2i(x, y), level).is_empty():
+		return true
+	return _blocked_tile_index(session, level).has(_tile_key(Vector2i(x, y)))
+
+## Where the active hero's route may end on a blocked tile. A walking hero may
+## end on a free boat to board it, never on other water. A sailing hero may end
+## on a water interaction, or on open shore or a shore interaction to step off.
+static func hero_route_destination(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
+	level = OverworldLevelRulesScript.query_level(session, level)
+	if WaterTravel.is_sailing(session):
+		if WaterTravel.is_water(session, x, y, level):
+			return tile_has_route_interaction(session, x, y, level)
+		return not tile_is_blocked(session, x, y, level) or tile_is_actionable_route_destination(session, x, y, level)
+	if not WaterTravel.free_boat_at(session, Vector2i(x, y), level).is_empty():
+		return true
+	if WaterTravel.is_water(session, x, y, level):
+		return false
+	return tile_is_actionable_route_destination(session, x, y, level)
+
 static func resource_node_interaction_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
 	if session == null:
 		return {}
@@ -3327,7 +3504,7 @@ static func tile_step_cuts_blocked_corner(session: SessionStateStoreScript.Sessi
 		return false
 	var side_a := Vector2i(from_tile.x + dx, from_tile.y)
 	var side_b := Vector2i(from_tile.x, from_tile.y + dy)
-	if not tile_is_blocked(session, side_a.x, side_a.y, level) or not tile_is_blocked(session, side_b.x, side_b.y, level):
+	if not hero_route_tile_blocked(session, side_a.x, side_a.y, level) or not hero_route_tile_blocked(session, side_b.x, side_b.y, level):
 		return false
 	# A doorway is an interaction endpoint within the town's exact source body.
 	# Its own wall can border a legal diagonal ingress/egress; unrelated bodies
@@ -3352,9 +3529,9 @@ static func tile_step_cuts_blocked_corner(session: SessionStateStoreScript.Sessi
 	return true
 
 static func _tile_blocks_route_step(session: SessionStateStoreScript.SessionData, tile: Vector2i, is_destination: bool) -> bool:
-	if not tile_is_blocked(session, tile.x, tile.y):
+	if not hero_route_tile_blocked(session, tile.x, tile.y):
 		return false
-	if is_destination and tile_is_actionable_route_destination(session, tile.x, tile.y):
+	if is_destination and hero_route_destination(session, tile.x, tile.y):
 		return false
 	return true
 

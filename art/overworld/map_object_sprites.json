@@ -172,11 +172,11 @@
     ]
   },
   "coverage": {
-    "authored_map_object_count": 462,
+    "authored_map_object_count": 464,
     "foundation_decorative_or_blocker_distinct_count": 200,
     "preexisting_unique_non_decorative_count": 0,
-    "new_distinct_non_decorative_asset_count": 262,
-    "total_distinct_authored_map_object_count_after_pass": 462,
+    "new_distinct_non_decorative_asset_count": 264,
+    "total_distinct_authored_map_object_count_after_pass": 464,
     "by_family": {
       "faction_landmark": 9,
       "guarded_reward_site": 32,
@@ -184,7 +184,7 @@
       "neutral_dwelling": 94,
       "neutral_encounter": 6,
       "pickup": 12,
-      "repeatable_service": 7,
+      "repeatable_service": 9,
       "scenario_objective": 14,
       "scouting_structure": 6,
       "shrine": 18,
@@ -456,7 +456,9 @@
     "mapobj_mirrorkeel_drydock",
     "mapobj_drifters_camp",
     "guarded_farmhouse",
-    "mapobj_shard_warden_bastide"
+    "mapobj_shard_warden_bastide",
+    "mapobj_shipyard",
+    "mapobj_whirlpool"
   ],
   "object_sprite_mappings": {
     "object_roadward_lodge": {
@@ -2240,6 +2242,18 @@
       "fit": "Original sprite assigned to the Shard Warden Bastide creature dwelling.",
       "assignment_source": "creature_dwellings_20261006",
       "family": "neutral_dwelling"
+    },
+    "object_shipyard": {
+      "asset_id": "mapobj_shipyard",
+      "fit": "Original sprite assigned to the Shipyard water travel site.",
+      "assignment_source": "water_travel_20261007",
+      "family": "repeatable_service"
+    },
+    "object_whirlpool": {
+      "asset_id": "mapobj_whirlpool",
+      "fit": "Original sprite assigned to the Whirlpool water travel site.",
+      "assignment_source": "water_travel_20261007",
+      "family": "repeatable_service"
     }
   }
 }

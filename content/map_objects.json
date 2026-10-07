@@ -48309,6 +48309,113 @@
         "scenario_placement_migration": true,
         "guard_resolution_runtime_adopted": true
       }
+    },
+    {
+      "id": "object_shipyard",
+      "name": "Shipyard",
+      "family": "repeatable_service",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "water_travel",
+        "boat_builder"
+      ],
+      "resource_site_id": "site_shipyard",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_mire_fen",
+        "biome_highland_ridge",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago",
+        "biome_ash_lava_wastes"
+      ],
+      "footprint": {
+        "width": 3,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "medium"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "repeatable_service",
+        "water_travel",
+        "coast_access"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "per_hero_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
+      },
+      "runtime_boundary": {
+        "status": "water_travel_live",
+        "live_reward_grants": true,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "random_map_placement": "homm3_type_meaning_only"
+      }
+    },
+    {
+      "id": "object_whirlpool",
+      "name": "Whirlpool",
+      "family": "repeatable_service",
+      "schema_version": 1,
+      "primary_class": "interactable_site",
+      "secondary_tags": [
+        "water_travel",
+        "sea_hazard"
+      ],
+      "resource_site_id": "site_whirlpool",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "repeatable_service",
+        "water_travel",
+        "sea_link"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "per_hero_visit",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "per_hero_visit"
+      },
+      "runtime_boundary": {
+        "status": "water_travel_live",
+        "live_reward_grants": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "random_map_placement": "homm3_type_meaning_only"
+      }
     }
   ]
 }

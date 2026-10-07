@@ -73,6 +73,7 @@
       "primary_classes": ["interactable_site", "faction_landmark"],
       "families": ["faction_landmark", "repeatable_service", "scouting_structure", "shrine", "sign_waypoint"],
       "explicit_object_ids": ["object_mist_lighthouse"],
+      "exclude_runtime_statuses": ["water_travel_live"],
       "require_resource_site": true,
       "runtime_selection_owner": "MapPackageService_runtime_live_proxy_entry",
       "semantic_category": "interactable_site"
@@ -117,6 +118,11 @@
       "id": "scenario_owned_object",
       "primary_classes": ["scenario_objective", "neutral_encounter"],
       "reason": "Identity depends on authored scenario hooks, encounter payload, or objective state and is not safe for generic RMG use."
+    },
+    {
+      "id": "water_travel_meaning_placement",
+      "runtime_statuses": ["water_travel_live"],
+      "reason": "Shipyards and whirlpools only work beside or on water; they are placed from HoMM3 Shipyard (87) and Whirlpool (111) by GeneratedRewardRules, never as generic interactable proxies."
     }
   ],
   "artifact_rarities_by_source_type": {

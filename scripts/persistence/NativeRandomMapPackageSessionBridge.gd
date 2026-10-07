@@ -85,7 +85,7 @@ static func build_session_from_adoption(
 				town["controlling_player_id"] = String(player.get("player_id", ""))
 				town["team_id"] = String(player.get("team_id", ""))
 				break
-	var resource_nodes := _resource_nodes_from_objects(source_objects, towns)
+	var resource_nodes := _resource_nodes_from_objects(source_objects, towns, map_rows)
 	var scenery_validation := NativeScenery.validate(source_objects)
 	if not bool(scenery_validation.get("ok", false)):
 		push_error("Generated scenery adoption failed: %s" % JSON.stringify(scenery_validation))
@@ -127,6 +127,7 @@ static func build_session_from_adoption(
 		"resolved_encounters": [],
 		"towns": towns,
 		"resource_nodes": resource_nodes,
+		"boats": boats_from_objects(source_objects),
 		"map_objects": map_objects,
 		"package_source_object_ids": package_source_object_ids,
 		"package_source_objects_by_id": package_source_objects_by_id,
@@ -432,13 +433,15 @@ static func _bool_or_default(value: Variant, default_value: bool) -> bool:
 static func _resource_nodes_from_document(map_document: Variant) -> Array:
 	return _resource_nodes_from_objects(_document_objects(map_document))
 
-static func _resource_nodes_from_objects(objects: Array, towns: Array = []) -> Array:
+static func _resource_nodes_from_objects(objects: Array, towns: Array = [], map_rows: Array = []) -> Array:
 	var nodes := []
 	for object in objects:
 		var kind := String(object.get("kind", ""))
 		if not (kind in ["resource_site", "mine", "neutral_dwelling", "reward_reference"]):
 			continue
-		var translated := GeneratedRewards.resolve(object, towns)
+		if GeneratedRewards.is_skipped(object):
+			continue
+		var translated := GeneratedRewards.resolve(object, towns, map_rows)
 		if not translated.is_empty():
 			translated["collected"] = false
 			nodes.append(translated)
@@ -451,6 +454,16 @@ static func _resource_nodes_from_objects(objects: Array, towns: Array = []) -> A
 		node["collected"] = false
 		nodes.append(node)
 	return nodes
+
+## HoMM3 boats become boats waiting on their water tiles (WaterTravelRules).
+static func boats_from_objects(objects: Array) -> Array:
+	var boats := []
+	for object in objects:
+		var tile := GeneratedRewards.boat_tile(object) if object is Dictionary else {}
+		if tile.is_empty():
+			continue
+		boats.append({"id": "boat_%s" % String(object.get("placement_id", boats.size())), "x": int(tile.x), "y": int(tile.y), "level": int(tile.level), "hero_id": ""})
+	return boats
 
 static func _artifact_nodes_from_objects(objects: Array) -> Array:
 	var nodes := []

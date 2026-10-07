@@ -17156,6 +17156,46 @@
         "no_internal_debug_score_fields": true,
         "large_text_panel_required": false
       }
+    },
+    {
+      "id": "site_shipyard",
+      "name": "Shipyard",
+      "family": "visit_building",
+      "action_label": "Visit",
+      "overworld_sprite_asset_id": "mapobj_shipyard",
+      "public_text": "Shipwrights build a boat at the dock for any visiting hero: 1,000 gold and 10 wood, when the dock is free.",
+      "visit": {
+        "role": "shipyard",
+        "cadence": "always",
+        "choices": [
+          {
+            "id": "build_boat",
+            "label": "Build a boat · 1,000 gold, 10 wood",
+            "cost": {
+              "gold": 1000,
+              "wood": 10
+            },
+            "effects": {
+              "build_boat": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "site_whirlpool",
+      "name": "Whirlpool",
+      "family": "visit_building",
+      "action_label": "Sail in",
+      "overworld_sprite_asset_id": "mapobj_whirlpool",
+      "public_text": "Throws a boat out at another whirlpool on this level. The weakest stack loses half its creatures.",
+      "visit": {
+        "role": "whirlpool",
+        "cadence": "always",
+        "effects": {
+          "whirlpool": true
+        }
+      }
     }
   ]
 }

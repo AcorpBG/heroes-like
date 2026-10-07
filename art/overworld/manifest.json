@@ -42094,6 +42094,37 @@
       "distinct_sprite_assignment": true,
       "assigned_map_object_id": "object_dwelling_shard_warden_bastide",
       "assigned_map_object_family": "neutral_dwelling"
+    },
+    "mapobj_shipyard": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_shipyard.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/water_travel_20261007/shipyard-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/water_travel_20261007/provenance.json",
+      "runtime_sha256": "51249686b1d09a758da6006bbec13f6d8866e915e15e2ad1ad444a7d79a3220f",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_shipyard",
+      "assigned_map_object_family": "repeatable_service"
+    },
+    "mapobj_whirlpool": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_whirlpool.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/water_travel_20261007/whirlpool-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/water_travel_20261007/provenance.json",
+      "runtime_sha256": "034e94d0229389cc178ed63c9fce3bda73622e7e1d7337c3529b92c8173c2577",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_whirlpool",
+      "assigned_map_object_family": "repeatable_service"
+    },
+    "mapobj_water_boat": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_water_boat.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/water_travel_20261007/boat-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/water_travel_20261007/provenance.json",
+      "runtime_sha256": "adacf7868d8c3c57ed24424fbf22d98ea0543f04087ea821806a0e5accc39f1a",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "runtime_role": "water_travel_boat"
     }
   },
   "resource_site_sprites": {
@@ -43957,6 +43988,14 @@
     "site_dwelling_shard_warden_bastide": {
       "asset_id": "mapobj_shard_warden_bastide",
       "fit": "Shard Warden Bastide creature dwelling sprite."
+    },
+    "site_shipyard": {
+      "asset_id": "mapobj_shipyard",
+      "fit": "Shipyard visit building sprite."
+    },
+    "site_whirlpool": {
+      "asset_id": "mapobj_whirlpool",
+      "fit": "Whirlpool sea link sprite."
     }
   },
   "artifact_default_sprite": {

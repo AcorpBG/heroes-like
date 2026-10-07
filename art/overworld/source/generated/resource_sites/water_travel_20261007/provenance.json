@@ -1,0 +1,40 @@
+{
+  "generator": "built_in_image_gen",
+  "references": [
+    "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_tidepool_skiffyard.png",
+    "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_bell_buoy_station.png",
+    "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_veil_skiffyard.png",
+    "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_harbor_pilot_house.png"
+  ],
+  "purpose": "Original sprites for water travel: the boat heroes board and sail, the whirlpool that links stretches of sea, and the neutral shipyard that builds boats.",
+  "images": [
+    {
+      "asset_id": "mapobj_water_boat",
+      "prompt": "A single adventure-map sprite for an original fantasy strategy game: a sturdy wooden sailing boat that carries a hero's army across the sea. A broad-beamed clinker-built hull of warm brown planks with dark tarred seams, a raised stern deck with a small carved tiller, a single central mast with a furled cream canvas sail tied to its yard, coils of rope, two small cargo crates and a lashed barrel on deck, a bronze-capped prow. The masthead is a plain bare pole top (no flag, no banner). The boat floats level, seen with its bow pointing to the lower left. A thin ring of pale water ripples and a little white foam hugs the waterline, nothing else of the sea.\n\nMatch the style of the reference images exactly: painterly hand-painted fantasy game sprite, rich saturated colours, soft warm key light from the upper left, crisp dark outlines softened by painting, small soft contact shadow. Same elevated three-quarter isometric camera angle as the references, object centered, filling about 60% of the frame with transparent margin around it.\n\nOne object only, no people, no ground tile, no scenery, no text, no letters, no frame. Plain transparent background.",
+      "file": "boat-source.png",
+      "references": [
+        "mapobj_tidepool_skiffyard",
+        "mapobj_bell_buoy_station"
+      ]
+    },
+    {
+      "asset_id": "mapobj_whirlpool",
+      "prompt": "A single adventure-map sprite for an original fantasy strategy game: a dangerous sea whirlpool. A round spiralling vortex of deep teal and dark blue water sinking toward a near-black funnel at its centre, with curling white foam bands and spray swept around it in a clockwise spiral, a few splinters of broken plank caught in the outer swirl. The outer edge fades into a soft ragged ring of churned foam, so the sprite sits naturally on open sea tiles.\n\nMatch the style of the reference images exactly: painterly hand-painted fantasy game sprite, rich saturated colours, soft warm key light from the upper left, crisp dark outlines softened by painting. Same elevated three-quarter isometric camera angle as the references (the whirlpool is a flattened ellipse seen from above at an angle), centered, filling about 60% of the frame with transparent margin around it.\n\nOne object only, no boats, no creatures, no ground tile, no text, no letters, no frame. Plain transparent background.",
+      "file": "whirlpool-source.png",
+      "references": [
+        "mapobj_bell_buoy_station",
+        "mapobj_tidepool_skiffyard"
+      ]
+    },
+    {
+      "asset_id": "mapobj_shipyard",
+      "prompt": "A single adventure-map building sprite for an original fantasy strategy game: a \"Shipyard\" on a rocky shore. A stone slipway runs down into a small patch of water at the lower left; on it sits a half-built wooden sailing boat with bare ribs at the stern and finished planking at the bow, held by timber props. Beside it a sturdy timber workshop with a slate roof and an open front, a tall wooden crane with a hanging hook and rope, stacks of sawn planks, a pile of logs, a tar barrel and a coil of rope on the quay. Warm lantern light in the workshop doorway. It builds boats for heroes who reach the coast.\n\nMatch the style of the reference images exactly: painterly hand-painted fantasy game sprite, rich saturated colours, soft warm key light from the upper left, crisp dark outlines softened by painting, small soft contact shadow. Same elevated three-quarter isometric camera angle as the references, object centered, filling about 65% of the frame with transparent margin around it.\n\nOne object only, no people, no ground tile beyond the building's own quay and the small water patch at the slipway, no scenery, no text, no letters, no frame. Plain transparent background.",
+      "file": "shipyard-source.png",
+      "references": [
+        "mapobj_veil_skiffyard",
+        "mapobj_harbor_pilot_house"
+      ]
+    }
+  ],
+  "packing": "Mechanical alpha trim (alpha above 60 for the crop box) and aspect-preserving resize onto a 512px transparent canvas, centered and bottom-aligned like the coast-harbor sprites; no repainting."
+}

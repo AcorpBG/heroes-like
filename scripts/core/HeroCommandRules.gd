@@ -1420,6 +1420,7 @@ static func hero_positions(session: SessionStateStoreScript.SessionData) -> Arra
 					"y": int(hero.get("position", {}).get("y", 0)),
 					"level": OverworldLevelRulesScript.level_of(hero),
 					"is_active": String(hero.get("id", "")) == String(session.overworld.get("active_hero_id", "")),
+					"boat_id": String(hero.get("boat_id", "")),
 				}
 			)
 	return positions
