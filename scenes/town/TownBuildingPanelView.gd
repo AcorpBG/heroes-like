@@ -25,7 +25,8 @@ const STATUS_TONES := {"ready": "green", "trade": "teal", "short": "red", "locke
 const SIDE_WIDTH := 372.0
 const SPELL_CARD_HEIGHT := 58.0
 const GRID_GAP := 8
-const TILE_WIDTH := 132.0
+const TILE_WIDTH := 148.0
+const TILE_HEIGHT := 48.0
 
 var _model: Dictionary = {}
 var _resources: Dictionary = {}
@@ -51,6 +52,7 @@ var _market_give := ""
 var _market_receive := ""
 var _market_amount := 1
 var _market_give_tiles: Dictionary = {}
+var _market_grids: Array = []
 var _market_receive_tiles: Dictionary = {}
 var _market_result: HBoxContainer
 var _market_rate_label: Label
@@ -165,6 +167,7 @@ func _rebuild_body() -> void:
 	_hero_grid = null
 	_spell_note = null
 	_market_give_tiles.clear()
+	_market_grids.clear()
 	_market_receive_tiles.clear()
 	_market_result = null
 	_market_slider = null
@@ -566,7 +569,7 @@ func _build_market() -> void:
 	_market_trade_button = Button.new()
 	_market_trade_button.name = "TradeButton"
 	_market_trade_button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	FrontierVisualKit.apply_button(_market_trade_button, "primary", 270, 34, 14)
+	FrontierVisualKit.apply_button(_market_trade_button, "primary", 300, 34, 14)
 	_market_trade_button.pressed.connect(press_market_trade)
 	amount_row.add_child(_market_trade_button)
 	_market_slider.value_changed.connect(func(value: float):
@@ -574,20 +577,27 @@ func _build_market() -> void:
 		_update_market_quote())
 	_show_market_pair()
 
-func _market_tile_row(caption: String, prefix: String, ids: Array, tiles: Dictionary) -> HBoxContainer:
-	var row := HBoxContainer.new()
-	row.name = "%sTiles" % prefix
-	row.add_theme_constant_override("separation", 8)
-	var title := _label(caption, "muted", 13)
-	title.custom_minimum_size.x = 64
-	row.add_child(title)
+## A caption over a grid of resource tiles. Nine resources wrap into as many
+## columns as the main column fits (two rows at 1280x720 and 1920x1080).
+func _market_tile_row(caption: String, prefix: String, ids: Array, tiles: Dictionary) -> VBoxContainer:
+	var box := VBoxContainer.new()
+	box.name = "%sTiles" % prefix
+	box.add_theme_constant_override("separation", 4)
+	box.add_child(_label(caption, "muted", 13))
+	var row := GridContainer.new()
+	row.name = "Grid"
+	row.columns = _market_tile_columns()
+	row.add_theme_constant_override("h_separation", GRID_GAP)
+	row.add_theme_constant_override("v_separation", 6)
+	box.add_child(row)
+	_market_grids.append(row)
 	var resources: Dictionary = _model.get("market", {}).get("resources", {})
 	for id_value in ids:
 		var resource_id := String(id_value)
 		var entry: Dictionary = resources.get(resource_id, {})
 		var tile := Button.new()
 		tile.name = "%s_%s" % [prefix, resource_id]
-		tile.custom_minimum_size = Vector2(TILE_WIDTH, 50)
+		tile.custom_minimum_size = Vector2(TILE_WIDTH, TILE_HEIGHT)
 		tile.focus_mode = Control.FOCUS_ALL
 		tile.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		var content := HBoxContainer.new()
@@ -625,7 +635,11 @@ func _market_tile_row(caption: String, prefix: String, ids: Array, tiles: Dictio
 			tile.pressed.connect(_on_market_receive_pressed.bind(resource_id))
 		row.add_child(tile)
 		tiles[resource_id] = tile
-	return row
+	return box
+
+func _market_tile_columns() -> int:
+	var width := _body.size.x if _body.size.x > 0.0 else 800.0
+	return maxi(1, int((width + GRID_GAP) / (TILE_WIDTH + GRID_GAP)))
 
 func _market_step_button(button_name: String, text: String, tip: String, step: int) -> Button:
 	var button := Button.new()
@@ -670,7 +684,7 @@ func _show_market_pair() -> void:
 	var resources: Dictionary = _model.get("market", {}).get("resources", {})
 	for resource_id in _market_give_tiles:
 		var tile: Button = _market_give_tiles[resource_id]
-		FrontierVisualKit.apply_button(tile, "primary" if resource_id == _market_give else "secondary", TILE_WIDTH, 50, 13)
+		FrontierVisualKit.apply_button(tile, "primary" if resource_id == _market_give else "secondary", TILE_WIDTH, TILE_HEIGHT, 13)
 		_market_tile_value(tile, "Have %s" % Board.format_amount(int(resources.get(resource_id, {}).get("stock", 0))), "body")
 		tile.tooltip_text = "Give %s. You have %s." % [String(resources.get(resource_id, {}).get("name", resource_id)), Board.format_amount(int(resources.get(resource_id, {}).get("stock", 0)))]
 	for resource_id in _market_receive_tiles:
@@ -678,10 +692,12 @@ func _show_market_pair() -> void:
 		var pair := _market_pair_for(_market_give, resource_id)
 		var tradable := String(pair.get("mode", "")) != ""
 		tile.disabled = not tradable
-		FrontierVisualKit.apply_button(tile, "primary" if resource_id == _market_receive else "secondary", TILE_WIDTH, 50, 13)
+		FrontierVisualKit.apply_button(tile, "primary" if resource_id == _market_receive else "secondary", TILE_WIDTH, TILE_HEIGHT, 13)
 		_market_tile_value(tile, String(pair.get("unit_text", "")) if tradable else "—", "gold" if tradable else "muted")
 		tile.tooltip_text = ("%s · %s" % [String(pair.get("rate_text", "")), String(pair.get("limit_text", ""))]) if tradable else String(pair.get("reason", "This market does not trade that pair."))
-	var max_amount := int(_market_pair().get("max_amount", 0))
+	# The slider steps through the pair's quotes (amounts in the received
+	# resource); `_market_amount` is the chosen step.
+	var max_amount: int = _market_pair().get("quotes", []).size()
 	_market_slider.set_value_no_signal(1)
 	_market_slider.min_value = 1
 	_market_slider.max_value = maxi(1, max_amount)
@@ -958,6 +974,8 @@ func _apply_columns() -> void:
 		_spell_grid.custom_minimum_size.y = rows * SPELL_CARD_HEIGHT + maxi(0, rows - 1) * GRID_GAP
 	if _hero_grid != null:
 		_hero_grid.columns = 2 if width >= 640.0 else 1
+	for grid in _market_grids:
+		(grid as GridContainer).columns = _market_tile_columns()
 
 # --- validation -----------------------------------------------------------------
 
@@ -1019,7 +1037,9 @@ func _market_snapshot() -> Dictionary:
 		"give_id": _market_give,
 		"receive_id": _market_receive,
 		"mode": String(pair.get("mode", "")),
-		"amount": _market_amount,
+		"amount": int(quote.get("amount", 0)),
+		"step": _market_amount,
+		"steps": pair.get("quotes", []).map(func(entry): return int(entry.get("amount", 0))),
 		"max_amount": int(pair.get("max_amount", 0)),
 		"slider_max": int(_market_slider.max_value),
 		"give_amount": int(quote.get("give_amount", 0)),
@@ -1090,11 +1110,16 @@ func validation_select_market_pair(give_id: String, receive_id: String) -> bool:
 	receive_tile.pressed.emit()
 	return _market_give == give_id and _market_receive == receive_id
 
+## Moves the slider to the step trading `count` units (bought, sold or received).
 func validation_set_market_amount(count: int) -> bool:
 	if _market_slider == null:
 		return false
-	_market_slider.value = count
-	return _market_amount == count
+	var quotes: Array = _market_pair().get("quotes", [])
+	for index in range(quotes.size()):
+		if int(quotes[index].get("amount", 0)) == count:
+			_market_slider.value = index + 1
+			return _market_amount == index + 1
+	return false
 
 func validation_press_market_trade() -> bool:
 	if _market_trade_button == null or _market_trade_button.disabled:

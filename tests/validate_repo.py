@@ -1449,6 +1449,9 @@ ECONOMY_REPORT_RESOURCE_IDS = ("gold", "wood", "ore", *ECONOMY_STAGED_RARE_RESOU
 ECONOMY_STOCKPILE_RESOURCE_IDS = {"gold", "wood", "ore", *ECONOMY_STAGED_RARE_RESOURCE_IDS}
 ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS = ("gold", "wood", "ore", *ECONOMY_STAGED_RARE_RESOURCE_IDS)
 ECONOMY_NORMAL_MARKET_RESOURCE_IDS = ("wood", "ore")
+# Owner decision, 2026-10-07: town markets trade every stockpile resource but
+# gold, rare resources included, under weekly per-resource caps.
+ECONOMY_MARKET_RESOURCE_IDS = ("wood", "ore", *ECONOMY_STAGED_RARE_RESOURCE_IDS)
 ECONOMY_TARGET_ONLY_RESOURCE_IDS: set[str] = set()
 ECONOMY_NON_STOCKPILE_REWARD_IDS = {"experience"}
 ECONOMY_RARE_RESOURCE_IDS = set(ECONOMY_STAGED_RARE_RESOURCE_IDS)
@@ -2815,7 +2818,7 @@ def build_economy_resource_report() -> dict:
             "ui_report": "registry_rows_visible_in_economy_resource_report_and_runtime_resource_surfaces",
             "content_sources": "live_resource_fronts_and_high_tier_costs",
             "save_compatibility": "old_saves_accept_absent_rare_resources_without_version_bump",
-            "market": "normal_market_rare_buying_disabled",
+            "market": "normal_market_rare_trading_with_weekly_caps",
             "broad_costs": "high_tier_town_development_enabled",
         },
         "registry_policy": {
@@ -2933,13 +2936,19 @@ def build_economy_resource_report() -> dict:
             if isinstance(scenario_entry, dict) and bool(scenario_entry.get("carryover_export", {}).get("resources", False)):
                 report["usage"]["gold"]["used_by"]["campaign_rewards"] += 1
                 append_unique(report["usage"]["gold"]["source_paths"]["scenario_grants"], f"campaigns:{campaign_id}:carryover_export.resources")
-    for market_resource_id in ("wood", "ore"):
+    overworld_market_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8") if OVERWORLD_RULES_PATH.exists() else ""
+    market_keys_match = re.search(r'const MARKET_RESOURCE_KEYS := \[(?P<body>[^\]]*)\]', overworld_market_text)
+    runtime_market_resources = re.findall(r'"([a-z_]+)"', market_keys_match.group("body")) if market_keys_match else ["wood", "ore"]
+    rare_caps_present = "const MARKET_RARE_BUY_CAP" in overworld_market_text and "const MARKET_RARE_SELL_CAP" in overworld_market_text
+    for market_resource_id in runtime_market_resources:
+        if market_resource_id not in report["usage"]:
+            continue
         report["usage"][market_resource_id]["used_by"]["market_rules"] += 1
         append_unique(report["usage"][market_resource_id]["source_paths"]["market_profiles"], "legacy_common_exchange")
-    report["market_caps"]["legacy_common_exchange"] = {"market_profile_id": "legacy_common_exchange", "source": "runtime_town_market_caps", "buy_resources": ["wood", "ore"], "sell_resources": ["wood", "ore"], "buy_caps_present": True, "sell_caps_present": True, "refresh_cadence_present": True, "refresh_cadence": "weekly", "usage_storage": "town.market_usage", "rare_resource_buying_enabled": False, "warnings": []}
+    report["market_caps"]["legacy_common_exchange"] = {"market_profile_id": "legacy_common_exchange", "source": "runtime_town_market_caps", "buy_resources": list(runtime_market_resources), "sell_resources": list(runtime_market_resources), "buy_caps_present": True, "sell_caps_present": True, "rare_caps_present": rare_caps_present, "refresh_cadence_present": True, "refresh_cadence": "weekly", "usage_storage": "town.market_usage", "rare_resource_buying_enabled": bool(set(runtime_market_resources).intersection(ECONOMY_RARE_RESOURCE_IDS)), "warnings": []}
     legacy_market_resources = set(report["market_caps"]["legacy_common_exchange"]["buy_resources"]) | set(report["market_caps"]["legacy_common_exchange"]["sell_resources"])
-    if legacy_market_resources.intersection(ECONOMY_RARE_RESOURCE_IDS):
-        warning = "legacy normal market exposes rare-resource exchange before caps and save state"
+    if legacy_market_resources.intersection(ECONOMY_RARE_RESOURCE_IDS) and not rare_caps_present:
+        warning = "town market exposes rare-resource exchange without weekly rare caps"
         report["market_caps"]["legacy_common_exchange"]["warnings"].append(warning)
         report["errors"].append(warning)
     for warning in report["market_caps"]["legacy_common_exchange"]["warnings"]:
@@ -3018,11 +3027,13 @@ def validate_economy_rare_resource_activation_policy(errors: list[str]) -> None:
     ensure(policy.get("live_stockpile_resource_ids", []) == list(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS), errors, "Rare-resource policy must expose the full live stockpile set in order")
     ensure(str(policy.get("rare_resource_activation", "")) == "live_stockpile", errors, "Rare-resource activation must be live_stockpile")
     ensure(bool(policy.get("live_rare_resource_activation", False)) is True, errors, "Rare resources must be activated in live rules")
-    ensure(report.get("activation_gates", {}).get("market", "") == "normal_market_rare_buying_disabled", errors, "Rare-resource gates must keep normal market buying disabled")
+    ensure(report.get("activation_gates", {}).get("market", "") == "normal_market_rare_trading_with_weekly_caps", errors, "Rare-resource gates must trade rares through capped town markets")
     ensure(report.get("activation_gates", {}).get("save_compatibility", "") == "old_saves_accept_absent_rare_resources_without_version_bump", errors, "Rare-resource gates must preserve old-save compatibility")
-    ensure(report.get("market_caps", {}).get("legacy_common_exchange", {}).get("rare_resource_buying_enabled", True) is False, errors, "Legacy normal market must not buy rare resources")
-    ensure(not set(report.get("market_caps", {}).get("legacy_common_exchange", {}).get("buy_resources", [])).intersection(ECONOMY_RARE_RESOURCE_IDS), errors, "Legacy normal market buy list must not contain rare resources")
-    ensure(not set(report.get("market_caps", {}).get("legacy_common_exchange", {}).get("sell_resources", [])).intersection(ECONOMY_RARE_RESOURCE_IDS), errors, "Legacy normal market sell list must not contain rare resources")
+    # Owner decision, 2026-10-07: rares are fully tradeable, but only under weekly caps.
+    town_market_caps = report.get("market_caps", {}).get("legacy_common_exchange", {})
+    ensure(set(town_market_caps.get("buy_resources", [])) == set(ECONOMY_MARKET_RESOURCE_IDS), errors, "Town markets must buy every stockpile resource but gold")
+    ensure(set(town_market_caps.get("sell_resources", [])) == set(ECONOMY_MARKET_RESOURCE_IDS), errors, "Town markets must sell every stockpile resource but gold")
+    ensure(bool(town_market_caps.get("rare_caps_present", False)), errors, "Town market rare trading must keep weekly rare buy and sell caps")
     ensure("const SAVE_VERSION := 9" in session_store_text, errors, "Rare-resource staging must preserve SessionStateStore SAVE_VERSION 9")
     ensure("const SAVE_VERSION := 9" in autoload_session_text, errors, "Rare-resource staging must preserve autoload SessionState SAVE_VERSION 9")
 
@@ -3191,10 +3202,9 @@ def validate_strict_economy_resource_fixtures() -> tuple[list[str], list[str]]:
             errors.extend(strict_resource_dict_errors(f"{profile_id}.{field}", profile.get(field, {}), True))
         ensure(str(profile.get("refresh_cadence", "")) == "weekly", errors, f"{profile_id} must declare weekly refresh cadence")
         if bool(profile.get("normal_market", True)):
-            rare_buying = any(str(resource_id) in ECONOMY_RARE_RESOURCE_IDS and int(amount) > 0 for resource_id, amount in profile.get("buy_caps", {}).items()) if isinstance(profile.get("buy_caps", {}), dict) else False
-            ensure(not rare_buying, errors, f"{profile_id} normal market must not buy rare resources")
+            ensure(not strict_market_rare_cap_gap(profile), errors, f"{profile_id} normal market must cap rare buying and selling together")
         restricted = {str(value) for value in profile.get("restricted_buy_resource_ids", [])} if isinstance(profile.get("restricted_buy_resource_ids", []), list) else set()
-        ensure(ECONOMY_RARE_RESOURCE_IDS.issubset(restricted), errors, f"{profile_id} must explicitly restrict all staged rare-resource buys")
+        ensure(restricted.issubset(ECONOMY_STOCKPILE_RESOURCE_IDS), errors, f"{profile_id} restricts unknown resources")
     for profile in valid.get("faction_preferences", []):
         profile_id = str(profile.get("id", "valid_faction_preference"))
         ensure(str(profile.get("policy", "")) == "advisory", errors, f"{profile_id} must keep faction preferences advisory")
@@ -3219,11 +3229,18 @@ def validate_strict_economy_resource_fixtures() -> tuple[list[str], list[str]]:
             fail(errors, f"Strict invalid registry fixture {item.get('id')} unexpectedly passed")
     for profile in invalid.get("market_profiles", []):
         profile_id = str(profile.get("id", "invalid_market_profile"))
-        buy_caps = profile.get("buy_caps", {})
-        rare_buying = any(str(resource_id) in ECONOMY_RARE_RESOURCE_IDS and int(amount) > 0 for resource_id, amount in buy_caps.items()) if isinstance(buy_caps, dict) else False
-        if not (bool(profile.get("normal_market", False)) and rare_buying):
+        if not (bool(profile.get("normal_market", False)) and strict_market_rare_cap_gap(profile)):
             fail(errors, f"Strict invalid market fixture {profile_id} unexpectedly passed")
     return errors, warnings
+
+
+def strict_market_rare_cap_gap(profile: dict) -> bool:
+    """True when a market profile buys or sells a rare resource without capping both sides."""
+    buy_caps = profile.get("buy_caps", {}) if isinstance(profile.get("buy_caps", {}), dict) else {}
+    sell_caps = profile.get("sell_caps", {}) if isinstance(profile.get("sell_caps", {}), dict) else {}
+    rare_buys = {str(resource_id) for resource_id, amount in buy_caps.items() if str(resource_id) in ECONOMY_RARE_RESOURCE_IDS and int(amount) > 0}
+    rare_sells = {str(resource_id) for resource_id, amount in sell_caps.items() if str(resource_id) in ECONOMY_RARE_RESOURCE_IDS and int(amount) > 0}
+    return rare_buys != rare_sells
 
 
 def market_faction_cost_apply_discount(cost: object, discount_percent: int) -> dict[str, int]:
@@ -3323,18 +3340,26 @@ def market_faction_cost_market_case(town_id: str, town: dict, faction: dict, bui
     sell_adjustments = profile.get("sell_rate_adjustments", {}) if isinstance(profile.get("sell_rate_adjustments", {}), dict) else {}
     buy_rates: dict[str, int] = {}
     sell_rates: dict[str, int] = {}
-    for resource_id in ECONOMY_NORMAL_MARKET_RESOURCE_IDS:
+
+    def common_adjustment(adjustments: dict, resource_id: str) -> int:
+        if resource_id in adjustments:
+            return int(adjustments.get(resource_id, 0))
+        return round(sum(int(adjustments.get(key, 0)) for key in ECONOMY_NORMAL_MARKET_RESOURCE_IDS) / len(ECONOMY_NORMAL_MARKET_RESOURCE_IDS))
+
+    for resource_id in ECONOMY_MARKET_RESOURCE_IDS:
         abundance = market_resource_abundance_score(faction.get("economy", {}), town.get("economy", {}), resource_id)
-        buy_rate = 740 - (abundance * 35) + int(buy_adjustments.get(resource_id, 0))
-        sell_rate = 280 + (abundance * 30) + int(sell_adjustments.get(resource_id, 0))
+        buy_rate = 740 - (abundance * 35) + common_adjustment(buy_adjustments, resource_id)
+        sell_rate = 280 + (abundance * 30) + common_adjustment(sell_adjustments, resource_id)
         buy_rate = max(500, min(760, buy_rate))
         sell_rate = max(260, min(max(260, buy_rate - 120), sell_rate))
-        buy_rates[resource_id] = buy_rate
-        sell_rates[resource_id] = sell_rate
+        # Rare resources are worth twice wood or ore (EnemyTurnRules._resource_value).
+        value_scale = 2 if resource_id in ECONOMY_RARE_RESOURCE_IDS else 1
+        buy_rates[resource_id] = buy_rate * value_scale
+        sell_rates[resource_id] = sell_rate * value_scale
     buy_cap_bonus = profile.get("buy_cap_bonus", {}) if isinstance(profile.get("buy_cap_bonus", {}), dict) else {}
     sell_cap_bonus = profile.get("sell_cap_bonus", {}) if isinstance(profile.get("sell_cap_bonus", {}), dict) else {}
-    buy_caps = {resource_id: 6 + max(0, int(buy_cap_bonus.get(resource_id, 0))) for resource_id in ECONOMY_NORMAL_MARKET_RESOURCE_IDS}
-    sell_caps = {resource_id: 8 + max(0, int(sell_cap_bonus.get(resource_id, 0))) for resource_id in ECONOMY_NORMAL_MARKET_RESOURCE_IDS}
+    buy_caps = {resource_id: (2 if resource_id in ECONOMY_RARE_RESOURCE_IDS else 6) + max(0, int(buy_cap_bonus.get(resource_id, 0))) for resource_id in ECONOMY_MARKET_RESOURCE_IDS}
+    sell_caps = {resource_id: (3 if resource_id in ECONOMY_RARE_RESOURCE_IDS else 8) + max(0, int(sell_cap_bonus.get(resource_id, 0))) for resource_id in ECONOMY_MARKET_RESOURCE_IDS}
     exchange_resources = sorted(set(buy_rates.keys()) | set(sell_rates.keys()))
     return {
         "town_id": town_id,
@@ -3352,7 +3377,7 @@ def market_faction_cost_market_case(town_id: str, town: dict, faction: dict, bui
         "bulk_resources": bulk_resources,
         "exchange_resources": exchange_resources,
         "rare_resource_buying_enabled": bool(set(buy_rates.keys()).intersection(ECONOMY_RARE_RESOURCE_IDS)),
-        "normal_market_resource_ids_only": set(exchange_resources) == set(ECONOMY_NORMAL_MARKET_RESOURCE_IDS),
+        "all_market_resource_ids": set(exchange_resources) == set(ECONOMY_MARKET_RESOURCE_IDS),
     }
 
 
@@ -3369,9 +3394,9 @@ def build_market_faction_cost_report() -> dict:
         "mode": "bounded_live_hook_report",
         "policy": {
             "live_stockpile_resource_ids": list(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS),
-            "normal_market_resource_ids": list(ECONOMY_NORMAL_MARKET_RESOURCE_IDS),
+            "normal_market_resource_ids": list(ECONOMY_MARKET_RESOURCE_IDS),
             "rare_resource_activation": "live_stockpile",
-            "normal_market_rare_buying_enabled": False,
+            "normal_market_rare_buying_enabled": True,
             "runtime_market_cap_adoption": True,
             "market_cap_support": "weekly town.market_usage runtime state, cap-aware actions/readiness, and save-resume report",
             "market_profile_source": "content/buildings.json market_profile",
@@ -30966,7 +30991,7 @@ def validate_town_market_exchange_completion_feedback(errors: list[str]) -> None
             'var subject_kind := "unit_roster" if lane == "transfer" else',
             'var parts := action_id.split(":")',
             'var resource_deltas := _town_action_resource_deltas(before, after)',
-            'resource_id not in OverworldRules.NORMAL_MARKET_RESOURCE_KEYS',
+            'resource_id not in OverworldRules.MARKET_RESOURCE_KEYS',
             'resource_deltas.size() != 2',
             'action_type == "buy" and (resource_delta != amount or gold_delta >= 0)',
             'action_type == "sell" and (resource_delta != -amount or gold_delta <= 0)',
@@ -30988,7 +31013,7 @@ def validate_town_market_exchange_completion_feedback(errors: list[str]) -> None
     stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
         'event_id == "town_market_exchange_completed" and String(presentation.get("exchange_action", "")) not in ["buy", "sell", "convert"]',
-        'event_id == "town_market_exchange_completed" and String(presentation.get("exchange_resource_id", "")) not in ["wood", "ore"]',
+        'event_id == "town_market_exchange_completed" and String(presentation.get("exchange_resource_id", "")) not in OverworldRulesScript.MARKET_RESOURCE_KEYS',
         'event_id == "town_market_exchange_completed" and int(presentation.get("exchange_amount", 0)) <= 0',
         'event_id == "town_market_exchange_completed" and Array(presentation.get("resource_deltas", [])).size() != 2',
         'draw_entries = ["ledger_exchange_badge"] if reduced_motion else ["market_exchange_art", "ledger_exchange_badge"]',

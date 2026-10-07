@@ -5,17 +5,21 @@ extends Node
 ## building open one popout, the old separate market and spell dialogs are
 ## gone, the popout buys and sells for gold and converts one resource into
 ## another at the shown rate, and every "trade for it" cost button opens the
-## market popout. It also checks the conversion rule itself and that the
-## market and its upgrade cost gold only.
+## market popout. Every resource trades for every other, rare resources
+## included: the popout buys, sells and converts them at the shown rate within
+## the weekly limits. It also checks the trade rules themselves (values, tiers,
+## limits, no profitable cycle anywhere) and that the market costs gold only.
 
 const TownShellScene = preload("res://scenes/town/TownShell.tscn")
 const Board = preload("res://scripts/core/TownConstructionBoard.gd")
 const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRules.gd")
+const EnemyTurnRulesScript = preload("res://scripts/core/EnemyTurnRules.gd")
 const CAPTURE_DIR := "res://.artifacts/town_market_popout"
 const TAVERN_ID := "building_wayfarers_hall"
 const MARKET_ID := "building_market_square"
 const EXCHANGE_ID := "building_dev_trade_exchange"
-const STOCK := {"gold": 20000, "wood": 20, "ore": 20, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0}
+const STOCK := {"gold": 20000, "wood": 20, "ore": 20, "aetherglass": 6, "embergrain": 6, "peatwax": 6, "verdant_grafts": 6, "brass_scrip": 6, "memory_salt": 6}
+const RARES := ["aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]
 
 var _errors := []
 
@@ -29,6 +33,7 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(capture_dir)
 	var original_size := get_window().size
 	var rule_rows := _check_rules()
+	var rare_rows := _check_rare_rules()
 	var cost_rows := _check_gold_only_costs()
 	var only := OS.get_environment("MARKET_TOWN")
 	var rows := []
@@ -47,6 +52,7 @@ func _run() -> void:
 		"ok": _errors.is_empty(),
 		"schema": "town_market_popout_report_v1",
 		"rules": rule_rows,
+		"rare_rules": rare_rows,
 		"costs": cost_rows,
 		"town_count": rows.size(),
 		"rows": rows,
@@ -101,18 +107,91 @@ func _check_rules() -> Dictionary:
 			var two: Dictionary = TownRules.market_trade_quote(market, usage, stock, "gold", "wood", 2)
 			_check(failures, int(three.get("give_amount", 0)) == int(two.get("give_amount", 0)) + int(market.buy_rates.wood), "bulk lots price %s" % three)
 		_check(failures, TownRules.market_trade_mode(market, "wood", "wood") == "" and TownRules.market_trade_mode(market, "gold", "gold") == "", "same resource trades")
-		for import_id in market.get("import_resources", []):
-			_check(failures, TownRules.market_trade_mode(market, "gold", String(import_id)) == "buy" and TownRules.market_trade_mode(market, "wood", String(import_id)) == "" and TownRules.market_trade_mode(market, String(import_id), "gold") == "", "imports are gold-only buys")
 		cases.append({"market": String(market.get("building_id", "")), "wood_per_ore": per_unit, "gold_path": via_gold, "round_trip": round_trip, "max_now": max_now})
 	if not failures.is_empty():
 		_errors.append("rules: %s" % JSON.stringify(failures))
 	return {"ok": failures.is_empty(), "cases": cases, "failures": failures}
 
-func _market_fixture(building_id: String) -> Dictionary:
+func _market_fixture(building_id: String, town_id: String = "town_riverwatch") -> Dictionary:
 	var built := ["building_town_hall", MARKET_ID]
 	if building_id == EXCHANGE_ID:
 		built.append(EXCHANGE_ID)
-	return OverworldRules.town_market_state({"town_id": "town_riverwatch", "built_buildings": built})
+	return OverworldRules.town_market_state({"town_id": town_id, "built_buildings": built})
+
+## Rare resources trade like any other, HoMM3 style, at both market tiers and in
+## every faction town: priced at their economy value, better at the Trade
+## Exchange, held to smaller weekly limits, and never profitable in a cycle.
+func _check_rare_rules() -> Dictionary:
+	var failures := []
+	var markets := []
+	for town_value in ContentService.load_json("res://content/towns.json").get("items", []):
+		for building_id in [MARKET_ID, EXCHANGE_ID]:
+			markets.append(_market_fixture(building_id, String(town_value.get("id", ""))))
+	# The market values match the AI's resource valuation, so neither side sees a cheaper rare.
+	for resource_id in OverworldRules.MARKET_RESOURCE_KEYS:
+		_check(failures, int(OverworldRules.MARKET_RESOURCE_VALUES.get(resource_id, 0)) == EnemyTurnRulesScript._resource_value({resource_id: 1}), "%s market value %s differs from the AI valuation %d" % [resource_id, OverworldRules.MARKET_RESOURCE_VALUES.get(resource_id, 0), EnemyTurnRulesScript._resource_value({resource_id: 1})])
+	var empty := {"week": 1, "buy": {}, "sell": {}}
+	var stock := {"gold": 100000}
+	for resource_id in OverworldRules.MARKET_RESOURCE_KEYS:
+		stock[resource_id] = 100
+	for index in range(markets.size()):
+		var market: Dictionary = markets[index]
+		var ids: Array = TownRules.market_resource_ids(market)
+		_check(failures, ids == OverworldRules.MARKET_RESOURCE_KEYS, "market trades %s" % [ids])
+		var exchange := int(market.get("tier", 0)) >= 2
+		for rare in RARES:
+			for common in ["wood", "ore"]:
+				_check(failures, int(market.buy_rates[rare]) > int(market.buy_rates[common]) and int(market.sell_rates[rare]) > int(market.sell_rates[common]), "%s is not worth more than %s" % [rare, common])
+			_check(failures, int(market.buy_caps[rare]) == (5 if exchange else 2) and int(market.sell_caps[rare]) == (5 if exchange else 3), "%s caps %d/%d" % [rare, market.buy_caps[rare], market.sell_caps[rare]])
+		for common in ["wood", "ore"]:
+			_check(failures, int(market.buy_caps[common]) == (8 if exchange else 6) and int(market.sell_caps[common]) == (10 if exchange else 8), "%s caps %d/%d" % [common, market.buy_caps[common], market.sell_caps[common]])
+		if exchange:
+			var square: Dictionary = markets[index - 1]
+			for resource_id in ids:
+				_check(failures, int(market.buy_rates[resource_id]) < int(square.buy_rates[resource_id]) and int(market.sell_rates[resource_id]) > int(square.sell_rates[resource_id]), "Trade Exchange is not better for %s" % resource_id)
+		# Every pair quotes, and conversions charge exactly the midpoint-over-sell rate.
+		for give_id in ids:
+			_check(failures, int(TownRules.market_trade_quote(market, empty, stock, give_id, "gold", 1).get("receive_amount", 0)) == int(market.sell_rates[give_id]), "sell %s" % give_id)
+			_check(failures, int(TownRules.market_trade_quote(market, empty, stock, "gold", give_id, 1).get("give_amount", 0)) == int(market.buy_rates[give_id]), "buy %s" % give_id)
+			for receive_id in ids:
+				if give_id == receive_id:
+					continue
+				var rate: Dictionary = TownRules.market_conversion_rate(market, give_id, receive_id)
+				var back: Dictionary = TownRules.market_conversion_rate(market, receive_id, give_id)
+				var per_unit := float(rate.numerator) / float(rate.denominator)
+				var most := int(TownRules.market_trade_quote(market, empty, stock, give_id, receive_id, 1).get("max_amount", 0))
+				var count := mini(2, most)
+				var quote: Dictionary = TownRules.market_trade_quote(market, empty, stock, give_id, receive_id, count)
+				var expected_give := (count * int(rate.numerator) + int(rate.denominator) - 1) / int(rate.denominator)
+				_check(failures, most >= 1 and bool(quote.get("ok", false)) and int(quote.give_amount) == expected_give and int(quote.receive_amount) == count, "convert %s to %s: %s" % [give_id, receive_id, quote])
+				_check(failures, per_unit * float(back.numerator) / float(back.denominator) > 1.0, "%s to %s and back gains" % [give_id, receive_id])
+				_check(failures, per_unit < float(market.buy_rates[receive_id]) / float(market.sell_rates[give_id]), "converting %s to %s is not better than selling and buying" % [give_id, receive_id])
+				_check(failures, float(market.buy_rates[give_id]) * per_unit > float(market.sell_rates[receive_id]), "buying %s to convert and sell %s pays" % [give_id, receive_id])
+	# No cycle pays across towns and tiers either: buy anywhere, sell anywhere,
+	# convert in one town and back in another.
+	var cross_failures := 0
+	for first in markets:
+		for second in markets:
+			for give_id in OverworldRules.MARKET_RESOURCE_KEYS:
+				if int(second.sell_rates[give_id]) >= int(first.buy_rates[give_id]):
+					cross_failures += 1
+				for receive_id in OverworldRules.MARKET_RESOURCE_KEYS:
+					if give_id == receive_id:
+						continue
+					var there: Dictionary = TownRules.market_conversion_rate(first, give_id, receive_id)
+					var back: Dictionary = TownRules.market_conversion_rate(second, receive_id, give_id)
+					if float(there.numerator) / float(there.denominator) * float(back.numerator) / float(back.denominator) <= 1.0:
+						cross_failures += 1
+	_check(failures, cross_failures == 0, "%d profitable cross-town cycles" % cross_failures)
+	# Saved import counters already lived in the weekly buy bucket; they now count
+	# against the rare buy limit.
+	var exchange_market := _market_fixture(EXCHANGE_ID, "town_veilmourn_bellwake_harbor")
+	var legacy: Dictionary = OverworldRules._normalize_towns([{"town_id": "town_veilmourn_bellwake_harbor", "placement_id": "legacy", "owner": "player", "built_buildings": ["building_town_hall", MARKET_ID, EXCHANGE_ID], "market_usage": {"week": 1, "buy": {"wood": 0, "ore": 0, "memory_salt": 3}, "sell": {"wood": 0, "ore": 0}}}], 3)[0]
+	var legacy_cap: Dictionary = OverworldRules._market_cap_state_for_quote(legacy, exchange_market, OverworldRules._market_quote_from_state(exchange_market, "buy", "memory_salt", 1), 3)
+	_check(failures, int(legacy_cap.get("used", -1)) == 3 and int(legacy_cap.get("remaining", -1)) == 2, "saved import counter %s" % legacy_cap)
+	if not failures.is_empty():
+		_errors.append("rare rules: %s" % JSON.stringify(failures))
+	return {"ok": failures.is_empty(), "market_count": markets.size(), "failures": failures}
 
 func _check_gold_only_costs() -> Dictionary:
 	var failures := []
@@ -216,26 +295,45 @@ func _run_town(template_id: String, viewport_size: Vector2i, capture_dir: String
 	_check(failures, bool(info.get("open", false)) and String(info.get("panel", {}).get("building_id", "")) == MARKET_ID, "market popout closed after trading")
 	_no_scroll(failures, info, "market after trades")
 
+	# Rare resources trade like any other: every resource in both rows, then buy,
+	# sell and convert them with fresh weekly limits.
+	var desk: Dictionary = shell.get("_building_info_surface").call("validation_snapshot").get("market", {})
+	_check(failures, desk.get("give_tiles", []).size() == 9 and desk.get("receive_tiles", {}).size() == 9, "market rows %s / %s" % [desk.get("give_tiles", []), desk.get("receive_tiles", {}).keys()])
+	_reset_market_usage(SessionState.ensure_active_session())
+	shell.call("_refresh_building_information")
+	await _frames(2)
+	market_rows["buy_rare"] = await _trade(shell, null, failures, "gold", RARES[0], 2, capture_dir, template_id, viewport_size, "market_rare_buy")
+	await _check_cap_holds(shell, failures, "gold", RARES[0])
+	market_rows["sell_rare"] = await _trade(shell, null, failures, RARES[1], "gold", 3)
+	await _check_cap_holds(shell, failures, RARES[1], "gold")
+	market_rows["rare_to_wood"] = await _trade(shell, null, failures, RARES[2], "wood", 2)
+	market_rows["wood_to_rare"] = await _trade(shell, null, failures, "wood", RARES[3], 1)
+	market_rows["rare_to_rare"] = await _trade(shell, null, failures, RARES[4], RARES[5], 1, capture_dir, template_id, viewport_size, "market_rare_convert")
+	info = shell.call("validation_building_information_snapshot", MARKET_ID)
+	_no_scroll(failures, info, "market after rare trades")
+
 	# Cost buttons that offered an exchange open the market popout.
 	var routes := await _check_trade_routes(shell, failures, ids, base_unit)
 
-	# The Trade Exchange adds this town's two rare imports, bought with gold only.
+	# The Trade Exchange trades the same resources at better rates and with
+	# larger limits.
 	shell.call("_close_town_catalog", false)
 	live = SessionState.ensure_active_session()
+	var square_market: Dictionary = OverworldRules.town_market_state(TownRules.get_active_town(live))
 	_set_built(live, ["building_town_hall", TAVERN_ID, ids.dwelling, ids.guild, MARKET_ID, EXCHANGE_ID])
 	live.overworld["resources"] = STOCK.duplicate(true)
 	shell.call("_refresh")
 	await _frames(2)
 	info = await _open(shell, EXCHANGE_ID)
 	_no_scroll(failures, info, "trade exchange")
-	var exchange_market: Dictionary = shell.get("_building_info_surface").call("validation_snapshot").get("market", {})
-	var imports: Array = OverworldRules.town_market_state(TownRules.get_active_town(live)).get("import_resources", [])
-	_check(failures, imports.size() == 2 and imports.all(func(id): return exchange_market.get("receive_tiles", {}).has(id)), "import tiles %s for %s" % [exchange_market.get("receive_tiles", {}), imports])
-	if not imports.is_empty():
-		market_rows["import"] = await _trade(shell, null, failures, "gold", String(imports[0]), 1)
-		view = shell.get("_building_info_surface")
-		_check(failures, not bool(view.call("validation_select_market_pair", "wood", String(imports[0]))), "imports convert from wood")
-	market_rows["exchange_convert"] = await _trade(shell, null, failures, "ore", "wood", 2, capture_dir, template_id, viewport_size, "exchange_convert")
+	var exchange_market: Dictionary = OverworldRules.town_market_state(TownRules.get_active_town(live))
+	_check(failures, int(exchange_market.buy_rates[RARES[0]]) < int(square_market.buy_rates[RARES[0]]) and int(exchange_market.sell_rates[RARES[0]]) > int(square_market.sell_rates[RARES[0]]), "Trade Exchange rare rates are not better")
+	var exchange_usage: Dictionary = OverworldRules._normalize_town_market_usage_state(TownRules.get_active_town(live).get("market_usage", {}), int(live.day))
+	var exchange_room := int(TownRules.market_trade_quote(exchange_market, exchange_usage, live.overworld.get("resources", {}), "gold", RARES[0], 1).get("max_amount", 0))
+	_check(failures, exchange_room > int(square_market.buy_caps[RARES[0]]), "Trade Exchange rare limit %d" % exchange_room)
+	market_rows["exchange_buy_rare"] = await _trade(shell, null, failures, "gold", RARES[0], exchange_room)
+	await _check_cap_holds(shell, failures, "gold", RARES[0])
+	market_rows["exchange_convert"] = await _trade(shell, null, failures, RARES[5], "ore", 2, capture_dir, template_id, viewport_size, "exchange_convert")
 	shell.queue_free()
 	await _frames(2)
 	return {"ok": failures.is_empty(), "template_id": template_id, "viewport": viewport_size, "trades": market_rows, "routes": routes, "failures": failures}
@@ -247,6 +345,10 @@ func _trade(shell: Node, view, failures: Array, give_id: String, receive_id: Str
 	await _frames(1)
 	view = shell.get("_building_info_surface")
 	_check(failures, bool(view.call("validation_select_market_pair", give_id, receive_id)), "select %s for %s" % [give_id, receive_id])
+	# Giving a valuable resource steps by whole given units; take the nearest offered amount.
+	var steps: Array = view.call("validation_snapshot").get("market", {}).get("steps", [])
+	if amount not in steps and not steps.is_empty():
+		amount = int(steps.filter(func(step): return int(step) >= amount).front()) if steps.any(func(step): return int(step) >= amount) else int(steps.back())
 	_check(failures, bool(view.call("validation_set_market_amount", amount)), "amount %d for %s" % [amount, receive_id])
 	await _frames(2)
 	var shown: Dictionary = view.call("validation_snapshot").get("market", {})
@@ -279,15 +381,32 @@ func _trade(shell: Node, view, failures: Array, give_id: String, receive_id: Str
 	_check(failures, String(refreshed.get("give_id", "")) == give_id and String(refreshed.get("receive_id", "")) == receive_id and int(refreshed.get("stock", {}).get(give_id, -1)) == int(after.get(give_id, 0)), "popout did not refresh in place %s" % refreshed)
 	return {"mode": String(expected.get("mode", "")), "amount": amount, "give_amount": int(expected.get("give_amount", 0)), "receive_amount": int(expected.get("receive_amount", 0)), "rate_text": String(expected.get("rate_text", ""))}
 
+## After a trade used up a weekly limit, the popout offers no more and the order
+## itself is refused without touching the stores.
+func _check_cap_holds(shell: Node, failures: Array, give_id: String, receive_id: String) -> void:
+	var view = shell.get("_building_info_surface")
+	view.call("validation_select_market_pair", give_id, receive_id)
+	await _frames(1)
+	var shown: Dictionary = view.call("validation_snapshot").get("market", {})
+	_check(failures, int(shown.get("max_amount", -1)) == 0 and not bool(shown.get("trade_enabled", true)) and String(shown.get("reason", "")).contains("limit"), "%s>%s limit not shown: %s" % [give_id, receive_id, shown])
+	var live = SessionState.ensure_active_session()
+	var before: Dictionary = live.overworld.get("resources", {}).duplicate(true)
+	var forged := "market:buy:%s:1" % receive_id if give_id == "gold" else "market:sell:%s:1" % give_id
+	_check(failures, not bool(TownRules.perform_market_action(live, forged).get("ok", true)) and live.overworld.get("resources", {}) == before, "%s passed the weekly limit" % forged)
+
+func _reset_market_usage(session) -> void:
+	var active: Dictionary = TownRules.get_active_town(session)
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		if String(towns[index].get("placement_id", "")) == String(active.get("placement_id", "")):
+			towns[index]["market_usage"] = {}
+
 func _check_trade_routes(shell: Node, failures: Array, ids: Dictionary, base_unit: String) -> Dictionary:
 	var routes := {}
 	var live = SessionState.ensure_active_session()
 	# Short of gold, rich in wood and ore: every cost the market can cover offers a trade.
 	live.overworld["resources"] = {"gold": 40, "wood": 120, "ore": 120, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0}
-	var towns: Array = live.overworld.get("towns", [])
-	for index in range(towns.size()):
-		if String(towns[index].get("placement_id", "")) == String(TownRules.get_active_town(live).get("placement_id", "")):
-			towns[index]["market_usage"] = {}
+	_reset_market_usage(live)
 	shell.call("_close_town_catalog", false)
 	shell.call("_refresh")
 	await _frames(2)

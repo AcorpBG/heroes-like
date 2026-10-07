@@ -238,12 +238,12 @@ Rules:
 - Some resources are restricted until the player discovers or controls a matching site class.
 - Scenario markets can be disabled, capped, or scripted when scarcity is the point.
 
-Suggested exchange stance:
+Exchange stance (owner decision, 2026-10-07, replacing the earlier "rares only through special markets" stance):
 
-- Gold can buy limited wood/ore at poor rates.
-- Wood and ore can trade into each other at worse rates through market sites.
-- Aetherglass, verdant grafts, brass scrip, and memory salt require special markets or site control.
-- Faction resources should have sell value but limited buy availability.
+- Every town market trades any resource for any other, HoMM3 style: gold buys and sells every resource, and wood, ore and the six rare resources convert directly into each other.
+- Rare resources are priced at twice wood or ore (the economy's resource valuation), and a direct conversion beats selling then buying but always loses in a round trip.
+- Weekly per-town limits keep rare trading small: a Marketplace allows 2 bought and 3 sold of each rare, a Trade Exchange 5 and 5. Site control stays the sustained supply.
+- Details: `docs/town-market.md`.
 
 ## Capture And Counter-Capture Loops
 

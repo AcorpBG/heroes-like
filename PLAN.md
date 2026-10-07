@@ -46,6 +46,10 @@ Rules:
 
 `ux-town-market-popout-20261007` (completed, owner playtest fix): the market and magic guild popouts are their buildings' only windows: the Trade and Spells commands and every trade-for-it button open them, and the separate Town Market and spellbook dialogs are gone. The market popout is a HoMM-style desk that buys, sells and converts wood and ore directly within the weekly limits (`TownRules.market_trade_quote`), and the Marketplace and Trade Exchange now cost 3,000 and 4,500 gold only. See `docs/town-market.md`.
 
+### Rare resources fully tradeable
+
+`content-rare-resources-fully-tradeable-20261007` (completed, owner playtest fix): owner decision: every town market buys, sells and converts every stockpile resource, any for any other, with rares at twice the wood/ore value and better rates at the Trade Exchange. Weekly caps stay as the anti-exploit guard (rares 2/3 bought/sold at a Marketplace, 5/5 at a Trade Exchange), the old rare import folds into normal buying, and no trade cycle turns a profit. See `docs/town-market.md`.
+
 ### Water travel and transit objects
 
 `feature-water-travel-20261007` (completed for the player, owner direction): HoMM3-style boats. Walking onto a free boat boards it and stepping onto open shore leaves it, each ending the day's movement; sailing heroes move only on water and visit water sites. Neutral shipyards build a boat at their dock for 1,000 gold and 10 wood; whirlpools throw a boat out at another whirlpool for half of the weakest stack. Random maps translate HoMM3 transit objects by meaning instead of a random transit pick: boats, shipyards and whirlpools become themselves, border guards, gates, garrisons and quest guards become terrain-matched pay-to-open gates, keymaster's tents are left off, and portals and subterranean gates keep their passage with matching art. Shipyards and whirlpools are never used as stand-ins for other HoMM3 sites. Gates ask before taking payment, and older saves are migrated once. Follow-up: AI heroes do not sail yet. See `docs/water-travel.md`.

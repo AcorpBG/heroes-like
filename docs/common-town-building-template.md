@@ -9,7 +9,7 @@ Implemented owner direction, 2026-09-21. All six factions use one town template,
 | Town Hall | 500 / 1,000 / 2,000 / 4,000 gold daily. One active stage; per-town Capital Hall, no player-wide capital restriction. |
 | Fortifications | Three stages: +10 / +20 / +30 town readiness and +2 / +4 / +6 defense to defending creatures in town battles. Higher stages replace earlier benefits. |
 | Magic Guild | Five stages, enabling faction spells through tiers 1–5. |
-| Marketplace | Basic wood/ore exchange; Trade Exchange improves rates and enables bulk orders, plus paid imports of the town faction's two rare resources: 1,200 gold each, five of each per week. No daily gold income. |
+| Marketplace | Buys, sells and converts every resource, rare ones included, within weekly limits; Trade Exchange improves every rate, raises the limits and enables bulk wood/ore orders (`docs/town-market.md`). No daily gold income. |
 | Tavern | Recruit additional heroes using the existing visiting-hero system. |
 | Storehouse I | Exactly 1 wood and 1 ore per day. |
 | Storehouse II | Retains 1 wood + 1 ore and adds 1 main faction resource per day. |
@@ -47,13 +47,17 @@ The main resource follows existing faction affinity; the new secondary assignmen
 | Brasshollow Combine | brass scrip | embergrain |
 | Veilmourn Armada | memory salt | verdant grafts |
 
-### Limited rare imports
+### Rare resources at the market
 
-Trade Exchange provides an expensive fallback when the map lacks a renewable source of a faction resource. Each town can import up to five of its main resource and five of its secondary resource per week, at 1,200 gold per unit. Imports are buy-only, have no bulk discount and do not carry unused allowance forward. The town's authored faction determines the pair even when another faction captures it. Ownership changes, visiting heroes, rebuilding and save/load preserve consumed allowance; the next normal week resets it. Older saves begin with unused allowance and receive no free resources.
+Owner decision, 2026-10-07: rare resources are fully tradeable, HoMM3 style. This replaces the earlier Trade Exchange import (the faction's two rares at 1,200 gold, five a week, buy only). Every market buys, sells and converts all six rare resources at twice the price of wood or ore, the economy's valuation:
 
-Town Market shows the price, remaining allowance and reset day. Players place actual exchange orders before constructing or recruiting. AI uses the same prices and allowance, banking only the shortage for a legal T6/T7 construction target while reserving the project's complete cost and at least 2,000 gold. It can accumulate shipments across weeks for a ten-unit requirement. Mines, Storehouse II and faction producers remain the cheaper sustained supply.
+- A Marketplace allows 2 bought and 3 sold of each rare per week.
+- A Trade Exchange has better rates and allows 5 of each.
+- Rates follow the town's local abundance.
 
-`tests/town_rare_import_regression.py` passes 198 focused Windows checks: all six resource pairs, prices, caps, capture/rebuild/save persistence, legacy migration, rejected sales/off-pair orders, real construction/recruitment transactions and AI banking. Full-match continuations also exercise the recovery on their existing maps and earned treasuries. Native generation is unchanged.
+The same weekly usage carries through ownership changes, visiting heroes, rebuilding and save/load, and the next normal week resets it. A saved import count stays in the buy bucket and counts against the rare buy limit. Players place actual orders in the market popout before constructing or recruiting.
+
+The AI uses the same prices and limits. It banks only the shortage for a legal T6/T7 construction target while reserving the project's complete cost and at least 2,000 gold, and can accumulate purchases across weeks for a ten-unit requirement. Automatic cost coverage sells only wood and ore, never rares. Mines, Storehouse II and faction producers remain the cheaper sustained supply. Rules and validation: `docs/town-market.md`, `tests/town_rare_import_regression.py` and `tests/town_market_popout_report.tscn`.
 
 ## Faction buildings
 
@@ -101,7 +105,7 @@ AI town visitors and stationed defenders use the same paid services and persiste
 
 Artifact Exchange requires Marketplace. A visiting active hero can buy up to three distinct stocked artifacts per town per week; claimed offers remain exhausted through saves and ownership changes until the next weekly refresh. Offers use stable town identity/week, not simulation RNG. Common/uncommon/rare items cost 1,500 / 2,500 / 4,000 gold. Epic/legendary sale valuations are 6,500 / 10,000. Selling pays half valuation and requires the artifact in inventory, not equipped; quest items are excluded. Buying places the item in inventory. Duplicate ownership, sold-out stock, insufficient funds, remote visits, unowned towns and stale action callbacks are rejected before mutation.
 
-Artifact commerce is in **Town Market**; training is in **Town Log & Logistics**. Hover descriptions explain effects before use. Owned towns can upgrade their garrison even without a visiting hero; hero training/artifact commerce require a visitor.
+Artifact commerce is in the Artifact Exchange's building popout; training is in **Town Log & Logistics**. Hover descriptions explain effects before use. Owned towns can upgrade their garrison even without a visiting hero; hero training/artifact commerce require a visitor.
 
 ## AI town services
 

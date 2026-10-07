@@ -1,5 +1,7 @@
 # Economy Runtime Market Cap Persistence Report
 
+> Updated 2026-10-07: rare resources are now fully tradeable at town markets, under their own weekly caps (Marketplace 2 bought and 3 sold of each rare, Trade Exchange 5 and 5; wood and ore 6/8 and 8/10). See `docs/town-market.md`. The common-resource only scope below records the original slice.
+
 Slice: `economy-runtime-market-cap-persistence-20260524-10184`
 
 ## Result
