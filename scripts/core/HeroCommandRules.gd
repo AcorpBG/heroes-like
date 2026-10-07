@@ -17,6 +17,17 @@ const ARMY_SLOT_COUNT := 7
 const ARMY_SLOT_INDEX_KEY := "slot_index"
 const DEFAULT_RECRUIT_COST := {"gold": 1200}
 const BASE_SCOUT_RADIUS := 6
+const TOWN_DEVELOPMENT_PATH := "res://content/town_development.json"
+# Tavern veterans: about one offer in ten is level 2 and one in thirty level 3.
+const TAVERN_LEVEL_TWO_PERCENT := 10
+const TAVERN_LEVEL_THREE_PERCENT := 3
+# HoMM3-like starting army: a tier-1 company always, often a second company
+# (usually tier 2, sometimes the other tier-1 creature). Sizes are shares of
+# the creature's weekly growth.
+const STARTING_SECOND_COMPANY_PERCENT := 75
+const STARTING_SECOND_COMPANY_TIER_TWO_PERCENT := 70
+const STARTING_FIRST_COMPANY_GROWTH_SHARE := [0.75, 1.5]
+const STARTING_SECOND_COMPANY_GROWTH_SHARE := [0.5, 1.0]
 
 static func normalize_session(
 	session: SessionStateStoreScript.SessionData,
@@ -144,6 +155,157 @@ static func build_hero_from_template(
 	if movement_source is SessionStateStoreScript.SessionData and String(movement_source.overworld.get("active_player_id", "")) != "":
 		hero["player_id"] = String(movement_source.overworld.active_player_id)
 	return hero
+
+## Builds a newly hired commander. Every hire, the player's tavern and AI
+## recruitment alike, creates its hero here so no hired hero walks out without
+## troops: the hero leads `army_state`, or its starting army
+## (starting_army_for_hero, seeded by `seed_key`) when that holds no troops,
+## and arrives at `level` through HeroProgressionRules exactly as earned levels
+## do, with full movement and mana. tavern_offer gives a hire's level and army.
+static func build_recruited_hero(
+	hero_template: Dictionary,
+	position: Dictionary,
+	movement_source: Variant,
+	level: int = 1,
+	army_state: Variant = {},
+	seed_key: String = ""
+) -> Dictionary:
+	if hero_template.is_empty():
+		return {}
+	var hero_id := String(hero_template.get("id", ""))
+	var army := _normalize_army(army_state, hero_id)
+	if _valid_stack_count(army.get("stacks", [])) == 0:
+		army = starting_army_for_hero(hero_template, seed_key if seed_key != "" else hero_id)
+	var hero := build_hero_from_template(hero_template, position, army, movement_source)
+	if hero.is_empty():
+		return hero
+	if level > 1:
+		hero = HeroProgressionRulesScript.advance_to_level(hero, level)
+	# Specialty mana counts toward the new commander's full reserve.
+	hero = SpellRulesScript.ensure_hero_spellbook(hero, hero_template)
+	var spellbook: Dictionary = hero.get("spellbook", {})
+	var mana: Dictionary = spellbook.get("mana", {})
+	if not mana.is_empty():
+		mana["current"] = int(mana.get("max", 0))
+		spellbook["mana"] = mana
+		hero["spellbook"] = spellbook
+	var movement_max := movement_max_for_hero(hero, movement_source)
+	hero["movement"] = {"current": movement_max, "max": movement_max}
+	return hero
+
+## A HoMM3-style starting army for `hero_template`: a company of the faction's
+## tier-1 creature, often a second company (tier 2, or the other tier-1
+## creature), each a share of that creature's weekly growth. A template's own
+## `starting_army` rows ({unit_id, min, max}) are used instead when present.
+## Always at least one creature when the faction has any; the same `seed_key`
+## always gives the same army.
+static func starting_army_for_hero(hero_template: Dictionary, seed_key: String) -> Dictionary:
+	var hero_id := String(hero_template.get("id", ""))
+	var rng := _seeded_rng("%s|starting_army" % seed_key)
+	var stacks := []
+	var authored = hero_template.get("starting_army", [])
+	if authored is Array:
+		for row in authored:
+			var unit_id := String(row.get("unit_id", "")) if row is Dictionary else ""
+			if unit_id == "" or ContentService.get_unit(unit_id).is_empty():
+				continue
+			var low := maxi(1, int(row.get("min", row.get("count", 1))))
+			stacks.append({"unit_id": unit_id, "count": rng.randi_range(low, maxi(low, int(row.get("max", low))))})
+	if stacks.is_empty():
+		var faction_id := String(hero_template.get("faction_id", ""))
+		var tier_one := _faction_creatures(faction_id, 1)
+		var tier_two := _faction_creatures(faction_id, 2)
+		if not tier_one.is_empty():
+			var first := String(tier_one[rng.randi_range(0, tier_one.size() - 1)])
+			stacks.append({"unit_id": first, "count": _starting_company_size(rng, first, STARTING_FIRST_COMPANY_GROWTH_SHARE)})
+			var other_tier_one := tier_one.filter(func(unit_id): return String(unit_id) != first)
+			if rng.randi_range(0, 99) < STARTING_SECOND_COMPANY_PERCENT and not (tier_two.is_empty() and other_tier_one.is_empty()):
+				var tier_two_roll := rng.randi_range(0, 99)
+				var pool := tier_two if not tier_two.is_empty() and (other_tier_one.is_empty() or tier_two_roll < STARTING_SECOND_COMPANY_TIER_TWO_PERCENT) else other_tier_one
+				var second := String(pool[rng.randi_range(0, pool.size() - 1)])
+				stacks.append({"unit_id": second, "count": _starting_company_size(rng, second, STARTING_SECOND_COMPANY_GROWTH_SHARE)})
+	for index in range(stacks.size()):
+		stacks[index][ARMY_SLOT_INDEX_KEY] = index
+	return {"id": "%s_army" % hero_id, "name": "Field Army", "stacks": stacks}
+
+static func army_has_troops(army: Variant) -> bool:
+	return army is Dictionary and _valid_stack_count(army.get("stacks", [])) > 0
+
+## Save migration: older saves hired heroes with no troops. On restore, every
+## player hero still in play that leads no troops gets its starting army, and
+## so does an AI raid commander left without a host. Returns how many armies
+## were restored. Mid-battle and finished sessions are left as they are.
+static func restore_empty_hero_armies(session: SessionStateStoreScript.SessionData) -> int:
+	if session == null or not session.battle.is_empty() or String(session.scenario_status) not in ["", "in_progress"]:
+		return 0
+	var restored := 0
+	var heroes = session.overworld.get("player_heroes", [])
+	if heroes is Array:
+		for index in range(heroes.size()):
+			var hero = heroes[index]
+			if not (hero is Dictionary) or _valid_stack_count(hero.get("army", {}).get("stacks", []) if hero.get("army", {}) is Dictionary else []) > 0:
+				continue
+			var hero_id := String(hero.get("id", ""))
+			var army := starting_army_for_hero(ContentService.get_hero(hero_id), "%s|%s|restored_army|%s" % [String(session.session_id), String(session.scenario_id), hero_id])
+			if army.get("stacks", []).is_empty():
+				continue
+			var previous: Dictionary = hero.get("army", {}) if hero.get("army", {}) is Dictionary else {}
+			army["id"] = String(previous.get("id", army.get("id", "")))
+			army["name"] = String(previous.get("name", army.get("name", "Field Army")))
+			hero["army"] = army
+			heroes[index] = hero
+			restored += 1
+		if restored > 0:
+			session.overworld["player_heroes"] = heroes
+			_sync_active_hero_mirror(session)
+	var encounters = session.overworld.get("encounters", [])
+	var raids_restored := 0
+	if encounters is Array:
+		for index in range(encounters.size()):
+			var encounter = encounters[index]
+			if not (encounter is Dictionary) or bool(encounter.get("commanderless_support_column", false)):
+				continue
+			if String(encounter.get("spawned_by_player_id", "")) == "" and String(encounter.get("spawned_by_faction_id", "")) == "":
+				continue
+			var commander = encounter.get("enemy_commander_state", {})
+			var roster_hero_id := String(commander.get("roster_hero_id", "")) if commander is Dictionary else ""
+			var host = encounter.get("enemy_army", {})
+			if roster_hero_id == "" or _valid_stack_count(host.get("stacks", []) if host is Dictionary else []) > 0:
+				continue
+			var army := starting_army_for_hero(ContentService.get_hero(roster_hero_id), "%s|%s|restored_army|%s" % [String(session.session_id), String(session.scenario_id), String(encounter.get("placement_id", roster_hero_id))])
+			if army.get("stacks", []).is_empty():
+				continue
+			army["id"] = String((host if host is Dictionary else {}).get("id", encounter.get("encounter_id", "")))
+			army["name"] = String((host if host is Dictionary else {}).get("name", "Raid Host"))
+			encounter["enemy_army"] = army
+			encounters[index] = encounter
+			raids_restored += 1
+		if raids_restored > 0:
+			session.overworld["encounters"] = encounters
+	return restored + raids_restored
+
+## A commander never leaves a battle leading no troops. When a town defense is
+## won by the garrison after the visiting hero's own companies fell, one
+## creature from the garrison's largest surviving company joins the hero.
+static func keep_hero_troop_from_garrison(session: SessionStateStoreScript.SessionData, town: Dictionary, hero_id: String) -> bool:
+	var hero := hero_by_id(session, hero_id)
+	if hero.is_empty() or town.is_empty() or _valid_stack_count(hero.get("army", {}).get("stacks", [])) > 0:
+		return false
+	var garrison: Array = town.get("garrison", []).duplicate(true) if town.get("garrison", []) is Array else []
+	var largest := -1
+	for index in range(garrison.size()):
+		if garrison[index] is Dictionary and String(garrison[index].get("unit_id", "")) != "" and int(garrison[index].get("count", 0)) > 0:
+			if largest < 0 or int(garrison[index].get("count", 0)) > int(garrison[largest].get("count", 0)):
+				largest = index
+	if largest < 0:
+		return false
+	var unit_id := String(garrison[largest].get("unit_id", ""))
+	garrison[largest]["count"] = int(garrison[largest].get("count", 0)) - 1
+	if int(garrison[largest].get("count", 0)) <= 0:
+		garrison.remove_at(largest)
+	_set_holder_stacks(session, town, HOLDER_GARRISON, garrison)
+	_set_holder_stacks(session, town, hero_id, [{"unit_id": unit_id, "count": 1, ARMY_SLOT_INDEX_KEY: 0}])
+	return true
 
 static func movement_max_for_hero(hero_state: Dictionary, movement_source: Variant = null) -> int:
 	var artifact_bonuses = ArtifactRulesScript.aggregate_bonuses(hero_state)
@@ -594,12 +756,15 @@ static func get_tavern_actions(session: SessionStateStoreScript.SessionData, tow
 		if hero_template.is_empty():
 			continue
 		var cost := hero_recruit_cost(hero_template)
+		var offer := tavern_offer(session, hero_id)
 		actions.append(
 			{
 				"id": "hire_hero:%s" % hero_id,
 				"label": "Hire %s" % String(hero_template.get("name", hero_id)),
-				"summary": "%s | Cost %s" % [
+				"summary": "%s | Level %d | Army %s | Cost %s" % [
 					hero_profile_summary(hero_template, true),
+					int(offer.get("level", 1)),
+					_army_summary(offer.get("army", {})),
 					_describe_resources(cost),
 				],
 				"disabled": not _can_afford(session, cost),
@@ -628,7 +793,9 @@ static func recruit_hero_at_town(session: SessionStateStoreScript.SessionData, t
 
 	_spend_resources(session, cost)
 	var position := OverworldLevelRulesScript.town_entrance(town)
-	var hero := build_hero_from_template(hero_template, position, {"id": "%s_army" % hero_id, "name": "Field Army", "stacks": []}, session)
+	# The hero arrives exactly as the tavern card showed: level and army.
+	var hired := tavern_offer(session, hero_id)
+	var hero := build_recruited_hero(hero_template, position, session, int(hired.get("level", 1)), hired.get("army", {}))
 	var heroes = session.overworld.get("player_heroes", [])
 	if not (heroes is Array):
 		heroes = []
@@ -801,9 +968,9 @@ static func manage_army_slots(
 	if session == null:
 		return {"ok": false, "message": "No expedition is available for army management."}
 	if not _army_slot_holder_is_available(session, town, source_holder_id) or not _army_slot_holder_is_available(session, town, target_holder_id):
-		return {"ok": false, "message": "Army management is limited to the active commander or holders stationed in this town."}
-	if town.is_empty() and (source_holder_id != target_holder_id or source_holder_id != String(session.overworld.get("active_hero_id", ""))):
-		return {"ok": false, "message": "Field arrangement is limited to the active commander's own formation."}
+		return {"ok": false, "message": "Army management is limited to the active commander, a commander meeting it on the same tile, or holders stationed in this town."}
+	if town.is_empty() and source_holder_id != target_holder_id and String(session.overworld.get("active_hero_id", "")) not in [source_holder_id, target_holder_id]:
+		return {"ok": false, "message": "Field transfers must include the active commander."}
 	if source_slot_index < 0 or source_slot_index >= ARMY_SLOT_COUNT or target_slot_index < 0 or target_slot_index >= ARMY_SLOT_COUNT:
 		return {"ok": false, "message": "Choose two valid army slots."}
 	if source_holder_id == target_holder_id and source_slot_index == target_slot_index:
@@ -1175,6 +1342,351 @@ static func teach_field_spell(
 		"spell_id": spell_id,
 	}
 
+# Hero meeting screen (HoMM-style exchange between two commanders on one
+# field tile). Slot moves, merges, swaps and splits use manage_army_slots; the
+# orders below cover the bulk and slot-precise artifact handoffs.
+const FIELD_ARTIFACT_PACK_SLOT := "pack"
+
+static func field_slot_action_id(source_hero_id: String, source_slot_index: int, target_hero_id: String, target_slot_index: int, amount_token: String = "all") -> String:
+	return "field_slot:%s:%d:%s:%d:%s" % [source_hero_id, source_slot_index, target_hero_id, target_slot_index, amount_token]
+
+static func field_troops_all_action_id(source_hero_id: String, target_hero_id: String) -> String:
+	return "field_troops_all:%s:%s" % [source_hero_id, target_hero_id]
+
+static func field_artifact_place_action_id(source_hero_id: String, target_hero_id: String, artifact_id: String, target_slot: String = "") -> String:
+	return "field_artifact_place:%s:%s:%s:%s" % [source_hero_id, target_hero_id, artifact_id, target_slot]
+
+static func field_artifacts_all_action_id(source_hero_id: String, target_hero_id: String) -> String:
+	return "field_artifacts_all:%s:%s" % [source_hero_id, target_hero_id]
+
+static func field_spell_share_action_id(source_hero_id: String, target_hero_id: String, spell_id: String) -> String:
+	return "field_spell_share:%s:%s:%s" % [source_hero_id, target_hero_id, spell_id]
+
+static func field_exchange_state(session: SessionStateStoreScript.SessionData, partner_hero_id: String = "") -> Dictionary:
+	# The active commander faces one partner on its tile (the first one when
+	# the requested partner is not there). Empty when nobody shares the tile.
+	var partners := []
+	var partner_ids := []
+	for hero_value in field_rendezvous_heroes(session):
+		if not (hero_value is Dictionary):
+			continue
+		var hero_id := String(hero_value.get("id", ""))
+		partner_ids.append(hero_id)
+		partners.append({
+			"hero_id": hero_id,
+			"name": String(hero_value.get("name", hero_id)),
+			"portrait": String(ContentService.get_hero_art(hero_id).get("portrait", "")),
+		})
+	if partner_ids.is_empty():
+		return {}
+	var partner_id := partner_hero_id if partner_hero_id in partner_ids else String(partner_ids[0])
+	var left := field_exchange_snapshot(session, String(session.overworld.get("active_hero_id", "")))
+	var right := field_exchange_snapshot(session, partner_id)
+	if left.is_empty() or right.is_empty():
+		return {}
+	return {"left": left, "right": right, "partners": partners, "partner_id": partner_id}
+
+static func field_exchange_snapshot(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
+	# Read model for one side of the hero meeting screen: identity, primary
+	# stats, the seven army slots, worn and carried artifacts, known spells.
+	var army := army_slot_snapshot(session, {}, hero_id)
+	if army.is_empty():
+		return {}
+	var hero := hero_inspection_snapshot(session, hero_id)
+	if hero.is_empty():
+		return {}
+	var artifact_bonuses := ArtifactRulesScript.aggregate_bonuses(hero.duplicate(true))
+	var specialty_bonuses := HeroProgressionRulesScript.aggregate_bonuses(hero)
+	var stats := []
+	for stat in ["attack", "defense", "power", "knowledge"]:
+		var base := int(hero.get("command", {}).get(stat, 0))
+		var bonus := int(artifact_bonuses.get("battle_" + stat, 0)) + int(specialty_bonuses.get("battle_" + stat, 0)) if stat in ["attack", "defense"] else 0
+		stats.append({"id": stat, "label": stat.capitalize(), "base": base, "bonus": bonus, "value": base + bonus})
+	var artifacts := ArtifactRulesScript.normalize_hero_artifacts(hero.get("artifacts", {}))
+	var spell_ids := []
+	for spell_value in SpellRulesScript.known_spells(hero):
+		if spell_value is Dictionary and String(spell_value.get("id", "")) != "":
+			spell_ids.append(String(spell_value.get("id", "")))
+	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {}) if hero.get("spellbook", {}).get("mana", {}) is Dictionary else {}
+	var movement: Dictionary = hero.get("movement", {}) if hero.get("movement", {}) is Dictionary else {}
+	return {
+		"hero_id": hero_id,
+		"name": String(hero.get("name", hero_id)),
+		"level": int(hero.get("level", 1)),
+		"archetype": hero_archetype_label(hero),
+		"portrait": String(ContentService.get_hero_art(hero_id).get("portrait", "")),
+		"active": hero_id == String(session.overworld.get("active_hero_id", "")),
+		"stats": stats,
+		"mana": {"current": int(mana.get("current", 0)), "max": int(mana.get("max", 0))},
+		"movement": {"current": int(movement.get("current", 0)), "max": int(movement.get("max", 0))},
+		"army": army,
+		"equipped": artifacts.get("equipped", {}),
+		"inventory": artifacts.get("inventory", []),
+		"spell_ids": spell_ids,
+	}
+
+static func move_all_field_troops(
+	session: SessionStateStoreScript.SessionData,
+	source_hero_id: String,
+	target_hero_id: String
+) -> Dictionary:
+	# HoMM-style "move all": every stack that fits merges into a matching
+	# target stack or takes a free slot (its own index when open). When that
+	# would empty the source, its lowest-tier stack leaves one creature behind.
+	normalize_session(session)
+	var pair_error := _field_exchange_pair_error(session, source_hero_id, target_hero_id)
+	if pair_error != "":
+		return {"ok": false, "message": pair_error}
+	var source_raw := _holder_stacks(session, {}, source_hero_id)
+	var target_raw := _holder_stacks(session, {}, target_hero_id)
+	if _valid_stack_count(source_raw) > ARMY_SLOT_COUNT or _valid_stack_count(target_raw) > ARMY_SLOT_COUNT:
+		return {"ok": false, "message": "Army management is blocked because a holder exceeds the seven-stack formation capacity."}
+	var source_stacks := _slotted_stacks(source_raw)
+	var target_stacks := _slotted_stacks(target_raw)
+	var source_name := _holder_label(session, {}, source_hero_id)
+	var target_name := _holder_label(session, {}, target_hero_id)
+	if source_stacks.is_empty():
+		return {"ok": false, "message": "%s has no troops to hand over." % source_name}
+	var keeper_index := -1
+	var plan := _plan_move_all_troops(source_stacks, target_stacks, keeper_index)
+	if (plan.get("remaining", []) as Array).is_empty():
+		keeper_index = _move_all_keeper_index(source_stacks)
+		plan = _plan_move_all_troops(source_stacks, target_stacks, keeper_index)
+	var moved_count := int(plan.get("moved_count", 0))
+	if moved_count <= 0:
+		if keeper_index >= 0:
+			return {"ok": false, "message": _last_stack_message(session, {}, source_hero_id)}
+		return {"ok": false, "message": "%s has no free army slot for these troops." % target_name}
+	_set_holder_stacks(session, {}, source_hero_id, _slotted_stacks(plan.get("remaining", [])))
+	_set_holder_stacks(session, {}, target_hero_id, _slotted_stacks(plan.get("target", [])))
+	commit_active_hero(session)
+	var message := "Moved %d troops from %s to %s." % [moved_count, source_name, target_name]
+	var kept_unit_id := ""
+	if keeper_index >= 0:
+		kept_unit_id = String(source_stacks[keeper_index].get("unit_id", ""))
+		message += " %s keeps one %s." % [source_name, String(ContentService.get_unit(kept_unit_id).get("name", kept_unit_id))]
+	elif not (plan.get("remaining", []) as Array).is_empty():
+		message += " %s has no free slot for the rest." % target_name
+	return {
+		"ok": true,
+		"message": message,
+		"source_hero_id": source_hero_id,
+		"target_hero_id": target_hero_id,
+		"moved_count": moved_count,
+		"kept_unit_id": kept_unit_id,
+	}
+
+static func place_field_artifact(
+	session: SessionStateStoreScript.SessionData,
+	source_hero_id: String,
+	target_hero_id: String,
+	artifact_id: String,
+	target_slot: String = ""
+) -> Dictionary:
+	# Slot-precise artifact orders for the meeting screen. An empty target slot
+	# keeps the classic handoff (matching empty slot, otherwise backpack);
+	# FIELD_ARTIFACT_PACK_SLOT stows it; an equipment slot must accept it and
+	# pushes any artifact already worn there into that commander's backpack.
+	normalize_session(session)
+	if session == null:
+		return {"ok": false, "message": "No expedition is available for an artifact handoff."}
+	if target_slot != "" and target_slot != FIELD_ARTIFACT_PACK_SLOT and target_slot not in ArtifactRulesScript.EQUIPMENT_SLOTS:
+		return {"ok": false, "message": "That artifact slot does not exist."}
+	if artifact_id == "" or ContentService.get_artifact(artifact_id).is_empty():
+		return {"ok": false, "message": "That artifact handoff is invalid."}
+	if target_slot not in ["", FIELD_ARTIFACT_PACK_SLOT] and not ArtifactRulesScript.equipment_slot_accepts(target_slot, artifact_id):
+		var fits := ArtifactRulesScript.artifact_slot(artifact_id)
+		return {"ok": false, "message": "%s %s." % [
+			ArtifactRulesScript.artifact_name(artifact_id),
+			"is carried in the backpack, not worn" if fits == "" else "is worn in the %s slot" % fits,
+		]}
+	if source_hero_id == target_hero_id:
+		return _rearrange_field_artifact(session, source_hero_id, artifact_id, target_slot)
+	if target_slot == "":
+		return transfer_field_artifact(session, source_hero_id, target_hero_id, artifact_id)
+	var pair_error := _field_exchange_pair_error(session, source_hero_id, target_hero_id)
+	if pair_error != "":
+		return {"ok": false, "message": pair_error}
+	var source := hero_by_id(session, source_hero_id)
+	var target := hero_by_id(session, target_hero_id)
+	if not ArtifactRulesScript.has_artifact(source, artifact_id):
+		return {"ok": false, "message": "That artifact is no longer owned by %s." % String(source.get("name", source_hero_id))}
+	if ArtifactRulesScript.has_artifact(target, artifact_id):
+		return {"ok": false, "message": "%s already owns %s." % [String(target.get("name", target_hero_id)), ArtifactRulesScript.artifact_name(artifact_id)]}
+	var source_previous_max := movement_max_for_hero(source, session)
+	var target_previous_max := movement_max_for_hero(target, session)
+	var removal := ArtifactRulesScript.remove_owned_artifact(source, artifact_id)
+	if not bool(removal.get("ok", false)):
+		return {"ok": false, "message": String(removal.get("message", "Artifact handoff failed."))}
+	var claim := ArtifactRulesScript.claim_artifact(target, artifact_id, "Received", false)
+	if not bool(claim.get("ok", false)) or bool(claim.get("duplicate", false)):
+		return {"ok": false, "message": String(claim.get("message", "Artifact handoff failed."))}
+	var target_updated: Dictionary = claim.get("hero", target)
+	var displaced_id := ""
+	if target_slot != FIELD_ARTIFACT_PACK_SLOT:
+		var equip := ArtifactRulesScript.equip_artifact_in_slot(target_updated, artifact_id, target_slot)
+		if not bool(equip.get("ok", false)):
+			return {"ok": false, "message": String(equip.get("message", "Artifact handoff failed."))}
+		target_updated = equip.get("hero", target_updated)
+		displaced_id = String(equip.get("swapped_out_artifact_id", ""))
+	var source_updated: Dictionary = _preserve_movement_deficit_after_artifact_change(removal.get("hero", source), source_previous_max, session)
+	target_updated = _preserve_movement_deficit_after_artifact_change(target_updated, target_previous_max, session)
+	_store_field_heroes(session, [source_updated, target_updated])
+	var target_location := ArtifactRulesScript.locate_artifact(target_updated, artifact_id)
+	var message := "Passed %s from %s to %s%s." % [
+		ArtifactRulesScript.artifact_name(artifact_id),
+		String(source.get("name", source_hero_id)),
+		String(target.get("name", target_hero_id)),
+		"'s backpack" if target_slot == FIELD_ARTIFACT_PACK_SLOT else "",
+	]
+	if displaced_id != "":
+		message += " %s goes to the backpack." % ArtifactRulesScript.artifact_name(displaced_id)
+	return {
+		"ok": true,
+		"message": message,
+		"source_hero_id": source_hero_id,
+		"target_hero_id": target_hero_id,
+		"artifact_id": artifact_id,
+		"source_previous_location": String(removal.get("previous_location", "")),
+		"source_previous_slot": String(removal.get("previous_slot", "")),
+		"target_location": String(target_location.get("location", "")),
+		"target_slot": String(target_location.get("slot", "")),
+		"displaced_artifact_id": displaced_id,
+	}
+
+static func move_all_field_artifacts(
+	session: SessionStateStoreScript.SessionData,
+	source_hero_id: String,
+	target_hero_id: String
+) -> Dictionary:
+	# Hands over every artifact the target does not already own, each through
+	# the classic handoff (matching empty slot, otherwise backpack).
+	normalize_session(session)
+	var pair_error := _field_exchange_pair_error(session, source_hero_id, target_hero_id)
+	if pair_error != "":
+		return {"ok": false, "message": pair_error}
+	var source_name := _holder_label(session, {}, source_hero_id)
+	var target_name := _holder_label(session, {}, target_hero_id)
+	var owned := ArtifactRulesScript.owned_artifact_ids(hero_by_id(session, source_hero_id))
+	if owned.is_empty():
+		return {"ok": false, "message": "%s carries no artifacts." % source_name}
+	var moved := []
+	var kept := []
+	for artifact_id_value in owned:
+		var artifact_id := String(artifact_id_value)
+		if ArtifactRulesScript.has_artifact(hero_by_id(session, target_hero_id), artifact_id):
+			kept.append(artifact_id)
+			continue
+		var result := transfer_field_artifact(session, source_hero_id, target_hero_id, artifact_id)
+		if bool(result.get("ok", false)):
+			moved.append(artifact_id)
+		else:
+			kept.append(artifact_id)
+	if moved.is_empty():
+		return {"ok": false, "message": "%s already owns every artifact %s carries." % [target_name, source_name]}
+	var message := "Passed %d artifact%s from %s to %s." % [moved.size(), "" if moved.size() == 1 else "s", source_name, target_name]
+	if not kept.is_empty():
+		message += " %d already owned stay%s with %s." % [kept.size(), "s" if kept.size() == 1 else "", source_name]
+	return {
+		"ok": true,
+		"message": message,
+		"source_hero_id": source_hero_id,
+		"target_hero_id": target_hero_id,
+		"moved_artifact_ids": moved,
+		"kept_artifact_ids": kept,
+	}
+
+static func _rearrange_field_artifact(
+	session: SessionStateStoreScript.SessionData,
+	hero_id: String,
+	artifact_id: String,
+	target_slot: String
+) -> Dictionary:
+	if not _army_slot_holder_is_available(session, {}, hero_id):
+		return {"ok": false, "message": "Only commanders at the meeting can rearrange their gear here."}
+	var hero := hero_by_id(session, hero_id)
+	var location := ArtifactRulesScript.locate_artifact(hero, artifact_id)
+	if String(location.get("location", "missing")) == "missing":
+		return {"ok": false, "message": "That artifact is no longer owned by %s." % String(hero.get("name", hero_id))}
+	var change := {}
+	if target_slot == FIELD_ARTIFACT_PACK_SLOT or target_slot == "":
+		if String(location.get("location", "")) != "equipped":
+			return {"ok": false, "message": "%s is already in the backpack." % ArtifactRulesScript.artifact_name(artifact_id)}
+		change = ArtifactRulesScript.unequip_artifact(hero, String(location.get("slot", "")))
+	else:
+		change = ArtifactRulesScript.equip_artifact_in_slot(hero, artifact_id, target_slot)
+	if not bool(change.get("ok", false)):
+		return {"ok": false, "message": String(change.get("message", "The gear did not change."))}
+	var updated := _preserve_movement_deficit_after_artifact_change(change.get("hero", hero), movement_max_for_hero(hero, session), session)
+	_store_field_heroes(session, [updated])
+	var new_location := ArtifactRulesScript.locate_artifact(updated, artifact_id)
+	return {
+		"ok": true,
+		"message": String(change.get("message", "")),
+		"source_hero_id": hero_id,
+		"target_hero_id": hero_id,
+		"artifact_id": artifact_id,
+		"target_location": String(new_location.get("location", "")),
+		"target_slot": String(new_location.get("slot", "")),
+		"displaced_artifact_id": String(change.get("swapped_out_artifact_id", "")),
+	}
+
+static func _store_field_heroes(session: SessionStateStoreScript.SessionData, updated_heroes: Array) -> void:
+	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
+	for hero_value in updated_heroes:
+		if hero_value is Dictionary:
+			_replace_hero_in_array(heroes, hero_value)
+	session.overworld["player_heroes"] = heroes
+	_sync_active_hero_mirror(session)
+
+static func _plan_move_all_troops(source_stacks: Array, target_stacks: Array, keeper_index: int) -> Dictionary:
+	var remaining := []
+	var target := target_stacks.duplicate(true)
+	var moved_count := 0
+	for index in range(source_stacks.size()):
+		var stack: Dictionary = source_stacks[index].duplicate(true)
+		var count := int(stack.get("count", 0))
+		var amount := count - 1 if index == keeper_index else count
+		if amount <= 0:
+			remaining.append(stack)
+			continue
+		var unit_id := String(stack.get("unit_id", ""))
+		var matching := -1
+		var claimed := {}
+		for target_index in range(target.size()):
+			claimed[int(target[target_index].get(ARMY_SLOT_INDEX_KEY, -1))] = true
+			if matching < 0 and String(target[target_index].get("unit_id", "")) == unit_id:
+				matching = target_index
+		if matching >= 0:
+			target[matching]["count"] = int(target[matching].get("count", 0)) + amount
+		else:
+			var open_slot := int(stack.get(ARMY_SLOT_INDEX_KEY, -1))
+			if open_slot < 0 or open_slot >= ARMY_SLOT_COUNT or claimed.has(open_slot):
+				open_slot = _first_open_army_slot(claimed)
+			if open_slot < 0:
+				remaining.append(stack)
+				continue
+			var moved_stack := stack.duplicate(true)
+			moved_stack["count"] = amount
+			moved_stack[ARMY_SLOT_INDEX_KEY] = open_slot
+			target.append(moved_stack)
+		moved_count += amount
+		if amount < count:
+			stack["count"] = count - amount
+			remaining.append(stack)
+	return {"remaining": remaining, "target": target, "moved_count": moved_count}
+
+static func _move_all_keeper_index(source_stacks: Array) -> int:
+	# The creature left behind comes from the lowest-tier stack (first slot on ties).
+	var keeper := -1
+	var keeper_tier := 99
+	for index in range(source_stacks.size()):
+		var tier := int(ContentService.get_unit(String(source_stacks[index].get("unit_id", ""))).get("tier", 1))
+		if keeper < 0 or tier < keeper_tier:
+			keeper = index
+			keeper_tier = tier
+	return keeper
+
 static func transfer_town_stack(
 	session: SessionStateStoreScript.SessionData,
 	town: Dictionary,
@@ -1306,6 +1818,33 @@ static func tavern_week(session: SessionStateStoreScript.SessionData) -> int:
 
 static func days_until_tavern_rotation(session: SessionStateStoreScript.SessionData) -> int:
 	return 7 - ((maxi(1, int(session.day)) - 1) % 7) if session != null else 7
+
+## What hiring `hero_id` this week brings: {hero_id, week, level, army}. Level
+## 1 most weeks, 2 about one offer in ten, 3 about one in thirty. Decided with
+## the week's draw from the session, week and hero, never at hire time, so
+## repeated reads, saves, loads and a hire in the other tavern place never
+## reroll it. `week` defaults to the current tavern week.
+static func tavern_offer(session: SessionStateStoreScript.SessionData, hero_id: String, week: int = -1) -> Dictionary:
+	var hero_template := ContentService.get_hero(hero_id)
+	if session == null or hero_template.is_empty():
+		return {}
+	var offer_week := week if week >= 0 else tavern_week(session)
+	var seed_key := "%s|%s|tavern_offer|%d|%s" % [String(session.session_id), String(session.scenario_id), offer_week, hero_id]
+	var roll := _seeded_rng("%s|level" % seed_key).randi_range(0, 99)
+	var level := 1
+	if roll < TAVERN_LEVEL_THREE_PERCENT:
+		level = 3
+	elif roll < TAVERN_LEVEL_THREE_PERCENT + TAVERN_LEVEL_TWO_PERCENT:
+		level = 2
+	return {"hero_id": hero_id, "week": offer_week, "level": level, "army": starting_army_for_hero(hero_template, seed_key)}
+
+## The commander a hire of this week's `hero_id` would put in the field, for
+## the tavern card: its level's stats and specialties, movement and army.
+static func tavern_offer_preview(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
+	var offer := tavern_offer(session, hero_id)
+	if offer.is_empty():
+		return {}
+	return build_recruited_hero(ContentService.get_hero(hero_id), {}, session, int(offer.get("level", 1)), offer.get("army", {}))
 
 static func recruitable_hero_ids(session: SessionStateStoreScript.SessionData) -> Array:
 	var controlled := {}
@@ -1764,7 +2303,33 @@ static func _army_slot_holder_is_available(
 		return false
 	if not town.is_empty():
 		return holder_id in _stationed_holder_ids(session, town)
-	return holder_id == String(session.overworld.get("active_hero_id", "")) and not hero_by_id(session, holder_id).is_empty()
+	if holder_id == String(session.overworld.get("active_hero_id", "")):
+		return not hero_by_id(session, holder_id).is_empty()
+	# In the field, a commander sharing the active commander's tile joins the
+	# hero meeting, so slot orders may move troops between the two.
+	return _is_field_exchange_partner(session, holder_id)
+
+static func _is_field_exchange_partner(session: SessionStateStoreScript.SessionData, hero_id: String) -> bool:
+	var active := active_hero(session)
+	var partner := hero_by_id(session, hero_id)
+	if active.is_empty() or partner.is_empty() or hero_id == String(active.get("id", "")):
+		return false
+	return _normalize_position(partner.get("position", {})) == _normalize_position(active.get("position", {}))
+
+static func _field_exchange_pair_error(
+	session: SessionStateStoreScript.SessionData,
+	source_hero_id: String,
+	target_hero_id: String
+) -> String:
+	if session == null:
+		return "No expedition is available for a hero meeting."
+	if source_hero_id == "" or target_hero_id == "" or source_hero_id == target_hero_id:
+		return "Choose two different controlled commanders."
+	if not _army_slot_holder_is_available(session, {}, source_hero_id) or not _army_slot_holder_is_available(session, {}, target_hero_id):
+		return "Both commanders must stand together on the active commander's tile."
+	if String(session.overworld.get("active_hero_id", "")) not in [source_hero_id, target_hero_id]:
+		return "Field transfers must include the active commander."
+	return ""
 
 static func _slotted_stacks(value: Variant) -> Array:
 	var stacks := []
@@ -1847,6 +2412,35 @@ static func _holder_label(session: SessionStateStoreScript.SessionData, town: Di
 		return "%s garrison" % String(ContentService.get_town(String(town.get("town_id", ""))).get("name", town.get("town_id", "Town")))
 	var hero := hero_by_id(session, holder_id)
 	return String(hero.get("name", holder_id))
+
+static func _seeded_rng(seed_key: String) -> RandomNumberGenerator:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash(seed_key)
+	return rng
+
+## The faction's base creatures of `tier`, one per town dwelling line, from
+## the town development roster (the faction unit ladder when it has none).
+static func _faction_creatures(faction_id: String, tier: int) -> Array:
+	var creatures := []
+	var rosters = ContentService.load_json(TOWN_DEVELOPMENT_PATH).get("rosters", {})
+	var roster = rosters.get(faction_id, []) if rosters is Dictionary else []
+	if roster is Array:
+		for row in roster:
+			if row is Dictionary and int(row.get("tier", 0)) == tier:
+				var unit_id := String(row.get("unit_id", ""))
+				if unit_id != "" and unit_id not in creatures and not ContentService.get_unit(unit_id).is_empty():
+					creatures.append(unit_id)
+	if creatures.is_empty():
+		for unit_id_value in ContentService.get_faction(faction_id).get("unit_ladder_ids", []):
+			var unit := ContentService.get_unit(String(unit_id_value))
+			if int(unit.get("tier", 0)) == tier:
+				creatures.append(String(unit_id_value))
+	return creatures
+
+static func _starting_company_size(rng: RandomNumberGenerator, unit_id: String, growth_share: Array) -> int:
+	var growth := maxi(1, int(ContentService.get_unit(unit_id).get("growth", 6)))
+	var low := maxi(1, ceili(growth * float(growth_share[0])))
+	return rng.randi_range(low, maxi(low, ceili(growth * float(growth_share[1]))))
 
 static func _can_afford(session: SessionStateStoreScript.SessionData, cost: Variant) -> bool:
 	var resources = session.overworld.get("resources", {})

@@ -163,6 +163,38 @@ static func add_experience(hero_state: Dictionary, amount: int) -> Dictionary:
 		"messages": messages,
 	}
 
+## Experience a fresh level-1 hero needs to reach `level`, by the same
+## thresholds add_experience climbs: 250 for level 2, then 250 + 100 x level
+## more for each further level.
+static func experience_for_level(level: int) -> int:
+	var threshold := 0
+	var next_threshold := 250
+	for reached in range(2, level + 1):
+		threshold = next_threshold
+		next_threshold += 250 + reached * 100
+	return threshold
+
+## Raises a hero to `target_level` the way battles do: the experience for that
+## level through add_experience, with its command gains and one specialty
+## choice per level. Recruits arrive already trained, so each queued choice is
+## taken at once, the hero's focus specialty first, and no level-up is left
+## to present.
+static func advance_to_level(hero_state: Dictionary, target_level: int) -> Dictionary:
+	var hero := ensure_hero_progression(hero_state.duplicate(true))
+	var missing := experience_for_level(target_level) - int(hero.get("experience", 0))
+	if missing > 0:
+		hero = add_experience(hero, missing).get("hero", hero)
+	while pending_choices_remaining(hero) > 0:
+		var options: Array = current_pending_choice(hero).get("options", [])
+		if options.is_empty():
+			break
+		var choice := choose_specialty(hero, String(options[0]))
+		if not bool(choice.get("ok", false)):
+			break
+		hero = choice.get("hero", hero)
+	hero["level_up_presented"] = int(hero.get("level", 1))
+	return hero
+
 static func choose_specialty(hero_state: Dictionary, specialty_id: String) -> Dictionary:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
 	var pending_choices = hero.get("pending_specialty_choices", [])

@@ -64,7 +64,7 @@ func settle() -> void:
 		var scene = get_tree().current_scene
 		var town_busy: bool = scene != null and scene_path().ends_with("TownShell.tscn") and scene._town_action_input_blocker.visible
 		var battle_busy: bool = scene != null and scene_path().ends_with("BattleShell.tscn") and (scene._battle_exit_handoff_in_progress or scene._action_playback_in_progress)
-		var field_busy: bool = scene != null and scene_path().ends_with("OverworldShell.tscn") and (is_instance_valid(scene._turn_presenter) or scene._artifact_acquired_input_blocker.visible or scene._spell_cast_input_blocker.visible)
+		var field_busy: bool = scene != null and scene_path().ends_with("OverworldShell.tscn") and (is_instance_valid(scene._turn_presenter) or scene._artifact_acquired_input_blocker.visible or scene._spell_cast_input_blocker.visible or (scene.has_method("validation_battle_approach_pending") and scene.validation_battle_approach_pending()))
 		if not town_busy and not battle_busy and not field_busy:
 			break
 		if Time.get_ticks_msec() - started > 30000:

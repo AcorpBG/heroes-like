@@ -50,6 +50,7 @@ SCENES = [
     "town_building_skyline_progression_report",
     "army_stack_management_bar_runtime_report",
     "hero_field_rendezvous_army_transfer_report",
+    "hero_exchange_screen_report",
     "town_army_transfer_completion_feedback_report",
     "town_recruitment_ui_surface_report",
     "town_recruitment_cue_playback_report",

@@ -26698,8 +26698,6 @@ def validate_hero_command(errors: list[str]) -> None:
             ("HeroActions", "VBoxContainer"),
             ("Rendezvous", "Label"),
             ("RendezvousControls", "HBoxContainer"),
-            ("RendezvousOrders", "OptionButton"),
-            ("RendezvousTransfer", "Button"),
         ],
     )
 
@@ -26726,9 +26724,10 @@ def validate_hero_command(errors: list[str]) -> None:
         "OverworldRules.get_hero_actions",
         "OverworldRules.switch_active_hero",
         "func _rebuild_rendezvous_actions",
-        "func _on_rendezvous_transfer_pressed",
+        "func _on_hero_exchange_order_requested",
         "OverworldRules.perform_rendezvous_action",
-        "OverworldRules.get_rendezvous_actions",
+        "HeroCommandRules.field_exchange_state",
+        'preload("res://scenes/overworld/HeroExchangeScreen.gd")',
         'route == "rendezvous"',
         "_hero_actions",
         "_heroes_label",
@@ -26804,7 +26803,7 @@ def validate_hero_command(errors: list[str]) -> None:
         "matching_stack_merge",
         "cached_prevalidated",
         "destination_interaction_fast_path",
-        "command_selector_focusable",
+        "exchange_screen_focusable",
         "save_resume_preserved",
         "SessionStateStore.SAVE_VERSION",
     ):
@@ -26822,7 +26821,7 @@ def validate_hero_command(errors: list[str]) -> None:
         "movement_deficit_preserved",
         "immediate_bonus_update",
         "troop_orders_preserved",
-        "compact_selector_focusable",
+        "exchange_screen_focusable",
         "stale_order_rejected",
         "invalid_order_rejected",
         "save_resume_preserved",
@@ -26841,7 +26840,7 @@ def validate_hero_command(errors: list[str]) -> None:
         "stale_duplicate_rejected",
         "invalid_orders_rejected",
         "troop_and_artifact_orders_preserved",
-        "compact_selector_focusable",
+        "exchange_screen_focusable",
         "save_resume_preserved",
         "SessionStateStore.SAVE_VERSION",
     ):
@@ -45898,7 +45897,7 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
         ensure(required_token in shell_text, errors, f"OverworldShell.gd is missing hero-route locomotion token {required_token}")
     ensure(shell_text.count("func _record_hero_movement_presentation") == 1, errors, "OverworldShell.gd must define one hero movement presentation producer")
     record_block = gdscript_function_block(shell_text, "_record_hero_movement_presentation")
-    ensure('not bool(result.get("ok", false)) or route != ""' in record_block, errors, "Hero locomotion must fail closed outside successful non-routing field movement")
+    ensure('not bool(result.get("ok", false)) or route not in ["", "battle"]' in record_block, errors, "Hero locomotion must fail closed outside successful field movement (plain moves and walks that end in battle)")
     ensure('route_tiles.size() != route_steps.size() + 1' in record_block, errors, "Hero locomotion must require the exact origin plus resolved step count")
     ensure(record_block.find("cue_playback_policy_for_event") < record_block.find("_hero_movement_presentation_serial += 1"), errors, "Hero locomotion must resolve the authored cue policy before issuing a presentation serial")
     ensure("session.overworld" not in record_block and "session.flags" not in record_block, errors, "Hero locomotion presentation must not mutate session authority")
@@ -72389,7 +72388,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             ensure(required_token in text, errors, f"{path.name} is missing system presentation-audio proof: {required_token}")
 
     for function_name, cue_id in (("_record_hero_movement_presentation", "audio_placeholder_map_step"), ("_record_route_blocked_presentation", "audio_placeholder_invalid_route")):
-        match = re.search(rf"func {function_name}\(.*?\) -> void:\n(?P<body>.*?)(?=\nfunc )", overworld_shell_text, re.DOTALL)
+        match = re.search(rf"func {function_name}\(.*?\) -> (?:void|bool):\n(?P<body>.*?)(?=\nfunc )", overworld_shell_text, re.DOTALL)
         ensure(match is not None, errors, f"Could not isolate {function_name} navigation-audio ownership")
         if match is not None:
             body = match.group("body")

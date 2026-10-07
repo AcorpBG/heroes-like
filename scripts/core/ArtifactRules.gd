@@ -1106,6 +1106,52 @@ static func equip_artifact(hero_state: Dictionary, artifact_id: String) -> Dicti
 		"suffix_message": suffix_message,
 	}
 
+static func equipment_slot_accepts(slot: String, artifact_id: String) -> bool:
+	return slot in _compatible_equipment_slots(artifact_slot(artifact_id))
+
+static func equip_artifact_in_slot(hero_state: Dictionary, artifact_id: String, slot: String) -> Dictionary:
+	# Slot-precise equip (hero meeting screen). The artifact may come from the
+	# pack or another worn slot; whatever it displaces swaps into the vacated
+	# compatible slot, otherwise into the pack.
+	var hero = ensure_hero_artifacts(hero_state.duplicate(true))
+	if not equipment_slot_accepts(slot, artifact_id):
+		return {"ok": false, "hero": hero, "message": "%s does not fit the %s slot." % [artifact_name(artifact_id), _equipment_slot_label(slot)]}
+	var location := locate_artifact(hero, artifact_id)
+	var location_name := String(location.get("location", "missing"))
+	if location_name == "missing":
+		return {"ok": false, "hero": hero, "message": "That artifact is not owned by this commander."}
+	if location_name == "equipped" and String(location.get("slot", "")) == slot:
+		return {"ok": false, "hero": hero, "message": "%s is already worn there." % artifact_name(artifact_id)}
+	var artifacts = hero.get("artifacts", {})
+	var equipped: Dictionary = artifacts.get("equipped", {})
+	var inventory: Array = artifacts.get("inventory", []) if artifacts.get("inventory", []) is Array else []
+	var previous_slot := ""
+	if location_name == "equipped":
+		previous_slot = String(location.get("slot", ""))
+		equipped[previous_slot] = ""
+	else:
+		_remove_artifact_from_inventory(inventory, artifact_id)
+	var displaced_id := String(equipped.get(slot, ""))
+	equipped[slot] = artifact_id
+	if displaced_id != "":
+		if previous_slot != "" and equipment_slot_accepts(previous_slot, displaced_id):
+			equipped[previous_slot] = displaced_id
+		else:
+			inventory.append(displaced_id)
+	artifacts["equipped"] = equipped
+	artifacts["inventory"] = inventory
+	hero["artifacts"] = normalize_hero_artifacts(artifacts)
+	var message := "Equipped %s in %s." % [artifact_name(artifact_id), _equipment_slot_label(slot)]
+	if displaced_id != "":
+		message += " %s %s." % [artifact_name(displaced_id), "swaps places" if String(equipped.get(previous_slot, "")) == displaced_id and previous_slot != "" else "goes to the pack"]
+	return {
+		"ok": true,
+		"hero": hero,
+		"slot": slot,
+		"swapped_out_artifact_id": displaced_id,
+		"message": message,
+	}
+
 static func unequip_artifact(hero_state: Dictionary, slot: String) -> Dictionary:
 	var hero = ensure_hero_artifacts(hero_state.duplicate(true))
 	if slot not in EQUIPMENT_SLOTS:

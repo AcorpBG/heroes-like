@@ -11296,6 +11296,8 @@ static func _sync_player_force_from_battle(session: SessionStateStoreScript.Sess
 			)
 			towns[int(town_result.get("index", -1))] = town
 			session.overworld["towns"] = towns
+			if commander_type in ["active_hero", "town_hero"]:
+				HeroCommandRulesScript.keep_hero_troop_from_garrison(session, town, String(commander_source.get("hero_id", "")))
 		return
 
 	var army = session.overworld.get("army", {})
