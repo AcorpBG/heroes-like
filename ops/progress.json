@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ai-raid-director-removal-20261007",
-  "currentSliceId": "ai-raid-director-removal-20261007",
-  "currentSliceNotes": "COMPLETED 2026-10-07. Follow-up of ai-plays-by-player-rules-20261007. Removed the raid director nothing live called (EnemyAdventureRules 21.9k to 4.8k lines, EnemyTurnRules 8.1k to 1.3k: raid planner, targets, pillage, siege, launch, pressure, reinforcement and the empire cycle) with the unit-level tests that only ran it; kept migrate_legacy_raids and what it needs, the AI site seizure and the multi-level path surfaces the RMG transit and start placement tools use. Rewrote the HeadlessSimulationHarnessRules raid cases for heroes (town-defense hold single and multi-scenario, resource-site retake, regroup from the garrison, pressure coverage, human-town assault) and pinned fixture session ids. A computer player's own hero in a town's doorway no longer blocks hiring there. validate_repo pins on removed code were trimmed or repointed to AiHeroRules (validate_ai_hero_model added); versus baseline it reports the same 881 errors plus 3 obsolete-function pins for scenario objective targeting, a known hero-model gap. Open owner decision: inert Border Warden pillage resistance and DifficultyRules enemy pressure/raid knobs.",
+  "currentSlice": "balance-embercourt-convoy-rate-20261007",
+  "currentSliceId": "balance-embercourt-convoy-rate-20261007",
+  "currentSliceNotes": "COMPLETED 2026-10-07. Owner playtest: the Convoy Charter service paid 1,200 gold for 3 wood + 3 ore (200 each), worse than any market sell rate (260 floor, about 290 Marketplace, 380 Trade Exchange). Its reward is now 2,700 gold (450 each): above the best sell rate including Trade Exchange bulk lots (about 420) and below every buy rate, so buying materials to convoy them never profits. Exchange services no longer repeat their cost in the summary line (TownDevelopmentRules). Validation: town_faction_mechanics_regression 185/185 (real Town UI pays +2,700), town_building_panel_report, validate_repo unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Remove the unused raid director and rewrite its harness cases for AI heroes",
-  "currentSliceUpdatedAt": "2026-10-07T23:59:00Z",
+  "currentSliceTitle": "Embercourt supply convoy beats the market sell rate",
+  "currentSliceUpdatedAt": "2026-10-07T23:30:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -114194,6 +114194,19 @@
         "docs/ai-plays-by-player-rules.md"
       ],
       "notes": "Follow-up of ai-plays-by-player-rules-20261007. Removed the raid director nothing live called (EnemyAdventureRules 21.9k to 4.8k lines, EnemyTurnRules 8.1k to 1.3k: raid planner, targets, pillage, siege, launch, pressure, reinforcement and the empire cycle) with the unit-level tests that only ran it; kept migrate_legacy_raids and what it needs, the AI site seizure and the multi-level path surfaces the RMG transit and start placement tools use. Rewrote the HeadlessSimulationHarnessRules raid cases for heroes (town-defense hold single and multi-scenario, resource-site retake, regroup from the garrison, pressure coverage, human-town assault) and pinned fixture session ids. A computer player's own hero in a town's doorway no longer blocks hiring there. validate_repo pins on removed code were trimmed or repointed to AiHeroRules (validate_ai_hero_model added); versus baseline it reports the same 881 errors plus 3 obsolete-function pins for scenario objective targeting, a known hero-model gap. Open owner decision: inert Border Warden pillage resistance and DifficultyRules enemy pressure/raid knobs."
+    },
+    {
+      "id": "balance-embercourt-convoy-rate-20261007",
+      "title": "Embercourt supply convoy beats the market sell rate",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "content_balance_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/common-town-building-template.md"
+      ],
+      "notes": "Owner playtest: the Convoy Charter service paid 1,200 gold for 3 wood + 3 ore (200 each), worse than any market sell rate (260 floor, about 290 Marketplace, 380 Trade Exchange). Its reward is now 2,700 gold (450 each): above the best sell rate including Trade Exchange bulk lots (about 420) and below every buy rate, so buying materials to convoy them never profits. Exchange services no longer repeat their cost in the summary line (TownDevelopmentRules). Validation: town_faction_mechanics_regression 185/185 (real Town UI pays +2,700), town_building_panel_report, validate_repo unchanged."
     }
   ],
   "project": "heroes-like",
@@ -114853,7 +114866,7 @@
   ],
   "summary": "Owner-directed overworld actor readability completed: 112 original generated hero/creature sprites, full-size town visitors, painted-bound scale and cached alpha-edge contrast. Source/Linux/Windows visual/runtime acceptance, Large travel/AI/fog, existing reports, full repository and official exports/parity pass; 3.255 GB disposable outputs cleaned. Prior generated-world quality work remains completed; gameplay/native generation and save schema are unchanged. Broader production/release limits remain in project.md.",
   "taskId": "10236",
-  "updatedAt": "2026-10-07T23:00:00Z",
+  "updatedAt": "2026-10-07T23:30:00Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",

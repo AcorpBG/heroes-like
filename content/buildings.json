@@ -5258,13 +5258,13 @@
       ],
       "development_version": 1,
       "faction_id": "faction_embercourt",
-      "description": "Chartered river convoys produce 500 gold daily. Exchange 3 wood and 3 ore for 1,200 gold. Service available once per week per town.",
+      "description": "Chartered river convoys produce 500 gold daily. Exchange 3 wood and 3 ore for 2,700 gold. Service available once per week per town.",
       "income": {
         "gold": 500
       },
       "faction_service": {
         "label": "Commission a supply convoy",
-        "description": "Exchange 3 wood and 3 ore for 1,200 gold.",
+        "description": "Exchange 3 wood and 3 ore for 2,700 gold.",
         "scope": "town",
         "kind": "resource_exchange",
         "cost": {
@@ -5272,7 +5272,7 @@
           "ore": 3
         },
         "reward": {
-          "gold": 1200
+          "gold": 2700
         }
       }
     },

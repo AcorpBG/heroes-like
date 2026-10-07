@@ -62,6 +62,10 @@ Rules:
 
 `ai-raid-director-removal-20261007` (completed, follow-up of `ai-plays-by-player-rules-20261007`): the raid director nothing live called is removed from `EnemyAdventureRules`/`EnemyTurnRules` with its unit-level tests; the save migration, the AI site seizure and the multi-level path surfaces the RMG validation tools use stay. The headless harness raid cases (town and site defense, regroup, pressure coverage, objective targeting) are rewritten for heroes, and a computer player's own hero in a town's doorway no longer blocks hiring there. Open owner decision: the now inert Border Warden pillage resistance and `DifficultyRules` enemy pressure and raid knobs. See `docs/ai-plays-by-player-rules.md`.
 
+### Embercourt supply convoy rate
+
+`balance-embercourt-convoy-rate-20261007` (completed, owner playtest fix): the Convoy Charter's weekly supply convoy pays 2,700 gold for 3 wood + 3 ore (450 each), better than any market sell rate and below every buy rate, instead of 1,200 gold, which lost to the market.
+
 ### Water travel and transit objects
 
 `feature-water-travel-20261007` (completed for the player, owner direction): HoMM3-style boats. Walking onto a free boat boards it and stepping onto open shore leaves it, each ending the day's movement; sailing heroes move only on water and visit water sites. Neutral shipyards build a boat at their dock for 1,000 gold and 10 wood; whirlpools throw a boat out at another whirlpool for half of the weakest stack. Random maps translate HoMM3 transit objects by meaning instead of a random transit pick: boats, shipyards and whirlpools become themselves, border guards, gates, garrisons and quest guards become terrain-matched pay-to-open gates, keymaster's tents are left off, and portals and subterranean gates keep their passage with matching art. Shipyards and whirlpools are never used as stand-ins for other HoMM3 sites. Gates ask before taking payment, and older saves are migrated once. Follow-up: AI heroes do not sail yet. See `docs/water-travel.md`.

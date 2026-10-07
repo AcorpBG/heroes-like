@@ -154,7 +154,7 @@ func inspect_services_ui():
 	var gold:int=s.overworld.resources.gold
 	shell._on_response_action_pressed("town_faction:building_dev_embercourt_unique_1")
 	for i in range(3):await get_tree().process_frame
-	check(s.overworld.resources.gold==gold+1200,"faction UI callback did not execute")
+	check(s.overworld.resources.gold==gold+2700,"faction UI callback did not execute")
 	shell.queue_free();await get_tree().process_frame
 '''
 

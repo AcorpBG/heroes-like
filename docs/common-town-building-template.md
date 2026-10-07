@@ -90,7 +90,7 @@ The following mechanics supplement the three faction buildings and their passive
 
 | Faction / service building | Weekly service | Scope | Town defense building and effect |
 | --- | --- | --- | --- |
-| Embercourt / Convoy Charter | Trade 3 wood + 3 ore for 1,200 gold. | Town | Beacon Watch: defending ranged attacks deal +25% damage in round 1. |
+| Embercourt / Convoy Charter | Trade 3 wood + 3 ore for 2,700 gold (450 each, above the best market sell rate and below its buy rate). | Town | Beacon Watch: defending ranged attacks deal +25% damage in round 1. |
 | Mireclaw / Reedkin Gathering | Spend 1 peatwax to add one base week of tier-1 recruitment stock. | Town | Chainboom Defenses: attackers lose 1 movement point in rounds 1–2, minimum 1. |
 | Sunvault / Calibration Court | Spend 1 aetherglass to restore the visitor's mana fully. Does not consume the separate once-only power lesson. | Hero | Prism Muster: defenders gain 30 percentage points of spell-damage resistance in rounds 1–2, subject to the normal 75% cap. |
 | Thornwake / Renewal Nursery | Spend 1 verdant graft + 500 gold to add half a base week of tier-1–3 stock, rounded up per built dwelling. | Town | Rootbound Ward: at the start of rounds 2 and 3, each surviving defending stack heals up to 25% of one creature's health. No resurrection. |

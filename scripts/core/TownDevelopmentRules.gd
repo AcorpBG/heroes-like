@@ -250,8 +250,10 @@ static func service_actions(session, town: Dictionary) -> Array:
 		if b.has("faction_service") and present:
 			var reason := FactionServices.unavailable_reason(hero, town, b, int(session.day), resources)
 			var service: Dictionary = b.faction_service
+			# An exchange's description already names what it takes.
+			var cost_line := "" if String(service.get("kind", "")) == "resource_exchange" else " Cost: %s." % cost_text(service.get("cost", {}))
 			actions.append({"id": "town_faction:" + String(id), "label": String(service.label) + " — " + cost_text(service.get("cost", {})),
-				"summary": "%s Cost: %s. Once per week per %s. %s" % [String(service.description), cost_text(service.get("cost", {})), String(service.get("scope", "town")), reason], "disabled": reason != ""})
+				"summary": "%s%s Once per week per %s. %s" % [String(service.description), cost_line, String(service.get("scope", "town")), reason], "disabled": reason != ""})
 		var target := String(b.get("unlock_unit_id", ""))
 		var base := String(ContentService.get_unit(target).get("upgrade_from", ""))
 		if base != "":
