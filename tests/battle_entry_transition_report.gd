@@ -10,7 +10,9 @@ extends Node
 ##   writes the entry checkpoint and changes scene; no frame without a scene may
 ##   be drawn uncovered; the checkpoint caches its own summary on the trusted
 ##   (already normalized) path; the battle shell's first refresh does not build
-##   the save bar, which follows once the battle is on screen;
+##   the save surface: the save bar shows its real status at once and builds its
+##   tooltips when a save control is hovered; the collapsed Tactical Details
+##   sidebar is built when it opens, without changing the battle state;
 ## - battle -> next scene after Quick Resolve, and overworld -> town -> overworld,
 ##   each requested from a timer, must not show an empty frame either.
 ## Headless runs force the transition cover on and read the frame state at each
@@ -156,16 +158,27 @@ func _check_battle_entry() -> void:
 	_check(bool(checkpoint.get("restore_normalize_skipped", false)), "the entry checkpoint trusts the overworld normalized before the handoff")
 	_check(String(_battle_added.get("autosave_summary_resume_target", "")) == "battle", "the cached checkpoint summary resumes into this battle")
 
-	_check(bool(_battle_ready.get("first_refresh_deferred_save_surface", false)), "the battle shell's first refresh defers the save bar")
 	_check(int(_battle_ready.get("save_surface_build_count", -1)) == 0, "the battle shell's first frame does not build the save surface")
-	_check(String(_battle_ready.get("system_body_text", "x")) == "", "the first frame shows no stale save status")
+	var stale_at_ready: Array = _battle_ready.get("stale_surfaces", [])
+	_check(stale_at_ready.has("save_bar_details") and stale_at_ready.has("tactical_details"), "the first frame leaves the save tooltips and the collapsed Tactical Details for when they are shown")
+	_check(String(_battle_ready.get("system_body_text", "")) != "" and bool(_battle_ready.get("system_body_visible", false)), "the first frame already shows the save status")
 	_check(String(_battle_ready.get("save_button_text", "")) != "" and String(_battle_ready.get("menu_button_text", "")) != "", "the first frame already shows the final save bar buttons")
-	var deferred: Array = _battle_ready.get("pending_surfaces", [])
-	_check(deferred.has("save_bar") and deferred.has("action_guide") and deferred.has("tactical_details"), "the first frame leaves the save bar, the action guide and the collapsed Tactical Details for later")
-	var surfaces: Dictionary = battle.call("validation_entry_surfaces_snapshot")
-	_check(not (surfaces.get("pending_surfaces", ["save_bar"]) as Array).has("save_bar") and int(surfaces.get("save_surface_build_count", 0)) == 1, "the save bar is built once, after the battle is on screen")
-	_check(String(surfaces.get("system_body_text", "")) != "" and String(surfaces.get("action_guide_text", "")) != String(_battle_ready.get("action_guide_text", "")), "the deferred save status and action guide are filled in")
-	_check((surfaces.get("pending_surfaces", ["x"]) as Array).is_empty() and String(surfaces.get("active_focus_text", "")) != String(_battle_ready.get("active_focus_text", "")), "the collapsed Tactical Details content is filled in once the battle is on screen")
+	_check(String(_battle_ready.get("action_guide_text", "")) != "" and String(_battle_ready.get("action_panel_tooltip", "")) != "", "the first frame builds the action guide")
+	var presented: Dictionary = battle.call("validation_lazy_surfaces_snapshot")
+	_check(int(presented.get("save_surface_build_count", -1)) == 0, "nothing builds the save surface until a save control is shown")
+	var battle_before_hover: Dictionary = (battle.get("_session").battle as Dictionary).duplicate(true)
+	battle.get_node("%Save").mouse_entered.emit()
+	var hovered: Dictionary = battle.call("validation_lazy_surfaces_snapshot")
+	_check(int(hovered.get("save_surface_build_count", 0)) == 1 and not (hovered.get("stale_surfaces", []) as Array).has("save_bar_details"), "hovering Save builds the save surface once")
+	_check(String(hovered.get("save_button_tooltip", "")) != String(presented.get("save_button_tooltip", "")) and String(hovered.get("system_body_tooltip", "")) != "", "the hovered save bar has its tooltips")
+	_check(hovered.get("system_body_text") == presented.get("system_body_text") and hovered.get("save_button_text") == presented.get("save_button_text") and hovered.get("menu_button_text") == presented.get("menu_button_text"), "the quick save status matches the full save surface")
+	battle.call("_on_tactical_details_pressed")
+	var opened: Dictionary = battle.call("validation_lazy_surfaces_snapshot")
+	_check(bool(opened.get("sidebar_visible", false)) and (opened.get("stale_surfaces", ["x"]) as Array).is_empty(), "opening Tactical Details builds it")
+	_check(String(opened.get("active_focus_text", "")) != String(presented.get("active_focus_text", "")), "the opened sidebar shows the current focus")
+	_check((battle.get("_session").battle as Dictionary) == battle_before_hover, "building the save tooltips and the sidebar leaves the battle state unchanged")
+	battle.call("_on_tactical_details_pressed")
+	var surfaces: Dictionary = battle.call("validation_lazy_surfaces_snapshot")
 	_check(BattleArtPrewarmScript.pending_paths().is_empty(), "the board art requests are collected after the first frame")
 	_evidence["battle_entry"] = {
 		"frames": rows.size(),
@@ -273,7 +286,7 @@ func _on_node_added(node: Node) -> void:
 		"save_profile": SaveService.validation_last_runtime_save_profile(),
 		"autosave_summary_resume_target": String(autosave_summary.get("resume_target", "")),
 	}
-	node.ready.connect(func(): _battle_ready = node.call("validation_entry_surfaces_snapshot"), CONNECT_ONE_SHOT)
+	node.ready.connect(func(): _battle_ready = node.call("validation_lazy_surfaces_snapshot"), CONNECT_ONE_SHOT)
 
 
 func _phase_rows(phase: String) -> Array:

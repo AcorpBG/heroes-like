@@ -690,15 +690,22 @@ func _invalidate_latest_loadable_summary() -> void:
 func summary_recency_timestamp(summary: Dictionary) -> float:
 	return _summary_sort_timestamp(summary)
 
-## The in-session save bar's button labels, without inspecting stored saves or
-## copying the session. build_in_session_save_surface() returns the same labels.
-func in_session_action_labels(session: SessionStateStoreScript.SessionData, manual_slot: int = -1) -> Dictionary:
+## The in-session save bar's visible fields (button labels, save handoff brief,
+## latest ready save) without copying the session. They match the same fields of
+## build_in_session_save_surface(), whose live summary of a manual slot carries
+## no stored name, only the slot and resume target these lines read.
+func in_session_save_bar_status(session: SessionStateStoreScript.SessionData, manual_slot: int = -1) -> Dictionary:
 	var selected_slot := _normalize_manual_slot(manual_slot if manual_slot > 0 else _selected_manual_slot)
 	var current_target := _resume_target_for_session(session)
+	var live_summary := {}
+	if session != null and session.scenario_id != "":
+		live_summary = {"slot_type": SLOT_TYPE_MANUAL, "slot_id": str(selected_slot), "resume_target": current_target}
 	return {
 		"selected_slot": selected_slot,
 		"save_button_label": _in_session_save_label(current_target, selected_slot),
 		"menu_button_label": _return_to_menu_label(current_target, session),
+		"save_handoff_brief": _describe_session_save_handoff_brief_from_summary(session, live_summary),
+		"latest_context": _latest_context_line(latest_loadable_summary(), current_target),
 	}
 
 func build_current_session_save_context(session: SessionStateStoreScript.SessionData) -> Dictionary:
