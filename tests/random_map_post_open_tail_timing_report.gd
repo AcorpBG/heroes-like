@@ -168,6 +168,13 @@ func _assert_generated_opening_completion(session) -> Dictionary:
 	if not _assert_transition_intent_absent(raw_flags, "generated raw payload"):
 		return {}
 	var canonical_live_flags := _canonical_json_dictionary(session.flags)
+	# A native session's runtime scenario record is saved once, in overworld, and
+	# every load restores it into flags (SessionStateStore).
+	var record_key := "native_random_map_runtime_scenario_record"
+	var raw_overworld: Dictionary = raw_payload.get("overworld", {}) if raw_payload.get("overworld", {}) is Dictionary else {}
+	if not raw_flags.has(record_key) and canonical_live_flags.has(record_key) and raw_overworld.get(record_key) == canonical_live_flags.get(record_key):
+		raw_flags = raw_flags.duplicate()
+		raw_flags[record_key] = raw_overworld.get(record_key)
 	if canonical_live_flags != raw_flags:
 		_fail("Generated opening save did not mirror the completed flag set to the live session: %s" % JSON.stringify({
 			"different_keys": _different_dictionary_keys(canonical_live_flags, raw_flags),

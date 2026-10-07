@@ -1102,11 +1102,13 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if String(summary.get("presentation_model", "")) != "cohesive_biome_exact_body_raster_mass_v6":
 		_fail("%s generated body presentation model is not exact: %s" % [label, JSON.stringify(summary)])
 		return false
+	# Default fixture: the menu's Small land launch, with Normal monster strength
+	# since 2026-09-18 and player faction/hero selection since 2026-09-01.
 	var is_default_fixture := _active_size_class_id == SIZE_CLASS_ID and _active_seed == EXPLICIT_SEED
-	if is_default_fixture and int(summary.get("generated_record_count", 0)) != 175:
+	if is_default_fixture and int(summary.get("generated_record_count", 0)) != 152:
 		_fail("%s generated decorative record count changed: %s" % [label, summary.get("generated_record_count", -1)])
 		return false
-	if is_default_fixture and (int(summary.get("expected_body_tile_count", 0)) != 464 or int(summary.get("indexed_body_tile_count", 0)) != 464):
+	if is_default_fixture and (int(summary.get("expected_body_tile_count", 0)) != 414 or int(summary.get("indexed_body_tile_count", 0)) != 414):
 		_fail("%s exact generated body coverage changed: expected=%s indexed=%s" % [label, summary.get("expected_body_tile_count", -1), summary.get("indexed_body_tile_count", -1)])
 		return false
 	if int(summary.get("generated_record_count", 0)) <= 0 or int(summary.get("expected_body_tile_count", 0)) <= 0:
@@ -1118,7 +1120,7 @@ func _assert_generated_visual_summary(summary: Dictionary, label: String) -> boo
 	if not bool(summary.get("legacy_primary_markers_suppressed", false)) or int(summary.get("indexed_legacy_primary_marker_count", -1)) != 0:
 		_fail("%s generated DEF anchors still expose duplicate procedural markers: %s" % [label, JSON.stringify(_compact_generated_visual_summary(summary))])
 		return false
-	if is_default_fixture and int(summary.get("legacy_primary_marker_candidate_count", 0)) != 65:
+	if is_default_fixture and int(summary.get("legacy_primary_marker_candidate_count", 0)) != 36:
 		_fail("%s deterministic generated DEF-anchor candidate count changed: %s" % [label, summary.get("legacy_primary_marker_candidate_count", -1)])
 		return false
 	if not is_equal_approx(float(summary.get("body_sprite_extent_tiles", 0.0)), 1.42):
