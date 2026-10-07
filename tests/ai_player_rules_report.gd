@@ -14,6 +14,8 @@ const SEED := "ai-player-rules-20261007"
 const PLAYER_FACTION_ID := "faction_embercourt"
 const PLAYER_HERO_ID := "hero_lyra"
 const DAYS := 16
+## Days a hero may stand on one tile outside its towns before it counts as stuck.
+const MAX_STALLED_DAYS := 4
 
 var _failed := false
 
@@ -45,6 +47,8 @@ func _run() -> void:
 	var hero_steps := 0
 	var hero_days := 0
 	var battles_with_human := []
+	var still_days := {}
+	var longest_stall := {"hero": "", "days": 0}
 	var neutral_before := _unresolved_neutral_ids(session)
 	for _day in range(DAYS):
 		var positions := _hero_positions(session, controller)
@@ -77,6 +81,14 @@ func _run() -> void:
 				var now: Vector2i = after[placement_id]
 				hero_steps += maxi(absi(now.x - before.x), absi(now.y - before.y))
 				hero_days += 1
+				# A hero holding its own town's gate may wait; elsewhere a hero
+				# that never moves is stuck.
+				if now == before and not _at_own_town(session, controller, now):
+					still_days[placement_id] = int(still_days.get(placement_id, 0)) + 1
+				else:
+					still_days[placement_id] = 0
+				if int(still_days[placement_id]) > int(longest_stall.days):
+					longest_stall = {"hero": placement_id, "days": int(still_days[placement_id]), "tile": [now.x, now.y]}
 		days.append({"day": int(session.day), "ms": elapsed, "ai_ms": ai_ms, "ai_phases": ai_phases, "heroes": _hero_brief(session, controller), "gold": int(_state(session, controller).get("treasury", {}).get("gold", 0))})
 		if String(session.scenario_status) != "in_progress":
 			break
@@ -97,6 +109,8 @@ func _run() -> void:
 		return _fail("Raid entities or raid wording remain: %s" % JSON.stringify(raid_check))
 	if hero_days > 0 and float(hero_steps) / float(hero_days) < 2.0:
 		return _fail("AI heroes barely move (%d tiles over %d hero-days)." % [hero_steps, hero_days])
+	if int(longest_stall.days) >= MAX_STALLED_DAYS:
+		return _fail("An AI hero stood still away from its towns for %d days: %s" % [int(longest_stall.days), JSON.stringify(longest_stall)])
 	var save_check := _check_save_round_trip(session, controller)
 	if _failed:
 		return
@@ -119,6 +133,7 @@ func _run() -> void:
 		"captured_mines": captured_mines,
 		"guard_fights": fights,
 		"hero_tiles_per_day": float(hero_steps) / float(maxi(1, hero_days)),
+		"longest_stall": longest_stall,
 		"turn_ms_max": turn_ms_max,
 		"ai_turn_ms_max": ai_ms_max,
 		"battles_with_human": battles_with_human,
@@ -126,8 +141,54 @@ func _run() -> void:
 		"raid_check": raid_check,
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
+	var capture_dir := OS.get_environment("HEROES_AI_RULES_CAPTURE_DIR").strip_edges()
+	if capture_dir != "":
+		await _capture_overworld(session, controller, capture_dir)
 	_cleanup()
 	get_tree().quit(0)
+
+## With a window: the overworld where the human's scout has come within sight
+## of the computer player's strongest hero, as the human would see it.
+func _capture_overworld(session, controller: String, output_dir: String) -> void:
+	if DisplayServer.get_name() == "headless":
+		print("%s_CAPTURE {\"skipped\":\"headless\"}" % REPORT_ID)
+		return
+	var focus := {}
+	for entry in AiHeroRulesScript.active_hero_entries(session, controller):
+		if focus.is_empty() or AiHeroRulesScript.hero_power(entry) > AiHeroRulesScript.hero_power(focus):
+			focus = entry
+	if focus.is_empty():
+		return
+	var center := Vector2i(int(focus.get("x", 0)), int(focus.get("y", 0)))
+	var scout_tile := Vector2i(-1, -1)
+	for radius in range(3, 6):
+		for dy in range(-radius, radius + 1):
+			for dx in range(-radius, radius + 1):
+				var tile := center + Vector2i(dx, dy)
+				if scout_tile.x < 0 and maxi(absi(dx), absi(dy)) == radius and not OverworldRules.tile_is_blocked(session, tile.x, tile.y, LevelRules.level_of(focus)):
+					scout_tile = tile
+	if scout_tile.x >= 0:
+		OverworldRules._set_active_hero_position(session, scout_tile, LevelRules.level_of(focus))
+	OverworldRules.refresh_fog_of_war(session)
+	session.game_state = "overworld"
+	session = SessionState.set_active_session(session)
+	get_window().size = Vector2i(1280, 720)
+	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(shell)
+	for _frame in range(4):
+		await get_tree().process_frame
+	if shell.has_method("validation_minimap_recenter"):
+		shell.call("validation_minimap_recenter", center.x, center.y)
+	for _frame in range(4):
+		await get_tree().process_frame
+	await RenderingServer.frame_post_draw
+	var image := get_viewport().get_texture().get_image()
+	DirAccess.make_dir_recursive_absolute(output_dir)
+	var path := "%s/ai_hero_on_overworld_1280x720.png" % output_dir
+	var saved := image != null and not image.is_empty() and image.save_png(path) == OK
+	print("%s_CAPTURE %s" % [REPORT_ID, JSON.stringify({"path": path, "saved": saved, "hero": AiHeroRulesScript.hero_name(focus), "tile": [center.x, center.y], "threats": EnemyTurnRules.describe_threats(session)})])
+	shell.queue_free()
+	await get_tree().process_frame
 
 ## Timing only: computer players on a bigger generated map for several days
 ## (HEROES_AI_RULES_PERF_SIZE / HEROES_AI_RULES_PERF_DAYS).
@@ -334,7 +395,25 @@ func _check_market_trades_like_the_player(session, controller: String) -> Dictio
 	if int(pool.get("wood", 0)) != 2 or int(pool.get("gold", 0)) != 5000 - int(expected.get("give_amount", 0)) or bought != 2:
 		_fail("AI market trade differs from the human's quote %s: pool %s, usage %s" % [JSON.stringify(expected), JSON.stringify(pool), JSON.stringify(town.get("market_usage", {}))])
 		return {}
-	return {"bought_wood": 2, "gold_paid": int(expected.get("give_amount", 0))}
+	# Rare resources trade at every market, with their own weekly caps.
+	var rare_id := ""
+	for resource_id in TownRules.market_resource_ids(market):
+		if String(resource_id) not in ["wood", "ore"]:
+			rare_id = String(resource_id)
+			break
+	if rare_id == "":
+		_fail("The town market offers no rare resource: %s" % JSON.stringify(market))
+		return {}
+	town["market_usage"] = {}
+	var rare_quote: Dictionary = TownRules.market_trade_quote(market, usage, {"gold": 4000}, "gold", rare_id, 1)
+	var rare_pool := {"gold": 5000}
+	if not bool(rare_quote.get("ok", false)) or not AiHeroRulesScript._market_cover(session, town, rare_pool, {"gold": 1000, rare_id: 1}, true):
+		_fail("The AI could not buy %s at its market like the human: %s" % [rare_id, JSON.stringify(rare_quote)])
+		return {}
+	if int(rare_pool.get(rare_id, 0)) != 1 or int(rare_pool.get("gold", 0)) != 5000 - int(rare_quote.get("give_amount", 0)) or int(town.get("market_usage", {}).get("buy", {}).get(rare_id, 0)) != 1:
+		_fail("AI rare purchase differs from the human's quote %s: pool %s" % [JSON.stringify(rare_quote), JSON.stringify(rare_pool)])
+		return {}
+	return {"bought_wood": 2, "gold_paid": int(expected.get("give_amount", 0)), "bought_rare": rare_id, "rare_gold_paid": int(rare_quote.get("give_amount", 0))}
 
 func _hero_signature(entry: Dictionary) -> String:
 	var block: Dictionary = entry.get("ai_hero", {})
@@ -418,6 +497,14 @@ func _check_town_orders_pay_real_costs(session, controller: String) -> Dictionar
 			_fail("Treasury %s should be %d after paying %s, got %d." % [key, expected, JSON.stringify(spent), int(treasury_after.get(key, 0))])
 			return {}
 	return {"built": new_buildings, "recruited": recruited, "heroes_hired": hired, "spent": spent}
+
+func _at_own_town(session, controller: String, tile: Vector2i) -> bool:
+	for town in session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get("owner", "")) == "enemy" and PlayerRules.town_controller_id(town) == controller:
+			var entrance := LevelRules.town_entrance(town)
+			if int(entrance.get("x", -1)) == tile.x and int(entrance.get("y", -1)) == tile.y:
+				return true
+	return false
 
 func _hero_positions(session, controller: String) -> Dictionary:
 	var positions := {}

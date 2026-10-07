@@ -758,9 +758,10 @@ static func _town_rules() -> Variant:
 ## Covers `cost` at a town's market with the human's trades: each order is
 ## priced and limited by TownRules.market_trade_quote and recorded in the
 ## town's weekly market usage exactly like the market popout's buy, sell and
-## convert orders. Spare wood or ore converts first, gold buys the rest, and
-## spare wood or ore sells when gold is short. With `apply` false it only
-## checks; otherwise the trades move `pool` and the town's usage.
+## convert orders. Spare resources convert first (wood and ore before rare
+## ones), gold buys the rest, and spare resources sell when gold is short.
+## With `apply` false it only checks; otherwise the trades move `pool` and the
+## town's usage.
 static func _market_cover(session: SessionStateStoreScript.SessionData, town: Dictionary, pool: Dictionary, cost: Dictionary, apply: bool) -> bool:
 	if _can_afford(pool, cost):
 		return true
@@ -771,8 +772,14 @@ static func _market_cover(session: SessionStateStoreScript.SessionData, town: Di
 		return false
 	var usage: Dictionary = overworld_rules._normalize_town_market_usage_state(town.get("market_usage", {}), int(session.day)).duplicate(true)
 	var stock := pool.duplicate()
-	var normal: Array = overworld_rules.NORMAL_MARKET_RESOURCE_KEYS
-	var imports: Array = market.get("import_resources", []) if market.get("import_resources", []) is Array else []
+	var tradable: Array = town_rules.market_resource_ids(market)
+	var sources := []
+	for resource_id in overworld_rules.NORMAL_MARKET_RESOURCE_KEYS:
+		if resource_id in tradable:
+			sources.append(String(resource_id))
+	for resource_id in tradable:
+		if String(resource_id) not in sources:
+			sources.append(String(resource_id))
 	for key_value in cost.keys():
 		var key := String(key_value)
 		if key == "gold":
@@ -780,8 +787,8 @@ static func _market_cover(session: SessionStateStoreScript.SessionData, town: Di
 		var deficit := int(cost[key]) - int(stock.get(key, 0))
 		if deficit <= 0:
 			continue
-		if key in normal:
-			for other_value in normal:
+		if key in tradable:
+			for other_value in sources:
 				var other := String(other_value)
 				var spare := int(stock.get(other, 0)) - int(cost.get(other, 0))
 				if other == key or spare <= 0 or deficit <= 0:
@@ -790,7 +797,7 @@ static func _market_cover(session: SessionStateStoreScript.SessionData, town: Di
 				var count := mini(deficit, int(terms.get("max_amount", 0)))
 				if count > 0 and _market_trade(town_rules.market_trade_quote(market, usage, {other: spare}, other, key, count), stock, usage):
 					deficit -= count
-		if deficit > 0 and (key in normal or key in imports):
+		if deficit > 0 and key in tradable:
 			var spare_gold := maxi(0, int(stock.get("gold", 0)) - int(cost.get("gold", 0)))
 			if not _market_trade(town_rules.market_trade_quote(market, usage, {"gold": spare_gold}, "gold", key, deficit), stock, usage):
 				return false
@@ -798,7 +805,7 @@ static func _market_cover(session: SessionStateStoreScript.SessionData, town: Di
 		if deficit > 0:
 			return false
 	var gold_deficit := int(cost.get("gold", 0)) - int(stock.get("gold", 0))
-	for other_value in normal:
+	for other_value in sources:
 		if gold_deficit <= 0:
 			break
 		var other := String(other_value)
@@ -1163,7 +1170,7 @@ static func _take_garrison(session: SessionStateStoreScript.SessionData, entry: 
 			stacks = moved.get("stacks", stacks)
 			if moved.get("left", []).is_empty():
 				garrison.remove_at(weakest)
-	elif is_main:
+	elif is_main or _ferries_from(session, context, live_town, main_id):
 		if not garrison.is_empty() and not _town_threatened(session, context, live_town):
 			var merged := _merge_stacks_into(stacks, garrison)
 			stacks = merged.get("stacks", stacks)
@@ -1190,6 +1197,21 @@ static func _take_garrison(session: SessionStateStoreScript.SessionData, entry: 
 	towns[index] = live_town
 	session.overworld["towns"] = towns
 	return entry
+
+## A lesser hero carries a town's troops out to the main hero when the main
+## hero is more than a day's march from the town, as a human chains them.
+static func _ferries_from(session: SessionStateStoreScript.SessionData, context: Dictionary, town: Dictionary, main_id: String) -> bool:
+	if main_id == "" or _town_threatened(session, context, town):
+		return false
+	var main_index := _entry_index(session, main_id)
+	if main_index < 0:
+		return false
+	var main: Dictionary = session.overworld.encounters[main_index]
+	if not LevelRules.same_level(main, town):
+		return true
+	var entrance := LevelRules.town_entrance(town)
+	var distance := maxi(absi(int(main.get("x", 0)) - int(entrance.get("x", 0))), absi(int(main.get("y", 0)) - int(entrance.get("y", 0))))
+	return distance > int(main.get(AI_HERO_KEY, {}).get("movement", {}).get("max", 0))
 
 static func _main_hero_id(session: SessionStateStoreScript.SessionData, controller: String) -> String:
 	var best_id := ""
@@ -1363,9 +1385,30 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 		best = _best_candidate(session, context, entry, search, movement_max)
 		_profile_add(context, "choose_ms", started)
 	if best.is_empty():
+		best = _cornered_fight(session, entry, search)
+	if best.is_empty():
 		return {}
 	best["path"] = _path_to(search, int(best.tile_index))
 	return best
+
+## A hero hemmed in by a guard's zone (every way out passes through it) fights
+## that guard when the odds are at least even, rather than waiting forever.
+static func _cornered_fight(session: SessionStateStoreScript.SessionData, entry: Dictionary, search: Dictionary) -> Dictionary:
+	if int(search.get("order_count", 0)) > 1:
+		return {}
+	var power := hero_power(entry)
+	var encounters: Array = session.overworld.get("encounters", [])
+	var stops: Dictionary = search.get("stops", {})
+	for tile_index in stops.keys():
+		for ref in stops[tile_index]:
+			if int(ref.kind) != STOP_ENCOUNTER:
+				continue
+			var guard: Dictionary = encounters[int(ref.index)]
+			var template := ContentService.get_encounter(String(guard.get("encounter_id", guard.get("id", ""))))
+			var guard_power := army_power(_neutral_army(guard).get("stacks", []), template.get("enemy_commander", {}))
+			if guard_power > 0.0 and power >= guard_power:
+				return {"kind": "encounter", "id": String(guard.get("placement_id", "")), "index": int(ref.index), "value": 1.0, "tile_index": int(tile_index), "distance": int(search.dist[int(tile_index)]), "fight_power": guard_power}
+	return {}
 
 static func _profile_add(context: Dictionary, key: String, started: int) -> void:
 	var profile: Dictionary = context.get("profile", {})
@@ -1384,7 +1427,15 @@ static func _best_candidate(session: SessionStateStoreScript.SessionData, contex
 	var stops: Dictionary = search.get("stops", {})
 	for tile_index in stops.keys():
 		var distance := int(search.dist[int(tile_index)])
+		# Stepping into a guard's zone means fighting it first, as it does for
+		# the human: whatever else lies there is reached through that fight.
+		var guarded := false
 		for ref in stops[tile_index]:
+			if int(ref.kind) == STOP_ENCOUNTER:
+				guarded = true
+		for ref in stops[tile_index]:
+			if guarded and int(ref.kind) != STOP_ENCOUNTER:
+				continue
 			# Map objects count once explored; armies and heroes once in sight.
 			if int(ref.kind) not in [STOP_HERO, STOP_AI_HERO] and known[int(tile_index)] == 0:
 				continue
@@ -1640,6 +1691,8 @@ static func _town_candidate(session: SessionStateStoreScript.SessionData, contex
 		var main_id := _decision_main_id(session, context)
 		if main_id == "" or main_id == String(entry.get("placement_id", "")):
 			value = army_power(town.get("garrison", [])) * TROOP_VALUE_PER_POWER * 0.5
+		elif _ferries_from(session, context, town, main_id):
+			value = minf(army_power(town.get("garrison", [])) * TROOP_VALUE_PER_POWER * 0.3, MEET_VALUE_CAP)
 		else:
 			var stacks: Array = entry.get("enemy_army", {}).get("stacks", [])
 			if stacks.size() > 1:
@@ -1784,6 +1837,7 @@ static func _follow_plan(session: SessionStateStoreScript.SessionData, context: 
 			arrived = true
 			break
 		var before := LevelRules.position(entry)
+		plan["retreat_tile"] = Vector2i(int(before.get("x", 0)), int(before.get("y", 0)))
 		entry["x"] = tile.x
 		entry["y"] = tile.y
 		TurnPlayback.move(session, entry, before)
@@ -2264,8 +2318,27 @@ static func _fight_neutral(session: SessionStateStoreScript.SessionData, context
 		session.overworld["encounters"] = encounters
 		var hero_id := String(session.overworld.encounters[index].get("placement_id", ""))
 		if not _is_resolved(session, hero_id):
+			_step_back_from_guard(session, index, plan)
 			_avoid_target(session, hero_id, String(guard.get("placement_id", "")), int(session.day) + 3)
 	return {"arrived": true, "events": events}
+
+## After a fight that left the guard standing, the hero falls back to the tile
+## it attacked from instead of staying inside the guard's zone.
+static func _step_back_from_guard(session: SessionStateStoreScript.SessionData, index: int, plan: Dictionary) -> void:
+	if not (plan.get("retreat_tile", null) is Vector2i):
+		return
+	var tile: Vector2i = plan.retreat_tile
+	var entry: Dictionary = session.overworld.encounters[index]
+	if tile == Vector2i(int(entry.get("x", 0)), int(entry.get("y", 0))):
+		return
+	if _tile_blocked_for_standing(session, {}, tile, LevelRules.level_of(entry), String(entry.get("placement_id", ""))):
+		return
+	var before := LevelRules.position(entry)
+	entry["x"] = tile.x
+	entry["y"] = tile.y
+	TurnPlayback.move(session, entry, before)
+	_store_entry(session, index, entry)
+	_overworld_rules().invalidate_spatial_lookup(session)
 
 static func _fight_ai_hero(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, plan: Dictionary) -> Dictionary:
 	var encounters: Array = session.overworld.get("encounters", [])
