@@ -19,7 +19,7 @@ Popouts fit on screen without scrolling at 1280×720 and above:
 | --- | --- |
 | Creature dwelling | One recruit card per creature the dwelling offers now: portrait, tier and drawn melee/ranged badge, attack, defense, damage, health, speed, initiative, shots and abilities. An amount slider with **Max** sets how many to hire; the button shows the total cost. Stationed troops of the base creature can be upgraded here once the upgraded dwelling stands. |
 | Magic guild | Spells by guild level (tabs I–V). Each spell shows its icon, mana, adventure or battle use, school and effect. Built levels list what visiting heroes learn; unbuilt levels are dimmed and name the guild stage that teaches them. |
-| Tavern | This week's two heroes: portrait, class, summary, attack, defense, power, knowledge, movement, specialty, battle traits, starting spells and cost, with **Hire**. A full command or short gold disables Hire with the reason. |
+| Tavern | This week's two heroes: portrait, level chip, class, summary, attack, defense, power, knowledge, movement and specialties at the offered level, battle traits, starting army (creature portraits with counts), starting spells and cost, with **Hire**. A full command or short gold disables Hire with the reason. |
 | Market | An **Open market** hand-off to the full market. |
 | Artifact exchange | The week's buy offers and sell orders for the visiting hero. |
 | Hero training and faction services | The visit or service order for the visiting hero, disabled once claimed. |
@@ -36,6 +36,7 @@ The Muster Hall (Muster command) lists every creature the town can muster with t
 - Every player tavern offers the same two heroes each week, drawn on days 1, 8, 15 and so on from the player faction's hireable heroes (`HeroCommandRules.tavern_offer_ids`).
 - The draw shuffles the faction's whole hireable roster with a seed from the session, scenario and week, then takes the first two heroes not already in command. The same save always sees the same pair.
 - Hiring a hero leaves that place empty until the next week; the popout shows the empty place and the day the next pair arrives. Only offered heroes can be hired.
+- Each offer also fixes the hero's level and starting army for the week (`HeroCommandRules.tavern_offer`; see `docs/hero-hire-army-level.md`). The hired hero arrives exactly as the card shows.
 - The pair is computed on read and stored only when a hire changes it (`overworld.tavern_rotation`), so looking at the tavern never changes the session.
 
 ## Rules and ownership

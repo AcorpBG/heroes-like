@@ -8,6 +8,7 @@ const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
 const TownRulesScript = preload("res://scripts/core/TownRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
+const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const CampaignRulesScript = preload("res://scripts/core/CampaignRules.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 # Validation markers: ScenarioSelectRules.launch_mode_label / ScenarioSelectRules.difficulty_label
@@ -2903,6 +2904,8 @@ func _normalize_restore_result(payload: Dictionary, slot_type: String = "") -> D
 		}
 
 	OverworldRulesScript.normalize_overworld_state_bridge(session)
+	# Older saves could hold commanders hired without troops.
+	HeroCommandRulesScript.restore_empty_hero_armies(session)
 
 	var validity := String(structure_report.get("validity", "ok"))
 	if source_save_version < SessionStateStoreScript.SAVE_VERSION:

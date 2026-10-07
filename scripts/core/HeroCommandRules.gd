@@ -17,6 +17,17 @@ const ARMY_SLOT_COUNT := 7
 const ARMY_SLOT_INDEX_KEY := "slot_index"
 const DEFAULT_RECRUIT_COST := {"gold": 1200}
 const BASE_SCOUT_RADIUS := 6
+const TOWN_DEVELOPMENT_PATH := "res://content/town_development.json"
+# Tavern veterans: about one offer in ten is level 2 and one in thirty level 3.
+const TAVERN_LEVEL_TWO_PERCENT := 10
+const TAVERN_LEVEL_THREE_PERCENT := 3
+# HoMM3-like starting army: a tier-1 company always, often a second company
+# (usually tier 2, sometimes the other tier-1 creature). Sizes are shares of
+# the creature's weekly growth.
+const STARTING_SECOND_COMPANY_PERCENT := 75
+const STARTING_SECOND_COMPANY_TIER_TWO_PERCENT := 70
+const STARTING_FIRST_COMPANY_GROWTH_SHARE := [0.75, 1.5]
+const STARTING_SECOND_COMPANY_GROWTH_SHARE := [0.5, 1.0]
 
 static func normalize_session(
 	session: SessionStateStoreScript.SessionData,
@@ -144,6 +155,157 @@ static func build_hero_from_template(
 	if movement_source is SessionStateStoreScript.SessionData and String(movement_source.overworld.get("active_player_id", "")) != "":
 		hero["player_id"] = String(movement_source.overworld.active_player_id)
 	return hero
+
+## Builds a newly hired commander. Every hire, the player's tavern and AI
+## recruitment alike, creates its hero here so no hired hero walks out without
+## troops: the hero leads `army_state`, or its starting army
+## (starting_army_for_hero, seeded by `seed_key`) when that holds no troops,
+## and arrives at `level` through HeroProgressionRules exactly as earned levels
+## do, with full movement and mana. tavern_offer gives a hire's level and army.
+static func build_recruited_hero(
+	hero_template: Dictionary,
+	position: Dictionary,
+	movement_source: Variant,
+	level: int = 1,
+	army_state: Variant = {},
+	seed_key: String = ""
+) -> Dictionary:
+	if hero_template.is_empty():
+		return {}
+	var hero_id := String(hero_template.get("id", ""))
+	var army := _normalize_army(army_state, hero_id)
+	if _valid_stack_count(army.get("stacks", [])) == 0:
+		army = starting_army_for_hero(hero_template, seed_key if seed_key != "" else hero_id)
+	var hero := build_hero_from_template(hero_template, position, army, movement_source)
+	if hero.is_empty():
+		return hero
+	if level > 1:
+		hero = HeroProgressionRulesScript.advance_to_level(hero, level)
+	# Specialty mana counts toward the new commander's full reserve.
+	hero = SpellRulesScript.ensure_hero_spellbook(hero, hero_template)
+	var spellbook: Dictionary = hero.get("spellbook", {})
+	var mana: Dictionary = spellbook.get("mana", {})
+	if not mana.is_empty():
+		mana["current"] = int(mana.get("max", 0))
+		spellbook["mana"] = mana
+		hero["spellbook"] = spellbook
+	var movement_max := movement_max_for_hero(hero, movement_source)
+	hero["movement"] = {"current": movement_max, "max": movement_max}
+	return hero
+
+## A HoMM3-style starting army for `hero_template`: a company of the faction's
+## tier-1 creature, often a second company (tier 2, or the other tier-1
+## creature), each a share of that creature's weekly growth. A template's own
+## `starting_army` rows ({unit_id, min, max}) are used instead when present.
+## Always at least one creature when the faction has any; the same `seed_key`
+## always gives the same army.
+static func starting_army_for_hero(hero_template: Dictionary, seed_key: String) -> Dictionary:
+	var hero_id := String(hero_template.get("id", ""))
+	var rng := _seeded_rng("%s|starting_army" % seed_key)
+	var stacks := []
+	var authored = hero_template.get("starting_army", [])
+	if authored is Array:
+		for row in authored:
+			var unit_id := String(row.get("unit_id", "")) if row is Dictionary else ""
+			if unit_id == "" or ContentService.get_unit(unit_id).is_empty():
+				continue
+			var low := maxi(1, int(row.get("min", row.get("count", 1))))
+			stacks.append({"unit_id": unit_id, "count": rng.randi_range(low, maxi(low, int(row.get("max", low))))})
+	if stacks.is_empty():
+		var faction_id := String(hero_template.get("faction_id", ""))
+		var tier_one := _faction_creatures(faction_id, 1)
+		var tier_two := _faction_creatures(faction_id, 2)
+		if not tier_one.is_empty():
+			var first := String(tier_one[rng.randi_range(0, tier_one.size() - 1)])
+			stacks.append({"unit_id": first, "count": _starting_company_size(rng, first, STARTING_FIRST_COMPANY_GROWTH_SHARE)})
+			var other_tier_one := tier_one.filter(func(unit_id): return String(unit_id) != first)
+			if rng.randi_range(0, 99) < STARTING_SECOND_COMPANY_PERCENT and not (tier_two.is_empty() and other_tier_one.is_empty()):
+				var tier_two_roll := rng.randi_range(0, 99)
+				var pool := tier_two if not tier_two.is_empty() and (other_tier_one.is_empty() or tier_two_roll < STARTING_SECOND_COMPANY_TIER_TWO_PERCENT) else other_tier_one
+				var second := String(pool[rng.randi_range(0, pool.size() - 1)])
+				stacks.append({"unit_id": second, "count": _starting_company_size(rng, second, STARTING_SECOND_COMPANY_GROWTH_SHARE)})
+	for index in range(stacks.size()):
+		stacks[index][ARMY_SLOT_INDEX_KEY] = index
+	return {"id": "%s_army" % hero_id, "name": "Field Army", "stacks": stacks}
+
+static func army_has_troops(army: Variant) -> bool:
+	return army is Dictionary and _valid_stack_count(army.get("stacks", [])) > 0
+
+## Save migration: older saves hired heroes with no troops. On restore, every
+## player hero still in play that leads no troops gets its starting army, and
+## so does an AI raid commander left without a host. Returns how many armies
+## were restored. Mid-battle and finished sessions are left as they are.
+static func restore_empty_hero_armies(session: SessionStateStoreScript.SessionData) -> int:
+	if session == null or not session.battle.is_empty() or String(session.scenario_status) not in ["", "in_progress"]:
+		return 0
+	var restored := 0
+	var heroes = session.overworld.get("player_heroes", [])
+	if heroes is Array:
+		for index in range(heroes.size()):
+			var hero = heroes[index]
+			if not (hero is Dictionary) or _valid_stack_count(hero.get("army", {}).get("stacks", []) if hero.get("army", {}) is Dictionary else []) > 0:
+				continue
+			var hero_id := String(hero.get("id", ""))
+			var army := starting_army_for_hero(ContentService.get_hero(hero_id), "%s|%s|restored_army|%s" % [String(session.session_id), String(session.scenario_id), hero_id])
+			if army.get("stacks", []).is_empty():
+				continue
+			var previous: Dictionary = hero.get("army", {}) if hero.get("army", {}) is Dictionary else {}
+			army["id"] = String(previous.get("id", army.get("id", "")))
+			army["name"] = String(previous.get("name", army.get("name", "Field Army")))
+			hero["army"] = army
+			heroes[index] = hero
+			restored += 1
+		if restored > 0:
+			session.overworld["player_heroes"] = heroes
+			_sync_active_hero_mirror(session)
+	var encounters = session.overworld.get("encounters", [])
+	var raids_restored := 0
+	if encounters is Array:
+		for index in range(encounters.size()):
+			var encounter = encounters[index]
+			if not (encounter is Dictionary) or bool(encounter.get("commanderless_support_column", false)):
+				continue
+			if String(encounter.get("spawned_by_player_id", "")) == "" and String(encounter.get("spawned_by_faction_id", "")) == "":
+				continue
+			var commander = encounter.get("enemy_commander_state", {})
+			var roster_hero_id := String(commander.get("roster_hero_id", "")) if commander is Dictionary else ""
+			var host = encounter.get("enemy_army", {})
+			if roster_hero_id == "" or _valid_stack_count(host.get("stacks", []) if host is Dictionary else []) > 0:
+				continue
+			var army := starting_army_for_hero(ContentService.get_hero(roster_hero_id), "%s|%s|restored_army|%s" % [String(session.session_id), String(session.scenario_id), String(encounter.get("placement_id", roster_hero_id))])
+			if army.get("stacks", []).is_empty():
+				continue
+			army["id"] = String((host if host is Dictionary else {}).get("id", encounter.get("encounter_id", "")))
+			army["name"] = String((host if host is Dictionary else {}).get("name", "Raid Host"))
+			encounter["enemy_army"] = army
+			encounters[index] = encounter
+			raids_restored += 1
+		if raids_restored > 0:
+			session.overworld["encounters"] = encounters
+	return restored + raids_restored
+
+## A commander never leaves a battle leading no troops. When a town defense is
+## won by the garrison after the visiting hero's own companies fell, one
+## creature from the garrison's largest surviving company joins the hero.
+static func keep_hero_troop_from_garrison(session: SessionStateStoreScript.SessionData, town: Dictionary, hero_id: String) -> bool:
+	var hero := hero_by_id(session, hero_id)
+	if hero.is_empty() or town.is_empty() or _valid_stack_count(hero.get("army", {}).get("stacks", [])) > 0:
+		return false
+	var garrison: Array = town.get("garrison", []).duplicate(true) if town.get("garrison", []) is Array else []
+	var largest := -1
+	for index in range(garrison.size()):
+		if garrison[index] is Dictionary and String(garrison[index].get("unit_id", "")) != "" and int(garrison[index].get("count", 0)) > 0:
+			if largest < 0 or int(garrison[index].get("count", 0)) > int(garrison[largest].get("count", 0)):
+				largest = index
+	if largest < 0:
+		return false
+	var unit_id := String(garrison[largest].get("unit_id", ""))
+	garrison[largest]["count"] = int(garrison[largest].get("count", 0)) - 1
+	if int(garrison[largest].get("count", 0)) <= 0:
+		garrison.remove_at(largest)
+	_set_holder_stacks(session, town, HOLDER_GARRISON, garrison)
+	_set_holder_stacks(session, town, hero_id, [{"unit_id": unit_id, "count": 1, ARMY_SLOT_INDEX_KEY: 0}])
+	return true
 
 static func movement_max_for_hero(hero_state: Dictionary, movement_source: Variant = null) -> int:
 	var artifact_bonuses = ArtifactRulesScript.aggregate_bonuses(hero_state)
@@ -594,12 +756,15 @@ static func get_tavern_actions(session: SessionStateStoreScript.SessionData, tow
 		if hero_template.is_empty():
 			continue
 		var cost := hero_recruit_cost(hero_template)
+		var offer := tavern_offer(session, hero_id)
 		actions.append(
 			{
 				"id": "hire_hero:%s" % hero_id,
 				"label": "Hire %s" % String(hero_template.get("name", hero_id)),
-				"summary": "%s | Cost %s" % [
+				"summary": "%s | Level %d | Army %s | Cost %s" % [
 					hero_profile_summary(hero_template, true),
+					int(offer.get("level", 1)),
+					_army_summary(offer.get("army", {})),
 					_describe_resources(cost),
 				],
 				"disabled": not _can_afford(session, cost),
@@ -628,7 +793,9 @@ static func recruit_hero_at_town(session: SessionStateStoreScript.SessionData, t
 
 	_spend_resources(session, cost)
 	var position := OverworldLevelRulesScript.town_entrance(town)
-	var hero := build_hero_from_template(hero_template, position, {"id": "%s_army" % hero_id, "name": "Field Army", "stacks": []}, session)
+	# The hero arrives exactly as the tavern card showed: level and army.
+	var hired := tavern_offer(session, hero_id)
+	var hero := build_recruited_hero(hero_template, position, session, int(hired.get("level", 1)), hired.get("army", {}))
 	var heroes = session.overworld.get("player_heroes", [])
 	if not (heroes is Array):
 		heroes = []
@@ -1652,6 +1819,33 @@ static func tavern_week(session: SessionStateStoreScript.SessionData) -> int:
 static func days_until_tavern_rotation(session: SessionStateStoreScript.SessionData) -> int:
 	return 7 - ((maxi(1, int(session.day)) - 1) % 7) if session != null else 7
 
+## What hiring `hero_id` this week brings: {hero_id, week, level, army}. Level
+## 1 most weeks, 2 about one offer in ten, 3 about one in thirty. Decided with
+## the week's draw from the session, week and hero, never at hire time, so
+## repeated reads, saves, loads and a hire in the other tavern place never
+## reroll it. `week` defaults to the current tavern week.
+static func tavern_offer(session: SessionStateStoreScript.SessionData, hero_id: String, week: int = -1) -> Dictionary:
+	var hero_template := ContentService.get_hero(hero_id)
+	if session == null or hero_template.is_empty():
+		return {}
+	var offer_week := week if week >= 0 else tavern_week(session)
+	var seed_key := "%s|%s|tavern_offer|%d|%s" % [String(session.session_id), String(session.scenario_id), offer_week, hero_id]
+	var roll := _seeded_rng("%s|level" % seed_key).randi_range(0, 99)
+	var level := 1
+	if roll < TAVERN_LEVEL_THREE_PERCENT:
+		level = 3
+	elif roll < TAVERN_LEVEL_THREE_PERCENT + TAVERN_LEVEL_TWO_PERCENT:
+		level = 2
+	return {"hero_id": hero_id, "week": offer_week, "level": level, "army": starting_army_for_hero(hero_template, seed_key)}
+
+## The commander a hire of this week's `hero_id` would put in the field, for
+## the tavern card: its level's stats and specialties, movement and army.
+static func tavern_offer_preview(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
+	var offer := tavern_offer(session, hero_id)
+	if offer.is_empty():
+		return {}
+	return build_recruited_hero(ContentService.get_hero(hero_id), {}, session, int(offer.get("level", 1)), offer.get("army", {}))
+
 static func recruitable_hero_ids(session: SessionStateStoreScript.SessionData) -> Array:
 	var controlled := {}
 	if session != null:
@@ -2218,6 +2412,35 @@ static func _holder_label(session: SessionStateStoreScript.SessionData, town: Di
 		return "%s garrison" % String(ContentService.get_town(String(town.get("town_id", ""))).get("name", town.get("town_id", "Town")))
 	var hero := hero_by_id(session, holder_id)
 	return String(hero.get("name", holder_id))
+
+static func _seeded_rng(seed_key: String) -> RandomNumberGenerator:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash(seed_key)
+	return rng
+
+## The faction's base creatures of `tier`, one per town dwelling line, from
+## the town development roster (the faction unit ladder when it has none).
+static func _faction_creatures(faction_id: String, tier: int) -> Array:
+	var creatures := []
+	var rosters = ContentService.load_json(TOWN_DEVELOPMENT_PATH).get("rosters", {})
+	var roster = rosters.get(faction_id, []) if rosters is Dictionary else []
+	if roster is Array:
+		for row in roster:
+			if row is Dictionary and int(row.get("tier", 0)) == tier:
+				var unit_id := String(row.get("unit_id", ""))
+				if unit_id != "" and unit_id not in creatures and not ContentService.get_unit(unit_id).is_empty():
+					creatures.append(unit_id)
+	if creatures.is_empty():
+		for unit_id_value in ContentService.get_faction(faction_id).get("unit_ladder_ids", []):
+			var unit := ContentService.get_unit(String(unit_id_value))
+			if int(unit.get("tier", 0)) == tier:
+				creatures.append(String(unit_id_value))
+	return creatures
+
+static func _starting_company_size(rng: RandomNumberGenerator, unit_id: String, growth_share: Array) -> int:
+	var growth := maxi(1, int(ContentService.get_unit(unit_id).get("growth", 6)))
+	var low := maxi(1, ceili(growth * float(growth_share[0])))
+	return rng.randi_range(low, maxi(low, ceili(growth * float(growth_share[1]))))
 
 static func _can_afford(session: SessionStateStoreScript.SessionData, cost: Variant) -> bool:
 	var resources = session.overworld.get("resources", {})

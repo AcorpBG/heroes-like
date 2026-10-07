@@ -258,6 +258,8 @@ static func _hero_state(hero_id: String, start: Dictionary, difficulty: String) 
 	var faction_id := String(hero_template.get("faction_id", "faction_embercourt"))
 	var army_id := String(GENERATED_START_ARMY_BY_FACTION.get(faction_id, "army_emberwell_vanguard"))
 	var army_state := _army_state(ContentService.get_army_group(army_id))
+	if not HeroCommandRulesScript.army_has_troops(army_state):
+		army_state = HeroCommandRulesScript.starting_army_for_hero(hero_template, "generated_start|%s" % hero_id)
 	var hero := HeroCommandRulesScript.build_hero_from_template(hero_template, start, army_state, difficulty)
 	if not hero.is_empty():
 		hero["is_primary"] = true
