@@ -12771,8 +12771,10 @@ func validation_perform_artifact_action(action_id: String) -> Dictionary:
 
 func validation_try_progress_action() -> Dictionary:
 	var start := OverworldRules.hero_position(_session)
-	var safe_step := _first_validation_safe_step(start)
+	var safe_step := _first_validation_safe_step(start, true)
 	if safe_step.x >= 0:
+		# Map orders are explicit: the first press arms the route, the second commits it.
+		_on_map_tile_pressed(safe_step)
 		_on_map_tile_pressed(safe_step)
 		var finish := OverworldRules.hero_position(_session)
 		return {
@@ -13120,7 +13122,7 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 		"action_feedback": _validation_action_feedback(),
 	}
 
-func _first_validation_safe_step(start: Vector2i) -> Vector2i:
+func _first_validation_safe_step(start: Vector2i, stay_on_map := false) -> Vector2i:
 	for direction in DIRECTIONS:
 		var tile: Vector2i = start + direction
 		if not _tile_in_bounds(tile):
@@ -13132,6 +13134,12 @@ func _first_validation_safe_step(start: Vector2i) -> Vector2i:
 		if not OverworldRules.is_tile_explored(_session, tile.x, tile.y, LevelRules.view_level(_session)):
 			continue
 		if not _town_at(tile.x, tile.y).is_empty():
+			continue
+		# Pressing a town footprint selects (and for owned towns opens) the town,
+		# and entering a guard's engagement zone starts its battle.
+		if stay_on_map and not _town_footprint_selection(tile).is_empty():
+			continue
+		if stay_on_map and not OverworldRules.guard_engagement_encounter_at_tile(_session, tile.x, tile.y).is_empty():
 			continue
 		if not _resource_node_at(tile.x, tile.y).is_empty():
 			continue

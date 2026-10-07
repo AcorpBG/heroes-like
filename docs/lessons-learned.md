@@ -2,6 +2,8 @@
 
 Document role: durable engineering lessons for future coding-agent work.
 
+Status, 2026-10-07: the native generator reproduces H3MapEd byte for byte for the supported 24-setup release matrix, and unsupported setups fail closed (PLAN.md, `native-rmg-source-order-h3maped-alignment-10184`). The rules below apply when changing the generator core or its recovered data. Translating placed objects into original sites, art and rules after generation is runtime work, not parity work. Random-map tests written for the earlier generator were retired (`docs/rmg-test-retirement.md`).
+
 ## Native RMG Recovery Discipline
 
 Owner corrective note from the Small/Medium native RMG density investigation:

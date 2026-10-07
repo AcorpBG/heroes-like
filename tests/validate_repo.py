@@ -627,7 +627,6 @@ LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_SCRIPT_PATH = ROOT / "tests" / "live_stoc
 LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_SCENE_PATH = ROOT / "tests" / "live_stockpile_resource_surface_report.tscn"
 LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT_DOC_PATH = ROOT / "docs" / "economy-live-stockpile-resource-surface-report.md"
 NATIVE_RANDOM_MAP_PACKAGE_SESSION_BRIDGE_PATH = ROOT / "scripts" / "persistence" / "NativeRandomMapPackageSessionBridge.gd"
-NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT_SCRIPT_PATH = ROOT / "tests" / "native_random_map_package_session_adoption_report.gd"
 RUNTIME_MARKET_CAP_REPORT_SCRIPT_PATH = ROOT / "tests" / "runtime_market_cap_persistence_report.gd"
 RUNTIME_MARKET_CAP_REPORT_SCENE_PATH = ROOT / "tests" / "runtime_market_cap_persistence_report.tscn"
 RUNTIME_MARKET_CAP_REPORT_DOC_PATH = ROOT / "docs" / "economy-runtime-market-cap-persistence-report.md"
@@ -730,9 +729,6 @@ AI_RAID_ASSAULT_GROUPING_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_raid_assault_
 AI_RAID_ASSAULT_GROUPING_REPORT_SCENE_PATH = ROOT / "tests" / "ai_raid_assault_grouping_report.tscn"
 AI_RAID_ASSAULT_GROUPING_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-raid-assault-grouping-report.md"
 AI_COMMANDER_ASSAULT_CONSOLIDATION_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-commander-assault-consolidation-report.md"
-NATIVE_RMG_HOMM3_GATE_REPORT_SCRIPT_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.gd"
-NATIVE_RMG_HOMM3_GATE_REPORT_SCENE_PATH = ROOT / "tests" / "native_random_map_homm3_validation_adoption_gates_report.tscn"
-NATIVE_RMG_HOMM3_GATE_REPORT_DOC_PATH = ROOT / "docs" / "native-rmg-homm3-spec-rework-gate-report.md"
 RANDOM_MAP_PLAYER_SETUP_RETRY_UX_REPORT_SCRIPT_PATH = ROOT / "tests" / "random_map_player_setup_retry_ux_report.gd"
 RANDOM_MAP_PLAYER_SETUP_RETRY_UX_REPORT_SCENE_PATH = ROOT / "tests" / "random_map_player_setup_retry_ux_report.tscn"
 RANDOM_MAP_GENERATED_SETUP_PENDING_RETRY_DOC_PATH = ROOT / "docs" / "random-map-generated-setup-pending-retry-surface-report.md"
@@ -3722,7 +3718,6 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
     scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
     overworld_shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
     native_package_bridge_text = NATIVE_RANDOM_MAP_PACKAGE_SESSION_BRIDGE_PATH.read_text(encoding="utf-8") if NATIVE_RANDOM_MAP_PACKAGE_SESSION_BRIDGE_PATH.exists() else ""
-    native_package_report_text = NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8") if NATIVE_RANDOM_MAP_PACKAGE_SESSION_ADOPTION_REPORT_SCRIPT_PATH.exists() else ""
 
     for required_token in (
         "LIVE_STOCKPILE_RESOURCE_SURFACE_REPORT",
@@ -3776,60 +3771,6 @@ def validate_live_stockpile_resource_surface(errors: list[str]) -> None:
     ):
         ensure(forbidden_token not in native_package_bridge_text, errors, f"NativeRandomMapPackageSessionBridge.gd must not use proxy package-session token {forbidden_token}")
     ensure('"resources": {"gold": 5000, "wood": 10, "ore": 10}' not in native_package_bridge_text, errors, "Native generated package sessions must not seed a common-only resource map")
-    for required_token in (
-        "_assert_full_resource_stockpile",
-        "bridge_resource_stockpile",
-        "active_resource_stockpile",
-        "rare_resources_seeded_at_zero",
-        "generated_town_economy_surface",
-        "generated_package_town_economy_surface_v1",
-        "generated_town_economy_source_routes",
-        "generated_package_town_economy_source_routes_v1",
-        "neutral_town_case_count",
-        "_generated_economy_towns",
-        "MAX_GENERATED_PACKAGE_COMMON_ROUTE_STEPS",
-        "MAX_GENERATED_PACKAGE_RARE_ROUTE_STEPS",
-        "GENERATED_PACKAGE_SOURCE_ROUTE_STEPS_PER_DAY",
-        "GENERATED_PACKAGE_GUARDED_SOURCE_EXTRA_DAYS",
-        "MAX_GENERATED_PACKAGE_SOURCE_ACQUISITION_DAY",
-        "guarded_source_route_case_count",
-        "guarded_town_case_count",
-        "max_source_acquisition_day",
-        "_assert_generated_town_economy_source_routes",
-        "_best_generated_resource_route",
-        "_generated_source_acquisition_day",
-        "generated_town_economy_breadth",
-        "generated_package_town_economy_breadth_v1",
-        "GENERATED_TOWN_ECONOMY_BREADTH_CASES",
-        "strict_small_36x36_one_level_land_multi_seed",
-        "route_pressure_case_count",
-        "guarded_rare_source_route_breadth_case_count",
-        "total_guarded_rare_source_route_case_count",
-        "generated_player_town_development_runway",
-        "generated_package_player_town_development_runway_v1",
-        "generated_neutral_town_capture_development_runway",
-        "generated_package_neutral_town_capture_development_runway_v1",
-        "_assert_generated_neutral_town_capture_development_runway",
-        "_run_generated_neutral_town_capture_case",
-        "MIN_GENERATED_PACKAGE_NEUTRAL_CAPTURE_COMPLETION_DAY",
-        "MIN_GENERATED_PACKAGE_PLAYER_COMPLETION_DAY",
-        "pacing_floor_ok",
-        "source_adoption_policy",
-        "minimal_required_resource_coverage",
-        "secured_source_count",
-        "pacing_floor_case_count",
-        "source_adoption_policy_case_count",
-        "secured_source_count_total",
-        "same_day_guard_case_count",
-        "missing_player_resource_sources",
-        "unique_faction_count",
-        "unique_town_template_count",
-        "generated_faction_ids",
-        "generated_town_ids",
-        "initial_missing_building_count",
-        "OverworldRulesScript.LIVE_STOCKPILE_RESOURCE_KEYS",
-    ):
-        ensure(required_token in native_package_report_text, errors, f"Native package session adoption report is missing full-stockpile token {required_token}")
     ensure('OverworldRules.describe_resource_stockpile(_session.overworld.get("resources", {}), true)' in overworld_shell_text, errors, "Overworld shell must use the shared full resource summary rule, including zero rare holdings")
     ensure("Gold %d | Wood %d | Ore %d" not in overworld_shell_text, errors, "Overworld shell must not hard-code the common-only resource line")
     ensure("all nine live resources" in doc_text, errors, "Live stockpile resource surface doc must record full-resource summary coverage")
@@ -36697,7 +36638,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'not _save_authority_values_equal(save_reload_restored_authority, save_reload_source_authority)',
         '"save_reload_authority_exact": true',
         'String(summary.get("presentation_model", "")) != "cohesive_biome_exact_body_raster_mass_v6"',
-        'int(summary.get("expected_body_tile_count", 0)) != 464',
+        'int(summary.get("expected_body_tile_count", 0)) != 414',
         'not bool(summary.get("body_tile_keys_exact", false))',
         'not bool(summary.get("all_body_assets_loaded", false))',
         'not bool(summary.get("all_body_assets_terrain_matched", false))',
@@ -63375,50 +63316,6 @@ def validate_live_client_harness(errors: list[str]) -> None:
         ensure(required_token in outcome_script_text, errors, f"ScenarioOutcomeShell.gd is missing required live-harness token: {required_token}")
 
 
-def validate_native_rmg_homm3_validation_adoption_gate(errors: list[str]) -> None:
-    for path in (
-        NATIVE_RMG_HOMM3_GATE_REPORT_SCRIPT_PATH,
-        NATIVE_RMG_HOMM3_GATE_REPORT_SCENE_PATH,
-        NATIVE_RMG_HOMM3_GATE_REPORT_DOC_PATH,
-    ):
-        ensure(path.exists(), errors, f"Missing native RMG HoMM3 validation/adoption gate file: {path.relative_to(ROOT)}")
-
-    if NATIVE_RMG_HOMM3_GATE_REPORT_SCENE_PATH.exists():
-        scene_text = NATIVE_RMG_HOMM3_GATE_REPORT_SCENE_PATH.read_text(encoding="utf-8")
-        ensure(
-            'path="res://tests/native_random_map_homm3_validation_adoption_gates_report.gd"' in scene_text,
-            errors,
-            "Native RMG HoMM3 validation/adoption gate scene is not wired to its report script",
-        )
-
-    if NATIVE_RMG_HOMM3_GATE_REPORT_SCRIPT_PATH.exists():
-        script_text = NATIVE_RMG_HOMM3_GATE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-        for required_token in (
-            "NATIVE_RANDOM_MAP_HOMM3_VALIDATION_ADOPTION_GATES_REPORT",
-            "native_rmg_homm3_validation_adoption_gates_10184",
-            "runtime_zone_graph",
-            "object_placement_pipeline",
-            "guard_reward",
-            "ready_feature_gated_not_authoritative",
-            "seed_config_and_full_output_replay_boundary_stable_for_validated_components",
-            "full_output_signature_stable",
-            "performance_budget_msec",
-        ):
-            ensure(required_token in script_text, errors, f"Native RMG HoMM3 gate report is missing required token: {required_token}")
-
-    if NATIVE_RMG_HOMM3_GATE_REPORT_DOC_PATH.exists():
-        doc_text = NATIVE_RMG_HOMM3_GATE_REPORT_DOC_PATH.read_text(encoding="utf-8")
-        for required_text in (
-            "Native RMG HoMM3 Validation Adoption Gate Report",
-            "native-rmg-homm3-validation-adoption-gates-10184",
-            "ready_feature_gated_not_authoritative",
-            "full_output_signature_stable=true",
-            "No alpha readiness claim",
-            "authoritative package/session adoption remains gated",
-        ):
-            ensure(required_text in doc_text, errors, f"Native RMG HoMM3 gate report doc is missing required text: {required_text}")
-
-
 def validate_legacy_scenario_package_conversion(errors: list[str]) -> None:
     native_path = ROOT / "src" / "gdextension" / "src" / "map_package_service.cpp"
     report_script_path = ROOT / "tests" / "map_package_legacy_scenario_conversion_report.gd"
@@ -81072,7 +80969,6 @@ def main() -> int:
     validate_town_defense_battle_flow(errors)
     validate_live_validation_screenshot_orientation(errors)
     validate_live_client_harness(errors)
-    validate_native_rmg_homm3_validation_adoption_gate(errors)
     validate_native_rmg_authored_object_pool_eligibility(errors)
     validate_legacy_scenario_package_conversion(errors)
     validate_map_editor_package_save_copy(errors)

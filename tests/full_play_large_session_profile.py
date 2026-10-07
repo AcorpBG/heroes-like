@@ -6,7 +6,10 @@ import argparse
 import json
 import os
 from pathlib import Path
-import resource
+try:
+    import resource  # POSIX only; peak child memory is not reported on Windows.
+except ImportError:
+    resource = None
 import subprocess
 import tempfile
 
@@ -300,7 +303,7 @@ def main() -> int:
     markers = [line[len(MARKER):] for line in lines if line.startswith(MARKER)]
     report = json.loads(markers[-1]) if markers else {"ok": False, "failures": [line[:1000] for line in lines[-20:]]}
     report["returncode"] = result.returncode
-    report.update(reference_lookups=args.reference_lookups, reference_revision=REFERENCE, rendered=args.rendered, resolution=args.resolution, accessibility=args.accessibility, peak_child_rss_kib=resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss)
+    report.update(reference_lookups=args.reference_lookups, reference_revision=REFERENCE, rendered=args.rendered, resolution=args.resolution, accessibility=args.accessibility, peak_child_rss_kib=(resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss if resource else None))
     report["runtime_errors"] = [line for line in lines if line.startswith(("ERROR:", "SCRIPT ERROR:")) or "leaked" in line]
     if report["runtime_errors"] or result.returncode:
         report["ok"] = False

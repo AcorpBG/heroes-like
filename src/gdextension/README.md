@@ -139,18 +139,13 @@ pass `--allow-other-godot-version`. If `--release-only` is used without
 editor/headless loads the `windows.editor.x86_64` entry.
 
 Run the focused smokes manually with Godot 4.6.2 after adding it to `PATH` or
-using its executable name directly:
+using its executable name directly. Point `APPDATA` at a temporary folder first so
+the smokes cannot touch real saves or settings; the helper does this itself:
 
 ```bat
 Godot_v4.6.2-stable_win64.exe --headless --path . tests\map_package_api_skeleton_report.tscn
-Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_foundation_report.tscn
-Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_terrain_grid_report.tscn
-Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_zone_player_starts_report.tscn
-Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_road_river_report.tscn
-Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_object_placement_report.tscn
-Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_town_guard_report.tscn
-Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_validation_provenance_report.tscn
-Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_gdscript_comparison_report.tscn
+Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_homm3_re_object_table_proxy_report.tscn
+Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_rmg_end_to_end_runtime_boundary_report.tscn
 ```
 
 The underlying MSVC commands are:
@@ -226,17 +221,12 @@ Focused native load smoke:
 GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/map_package_api_skeleton_report.tscn
 ```
 
-Focused native RMG foundation smoke:
+Focused native RMG smoke (object-table translation, then generation, packages and
+sessions across the supported release matrix):
 
 ```sh
-GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_foundation_report.tscn
-GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_terrain_grid_report.tscn
-GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_zone_player_starts_report.tscn
-GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_road_river_report.tscn
-GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_object_placement_report.tscn
-GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_town_guard_report.tscn
-GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_validation_provenance_report.tscn
-GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_gdscript_comparison_report.tscn
+GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_random_map_homm3_re_object_table_proxy_report.tscn
+GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . tests/native_rmg_end_to_end_runtime_boundary_report.tscn
 ```
 
 Passing output includes:

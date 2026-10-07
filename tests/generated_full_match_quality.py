@@ -7,7 +7,10 @@ import hashlib
 import json
 import os
 from pathlib import Path
-import resource
+try:
+    import resource  # POSIX only; peak child memory is not reported on Windows.
+except ImportError:
+    resource = None
 import signal
 import subprocess
 import sys
@@ -843,7 +846,7 @@ def main(*, background_entrypoint: Path | None = None) -> int:
     errors = [line for line in lines if line.startswith(('ERROR:','SCRIPT ERROR:')) or 'leaked' in line]
     profile = out/'data/godot/app_userdata/heroes-like/debug/heroes_profile.jsonl'
     records = [json.loads(line) for line in profile.read_text().splitlines() if line.strip()] if profile.exists() else []
-    report.update(returncode=returncode, runtime_errors=errors, wall_s=monotonic()-started, peak_child_rss_kib=resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss, config=cfg, rendered=args.rendered, resolution=args.resolution, accessibility=args.accessibility, revision=revision, driver_sha256=provenance['driver_sha256'], runtime_source_tree_sha256=source_digest, launch_provenance=str(out/'launch_provenance.json'), profile_summary=summarize(records))
+    report.update(returncode=returncode, runtime_errors=errors, wall_s=monotonic()-started, peak_child_rss_kib=(resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss if resource else None), config=cfg, rendered=args.rendered, resolution=args.resolution, accessibility=args.accessibility, revision=revision, driver_sha256=provenance['driver_sha256'], runtime_source_tree_sha256=source_digest, launch_provenance=str(out/'launch_provenance.json'), profile_summary=summarize(records))
     actions = out/'actions.jsonl'
     report['army_capacity_trace'] = army_capacity_trace([json.loads(line) for line in actions.read_text().splitlines() if line.strip()] if actions.exists() else [])
     report['acceptance_failures'] = acceptance_failures(report)

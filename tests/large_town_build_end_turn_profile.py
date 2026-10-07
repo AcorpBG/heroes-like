@@ -7,7 +7,10 @@ import json
 import os
 import platform
 from pathlib import Path
-import resource
+try:
+    import resource  # POSIX only; peak child memory is not reported on Windows.
+except ImportError:
+    resource = None
 import shutil
 import subprocess
 import tempfile
@@ -309,7 +312,7 @@ def main() -> int:
             report["ok"] = False
             report["failures"].extend(measurement_errors)
         report["revision"] = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
-        report["host"] = {"platform": platform.platform(), "cpu_count": os.cpu_count(), "processor": platform.processor(), "peak_child_rss_kib": resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss}
+        report["host"] = {"platform": platform.platform(), "cpu_count": os.cpu_count(), "processor": platform.processor(), "peak_child_rss_kib": (resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss if resource else None)}
         report["detail_instrumentation"] = args.detail
         if args.compare:
             report["state_comparison"] = compare_states(output, ARTIFACTS / args.compare)

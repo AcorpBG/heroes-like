@@ -42,6 +42,10 @@ Rules:
 
 `feature-hero-hire-army-level-20261007` (completed, owner playtest fix): each weekly tavern offer fixes a level (about 10% level 2, 3% level 3, applied through `HeroProgressionRules.advance_to_level`) and a HoMM3-style starting army, deterministic per session, week and hero and shown on the tavern card. All hires go through `HeroCommandRules.build_recruited_hero`; old saves give empty-army heroes their starting army, and a won town defense keeps one creature with the hero. See `docs/hero-hire-army-level.md`.
 
+### Random-map test retirement
+
+`tests-rmg-retirement-20261007` (completed, owner-delegated test maintenance): all 104 random-map test scenes ran on Windows with isolated profiles. The 73 tests written for the generator before the 2026-06-19 state-chain rewrite (removed native API, old status and parity contracts, evidence outside the repository, approximation-era quality floors, old route and guard playtests) are retired. The 32 remaining scenes pass, and three later tests were updated to current behavior. `OverworldShell.validation_try_progress_action` now confirms its order (two-press map orders), which the live validation harness also relies on. The native build helper and README run the maintained native checks with an isolated profile. Gap: no current generated-map economy pacing check. See `docs/rmg-test-retirement.md`.
+
 ### Town market in the building popout
 
 `ux-town-market-popout-20261007` (completed, owner playtest fix): the market and magic guild popouts are their buildings' only windows: the Trade and Spells commands and every trade-for-it button open them, and the separate Town Market and spellbook dialogs are gone. The market popout is a HoMM-style desk that buys, sells and converts wood and ore directly within the weekly limits (`TownRules.market_trade_quote`), and the Marketplace and Trade Exchange now cost 3,000 and 4,500 gold only. See `docs/town-market.md`.

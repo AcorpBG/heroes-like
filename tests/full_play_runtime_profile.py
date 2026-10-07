@@ -7,7 +7,10 @@ from collections import defaultdict
 import json
 import os
 from pathlib import Path
-import resource
+try:
+    import resource  # POSIX only; peak child memory is not reported on Windows.
+except ImportError:
+    resource = None
 import signal
 import shutil
 import subprocess
@@ -85,7 +88,7 @@ def main() -> int:
         "headless": args.headless, "accessibility": args.accessibility,
         "functional_only": args.functional_only,
         "revision": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
-        "peak_child_rss_kib": resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss,
+        "peak_child_rss_kib": (resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss if resource else None),
         "live_report": str(live_path), "profile_path": str(profile_path),
         "step_count": len(live.get("steps", [])), "summary": summarize(records),
         "note": "Nested profile totals are inclusive; do not sum as wall time. Real flows use tactical orders and shipped Quick Resolve; inspect individual steps for coverage. Rendered evidence uses the explicitly recorded accessibility backend and software GPU, not hardware certification.",

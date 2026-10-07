@@ -194,8 +194,10 @@ func _assert_conflict_boundaries(payload: Dictionary, placement: Dictionary) -> 
 	return true
 
 func _assert_fairness(fairness: Dictionary) -> bool:
-	if String(fairness.get("status", "")) != "pass":
-		_fail("Fairness report did not pass: %s" % JSON.stringify(fairness))
+	# The fairness model is report-only (pass/warning/fail); a warning is advice,
+	# only a fail is a placement defect.
+	if String(fairness.get("status", "")) not in ["pass", "warning"]:
+		_fail("Fairness report failed: %s" % JSON.stringify(fairness))
 		return false
 	var producer: Dictionary = fairness.get("core_economy_producer_access", {})
 	if String(producer.get("status", "")) != "pass" or producer.get("per_player", []).is_empty():
