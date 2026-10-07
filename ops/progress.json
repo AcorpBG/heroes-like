@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "feature-water-travel-20261007",
-  "currentSliceId": "feature-water-travel-20261007",
-  "currentSliceNotes": "COMPLETED 2026-10-07. Player water travel and random-map transit translation are live. WaterTravelRules owns boats (overworld.boats, hero boat_id); OverworldRules routes walking and sailing heroes through hero_route_tile_blocked/hero_route_destination, boarding and going ashore end the day's movement, site_shipyard builds a boat at its dock for 1000 gold + 10 wood, site_whirlpool throws a sailing hero to another whirlpool for half of the weakest stack. GeneratedRewardRules maps HoMM3 boat 8, shipyard 87 and whirlpool 111 to themselves, border guard/gate/garrison/quest guard (9, 212, 33, 219, 215) to terrain-matched pay-to-open route locks that prompt before payment, drops keymaster tents (10), and reskins monoliths (43-45) and subterranean gates (103) while keeping NativeTransitRules passage. Older saves migrate once via overworld.generated_transit_translation_version. object_shipyard/object_whirlpool carry runtime status water_travel_live, which content/random_map_object_eligibility.json excludes from the generic interactable pool (exclusion water_travel_meaning_placement; pins now 464 authored / 396 eligible / 68 excluded). Validation: tests/water_travel_report.tscn 46/46; native_random_map_homm3_re_object_table_proxy_report, native_rmg_end_to_end_runtime_boundary_report, random_map_terrain_transit_semantics_report, visit_buildings_report, creature_dwellings_report, pickups_income_rules_report and town_building_panel_report pass; validate_repo findings identical to HEAD (authored-scenario and other pre-existing findings only); large_generated_map_runtime_profile, overworld_landmark_readability, overworld_visual_smoke and native_random_map_package_session_adoption fail identically on HEAD. Follow-up: AI heroes do not sail or build boats yet.",
+  "currentSlice": "ux-overworld-movement-feedback-20261007",
+  "currentSliceId": "ux-overworld-movement-feedback-20261007",
+  "currentSliceNotes": "COMPLETED 2026-10-07. Owner playtest: the hero portrait bar kept stale movement after map moves, and attack orders opened the battle instantly. Rules were already correct; the shell's route-only refresh now updates each portrait button's movement/mana meters in place (no roster rebuild) and drains the bar per tile during the walk, and battle routes play the walk with an order blocker before opening the battle on arrival (Escape/Enter skips; out-of-range attacks stop short with no battle). Headless automation keeps the instant handoff unless a report enables the march. Validation: overworld_movement_feedback_report 48/48 (failed 8 checks on the old code), movement/encounter/route regressions unchanged, validate_repo unchanged. Follow-ups: town fallback entry and chest reward dialogs still skip the walk; the attack target is not remembered across End Turn.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Water travel (boats, shipyards, whirlpools) and pay-to-open random-map gates",
-  "currentSliceUpdatedAt": "2026-10-07T18:00:00Z",
+  "currentSliceTitle": "Portrait bar movement refresh and walked attack orders",
+  "currentSliceUpdatedAt": "2026-10-07T19:05:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -114085,6 +114085,32 @@
         "docs/water-travel.md"
       ],
       "notes": "Player water travel and random-map transit translation are live. WaterTravelRules owns boats (overworld.boats, hero boat_id); OverworldRules routes walking and sailing heroes through hero_route_tile_blocked/hero_route_destination, boarding and going ashore end the day's movement, site_shipyard builds a boat at its dock for 1000 gold + 10 wood, site_whirlpool throws a sailing hero to another whirlpool for half of the weakest stack. GeneratedRewardRules maps HoMM3 boat 8, shipyard 87 and whirlpool 111 to themselves, border guard/gate/garrison/quest guard (9, 212, 33, 219, 215) to terrain-matched pay-to-open route locks that prompt before payment, drops keymaster tents (10), and reskins monoliths (43-45) and subterranean gates (103) while keeping NativeTransitRules passage. Older saves migrate once via overworld.generated_transit_translation_version. object_shipyard/object_whirlpool carry runtime status water_travel_live, which content/random_map_object_eligibility.json excludes from the generic interactable pool (exclusion water_travel_meaning_placement; pins now 464 authored / 396 eligible / 68 excluded). Validation: tests/water_travel_report.tscn 46/46; native_random_map_homm3_re_object_table_proxy_report, native_rmg_end_to_end_runtime_boundary_report, random_map_terrain_transit_semantics_report, visit_buildings_report, creature_dwellings_report, pickups_income_rules_report and town_building_panel_report pass; validate_repo findings identical to HEAD (authored-scenario and other pre-existing findings only); large_generated_map_runtime_profile, overworld_landmark_readability, overworld_visual_smoke and native_random_map_package_session_adoption fail identically on HEAD. Follow-up: AI heroes do not sail or build boats yet."
+    },
+    {
+      "id": "ux-hero-exchange-screen-20261007",
+      "title": "HoMM-style hero meeting screen replaces the rendezvous drop-down",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/hero-exchange-screen.md"
+      ],
+      "notes": "Owner playtest: overworld hero trading was a drop-down text menu. scenes/overworld/HeroExchangeScreen.gd (+HeroExchangeSlot.gd) opens when heroes meet (walk-on, Meet context action, Command drawer button): two heroes facing each other with portrait, level, stats, 7 army slots, equipment slots, paged backpack and teachable spells. Click or drag to move/merge/swap, Shift or Split for an amount slider, move-all troops/artifacts both ways, slot-type-aware artifact handoff, spell teaching; a hero never drops to zero creatures (move-all keeps one creature of the lowest-tier stack). Orders go through OverworldRules.perform_rendezvous_action into new HeroCommandRules slot-precise functions (move_all_field_troops, place_field_artifact, move_all_field_artifacts, field_exchange_state) and ArtifactRules.equip_artifact_in_slot. Validation: hero_exchange_screen_report plus the three hero_field_rendezvous reports pass; validate_repo unchanged. Follow-up: reuse the screen for two heroes in the same town."
+    },
+    {
+      "id": "ux-overworld-movement-feedback-20261007",
+      "title": "Portrait bar movement refresh and walked attack orders",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/overworld-movement-feedback.md"
+      ],
+      "notes": "Owner playtest: the hero portrait bar kept stale movement after map moves, and attack orders opened the battle instantly. Rules were already correct; the shell's route-only refresh now updates each portrait button's movement/mana meters in place (no roster rebuild) and drains the bar per tile during the walk, and battle routes play the walk with an order blocker before opening the battle on arrival (Escape/Enter skips; out-of-range attacks stop short with no battle). Headless automation keeps the instant handoff unless a report enables the march. Validation: overworld_movement_feedback_report 48/48 (failed 8 checks on the old code), movement/encounter/route regressions unchanged, validate_repo unchanged. Follow-ups: town fallback entry and chest reward dialogs still skip the walk; the attack target is not remembered across End Turn."
     }
   ],
   "project": "heroes-like",
@@ -114744,7 +114770,7 @@
   ],
   "summary": "Owner-directed overworld actor readability completed: 112 original generated hero/creature sprites, full-size town visitors, painted-bound scale and cached alpha-edge contrast. Source/Linux/Windows visual/runtime acceptance, Large travel/AI/fog, existing reports, full repository and official exports/parity pass; 3.255 GB disposable outputs cleaned. Prior generated-world quality work remains completed; gameplay/native generation and save schema are unchanged. Broader production/release limits remain in project.md.",
   "taskId": "10236",
-  "updatedAt": "2026-10-07T18:00:00Z",
+  "updatedAt": "2026-10-07T19:05:00Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",
