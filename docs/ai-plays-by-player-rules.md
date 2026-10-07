@@ -70,7 +70,7 @@ Searches use flat byte masks per level: static blocking and site stops are built
 
 ## Known gaps
 
-- Heroes stay on their map level: native two-level transit is not used yet. Boats are not used (water is impassable for everyone for now).
+- Heroes stay on their map level: native two-level transit is not used yet. AI heroes do not use boats, shipyards or whirlpools yet; water stays impassable for them even though the human can sail (`docs/water-travel.md`).
 - Heroes do not plan around scenario objectives; they only value what is on the map.
 - The legacy raid director code and its unit-level tests remain in `EnemyAdventureRules`/`EnemyTurnRules`; nothing live calls them. Removing them is a follow-up.
 - `HeadlessSimulationHarnessRules` cases that still describe raid behavior (town-defense and resource-defense retasks, regroup and retreat, multi-scenario pressure coverage and objective targeting) failed before this change and still fail; they need rewriting for heroes.

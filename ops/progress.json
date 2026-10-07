@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-rare-resources-fully-tradeable-20261007",
-  "currentSliceId": "content-rare-resources-fully-tradeable-20261007",
-  "currentSliceNotes": "COMPLETED 2026-10-07. Owner decision 2026-10-07: rare resources become fully tradeable, HoMM3-style. The Marketplace and Trade Exchange buy, sell and convert every stockpile resource (gold, wood, ore, six rares), any for any other, in a wrapped give/get tile grid without scrolling. Rares are valued at twice wood/ore from EnemyTurnRules._resource_value (mirrored by OverworldRules.MARKET_RESOURCE_VALUES, checked equal by the report): Marketplace 720/290 wood-ore and 1,440/580 rare buy/sell, Trade Exchange 590/380 and 1,180/760, local abundance kept; conversion stays mid-over-sell so direct conversion beats sell-then-buy and no buy/sell/convert cycle profits. Weekly caps (bought/sold): wood/ore 6/8 Marketplace, 8/10 Trade Exchange; each rare 2/3 and 5/5. The old Trade Exchange rare import (town's two rares, 1,200 gold, 5 a week) is folded into the normal buy path; saved import counters carry over. AI rare buying reads the new rare_resources list. Validation: town_market_popout_report (live rare buy/sell/convert and caps in six towns), town_rare_import_regression (330), town development 688, hero review 80, building panel, construction, hero hire and AI economy reports pass; validate_repo unchanged with rare-market pins updated to the owner direction. Gap: no faction has local abundance on its own rare yet.",
+  "currentSlice": "ai-plays-by-player-rules-20261007",
+  "currentSliceId": "ai-plays-by-player-rules-20261007",
+  "currentSliceNotes": "COMPLETED 2026-10-07. Owner playtest: enemy 'raids' felt wrong and the AI was weak (no mines, no town growth, ignored guards). EnemyTurnRules.run_enemy_turn now calls the new AiHeroRules.run_faction_turn for every computer player. AI heroes (encounter entries with an ai_hero block, real troops) move with the human's movement points and pathing, know only what their fog-honest explored map shows, and pick errands by utility (pickups, mines, dwellings, visit buildings, artifacts, guards, neutral and human towns, human heroes in sight, own towns, exploration). Guards and rival AI heroes are fought with the human's auto-resolve after a scratch-session preview (go only on a win keeping half strength; skipped at a 3x margin, preview reused for the fight); guard zones work as for the human. Lesser heroes hand troops to the main hero and ferry garrisons. Towns build a Tavern while heroes are needed, hire through HeroCommandRules.tavern_offer + build_recruited_hero, recruit and build at real cost, and trade at the human's market quotes (all resources, weekly caps). No pillage, abstract siege or pressure spawns; 'raid' wording is gone. Saves migrate raid hosts to heroes once (overworld.ai_heroes_version = 1); commanderless columns join a nearby hero or a town garrison. Large map end turn rules part 1782 ms -> 903 ms; homm3_large 3 AIs 21 days: 0.4-1.6 s typical, 4.2 s worst. Validation: ai_player_rules_report (16-day skirmish: mines, guards, real costs, market quotes, no raids, migration, save round trip), raid-model AI scenes and passing harness cases converted to heroes, 48 baseline scenes unchanged, validate_repo unchanged. Follow-ups: AI two-level transit and boats; scenario objectives; remove the unused legacy raid director code; rewrite the raid-era harness cases that already failed; Border Warden pillage bonus and DifficultyRules raid/pressure knobs are inert; a hero in a town doorway blocks hiring there.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Rare resources fully tradeable at every town market",
-  "currentSliceUpdatedAt": "2026-10-07T21:30:00Z",
+  "currentSliceTitle": "Computer players act through real heroes and towns under the human's rules",
+  "currentSliceUpdatedAt": "2026-10-07T23:00:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -114154,6 +114154,19 @@
         "docs/common-town-building-template.md"
       ],
       "notes": "Owner decision 2026-10-07: rare resources become fully tradeable, HoMM3-style. The Marketplace and Trade Exchange buy, sell and convert every stockpile resource (gold, wood, ore, six rares), any for any other, in a wrapped give/get tile grid without scrolling. Rares are valued at twice wood/ore from EnemyTurnRules._resource_value (mirrored by OverworldRules.MARKET_RESOURCE_VALUES, checked equal by the report): Marketplace 720/290 wood-ore and 1,440/580 rare buy/sell, Trade Exchange 590/380 and 1,180/760, local abundance kept; conversion stays mid-over-sell so direct conversion beats sell-then-buy and no buy/sell/convert cycle profits. Weekly caps (bought/sold): wood/ore 6/8 Marketplace, 8/10 Trade Exchange; each rare 2/3 and 5/5. The old Trade Exchange rare import (town's two rares, 1,200 gold, 5 a week) is folded into the normal buy path; saved import counters carry over. AI rare buying reads the new rare_resources list. Validation: town_market_popout_report (live rare buy/sell/convert and caps in six towns), town_rare_import_regression (330), town development 688, hero review 80, building panel, construction, hero hire and AI economy reports pass; validate_repo unchanged with rare-market pins updated to the owner direction. Gap: no faction has local abundance on its own rare yet."
+    },
+    {
+      "id": "ai-plays-by-player-rules-20261007",
+      "title": "Computer players act through real heroes and towns under the human's rules",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ai_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Owner playtest: enemy 'raids' felt wrong and the AI was weak (no mines, no town growth, ignored guards). EnemyTurnRules.run_enemy_turn now calls the new AiHeroRules.run_faction_turn for every computer player. AI heroes (encounter entries with an ai_hero block, real troops) move with the human's movement points and pathing, know only what their fog-honest explored map shows, and pick errands by utility (pickups, mines, dwellings, visit buildings, artifacts, guards, neutral and human towns, human heroes in sight, own towns, exploration). Guards and rival AI heroes are fought with the human's auto-resolve after a scratch-session preview (go only on a win keeping half strength; skipped at a 3x margin, preview reused for the fight); guard zones work as for the human. Lesser heroes hand troops to the main hero and ferry garrisons. Towns build a Tavern while heroes are needed, hire through HeroCommandRules.tavern_offer + build_recruited_hero, recruit and build at real cost, and trade at the human's market quotes (all resources, weekly caps). No pillage, abstract siege or pressure spawns; 'raid' wording is gone. Saves migrate raid hosts to heroes once (overworld.ai_heroes_version = 1); commanderless columns join a nearby hero or a town garrison. Large map end turn rules part 1782 ms -> 903 ms; homm3_large 3 AIs 21 days: 0.4-1.6 s typical, 4.2 s worst. Validation: ai_player_rules_report (16-day skirmish: mines, guards, real costs, market quotes, no raids, migration, save round trip), raid-model AI scenes and passing harness cases converted to heroes, 48 baseline scenes unchanged, validate_repo unchanged. Follow-ups: AI two-level transit and boats; scenario objectives; remove the unused legacy raid director code; rewrite the raid-era harness cases that already failed; Border Warden pillage bonus and DifficultyRules raid/pressure knobs are inert; a hero in a town doorway blocks hiring there."
     }
   ],
   "project": "heroes-like",
@@ -114813,7 +114826,7 @@
   ],
   "summary": "Owner-directed overworld actor readability completed: 112 original generated hero/creature sprites, full-size town visitors, painted-bound scale and cached alpha-edge contrast. Source/Linux/Windows visual/runtime acceptance, Large travel/AI/fog, existing reports, full repository and official exports/parity pass; 3.255 GB disposable outputs cleaned. Prior generated-world quality work remains completed; gameplay/native generation and save schema are unchanged. Broader production/release limits remain in project.md.",
   "taskId": "10236",
-  "updatedAt": "2026-10-07T21:30:00Z",
+  "updatedAt": "2026-10-07T23:00:00Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",

@@ -50,6 +50,10 @@ Rules:
 
 `content-rare-resources-fully-tradeable-20261007` (completed, owner playtest fix): owner decision: every town market buys, sells and converts every stockpile resource, any for any other, with rares at twice the wood/ore value and better rates at the Trade Exchange. Weekly caps stay as the anti-exploit guard (rares 2/3 bought/sold at a Marketplace, 5/5 at a Trade Exchange), the old rare import folds into normal buying, and no trade cycle turns a profit. See `docs/town-market.md`.
 
+### AI plays by player rules
+
+`ai-plays-by-player-rules-20261007` (completed, owner playtest fix): computer players act only through real heroes and towns under the human's rules (`AiHeroRules`): daily movement, fog-honest knowledge, utility-chosen errands (mines, sites, guards, towns, human heroes), auto-resolve fights checked with a preview, troop hand-overs to the main hero, and towns that hire, recruit, build and trade at the human's prices. Raids are gone and old saves migrate raid hosts to heroes once. Follow-ups: AI boats and level transit, scenario objectives, removing the unused raid director code. See `docs/ai-plays-by-player-rules.md`.
+
 ### Water travel and transit objects
 
 `feature-water-travel-20261007` (completed for the player, owner direction): HoMM3-style boats. Walking onto a free boat boards it and stepping onto open shore leaves it, each ending the day's movement; sailing heroes move only on water and visit water sites. Neutral shipyards build a boat at their dock for 1,000 gold and 10 wood; whirlpools throw a boat out at another whirlpool for half of the weakest stack. Random maps translate HoMM3 transit objects by meaning instead of a random transit pick: boats, shipyards and whirlpools become themselves, border guards, gates, garrisons and quest guards become terrain-matched pay-to-open gates, keymaster's tents are left off, and portals and subterranean gates keep their passage with matching art. Shipyards and whirlpools are never used as stand-ins for other HoMM3 sites. Gates ask before taking payment, and older saves are migrated once. Follow-up: AI heroes do not sail yet. See `docs/water-travel.md`.
