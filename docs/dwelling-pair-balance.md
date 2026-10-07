@@ -8,7 +8,7 @@ Every faction town offers two exclusive dwelling lines at tiers I–V, and each 
 
 - Two melee lines (or two ranged lines) at the same tier split into a **tank** (more defense and health, less attack and top damage) and a **striker** (more attack and top damage, less defense), and trade evenly per gold.
 - When one line shoots and the other fights in melee, the melee line is always the bulkier one (health weighted by defense). The shooter keeps a head-on edge per gold, because a duel cannot credit the melee line for screening, blocking and closing on shooters in a real army.
-- An upgrade stays at least as strong as its base on every stat and costs at least 20% more gold.
+- An upgrade stays at least as strong as its base on every stat and costs at least 20% more gold. It always gains health and at least one of attack, defense or damage; tank upgrades such as Ledgerwall Porters and Kilnwall Wardens gain defense instead of attack by design. `tests/town_development_regression.py` checks this for all 72 upgrades.
 
 Tiers VI and VII are single dwellings and neutral units are not part of this pass.
 

@@ -21,7 +21,13 @@ def inspect_content():
         for r in roster:
             base, veteran = units[r['unit_id']], units[r['upgraded_unit_id']]
             assert veteran['upgrade_from'] == base['id']
-            assert veteran['hp'] > base['hp'] and veteran['attack'] > base['attack']
+            # An upgrade is never worse and always gains: more health, no battle
+            # stat below its base, and a higher attack, defense or damage. Tank
+            # upgrades such as Ledgerwall Porters gain defense instead of attack.
+            assert veteran['hp'] > base['hp'], veteran['id']
+            for stat in ('attack', 'defense', 'min_damage', 'max_damage', 'speed', 'initiative'):
+                assert veteran.get(stat, 0) >= base.get(stat, 0), (veteran['id'], stat)
+            assert any(veteran[stat] > base[stat] for stat in ('attack', 'defense', 'min_damage', 'max_damage')), veteran['id']
             assert veteran['id'] in art and veteran['id'] in animation
             assert buildings[r['upgrade_building_id']]['upgrade_from'] == r['building_id']
         assert all(not buildings[b].get('retired_from_town_tree') for b in town['buildable_building_ids'])
