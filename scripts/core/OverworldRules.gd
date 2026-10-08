@@ -6263,10 +6263,11 @@ static func controlled_resource_site_income(
 	var income := _empty_live_resource_stockpile()
 	var resolved_income_day := int(session.day) if income_day < 0 else income_day
 	for node in session.overworld.get("resource_nodes", []):
-		if not (node is Dictionary):
+		# The resource bar asks every refresh: skip unowned sites before the content lookup.
+		if not (node is Dictionary) or not _resource_node_matches_controller(node, controller_id):
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-		if not _resource_site_is_persistent(site) or not _resource_node_matches_controller(node, controller_id):
+		if not _resource_site_is_persistent(site):
 			continue
 		income = _add_resource_sets(income, _resource_site_control_income_for_day(site, resolved_income_day))
 	return income
@@ -6279,6 +6280,13 @@ static func _resource_site_control_income_for_day(site: Dictionary, day: int) ->
 
 static func _resource_site_income_cadence_label(site: Dictionary) -> String:
 	return "Weekly" if String(site.get("control_income_cadence", "daily")) == "weekly" else "Daily"
+
+## Resources the player receives at the next daybreak: the same projection as
+## the end-turn income forecast (towns, hero artifacts/specialties, sites).
+static func player_daily_income(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null:
+		return _empty_live_resource_stockpile()
+	return _player_daily_income_projection(session, int(session.day) + 1)
 
 static func _player_daily_income_projection(
 	session: SessionStateStoreScript.SessionData,

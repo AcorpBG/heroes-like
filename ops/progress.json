@@ -114350,6 +114350,18 @@
         "docs/generated-object-placement-scan.md"
       ],
       "notes": "Owner go-ahead on scan findings 1 and 4. (1) OverworldMapView._resource_flank_rock_tiles/_draw_resource_flank_rocks: package block tiles of a generated site that its painted art (or mine art) does not reach get a terrain rock from native_scenery rock_contact_palettes with the base ground tint; never the entrance, none for an opened route body; presentation only. (4) OverworldRules.resource_node_is_present keeps a collected one-time node present when its map object's interaction.remains_after_visit is true: looted guarded banks keep blocking with secured art, opened route camps (block tiles already cleared) stay visible and passable, pickups are still taken; AiHeroRules clears the pre-claim static body when a claim opens or removes a site. Validation, focused per owner (no full rescan): new tests/generated_site_footprint_dressing_report (custom yard on a generated small map with only the affected objects; 74 checks windowed incl. per-object render/remove pixel checks that every blocked tile shows art or a rock), overworld_object_footprint_alignment_report passes, validate_repo identical (828). ai_player_rules_report not rerun."
+    },
+    {
+      "id": "ux-resource-bar-daily-income-20261008",
+      "title": "Resource bar shows each resource's daily income",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md"
+      ],
+      "notes": "Owner request: show the daily income for each resource in the resource bar, separated by a + sign. ResourceStockpileMenu.sync_stockpile takes an optional daily_income; each inline cell shows the amount then a signed income label (green gain, red loss, muted +0), popup rows read 'Gold  5000  +500' and tooltips 'Gold: 5000 (+500 per day)'; validation_snapshot exposes daily_income. OverworldShell and TownShell feed OverworldRules.player_daily_income (new public wrapper over the end-turn forecast projection _player_daily_income_projection for day+1: towns at daybreak, hero artifacts/specialties, controlled sites, difficulty scaling). controlled_resource_site_income now checks the controller before the content lookup (same result; the bar asks on every refresh). Cost on a generated extra-large map: 0.9 ms on day 1, 1.7 ms with 4 towns/60 sites, 6.7 ms owning all 16 towns/952 sites, against a 225 ms route-preview refresh there. Validation: new tests/resource_bar_daily_income_report (generated small map, two flagged wood/ore sites: overworld and town bars show the rules income, labels and tooltips, next end_turn pays exactly the shown income; 106 checks) passes; windowed captures at 1920x1080 and 1280x720 (overworld) and town 1920x1080 show no clipping; town_garrison_rows, overworld_object_footprint_alignment and site_recruit_overflow reports pass; validate_repo identical to baseline (884 in this checkout). Pinned popup/tooltip format updated in validate_repo, resource_stockpile_icon_popover_runtime_report (River Pass setup, not run) and the Linux-only overworld_stockpile_text_fit_regression (not run here: needs xvfb and a saved match)."
     }
   ],
   "project": "heroes-like",

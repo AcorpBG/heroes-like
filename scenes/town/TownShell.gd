@@ -1444,7 +1444,8 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	_resource_label.sync_stockpile(
 		_session.overworld.get("resources", {}),
 		String(view_state.get("resources_text", "")),
-		String(view_state.get("resources_tooltip_text", ""))
+		String(view_state.get("resources_tooltip_text", "")),
+		OverworldRules.player_daily_income(_session)
 	)
 	_last_economy_readability_surface = _duplicate_dictionary(view_state.get("economy_readability_surface", {}))
 	_last_rendered_build_actions = _duplicate_action_array(view_state.get("build_actions", []))

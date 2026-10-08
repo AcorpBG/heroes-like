@@ -170,14 +170,16 @@ func _menu_contract(snapshot: Dictionary, resources: Variant) -> Dictionary:
 		var definition: Dictionary = OverworldRules.resource_definition(resource_id)
 		var display_name: String = String(definition.get("display_name", ""))
 		var amount: int = int((resources as Dictionary).get(resource_id, 0)) if resources is Dictionary else 0
+		var daily: int = int(row.get("daily_income", 0))
 		var expected_icon_path: String = OverworldRules.resource_icon_path(resource_id)
 		var texture: Texture2D = load(expected_icon_path) as Texture2D
 		exact = exact and (
 			String(row.get("resource_id", "")) == resource_id
 			and String(row.get("display_name", "")) == display_name
 			and int(row.get("amount", -1)) == amount
-			and String(row.get("text", "")) == "%s  %d" % [display_name, amount]
-			and String(row.get("tooltip", "")) == "%s: %d" % [display_name, amount]
+			and daily == int((snapshot.get("daily_income", {}) as Dictionary).get(resource_id, 0))
+			and String(row.get("text", "")) == "%s  %d  %+d" % [display_name, amount, daily]
+			and String(row.get("tooltip", "")) == "%s: %d (%+d per day)" % [display_name, amount, daily]
 			and bool(row.get("disabled", false))
 			and bool(row.get("icon_loaded", false))
 			and String(row.get("icon_path", "")) == expected_icon_path

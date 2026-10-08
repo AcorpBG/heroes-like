@@ -94,6 +94,10 @@ Rules:
 
 `ux-generated-site-footprint-dressing-20261008` (completed, owner go-ahead after the scan): blocked tiles a generated site's art leaves bare get a small terrain rock, so they no longer look walkable; claimed one-time sites whose object remains after its visit (looted guarded banks, opened route camps) stay on the map with their secured art instead of vanishing. Focused check: `tests/generated_site_footprint_dressing_report.tscn`.
 
+### Resource bar daily income
+
+`ux-resource-bar-daily-income-20261008` (completed, owner request): the resource bar on the overworld and in town shows each resource's daily income after its amount ("5000 +500"; green for a gain, muted "+0"), and its tooltips and popup say "+N per day". The figure is the end-turn income forecast (`OverworldRules.player_daily_income`), so it is exactly what the next daybreak pays. `tests/resource_bar_daily_income_report.tscn` checks both bars and the payout on a generated map.
+
 ### Full-army site claims
 
 `gameplay-site-recruit-overflow-20261008` (completed, owner playtest fix): a full army no longer blocks claiming a site that grants troops (Glassbound Eyrie, Railblock Camp and 66 others). The site is claimed and pays out; troops that fit join, and a dialog offers to dismiss a stack for the rest or leave them behind. AI heroes claim the same way and keep what fits. Free reward gates ask to Claim instead of "Pay nothing". See `docs/site-recruit-overflow.md`.
