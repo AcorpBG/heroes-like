@@ -49,7 +49,12 @@ func _river_pass_live_heroes_take_player_sites() -> Dictionary:
 	var signal_post_before := _resource_controller(session, "river_signal_post")
 	var encounters: Array = session.overworld.get("encounters", [])
 	encounters.append(_strong_raid_seed(session, config, "hero_vaska", "live_turn_vaska_free_company", {"x": 0, "y": 4}))
-	encounters.append(_strong_raid_seed(session, config, "hero_sable", "live_turn_sable_signal_post", {"x": 2, "y": 3}))
+	# Sable is the more experienced commander, so it leads the main army and
+	# acts last (AiHeroRules._main_hero_id): Vaska takes the site it stands on
+	# first, then Sable the other.
+	var sable_seed := _strong_raid_seed(session, config, "hero_sable", "live_turn_sable_signal_post", {"x": 2, "y": 3})
+	sable_seed["enemy_commander_state"]["experience"] = maxi(int(sable_seed["enemy_commander_state"].get("experience", 0)), 1000)
+	encounters.append(sable_seed)
 	session.overworld["encounters"] = encounters
 	_load_as_old_save(session)
 	_assert_ai_hero(_encounter(session, "live_turn_vaska_free_company"), "Vaska")
@@ -93,15 +98,22 @@ func _river_pass_live_heroes_take_player_sites() -> Dictionary:
 		return {}
 	var vaska_progress_after := _commander_progress_snapshot(session, "hero_vaska")
 	var sable_progress_after := _commander_progress_snapshot(session, "hero_sable")
-	_assert_progression(vaska_progress_before, vaska_progress_after, EnemyAdventureRules.COMMANDER_OUTCOME_RESOURCE_SECURED, "Vaska")
-	_assert_progression(sable_progress_before, sable_progress_after, EnemyAdventureRules.COMMANDER_OUTCOME_RESOURCE_SECURED, "Sable")
+	# Whoever seized a held site records the success. The heroes divide the
+	# sites by their own choices: the lesser hero acts first and may take both.
+	var before_by_hero := {"hero_vaska": vaska_progress_before, "hero_sable": sable_progress_before}
+	var claimers := _site_claimers(result.get("events", []), ["river_free_company", "river_signal_post"])
+	if claimers.is_empty():
+		_fail("No hero recorded seizing the held sites: %s" % JSON.stringify(result.get("events", [])).left(1500))
+		return {}
+	for roster_hero_id in claimers:
+		_assert_progression(before_by_hero[roster_hero_id], _commander_progress_snapshot(session, roster_hero_id), EnemyAdventureRules.COMMANDER_OUTCOME_RESOURCE_SECURED, roster_hero_id)
 	if _failed:
 		return {}
 	EnemyTurnRules.normalize_enemy_states(session)
 	var vaska_progress_normalized := _commander_progress_snapshot(session, "hero_vaska")
 	var sable_progress_normalized := _commander_progress_snapshot(session, "hero_sable")
-	_assert_progression(vaska_progress_before, vaska_progress_normalized, EnemyAdventureRules.COMMANDER_OUTCOME_RESOURCE_SECURED, "normalized Vaska")
-	_assert_progression(sable_progress_before, sable_progress_normalized, EnemyAdventureRules.COMMANDER_OUTCOME_RESOURCE_SECURED, "normalized Sable")
+	for roster_hero_id in claimers:
+		_assert_progression(before_by_hero[roster_hero_id], _commander_progress_snapshot(session, roster_hero_id), EnemyAdventureRules.COMMANDER_OUTCOME_RESOURCE_SECURED, "normalized %s" % roster_hero_id)
 	if _failed:
 		return {}
 	var public_log := EnemyAdventureRules.ai_public_event_log_boundary_report(result.get("events", []), 8)
@@ -123,6 +135,7 @@ func _river_pass_live_heroes_take_player_sites() -> Dictionary:
 		"sable_progress_before": sable_progress_before,
 		"sable_progress_after": sable_progress_after,
 		"sable_progress_normalized": sable_progress_normalized,
+		"site_claimers": claimers,
 		"public_event_count": int(public_log.get("public_event_count", 0)),
 		"save_version": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -165,16 +178,25 @@ func _river_pass_heroes_spend_movement_points() -> Dictionary:
 		"tiles_moved": moved,
 	}
 
+## So are the supply caches authored scenarios add beside computer towns
+## (ScenarioFactory development source support): a hero values one far above
+## the held sites.
 func _clear_loose_rewards(session) -> void:
 	for artifact in session.overworld.get("artifact_nodes", []):
 		if artifact is Dictionary:
 			artifact["collected"] = true
+	var kept := []
 	for node in session.overworld.get("resource_nodes", []):
+		if node is Dictionary and bool(node.get("development_source_support", false)):
+			continue
+		kept.append(node)
 		if not (node is Dictionary) or bool(node.get("collected", false)):
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		if not bool(site.get("persistent_control", false)):
 			node["collected"] = true
+	session.overworld["resource_nodes"] = kept
+	OverworldRules.invalidate_spatial_lookup(session)
 
 func _load_as_old_save(session) -> void:
 	session.overworld.erase("ai_heroes_version")
@@ -376,6 +398,18 @@ func _assert_site_route_closure_event(events: Variant, target_id: String, expect
 
 ## Claiming a site counts as a strategic success. Experience comes from battles
 ## and from what the site grants, as for the human, not from the errand.
+## Roster heroes whose AI heroes seized one of these sites this turn.
+func _site_claimers(events: Variant, site_ids: Array) -> Array:
+	var roster_by_placement := {"live_turn_vaska_free_company": "hero_vaska", "live_turn_sable_signal_post": "hero_sable"}
+	var claimers := []
+	if events is Array:
+		for event in events:
+			if event is Dictionary and String(event.get("event_type", "")) == "ai_site_seized" and String(event.get("target_id", "")) in site_ids:
+				var roster_hero_id := String(roster_by_placement.get(String(event.get("actor_id", "")), ""))
+				if roster_hero_id != "" and roster_hero_id not in claimers:
+					claimers.append(roster_hero_id)
+	return claimers
+
 func _assert_progression(before: Dictionary, after: Dictionary, expected_outcome: String, label: String) -> void:
 	if after.is_empty():
 		_fail("%s commander progression snapshot is empty." % label)

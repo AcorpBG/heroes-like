@@ -8916,7 +8916,10 @@ static func _encounter_army_unit_summary(army: Dictionary) -> String:
 
 static func _encounter_reward_surface(encounter: Dictionary) -> String:
 	var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
-	var reward_summary := _describe_reward_delta(encounter_def.get("rewards", {}))
+	# What beating this army pays, by its strength (BattleRules.battle_rewards_for_strength).
+	var commander: Variant = encounter.get("enemy_commander_state", encounter_def.get("enemy_commander", {}))
+	var rewards: Dictionary = _battle_rules().battle_rewards_for_strength(encounter_def, _encounter_army_payload(encounter).get("stacks", []), commander)
+	var reward_summary := _describe_reward_delta(rewards)
 	if reward_summary != "":
 		return reward_summary
 	var metadata := _encounter_neutral_metadata(encounter)

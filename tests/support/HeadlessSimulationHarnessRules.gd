@@ -98,6 +98,8 @@ const STRATEGIC_AI_BASELINE_CAPABILITIES := {
 const STRATEGIC_AI_BASELINE_RMG_TURN_COUNT := 3
 ## Days the live town-governor case plays: build, then buy the new troops.
 const LIVE_TOWN_GOVERNOR_TURNS := 3
+## Experience that makes a fixture's host commander its faction's main hero.
+const RECRUITMENT_HOST_EXPERIENCE := 5000
 ## What a computer player's heroes visibly get done on the map.
 const AI_HERO_OBJECTIVE_EVENT_TYPES := ["ai_site_seized", "ai_artifact_secured", "ai_guard_defeated", "ai_town_captured"]
 const STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET := 100
@@ -2514,9 +2516,11 @@ static func _strategic_ai_live_town_governor_build_execution(input_config: Dicti
 	if _town_by_placement(session, town_id).is_empty():
 		failures.append("Missing town %s for live town-governor fixture." % town_id)
 	# Computer players build and recruit by the player's rules. The town
-	# already has its Tavern, so a day's build goes to the best-value building;
-	# troops a new dwelling adds are bought the following day.
+	# already has its Tavern, so a day's build goes to the best-value building
+	# (often its Marketplace or a hall first); a week's tier-1 troops wait in
+	# its dwellings, so it recruits whatever it builds.
 	_ensure_town_building(session, town_id, HeroCommandRules.HALL_BUILDING_ID, failures)
+	_seed_town_recruits(session, town_id, faction_id)
 	var town_before := _town_by_placement(session, town_id)
 	var treasury_before := _resource_pool(state.get("treasury", {})) if not state.is_empty() else _resource_pool({})
 	var built_before := _town_building_ids(town_before)
@@ -3226,6 +3230,7 @@ static func _strategic_ai_multi_scenario_recruitment_delivery(input_config: Dict
 			_set_player_position(session, {"x": 0, "y": 12})
 			_set_resource_controller(session, target_id, "player", failures)
 			_prepare_recruitment_delivery_town(session, town_id, faction_id, unit_id, recruit_count, failures)
+			_clear_loose_map_rewards(session)
 			var raid_id := "headless_multi_recruitment_%s_%s" % [scenario_id.replace("-", "_"), faction_id.replace("faction_", "")]
 			# The host standing at the town gate loads as a hero; the town
 			# recruits into its garrison and the faction's main hero marches the
@@ -4519,6 +4524,16 @@ static func _set_player_position(session: SessionStateStoreScript.SessionData, p
 				player_heroes[index]["position"] = session.overworld["hero_position"].duplicate(true)
 		session.overworld["player_heroes"] = player_heroes
 
+static func _seed_town_recruits(session: SessionStateStoreScript.SessionData, placement_id: String, faction_id: String) -> void:
+	var unit_id := _first_recruit_unit_id_for_faction(faction_id)
+	if unit_id == "":
+		return
+	for town in session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
+			var recruits: Dictionary = town.get("available_recruits", {}) if town.get("available_recruits", {}) is Dictionary else {}
+			recruits[unit_id] = maxi(int(recruits.get(unit_id, 0)), int(ContentService.get_unit(unit_id).get("growth", 6)))
+			town["available_recruits"] = recruits
+
 static func _prepare_recruitment_delivery_town(
 	session: SessionStateStoreScript.SessionData,
 	placement_id: String,
@@ -4626,6 +4641,12 @@ static func _recruitment_delivery_raid_seed(
 		{},
 		EnemyAdventureRules.commander_roster_for_faction(session, faction_id)
 	)
+	# The host is the faction's most experienced commander, so it leads the
+	# main army and the garrison marches out to it (AiHeroRules._main_hero_id),
+	# whatever a hero the town hires that day brings.
+	var commander: Dictionary = raid["enemy_commander_state"]
+	commander["experience"] = maxi(int(commander.get("experience", 0)), RECRUITMENT_HOST_EXPERIENCE)
+	raid["enemy_commander_state"] = commander
 	return EnemyAdventureRules.ensure_raid_army(raid, session)
 
 static func _friendly_town_adjacent_raid_origin(
@@ -5258,16 +5279,25 @@ static func _town_recruit_event_count_for(events: Array, town_id: String) -> int
 	return count
 
 ## Pickups and loose artifacts are gone, so heroes go for the sites under test.
+## So are the supply caches authored scenarios add beside computer towns
+## (ScenarioFactory development source support): a hero values one far above
+## any site under test.
 static func _clear_loose_map_rewards(session: SessionStateStoreScript.SessionData) -> void:
 	for artifact in session.overworld.get("artifact_nodes", []):
 		if artifact is Dictionary:
 			artifact["collected"] = true
+	var kept := []
 	for node in session.overworld.get("resource_nodes", []):
+		if node is Dictionary and bool(node.get("development_source_support", false)):
+			continue
+		kept.append(node)
 		if not (node is Dictionary) or bool(node.get("collected", false)):
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		if not bool(site.get("persistent_control", false)):
 			node["collected"] = true
+	session.overworld["resource_nodes"] = kept
+	OverworldRules.invalidate_spatial_lookup(session)
 
 ## A hero's goal is its own business: no raid-style target fields.
 static func _hero_goal_private(entry: Dictionary) -> bool:

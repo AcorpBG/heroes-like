@@ -30,6 +30,24 @@ const WALLED_MAP_DAYS := 28
 const WALLED_MAP_MIN_EXPLORED := 560
 const WALLED_MAP_MIN_GUARDS := 4
 const WALLED_MAP_MIN_SITES := 10
+## The large map of the owner's 2026-10-08 playthrough (Veilmourn against
+## Embercourt, Mireclaw and Sunvault). There Embercourt's lesser hero waited on
+## the one tile linking its capital's pocket to the map and held the main army
+## in for 34 days, Mireclaw stopped exploring after day 18 while it turned down
+## guards it would beat, and no computer town built a Marketplace, so the
+## factions short of ore hoarded up to 60,000 gold.
+const WIND_RIDGE_SEED := "1041912569"
+const WIND_RIDGE_SCENARIO_ID := "native_h3maped_72863470_skirmish"
+const WIND_RIDGE_SESSION_ID := "native_rmg_session_native_h3maped_72863470"
+const WIND_RIDGE_FACTION_ID := "faction_veilmourn"
+const WIND_RIDGE_HERO_ID := "hero_veilmourn_ivara_blacktide"
+const WIND_RIDGE_DAYS := 24
+## Each computer player explores at least this much by day 25. In the owner's
+## game Embercourt had 443 tiles all game and Mireclaw 1,114; the hero model now
+## reaches about 1,480, 1,375 and 1,830 for Embercourt, Mireclaw and Sunvault.
+const WIND_RIDGE_MIN_EXPLORED := 1000
+const WIND_RIDGE_POCKET_EXIT := Vector2i(71, 98)
+const WIND_RIDGE_POCKET_INSIDE := Vector2i(73, 100)
 
 var _failed := false
 
@@ -41,6 +59,13 @@ func _run() -> void:
 	var perf_size := OS.get_environment("HEROES_AI_RULES_PERF_SIZE").strip_edges()
 	if perf_size != "":
 		return _run_perf(perf_size, maxi(1, int(OS.get_environment("HEROES_AI_RULES_PERF_DAYS"))))
+	if OS.get_environment("HEROES_AI_RULES_ONLY").strip_edges() == "wind_ridge":
+		var only := _check_wind_ridge_reach()
+		if not _failed:
+			print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "wind_ridge_reach": only})])
+			_cleanup()
+			get_tree().quit(0)
+		return
 	var session = _start_session()
 	if session == null:
 		return
@@ -128,6 +153,15 @@ func _run() -> void:
 	var walled_map := _check_expansion_on_walled_map()
 	if _failed:
 		return
+	var garrison_swap := _check_garrison_pickup_swaps_in_stronger_stacks()
+	if _failed:
+		return
+	var rewards := _check_battle_rewards_scale_with_strength()
+	if _failed:
+		return
+	var wind_ridge := _check_wind_ridge_reach()
+	if _failed:
+		return
 
 	var payload := {
 		"ok": true,
@@ -140,6 +174,9 @@ func _run() -> void:
 		"market": market,
 		"doorway_hire": doorway_hire,
 		"walled_map_expansion": walled_map,
+		"garrison_swap": garrison_swap,
+		"battle_rewards": rewards,
+		"wind_ridge_reach": wind_ridge,
 		"captured_mines": captured_mines,
 		"guard_fights": fights,
 		"hero_tiles_per_day": float(hero_steps) / float(maxi(1, hero_days)),
@@ -234,7 +271,7 @@ func _run_perf(size_class_id: String, day_count: int) -> void:
 	_cleanup()
 	get_tree().quit(0)
 
-func _start_session(size_class_id: String = "homm3_small", player_count: int = 2, seed: String = SEED, hero_id: String = PLAYER_HERO_ID):
+func _start_session(size_class_id: String = "homm3_small", player_count: int = 2, seed: String = SEED, hero_id: String = PLAYER_HERO_ID, faction_id: String = PLAYER_FACTION_ID):
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
 		seed,
 		"",
@@ -244,7 +281,7 @@ func _start_session(size_class_id: String = "homm3_small", player_count: int = 2
 		false,
 		size_class_id,
 		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
-		PLAYER_FACTION_ID,
+		faction_id,
 		hero_id
 	)
 	var setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY)
@@ -260,8 +297,8 @@ func _start_session(size_class_id: String = "homm3_small", player_count: int = 2
 
 ## The human never moves in this run. A large army at home keeps a sensible AI
 ## from ending the game early, so the run shows it working the map instead.
-func _fortify_idle_human(session) -> void:
-	var army_id := String(RandomMapGeneratorRules.DEFAULT_ARMY_BY_FACTION.get(PLAYER_FACTION_ID, ""))
+func _fortify_idle_human(session, faction_id: String = PLAYER_FACTION_ID) -> void:
+	var army_id := String(RandomMapGeneratorRules.DEFAULT_ARMY_BY_FACTION.get(faction_id, ""))
 	var stacks := []
 	for stack in ContentService.get_army_group(army_id).get("stacks", []):
 		stacks.append({"unit_id": String(stack.get("unit_id", "")), "count": int(stack.get("count", 0)) * 40})
@@ -629,6 +666,176 @@ func _check_expansion_on_walled_map() -> Dictionary:
 	elif int(longest_stall.days) >= MAX_STALLED_DAYS:
 		_fail("On the owner's walled map an AI hero stood idle in the field for %d days: %s" % [int(longest_stall.days), JSON.stringify(result)])
 	return result
+
+## The owner's 2026-10-08 large map with the human idle at home: every computer
+## player builds a Marketplace, Embercourt's main army gets out of its capital's
+## pocket, and no hero stands idle in the field.
+func _check_wind_ridge_reach() -> Dictionary:
+	ContentService.clear_generated_scenario_drafts()
+	var session = _start_session("homm3_large", 4, WIND_RIDGE_SEED, WIND_RIDGE_HERO_ID, WIND_RIDGE_FACTION_ID)
+	if session == null:
+		return {}
+	if session.scenario_id != WIND_RIDGE_SCENARIO_ID:
+		_fail("Seed %s no longer generates the owner's large map: %s" % [WIND_RIDGE_SEED, session.scenario_id])
+		return {}
+	session.session_id = WIND_RIDGE_SESSION_ID
+	_fortify_idle_human(session, WIND_RIDGE_FACTION_ID)
+	var controllers := []
+	for state in session.overworld.get("enemy_states", []):
+		if state is Dictionary:
+			controllers.append(PlayerRules.controller_id(state))
+	# The one tile linking Embercourt's capital pocket to the map cuts a way
+	# through; the tile its main hero stood on for 30 days does not.
+	var pocket := _check_capital_pocket_exit(session)
+	if _failed:
+		return {}
+	var still_days := {}
+	var longest_stall := {}
+	var market_day := {}
+	for controller in controllers:
+		still_days[controller] = {}
+		longest_stall[controller] = {"hero": "", "days": 0}
+	# HEROES_AI_RULES_WIND_DAYS plays longer for a look at the later game.
+	var day_count := maxi(WIND_RIDGE_DAYS, int(OS.get_environment("HEROES_AI_RULES_WIND_DAYS")))
+	for _day in range(day_count):
+		var positions := {}
+		for controller in controllers:
+			positions[controller] = _hero_positions(session, controller)
+		OverworldRules.end_turn(session)
+		if not session.battle.is_empty():
+			BattleAutoResolveRulesScript.resolve_active_battle(session)
+			if session.battle.is_empty() and String(session.scenario_status) == "in_progress":
+				session.game_state = "overworld"
+		for controller in controllers:
+			_track_stalls(session, controller, positions[controller], still_days[controller], longest_stall[controller])
+			if not market_day.has(controller) and _has_market(session, controller):
+				market_day[controller] = int(session.day)
+			if OS.get_environment("HEROES_AI_RULES_WIND_TRACE") != "":
+				var trace_state := _state(session, controller)
+				var trace_heroes := []
+				for entry in AiHeroRulesScript.active_hero_entries(session, controller):
+					var block: Dictionary = entry.get("ai_hero", {})
+					trace_heroes.append("%s@%d,%d p%d %s:%s%s w%d" % [AiHeroRulesScript.hero_name(entry).left(6), int(entry.x), int(entry.y), int(AiHeroRulesScript.hero_power(entry)), String(block.get("goal", {}).get("kind", "")), String(block.get("goal", {}).get("id", "")).right(4), " P" if String(block.get("parked", "")) != "" else "", int(entry.get("enemy_commander_state", {}).get("battle_wins", 0))])
+				print("WIND_TRACE d%d %s x%d g%d o%d b%s %s" % [int(session.day), controller, AiHeroRulesScript.explored_tile_count(trace_state), int(trace_state.get("treasury", {}).get("gold", 0)), int(trace_state.get("treasury", {}).get("ore", 0)), str(_ai_town_brief(session, controller).map(func(row): return row.built.size())), " | ".join(trace_heroes)])
+		if String(session.scenario_status) != "in_progress":
+			break
+	var factions := {}
+	for controller in controllers:
+		var state := _state(session, controller)
+		var wins := 0
+		for entry in AiHeroRulesScript.active_hero_entries(session, controller):
+			wins += int(entry.get("enemy_commander_state", {}).get("battle_wins", 0))
+		var sites := 0
+		for node in session.overworld.get("resource_nodes", []):
+			if node is Dictionary and PlayerRules.resource_controller_id(node) == controller:
+				sites += 1
+		factions[controller] = {
+			"faction": PlayerRules.faction_id(session, controller),
+			"explored_tiles": AiHeroRulesScript.explored_tile_count(state),
+			"battle_wins": wins,
+			"sites": sites,
+			"market_day": int(market_day.get(controller, -1)),
+			"gold": int(state.get("treasury", {}).get("gold", 0)),
+			"ore": int(state.get("treasury", {}).get("ore", 0)),
+			"longest_stall": longest_stall[controller],
+			"heroes": _hero_brief(session, controller),
+			"towns": _ai_town_brief(session, controller).map(func(row): return {"id": row.id, "built": row.built.size()}),
+		}
+	var result := {"seed": WIND_RIDGE_SEED, "day": int(session.day), "pocket_exit": pocket, "factions": factions}
+	print("%s_WIND_RIDGE %s" % [REPORT_ID, JSON.stringify(result)])
+	for controller in controllers:
+		var row: Dictionary = factions[controller]
+		if _first_ai_town(session, controller).is_empty():
+			continue
+		if int(row.market_day) < 0:
+			_fail("%s never built a Marketplace on the owner's large map: %s" % [controller, JSON.stringify(row)])
+			return result
+		if int(row.longest_stall.days) >= MAX_STALLED_DAYS:
+			_fail("%s left a hero idle in the field for %d days on the owner's large map: %s" % [controller, int(row.longest_stall.days), JSON.stringify(row)])
+			return result
+		if int(row.explored_tiles) < WIND_RIDGE_MIN_EXPLORED:
+			_fail("%s stayed boxed in on the owner's large map: %s" % [controller, JSON.stringify(row)])
+			return result
+	return result
+
+## Embercourt's capital sits in a pocket whose only way out is one tile beside
+## the town. On 2026-10-08 a lesser hero waited there and held the main army in
+## for 34 days. That tile cuts a way through, and waiting heroes avoid such
+## tiles; the open tile the main army stood on does not.
+func _check_capital_pocket_exit(session) -> Dictionary:
+	var controller := ""
+	for state in session.overworld.get("enemy_states", []):
+		if state is Dictionary and String(state.get("faction_id", "")) == "faction_embercourt":
+			controller = PlayerRules.controller_id(state)
+	var capital := _first_ai_town(session, controller)
+	if capital.is_empty():
+		_fail("Embercourt holds no town on the owner's large map.")
+		return {}
+	# Heroes take the field on the computer player's first turn: search from the
+	# capital's doorway instead.
+	var door := LevelRules.town_entrance(capital)
+	var probe := {"placement_id": "pocket_probe", "x": int(door.get("x", 0)), "y": int(door.get("y", 0)), "level": LevelRules.level_of(door)}
+	var context: Dictionary = AiHeroRulesScript._new_context(session, _ai_config(session, controller), _state(session, controller))
+	var search: Dictionary = AiHeroRulesScript._search(session, context, probe, 30)
+	var size: Vector2i = context.map_size
+	var exit_cuts: bool = AiHeroRulesScript._cuts_a_way(search, WIND_RIDGE_POCKET_EXIT.y * size.x + WIND_RIDGE_POCKET_EXIT.x, size)
+	var inside_cuts: bool = AiHeroRulesScript._cuts_a_way(search, WIND_RIDGE_POCKET_INSIDE.y * size.x + WIND_RIDGE_POCKET_INSIDE.x, size)
+	var result := {"exit": [WIND_RIDGE_POCKET_EXIT.x, WIND_RIDGE_POCKET_EXIT.y], "exit_cuts": exit_cuts, "inside": [WIND_RIDGE_POCKET_INSIDE.x, WIND_RIDGE_POCKET_INSIDE.y], "inside_cuts": inside_cuts}
+	if not exit_cuts or inside_cuts:
+		_fail("The pocket exit beside Embercourt's capital is not told apart from open ground: %s" % JSON.stringify(result))
+	return result
+
+## A full army takes a stronger garrison stack in place of its weakest, as a
+## human would; a garrison of other kinds it cannot take is worth nothing to it.
+func _check_garrison_pickup_swaps_in_stronger_stacks() -> Dictionary:
+	var weak := []
+	var strong_id := ""
+	for unit in ContentService.load_json("res://content/units.json").get("items", []):
+		if not (unit is Dictionary):
+			continue
+		if int(unit.get("tier", 0)) == 1 and weak.size() < 7:
+			weak.append({"unit_id": String(unit.get("id", "")), "count": 2})
+		elif int(unit.get("tier", 0)) == 7 and strong_id == "":
+			strong_id = String(unit.get("id", ""))
+	if weak.size() < 7 or strong_id == "":
+		_fail("The unit catalog has no seven tier-1 kinds and a tier-7 kind for the garrison check.")
+		return {}
+	var garrison := [{"unit_id": strong_id, "count": 1}]
+	var pickup: Dictionary = AiHeroRulesScript._garrison_pickup(weak.duplicate(true), garrison.duplicate(true))
+	var taken_ids: Array = pickup.stacks.map(func(stack): return String(stack.unit_id))
+	var left_ids: Array = pickup.left.map(func(stack): return String(stack.unit_id))
+	var result := {"taken": taken_ids, "left": left_ids, "gain": snappedf(float(pickup.gain), 0.1)}
+	if pickup.stacks.size() != 7 or strong_id not in taken_ids or left_ids.size() != 1 or float(pickup.gain) <= 0.0:
+		_fail("A full army did not trade its weakest stack for a stronger garrison stack: %s" % JSON.stringify(result))
+	return result
+
+## A won battle pays by the strength beaten (BattleRules.battle_rewards_for_strength):
+## half a point of experience per point of strength, half the encounter's gold
+## scaled against a typical guard of 300 strength. Beating an AI hero no longer
+## pays a flat 140 gold and 160 experience whatever its army.
+func _check_battle_rewards_scale_with_strength() -> Dictionary:
+	var template := ContentService.get_encounter(AiHeroRulesScript.AI_HERO_ENCOUNTER_ID)
+	var lone := [{"unit_id": "unit_bog_brute", "count": 1}]
+	var host := [{"unit_id": "unit_bog_brute", "count": 120}]
+	var lone_rewards: Dictionary = BattleRules.battle_rewards_for_strength(template, lone)
+	var host_rewards: Dictionary = BattleRules.battle_rewards_for_strength(template, host)
+	var host_strength: float = AiHeroRulesScript.army_power(host)
+	var scale := clampf(host_strength / BattleRules.REWARD_REFERENCE_STRENGTH, BattleRules.REWARD_RESOURCE_SCALE_MIN, BattleRules.REWARD_RESOURCE_SCALE_MAX)
+	var expected_gold := int(round(float(template.get("rewards", {}).get("gold", 0)) * BattleRules.REWARD_RESOURCE_SHARE * scale / 10.0)) * 10
+	var result := {"lone": lone_rewards, "host": host_rewards, "host_strength": snappedf(host_strength, 0.1), "template": template.get("rewards", {})}
+	if int(host_rewards.get("experience", 0)) != int(round(host_strength * BattleRules.REWARD_EXPERIENCE_PER_STRENGTH)) or int(host_rewards.get("gold", 0)) != expected_gold:
+		_fail("Battle rewards do not follow the strength beaten: %s" % JSON.stringify(result))
+	elif int(lone_rewards.get("experience", 0)) * 20 > int(host_rewards.get("experience", 0)) or int(lone_rewards.get("gold", 0)) >= int(template.get("rewards", {}).get("gold", 0)):
+		_fail("A lone creature pays as much as an army: %s" % JSON.stringify(result))
+	return result
+
+func _has_market(session, controller: String) -> bool:
+	for town in session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get("owner", "")) == "enemy" and PlayerRules.town_controller_id(town) == controller:
+			for building_id in town.get("built_buildings", []):
+				if not (ContentService.get_building(String(building_id)).get("market_profile", {}) as Dictionary).is_empty():
+					return true
+	return false
 
 func _by_own_town(session, controller: String, tile: Vector2i) -> bool:
 	for town in session.overworld.get("towns", []):

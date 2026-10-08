@@ -92,6 +92,10 @@ Rules:
 
 `ux-generated-object-sprite-footprint-20261008` (completed, owner playtest fix): generated sites draw their sprite over their real footprint. Their x/y is the HoMM3 bottom-right tile (sometimes outside the body), so the sprite rect now comes from the body tiles: on the bottom row, centred over the columns, at least the art profile's size. Mines keep their three-by-two art around the entry. `tests/overworld_object_footprint_alignment_report.tscn` checks every site of a generated map.
 
+### AI markets, out-of-the-way idle heroes, strength-scaled rewards
+
+`ai-market-parking-fight-rewards-20261008` (completed, owner review of the 2026-10-08 large-map game): the Marketplace costs 1,000 gold and the Trade Exchange 3,000 gold, 5 wood and 5 ore; computer towns value each market stage like a Storehouse (more while a resource is missing) and credit buildings for what they unlock, so every computer player builds a Marketplace on day 3. Idle AI heroes park in their town, waiting heroes keep off tiles that cut a way through, a hero blocked by its own idle hero asks it to step aside, the most experienced hero leads the main army, a full army swaps in stronger garrison stacks, built visit sites can be crossed, and a boxed-in hero fights its way out. The fight loss estimate is calibrated on 1,262 auto-resolved fights and an idle hero takes a clean win. Every battle pays by the strength beaten, mostly experience, half the gold and resources. Stripping garrisons stays (owner). Open: market weekly caps keep ore-poor factions hoarding gold. See `docs/ai-plays-by-player-rules.md`, `docs/town-market.md`.
+
 ### Full-army site claims
 
 `gameplay-site-recruit-overflow-20261008` (completed, owner playtest fix): a full army no longer blocks claiming a site that grants troops (Glassbound Eyrie, Railblock Camp and 66 others). The site is claimed and pays out; troops that fit join, and a dialog offers to dismiss a stack for the rest or leave them behind. AI heroes claim the same way and keep what fits. Free reward gates ask to Claim instead of "Pay nothing". See `docs/site-recruit-overflow.md`.
