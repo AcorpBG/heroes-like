@@ -26,6 +26,12 @@ MAX_CONTROL_RESISTANCE_PCT = 80
 COHESION_MIN = 0
 COHESION_MAX = 10
 MOMENTUM_MAX = 4
+ATTACK_BONUS_PER_POINT = 0.05
+ATTACK_BONUS_MAX = 3.0
+DEFENSE_REDUCTION_PER_POINT = 0.025
+DEFENSE_REDUCTION_MAX = 0.7
+POWER_PER_EXTRA_ROUND = 4
+MAX_POWER_EXTRA_ROUNDS = 3
 SIMULATION_GUARD_MAX_ROUNDS = 200
 DEFAULT_SEEDS = 100
 DEFAULT_WEEKS = [1, 2, 3, 4]
@@ -88,6 +94,19 @@ def load_items(filename: str) -> dict[str, dict[str, Any]]:
 
 def clamp(value: float, low: float, high: float) -> float:
     return min(high, max(low, value))
+
+
+def attack_defense_multiplier(attack_stat: int, defense_stat: int) -> float:
+    """Mirror of BattleDamageRules.attack_defense_multiplier."""
+    difference = attack_stat - defense_stat
+    if difference >= 0:
+        return 1.0 + min(difference * ATTACK_BONUS_PER_POINT, ATTACK_BONUS_MAX)
+    return 1.0 - min(-difference * DEFENSE_REDUCTION_PER_POINT, DEFENSE_REDUCTION_MAX)
+
+
+def spell_duration_bonus(hero: dict[str, Any]) -> int:
+    """Mirror of SpellRules.spell_duration_bonus."""
+    return min(MAX_POWER_EXTRA_ROUNDS, max(0, int(hero.get("power", 0))) // POWER_PER_EXTRA_ROUND)
 
 
 def stable_seed(*parts: Any) -> int:
@@ -1192,6 +1211,7 @@ class FastBattleBenchmark:
         hero["mana_current"] = max(0, int(hero.get("mana_current", 0)) - mana_cost)
         battle.setdefault("commander_spell_cast_rounds", {})[side] = int(battle.get("round", 1))
         effect_type = str(effect.get("type", ""))
+        duration_bonus = spell_duration_bonus(hero)
         spell_casts_by_school[str(spell.get("school_id", ""))] += 1
         spell_casts_by_tier[str(int(spell.get("tier", 0)))] += 1
         spell_casts_by_effect[effect_type] += 1
@@ -1214,7 +1234,7 @@ class FastBattleBenchmark:
                 if status_block["blocked"]:
                     self._record_spell_resist(status_block, active, spell, consequence_counts, spell_resists_by_faction, spell_resists_by_id)
                 else:
-                    self._apply_effect(target, effect["status_effect"], battle, "spell", str(spell["id"]))
+                    self._apply_effect(target, effect["status_effect"], battle, "spell", str(spell["id"]), duration_bonus)
                     consequence_counts["status_applied"] += 1
             self._apply_damage_pressure(battle, active, before, target, True, "spell", consequence_counts)
         elif effect_type == "control_enemy" and isinstance(effect.get("status_effect", {}), dict):
@@ -1222,21 +1242,21 @@ class FastBattleBenchmark:
             if status_block["blocked"]:
                 self._record_spell_resist(status_block, active, spell, consequence_counts, spell_resists_by_faction, spell_resists_by_id)
             else:
-                self._apply_effect(target, effect["status_effect"], battle, "spell", str(spell["id"]))
+                self._apply_effect(target, effect["status_effect"], battle, "spell", str(spell["id"]), duration_bonus)
                 consequence_counts["status_applied"] += 1
         elif effect_type in ["defense_buff", "initiative_buff", "attack_buff"]:
-            self._apply_effect(target, effect, battle, "spell", str(spell["id"]))
+            self._apply_effect(target, effect, battle, "spell", str(spell["id"]), duration_bonus)
             consequence_counts["buff_applied"] += 1
         elif effect_type == "recover_ally":
             restore = int(effect.get("base_restore", 0)) + int(hero.get("power", 0)) * int(effect.get("power_scale", 0))
             max_health = int(target.get("total_health", 0)) + self._stack_recoverable_health(target)
             target["total_health"] = min(max_health, int(target.get("total_health", 0)) + max(0, restore))
-            self._apply_effect(target, effect, battle, "spell", str(spell["id"]))
+            self._apply_effect(target, effect, battle, "spell", str(spell["id"]), duration_bonus)
             consequence_counts["recovery"] += 1
         elif effect_type == "cleanse_ally":
             cleanse_ids = {str(value) for value in effect.get("cleanse_effect_ids", [])}
             target["effects"] = [fx for fx in target.get("effects", []) if str(fx.get("effect_id", "")) not in cleanse_ids]
-            self._apply_effect(target, effect, battle, "spell", str(spell["id"]))
+            self._apply_effect(target, effect, battle, "spell", str(spell["id"]), duration_bonus)
             consequence_counts["cleanse"] += 1
 
     def _spell_damage(self, hero: dict[str, Any], target: dict[str, Any], effect: dict[str, Any]) -> int:
@@ -1434,7 +1454,7 @@ class FastBattleBenchmark:
         defense_stat = self._stack_defense_total(defender, battle) + int(self._hero_for_side(battle, defender["side"]).get("defense", 0))
         if bool(defender.get("defending", False)):
             defense_stat += 2
-        modifier = 1.0 + (clamp(float(attack_stat - defense_stat), -8.0, 8.0) * 0.05)
+        modifier = attack_defense_multiplier(attack_stat, defense_stat)
         terrain = str(battle.get("terrain", "plains"))
         if is_ranged and terrain == "forest":
             modifier *= 0.8
@@ -2074,18 +2094,16 @@ class FastBattleBenchmark:
             counts["status_applied"] += 1
 
     def _apply_damage_pressure(self, battle: dict[str, Any], attacker: dict[str, Any], before: dict[str, Any], after: dict[str, Any], is_ranged: bool, source_type: str, counts: Counter[str]) -> None:
-        before_count = self._alive_count(before)
         after_count = self._alive_count(after)
-        lost_count = max(0, before_count - after_count)
         before_health = max(1, int(before.get("total_health", 0)))
         after_health = max(0, int(after.get("total_health", 0)))
         lost_ratio = clamp(float(before_health - after_health) / float(before_health), 0.0, 1.0)
         cohesion_shift = 0
         if after_count <= 0:
             cohesion_shift = -3
-        elif lost_ratio >= 0.45 or lost_count >= 2:
+        elif lost_ratio >= 0.45:
             cohesion_shift = -2
-        elif lost_ratio >= 0.18 or lost_count >= 1:
+        elif lost_ratio >= 0.18:
             cohesion_shift = -1
         if after_count > 0 and self._stack_is_isolated(battle, after):
             cohesion_shift -= 1
@@ -2116,7 +2134,7 @@ class FastBattleBenchmark:
         if momentum_gain > 0:
             counts["momentum_gain"] += 1
 
-    def _apply_effect(self, stack: dict[str, Any], effect: dict[str, Any], battle: dict[str, Any], source_type: str, source_id: str) -> bool:
+    def _apply_effect(self, stack: dict[str, Any], effect: dict[str, Any], battle: dict[str, Any], source_type: str, source_id: str, duration_bonus: int = 0) -> bool:
         incoming_effect_id = str(effect.get("effect_id", effect.get("type", source_id)))
         for source in battle.get("stacks", []):
             if not isinstance(source, dict) or str(source.get("side", "")) != str(stack.get("side", "")):
@@ -2172,7 +2190,7 @@ class FastBattleBenchmark:
             "protected_side": str(effect.get("protected_side", "")),
             "target_role": str(effect.get("target_role", "")),
             "target_min_tier": max(1, int(effect.get("target_min_tier", 1))),
-            "expires_after_round": max(1, int(battle.get("round", 1))) + max(1, int(effect.get("duration_rounds", 1))) - 1,
+            "expires_after_round": max(1, int(battle.get("round", 1))) + max(1, int(effect.get("duration_rounds", 1))) + duration_bonus - 1,
         })
         return True
 

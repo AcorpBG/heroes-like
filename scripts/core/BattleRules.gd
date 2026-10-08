@@ -16,6 +16,7 @@ const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRule
 const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
 const ActionPlayback = preload("res://scripts/core/BattleActionPlayback.gd")
 const Footprint = preload("res://scripts/core/BattleFootprint.gd")
+const DamageRules = preload("res://scripts/core/BattleDamageRules.gd")
 const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 
@@ -9458,7 +9459,7 @@ static func _damage_modifier(
 	if bool(defender.get("defending", false)):
 		defense_stat += 2
 
-	var modifier = 1.0 + (clampf(float(attack_stat - defense_stat), -8.0, 8.0) * 0.05)
+	var modifier = DamageRules.attack_defense_multiplier(attack_stat, defense_stat)
 	var resolved_distance = int(battle.get("distance", 1)) if attack_distance < 0 else attack_distance
 	if is_ranged and String(battle.get("terrain", "")) == "forest":
 		modifier *= 0.8
@@ -12822,18 +12823,18 @@ static func _apply_damage_pressure(
 		messages.append("%s seizes the tempo." % _stack_label(updated_attacker))
 	return messages
 
+## Cohesion lost to one hit goes by the share of the stack it took, never by
+## the number of creatures: two of two hundred is a scratch, two of three a rout.
 static func _casualty_cohesion_shift(target_before: Dictionary, target_after: Dictionary) -> int:
 	var before_health = max(1, int(target_before.get("total_health", 0)))
 	var after_health = max(0, int(target_after.get("total_health", 0))) if not target_after.is_empty() else 0
-	var before_count = _alive_count(target_before)
 	var after_count = _alive_count(target_after) if not target_after.is_empty() else 0
-	var lost_count = max(0, before_count - after_count)
 	var lost_health_ratio = clampf(float(max(0, before_health - after_health)) / float(before_health), 0.0, 1.0)
 	if after_count <= 0:
 		return -3
-	if lost_health_ratio >= 0.45 or lost_count >= 2:
+	if lost_health_ratio >= 0.45:
 		return -2
-	if lost_health_ratio >= 0.18 or lost_count >= 1:
+	if lost_health_ratio >= 0.18:
 		return -1
 	return 0
 

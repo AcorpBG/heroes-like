@@ -53,7 +53,7 @@ func run():
 	Heroes.commit_active_hero(session)
 	var prompt:Dictionary=Rules.get_level_up_prompt(session)
 	check(prompt.get("previous_level")==1 and prompt.get("level")==3,"two-level XP grant not summarized")
-	check(prompt.command_gains.attack==1 and prompt.command_gains.defense==1,"wrong command gains")
+	check(prompt.command_gains.power==1 and prompt.command_gains.knowledge==1,"wrong command gains (Lyra follows the magic path)")
 	check(prompt.movement_gain==2,"automatic movement gains missing")
 	check(not Rules.get_level_up_prompt(restore(session)).is_empty(),"unread level lost on save")
 	var context:Dictionary=prompt.context.duplicate(true)
@@ -73,7 +73,7 @@ func run():
 	Rules._award_experience(session,500)
 	Heroes.commit_active_hero(session)
 	prompt=Rules.get_level_up_prompt(session)
-	check(prompt.previous_level==3 and prompt.level==4 and prompt.command_gains.attack==1 and prompt.command_gains.defense==0,"next promotion includes already reviewed gains")
+	check(prompt.previous_level==3 and prompt.level==4 and prompt.command_gains.power==1 and prompt.command_gains.knowledge==0,"next promotion includes already reviewed gains")
 	# Existing saves: only unresolved progression should receive a reminder.
 	var legacy:Dictionary=session.overworld.hero.duplicate(true)
 	legacy.erase("level_up_presented")
