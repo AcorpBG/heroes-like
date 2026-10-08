@@ -168,6 +168,12 @@ static func _create_generated_registered_session(
 	session.overworld[SessionStateStoreScript.GENERATED_RANDOM_MAP_MATERIALIZATION_FLAG] = materialization_identity.duplicate(true)
 	session.overworld[SessionStateStoreScript.GENERATED_MAP_RUNTIME_MATERIALIZATION_KEY] = runtime_materialization.duplicate(true)
 	session.overworld["generated_terrain_layers_record_id"] = String(terrain_layers.get("id", ""))
+	# Computer players start with what the human starts with.
+	var states: Array = session.overworld.get("enemy_states", [])
+	for index in range(states.size()):
+		if states[index] is Dictionary:
+			states[index]["treasury"] = _normalize_resources(session.overworld.get("resources", {}))
+	session.overworld["enemy_states"] = states
 	return session
 
 static func _generated_identity(generated_map: Dictionary) -> Dictionary:

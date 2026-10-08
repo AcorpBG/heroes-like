@@ -35,13 +35,13 @@ func _run() -> void:
 		return
 
 	var initial := _market_snapshot(session, "initial")
-	_assert_action_state(initial, "market:buy:wood:1", false, 6, "initial buy wood")
-	_assert_action_state(initial, "market:sell:ore:1", false, 8, "initial sell ore")
+	_assert_action_state(initial, "market:buy:wood:1", false, 12, "initial buy wood")
+	_assert_action_state(initial, "market:sell:ore:1", false, 16, "initial sell ore")
 	_assert_capped_resources(initial)
 	if _failed:
 		return
 
-	var buy_results := _perform_repeated(session, "market:buy:wood:1", 6, "buy wood cap")
+	var buy_results := _perform_repeated(session, "market:buy:wood:1", 12, "buy wood cap")
 	var after_buy_cap := _market_snapshot(session, "after_buy_cap")
 	_assert_action_state(after_buy_cap, "market:buy:wood:1", true, 0, "after buy cap")
 	var rejected_buy: Dictionary = TownRules.perform_market_action(session, "market:buy:wood:1")
@@ -50,7 +50,7 @@ func _run() -> void:
 	if _failed:
 		return
 
-	var sell_results := _perform_repeated(session, "market:sell:ore:1", 8, "sell ore cap")
+	var sell_results := _perform_repeated(session, "market:sell:ore:1", 16, "sell ore cap")
 	var after_sell_cap := _market_snapshot(session, "after_sell_cap")
 	_assert_action_state(after_sell_cap, "market:sell:ore:1", true, 0, "after sell cap")
 	var rejected_sell: Dictionary = TownRules.perform_market_action(session, "market:sell:ore:1")
@@ -71,8 +71,8 @@ func _run() -> void:
 
 	var advanced := _advance_to_next_week(restored)
 	var next_week := _market_snapshot(restored, "next_week")
-	_assert_action_state(next_week, "market:buy:wood:1", false, 6, "next week buy reset")
-	_assert_action_state(next_week, "market:sell:ore:1", false, 8, "next week sell reset")
+	_assert_action_state(next_week, "market:buy:wood:1", false, 12, "next week buy reset")
+	_assert_action_state(next_week, "market:sell:ore:1", false, 16, "next week sell reset")
 	if _failed:
 		return
 	var smuggler_case := _run_smuggler_profile_case()
@@ -165,8 +165,8 @@ func _run_smuggler_profile_case() -> Dictionary:
 		if int(smuggler_state.get("sell_rates", {}).get(resource_id, 0)) <= int(square_state.get("sell_rates", {}).get(resource_id, 0)):
 			_fail("Smuggler profile did not improve %s liquidation over Market Square." % resource_id)
 			return {}
-		if int(smuggler_state.get("buy_caps", {}).get(resource_id, 0)) != 8 \
-				or int(smuggler_state.get("sell_caps", {}).get(resource_id, 0)) != 10:
+		if int(smuggler_state.get("buy_caps", {}).get(resource_id, 0)) != 20 \
+				or int(smuggler_state.get("sell_caps", {}).get(resource_id, 0)) != 24:
 			_fail("Smuggler profile did not apply bounded weekly %s throughput: %s" % [resource_id, smuggler_state])
 			return {}
 
@@ -213,8 +213,8 @@ func _run_smuggler_profile_case() -> Dictionary:
 		"actions": after_actions,
 		"usage": after_town.get("market_usage", {}),
 	}
-	_assert_action_state(after, "market:sell:ore:1", false, 8, "smuggler shared single cap")
-	_assert_action_state(after, "market:sell:ore:2", false, 8, "smuggler shared bulk cap")
+	_assert_action_state(after, "market:sell:ore:1", false, 22, "smuggler shared single cap")
+	_assert_action_state(after, "market:sell:ore:2", false, 22, "smuggler shared bulk cap")
 	return {
 		"ok": not _failed,
 		"scenario_id": SMUGGLER_SCENARIO_ID,

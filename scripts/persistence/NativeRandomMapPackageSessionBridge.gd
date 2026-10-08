@@ -132,7 +132,7 @@ static func build_session_from_adoption(
 		"package_source_object_ids": package_source_object_ids,
 		"package_source_objects_by_id": package_source_objects_by_id,
 		"artifact_nodes": artifact_nodes,
-		"enemy_states": PlayerRules.enemy_configs(players),
+		"enemy_states": _opening_enemy_states(players),
 		"map_package_ref": map_ref,
 		"scenario_package_ref": scenario_ref,
 		"native_random_map_package_session_adoption": boundary.duplicate(true),
@@ -271,6 +271,14 @@ static func _army_state(army_template: Dictionary) -> Dictionary:
 		if stack is Dictionary:
 			stacks.append({"unit_id": String(stack.get("unit_id", "")), "count": max(0, int(stack.get("count", 0)))})
 	return {"id": String(army_template.get("id", "")), "name": String(army_template.get("name", "Field Army")), "stacks": stacks}
+
+## Computer players start with what the human starts with.
+static func _opening_enemy_states(players: Array) -> Array:
+	var states := []
+	for config in PlayerRules.enemy_configs(players):
+		config["treasury"] = _opening_resource_stockpile()
+		states.append(config)
+	return states
 
 static func _opening_resource_stockpile() -> Dictionary:
 	var resources := {}
