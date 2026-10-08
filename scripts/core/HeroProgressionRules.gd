@@ -140,12 +140,19 @@ static func level_up_summary(hero_state: Dictionary) -> Dictionary:
 	if previous >= level:
 		return {}
 	var gains := {}
+	var rolls := []
 	for earned_level in range(previous + 1, level + 1):
-		gains = _apply_command_gain(gains, command_gain_stat(hero, earned_level))
+		var stat := command_gain_stat(hero, earned_level)
+		gains = _apply_command_gain(gains, stat)
+		rolls.append({"level": earned_level, "stat": stat})
+	var path := command_path(hero)
 	return {
 		"previous_level": previous,
 		"level": level,
 		"command_gains": gains,
+		"command_rolls": rolls,
+		"command_path": path,
+		"command_odds": (COMMAND_GAIN_WEIGHTS[path] as Dictionary).duplicate(),
 		"movement_gain": level - previous,
 		"choice": current_pending_choice(hero),
 		"choices_remaining": pending_choices_remaining(hero),
