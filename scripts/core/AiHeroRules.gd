@@ -41,6 +41,16 @@ const GUARD_WIN_RATIO := 1.5
 const HERO_ATTACK_RATIO := 1.3
 const TOWN_ATTACK_RATIO := 1.4
 const THREAT_RATIO := 1.15
+## A town is worth this much plus two weeks of its income and troop growth
+## (`_town_worth`); a faction that has lost every town values one twice as much.
+const TOWN_BASE_VALUE := 4000.0
+const HOMELESS_TOWN_MULTIPLIER := 2.0
+## Killing a hero that threatens one of our towns is worth this share of the town.
+const THREAT_KILL_SHARE := 0.5
+## The most of its strength a main hero leaves behind to guard a town.
+const GUARD_SHARE_MAX := 0.25
+## The main hero holds at least this share of the strongest hero's army.
+const MAIN_ARMY_SHARE := 0.5
 const TROOP_VALUE_PER_POWER := 10.0
 ## Builds weigh a dwelling's troops and a building's income over two weeks.
 const BUILD_HORIZON_WEEKS := 2.0
@@ -1171,6 +1181,23 @@ static func _roster_progression_seed(state: Dictionary, hero_id: String) -> Dict
 			return commander if commander is Dictionary else {}
 	return {}
 
+## The encounter index of a hostile computer player's hero standing in the
+## town's doorway, which defends the town; -1 when there is none.
+static func _town_hero_defender_index(session: SessionStateStoreScript.SessionData, town: Dictionary, controller: String) -> int:
+	var entrance := LevelRules.town_entrance(town)
+	var resolved := _resolved_lookup(session)
+	var encounters: Array = session.overworld.get("encounters", [])
+	for index in range(encounters.size()):
+		var entry = encounters[index]
+		if not (entry is Dictionary) or not is_ai_hero(entry) or resolved.has(String(entry.get("placement_id", ""))):
+			continue
+		var other := PlayerRules.raid_controller_id(entry)
+		if other == controller or PlayerRules.allied(session, controller, other):
+			continue
+		if LevelRules.same_level(entry, entrance) and int(entry.get("x", -1)) == int(entrance.get("x", -2)) and int(entry.get("y", -1)) == int(entrance.get("y", -2)):
+			return index
+	return -1
+
 ## Whether nothing stands in the town's doorway. With `own_controller` set, that
 ## player's own heroes there do not count: they are in the town, and a hire
 ## joins them there, as the human's hires join heroes visiting a town.
@@ -1192,16 +1219,19 @@ static func _town_entrance_free(session: SessionStateStoreScript.SessionData, to
 ## Buys what each town offers, strongest tier first, with real costs and
 ## availability, into the garrison. Gold reserved for a planned hire is kept.
 static func _recruit_in_towns(session: SessionStateStoreScript.SessionData, context: Dictionary, reserve: Dictionary) -> Dictionary:
+	var events := []
+	for entry in _turn_rules()._owned_town_entries(session, String(context.controller)):
+		events.append_array(_recruit_town(session, context, int(entry.get("index", -1)), reserve))
+	return {"events": events, "messages": []}
+
+## Buys what one owned town offers into its garrison, strongest tier first,
+## with the treasury the faction holds and the market's help.
+static func _recruit_town(session: SessionStateStoreScript.SessionData, context: Dictionary, index: int, reserve: Dictionary) -> Array:
 	var turn_rules = _turn_rules()
-	var overworld_rules = _overworld_rules()
-	var controller := String(context.controller)
 	var treasury: Dictionary = context.state.treasury
 	var events := []
 	var towns: Array = session.overworld.get("towns", [])
-	for entry in turn_rules._owned_town_entries(session, controller):
-		var index := int(entry.get("index", -1))
-		if index < 0 or index >= towns.size():
-			continue
+	if index >= 0 and index < towns.size():
 		var town: Dictionary = towns[index]
 		var unit_ids := []
 		for unit_id in town.get("available_recruits", {}).keys():
@@ -1237,8 +1267,8 @@ static func _recruit_in_towns(session: SessionStateStoreScript.SessionData, cont
 			if not event.is_empty():
 				events.append(event)
 		towns[index] = town
-	session.overworld["towns"] = towns
-	return {"events": events, "messages": []}
+		session.overworld["towns"] = towns
+	return events
 
 ## Army transfers in an owned town, as a human would arrange them: the main
 ## (strongest) hero takes the garrison along unless the town is under threat;
@@ -1333,12 +1363,21 @@ static func _ferries_from(session: SessionStateStoreScript.SessionData, context:
 ## the main hero became the main hero itself, kept the troops, and left the
 ## hero with the levels and the fights behind with nothing.
 static func _main_hero_id(session: SessionStateStoreScript.SessionData, controller: String) -> String:
+	# The most experienced hero leads, among those still holding a real army:
+	# a veteran whose army was beaten collects troops again rather than draw
+	# them off the hero that has them.
+	var heroes := active_hero_entries(session, controller)
+	var strongest := 0.0
+	for hero in heroes:
+		strongest = maxf(strongest, hero_power(hero))
 	var best_id := ""
 	var best_experience := -1
 	var best_power := -1.0
-	for hero in active_hero_entries(session, controller):
-		var experience := int(hero.get("enemy_commander_state", {}).get("experience", 0))
+	for hero in heroes:
 		var power := hero_power(hero)
+		if power < strongest * MAIN_ARMY_SHARE:
+			continue
+		var experience := int(hero.get("enemy_commander_state", {}).get("experience", 0))
 		var better := experience > best_experience
 		if experience == best_experience:
 			better = power > best_power or (is_equal_approx(power, best_power) and String(hero.get("placement_id", "")) < best_id)
@@ -1368,16 +1407,126 @@ static func _town_threatened(session: SessionStateStoreScript.SessionData, conte
 	var defense := army_power(town.get("garrison", []))
 	var entrance := LevelRules.town_entrance(town)
 	var threatened := false
+	var strongest := 0.0
 	for threat in cache.hostile:
 		if int(threat.get("level", 0)) != LevelRules.level_of(entrance):
 			continue
 		var distance := maxi(absi(int(threat.x) - int(entrance.get("x", 0))), absi(int(threat.y) - int(entrance.get("y", 0))))
 		if distance <= int(threat.get("reach", 10)) + 2 and float(threat.power) > defense * THREAT_RATIO:
 			threatened = true
-			break
+			if float(threat.power) > strongest:
+				strongest = float(threat.power)
+				cache["threat_hero:%s" % String(town.get("placement_id", ""))] = threat
 	cache[key] = threatened
 	context["decision"] = cache
 	return threatened
+
+## The strongest hostile hero that threatens the town ({} when none does):
+## position, level, strength and reach.
+static func _strongest_threat(session: SessionStateStoreScript.SessionData, context: Dictionary, town: Dictionary) -> Dictionary:
+	if not _town_threatened(session, context, town):
+		return {}
+	return context.get("decision", {}).get("threat_hero:%s" % String(town.get("placement_id", "")), {})
+
+## Whether a hero stays in a threatened town of ours. The main hero stays
+## while the threat is too strong to attack; a lesser hero would only be lost
+## there and goes on. A weaker raider the hero can catch today it hunts. One it
+## cannot catch today would walk back in behind it, so the hero leaves just
+## enough troops to beat that raider, or stays when that would cost more than a
+## quarter of its strength.
+static func _holds_gate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, town: Dictionary, is_main: bool) -> bool:
+	var threat := _strongest_threat(session, context, town)
+	if threat.is_empty():
+		return false
+	if float(threat.power) * HERO_ATTACK_RATIO > hero_power(entry):
+		return is_main
+	var distance := maxi(absi(int(threat.x) - int(entry.get("x", 0))), absi(int(threat.y) - int(entry.get("y", 0))))
+	if distance <= int(entry.get(AI_HERO_KEY, {}).get("movement", {}).get("current", 0)):
+		return false
+	return not _leave_guard(session, context, entry, town, float(threat.power) * THREAT_RATIO)
+
+## Moves the fewest creatures of one kind that together beat `needed` from the
+## hero into the town's garrison. False when that would cost the hero more
+## than GUARD_SHARE_MAX of its strength or leave it without troops.
+static func _leave_guard(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, town: Dictionary, needed: float) -> bool:
+	var needed_left := needed - army_power(town.get("garrison", []))
+	if needed_left <= 0.0:
+		return true
+	var army: Dictionary = entry.get("enemy_army", {})
+	var stacks: Array = army.get("stacks", []).duplicate(true) if army.get("stacks", []) is Array else []
+	var total := army_power(stacks)
+	var best := -1
+	var best_count := 0
+	var best_cost := INF
+	for index in range(stacks.size()):
+		var stack: Dictionary = stacks[index]
+		var one := stack.duplicate(true)
+		one["count"] = 1
+		var unit := army_power([one])
+		if unit <= 0.0:
+			continue
+		var count := int(ceil(needed_left / unit))
+		if count > int(stack.get("count", 0)) or (count == int(stack.get("count", 0)) and stacks.size() == 1):
+			continue
+		if count * unit < best_cost:
+			best_cost = count * unit
+			best = index
+			best_count = count
+	if best < 0 or best_cost > total * GUARD_SHARE_MAX:
+		return false
+	var guard: Dictionary = stacks[best].duplicate(true)
+	guard["count"] = best_count
+	guard.erase("slot_index")
+	var placed := _merge_stacks_into(town.get("garrison", []), [guard])
+	if not placed.get("left", []).is_empty():
+		return false
+	stacks[best]["count"] = int(stacks[best].get("count", 0)) - best_count
+	if int(stacks[best]["count"]) <= 0:
+		stacks.remove_at(best)
+	var index := _entry_index(session, String(entry.get("placement_id", "")))
+	var town_index := int(_find_town(session, String(town.get("placement_id", ""))).get("index", -1))
+	if index < 0 or town_index < 0:
+		return false
+	army["stacks"] = stacks
+	entry["enemy_army"] = army
+	entry["enemy_commander_state"] = AdventureRules.sync_commander_army_continuity(entry.get("enemy_commander_state", {}), army, AI_HERO_ENCOUNTER_ID)
+	_store_entry(session, index, entry)
+	var towns: Array = session.overworld.get("towns", [])
+	towns[town_index]["garrison"] = placed.get("stacks", [])
+	session.overworld["towns"] = towns
+	context["decision"] = {}
+	return true
+
+## What holding a town is worth: a base plus two weeks of its income and of
+## the troops its dwellings muster, priced as the town planner prices them.
+static func _town_worth(session: SessionStateStoreScript.SessionData, context: Dictionary, town: Dictionary) -> float:
+	var cache: Dictionary = context.get("town_worth", {})
+	var id := String(town.get("placement_id", ""))
+	if cache.has(id):
+		return float(cache[id])
+	var income := _build_value(_overworld_rules().town_income(town, session)) * 7.0 * BUILD_HORIZON_WEEKS
+	var troops := _recruit_set_value(_trial_growth(town)) * BUILD_HORIZON_WEEKS
+	var worth := TOWN_BASE_VALUE + income + troops
+	cache[id] = worth
+	context["town_worth"] = cache
+	return worth
+
+## A share of the worth of the most valuable of our towns this hostile hero
+## threatens: removing it saves the town.
+static func _threatened_town_share(session: SessionStateStoreScript.SessionData, context: Dictionary, other: Dictionary) -> float:
+	var best := 0.0
+	var power := hero_power(other)
+	var reach := maxi(6, _movement_max(other))
+	for town in session.overworld.get("towns", []):
+		if not (town is Dictionary) or String(town.get("owner", "")) != "enemy" or PlayerRules.town_controller_id(town) != String(context.controller):
+			continue
+		var entrance := LevelRules.town_entrance(town)
+		if not LevelRules.same_level(entrance, other):
+			continue
+		var distance := maxi(absi(int(other.get("x", 0)) - int(entrance.get("x", 0))), absi(int(other.get("y", 0)) - int(entrance.get("y", 0))))
+		if distance <= reach + 2 and power > army_power(town.get("garrison", [])) * THREAT_RATIO:
+			best = maxf(best, _town_worth(session, context, town) * THREAT_KILL_SHARE)
+	return best
 
 ## Facts that hold for one decision; heroes and garrisons change between them.
 static func _decision_main_id(session: SessionStateStoreScript.SessionData, context: Dictionary) -> String:
@@ -1406,8 +1555,9 @@ static func _run_hero_day(session: SessionStateStoreScript.SessionData, context:
 		entry = session.overworld.encounters[index]
 		context["decision"] = {}
 		var home := _own_town_at(session, String(context.controller), entry)
-		if not home.is_empty() and placement_id == _main_hero_id(session, String(context.controller)) and _town_threatened(session, context, home):
-			# A hostile hero is a day away: the main army holds the gate.
+		if not home.is_empty() and _holds_gate(session, context, entry, home, placement_id == _main_hero_id(session, String(context.controller))):
+			# A hostile hero is a day away: the hero holds the gate, unless it
+			# can catch and beat that hero today.
 			break
 		var plan := _choose_plan(session, context, entry)
 		if plan.is_empty():
@@ -1962,7 +2112,7 @@ static func _candidate(session: SessionStateStoreScript.SessionData, context: Di
 			var other_power := hero_power(other)
 			if power < other_power * HERO_ATTACK_RATIO:
 				return {}
-			return {"kind": "ai_hero", "id": String(other.get("placement_id", "")), "index": int(ref.index), "value": 1200.0 + other_power * TROOP_VALUE_PER_POWER * 0.5, "fight_power": other_power}
+			return {"kind": "ai_hero", "id": String(other.get("placement_id", "")), "index": int(ref.index), "value": 1200.0 + other_power * TROOP_VALUE_PER_POWER * 0.5 + _threatened_town_share(session, context, other), "fight_power": other_power}
 	return {}
 
 ## A lesser hero walks its troops over to the main hero, the way a human
@@ -2269,19 +2419,26 @@ static func _town_candidate(session: SessionStateStoreScript.SessionData, contex
 			if stacks.size() > 1:
 				value = (army_power(stacks) - army_power([stacks[_weakest_stack_index(stacks)]])) * TROOP_VALUE_PER_POWER * 0.3
 		if _town_threatened(session, context, town):
-			value += 4000.0
+			value += maxf(TOWN_BASE_VALUE, _town_worth(session, context, town) * THREAT_KILL_SHARE)
 		if value <= 50.0:
 			return {}
 		return {"kind": "town_own", "id": id, "index": index, "value": value}
 	if owner != "neutral" and PlayerRules.allied(session, controller, town_controller if owner == "enemy" else "player"):
 		return {}
 	var defense := army_power(town.get("garrison", []))
+	var defender_index := _town_hero_defender_index(session, town, controller)
+	if defender_index >= 0:
+		defense += hero_power(session.overworld.encounters[defender_index])
 	if owner == "player":
 		var force: Dictionary = HeroCommandRulesScript.town_defense_force(session, town)
 		defense = army_power(town.get("garrison", [])) + army_power(force.get("hero", {}).get("army", {}).get("stacks", []), force.get("hero", {}))
 	if defense > 0.0 and power < defense * TOWN_ATTACK_RATIO:
 		return {}
-	var value := 6000.0 if owner == "player" else 4000.0
+	# A town is worth its income and troops, the human's most of all; a faction
+	# with no town left needs one to recruit at all.
+	var value := _town_worth(session, context, town) + (2000.0 if owner == "player" else 0.0)
+	if _turn_rules()._owned_town_entries(session, controller).is_empty():
+		value *= HOMELESS_TOWN_MULTIPLIER
 	return {"kind": "town_hostile" if owner != "neutral" else "town_neutral", "id": id, "index": index, "value": value - _expected_loss_value(power, defense), "fight_power": defense}
 
 static func _player_hero_seen(session: SessionStateStoreScript.SessionData, context: Dictionary, hero: Dictionary) -> bool:
@@ -2313,6 +2470,14 @@ static func _hostile_heroes(session: SessionStateStoreScript.SessionData, contro
 		var position: Dictionary = hero.get("position", {})
 		var movement: Dictionary = hero.get("movement", {}) if hero.get("movement", {}) is Dictionary else {}
 		result.append({"x": int(position.get("x", 0)), "y": int(position.get("y", 0)), "level": LevelRules.level_of(position), "power": army_power(hero.get("army", {}).get("stacks", []), hero), "reach": maxi(6, int(movement.get("max", 10)))})
+	# Other computer players' heroes threaten towns just as the human's do.
+	for entry in active_hero_entries(session):
+		var other := PlayerRules.raid_controller_id(entry)
+		if other == controller or PlayerRules.allied(session, controller, other):
+			continue
+		if not _position_seen(session, context, LevelRules.position(entry)):
+			continue
+		result.append({"x": int(entry.get("x", 0)), "y": int(entry.get("y", 0)), "level": LevelRules.level_of(entry), "power": hero_power(entry), "reach": maxi(6, _movement_max(entry))})
 	return result
 
 # --- Knowledge ----------------------------------------------------------------
@@ -3057,6 +3222,17 @@ static func _attack_town(session: SessionStateStoreScript.SessionData, context: 
 				"defender_owner": "player",
 			}, "%s attacks %s." % [hero_name(session.overworld.encounters[index]), _turn_rules()._town_name(town)], town)
 	var events := []
+	# A hero standing in the town defends it: beat that hero first.
+	var defender_index := _town_hero_defender_index(session, town, controller)
+	var defender_power := 0.0
+	if defender_index >= 0:
+		defender_power = hero_power(session.overworld.encounters[defender_index])
+		var duel := _fight_ai_hero(session, context, index, {"index": defender_index})
+		events.append_array(duel.get("events", []))
+		if _is_resolved(session, String(session.overworld.encounters[index].get("placement_id", ""))) or not _is_resolved(session, String(session.overworld.encounters[defender_index].get("placement_id", ""))):
+			return {"arrived": true, "events": events}
+		towns = session.overworld.get("towns", [])
+		town = towns[town_index]
 	var garrison: Array = town.get("garrison", []) if town.get("garrison", []) is Array else []
 	if army_power(garrison) > 0.0:
 		var fight := _auto_resolve(session, context, index, {
@@ -3079,6 +3255,9 @@ static func _attack_town(session: SessionStateStoreScript.SessionData, context: 
 	if not bool(transition.get("ok", false)):
 		return {"arrived": true, "events": events}
 	context["topology_changed"] = true
+	# A human buys a captured town's troops into its garrison at once, so a
+	# passing hero cannot simply walk back in.
+	events.append_array(_recruit_town(session, context, town_index, {}))
 	var entry: Dictionary = session.overworld.encounters[index]
 	if bool(session.flags.get(BATTLE_LOG_FLAG, false)):
 		var captures: Array = session.flags.get(CAPTURE_LOG_KEY, [])
@@ -3090,7 +3269,7 @@ static func _attack_town(session: SessionStateStoreScript.SessionData, context: 
 			"town_placement_id": String(town.get("placement_id", "")),
 			"town": _turn_rules()._town_name(town),
 			"from": previous_controller,
-			"garrison_power": army_power(garrison),
+			"garrison_power": army_power(garrison) + defender_power,
 		})
 		session.flags[CAPTURE_LOG_KEY] = captures
 	TurnPlayback.action(session, entry, "captures a town")

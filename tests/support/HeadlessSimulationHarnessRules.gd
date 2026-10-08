@@ -100,6 +100,9 @@ const STRATEGIC_AI_BASELINE_RMG_TURN_COUNT := 3
 const LIVE_TOWN_GOVERNOR_TURNS := 3
 ## Experience that makes a fixture's host commander its faction's main hero.
 const RECRUITMENT_HOST_EXPERIENCE := 5000
+## Creatures the host leads: the main hero holds at least half the strongest
+## army, which a tavern hire's starting army must not outweigh.
+const RECRUITMENT_HOST_COUNT := 40
 ## What a computer player's heroes visibly get done on the map.
 const AI_HERO_OBJECTIVE_EVENT_TYPES := ["ai_site_seized", "ai_artifact_secured", "ai_guard_defeated", "ai_town_captured"]
 const STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET := 100
@@ -2372,6 +2375,12 @@ static func _strategic_ai_live_route_progression(input_config: Dictionary) -> Di
 			break
 		var events: Array = turn_result.get("enemy_activity_events", []) if turn_result.get("enemy_activity_events", []) is Array else []
 		all_events.append_array(events)
+		# The main hero may attack the human's hero by its town; the human
+		# fights that battle, or every later computer turn waits on it.
+		if not session.battle.is_empty():
+			BattleAutoResolveRulesScript.resolve_active_battle(session)
+			if session.battle.is_empty() and String(session.scenario_status) == "in_progress":
+				session.game_state = "overworld"
 		var raid := _encounter_by_placement(session, raid_id)
 		if raid.is_empty():
 			failures.append("Live route raid disappeared on turn %d." % (turn_index + 1))
@@ -4630,7 +4639,7 @@ static func _recruitment_delivery_raid_seed(
 		"enemy_army": {
 			"id": "headless_recruitment_delivery_fixture_host",
 			"name": "Recruitment Delivery Host",
-			"stacks": [{"unit_id": unit_id, "count": 1}],
+			"stacks": [{"unit_id": unit_id, "count": RECRUITMENT_HOST_COUNT}],
 		},
 	}
 	raid["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
@@ -4641,9 +4650,9 @@ static func _recruitment_delivery_raid_seed(
 		{},
 		EnemyAdventureRules.commander_roster_for_faction(session, faction_id)
 	)
-	# The host is the faction's most experienced commander, so it leads the
-	# main army and the garrison marches out to it (AiHeroRules._main_hero_id),
-	# whatever a hero the town hires that day brings.
+	# The host is the faction's most experienced commander with a real army,
+	# so it leads the main army and the garrison marches out to it
+	# (AiHeroRules._main_hero_id), whatever a hero the town hires that day brings.
 	var commander: Dictionary = raid["enemy_commander_state"]
 	commander["experience"] = maxi(int(commander.get("experience", 0)), RECRUITMENT_HOST_EXPERIENCE)
 	raid["enemy_commander_state"] = commander

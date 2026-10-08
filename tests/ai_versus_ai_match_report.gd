@@ -9,6 +9,7 @@ extends Node
 # HEROES_AI_MATCH_SEED     match seed (factions and map); "random" draws one.
 # HEROES_AI_MATCH_MAX_DAYS day cap for an undecided match (default 160).
 # HEROES_AI_MATCH_OUT      where the JSON record goes (default user://).
+# HEROES_AI_MATCH_TRACE    1 prints each day's heroes, goals and towns.
 # HEROES_AI_MATCH_SWAP     1 plays the same map with the factions' starting
 #                          places swapped, to tell map balance from faction.
 
@@ -22,6 +23,11 @@ const DEFAULT_MAX_DAYS := 160
 const DEFAULT_OUT := "user://ai_versus_ai_match.json"
 ## The regression run stops here; a full match is an evaluation, not a test.
 const TEST_DAYS := 40
+## In the regression run's 40 days (capitals 9 tiles apart) a town may fall to
+## the other player without a fight at most this often. Before towns were
+## defended 45 of 48 captures were; with defense the match is decided on day 13
+## after one capture, past defenders.
+const MAX_UNOPPOSED_CAPTURES := 12
 
 var _failed := false
 
@@ -40,6 +46,7 @@ func _run() -> void:
 		match_seed = DEFAULT_SEED
 	var max_days := int(OS.get_environment("HEROES_AI_MATCH_MAX_DAYS")) if OS.get_environment("HEROES_AI_MATCH_MAX_DAYS") != "" else (DEFAULT_MAX_DAYS if full_match else TEST_DAYS)
 	var swapped := OS.get_environment("HEROES_AI_MATCH_SWAP").strip_edges() not in ["", "0"]
+	var trace := OS.get_environment("HEROES_AI_MATCH_TRACE").strip_edges() not in ["", "0"]
 	var out_path := OS.get_environment("HEROES_AI_MATCH_OUT").strip_edges()
 	if out_path == "":
 		out_path = DEFAULT_OUT
@@ -108,6 +115,8 @@ func _run() -> void:
 			_fail("Day %d left the overworld (%s) with no human seat." % [int(session.day), String(session.game_state)])
 			return
 		_note_changes(session, seats, captures_seen, heroes_seen, timeline)
+		if trace:
+			_print_trace(session, seats)
 		ledger.append(_day_row(session, seats))
 		if AiSeatRulesScript.match_over(session):
 			var standing := AiSeatRulesScript.standing_players(session)
@@ -136,6 +145,14 @@ func _run() -> void:
 	if battles.is_empty():
 		_fail("No fight was logged in %d days." % int(session.day))
 		return
+	if not full_match:
+		var unopposed := 0
+		for event in timeline:
+			if String(event.get("type", "")) == "town_captured" and String(event.get("from", "")) in seats and float(event.get("garrison_power", 0.0)) <= 0.0:
+				unopposed += 1
+		if unopposed > MAX_UNOPPOSED_CAPTURES:
+			_fail("%d towns fell to the other player without a fight in %d days." % [unopposed, int(session.day)])
+			return
 	var fought := {}
 	for battle in battles:
 		fought[String(battle.get("player_id", ""))] = true
@@ -317,6 +334,17 @@ func _note_changes(session, seats: Array, captures_seen: Array, heroes_seen: Dic
 		if placement_id in resolved:
 			seen["fell_day"] = int(session.day)
 			timeline.append({"day": int(session.day), "type": "hero_fell", "player_id": seat, "hero": String(seen.hero)})
+
+func _print_trace(session, seats: Array) -> void:
+	for seat in seats:
+		var heroes := []
+		for entry in AiHeroRulesScript.active_hero_entries(session, seat):
+			var goal: Dictionary = entry.get("ai_hero", {}).get("goal", {})
+			heroes.append("%s(%d)@%d,%d>%s:%s" % [AiHeroRulesScript.hero_name(entry), int(AiHeroRulesScript.hero_power(entry)), int(entry.get("x", 0)), int(entry.get("y", 0)), String(goal.get("kind", "")), String(goal.get("id", "")).get_slice("_object_", 1)])
+		var towns := []
+		for town in _towns_of(session, seat):
+			towns.append("%s@%d,%d g%d" % [_town_name(town), int(town.get("x", 0)), int(town.get("y", 0)), int(AiHeroRulesScript.army_power(town.get("garrison", []))) ])
+		print("MATCH_TRACE d%d %s gold=%d %s | %s" % [int(session.day), seat, int(_state(session, seat).get("treasury", {}).get("gold", 0)), " ".join(heroes), " ".join(towns)])
 
 func _day_row(session, seats: Array) -> Dictionary:
 	var row := {"day": int(session.day), "sides": {}}
