@@ -13,6 +13,8 @@ const FRAME := "res://art/ui/runtime/overworld/parchment_panel.png"
 const PORTRAIT_FRAME := "res://art/ui/runtime/overworld/hero_frame.png"
 
 var hero: Dictionary = {}
+## The close button names where the player returns (the Town screen sets its own).
+var close_label := "Return to map"
 var _panel: PanelContainer
 var _body: VBoxContainer
 var _tabs: TabContainer
@@ -87,7 +89,7 @@ func _build() -> void:
 	_body.add_child(header)
 	var title := _label(header, String(hero.get("name", "Hero")), 26, "gold")
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_close = _button(header, "Return to map", "Close hero sheet · Escape / controller Back", Vector2(160, 38))
+	_close = _button(header, close_label, "Close hero sheet · Escape / controller Back", Vector2(160, 38))
 	_close.name = "CloseHeroSheet"
 	_close.pressed.connect(close_sheet)
 	var content := HBoxContainer.new()

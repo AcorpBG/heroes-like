@@ -15,6 +15,9 @@ const TAVERN_OFFER_SIZE := 2
 const TAVERN_ROTATION_KEY := "tavern_rotation"
 const ARMY_SLOT_COUNT := 7
 const ARMY_SLOT_INDEX_KEY := "slot_index"
+const TOWN_GARRISON_HERO_KEY := "garrison_hero_id"
+const TOWN_GARRISON_HEROES_VERSION_KEY := "town_garrison_heroes_version"
+const TOWN_GARRISON_HEROES_VERSION := 1
 const DEFAULT_RECRUIT_COST := {"gold": 1200}
 const BASE_SCOUT_RADIUS := 6
 const TOWN_DEVELOPMENT_PATH := "res://content/town_development.json"
@@ -116,6 +119,7 @@ static func normalize_session(
 		active_hero_id = String(normalized_heroes[0].get("id", ""))
 	session.overworld["active_hero_id"] = active_hero_id
 	_sync_active_hero_mirror(session)
+	_normalize_town_garrison_heroes(session)
 
 static func build_hero_from_template(
 	hero_template: Dictionary,
@@ -646,13 +650,176 @@ static func stationed_heroes(session: SessionStateStoreScript.SessionData, town:
 
 static func town_defending_hero(session: SessionStateStoreScript.SessionData, town: Dictionary, preferred_hero_id: String = "") -> Dictionary:
 	var candidates := stationed_heroes(session, town)
-	for identity in [preferred_hero_id, String(session.overworld.get("active_hero_id", "")) if session != null else ""]:
+	if preferred_hero_id != "":
+		for hero in candidates:
+			if String(hero.get("id", "")) == preferred_hero_id: return hero
+	# The garrison hero's army is the garrison, so it holds the walls.
+	var garrison_hero := town_garrison_hero(session, town)
+	if not garrison_hero.is_empty():
+		return garrison_hero
+	for identity in [String(session.overworld.get("active_hero_id", "")) if session != null else ""]:
 		if identity == "": continue
 		for hero in candidates:
 			if String(hero.get("id", "")) == identity: return hero
 	for hero in candidates:
 		if bool(hero.get("is_primary", false)): return hero
 	return candidates[0] if not candidates.is_empty() else {}
+
+## HoMM-style town slots. Both heroes stand on the town entrance tile: one may
+## hold the garrison (its army is the garrison row) and one visits at the gate.
+static func town_garrison_hero(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	if session == null or town.is_empty():
+		return {}
+	var hero_id := String(town.get(TOWN_GARRISON_HERO_KEY, ""))
+	if hero_id == "":
+		return {}
+	var hero := hero_by_id(session, hero_id)
+	if hero.is_empty() or not _hero_is_stationed_at_town(hero, town):
+		return {}
+	return hero
+
+static func town_visiting_hero(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	var garrison_id := String(town_garrison_hero(session, town).get("id", ""))
+	var visitors := []
+	for hero in stationed_heroes(session, town):
+		if String(hero.get("id", "")) != garrison_id:
+			visitors.append(hero)
+	var active_hero_id := String(session.overworld.get("active_hero_id", "")) if session != null else ""
+	for hero in visitors:
+		if String(hero.get("id", "")) == active_hero_id:
+			return hero
+	return visitors[0] if not visitors.is_empty() else {}
+
+## The army slot holder of the garrison row: the garrison hero, else the town.
+static func town_garrison_holder_id(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
+	var hero := town_garrison_hero(session, town)
+	return String(hero.get("id", "")) if not hero.is_empty() else HOLDER_GARRISON
+
+## Places `hero_id` in the garrison, or sends the garrison hero out to the gate
+## when `hero_id` is "". Entering an unheld garrison takes its troops into the
+## hero's army (they must fit in seven slots); entering a held garrison swaps the
+## two heroes, the old garrison hero leaving with its own army.
+static func set_town_garrison_hero(session: SessionStateStoreScript.SessionData, town: Dictionary, hero_id: String) -> Dictionary:
+	normalize_session(session)
+	var live_town := _live_town(session, town)
+	if live_town.is_empty():
+		return {"ok": false, "message": "No town is available for its garrison."}
+	if String(live_town.get("owner", "neutral")) != "player":
+		return {"ok": false, "message": "Only your towns take a garrison hero."}
+	var current := town_garrison_hero(session, live_town)
+	var current_id := String(current.get("id", ""))
+	if hero_id == "":
+		if current.is_empty():
+			return {"ok": false, "message": "No hero holds the garrison."}
+		var visitor := town_visiting_hero(session, live_town)
+		if not visitor.is_empty():
+			return {"ok": false, "message": "%s already waits at the gate. Swap the two heroes instead." % String(visitor.get("name", "A hero"))}
+		_write_town_garrison_hero(session, live_town, "")
+		town[TOWN_GARRISON_HERO_KEY] = ""
+		return {"ok": true, "operation": "release", "hero_id": current_id, "message": "%s leaves the garrison and waits at the gate." % String(current.get("name", "The hero"))}
+	if hero_id == current_id:
+		return {"ok": false, "message": "%s already holds the garrison." % String(current.get("name", "That hero"))}
+	var hero := hero_by_id(session, hero_id)
+	if hero.is_empty() or not _hero_is_stationed_at_town(hero, live_town):
+		return {"ok": false, "message": "Only a hero at this town can enter its garrison."}
+	var hero_name := String(hero.get("name", "The hero"))
+	if current.is_empty():
+		var town_stacks: Array = live_town.get("garrison", []) if live_town.get("garrison", []) is Array else []
+		var merged := merge_stacks_into_army(_holder_stacks(session, live_town, hero_id), town_stacks)
+		if merged.is_empty() and _valid_stack_count(town_stacks) > 0:
+			return {"ok": false, "message": "%s's army has no room for the garrison's troops. Free a slot or merge stacks first." % hero_name}
+		if _valid_stack_count(town_stacks) > 0:
+			_set_holder_stacks(session, live_town, hero_id, merged)
+			_set_holder_stacks(session, live_town, HOLDER_GARRISON, [])
+		_write_town_garrison_hero(session, live_town, hero_id)
+		town[TOWN_GARRISON_HERO_KEY] = hero_id
+		town["garrison"] = []
+		return {"ok": true, "operation": "garrison", "hero_id": hero_id, "message": "%s takes command of the garrison." % hero_name}
+	_write_town_garrison_hero(session, live_town, hero_id)
+	town[TOWN_GARRISON_HERO_KEY] = hero_id
+	return {"ok": true, "operation": "swap", "hero_id": hero_id, "released_hero_id": current_id, "message": "%s takes the garrison; %s waits at the gate." % [hero_name, String(current.get("name", "the other hero"))]}
+
+## Merges `incoming` stacks into `army` (same units join, new units take free
+## slots). Returns the slotted result, or [] when the units do not fit.
+static func merge_stacks_into_army(army: Array, incoming: Array) -> Array:
+	var merged := _slotted_stacks(army)
+	for stack_value in incoming:
+		if not (stack_value is Dictionary):
+			continue
+		var unit_id := String(stack_value.get("unit_id", ""))
+		var count := int(stack_value.get("count", 0))
+		if unit_id == "" or count <= 0:
+			continue
+		var joined := false
+		for index in range(merged.size()):
+			if String(merged[index].get("unit_id", "")) == unit_id:
+				merged[index]["count"] = int(merged[index].get("count", 0)) + count
+				joined = true
+				break
+		if joined:
+			continue
+		var claimed := {}
+		for stack in merged:
+			claimed[int(stack.get(ARMY_SLOT_INDEX_KEY, -1))] = true
+		var slot := _first_open_army_slot(claimed)
+		if slot < 0:
+			return []
+		var placed: Dictionary = stack_value.duplicate(true)
+		placed[ARMY_SLOT_INDEX_KEY] = slot
+		merged.append(placed)
+	merged.sort_custom(_stack_slot_less)
+	return merged
+
+static func _live_town(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	var placement_id := String(town.get("placement_id", ""))
+	for entry in session.overworld.get("towns", []):
+		if entry is Dictionary and String(entry.get("placement_id", "")) == placement_id:
+			return entry
+	return {}
+
+static func _write_town_garrison_hero(session: SessionStateStoreScript.SessionData, town: Dictionary, hero_id: String) -> void:
+	var live_town := _live_town(session, town)
+	if live_town.is_empty():
+		return
+	if hero_id == "":
+		live_town.erase(TOWN_GARRISON_HERO_KEY)
+	else:
+		live_town[TOWN_GARRISON_HERO_KEY] = hero_id
+
+## Clears garrison heroes that left, lost their town or no longer exist, and
+## once per save gives towns holding two of the player's heroes a garrison hero
+## (the commander not in active use), when the garrison's troops fit its army.
+static func _normalize_town_garrison_heroes(session: SessionStateStoreScript.SessionData) -> void:
+	var migrate := int(session.overworld.get(TOWN_GARRISON_HEROES_VERSION_KEY, 0)) < TOWN_GARRISON_HEROES_VERSION
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		var hero_id := String(town.get(TOWN_GARRISON_HERO_KEY, ""))
+		if hero_id != "":
+			if String(town.get("owner", "neutral")) != "player" or town_garrison_hero(session, town).is_empty():
+				town.erase(TOWN_GARRISON_HERO_KEY)
+			continue
+		if not migrate or String(town.get("owner", "neutral")) != "player":
+			continue
+		var stationed := stationed_heroes(session, town)
+		if stationed.size() < 2:
+			continue
+		var active_hero_id := String(session.overworld.get("active_hero_id", ""))
+		for hero in stationed:
+			var candidate_id := String(hero.get("id", ""))
+			if candidate_id == active_hero_id:
+				continue
+			var town_stacks: Array = town.get("garrison", []) if town.get("garrison", []) is Array else []
+			var merged := merge_stacks_into_army(_holder_stacks(session, town, candidate_id), town_stacks)
+			if merged.is_empty() and _valid_stack_count(town_stacks) > 0:
+				continue
+			if _valid_stack_count(town_stacks) > 0:
+				_set_holder_stacks(session, town, candidate_id, merged)
+				_set_holder_stacks(session, town, HOLDER_GARRISON, [])
+			town[TOWN_GARRISON_HERO_KEY] = candidate_id
+			break
+	session.overworld[TOWN_GARRISON_HEROES_VERSION_KEY] = TOWN_GARRISON_HEROES_VERSION
 
 static func town_recruitment_destination(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	# Remote management is not hero presence. Share the entrance/level and
@@ -950,7 +1117,7 @@ static func army_slot_snapshot(
 		"occupied_slot_count": occupied_count,
 		"overflow_stack_count": overflow_stacks.size(),
 		"overflow_stacks": overflow_stacks,
-		"message": "%d stacks exceed the seven-slot limit. Open Town Log & Logistics and use Transfers to reduce this army; no troops were removed." % occupied_count if occupied_count > ARMY_SLOT_COUNT else "",
+		"message": "%d stacks exceed the seven-slot limit. Merge stacks or move some to another army; no troops were removed." % occupied_count if occupied_count > ARMY_SLOT_COUNT else "",
 		"troop_count": troop_count,
 		"slots": slots,
 	}
@@ -1949,6 +2116,10 @@ static func hero_positions(session: SessionStateStoreScript.SessionData) -> Arra
 	var positions := []
 	if session == null:
 		return positions
+	var garrison_towns := {}
+	for town in session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get(TOWN_GARRISON_HERO_KEY, "")) != "":
+			garrison_towns[String(town.get(TOWN_GARRISON_HERO_KEY, ""))] = String(town.get("placement_id", ""))
 	for hero in session.overworld.get("player_heroes", []):
 		if hero is Dictionary:
 			positions.append(
@@ -1960,6 +2131,7 @@ static func hero_positions(session: SessionStateStoreScript.SessionData) -> Arra
 					"level": OverworldLevelRulesScript.level_of(hero),
 					"is_active": String(hero.get("id", "")) == String(session.overworld.get("active_hero_id", "")),
 					"boat_id": String(hero.get("boat_id", "")),
+					"garrison_town_placement_id": String(garrison_towns.get(String(hero.get("id", "")), "")),
 				}
 			)
 	return positions

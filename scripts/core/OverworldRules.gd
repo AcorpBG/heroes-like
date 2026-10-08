@@ -7298,6 +7298,7 @@ static func _normalize_towns(towns: Array, current_day: int = -1) -> Array:
 static func _copy_town_runtime_metadata(target: Dictionary, source: Dictionary) -> void:
 	for key in [
 		"development_version",
+		"garrison_hero_id",
 		"legacy_built_buildings",
 		"artifact_shop_purchases",
 		"town_service_claims",

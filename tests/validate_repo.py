@@ -33039,12 +33039,8 @@ def validate_town_capture_frontier_first_view_status(errors: list[str]) -> None:
         plaque_body = plaque_match.group("body")
         plaque_tokens = (
             "var readiness := OverworldRulesScript.town_battle_readiness(_town, _session)",
-            "var force := HeroCommandRulesScript.town_defense_force(_session, _town)",
             "var spell_tier := TownRulesScript.current_spell_tier(_town)",
             "var pressure := OverworldRulesScript.town_pressure_output(_town, _session)",
-            '"title": "Defending troops"',
-            '"value": "%d / %d stacks" % [force.troops, force.stack_count]',
-            '"title": "Garrison troops"',
             '"title": "Readiness"',
             '"value": "%d • not troops" % readiness',
             '"title": "Spell"',
@@ -33055,7 +33051,12 @@ def validate_town_capture_frontier_first_view_status(errors: list[str]) -> None:
         ensure(
             min(plaque_positions) >= 0 and plaque_positions == sorted(plaque_positions),
             errors,
-            "Town status plaques must separate defending force, garrison and readiness before Spell/contextual-Front/Routes from live rule state",
+            "Town status plaques must show readiness before Spell/contextual-Front/Routes from live rule state",
+        )
+        ensure(
+            '"title": "Defending troops"' not in plaque_body and '"title": "Garrison troops"' not in plaque_body,
+            errors,
+            "Town status plaques must not repeat troop counts; the garrison and visiting rows show them",
         )
         ensure(plaque_body.count("_contextual_front_plaque(pressure)") == 1, errors, "Town status plaques must own exactly one contextual Front slot")
 
@@ -52679,22 +52680,22 @@ def validate_active_play_supported_viewport_containment(errors: list[str]) -> No
         town_responsive.find("var narrow_layout := available_size.x < 960.0"),
         town_responsive.find("_header_label.clip_text = compact_layout"),
         town_responsive.find("_resource_chip_panel.custom_minimum_size.x = 96.0 if compact_layout else 226.0"),
-        town_responsive.find("_resource_label.custom_minimum_size.x = 80.0 if compact_layout else 210.0"),
-        town_responsive.find("_resource_label.set_compact_mode(compact_layout)"),
+        town_responsive.find("_resource_label.custom_minimum_size.x = 0.0"),
+        town_responsive.find("_resource_label.set_compact_mode(false)"),
         town_responsive.find("_stage_column.visible = true"),
-        town_responsive.find("_sidebar_shell_panel.visible = true"),
+        town_responsive.find("_sidebar_shell_panel.visible = false"),
         town_responsive.find("_town_orders_toggle_button.visible = false"),
         town_responsive.find("var rail_width := TOWN_COMPACT_MANAGEMENT_RAIL_WIDTH if compact_layout else TOWN_WIDE_MANAGEMENT_RAIL_WIDTH"),
         town_responsive.find("_sidebar_shell_panel.offset_left = -rail_width - TOWN_EDGE_GAP"),
     ]
-    ensure(all(index >= 0 for index in required_town_source_order) and required_town_source_order == sorted(required_town_source_order), errors, "Town compact header/resource budgets must precede the full-bleed stage and stable edge-overlay placement")
+    ensure(all(index >= 0 for index in required_town_source_order) and required_town_source_order == sorted(required_town_source_order), errors, "Town compact header budget, the bottom resource bar and the retired command sidebar must precede the full-bleed stage and stable edge-overlay placement")
     for token in (
         "_header_label.clip_text = compact_layout",
         "_resource_chip_panel.custom_minimum_size.x = 96.0 if compact_layout else 226.0",
-        "_resource_label.custom_minimum_size.x = 80.0 if compact_layout else 210.0",
-        "_resource_label.set_compact_mode(compact_layout)",
+        "_resource_label.custom_minimum_size.x = 0.0",
+        "_resource_label.set_compact_mode(false)",
         "_stage_column.visible = true",
-        "_sidebar_shell_panel.visible = true",
+        "_sidebar_shell_panel.visible = false",
         "_town_orders_toggle_button.visible = false",
     ):
         ensure(town_responsive.count(token) == 1, errors, f"Town responsive layout must own exactly one compact/full-bleed assignment: {token}")

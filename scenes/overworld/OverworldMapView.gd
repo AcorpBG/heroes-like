@@ -309,6 +309,10 @@ const HERO_GROUND_ANCHOR_Y_FACTOR := 0.72
 const HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR := 1.0
 const HERO_TOWN_FOOTPRINT_VISITOR_SPRITE_EXTENT_FACTOR := HERO_FIELD_SPRITE_EXTENT_FACTOR
 const HERO_TOWN_FOOTPRINT_VISITOR_RECT_CENTER_Y_FACTOR := 0.50
+const GARRISON_MEDALLION_RADIUS := 0.34
+const GARRISON_MEDALLION_RISE := 1.55
+const GARRISON_MEDALLION_SEGMENTS := 24
+const GARRISON_MEDALLION_GOLD := Color(0.88, 0.70, 0.32, 1.0)
 const WORLD_SPRITE_SILHOUETTE_MODEL := "eight_direction_alpha_silhouette_outline"
 const TOWN_SPRITE_SILHOUETTE_WIDTH_FACTOR := 0.003
 const TOWN_SPRITE_SILHOUETTE_MIN_PX := 0.55
@@ -740,6 +744,9 @@ var _generated_decorative_bodies_by_tile: Dictionary = {}
 var _native_scenery_layers_by_tile: Dictionary = {}
 var _standalone_map_objects_by_tile: Dictionary = {}
 var _heroes_by_tile: Dictionary = {}
+# Garrisoned heroes by town entrance tile: drawn as a medallion on the town.
+var _garrison_heroes_by_tile: Dictionary = {}
+var _hero_portrait_textures: Dictionary = {}
 var _boats_by_tile: Dictionary = {}
 var _decorative_object_asset_ids: Dictionary = {}
 var _generated_decorative_blocker_asset_ids_by_biome: Dictionary = {}
@@ -1737,6 +1744,11 @@ func _canvas_draw_colored_polygon(points: PackedVector2Array, color: Color) -> v
 	if _record_scenery_command(&"draw_colored_polygon", [points, _actor_color(color)]):
 		return
 	_current_draw_canvas_item().draw_colored_polygon(points, _actor_color(color))
+
+func _canvas_draw_string(font: Font, position: Vector2, text: String, alignment: HorizontalAlignment, width: float, font_size: int, color: Color) -> void:
+	if _record_scenery_command(&"draw_string", [font, position, text, alignment, width, font_size, _actor_color(color)]):
+		return
+	_current_draw_canvas_item().draw_string(font, position, text, alignment, width, font_size, _actor_color(color))
 
 func _canvas_draw_polygon(points: PackedVector2Array, colors: PackedColorArray) -> void:
 	if _record_scenery_command(&"draw_polygon", [points, colors]):
@@ -3868,6 +3880,49 @@ func _draw_tile_dynamic_icon(tile: Vector2i, rect: Rect2) -> void:
 		_draw_hero_marker(rect, tile)
 	elif _boats_by_tile.has(_tile_key(tile)):
 		_draw_free_boat(rect, not visible)
+	if visible and _garrison_heroes_by_tile.has(_tile_key(tile)):
+		_draw_garrison_medallion(rect, _garrison_heroes_by_tile[_tile_key(tile)])
+
+## A hero in a town's garrison stays inside the walls: its portrait hangs on the
+## town above the gate, marked "G" like its entry in the hero list.
+func _draw_garrison_medallion(entrance_rect: Rect2, hero: Dictionary) -> void:
+	var extent := minf(entrance_rect.size.x, entrance_rect.size.y)
+	var radius := extent * GARRISON_MEDALLION_RADIUS
+	var center := entrance_rect.get_center() + Vector2(0.0, -extent * GARRISON_MEDALLION_RISE)
+	var ring := maxf(1.5, radius * 0.14)
+	_canvas_draw_circle(center, radius + ring, MARKER_OUTLINE_COLOR, true, -1.0, true)
+	_canvas_draw_circle(center, radius + ring * 0.55, GARRISON_MEDALLION_GOLD, true, -1.0, true)
+	var texture := _hero_portrait_texture(String(hero.get("id", "")))
+	var points := PackedVector2Array()
+	var uvs := PackedVector2Array()
+	for index in range(GARRISON_MEDALLION_SEGMENTS):
+		var angle := TAU * float(index) / float(GARRISON_MEDALLION_SEGMENTS)
+		var direction := Vector2(cos(angle), sin(angle))
+		points.append(center + direction * radius)
+		# Portraits are taller than wide: sample the face, upper middle of the art.
+		uvs.append(Vector2(0.5, 0.36) + Vector2(direction.x * 0.42, direction.y * 0.32))
+	if texture != null:
+		var colors := PackedColorArray()
+		colors.resize(points.size())
+		colors.fill(Color(1.0, 1.0, 1.0, 1.0))
+		_canvas_draw_textured_polygon(points, colors, uvs, texture)
+	else:
+		_canvas_draw_colored_polygon(points, Color(0.12, 0.13, 0.13, 1.0))
+	var badge_size := radius * 0.82
+	var badge := Rect2(center + Vector2(radius * 0.38, radius * 0.38), Vector2(badge_size, badge_size))
+	_canvas_draw_rect(badge, MARKER_OUTLINE_COLOR)
+	_canvas_draw_rect(badge.grow(-maxf(1.0, badge_size * 0.10)), GARRISON_MEDALLION_GOLD, false, maxf(1.0, badge_size * 0.10))
+	var font := get_theme_default_font()
+	var font_size := int(maxf(8.0, badge_size * 0.78))
+	_canvas_draw_string(font, badge.position + Vector2(badge_size * 0.22, badge_size * 0.80), "G", HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, GARRISON_MEDALLION_GOLD)
+
+func _hero_portrait_texture(hero_id: String) -> Texture2D:
+	if _hero_portrait_textures.has(hero_id):
+		return _hero_portrait_textures[hero_id]
+	var path := String(ContentService.get_hero_art(hero_id).get("portrait", ""))
+	var texture: Texture2D = load(path) as Texture2D if path != "" and ResourceLoader.exists(path, "Texture2D") else null
+	_hero_portrait_textures[hero_id] = texture
+	return texture
 
 ## An empty boat moored on its water tile (WaterTravelRules).
 func _draw_free_boat(rect: Rect2, remembered: bool) -> void:
@@ -11319,6 +11374,7 @@ func _stable_unit_fraction(stable_key: String) -> float:
 
 func _rebuild_hero_index() -> void:
 	_heroes_by_tile.clear()
+	_garrison_heroes_by_tile.clear()
 	_boats_by_tile.clear()
 	for boat_value in WaterTravelScript.free_boats(_session, _level):
 		_boats_by_tile[_tile_key(Vector2i(int(boat_value.get("x", -1)), int(boat_value.get("y", -1))))] = boat_value
@@ -11329,6 +11385,9 @@ func _rebuild_hero_index() -> void:
 		if not LevelRules.on_level(hero_value, _level):
 			continue
 		var key := _tile_key(Vector2i(int(hero.get("x", -1)), int(hero.get("y", -1))))
+		if String(hero.get("garrison_town_placement_id", "")) != "":
+			_garrison_heroes_by_tile[key] = hero
+			continue
 		var heroes: Array = _heroes_by_tile.get(key, [])
 		heroes.append(hero)
 		_heroes_by_tile[key] = heroes
@@ -11383,7 +11442,7 @@ func _enemy_commander_presentation_signature(encounters: Variant) -> int:
 func _hero_index_signature_for(session) -> int:
 	if session == null:
 		return 0
-	var heroes := _placement_array_cache_signature(HeroCommandRulesScript.hero_positions(session), ["hero_id", "is_active", "boat_id"])
+	var heroes := _placement_array_cache_signature(HeroCommandRulesScript.hero_positions(session), ["hero_id", "is_active", "boat_id", "garrison_town_placement_id"])
 	return _combine_cache_signature(_combine_cache_signature(_level, heroes), _placement_array_cache_signature(WaterTravelScript.boats(session), ["id", "hero_id"]))
 
 func _ensure_road_tile_payload(tile: Vector2i, overlay_id: String, road_id: String, role: String, source_tile: Dictionary = {}) -> void:

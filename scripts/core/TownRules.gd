@@ -1878,6 +1878,22 @@ static func manage_army_slots_in_active_town(
 			finalized[key] = result[key]
 	return finalized
 
+## Moves a hero into the active town's garrison ("" sends the garrison hero out
+## to the gate). See HeroCommandRules.set_town_garrison_hero.
+static func set_garrison_hero_in_active_town(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return {"ok": false, "message": "No town is available for its garrison."}
+	var result: Dictionary = HeroCommandRulesScript.set_town_garrison_hero(session, town, hero_id)
+	if not bool(result.get("ok", false)):
+		return result
+	var finalized := _finalize_town_result(session, true, String(result.get("message", "")))
+	for key_value in result.keys():
+		var key := String(key_value)
+		if key not in ["ok", "message"]:
+			finalized[key] = result[key]
+	return finalized
+
 static func perform_response_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
 	if action_id.begins_with("town_"):
 		var town := get_active_town(session)

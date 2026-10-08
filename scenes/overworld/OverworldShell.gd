@@ -5277,11 +5277,49 @@ func _rebuild_hero_actions() -> void:
 		button.set_meta("art_path", portrait_path)
 		button.set_meta("active", is_active)
 		_sync_hero_roster_readiness(button, hero_id, action)
+		_sync_hero_garrison_badge(button, hero_id)
 		retained.append(button)
 		displayed_hero_count += 1
 	_reconcile_roster_buttons(_hero_actions, retained)
 	_hero_roster_title_label.text = "Heroes  %d" % displayed_hero_count
 	_sync_next_movable_hero_state()
+
+## A hero in a town's garrison is marked "G", like its medallion on the map.
+func _sync_hero_garrison_badge(button: Button, hero_id: String) -> void:
+	var town_name := ""
+	for town in _session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get(HeroCommandRules.TOWN_GARRISON_HERO_KEY, "")) == hero_id:
+			town_name = String(ContentService.get_town(String(town.get("town_id", ""))).get("name", "town"))
+			break
+	var badge := button.get_node_or_null("GarrisonBadge") as Label
+	button.set_meta("garrison_town_name", town_name)
+	if town_name == "":
+		if badge != null:
+			badge.visible = false
+		return
+	if badge == null:
+		badge = Label.new()
+		badge.name = "GarrisonBadge"
+		badge.text = "G"
+		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		badge.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		badge.add_theme_font_size_override("font_size", 11)
+		badge.add_theme_color_override("font_color", Color(0.95, 0.78, 0.38))
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color(0.05, 0.05, 0.05, 0.92)
+		style.border_color = Color(0.88, 0.70, 0.32)
+		style.set_border_width_all(1)
+		style.set_corner_radius_all(3)
+		badge.add_theme_stylebox_override("normal", style)
+		button.add_child(badge)
+		badge.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+		badge.offset_left = -19
+		badge.offset_top = 3
+		badge.offset_right = -3
+		badge.offset_bottom = 19
+	badge.visible = true
+	badge.accessibility_name = "In the garrison of %s" % town_name
 
 ## Movement and mana as the player sees them now. The active hero's values live
 ## on the session mirrors until commit_active_hero copies them into the roster.

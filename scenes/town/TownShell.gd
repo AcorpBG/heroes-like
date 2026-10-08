@@ -12,6 +12,8 @@ const TownConstructionScreenScript = preload("res://scenes/town/TownConstruction
 const TownConstructionBoardScript = preload("res://scripts/core/TownConstructionBoard.gd")
 const TownBuildingPanelScript = preload("res://scripts/core/TownBuildingPanel.gd")
 const TownBuildingPanelViewScript = preload("res://scenes/town/TownBuildingPanelView.gd")
+const TownArmyRowsScript = preload("res://scenes/town/TownArmyRows.gd")
+const HeroSheetScript = preload("res://scenes/shared/HeroSheet.gd")
 const TownRecruitCardScript = preload("res://scenes/town/TownRecruitCard.gd")
 
 const UI_ART_TOWN_BANNER_FRAME := "res://art/ui/runtime/town/banner_frame.png"
@@ -26,6 +28,8 @@ const TOWN_WIDE_MANAGEMENT_RAIL_WIDTH := 290.0
 const TOWN_HEADER_HEIGHT := 48.0
 const TOWN_FOOTER_HEIGHT := 48.0
 const TOWN_EDGE_GAP := 8.0
+const TOWN_SWITCHER_WIDTH := 172.0
+const TOWN_SWITCHER_ICON_HEIGHT := 76.0
 const TOWN_ACTION_ICON_PATHS := {
 	"build": "res://art/towns/runtime/building_categories/civic.png",
 	"muster": "res://art/towns/runtime/building_categories/dwelling.png",
@@ -165,6 +169,7 @@ func _open_construction_screen() -> void:
 	_rebuild_build_actions(_read_build_catalog())
 	_construction_screen.set_peek(false)
 	move_child(_construction_screen, get_child_count() - 1)
+	_keep_town_bars_on_top()
 	_construction_screen.visible = true
 	_apply_responsive_layout()
 	call_deferred("_configure_town_keyboard_focus", true)
@@ -329,6 +334,13 @@ var _load_resumed_cue_presenter: SystemLoadResumedCuePresenter
 
 static var _town_entity_cache_by_session: Dictionary = {}
 
+# HoMM-style town layout (docs/town-garrison-rows.md): army rows bottom left,
+# the overworld resource bar along the bottom edge, the town list top right.
+var _army_rows: PanelContainer
+var _resource_bar_panel: PanelContainer
+var _town_switcher: VBoxContainer
+var _hero_sheet: Control
+
 func _ready() -> void:
 	_banner_panel.set_meta("contextual_help_exclusion", true)
 	var profile_started := ProfileLogScript.begin_usec()
@@ -338,6 +350,7 @@ func _ready() -> void:
 	_prepare_direct_dialog_surfaces()
 	_promote_town_edge_overlays()
 	_configure_direct_action_buttons()
+	_build_garrison_rows_layout()
 	if _town_stage_view.has_method("set_external_command_overlay"):
 		_town_stage_view.call("set_external_command_overlay", true)
 	_save_written_cue_presenter = SystemSaveWrittenCuePresenterScript.new()
@@ -388,6 +401,7 @@ func _ready() -> void:
 		return
 	_session.game_state = "town"
 	TownRules.teach_visiting_heroes(_session, TownRules.get_active_town(_session))
+	_refresh_town_switcher()
 	phase_started = ProfileLogScript.begin_usec()
 	_configure_save_slot_picker()
 	buckets["configure_save_surface"] = ProfileLogScript.elapsed_ms(phase_started)
@@ -428,12 +442,16 @@ func _apply_responsive_layout() -> void:
 	var narrow_layout := available_size.x < 960.0
 	_header_label.clip_text = compact_layout
 	_resource_chip_panel.custom_minimum_size.x = 96.0 if compact_layout else 226.0
-	_resource_label.custom_minimum_size.x = 80.0 if compact_layout else 210.0
-	_resource_label.set_compact_mode(compact_layout)
+	_resource_label.custom_minimum_size.x = 0.0
+	_resource_label.set_compact_mode(false)
 	_narrow_layout_active = narrow_layout
 	_narrow_orders_open = false
 	_stage_column.visible = true
-	_sidebar_shell_panel.visible = true
+	# The Command card, action dock and footer are retired; the army panel, the
+	# resource bar and the banner's Return to Field replace them.
+	_sidebar_shell_panel.visible = false
+	_footer_panel.visible = false
+	_resource_chip_panel.visible = false
 	_sidebar_shell_panel.custom_minimum_size = Vector2.ZERO
 	_town_orders_toggle_button.visible = false
 	_command_panel.visible = available_size.x >= 1120.0 and available_size.y >= 640.0
@@ -456,12 +474,14 @@ func _apply_responsive_layout() -> void:
 	_footer_panel.offset_top = -TOWN_FOOTER_HEIGHT - TOWN_EDGE_GAP
 	_footer_panel.offset_right = -TOWN_EDGE_GAP
 	_footer_panel.offset_bottom = -TOWN_EDGE_GAP
+	var resource_bar_height := _layout_garrison_rows()
 	if _town_catalog_panel != null:
 		var catalog_center := _town_catalog_panel.get_parent() as CenterContainer
 		catalog_center.offset_left = 18.0
 		catalog_center.offset_right = -18.0
 		catalog_center.offset_top = 18.0
-		catalog_center.offset_bottom = -18.0
+		# Popouts stay above the resource bar so the stores remain readable.
+		catalog_center.offset_bottom = -18.0 - resource_bar_height
 		(_town_catalog_overlay.get_node("CatalogShade") as ColorRect).color.a = 0.72
 		_town_catalog_scroll.custom_minimum_size.y = 340.0
 		# Building popouts and the Muster Hall carry recruit cards, spell shelves
@@ -1051,6 +1071,168 @@ func _refresh_army_management(town: Dictionary) -> void:
 	if not active_hero.is_empty():
 		holders.append(active_hero)
 	_army_management.configure(holders, not holders.is_empty())
+	_refresh_town_army_rows(town)
+
+## Builds the HoMM-style town furniture: the army panel (command squares,
+## garrison and visiting rows), the overworld resource bar along the bottom
+## edge, the town list at the top right and Return to Field in the banner.
+func _build_garrison_rows_layout() -> void:
+	_army_rows = TownArmyRowsScript.new()
+	_army_rows.name = "TownArmyRows"
+	add_child(_army_rows)
+	_army_rows.set_command_buttons([_build_action_button, _muster_action_button, _trade_action_button, _spells_action_button])
+	_log_action_button.visible = false
+	_army_rows.slot_order_requested.connect(_on_army_slot_operation_requested)
+	_army_rows.garrison_hero_requested.connect(_on_garrison_hero_requested)
+	_army_rows.hero_sheet_requested.connect(_open_town_hero_sheet)
+	_army_rows.z_index = 16
+	_resource_bar_panel = PanelContainer.new()
+	_resource_bar_panel.name = "TownResourceBar"
+	FrontierVisualKit.apply_badge(_resource_bar_panel, "gold")
+	add_child(_resource_bar_panel)
+	_resource_label.get_parent().remove_child(_resource_label)
+	_resource_bar_panel.add_child(_resource_label)
+	_resource_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_resource_label.enable_inline_icons()
+	# Above building popouts (48) and the construction screen (40).
+	_resource_bar_panel.z_index = 52
+	_town_switcher = VBoxContainer.new()
+	_town_switcher.name = "TownSwitcher"
+	_town_switcher.add_theme_constant_override("separation", 6)
+	_town_switcher.z_index = 16
+	add_child(_town_switcher)
+	var top_bar := _resource_chip_panel.get_parent()
+	_leave_button.get_parent().remove_child(_leave_button)
+	top_bar.add_child(_leave_button)
+	top_bar.move_child(_leave_button, _resource_chip_panel.get_index())
+
+## Places the army panel bottom left above the resource bar and the town list
+## top right; returns the space the resource bar takes at the bottom edge.
+func _layout_garrison_rows() -> float:
+	if _army_rows == null or _resource_bar_panel == null:
+		return 0.0
+	var viewport_size := size if size.x > 0.0 and size.y > 0.0 else get_viewport_rect().size
+	var bar_height := maxf(34.0, _resource_bar_panel.get_combined_minimum_size().y)
+	_resource_bar_panel.position = Vector2(4.0, viewport_size.y - bar_height - 4.0)
+	_resource_bar_panel.size = Vector2(viewport_size.x - 8.0, bar_height)
+	var rows_size := _army_rows.get_combined_minimum_size()
+	_army_rows.position = Vector2(TOWN_EDGE_GAP, viewport_size.y - bar_height - 8.0 - rows_size.y)
+	_army_rows.size = rows_size
+	if _town_switcher != null:
+		_town_switcher.position = Vector2(viewport_size.x - TOWN_SWITCHER_WIDTH - TOWN_EDGE_GAP, TOWN_HEADER_HEIGHT + TOWN_EDGE_GAP)
+		_town_switcher.size = Vector2(TOWN_SWITCHER_WIDTH, 0.0)
+	return bar_height + 8.0
+
+func _keep_town_bars_on_top() -> void:
+	if _resource_bar_panel != null and _resource_bar_panel.get_parent() == self:
+		move_child(_resource_bar_panel, get_child_count() - 1)
+
+func _refresh_town_army_rows(town: Dictionary) -> void:
+	if _army_rows == null or _session == null:
+		return
+	var state := {}
+	var garrison_hero := HeroCommandRules.town_garrison_hero(_session, town)
+	var visiting_hero := HeroCommandRules.town_visiting_hero(_session, town)
+	for side in ["garrison", "visiting"]:
+		var hero: Dictionary = garrison_hero if side == "garrison" else visiting_hero
+		var hero_id := String(hero.get("id", ""))
+		var holder_id := HeroCommandRules.town_garrison_holder_id(_session, town) if side == "garrison" else hero_id
+		var snapshot: Dictionary = HeroCommandRules.army_slot_snapshot(_session, town, holder_id) if holder_id != "" else {}
+		state[side] = {
+			"holder_id": holder_id,
+			"hero_id": hero_id,
+			"hero_name": String(hero.get("name", "")),
+			"portrait": String(ContentService.get_hero_art(hero_id).get("portrait", "")) if hero_id != "" else "",
+			"slots": snapshot.get("slots", []),
+		}
+	_army_rows.configure(state)
+
+func _refresh_town_switcher() -> void:
+	if _town_switcher == null or _session == null:
+		return
+	for child in _town_switcher.get_children():
+		_town_switcher.remove_child(child)
+		child.queue_free()
+	var active_placement := String(TownRules.get_active_town(_session).get("placement_id", ""))
+	for town_value in _session.overworld.get("towns", []):
+		if not (town_value is Dictionary) or String(town_value.get("owner", "neutral")) != "player":
+			continue
+		var town: Dictionary = town_value
+		var placement_id := String(town.get("placement_id", ""))
+		var town_data := ContentService.get_town(String(town.get("town_id", "")))
+		var town_name := String(town_data.get("name", placement_id))
+		var current := placement_id == active_placement
+		var button := Button.new()
+		button.name = "TownSwitch_%s" % placement_id
+		button.custom_minimum_size = Vector2(TOWN_SWITCHER_WIDTH, TOWN_SWITCHER_ICON_HEIGHT)
+		button.clip_contents = true
+		button.focus_mode = Control.FOCUS_ALL
+		button.tooltip_text = "%s\n%s" % [town_name, "You are here." if current else "Open this town."]
+		button.accessibility_name = "%s town %s" % ["Current" if current else "Open", town_name]
+		button.set_meta("town_placement_id", placement_id)
+		button.set_meta("current", current)
+		var frame := StyleBoxFlat.new()
+		frame.bg_color = Color(0.0, 0.0, 0.0, 0.8)
+		frame.border_color = Color(0.88, 0.70, 0.32) if current else Color(0.46, 0.37, 0.19)
+		frame.set_border_width_all(3 if current else 1)
+		frame.set_corner_radius_all(4)
+		for state_name in ["normal", "hover", "pressed", "focus"]:
+			button.add_theme_stylebox_override(state_name, frame)
+		var art := TextureRect.new()
+		art.texture = _unit_art_texture(String(town_data.get("scenic_backdrop_path", "")))
+		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		art.offset_left = 3
+		art.offset_top = 3
+		art.offset_right = -3
+		art.offset_bottom = -3
+		button.add_child(art)
+		var name_label := Label.new()
+		name_label.text = town_name
+		name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		name_label.add_theme_font_size_override("font_size", 13)
+		name_label.add_theme_color_override("font_color", Color(0.95, 0.80, 0.42) if current else Color(0.95, 0.91, 0.80))
+		name_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.95))
+		name_label.add_theme_constant_override("outline_size", 5)
+		name_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+		name_label.offset_top = -24
+		name_label.offset_bottom = -4
+		button.add_child(name_label)
+		button.pressed.connect(_on_town_switch_pressed.bind(placement_id))
+		_town_switcher.add_child(button)
+
+func _on_town_switch_pressed(placement_id: String) -> void:
+	if _session == null or placement_id == String(TownRules.get_active_town(_session).get("placement_id", "")):
+		return
+	var result := OverworldRules.set_active_town_visit(_session, placement_id)
+	if not bool(result.get("ok", false)):
+		_last_message = String(result.get("message", ""))
+		_refresh()
+		return
+	AppRouter.go_to_town()
+
+func _on_garrison_hero_requested(hero_id: String) -> void:
+	var result := TownRules.set_garrison_hero_in_active_town(_session, hero_id)
+	_last_message = String(result.get("message", "The garrison did not change."))
+	_army_rows.clear_selection()
+	if bool(result.get("ok", false)):
+		_invalidate_active_town_entity_cache("garrison_hero", ["town", "hero_army"])
+	_refresh()
+
+func _open_town_hero_sheet(hero_id: String) -> void:
+	var snapshot := HeroCommandRules.hero_inspection_snapshot(_session, hero_id)
+	if snapshot.is_empty():
+		return
+	if not is_instance_valid(_hero_sheet):
+		_hero_sheet = HeroSheetScript.new()
+		_hero_sheet.name = "HeroSheet"
+		_hero_sheet.close_label = "Return to town"
+		add_child(_hero_sheet)
+	_hero_sheet.z_index = 60
+	_hero_sheet.open_hero(snapshot, _army_rows)
 
 func _on_response_action_pressed(action_id: String) -> void:
 	var context := _prepare_order_read_context(action_id)
@@ -1407,6 +1589,12 @@ func _input(event: InputEvent) -> void:
 			_town_stage_view.call("dismiss_town_action_presentation")
 		return
 	if _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():
+		return
+	# The hero sheet closes itself on Escape; the town must not leave under it.
+	if is_instance_valid(_hero_sheet) and _hero_sheet.visible:
+		return
+	if event.is_action_pressed("ui_cancel") and _army_rows != null and _army_rows.cancel_transient():
+		get_viewport().set_input_as_handled()
 		return
 	if _construction_screen_is_open():
 		if event.is_action_pressed("ui_cancel"):

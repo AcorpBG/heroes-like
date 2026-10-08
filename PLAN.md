@@ -82,6 +82,10 @@ Rules:
 
 `perf-battle-refresh-read-scope-20261008` (completed, owner playtest fix): battle refreshes read each board state once (memoized reachability, attack legality and targets inside a read scope) and build hidden surfaces (save bar tooltips, collapsed sidebar) only when shown, removing the ~350 ms frame after battle entry and speeding every battle action. See `docs/battle-entry-transition.md`.
 
+### Town garrison and visiting rows
+
+`ux-town-garrison-rows-20261008` (completed, owner playtest fix): the Town screen has HoMM-style permanent rows: a 2x2 block of command squares, then the garrison row (garrison hero portrait + seven slots) and the visiting row, with click, drag and split troop orders and portrait clicks for the hero sheet and garrison swaps. The overworld resource bar sits along the bottom of every town view, an icon town list switches towns directly, and the Town Log, Command card and footer are retired. A hero can hold a town's garrison (its army is the garrison and defends the town) and shows on the overworld as a medallion with a G badge. See `docs/town-garrison-rows.md`.
+
 ### Water travel and transit objects
 
 `feature-water-travel-20261007` (completed for the player, owner direction): HoMM3-style boats. Walking onto a free boat boards it and stepping onto open shore leaves it, each ending the day's movement; sailing heroes move only on water and visit water sites. Neutral shipyards build a boat at their dock for 1,000 gold and 10 wood; whirlpools throw a boat out at another whirlpool for half of the weakest stack. Random maps translate HoMM3 transit objects by meaning instead of a random transit pick: boats, shipyards and whirlpools become themselves, border guards, gates, garrisons and quest guards become terrain-matched pay-to-open gates, keymaster's tents are left off, and portals and subterranean gates keep their passage with matching art. Shipyards and whirlpools are never used as stand-ins for other HoMM3 sites. Gates ask before taking payment, and older saves are migrated once. Follow-up: AI heroes do not sail yet. See `docs/water-travel.md`.

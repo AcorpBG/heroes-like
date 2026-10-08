@@ -2229,23 +2229,11 @@ func _cached_status_plaque_payloads() -> Array:
 
 func _status_plaque_payloads() -> Array:
 	var readiness := OverworldRulesScript.town_battle_readiness(_town, _session)
-	var force := HeroCommandRulesScript.town_defense_force(_session, _town)
 	var spell_tier := TownRulesScript.current_spell_tier(_town)
 	var pressure := OverworldRulesScript.town_pressure_output(_town, _session)
 	var disrupted := int(_logistics.get("disrupted_count", 0))
+	# Troop counts live in the garrison and visiting rows below the stage.
 	return [
-		{
-			"title": "Defending troops",
-			"value": "%d / %d stacks" % [force.troops, force.stack_count],
-			"color": Color(0.33, 0.60, 0.64, 0.95),
-			"kind": "guard",
-		},
-		{
-			"title": "Garrison troops",
-			"value": "Empty" if int(force.garrison_troops) == 0 else "%d / %d stacks" % [force.garrison_troops, force.garrison_stacks],
-			"color": Color(0.85, 0.64, 0.36, 0.95),
-			"kind": "garrison",
-		},
 		{
 			"title": "Readiness",
 			"value": "%d • not troops" % readiness,
