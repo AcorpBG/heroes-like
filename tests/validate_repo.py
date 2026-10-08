@@ -36805,8 +36805,8 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     world_tile_extent_block = gd_function_block(map_text, "_object_world_tile_extent")
     visible_footprint_block = gd_function_block(map_text, "_object_visible_footprint_rect")
     for token in (
-        "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.42",
-        "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.56",
+        "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.62",
+        "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.66",
         'const WORLD_OBJECT_SCALE_HIERARCHY_MODEL := "classic_readable_semantic_landmark_bands_v6"',
         "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.88",
         "const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.82",
@@ -36829,6 +36829,8 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     ):
         ensure(map_text.count(token) == 1, errors, f"Overworld world-scale hierarchy must own one exact production constant: {token}")
     for rejected_token in (
+        "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.42",
+        "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.56",
         "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.34",
         "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.38",
         "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.44",

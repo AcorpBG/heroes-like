@@ -25,11 +25,14 @@ On a copy of the owner's 108x108 generated map (Day 48, single level, fog fully 
 - **Art narrower than the footprint**: blocked tiles of a generated site that its painting leaves bare get a small terrain rock from the scenery's rock-contact palette (`OverworldMapView._draw_resource_flank_rocks`), so they no longer look walkable. The entrance stays clear; an opened route body gets none. Presentation only: occupancy is unchanged.
 - **Claimed one-time sites vanished**: a collected site now stays on the map when its map object says `interaction.remains_after_visit` (`OverworldRules.resource_node_is_present`). A looted guarded bank keeps blocking and shows its secured art; an opened route camp stays visible but passable; pickups are still taken. AI heroes clear the tiles a site blocked before their claim when the claim opens or removes it (`AiHeroRules`).
 
-## Still open
+## Readability fixes (owner go-ahead, slice `ux-scenery-pickup-readability-20261008`)
 
-- **Low-visibility blockers and pickups**: the empty-looking scenery tiles, tiny artifact and cache sprites, and the pickups hidden under scenery.
+- **Blocked scenery that looked walkable**: at index time each blocked scenery cell's painted coverage is sampled from small alpha masks of the art actually drawn there (its own piece, its formation slice, overlapping formations, edge rocks). A cell painted less than 30% gets a filler from its own family and terrain palette (rocks, bushes, deadwood, reeds; the family's tiny "low" pieces excluded). A cell's own piece is also at least 0.62 tile long. On the owner's map 808 of 6,311 cells get a filler; the art caches and the filler result are session-wide, so returning to the overworld costs about 5 ms (about 0.3 s once per map per launch).
+- **Tiny or hidden pickups**: artifacts are drawn at 0.62 of a tile (was 0.42) and loose pickups at 0.66 (was 0.56); pickups draw in the foreground pass with structures and armies, so a neighbouring canopy or rock silhouette no longer hides them; a faint static four-point glint marks every visible pickup.
 
 ## Validation
+
+`tests/overworld_scenery_pickup_readability_report.tscn` renders a generated small map with and without scenery and requires every scenery-blocked tile to show art, and places artifacts and caches just above scenery and in open ground and requires each to be visible and at least about half a tile.
 
 `tests/generated_site_footprint_dressing_report.tscn` builds a custom yard on a generated small map with only the affected objects (Bell Spire on grass and snow, Slipgate Mirror, Tide Kiln, Basalt Oath Tomb, sawmill, looted Eyrie and Barrow Vault, opened Railblock Camp, unclaimed Eyrie, taken pickup) and checks presence, blocking, the flank rocks and, with a window, that every blocked tile shows art or a rock.
 

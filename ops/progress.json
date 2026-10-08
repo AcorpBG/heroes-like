@@ -114352,6 +114352,19 @@
       "notes": "Owner go-ahead on scan findings 1 and 4. (1) OverworldMapView._resource_flank_rock_tiles/_draw_resource_flank_rocks: package block tiles of a generated site that its painted art (or mine art) does not reach get a terrain rock from native_scenery rock_contact_palettes with the base ground tint; never the entrance, none for an opened route body; presentation only. (4) OverworldRules.resource_node_is_present keeps a collected one-time node present when its map object's interaction.remains_after_visit is true: looted guarded banks keep blocking with secured art, opened route camps (block tiles already cleared) stay visible and passable, pickups are still taken; AiHeroRules clears the pre-claim static body when a claim opens or removes a site. Validation, focused per owner (no full rescan): new tests/generated_site_footprint_dressing_report (custom yard on a generated small map with only the affected objects; 74 checks windowed incl. per-object render/remove pixel checks that every blocked tile shows art or a rock), overworld_object_footprint_alignment_report passes, validate_repo identical (828). ai_player_rules_report not rerun."
     },
     {
+      "id": "ux-scenery-pickup-readability-20261008",
+      "title": "Blocked scenery always shows art; pickups larger, never hidden, with a glint",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/generated-object-placement-scan.md"
+      ],
+      "notes": "Owner go-ahead on scan findings 2 and 3. Scenery: OverworldMapView._index_scenery_cell_fillers samples each blocked scenery cell's painted coverage (4x4 samples against 24px alpha masks of its own piece, formation slice, overlapping formations and rock contacts; bottom rows first, early exit) and gives cells under 30% a filler from native_scenery component_palettes for the cell's family and terrain (low cells excluded), drawn by _draw_native_scenery_fillers; _scenery_piece_tiles sets a 0.62-tile minimum for a cell's own piece; NativeSceneryFormation.painted_tiles shared by slice and coverage. Static caches (alpha masks, raster sizes, filler result per session/level/scenery signature): owner's 108x108 map 808 of 6,311 cells filled, ~0.3 s once per map per launch, ~5 ms on later overworld rebuilds. Pickups: artifact extent 0.62 (was 0.42), loose pickup 0.66 (was 0.56), drawn in the foreground pass instead of before scenery, static glint on visible pickups; validate_repo pins and overworld_object_scale_regression expectations updated. Validation (focused, per owner): new tests/overworld_scenery_pickup_readability_report windowed 21 checks (511/511 scenery tiles show art, 8 pickups incl. 6 just above scenery visible and readable), terrain crops from the owner's map reviewed (swamp, snow, grass, rough, dirt, sand), validate_repo identical (828). Full scan not rerun."
+    },
+    {
       "id": "ux-resource-bar-daily-income-20261008",
       "title": "Resource bar shows each resource's daily income",
       "status": "completed",

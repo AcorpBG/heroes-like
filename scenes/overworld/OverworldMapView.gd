@@ -227,8 +227,8 @@ const HERO_PLATE_RADIUS_FACTOR := 0.33
 const OBJECT_SPRITE_PLATE_RADIUS_FACTOR := 0.40
 const OBJECT_SPRITE_EXTENT_FACTOR := 0.88
 const WORLD_OBJECT_SCALE_HIERARCHY_MODEL := "classic_readable_semantic_landmark_bands_v6"
-const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.42
-const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.56
+const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.62
+const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.66
 const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.88
 const OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES := 1.08
 const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.82
@@ -249,6 +249,12 @@ const OBJECT_PAINTED_BOUNDS_PADDING_PIXELS := 1
 const OBJECT_MIN_PAINTED_EXTENT_FRACTION := 0.34
 const OBJECT_VISIBLE_SCALE_MODEL := "cached_alpha_bounds_semantic_visible_extent"
 const GENERATED_DECORATIVE_BODY_SPRITE_EXTENT_TILES := 1.42
+# A blocking scenery cell's own piece is at least this long (tiles), so a
+# twig or reed reads as a clump; cells whose painted art covers less than
+# SCENERY_FILLER_MAX_COVERAGE get a filler from their family's palette.
+const SCENERY_PIECE_MIN_EXTENT_TILES := 0.62
+const SCENERY_FILLER_MAX_COVERAGE := 0.3
+const PICKUP_GLINT_COLOR := Color(1.0, 0.95, 0.78, 0.82)
 const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MIN := 0.96
 const GENERATED_DECORATIVE_BODY_SCALE_FACTOR_MAX := 1.04
 const GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES := 1
@@ -591,6 +597,12 @@ var _object_asset_regions: Dictionary = {}
 var _object_textures: Dictionary = {}
 var _object_texture_missing: Dictionary = {}
 var _object_texture_visible_regions: Dictionary = {}
+# Small alpha masks and sizes of scenery art (painted coverage of blocked
+# cells) and the filler result of the latest map and level. Static: the view is
+# rebuilt on every return to the overworld, the art and the scenery are not.
+static var _scenery_alpha_masks: Dictionary = {}
+static var _scenery_raster_sizes: Dictionary = {}
+static var _scenery_filler_cache: Dictionary = {}
 var _ownership_pennant_asset_ids: Dictionary = {}
 var _unit_art_textures: Dictionary = {}
 var _unit_art_texture_missing: Dictionary = {}
@@ -2179,19 +2191,19 @@ func _draw_state_layer() -> void:
 				object_presentations += _visible_object_presentation_count(tile)
 			_draw_tile_state_overlay(tile, rect)
 			_draw_town_footprint_underlay(tile, rect)
-			_draw_tile_ground_pickups(tile, rect)
-	# Ground loot (including its animated highlights) sits beneath overhanging
-	# canopies and rock silhouettes. Finish all loot before drawing scenery:
-	# a tree's canopy can reach tiles several rows above its ground anchor.
+	# A tree's canopy can reach tiles several rows above its ground anchor.
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile := Vector2i(x, y)
 			_draw_tile_scenery_icon(tile, _tile_rect(board_rect, tile))
-	# Structures and armies retain their readable foreground presentation.
+	# Loot, structures and armies keep a readable foreground: a pickup is never
+	# hidden under a neighbouring canopy or rock silhouette.
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile := Vector2i(x, y)
-			_draw_tile_state_icon(tile, _tile_rect(board_rect, tile), false)
+			var rect := _tile_rect(board_rect, tile)
+			_draw_tile_ground_pickups(tile, rect)
+			_draw_tile_state_icon(tile, rect, false)
 	OverworldRulesScript.end_fog_read_scope(_session)
 	_scenery_batches.finish()
 	_draw_canvas_item = previous_target
@@ -3838,10 +3850,25 @@ func _draw_tile_ground_pickups(tile: Vector2i, rect: Rect2) -> void:
 		var resource_rect := _resource_draw_rect(resource, rect, tile)
 		if not _draw_resource_sprite(resource, resource_rect, remembered, tile):
 			_draw_resource_marker(resource, resource_rect, remembered, tile)
+		elif not remembered:
+			_draw_pickup_glint(rect)
 	var artifact := _artifact_node_at(tile)
 	if not artifact.is_empty():
 		if not _draw_artifact_sprite(artifact, rect, remembered, tile):
 			_draw_artifact_marker(rect, remembered, tile)
+		elif not remembered:
+			_draw_pickup_glint(rect)
+
+## A faint, still four-point glint above a visible pickup so loot catches the
+## eye; static, so reduced motion is unaffected.
+func _draw_pickup_glint(rect: Rect2) -> void:
+	var center := rect.position + rect.size * Vector2(0.72, 0.26)
+	var arm := rect.size.x * 0.11
+	var waist := rect.size.x * 0.022
+	for axis in [Vector2.RIGHT, Vector2.DOWN]:
+		var side := Vector2(-axis.y, axis.x) * waist
+		_canvas_draw_colored_polygon(PackedVector2Array([center - axis * arm, center + side, center + axis * arm, center - side]), PICKUP_GLINT_COLOR)
+	_canvas_draw_circle(center, waist * 1.6, Color(1.0, 1.0, 1.0, 0.9))
 
 func _draw_tile_state_icon(tile: Vector2i, rect: Rect2, include_scenery: bool = true) -> void:
 	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
@@ -4709,7 +4736,6 @@ func _draw_generated_decorative_body_sprite(object: Dictionary, rect: Rect2, rem
 	return true
 
 func _draw_scaled_scenery_body(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
-	var rules = preload("res://scripts/persistence/NativeSceneryRules.gd")
 	var asset_id := _decorative_object_asset_id(object)
 	var own: Dictionary = object.get("generated_body_formation", {})
 	var inside_mass := false
@@ -4718,17 +4744,15 @@ func _draw_scaled_scenery_body(object: Dictionary, rect: Rect2, remembered: bool
 	# Low shared foothills already describe connected rock ground. Adding a
 	# random spire/basin/arch on every cell creates an unrelated object carpet.
 	_draw_native_rock_contacts(object, rect, remembered, tile)
+	_draw_native_scenery_fillers(object, rect, remembered, tile)
 	var has_foothills: bool = not object.get("generated_body_rock_contacts", []).is_empty()
 	if not inside_mass and not has_foothills:
 		var texture = _object_texture_for_asset(asset_id)
 		if not texture is Texture2D: return false
 		var region := _object_texture_visible_region(asset_id, texture)
 		var raster: Texture2D = region.get("draw_texture", texture)
-		var limits: Vector2 = rules.body_scale(object, asset_id, not own.is_empty(), _terrain_at(tile)) * rect.size
-		var factor := minf(limits.x / raster.get_width(), limits.y / raster.get_height())
-		var size := raster.get_size() * factor
-		# Ground plants share the tree's baseline, not its canvas-size target.
-		var painted := Rect2(Vector2(rect.get_center().x-size.x*0.5, rect.end.y-size.y-rect.size.y*0.08),size)
+		var piece := _scenery_piece_tiles(object, asset_id, tile, raster.get_size())
+		var painted := Rect2(rect.position + (piece.position - Vector2(tile)) * rect.size, piece.size * rect.size)
 		var tint := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
 		tint *= _native_scenery_modulate(object, tile, asset_id)
 		if not own.is_empty():
@@ -4738,6 +4762,33 @@ func _draw_scaled_scenery_body(object: Dictionary, rect: Rect2, remembered: bool
 			_draw_living_scenery(asset_id, raster, painted, tint, tile)
 	_draw_native_scenery_formation(object, rect, remembered, tile)
 	return true
+
+## A scenery cell's own piece in tile units: its family's size limits, at
+## least SCENERY_PIECE_MIN_EXTENT_TILES long; ground plants share the tree's
+## baseline, not its canvas-size target.
+func _scenery_piece_tiles(object: Dictionary, asset_id: String, tile: Vector2i, raster_size: Vector2) -> Rect2:
+	var own: Dictionary = object.get("generated_body_formation", {})
+	var limits: Vector2 = preload("res://scripts/persistence/NativeSceneryRules.gd").body_scale(object, asset_id, not own.is_empty(), _terrain_at(tile))
+	var factor := minf(limits.x / maxf(raster_size.x, 1.0), limits.y / maxf(raster_size.y, 1.0))
+	var size := raster_size * factor
+	var longest := maxf(size.x, size.y)
+	if longest > 0.0 and longest < SCENERY_PIECE_MIN_EXTENT_TILES:
+		size *= SCENERY_PIECE_MIN_EXTENT_TILES / longest
+	return Rect2(Vector2(float(tile.x) + 0.5 - size.x * 0.5, float(tile.y) + 0.92 - size.y), size)
+
+func _draw_native_scenery_fillers(object: Dictionary, cell_rect: Rect2, remembered: bool, tile: Vector2i) -> void:
+	for filler in object.get("generated_body_fillers", []):
+		var asset_id := String(filler.asset_id)
+		var texture = _object_texture_for_asset(asset_id)
+		if not texture is Texture2D: continue
+		var raster: Texture2D = _object_texture_visible_region(asset_id, texture).get("draw_texture", texture)
+		var piece: Rect2 = filler.rect
+		var painted := Rect2(cell_rect.position + (piece.position - Vector2(tile)) * cell_rect.size, piece.size * cell_rect.size)
+		var part := preload("res://scripts/persistence/NativeSceneryFormation.gd").clip(painted, cell_rect, raster.get_size())
+		if part.is_empty(): continue
+		var tint := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
+		tint *= _native_scenery_modulate(object, tile, asset_id)
+		_canvas_draw_texture_rect_region(raster, part.rect, part.source, tint)
 
 func _draw_native_scenery_formation(object: Dictionary, cell_rect: Rect2, remembered: bool, tile: Vector2i) -> void:
 	var own: Dictionary = object.get("generated_body_formation", {})
@@ -11186,6 +11237,144 @@ func _index_native_rock_contacts() -> void:
 			rock.cell.generated_body_rock_contacts.append(contact)
 			rocks[neighbor].cell.generated_body_rock_contacts.append(contact)
 	_index_native_scenery_layers()
+	_index_scenery_cell_fillers()
+
+## Blocked scenery cells the art leaves (almost) bare: a formation keeps its
+## art's proportions, so a wide or irregular mass can leave edge cells empty,
+## and a cell's own piece can be a low plant. Such a cell gets a filler from
+## its own family and terrain palette, so no blocked tile looks walkable.
+## Coverage samples painted pixels (alpha masks), not bounding boxes; art that
+## cannot be read counts as covered. Presentation only.
+func _index_scenery_cell_fillers() -> void:
+	var cache_key := "%s|%d|%d" % [String(_session.session_id) if _session != null else "", _level, _scenery_index_signature]
+	var cached: Dictionary = _scenery_filler_cache.get(cache_key, {})
+	var fillers := {}
+	var scenery: Dictionary = ContentService.load_json("res://art/overworld/native_scenery.json")
+	var scale_rules: Dictionary = ContentService.load_json("res://art/overworld/scenery_scale.json")
+	for key in _generated_decorative_bodies_by_tile:
+		var cell: Dictionary = _generated_decorative_bodies_by_tile[key]
+		cell.erase("generated_body_fillers")
+		if _scenery_filler_cache.has(cache_key):
+			if cached.has(key):
+				cell["generated_body_fillers"] = cached[key]
+			continue
+		if int(cell.get("native_scenery_art_version", 0)) < 2:
+			continue
+		var tile := Vector2i(int(cell.x), int(cell.y))
+		if not _scenery_cell_is_bare(cell, tile, key):
+			continue
+		var filler := _scenery_cell_filler(cell, tile, scenery, scale_rules)
+		if not filler.is_empty():
+			cell["generated_body_fillers"] = [filler]
+			fillers[key] = [filler]
+	if not _scenery_filler_cache.has(cache_key):
+		_scenery_filler_cache = {cache_key: fillers}
+
+## True when the art drawn on this cell paints less than
+## SCENERY_FILLER_MAX_COVERAGE of it (4x4 samples, bottom rows first since art
+## stands on the ground; stops as soon as enough are painted).
+func _scenery_cell_is_bare(cell: Dictionary, tile: Vector2i, key: String) -> bool:
+	var pieces := []
+	var own: Dictionary = cell.get("generated_body_formation", {})
+	var contacts: Array = cell.get("generated_body_rock_contacts", [])
+	var inside_mass := not own.is_empty() and Rect2i(own.mass_origin, own.mass_size).has_point(tile)
+	if not inside_mass and contacts.is_empty():
+		var asset_id := _decorative_object_asset_id(cell)
+		var raster_size := _scenery_raster_size(asset_id)
+		if raster_size != Vector2.ZERO:
+			pieces.append([asset_id, _scenery_piece_tiles(cell, asset_id, tile, raster_size)])
+	var formations: Array = _native_scenery_layers_by_tile.get(key, []).duplicate()
+	if not own.is_empty() and not bool(own.get("overlapping", false)):
+		formations.append(own)
+	for formation in formations:
+		# Formations are shared by their cells: compute their painted art once.
+		if not formation.has("painted_tiles"):
+			var raster_size := _scenery_raster_size(String(formation.get("asset_id", "")))
+			formation["painted_tiles"] = preload("res://scripts/persistence/NativeSceneryFormation.gd").painted_tiles(formation, raster_size) if raster_size != Vector2.ZERO else Rect2()
+		var art: Rect2 = formation.painted_tiles
+		if art.has_area():
+			pieces.append([String(formation.get("asset_id", "")), art])
+	for contact in contacts:
+		var asset_id := String(contact.asset_id)
+		var raster_size := _scenery_raster_size(asset_id)
+		if raster_size == Vector2.ZERO:
+			continue
+		var target: Rect2 = contact.rect
+		var painted_size := raster_size * minf(target.size.x / raster_size.x, target.size.y / raster_size.y)
+		pieces.append([asset_id, Rect2(target.get_center() - painted_size * 0.5, painted_size)])
+	var needed := ceili(SCENERY_FILLER_MAX_COVERAGE * 16.0)
+	var covered := 0
+	for sample_y in range(3, -1, -1):
+		for sample_x in range(4):
+			var point := Vector2(tile) + Vector2((float(sample_x) + 0.5) / 4.0, (float(sample_y) + 0.5) / 4.0)
+			for piece in pieces:
+				var area: Rect2 = piece[1]
+				if area.has_point(point) and _scenery_alpha_at(String(piece[0]), (point - area.position) / area.size) >= 0.35:
+					covered += 1
+					break
+			if covered >= needed:
+				return false
+	return true
+
+func _scenery_cell_filler(cell: Dictionary, tile: Vector2i, scenery: Dictionary, scale_rules: Dictionary) -> Dictionary:
+	var policy: Dictionary = preload("res://scripts/persistence/NativeSceneryRules.gd").policy(cell)
+	var family := String(policy.get("landscape_family", policy.get("variation_family", "")))
+	var terrain := _terrain_at(tile)
+	var by_terrain: Dictionary = scenery.get("terrain_component_palettes", {}).get(terrain, {})
+	var pool: Array = by_terrain.get(family, scenery.get("component_palettes", {}).get(family, {}).get(String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(terrain, "")), []))
+	# The family's low components are ground detail, too small to read as a block.
+	var low: Array = scale_rules.get(family + "_low_cells", [])
+	pool = pool.filter(func(asset): return int(String(asset).get_slice("_", String(asset).get_slice_count("_") - 1)) not in low)
+	if pool.is_empty():
+		return {}
+	var asset_id := String(pool[("scenery-filler|" + _tile_key(tile)).sha256_buffer().decode_u32(0) % pool.size()])
+	var raster_size := _scenery_raster_size(asset_id)
+	if raster_size == Vector2.ZERO:
+		return {}
+	var target := Rect2(Vector2(tile) + Vector2(0.05, 0.1), Vector2(0.9, 0.86))
+	var painted_size := raster_size * minf(target.size.x / raster_size.x, target.size.y / raster_size.y)
+	return {"asset_id": asset_id, "rect": Rect2(Vector2(target.get_center().x - painted_size.x * 0.5, target.end.y - painted_size.y), painted_size)}
+
+func _scenery_raster_size(asset_id: String) -> Vector2:
+	if _scenery_raster_sizes.has(asset_id):
+		return _scenery_raster_sizes[asset_id]
+	var size := Vector2.ZERO
+	var texture = _object_texture_for_asset(asset_id)
+	if texture is Texture2D:
+		var raster: Texture2D = _object_texture_visible_region(asset_id, texture).get("draw_texture", texture)
+		size = raster.get_size()
+	_scenery_raster_sizes[asset_id] = size
+	return size
+
+func _scenery_alpha_at(asset_id: String, uv: Vector2) -> float:
+	var mask: Dictionary = _scenery_alpha_masks.get(asset_id, {})
+	if mask.is_empty():
+		mask = {"size": Vector2i.ZERO, "alpha": PackedByteArray()}
+		var texture = _object_texture_for_asset(asset_id)
+		if texture is Texture2D:
+			var raster: Texture2D = _object_texture_visible_region(asset_id, texture).get("draw_texture", texture)
+			var image := raster.get_image()
+			if image != null and not image.is_empty():
+				if image.is_compressed():
+					image.decompress()
+				image.convert(Image.FORMAT_RGBA8)
+				var scale := 24.0 / float(maxi(image.get_width(), image.get_height()))
+				var width := maxi(1, roundi(image.get_width() * scale))
+				var height := maxi(1, roundi(image.get_height() * scale))
+				image.resize(width, height, Image.INTERPOLATE_BILINEAR)
+				var alpha := PackedByteArray()
+				alpha.resize(width * height)
+				for y in range(height):
+					for x in range(width):
+						alpha[y * width + x] = int(image.get_pixel(x, y).a * 255.0)
+				mask = {"size": Vector2i(width, height), "alpha": alpha}
+		_scenery_alpha_masks[asset_id] = mask
+	var size: Vector2i = mask.size
+	if size.x == 0:
+		return 1.0
+	var x := clampi(int(uv.x * size.x), 0, size.x - 1)
+	var y := clampi(int(uv.y * size.y), 0, size.y - 1)
+	return float(mask.alpha[y * size.x + x]) / 255.0
 
 func _index_connected_scenery_patches() -> void:
 	var profiles := ContentService.load_json("res://art/overworld/connected_scenery.json")

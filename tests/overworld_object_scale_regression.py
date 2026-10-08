@@ -66,7 +66,7 @@ func scale_contracts(view, session) -> void:
 			for tile_size in [36.0, 52.0, 74.0, 104.0]:
 				var rect := Rect2(Vector2.ZERO, Vector2(span) * tile_size)
 				var scale: Dictionary = view._object_sprite_visual_metrics(rect, profile, tile_size, rect)
-				check(is_equal_approx(scale.sprite_extent_tiles, 0.56), "portable extent depends on package footprint: " + site_id)
+				check(is_equal_approx(scale.sprite_extent_tiles, 0.66), "portable extent depends on package footprint: " + site_id)
 				check(not scale.uses_multi_tile_visual_cap, "building-sized minimum applied to pickup: " + site_id)
 				var texture = view._object_texture_for_asset(cases[site_id])
 				var payload: Dictionary = view._object_painted_sprite_draw_payload(cases[site_id], texture, scale.sprite_center, scale.sprite_extent_px)
@@ -87,7 +87,7 @@ func scale_contracts(view, session) -> void:
 		var profile: Dictionary = view._artifact_object_profile({"artifact_id":id})
 		var rect := Rect2(0, 0, 74, 74)
 		var scale: Dictionary = view._object_sprite_visual_metrics(rect, profile, 74.0, rect)
-		check(is_equal_approx(scale.sprite_extent_tiles, 0.42), "artifact not handheld scale: " + id)
+		check(is_equal_approx(scale.sprite_extent_tiles, 0.62), "artifact not handheld scale: " + id)
 		check(scale.sprite_extent_px >= 24, "artifact unreadable at normal zoom: " + id)
 	for family in {"mine":0.82, "scouting_structure":0.78, "scenario_objective":0.94, "encounter":0.88, "blocker":0.92, "decoration":0.46}:
 		var expected: Dictionary = {"mine":0.82, "scouting_structure":0.78, "scenario_objective":0.94, "encounter":0.88, "blocker":0.92, "decoration":0.46}
