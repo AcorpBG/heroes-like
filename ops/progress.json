@@ -114365,6 +114365,19 @@
       "notes": "Owner go-ahead on scan findings 2 and 3. Scenery: OverworldMapView._index_scenery_cell_fillers samples each blocked scenery cell's painted coverage (4x4 samples against 24px alpha masks of its own piece, formation slice, overlapping formations and rock contacts; bottom rows first, early exit) and gives cells under 30% a filler from native_scenery component_palettes for the cell's family and terrain (low cells excluded), drawn by _draw_native_scenery_fillers; _scenery_piece_tiles sets a 0.62-tile minimum for a cell's own piece; NativeSceneryFormation.painted_tiles shared by slice and coverage. Static caches (alpha masks, raster sizes, filler result per session/level/scenery signature): owner's 108x108 map 808 of 6,311 cells filled, ~0.3 s once per map per launch, ~5 ms on later overworld rebuilds. Pickups: artifact extent 0.62 (was 0.42), loose pickup 0.66 (was 0.56), drawn in the foreground pass instead of before scenery, static glint on visible pickups; validate_repo pins and overworld_object_scale_regression expectations updated. Validation (focused, per owner): new tests/overworld_scenery_pickup_readability_report windowed 21 checks (511/511 scenery tiles show art, 8 pickups incl. 6 just above scenery visible and readable), terrain crops from the owner's map reviewed (swamp, snow, grass, rough, dirt, sand), validate_repo identical (828). Full scan not rerun."
     },
     {
+      "id": "art-overworld-terrain-decals-v4-20261008",
+      "title": "Rework ground decals: one set per ground, scattered by the ground shader",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "art_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/overworld-terrain-decals.md"
+      ],
+      "notes": "Owner asked for a complete rework (different decals per ground type, more variety, seamless integration, more varied placement). Old: 16 clusters, 4 'grey rock with meadow grass' shared by rough/rock/underground/dirt/sand/ash, drawn per tile on every fifth tile as stickers. New: 13 generated 4x4 sheets (grass, plains, forest, swamp, dirt, sand, rough, rock, ash, lava, underground, snow, ice; 208 decals), each generated with its ground material as reference (sources, prompts, hashes in art/overworld/source/generated/terrain/decals_v4/manifest.json); tools/prepare_overworld_terrain_decals.py cuts, grades 12% toward the ground tone, feathers, bleeds and packs a reproducible 2048x2048 atlas. The ground shader scatters them (decal_layer): jittered 1-tile grid, tiny/medium/large classes, mirror, per-set density modulated by slow noise for clusters and clearings, roads (lookup blue channel), water and unexplored tiles excluded, fading by the ground's own blend weight at biome borders, explicit mip levels. The per-tile _draw_terrain_detail_decal path is removed; OverworldMapView._terrain_decal_payload reports the set. Validation: before/after captures on the owner's map (dirt, lava, snow, grass, swamp, rough, sand) reviewed; validate_repo identical (828) with the decal contract rewritten; random_map_live_overworld_render_move_report and overworld_raster_terrain_blocker_mass_report updated to the new payload. Old atlases kept as provenance; archived Ninefold smoke still references v3."
+    },
+    {
       "id": "ux-resource-bar-daily-income-20261008",
       "title": "Resource bar shows each resource's daily income",
       "status": "completed",
