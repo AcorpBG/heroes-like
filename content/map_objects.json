@@ -48416,6 +48416,174 @@
         "scenario_placement_migration": false,
         "random_map_placement": "homm3_type_meaning_only"
       }
+    },
+    {
+      "id": "object_wayring",
+      "name": "Wayring",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "conditional_route"
+      ],
+      "resource_site_id": "site_wayring",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_mire_fen",
+        "biome_highland_ridge",
+        "biome_rough_badlands",
+        "biome_ash_lava_wastes",
+        "biome_coast_archipelago",
+        "biome_subterranean_underways",
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "conditional_route"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "always",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "runtime_boundary": {
+        "status": "portal_network_live",
+        "live_reward_grants": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "random_map_placement": "homm3_type_meaning_only",
+        "network_source": "native_transit_package_contract"
+      }
+    },
+    {
+      "id": "object_waygate",
+      "name": "Waygate",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "conditional_route"
+      ],
+      "resource_site_id": "site_waygate",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_mire_fen",
+        "biome_highland_ridge",
+        "biome_rough_badlands",
+        "biome_ash_lava_wastes",
+        "biome_coast_archipelago",
+        "biome_subterranean_underways",
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "conditional_route"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "always",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "runtime_boundary": {
+        "status": "portal_network_live",
+        "live_reward_grants": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "random_map_placement": "homm3_type_meaning_only",
+        "network_source": "native_transit_package_contract"
+      }
+    },
+    {
+      "id": "object_wayfall",
+      "name": "Wayfall",
+      "family": "transit_object",
+      "schema_version": 1,
+      "primary_class": "transit_route_object",
+      "secondary_tags": [
+        "conditional_route"
+      ],
+      "resource_site_id": "site_wayfall",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_mire_fen",
+        "biome_highland_ridge",
+        "biome_rough_badlands",
+        "biome_ash_lava_wastes",
+        "biome_coast_archipelago",
+        "biome_subterranean_underways",
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 1,
+        "height": 1,
+        "anchor": "bottom_center",
+        "tier": "micro"
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "conditional_route"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "always",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": true,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "runtime_boundary": {
+        "status": "portal_network_live",
+        "live_reward_grants": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": false,
+        "scenario_placement_migration": false,
+        "random_map_placement": "homm3_type_meaning_only",
+        "network_source": "native_transit_package_contract"
+      }
     }
   ]
 }

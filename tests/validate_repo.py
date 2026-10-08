@@ -883,7 +883,7 @@ SPELL_TIER_COST_BONUS_EFFECTS = {"control_enemy", "recover_ally", "cleanse_ally"
 SPELL_TIER_MOVEMENT_AMOUNT = {1: 3, 2: 5, 3: 7, 4: 10, 5: 14}
 SPELL_TIER_REVEAL_AMOUNT = {1: 7, 2: 9, 3: 11, 4: 14, 5: 18}
 SPELL_TIER_DAMAGE_BASE_BANDS = {1: (14, 18), 2: (24, 30), 3: (36, 44), 4: (50, 60), 5: (68, 82)}
-SPELL_TIER_DAMAGE_POWER_BANDS = {1: (4, 5), 2: (6, 7), 3: (8, 9), 4: (10, 12), 5: (13, 15)}
+SPELL_TIER_DAMAGE_POWER_BANDS = {1: (10, 13), 2: (15, 18), 3: (20, 23), 4: (25, 30), 5: (33, 38)}
 SPELL_TIER_WOUNDED_BONUS = {1: 4, 2: 8, 3: 12, 4: 16, 5: 22}
 SPELL_TIER_RECOVERY_BASE = {1: 18, 2: 28, 3: 40, 4: 56, 5: 76}
 SPELL_TIER_RECOVERY_POWER = {1: 4, 2: 6, 3: 8, 4: 11, 5: 14}
@@ -4005,6 +4005,14 @@ def build_all_interactable_object_footprint_audit(map_objects: dict[str, dict]) 
         "failures": failures,
         "exceptions": exceptions,
     }
+
+
+def is_native_portal_network_object(obj: dict) -> bool:
+    # Wayrings, Waygates and Wayfalls take their exits from the native package's
+    # portal contract (docs/portal-networks.md), never from authored local
+    # offsets, so the authored route-effect contract does not apply to them.
+    runtime = obj.get("runtime_boundary", {}) if isinstance(obj.get("runtime_boundary", {}), dict) else {}
+    return str(runtime.get("status", "")) == "portal_network_live"
 
 
 def validate_overworld_object_route_effect_authoring_entry(object_id: str, obj: dict, site: dict | None) -> dict:
@@ -7373,7 +7381,7 @@ def build_overworld_object_report() -> dict:
             append_unique(report["ai_editor_implications"]["requires_future_ai_valuation"], object_id)
         if site is None and site_id:
             object_warnings.append(f"linked resource_site_id {site_id} is missing")
-        if primary_class == "transit_route_object":
+        if primary_class == "transit_route_object" and not is_native_portal_network_object(obj):
             route_authoring_entry = validate_overworld_object_route_effect_authoring_entry(object_id, obj, site)
             report["route_effect_authoring"]["entries"][object_id] = route_authoring_entry
             append_unique(report["route_effect_authoring"]["selected_transit_object_ids"], object_id)
@@ -19989,7 +19997,6 @@ def validate_confirmation_dialog_visual_surfaces(errors: list[str]) -> None:
         "Overworld": (
             'FrontierVisualKit.apply_confirmation_dialog(_end_turn_confirmation_dialog, "primary")',
             'FrontierVisualKit.apply_confirmation_dialog(_manual_save_overwrite_dialog as ConfirmationDialog, "danger")',
-            'FrontierVisualKit.apply_confirmation_dialog(_native_destination_dialog)',
             'FrontierVisualKit.apply_confirmation_dialog(_resource_reward_dialog)',
             'FrontierVisualKit.apply_confirmation_dialog(_dwelling_recruit_dialog)',
             'FrontierVisualKit.apply_confirmation_dialog(_site_recruit_dialog)',
@@ -40917,6 +40924,7 @@ def validate_overworld_object_route_effect_authoring(errors: list[str]) -> None:
         object_id
         for object_id, obj in map_objects.items()
         if infer_overworld_object_primary_class(obj, resource_sites.get(str(obj.get("resource_site_id", "")))) == "transit_route_object"
+        and not is_native_portal_network_object(obj)
     )
     ensure(bool(transit_object_ids), errors, "Route-effect authoring validation must have selected transit object metadata")
     for object_id in transit_object_ids:
@@ -43894,7 +43902,7 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
     ensure(sync_block.find("_hero_movement_last_serial = serial") < sync_block.find("_tiles_from_payloads"), errors, "Map view must consume each movement serial once before validating its detached path")
     ensure(sync_block.find("_hero_movement_reduced_motion") < sync_block.find("if _hero_movement_reduced_motion:"), errors, "Map view must derive reduced-motion policy before choosing endpoint snap")
     processing_block = gdscript_function_block(map_view_text, "_sync_presentation_processing")
-    ensure('set_process(_overworld_terrain_ambient_should_animate() or _hero_movement_active or _object_resolution_active or _object_resolution_queued or _route_blocked_active or _spell_cast_active)' in processing_block, errors, "Map view must run per-frame processing only while ambient life or an action presentation is active or queued")
+    ensure('set_process(_overworld_terrain_ambient_should_animate() or _hero_movement_active or _object_resolution_active or _object_resolution_queued or _route_blocked_active or _spell_cast_active or _portal_fx_should_animate())' in processing_block, errors, "Map view must run per-frame processing only while ambient life, visible animated portals or an action presentation is active or queued")
     ensure("_invalidate_session_static_cache" not in process_block and "_invalidate_state_cache" not in process_block, errors, "Hero locomotion frames must not invalidate static or state caches")
     ensure("_invalidate_dynamic_layer" in process_block, errors, "Hero locomotion frames must invalidate the dynamic layer")
     ensure("session" not in process_block and "session" not in draw_block, errors, "Hero locomotion frame/draw helpers must not mutate or consult session authority")
@@ -44974,7 +44982,8 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         ensure(not any("another tactical choice without changing the army roster" in description for description in descriptions), errors, "Production spell descriptions must not retain the catalog placeholder sentence")
         legacy_mechanics = [{key: value for key, value in spell.items() if key != "description"} for spell in spells[:112] if isinstance(spell, dict)]
         legacy_mechanics_hash = hashlib.sha256(json.dumps(legacy_mechanics, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
-        ensure(legacy_mechanics_hash == "8e146e0135f7efbdd371679a176bb2fe0695f768637ac0ff4ed0344bcd3cb0cc", errors, "The established 112-spell mechanics payload must remain unchanged while its copy is rewritten")
+        # Re-pinned 2026-10-08: damage spells gain 2.5x as much per point of power (battle-stat-scaling).
+        ensure(legacy_mechanics_hash == "b7555b7b9c031f84d603e3655b9b3442bada8e844837f7216c473851b0140ea0", errors, "The established 112-spell mechanics payload must remain unchanged while its copy is rewritten")
 
     signature_spell_contract = {
         "spell_beacon_lockfire_muster": ("beacon", "attack_buff", "town_rainwrit_bastion", "building_embercourt_beacon_court"),
@@ -64172,9 +64181,9 @@ def validate_native_rmg_authored_object_pool_eligibility(errors: list[str]) -> N
             decisions.append(f"excluded:{exclusion_id}")
             excluded_decisions[object_id] = exclusion_id
         ensure(len(decisions) == 1, errors, f"Authored map object {object_id} must have exactly one native-RMG eligibility decision, got {decisions}")
-    ensure(len(authored) == 464, errors, "Native RMG eligibility baseline must cover all 464 authored map objects")
+    ensure(len(authored) == 467, errors, "Native RMG eligibility baseline must cover all 467 authored map objects")
     ensure(len(eligible_decisions) == 396, errors, "Native RMG eligibility must expose all 396 compatible authored map objects, including guarded sites and rare pickups")
-    ensure(len(excluded_decisions) == 68, errors, "Native RMG eligibility must retain 68 explicit safety/scenario/water-travel exclusions")
+    ensure(len(excluded_decisions) == 71, errors, "Native RMG eligibility must retain 71 explicit safety/scenario/water-travel/portal-network exclusions")
     ensure(len(candidate_ids_by_pool.get("guarded_reward", set())) == 32, errors, "All 32 executable guarded sites must be eligible; stale object summaries cannot exclude them")
     source_type_pools = registry.get("source_type_pools", {})
     for type_id, pool_id in source_type_pools.items():
@@ -77393,10 +77402,10 @@ def validate_eight_foundation_map_object_identities(errors: list[str]) -> None:
     object_assets = art_manifest.get("object_assets", {})
     site_sprites = art_manifest.get("resource_site_sprites", {})
     nondecorative_ids = {object_id for object_id, row in map_objects.items() if row.get("family") not in {"blocker", "decoration"}}
-    ensure(len(nondecorative_ids) == 264 and set(mappings) == nondecorative_ids and len(asset_ids) == 264 and len(set(asset_ids)) == 264, errors, "All 264 authored non-decorative map objects must retain one exact distinct sprite mapping")
+    ensure(len(nondecorative_ids) == 267 and set(mappings) == nondecorative_ids and len(asset_ids) == 267 and len(set(asset_ids)) == 267, errors, "All 267 authored non-decorative map objects must retain one exact distinct sprite mapping")
     ensure(sprite_manifest.get("source", {}).get("new_generated_sprite_count") == 222 and sprite_manifest.get("source", {}).get("generated_batch_count") == 20, errors, "Foundation identity coverage must retain the expanded 222-object, 20-batch mapping provenance")
     coverage = sprite_manifest.get("coverage", {})
-    ensure(coverage.get("preexisting_unique_non_decorative_count") == 0 and coverage.get("new_distinct_non_decorative_asset_count") == 264 and coverage.get("total_distinct_authored_map_object_count_after_pass") == 464, errors, "Foundation identity coverage totals changed")
+    ensure(coverage.get("preexisting_unique_non_decorative_count") == 0 and coverage.get("new_distinct_non_decorative_asset_count") == 267 and coverage.get("total_distinct_authored_map_object_count_after_pass") == 467, errors, "Foundation identity coverage totals changed")
     ensure(source_manifest.get("schema") == "foundation_map_object_identities_source_manifest_v1" and source_manifest.get("content_slice_id") == "content-eight-foundation-map-object-identities-10184" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("background_extraction_mode") == "built_in_image_gen_background_extraction" and len(str(source_manifest.get("prompt_set_summary", ""))) >= 500, errors, "Foundation object source provenance changed")
     source_rows = {str(row.get("object_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     ensure(set(source_rows) == set(expected), errors, "Foundation object source manifest must own exactly the eight completed identities")

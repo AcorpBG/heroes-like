@@ -13,6 +13,8 @@ const SPELL_SCHOOL_IDS := ["beacon", "mire", "lens", "root", "furnace", "veil", 
 const STATUS_EFFECT_IDS := ["status_harried", "status_staggered", "status_rooted", "status_overheated"]
 const MAX_SPELL_RESISTANCE_PCT := 75
 const MAX_CONTROL_RESISTANCE_PCT := 80
+const POWER_PER_EXTRA_ROUND := 4
+const MAX_POWER_EXTRA_ROUNDS := 3
 # The battle's persisted seeded stream (BattleRules owns the other RNG keys).
 const BATTLE_RNG_STATE_KEY := "damage_rng_state"
 # Resolution field: stream state after a resistance roll, committed by the cast.
@@ -827,7 +829,7 @@ static func _battle_spell_effect_summary(
 			if status_effect is Dictionary and not status_effect.is_empty():
 				summary += "; applies %s %dr" % [
 					String(status_effect.get("label", "effect")),
-					max(1, int(status_effect.get("duration_rounds", 1))),
+					spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1)),
 				]
 			if _wounded_bonus_applies(effect, target_stack):
 				summary += "; wounded target bonus"
@@ -837,7 +839,7 @@ static func _battle_spell_effect_summary(
 			return "applies %s to %s for %d rounds" % [
 				String(status_effect.get("label", "control")),
 				String(target_stack.get("name", "selected enemy")),
-				max(1, int(status_effect.get("duration_rounds", 1))),
+				spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1)),
 			]
 		"recover_ally":
 			var target_label := String(active_stack.get("name", "active stack"))
@@ -847,7 +849,7 @@ static func _battle_spell_effect_summary(
 			if not modifiers.is_empty():
 				summary += "; %s for %d rounds" % [
 					_modifier_summary(modifiers),
-					max(1, int(effect.get("duration_rounds", 1))),
+					spell_duration_rounds(hero_state, effect.get("duration_rounds", 1)),
 				]
 			return summary
 		"cleanse_ally":
@@ -860,7 +862,7 @@ static func _battle_spell_effect_summary(
 			if not cleanse_modifiers.is_empty():
 				cleanse_summary += "; %s for %d rounds" % [
 					_modifier_summary(cleanse_modifiers),
-					max(1, int(effect.get("duration_rounds", 1))),
+					spell_duration_rounds(hero_state, effect.get("duration_rounds", 1)),
 				]
 			return cleanse_summary
 		"defense_buff", "initiative_buff", "attack_buff":
@@ -868,7 +870,7 @@ static func _battle_spell_effect_summary(
 			return "%s to %s for %d rounds" % [
 				_modifier_summary(battle_spell_modifiers(spell)),
 				target_label,
-				max(1, int(effect.get("duration_rounds", 1))),
+				spell_duration_rounds(hero_state, effect.get("duration_rounds", 1)),
 			]
 		_:
 			return "No supported battle effect"
@@ -1097,7 +1099,7 @@ static func resolve_battle_spell(
 	match effect_type:
 		"damage_enemy":
 			var damage_projection := battle_spell_damage_projection(hero, battle, target_stack, spell)
-			var post_damage_effect := _status_effect_from_spell_effect(spell, battle)
+			var post_damage_effect := _status_effect_from_spell_effect(spell, battle, hero)
 			var status_resolution := battle_spell_status_resolution(battle, active_stack, target_stack, spell, post_damage_effect)
 			var resolved_post_damage_effect := post_damage_effect
 			if bool(status_resolution.get("blocked", false)):
@@ -1134,7 +1136,7 @@ static func resolve_battle_spell(
 				"message": message,
 			}
 		"control_enemy":
-			var control_effect := _status_effect_from_spell_effect(spell, battle)
+			var control_effect := _status_effect_from_spell_effect(spell, battle, hero)
 			var control_resolution := battle_spell_status_resolution(battle, active_stack, target_stack, spell, control_effect)
 			var resolved_control_effect := control_effect
 			if bool(control_resolution.get("blocked", false)):
@@ -1166,7 +1168,7 @@ static func resolve_battle_spell(
 				"resolution_type": "recover_effect",
 				"target_battle_id": String(ally_target.get("battle_id", "")),
 				"recovery_amount": _battle_spell_recovery_amount(hero, spell),
-				"effect": _effect_payload(spell, effect, battle) if not battle_spell_modifiers(spell).is_empty() else {},
+				"effect": _effect_payload(spell, effect, battle, hero) if not battle_spell_modifiers(spell).is_empty() else {},
 				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(ally_target.get("name", "the line"))],
 			}
 		"cleanse_ally":
@@ -1176,7 +1178,7 @@ static func resolve_battle_spell(
 				"resolution_type": "cleanse_effect",
 				"target_battle_id": String(ally_target.get("battle_id", "")),
 				"cleanse_effect_ids": _normalize_string_array(effect.get("cleanse_effect_ids", [])),
-				"effect": _effect_payload(spell, effect, battle) if not battle_spell_modifiers(spell).is_empty() or not normalize_status_immunity_ids(effect.get("status_immunity_ids", [])).is_empty() else {},
+				"effect": _effect_payload(spell, effect, battle, hero) if not battle_spell_modifiers(spell).is_empty() or not normalize_status_immunity_ids(effect.get("status_immunity_ids", [])).is_empty() else {},
 				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(ally_target.get("name", "the line"))],
 			}
 		"defense_buff":
@@ -1185,7 +1187,7 @@ static func resolve_battle_spell(
 				"hero": hero,
 				"resolution_type": "effect",
 				"target_battle_id": String(ally_target.get("battle_id", "")),
-				"effect": _effect_payload(spell, effect, battle),
+				"effect": _effect_payload(spell, effect, battle, hero),
 				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(ally_target.get("name", "the line"))],
 			}
 		"initiative_buff", "attack_buff":
@@ -1194,7 +1196,7 @@ static func resolve_battle_spell(
 				"hero": hero,
 				"resolution_type": "effect",
 				"target_battle_id": String(ally_target.get("battle_id", "")),
-				"effect": _effect_payload(spell, effect, battle),
+				"effect": _effect_payload(spell, effect, battle, hero),
 				"message": "%s casts %s on %s." % [caster_name, String(spell.get("name", spell_id)), String(ally_target.get("name", "the line"))],
 			}
 		_:
@@ -1497,6 +1499,17 @@ static func build_battle_effect(
 		"expires_after_round": max(1, int(battle.get("round", 1))) + max(1, duration_rounds) - 1,
 	}
 
+## Every POWER_PER_EXTRA_ROUND points of the caster's power keep a battle
+## spell's buffs, debuffs and riders one round longer, up to
+## MAX_POWER_EXTRA_ROUNDS extra rounds.
+static func spell_duration_bonus(hero_state: Dictionary) -> int:
+	var command = hero_state.get("command", {})
+	var power: int = max(0, int(command.get("power", 0))) if command is Dictionary else 0
+	return mini(MAX_POWER_EXTRA_ROUNDS, power / POWER_PER_EXTRA_ROUND)
+
+static func spell_duration_rounds(hero_state: Dictionary, base_rounds: Variant) -> int:
+	return max(1, int(base_rounds)) + spell_duration_bonus(hero_state)
+
 static func battle_spell_modifiers(spell: Dictionary) -> Dictionary:
 	var effect = spell.get("effect", {})
 	match String(effect.get("type", "")):
@@ -1521,13 +1534,13 @@ static func battle_spell_recoverable_health(stack: Dictionary) -> int:
 	var living_creatures: int = int(ceil(float(current_health) / float(unit_hp)))
 	return max(0, (living_creatures * unit_hp) - current_health)
 
-static func _effect_payload(spell: Dictionary, effect: Dictionary, battle: Dictionary) -> Dictionary:
+static func _effect_payload(spell: Dictionary, effect: Dictionary, battle: Dictionary, hero_state: Dictionary = {}) -> Dictionary:
 	var modifiers := battle_spell_modifiers(spell)
 	return build_battle_effect(
 		"spell:%s:%s" % [String(spell.get("id", "")), String(effect.get("type", ""))],
 		String(spell.get("name", "Spell")),
 		modifiers,
-		int(effect.get("duration_rounds", 1)),
+		spell_duration_rounds(hero_state, effect.get("duration_rounds", 1)),
 		battle,
 		"spell",
 		String(spell.get("id", "")),
@@ -1557,11 +1570,11 @@ static func _battle_spell_action_summary(
 				]
 			var status_effect: Dictionary = effect.get("status_effect", {})
 			if status_effect is Dictionary and not status_effect.is_empty():
-				var status_payload := _status_effect_from_spell_effect(spell, battle)
+				var status_payload := _status_effect_from_spell_effect(spell, battle, hero_state)
 				var control_pct := control_resistance_pct(battle, target_stack, spell)
 				summary += " Applies %s for %d rounds." % [
 					String(status_effect.get("label", "a battle effect")),
-					max(1, int(status_effect.get("duration_rounds", 1))),
+					spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1)),
 				]
 				if target_is_immune_to_status(target_stack, battle, String(status_payload.get("effect_id", ""))):
 					summary += " Target is immune to that rider."
@@ -1575,9 +1588,9 @@ static func _battle_spell_action_summary(
 			var summary := "Apply %s to %s for %d rounds." % [
 				String(control_effect.get("label", "control")),
 				String(target_stack.get("name", "the selected enemy")),
-				max(1, int(control_effect.get("duration_rounds", 1))),
+				spell_duration_rounds(hero_state, control_effect.get("duration_rounds", 1)),
 			]
-			var control_payload := _status_effect_from_spell_effect(spell, battle)
+			var control_payload := _status_effect_from_spell_effect(spell, battle, hero_state)
 			var control_pct := control_resistance_pct(battle, target_stack, spell)
 			if target_is_immune_to_status(target_stack, battle, String(control_payload.get("effect_id", ""))):
 				summary += " Target is immune."
@@ -1595,7 +1608,7 @@ static func _battle_spell_action_summary(
 			if not recovery_modifiers.is_empty():
 				recovery_summary += " Grant %s for %d rounds." % [
 					_modifier_summary(recovery_modifiers),
-					max(1, int(effect.get("duration_rounds", 1))),
+					spell_duration_rounds(hero_state, effect.get("duration_rounds", 1)),
 				]
 			if timing_hint != "":
 				recovery_summary += " Timing: %s" % timing_hint
@@ -1609,7 +1622,7 @@ static func _battle_spell_action_summary(
 			if not cleanse_modifiers.is_empty():
 				cleanse_summary += " Grant %s for %d rounds." % [
 					_modifier_summary(cleanse_modifiers),
-					max(1, int(effect.get("duration_rounds", 1))),
+					spell_duration_rounds(hero_state, effect.get("duration_rounds", 1)),
 				]
 			if timing_hint != "":
 				cleanse_summary += " Timing: %s" % timing_hint
@@ -1618,7 +1631,7 @@ static func _battle_spell_action_summary(
 			var summary := "Grant %s to %s for %d rounds." % [
 				_modifier_summary(battle_spell_modifiers(spell)),
 				String(active_stack.get("name", "the active stack")),
-				max(1, int(effect.get("duration_rounds", 1))),
+				spell_duration_rounds(hero_state, effect.get("duration_rounds", 1)),
 			]
 			if timing_hint != "":
 				summary += " Timing: %s" % timing_hint
@@ -1627,7 +1640,7 @@ static func _battle_spell_action_summary(
 			var summary := "Grant %s to %s for %d rounds." % [
 				_modifier_summary(battle_spell_modifiers(spell)),
 				String(active_stack.get("name", "the active stack")),
-				max(1, int(effect.get("duration_rounds", 1))),
+				spell_duration_rounds(hero_state, effect.get("duration_rounds", 1)),
 			]
 			if timing_hint != "":
 				summary += " Timing: %s" % timing_hint
@@ -2045,7 +2058,7 @@ static func _spell_effect_modifiers(effect: Dictionary, default_kind: String, de
 		return _normalize_effect_modifiers(modifiers)
 	return _normalize_effect_modifiers({default_kind: max(1, default_amount)})
 
-static func _status_effect_from_spell_effect(spell: Dictionary, battle: Dictionary) -> Dictionary:
+static func _status_effect_from_spell_effect(spell: Dictionary, battle: Dictionary, hero_state: Dictionary = {}) -> Dictionary:
 	var status_effect = spell.get("effect", {}).get("status_effect", {})
 	if not (status_effect is Dictionary) or status_effect.is_empty():
 		return {}
@@ -2056,7 +2069,7 @@ static func _status_effect_from_spell_effect(spell: Dictionary, battle: Dictiona
 		effect_id,
 		String(status_effect.get("label", effect_id.capitalize())),
 		status_effect.get("modifiers", {}),
-		int(status_effect.get("duration_rounds", 1)),
+		spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1)),
 		battle,
 		"spell",
 		String(spell.get("id", "")),

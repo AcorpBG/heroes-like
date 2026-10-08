@@ -32,6 +32,17 @@ func clone(source):
 	result.from_dict(source.to_dict())
 	Rules.normalize_overworld_state(result)
 	return result
+# Portals with several exits roll a random one (docs/portal-networks.md). The
+# roll is keyed by the traveller's trip count, so advancing that count until
+# the roll opens with the wanted exit gives one real, deterministic trip there.
+func travel_to(session, node: Dictionary, destination: Dictionary) -> Dictionary:
+	var actor := String(session.overworld.active_hero_id)
+	for attempt in range(64):
+		var order := Transit.exit_order(node, Rules.native_exit_roll_key(session, node, actor))
+		if not order.is_empty() and String(order[0].target_placement_id) == String(destination.target_placement_id):
+			return Rules.perform_context_action(session, "collect_resource")
+		Rules.note_native_trip(session, actor)
+	return {"ok": false, "error": "roll_never_opened_with_exit"}
 func place(session, tile: Vector3i) -> void:
 	Rules._set_active_hero_position(session, Vector2i(tile.x, tile.y), tile.z)
 	session.overworld.movement.current = 20
@@ -321,21 +332,20 @@ func exercise_portals(source, gates: Array) -> Dictionary:
 			broken.native_transit.destinations.pop_back()
 			end.checks["missing_destination_fails_validation"] = not Transit.validate(invalid.overworld.resource_nodes).is_empty()
 			if options.size() > 1:
-				var pending: Dictionary = Rules.perform_context_action(session, "collect_resource")
-				var actions := Rules.get_context_actions(session)
-				end.checks["multiple_destinations_require_explicit_choice"] = bool(pending.get("native_transit_choice_required", false)) and int(session.overworld.movement.current) == entry_movement and Transit.point(session.overworld.hero_position) == entry
-				end.checks["every_exit_has_context_action"] = options.all(func(destination): return actions.any(func(action): return action.get("id") == "native_transit:" + String(destination.target_placement_id)))
+				var rolled = clone(session)
+				var rolled_result: Dictionary = Rules.perform_context_action(rolled, "collect_resource")
+				var landed := Transit.point(rolled.overworld.hero_position)
+				end.checks["multiple_destinations_roll_one_exit"] = bool(rolled_result.get("ok", false)) and options.any(func(destination): return Transit.point(destination.exit) == landed) and int(rolled.overworld.movement.current) == entry_movement - 1
 			for destination in options:
 				var trip_session = clone(session)
 				var trip_node: Dictionary = Rules._find_resource_node_by_placement(trip_session, String(gate.placement_id)).node
 				var exit := Transit.point(destination.exit)
-				var action_id := "native_transit:" + String(destination.target_placement_id)
 				var before_movement := int(trip_session.overworld.movement.current)
 				var before_trip_node := trip_node.duplicate(true)
 				var before_trip_resources: Dictionary = trip_session.overworld.resources.duplicate(true)
-				var result: Dictionary = Rules.perform_context_action(trip_session, action_id)
+				var result: Dictionary = travel_to(trip_session, trip_node, destination)
 				var trip := {"target_placement_id": destination.target_placement_id, "result": result, "checks": {}, "movement_before": before_movement, "movement_after": int(trip_session.overworld.movement.current), "node_unchanged": trip_node == before_trip_node, "resources_unchanged": trip_session.overworld.resources == before_trip_resources}
-				trip.checks["context_action_reaches_exact_exit"] = bool(result.get("ok", false)) and Transit.point(trip_session.overworld.hero_position) == exit
+				trip.checks["random_roll_reaches_each_exit"] = bool(result.get("ok", false)) and Transit.point(trip_session.overworld.hero_position) == exit
 				trip.checks["one_movement_no_claim_or_reward"] = int(trip_session.overworld.movement.current) == before_movement - 1 and trip_node == before_trip_node and trip_session.overworld.resources == before_trip_resources
 				trip.checks["save_roundtrip_keeps_position_group_and_fog"] = clone(trip_session).to_dict() == trip_session.to_dict()
 				var occupied = clone(session)
@@ -344,22 +354,19 @@ func exercise_portals(source, gates: Array) -> Dictionary:
 				other.position = destination.exit.duplicate(true)
 				occupied.overworld.player_heroes.append(other)
 				var occupied_movement := int(occupied.overworld.movement.current)
-				var rejected: Dictionary = Rules.perform_context_action(occupied, action_id)
+				var occupied_node: Dictionary = Rules._find_resource_node_by_placement(occupied, String(gate.placement_id)).node
+				var rejected: Dictionary = travel_to(occupied, occupied_node, destination)
 				trip["occupied_result"] = rejected
-				trip.checks["occupied_exit_rejected_without_cost"] = not bool(rejected.get("ok", false)) and Transit.point(occupied.overworld.hero_position) == entry and int(occupied.overworld.movement.current) == occupied_movement
+				# An occupied exit is skipped for the next exit in roll order; a
+				# portal with no other exit refuses the trip without cost.
+				var landed_at := Transit.point(occupied.overworld.hero_position)
+				trip.checks["occupied_exit_never_used"] = landed_at != exit and (bool(rejected.get("ok", false)) if options.size() > 1 else (not bool(rejected.get("ok", false)) and landed_at == entry and int(occupied.overworld.movement.current) == occupied_movement))
 				if options.size() > 1:
 					var arrived = clone(session)
 					var arrived_node: Dictionary = Rules._find_resource_node_by_placement(arrived, String(gate.placement_id)).node
-					var choose: Dictionary = Rules.travel_native_passage(arrived, arrived_node, 0)
-					var resumed = clone(arrived)
-					var resumed_movement := int(resumed.overworld.movement.current)
-					var chosen: Dictionary = Rules.perform_context_action(resumed, action_id)
-					trip.checks["paid_arrival_choice_survives_save_without_double_charge"] = bool(choose.get("native_transit_choice_required", false)) and bool(chosen.get("ok", false)) and int(resumed.overworld.movement.current) == resumed_movement and Transit.point(resumed.overworld.hero_position) == exit
-					var tomorrow = clone(arrived)
-					tomorrow.day += 1
-					var tomorrow_movement := int(tomorrow.overworld.movement.current)
-					var next_day: Dictionary = Rules.perform_context_action(tomorrow, action_id)
-					trip.checks["arrival_credit_does_not_grant_next_day_free_travel"] = bool(next_day.get("ok", false)) and int(tomorrow.overworld.movement.current) == tomorrow_movement - 1
+					var walked: Dictionary = Rules.travel_native_passage(arrived, arrived_node, 0)
+					var walked_to := Transit.point(arrived.overworld.hero_position)
+					trip.checks["paid_arrival_travels_at_once_without_extra_cost"] = bool(walked.get("ok", false)) and options.any(func(option): return Transit.point(option.exit) == walked_to) and int(arrived.overworld.movement.current) == before_movement
 				end.trips.append(trip)
 			var shape := str(int(gate.h3m_type_id)) + ":" + str(options.size())
 			if not represented.has(shape):
@@ -526,9 +533,9 @@ func exercise_town_journeys(source) -> Dictionary:
 			if next != Vector2i(position.x, position.y):
 				moved = Rules.try_move(session, next.x - position.x, next.y - position.y)
 			elif not link.is_empty():
-				moved = Rules.perform_context_action(session, "native_transit:" + String(link.target_placement_id))
-			if bool(moved.get("native_transit_choice_required", false)) and not link.is_empty():
-				moved = Rules.perform_context_action(session, "native_transit:" + String(link.target_placement_id))
+				# The planned exit is one of the portal's random exits; the walk
+				# re-plans from wherever the roll lands.
+				moved = Rules.perform_context_action(session, "collect_resource")
 			var after := Transit.point(session.overworld.hero_position)
 			row.steps.append({"from": Levels.position(position), "to": Levels.position(after), "plan": plan, "result": moved, "cost": before_moves - int(session.overworld.movement.current)})
 			if not bool(moved.get("ok", false)) or before_moves - int(session.overworld.movement.current) != 1:
@@ -624,64 +631,26 @@ func player_journey_enemy_contact_plan(session, context: Dictionary) -> Dictiona
 	return best
 
 func exercise_multihero_credit(source, gate: Dictionary, gates: Array) -> Dictionary:
+	# Each hero keeps its own trip count for the random-exit roll, and the
+	# counts survive a production save.
 	var session = clone(source)
 	for encounter in session.overworld.encounters:
 		session.overworld.resolved_encounters.append(String(encounter.placement_id))
 	var first_id := String(session.overworld.active_hero_id)
-	var entry := Transit.point(Transit.link_of(gate).entry)
-	place(session, entry)
-	var first_arrival := {}
-	for delta in Ai.PATH_MOVEMENT_DELTAS:
-		var tile := Vector2i(entry.x + delta.x, entry.y + delta.y)
-		if Rules.tile_is_blocked(session, tile.x, tile.y, entry.z) or Rules.tile_has_route_interaction(session, tile.x, tile.y, entry.z) or Rules.tile_step_cuts_blocked_corner(session, Vector2i(entry.x, entry.y), tile):
-			continue
-		var left: Dictionary = Rules.try_move(session, delta.x, delta.y)
-		if bool(left.get("ok", false)):
-			first_arrival = Rules.try_move(session, -delta.x, -delta.y)
-		break
-	var first_movement := int(session.overworld.movement.current)
-	var second_gate := {}
-	var second_exit := {}
-	var first_exit: Dictionary = Transit.destinations(gate)[0]
-	for candidate in gates:
-		if String(candidate.placement_id) == String(gate.placement_id):
-			continue
-		for destination in Transit.destinations(candidate):
-			if String(destination.target_placement_id) not in [String(gate.placement_id), String(first_exit.target_placement_id)]:
-				second_gate = candidate
-				second_exit = destination
-				break
-		if not second_gate.is_empty():
-			break
-	if second_gate.is_empty():
-		return {"ok": false, "error": "no_independent_second_hero_trip"}
-	# A second real hero template with a controlled starting army; recruitment
-	# pricing is outside this movement-credit fixture. Switching/saving/travel
-	# all use the production roster and action owners.
+	place(session, Transit.point(Transit.link_of(gate).entry))
+	var first_trip: Dictionary = Rules.perform_context_action(session, "collect_resource")
 	var second_id := "hero_vaska" if first_id != "hero_vaska" else "hero_veilmourn_orso_nightchart"
-	var second: Dictionary = Heroes._normalize_player_hero({"id": second_id, "is_primary": false}, session, Transit.link_of(second_gate).entry, session.overworld.army, {"current": 14, "max": 14})
+	var second: Dictionary = Heroes._normalize_player_hero({"id": second_id, "is_primary": false}, session, Transit.link_of(gate).entry, session.overworld.army, {"current": 14, "max": 14})
 	session.overworld.player_heroes.append(second)
-	var pending_before: Dictionary = session.overworld.get("native_transit_pending_arrival", {}).duplicate(true)
 	var switched: Dictionary = Heroes.set_active_hero(session, second_id)
 	Rules.invalidate_spatial_lookup(session)
-	var second_arrival := {}
-	if Transit.destinations(second_gate).size() > 1:
-		second_arrival = exercise_inactive_portal_approach(session, Transit.point(Transit.link_of(second_gate).entry))
-		if not bool(second_arrival.get("ok", false)):
-			return {"ok": false, "error": "second_hero_approach_failed", "second_arrival": second_arrival}
-	var pending_both: Dictionary = session.overworld.get("native_transit_pending_arrival", {}).duplicate(true)
-	var both_saved: Dictionary = SaveService.save_runtime_file_session(session, "multihero_both_pending")
-	session = SaveService.restore_session_from_summary(SaveService.inspect_save_file("multihero_both_pending"))
-	if session == null:
-		return {"ok": false, "error": "two_hero_pending_save_failed"}
-	var second_trip: Dictionary = Rules.perform_context_action(session, "native_transit:" + String(second_exit.target_placement_id))
-	var pending_after: Dictionary = session.overworld.get("native_transit_pending_arrival", {}).duplicate(true)
-	var saved: Dictionary = SaveService.save_runtime_file_session(session, "multihero_portal_credit")
-	var resumed = SaveService.restore_session_from_summary(SaveService.inspect_save_file("multihero_portal_credit"))
-	var switched_back: Dictionary = Heroes.set_active_hero(resumed, first_id) if resumed != null else {}
-	var first_trip: Dictionary = Rules.perform_context_action(resumed, "native_transit:" + String(first_exit.target_placement_id)) if bool(switched_back.get("ok", false)) else {}
-	var after := int(resumed.overworld.movement.current) if resumed != null else -1
-	return {"ok": bool(first_arrival.get("native_transit_choice_required", false)) and bool(switched.get("ok", false)) and bool(both_saved.get("ok", false)) and bool(second_trip.get("ok", false)) and bool(saved.get("ok", false)) and bool(first_trip.get("ok", false)) and after == first_movement, "first_movement_before": first_movement, "first_movement_after": after, "first_arrival": first_arrival, "second_arrival": second_arrival, "second_trip": second_trip, "first_trip": first_trip, "pending_before_other_hero": pending_before, "pending_with_both_heroes": pending_both, "pending_after_other_hero": pending_after}
+	var second_trip: Dictionary = Rules.perform_context_action(session, "collect_resource")
+	var trips: Dictionary = session.overworld.get(Rules.NATIVE_TRANSIT_TRIPS_KEY, {}).duplicate(true)
+	var saved: Dictionary = SaveService.save_runtime_file_session(session, "multihero_portal_trips")
+	var resumed = SaveService.restore_session_from_summary(SaveService.inspect_save_file("multihero_portal_trips"))
+	var resumed_trips: Dictionary = resumed.overworld.get(Rules.NATIVE_TRANSIT_TRIPS_KEY, {}) if resumed != null else {}
+	var independent := int(trips.get(first_id, 0)) == 1 and int(trips.get(second_id, 0)) == 1
+	return {"ok": bool(first_trip.get("ok", false)) and bool(switched.get("ok", false)) and bool(second_trip.get("ok", false)) and bool(saved.get("ok", false)) and independent and int(resumed_trips.get(first_id, 0)) == 1 and int(resumed_trips.get(second_id, 0)) == 1, "first_trip": first_trip, "second_trip": second_trip, "trips": trips, "resumed_trips": resumed_trips}
 
 func exercise_inactive_portal_approach(session, entry: Vector3i) -> Dictionary:
 	var local := Vector2i(entry.x, entry.y)
@@ -717,23 +686,27 @@ func exercise_portal_representative(source, gate: Dictionary, shape: String) -> 
 	var checks := {}
 	var left: Dictionary = Rules.try_move(session, approach.x - entry.x, approach.y - entry.y) if approach.x >= 0 else {}
 	var movement_before := int(session.overworld.movement.current)
+	var approached = clone(session)
+	# Walking onto the portal travels at once; with several exits the roll
+	# picks one of them (docs/portal-networks.md).
 	var arrived: Dictionary = Rules.try_move(session, entry.x - approach.x, entry.y - approach.y) if bool(left.get("ok", false)) else {}
-	var before_save_position := Transit.point(session.overworld.hero_position)
+	var landed := Transit.point(session.overworld.hero_position)
 	var save_id := "portal_route_" + shape.replace(":", "_")
 	var saved: Dictionary = SaveService.save_runtime_file_session(session, save_id)
 	var resumed = SaveService.restore_session_from_summary(SaveService.inspect_save_file(save_id))
-	checks["production_save_keeps_position_contracts_and_fog"] = bool(saved.get("ok", false)) and resumed != null and Transit.point(resumed.overworld.hero_position) == before_save_position and resumed.overworld.fog == session.overworld.fog and Transit.validate(resumed.overworld.resource_nodes).is_empty()
-	var chosen := {}
-	if resumed != null and options.size() > 1:
-		chosen = Rules.perform_context_action(resumed, "native_transit:" + String(destination.target_placement_id))
-		var defended = clone(session)
-		defended.overworld.encounters.append({"placement_id":"portal_choice_hostile_probe", "encounter_id":"encounter_mire_raid", "x":expected_exit.x, "y":expected_exit.y, "level":expected_exit.z, "blocking_body":true})
+	checks["production_save_keeps_position_contracts_and_fog"] = bool(saved.get("ok", false)) and resumed != null and Transit.point(resumed.overworld.hero_position) == landed and resumed.overworld.fog == session.overworld.fog and Transit.validate(resumed.overworld.resource_nodes).is_empty()
+	if options.size() > 1:
+		var defended = clone(approached)
+		for option in options:
+			var option_exit := Transit.point(option.exit)
+			defended.overworld.encounters.append({"placement_id":"portal_exit_hostile_probe_" + String(option.target_placement_id), "encounter_id":"encounter_mire_raid", "x":option_exit.x, "y":option_exit.y, "level":option_exit.z, "blocking_body":true})
 		Rules.invalidate_spatial_lookup(defended)
 		Rules._refresh_blocked_tile_index(defended)
 		var paid_movement := int(defended.overworld.movement.current)
-		var combat_choice: Dictionary = Rules.perform_context_action(defended, "native_transit:" + String(destination.target_placement_id))
-		checks["paid_choice_enters_hostile_exit_without_second_charge"] = bool(combat_choice.get("ok", false)) and String(combat_choice.get("route", "")) == "battle" and String(defended.battle.get("resolved_key", "")) == "portal_choice_hostile_probe" and int(defended.overworld.movement.current) == paid_movement and Transit.point(defended.overworld.hero_position) == expected_exit
-	checks["real_approach_then_saved_choice_spends_one_total"] = bool(left.get("ok", false)) and bool(arrived.get("ok", false)) and resumed != null and Transit.point(resumed.overworld.hero_position) == expected_exit and int(resumed.overworld.movement.current) == movement_before - 1
+		var combat_arrival: Dictionary = Rules.try_move(defended, entry.x - approach.x, entry.y - approach.y)
+		checks["random_exit_enters_hostile_exit_as_battle"] = bool(combat_arrival.get("ok", false)) and String(combat_arrival.get("route", "")) == "battle" and String(defended.battle.get("resolved_key", "")).begins_with("portal_exit_hostile_probe_") and int(defended.overworld.movement.current) == paid_movement - 1
+	checks["real_approach_travels_once_spending_one_total"] = bool(left.get("ok", false)) and bool(arrived.get("ok", false)) and options.any(func(option): return Transit.point(option.exit) == landed) and resumed != null and int(resumed.overworld.movement.current) == movement_before - 1
+	var chosen := {}
 	return {"shape": shape, "placement_id": gate.placement_id, "checks": checks, "left": left, "arrived": arrived, "chosen": chosen}
 
 func exercise_portal_visual(source, gates: Array, out: String) -> Dictionary:
@@ -767,43 +740,15 @@ func exercise_portal_visual(source, gates: Array, out: String) -> Dictionary:
 			var rect: Rect2 = control.get_global_rect()
 			controls_inside = controls_inside and viewport.encloses(rect)
 			control_rects.append({"label": control.text, "position": str(rect.position), "size": str(rect.size)})
-	var action_id := "native_transit:" + String(options[0].target_placement_id) if options.size() > 1 else "collect_resource"
-	var action_exists := actions.any(func(action): return action.get("id") == action_id)
-	var choice_dialog_ok := true
-	var cancel_preserves_state := true
-	var dialog_bounds_ok := true
-	var dialog_rects := {}
-	if options.size() > 1:
-		var before_choice_position := Transit.point(session.overworld.hero_position)
-		var before_choice_movement := int(session.overworld.movement.current)
-		shell._on_context_action_pressed("collect_resource")
-		for frame in range(4):
-			await get_tree().process_frame
-		choice_dialog_ok = shell._native_destination_dialog != null and shell._native_destination_dialog.visible and shell._native_destination_picker.item_count == options.size() and shell._overworld_gameplay_movement_blocked_reason() == "native_destination_dialog_open"
-		var dialog: ConfirmationDialog = shell._native_destination_dialog
-		var dialog_rect := Rect2(Vector2(dialog.position), Vector2(dialog.size))
-		dialog_bounds_ok = shell.get_viewport_rect().encloses(dialog_rect)
-		var dialog_local := Rect2(Vector2.ZERO, Vector2(dialog.size))
-		for control in [shell._native_destination_picker, dialog.get_ok_button(), dialog.get_cancel_button()]:
-			dialog_bounds_ok = dialog_bounds_ok and dialog_local.encloses(control.get_global_rect())
-		dialog_rects = {"position": str(dialog.position), "size": str(dialog.size), "parent_viewport": str(shell.get_viewport_rect()), "ok_button": str(dialog.get_ok_button().get_global_rect()), "cancel_button": str(dialog.get_cancel_button().get_global_rect())}
-		await RenderingServer.frame_post_draw
-		get_viewport().get_texture().get_image().save_png(out.path_join("portal_choices.png"))
-		shell._on_native_destination_canceled()
-		cancel_preserves_state = Transit.point(session.overworld.hero_position) == before_choice_position and int(session.overworld.movement.current) == before_choice_movement and not shell._native_destination_dialog.visible and shell._overworld_gameplay_movement_blocked_reason() == ""
-		shell._on_context_action_pressed("collect_resource")
-		for frame in range(4):
-			await get_tree().process_frame
-		shell._native_destination_picker.select(0)
-		shell._native_destination_dialog.get_ok_button().pressed.emit()
-	else:
-		shell._on_context_action_pressed(action_id)
+	var action_exists := actions.any(func(action): return action.get("id") == "collect_resource")
+	shell._on_context_action_pressed("collect_resource")
 	for frame in range(8):
 		await get_tree().process_frame
 	await RenderingServer.frame_post_draw
 	get_viewport().get_texture().get_image().save_png(out.path_join("portal_after.png"))
-	var exit := Transit.point(options[0].exit)
-	var checks := {"context_action_exists": action_exists, "controls_inside_viewport": controls_inside, "context_action_reaches_visible_exact_exit": Transit.point(session.overworld.hero_position) == exit and shell._map_view._has_hero_at(Vector2i(exit.x, exit.y)), "main_and_minimap_follow_destination": shell._map_view._level == exit.z and shell._minimap.validation_snapshot().level == exit.z, "no_teleport_walk_animation": shell._hero_movement_presentation.is_empty(), "resolution_matches": get_viewport().get_texture().get_image().get_size() == Vector2i(int(size[0]), int(size[1])), "control_rects": control_rects, "choice_dialog_has_all_exits_and_owns_input": choice_dialog_ok, "choice_cancel_does_not_move_or_spend": cancel_preserves_state, "choice_dialog_and_buttons_inside_viewport": dialog_bounds_ok, "dialog_rects": dialog_rects}
+	var exit := Transit.point(session.overworld.hero_position)
+	var reached_exit := options.any(func(option): return Transit.point(option.exit) == exit)
+	var checks := {"context_action_exists": action_exists, "controls_inside_viewport": controls_inside, "context_action_reaches_visible_random_exit": reached_exit and shell._map_view._has_hero_at(Vector2i(exit.x, exit.y)), "main_and_minimap_follow_destination": shell._map_view._level == exit.z and shell._minimap.validation_snapshot().level == exit.z, "no_teleport_walk_animation": shell._hero_movement_presentation.is_empty(), "resolution_matches": get_viewport().get_texture().get_image().get_size() == Vector2i(int(size[0]), int(size[1])), "control_rects": control_rects}
 	shell.queue_free()
 	await get_tree().process_frame
 	return checks
@@ -932,28 +877,28 @@ def portal_failures(report, expected_ends, representatives_only=False):
             failed.append(f"{end.get('placement_id')}: destination_coverage")
         required += ["missing_destination_fails_validation"] if trips else ["arrival_only_or_stranded_is_explicit", "inactive_portal_approach_is_a_successful_move"]
         if len(trips) > 1:
-            required += ["multiple_destinations_require_explicit_choice", "every_exit_has_context_action"]
+            required += ["multiple_destinations_roll_one_exit"]
         for key in required:
             if end.get("checks", {}).get(key) is not True:
                 failed.append(f"{end.get('placement_id')}: {key}")
         for trip in trips:
-            keys = ["context_action_reaches_exact_exit", "one_movement_no_claim_or_reward", "save_roundtrip_keeps_position_group_and_fog", "occupied_exit_rejected_without_cost"]
+            keys = ["random_roll_reaches_each_exit", "one_movement_no_claim_or_reward", "save_roundtrip_keeps_position_group_and_fog", "occupied_exit_never_used"]
             if len(trips) > 1:
-                keys += ["paid_arrival_choice_survives_save_without_double_charge", "arrival_credit_does_not_grant_next_day_free_travel"]
+                keys += ["paid_arrival_travels_at_once_without_extra_cost"]
             for key in keys:
                 if trip.get("checks", {}).get(key) is not True:
                     failed.append(f"{end.get('placement_id')} -> {trip.get('target_placement_id')}: {key}")
     expected_shapes = {f"{int(gate['h3m_type_id'])}:{len(gate['native_transit'].get('destinations', []))}" for gate in source_ends.values() if gate.get("native_transit", {}).get("destinations")}
     if any(len(gate.get("native_transit", {}).get("destinations", [])) > 1 for gate in source_ends.values()) and portals.get("multihero_credit", {}).get("ok") is not True:
-        failed.append("multihero_pending_credit_not_preserved")
+        failed.append("multihero_trip_counts_not_preserved")
     representatives = portals.get("representatives", [])
     multi_exit_shapes = {f"{int(gate['h3m_type_id'])}:{len(gate['native_transit'].get('destinations', []))}" for gate in source_ends.values() if len(gate.get("native_transit", {}).get("destinations", [])) > 1}
     if len(representatives) != len(expected_shapes) or {r.get("shape") for r in representatives} != expected_shapes:
         failed.append("missing_portal_shape_gameplay_evidence")
     for representative in representatives:
-        keys = ["production_save_keeps_position_contracts_and_fog", "real_approach_then_saved_choice_spends_one_total"]
+        keys = ["production_save_keeps_position_contracts_and_fog", "real_approach_travels_once_spending_one_total"]
         if representative.get("shape") in multi_exit_shapes:
-            keys.append("paid_choice_enters_hostile_exit_without_second_charge")
+            keys.append("random_exit_enters_hostile_exit_as_battle")
         for key in keys:
             if representative.get("checks", {}).get(key) is not True:
                 failed.append(f"{representative.get('shape')}: {key}")
@@ -1089,7 +1034,7 @@ def main():
         failed.extend(key for key, value in controls.items() if not value)
         hashes["baseline_session:" + str(args.baseline_session)] = hashlib.sha256(args.baseline_session.read_bytes()).hexdigest()
     if args.render:
-        visual_checks = ("context_action_exists", "controls_inside_viewport", "context_action_reaches_visible_exact_exit", "main_and_minimap_follow_destination", "no_teleport_walk_animation", "resolution_matches", "choice_dialog_has_all_exits_and_owns_input", "choice_cancel_does_not_move_or_spend", "choice_dialog_and_buttons_inside_viewport") if args.portal_case else ("before_main_and_minimap_level", "context_action_changes_main_and_minimap", "hero_visible_at_actual_exit", "no_cross_layer_movement_animation", "resolution_matches")
+        visual_checks = ("context_action_exists", "controls_inside_viewport", "context_action_reaches_visible_random_exit", "main_and_minimap_follow_destination", "no_teleport_walk_animation", "resolution_matches") if args.portal_case else ("before_main_and_minimap_level", "context_action_changes_main_and_minimap", "hero_visible_at_actual_exit", "no_cross_layer_movement_animation", "resolution_matches")
         for key in visual_checks:
             if raw.get("visual", {}).get(key) is not True:
                 failed.append("visual: " + key)

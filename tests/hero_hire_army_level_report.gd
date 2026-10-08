@@ -169,10 +169,15 @@ func _check_hired_hero(hero: Dictionary, offer: Dictionary) -> void:
 	var starting: Array = template.get("starting_specialties", [])
 	_check(hero.get("specialties", []).size() == starting.size() + level - 1, "%s specialties %s at level %d" % [hero_id, hero.get("specialties", []), level])
 	var command: Dictionary = template.get("command", {})
-	var gains := {"attack": 0, "defense": 0}
+	var order := ["attack", "defense", "attack", "defense", "power", "attack", "defense", "attack", "defense", "knowledge"]
+	if String(template.get("command_path", "")) == "magic":
+		order = ["power", "knowledge", "power", "knowledge", "attack", "power", "knowledge", "power", "knowledge", "defense"]
+	var expected := {}
+	for stat in ["attack", "defense", "power", "knowledge"]:
+		expected[stat] = int(command.get(stat, 0))
 	for earned in range(2, level + 1):
-		gains["attack" if earned % 2 == 0 else "defense"] += 1
-	_check(int(hero.get("command", {}).get("attack", 0)) == int(command.get("attack", 0)) + gains.attack and int(hero.get("command", {}).get("defense", 0)) == int(command.get("defense", 0)) + gains.defense, "%s command %s at level %d" % [hero_id, hero.get("command", {}), level])
+		expected[order[(earned - 2) % order.size()]] += 1
+	_check(expected.keys().all(func(stat): return int(hero.get("command", {}).get(stat, 0)) == int(expected[stat])), "%s command %s at level %d, expected %s" % [hero_id, hero.get("command", {}), level, expected])
 	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
 	_check(int(mana.get("current", -1)) == int(mana.get("max", -2)), "%s arrives without full mana %s" % [hero_id, mana])
 

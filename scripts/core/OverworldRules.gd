@@ -16,7 +16,9 @@ const VisitBuildings = preload("res://scripts/core/VisitBuildingRules.gd")
 const WaterTravel = preload("res://scripts/core/WaterTravelRules.gd")
 const GeneratedRewards = preload("res://scripts/persistence/GeneratedRewardRules.gd")
 const GENERATED_TRANSIT_TRANSLATION_KEY := "generated_transit_translation_version"
-const GENERATED_TRANSIT_TRANSLATION_VERSION := 1
+const GENERATED_TRANSIT_TRANSLATION_VERSION := 2
+# Portal trips per traveller, part of the random-exit roll (docs/portal-networks.md).
+const NATIVE_TRANSIT_TRIPS_KEY := "native_transit_trips"
 const ROUTE_LOCK_CHOICE_ID := "open_route"
 # Troops a claimed site offered that did not fit the visiting hero's army; the
 # hero may dismiss a stack to take them or leave them behind.
@@ -313,6 +315,7 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 	_migrate_generated_transit_meanings(session)
 	WaterTravel.normalize(session)
 	NativeTransit.normalize_legacy_session(session)
+	NativeTransit.assign_network_colours(session.overworld.get("resource_nodes", []))
 	if not session.overworld.has("hero_position") or not (session.overworld.get("hero_position") is Dictionary):
 		session.overworld["hero_position"] = scenario.get("start", {"x": 0, "y": 0})
 	_refresh_blocked_tile_index(session)
@@ -327,9 +330,13 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 ## shipyards, whirlpools, gates and portals. Translate them by meaning once:
 ## boats become boats, shipyards and whirlpools get their sites, unopened gates
 ## become a gate that suits their terrain, and portals keep their passage with
-## matching art. Opened gates stay open.
+## matching art. Opened gates stay open. Version 2 gives each portal kind its
+## own art and drops portal networks that never leave their zone; saves already
+## at version 1 only revisit their portals.
 static func _migrate_generated_transit_meanings(session: SessionStateStoreScript.SessionData) -> void:
-	if int(session.overworld.get(GENERATED_TRANSIT_TRANSLATION_KEY, 0)) >= GENERATED_TRANSIT_TRANSLATION_VERSION:
+	var migrated_version := int(session.overworld.get(GENERATED_TRANSIT_TRANSLATION_KEY, 0))
+	session.overworld.erase("native_transit_pending_arrival")
+	if migrated_version >= GENERATED_TRANSIT_TRANSLATION_VERSION:
 		return
 	var sources: Variant = session.overworld.get("package_source_objects_by_id", {})
 	var nodes: Variant = session.overworld.get("resource_nodes", [])
@@ -342,6 +349,9 @@ static func _migrate_generated_transit_meanings(session: SessionStateStoreScript
 	var kept := []
 	for node_value in nodes:
 		if not (node_value is Dictionary) or int(node_value.get("h3m_type_id", -1)) not in GeneratedRewards.TRANSIT_MEANING_TYPES:
+			kept.append(node_value)
+			continue
+		if migrated_version >= 1 and int(node_value.get("h3m_type_id", -1)) not in GeneratedRewards.PORTAL_TYPES:
 			kept.append(node_value)
 			continue
 		var node: Dictionary = node_value
@@ -757,7 +767,7 @@ static func route_movement_preview(
 static func native_passage_travel_check(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_position: Vector3i, actor_id: String, target_id: String = "") -> Dictionary:
 	var resolved := NativeTransit.resolve(session.overworld.get("resource_nodes", []), node, target_id)
 	if not bool(resolved.get("ok", false)):
-		if bool(resolved.get("native_transit_choice_required", false)):
+		if bool(resolved.get("native_transit_random_exit", false)):
 			if actor_position != NativeTransit.point(NativeTransit.link_of(node).get("entry")):
 				return {"ok": false, "message": "Move to the passage entrance first."}
 			var source_safety := _native_passage_endpoint_safety(session, node, actor_id)
@@ -774,6 +784,29 @@ static func native_passage_travel_check(session: SessionStateStoreScript.Session
 		if not bool(safety.get("ok", false)):
 			return safety
 	return resolved
+
+## Like HoMM3 monoliths, a portal with several exits sends the traveller to a
+## random one. The roll is keyed by portal, day, traveller and that traveller's
+## trip count, so a reload replays it and the next trip can land elsewhere. An
+## exit that is blocked right now is skipped for the next one in roll order.
+static func native_random_exit_check(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_position: Vector3i, actor_id: String) -> Dictionary:
+	var first_failure := {}
+	for destination in NativeTransit.exit_order(node, native_exit_roll_key(session, node, actor_id)):
+		var check := native_passage_travel_check(session, node, actor_position, actor_id, String(destination.get("target_placement_id", "")))
+		if bool(check.get("ok", false)):
+			return check
+		if first_failure.is_empty():
+			first_failure = check
+	return first_failure if not first_failure.is_empty() else {"ok": false, "error": "native_passage_has_no_exit", "message": "This portal has no exit on this map."}
+
+static func native_exit_roll_key(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_id: String) -> String:
+	var trips: Dictionary = session.overworld.get(NATIVE_TRANSIT_TRIPS_KEY, {}) if session.overworld.get(NATIVE_TRANSIT_TRIPS_KEY, {}) is Dictionary else {}
+	return "%s|%d|%s|%d" % [String(node.get("placement_id", "")), int(session.day), actor_id, int(trips.get(actor_id, 0))]
+
+static func note_native_trip(session: SessionStateStoreScript.SessionData, actor_id: String) -> void:
+	var trips: Dictionary = session.overworld.get(NATIVE_TRANSIT_TRIPS_KEY, {}) if session.overworld.get(NATIVE_TRANSIT_TRIPS_KEY, {}) is Dictionary else {}
+	trips[actor_id] = int(trips.get(actor_id, 0)) + 1
+	session.overworld[NATIVE_TRANSIT_TRIPS_KEY] = trips
 
 static func _native_passage_endpoint_safety(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_id: String, actor_blocked_indexes: Variant = null, combat_arrival: bool = false) -> Dictionary:
 	var tile := NativeTransit.point(NativeTransit.link_of(node).get("entry"))
@@ -829,37 +862,15 @@ static func _native_passage_endpoint_safety(session: SessionStateStoreScript.Ses
 			return {"ok": false, "message": "Recover the artifact at the passage entrance first."}
 	return {"ok": true}
 
-static func _native_arrival_credits(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	var stored: Variant = session.overworld.get("native_transit_pending_arrival", {})
-	if not (stored is Dictionary):
-		return {}
-	# Accept the initial single-actor additive shape when resuming an earlier
-	# session. Independent heroes must not overwrite or consume each other's
-	# already-paid approach. Reads do not mutate the session.
-	if stored.has("hero_id"):
-		var legacy := {}
-		legacy[String(stored.get("hero_id", ""))] = stored
-		return legacy
-	return stored
-
-static func travel_native_passage(session: SessionStateStoreScript.SessionData, node: Dictionary, movement_cost: int = 1, target_id: String = "") -> Dictionary:
+static func travel_native_passage(session: SessionStateStoreScript.SessionData, node: Dictionary, movement_cost: int = 1) -> Dictionary:
 	movement_cost = clampi(movement_cost, 0, 1)
 	var actor_id := String(session.overworld.get("active_hero_id", ""))
 	var actor_position := NativeTransit.point(session.overworld.get("hero_position"))
-	var check := native_passage_travel_check(session, node, actor_position, actor_id, target_id)
+	var check := native_passage_travel_check(session, node, actor_position, actor_id)
+	if bool(check.get("native_transit_random_exit", false)):
+		check = native_random_exit_check(session, node, actor_position, actor_id)
 	if not bool(check.get("ok", false)):
-		if bool(check.get("native_transit_choice_required", false)):
-			if movement_cost == 0:
-				# The approach step was already paid. Persist only this actor's
-				# current entrance/day credit so a deferred choice survives saving,
-				# without gifting another hero or tomorrow's return a free jump.
-				var credits := _native_arrival_credits(session).duplicate(false)
-				credits[actor_id] = {"hero_id": actor_id, "placement_id": String(node.get("placement_id", "")), "day": session.day, "entry": NativeTransit.link_of(node).get("entry", {}).duplicate(true)}
-				session.overworld["native_transit_pending_arrival"] = credits
-			# Arriving and requesting a destination is a successful interaction,
-			# not failed movement after the hero has already spent the approach.
-			check["ok"] = true
-		elif movement_cost == 0 and actor_position == NativeTransit.point(NativeTransit.link_of(node).get("entry")):
+		if movement_cost == 0 and actor_position == NativeTransit.point(NativeTransit.link_of(node).get("entry")):
 			# An arrival-only/stranded endpoint or a temporarily occupied exit
 			# does not undo a legal, already-paid walk to this entrance. Keep
 			# explicit Travel requests rejected, and never mask bad contracts.
@@ -868,10 +879,6 @@ static func travel_native_passage(session: SessionStateStoreScript.SessionData, 
 				check["ok"] = true
 				check["native_transit_unavailable"] = true
 		return check
-	var credits := _native_arrival_credits(session).duplicate(false)
-	var pending: Dictionary = credits.get(actor_id, {}) if credits.get(actor_id, {}) is Dictionary else {}
-	if target_id != "" and String(pending.get("hero_id", "")) == actor_id and String(pending.get("placement_id", "")) == String(node.get("placement_id", "")) and int(pending.get("day", -1)) == session.day and NativeTransit.point(pending.get("entry")) == actor_position:
-		movement_cost = 0
 	# Arrival has already spent the approach step. A deliberate return from the
 	# entrance spends one step, so neither route previews nor zero-move heroes
 	# gain a free loop. This is live game movement, not a generator RNG rule.
@@ -889,11 +896,7 @@ static func travel_native_passage(session: SessionStateStoreScript.SessionData, 
 			return {"ok": false, "message": "The passage is defended, but battle setup failed."}
 	movement["current"] = int(movement.get("current", 0)) - movement_cost
 	session.overworld["movement"] = movement
-	credits.erase(actor_id)
-	if credits.is_empty():
-		session.overworld.erase("native_transit_pending_arrival")
-	else:
-		session.overworld["native_transit_pending_arrival"] = credits
+	note_native_trip(session, actor_id)
 	_set_active_hero_position(session, Vector2i(destination.x, destination.y), destination.z)
 	session.overworld["view_level"] = destination.z
 	clear_active_town_visit(session)
@@ -908,7 +911,49 @@ static func travel_native_passage(session: SessionStateStoreScript.SessionData, 
 		arrival_battle.player_commander_state["movement"] = session.overworld.movement.duplicate(true)
 		session.battle = arrival_battle
 		return {"ok": true, "message": describe_encounter_battle_cue(session, defender), "route": "battle", "native_transit": check.link.duplicate(true), "movement_cost": movement_cost}
-	return {"ok": true, "message": "Travelled through the passage to %s (%d,%d)." % ["the underground" if destination.z > 0 else "the surface", destination.x, destination.y], "native_transit": check.link.duplicate(true), "movement_cost": movement_cost}
+	return {"ok": true, "message": _native_travel_message(node, destination), "native_transit": check.link.duplicate(true), "movement_cost": movement_cost}
+
+## "Azure Wayring": the network colour, then the portal's name.
+static func native_portal_display_name(node: Dictionary) -> String:
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	return "%s %s" % [String(NativeTransit.network_colour(node).get("name", "")), String(site.get("name", "portal"))]
+
+## Says what kind of portal this is, its network and where it can take you.
+## Exits on tiles the player has not explored are counted but not located.
+static func describe_native_portal(session: SessionStateStoreScript.SessionData, node: Dictionary) -> String:
+	var indexed := NativeTransit.nodes_by_id(session.overworld.get("resource_nodes", []))
+	var error := NativeTransit.contract_error(node, indexed)
+	if error != "":
+		return "This portal has an invalid destination (%s)." % error
+	var name := native_portal_display_name(node)
+	var colour := String(NativeTransit.network_colour(node).get("name", ""))
+	var options := NativeTransit.destinations(node)
+	var places := []
+	for destination in options:
+		var tile := NativeTransit.point(destination.get("exit"))
+		if is_tile_explored(session, tile.x, tile.y, tile.z):
+			places.append("%d,%d" % [tile.x, tile.y])
+	var where := " (%s)" % ", ".join(places) if not places.is_empty() else ""
+	var peer_name := native_portal_display_name(indexed.get(String(options[0].get("target_placement_id", "")), {})) if not options.is_empty() else ""
+	match NativeTransit.portal_kind(node):
+		"one_way_exit":
+			return "%s: a one-way exit. Travellers from %s Waygates come out here; it cannot be entered." % [name, colour]
+		"one_way_entrance":
+			if options.is_empty():
+				return "%s: a one-way portal whose network has no exit on this map." % name
+			if options.size() == 1:
+				return "%s: a one-way portal to the %s%s. There is no way back through it." % [name, peer_name, where]
+			return "%s: a one-way portal. It sends you to one of %d %ss%s at random. There is no way back through it." % [name, options.size(), peer_name, where]
+	if options.is_empty():
+		return "%s: a two-way portal whose network has no other end on this map." % name
+	if options.size() == 1:
+		return "%s: a two-way portal to the other %s%s, and back." % [name, peer_name, where]
+	return "%s: a two-way portal. It sends you to one of %d other %ss%s at random." % [name, options.size(), peer_name, where]
+
+static func _native_travel_message(node: Dictionary, destination: Vector3i) -> String:
+	if NativeTransit.portal_kind(node) == "":
+		return "Travelled through the passage to %s (%d,%d)." % ["the underground" if destination.z > 0 else "the surface", destination.x, destination.y]
+	return "Travelled through the %s and came out at %d,%d." % [native_portal_display_name(node), destination.x, destination.y]
 
 static func active_linked_transit_edges(session: SessionStateStoreScript.SessionData, level: int = -1) -> Array:
 	var edges := []
@@ -1196,9 +1241,6 @@ static func try_move_along_route(
 		result["reward_choice"] = interaction_result["reward_choice"].duplicate(true)
 	if interaction_result.has("native_transit"):
 		result["native_transit"] = interaction_result.native_transit.duplicate(true)
-	if bool(interaction_result.get("native_transit_choice_required", false)):
-		result["native_transit_choice_required"] = true
-		result["destinations"] = interaction_result.get("destinations", []).duplicate(true)
 	result["route_steps"] = _route_tile_payloads(path.slice(1, reachable_steps + 1))
 	var route_execution := preview.duplicate(true)
 	route_execution["reached_destination"] = reached_destination
@@ -2441,16 +2483,6 @@ static func _collect_artifact_node_result(
 static func perform_context_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
 	if session == null:
 		return {}
-	if action_id.begins_with("native_transit:"):
-		normalize_overworld_state_for_runtime(session)
-		# Some source portal descriptors have a two-cell body with their
-		# action tile one column west of the visual anchor. Use the same
-		# authoritative interaction lookup as the ordinary context action.
-		var resource := _find_context_resource_node(session)
-		var node: Dictionary = resource.get("node", {})
-		if int(resource.get("index", -1)) < 0 or not NativeTransit.is_native(node):
-			return {"ok": false, "message": "Move to the passage entrance first."}
-		return travel_native_passage(session, node, 1, action_id.trim_prefix("native_transit:"))
 	if action_id == "collect_resource":
 		return collect_active_resource(session)
 	if action_id == "collect_artifact":
@@ -6958,14 +6990,7 @@ static func get_context_actions(session: SessionStateStoreScript.SessionData) ->
 		"resource":
 			var node = context.get("node", {})
 			var site := NodePayload.site_for_node(node)
-			if NativeTransit.is_native(node) and NativeTransit.destinations(node).size() > 1:
-				actions.append({"id": "collect_resource", "label": "Choose Destination", "summary": "Choose which connected passage exit to use."})
-				for destination in NativeTransit.destinations(node):
-					var tile := NativeTransit.point(destination.get("exit"))
-					var target_id := String(destination.get("target_placement_id", ""))
-					var check := native_passage_travel_check(session, node, NativeTransit.point(session.overworld.get("hero_position")), String(session.overworld.get("active_hero_id", "")), target_id)
-					actions.append({"id": "native_transit:" + target_id, "label": "Travel: %s %d,%d" % ["Below" if tile.z > 0 else "Surface", tile.x, tile.y], "summary": "Travel to this connected destination." if bool(check.get("ok", false)) else String(check.get("message", "Passage unavailable.")), "disabled": not bool(check.get("ok", false))})
-			elif _resource_node_claimable_by_player(node, site, session):
+			if _resource_node_claimable_by_player(node, site, session):
 				var collection_resource_id := resource_site_primary_stockpile_resource_id(site)
 				var admission: Dictionary = HeroCommandRulesScript.army_addition_split(session.overworld.get("army", {}).get("stacks", []), _resource_site_claim_recruits(site))
 				var overflow: Dictionary = admission.get("overflow", {})
@@ -8185,7 +8210,7 @@ static func _resource_site_action_label(node: Dictionary, site: Dictionary) -> S
 		var link := NativeTransit.link_of(node)
 		if String(link.get("kind", "")) == "paired_cave":
 			return "Travel Underground" if int(link.get("exit", {}).get("level", 0)) > 0 else "Travel to Surface"
-		return "Travel Through Portal" if not NativeTransit.destinations(node).is_empty() else "Inspect Portal"
+		return "Step Through" if not NativeTransit.destinations(node).is_empty() else "Inspect"
 	var authored_label := String(site.get("action_label", ""))
 	if authored_label != "":
 		return authored_label
@@ -9862,6 +9887,8 @@ static func _resource_site_response_action(
 static func _resource_site_context_summary(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> String:
 	site = NodePayload.site_for_node(node, site)
 	if NativeTransit.is_native(node):
+		if NativeTransit.portal_kind(node) != "":
+			return describe_native_portal(session, node)
 		var resolved := NativeTransit.resolve(session.overworld.get("resource_nodes", []), node)
 		if not bool(resolved.get("ok", false)):
 			return String(resolved.get("message", "This passage is unavailable."))
@@ -15058,6 +15085,8 @@ static func _context_action_briefing(session: SessionStateStoreScript.SessionDat
 		"collect_resource":
 			var node = context.get("node", {})
 			if NativeTransit.is_native(node):
+				if NativeTransit.portal_kind(node) != "":
+					return "Step through the %s. Costs 1 movement when you already stand at it; walking onto it includes the trip." % native_portal_display_name(node)
 				return "Use the paired passage. Costs 1 movement when already at its entrance; approaching it includes travel. The destination must be clear."
 			var site := NodePayload.site_for_node(node)
 			return "Secure %s now to %s." % [

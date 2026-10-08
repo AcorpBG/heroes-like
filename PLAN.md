@@ -100,6 +100,10 @@ Rules:
 
 `ux-overworld-road-junctions-20261008` (completed, owner playtest fix): where generated roads run two tiles wide at a junction or side by side, the renderer links the roads entering each clump with one tree instead of joining every adjacent tile, so junctions read as a T or a cross instead of ladders and loops; real loops and crossings are unchanged. See `docs/overworld-road-junctions.md`.
 
+### Battle stat scaling
+
+`battle-stat-scaling-20261008` (completed, owner review): attack against defense no longer stops at ±8 points: +5% per point of attack lead up to +300%, -2.5% per point of defense lead down to -70%. Level-ups follow the hero's might or magic command path, so magic heroes grow power and knowledge; damage spells gain 2.5x as much per point of power, and every 4 power adds a round to spell buffs, debuffs and riders (up to 3). A hit's cohesion loss goes by the share of the stack it took, not by creatures killed, so big stacks no longer lose 2 cohesion to every hit. See `docs/battle-stat-scaling.md`.
+
 ### Organic ground borders
 
 `art-overworld-organic-ground-borders-20261008` (completed, owner-approved prototype): biome borders meander off the tile grid (noise-bent corner weights that fade out near tile centres) and grounds meet with a height-and-priority blend instead of a cross-fade, so one ground's detail fringes the other; coasts curve the same way. See `docs/overworld-ground-borders.md`.
@@ -135,6 +139,10 @@ Rules:
 ### Water travel and transit objects
 
 `feature-water-travel-20261007` (completed for the player, owner direction): HoMM3-style boats. Walking onto a free boat boards it and stepping onto open shore leaves it, each ending the day's movement; sailing heroes move only on water and visit water sites. Neutral shipyards build a boat at their dock for 1,000 gold and 10 wood; whirlpools throw a boat out at another whirlpool for half of the weakest stack. Random maps translate HoMM3 transit objects by meaning instead of a random transit pick: boats, shipyards and whirlpools become themselves, border guards, gates, garrisons and quest guards become terrain-matched pay-to-open gates, keymaster's tents are left off, and portals and subterranean gates keep their passage with matching art. Shipyards and whirlpools are never used as stand-ins for other HoMM3 sites. Gates ask before taking payment, and older saves are migrated once. Follow-up: AI heroes do not sail yet. See `docs/water-travel.md`.
+
+### Portal networks
+
+`feature-portal-networks-20261008` (completed for the player, owner direction): random-map Monoliths become three readable sites, the Wayring (two-way), Waygate (one-way entrance) and Wayfall (one-way exit), told apart by their stonework; the magic inside is the painting's own light, tinted in the network's colour and gently animated, and every network on the map has its own colour (a still frame under reduced motion). Portals with several exits send the traveller to a random one, as in HoMM3; there is no destination menu. H3MapEd reuses a portal colour after 16 portal connections and can build a zone's link to itself twice (`0x4a7e64`, `0x49b3fb`); generation is unchanged, but the package now records which connection placed each portal end, so each connection is its own network and networks that never leave their zone are left off. Older saves migrate their portals once. Follow-up: AI heroes do not use portals yet. See `docs/portal-networks.md`.
 
 ### Town building popouts
 

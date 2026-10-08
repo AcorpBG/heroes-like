@@ -37,7 +37,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 30,
-        "power_scale": 7,
+        "power_scale": 18,
         "wounded_threshold_ratio": 0.5,
         "wounded_bonus_damage": 8,
         "status_effect": {
@@ -215,7 +215,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 14,
-        "power_scale": 4,
+        "power_scale": 10,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
@@ -408,7 +408,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 28,
-        "power_scale": 6,
+        "power_scale": 15,
         "status_effect": {
           "effect_id": "status_staggered",
           "label": "Dazzled",
@@ -520,7 +520,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 18,
-        "power_scale": 5,
+        "power_scale": 13,
         "status_effect": {
           "effect_id": "status_staggered",
           "label": "Overpressured",
@@ -578,7 +578,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 15,
-        "power_scale": 4,
+        "power_scale": 10,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Marked",
@@ -683,7 +683,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 42,
-        "power_scale": 9,
+        "power_scale": 23,
         "status_effect": {
           "effect_id": "status_staggered",
           "label": "Staggered",
@@ -843,7 +843,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 77,
-        "power_scale": 15,
+        "power_scale": 38,
         "status_effect": {
           "effect_id": "status_staggered",
           "label": "Staggered",
@@ -875,7 +875,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 51,
-        "power_scale": 11,
+        "power_scale": 28,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
@@ -1029,7 +1029,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 14,
-        "power_scale": 4,
+        "power_scale": 10,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
@@ -1183,7 +1183,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 36,
-        "power_scale": 8,
+        "power_scale": 20,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
@@ -1248,7 +1248,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 14,
-        "power_scale": 4,
+        "power_scale": 10,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
@@ -1406,7 +1406,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 37,
-        "power_scale": 8,
+        "power_scale": 20,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
@@ -1644,7 +1644,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 73,
-        "power_scale": 14,
+        "power_scale": 35,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
@@ -1800,7 +1800,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 25,
-        "power_scale": 6,
+        "power_scale": 15,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
@@ -1902,7 +1902,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 79,
-        "power_scale": 15,
+        "power_scale": 38,
         "status_effect": {
           "effect_id": "status_staggered",
           "label": "Staggered",
@@ -2055,7 +2055,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 30,
-        "power_scale": 7,
+        "power_scale": 18,
         "status_effect": {
           "effect_id": "status_staggered",
           "label": "Staggered",
@@ -2208,7 +2208,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 52,
-        "power_scale": 11,
+        "power_scale": 28,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
@@ -2361,7 +2361,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 14,
-        "power_scale": 4,
+        "power_scale": 10,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
@@ -2514,7 +2514,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 37,
-        "power_scale": 8,
+        "power_scale": 20,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
@@ -2617,7 +2617,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 39,
-        "power_scale": 8,
+        "power_scale": 20,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
@@ -2774,7 +2774,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 74,
-        "power_scale": 14,
+        "power_scale": 35,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Harried",
@@ -3074,7 +3074,7 @@
       "effect": {
         "type": "damage_enemy",
         "base_damage": 40,
-        "power_scale": 9,
+        "power_scale": 23,
         "status_effect": {
           "effect_id": "status_harried",
           "label": "Drowned-Bell Verdict",

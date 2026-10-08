@@ -3449,6 +3449,17 @@ struct GeneratorObjectPrivateState {
 	std::vector<uint32_t> monolith_paired_output_object_keys_14c0;
 	GeneratorObjectVectorState monolith_two_way_output_vector_14d0;
 	std::vector<uint32_t> monolith_two_way_output_object_keys_14d0;
+	// Additive runtime bookkeeping, never read by generation: which 0x4a7605
+	// call (one template connection) committed each portal end, and the
+	// relation-owner zones of that end and of both connection sides.
+	struct MonolithConnectionEnd4a7605 {
+		int32_t connection_ordinal = -1;
+		int32_t zone = -1;
+		int32_t source_zone = -1;
+		int32_t target_zone = -1;
+	};
+	std::map<uint32_t, MonolithConnectionEnd4a7605> monolith_connection_end_by_object_key_4a7605;
+	int32_t monolith_connection_count_4a7605 = 0;
 	bool endpoint_cursor_0xf58_present = false;
 	bool endpoint_cursor_0xf58_known = false;
 	int32_t endpoint_cursor_0xf58 = 0;
@@ -4130,6 +4141,14 @@ struct RuntimeMapObjectProjection {
 	// and source descriptor lanes. Not part of the native H3M payload.
 	bool monolith_source_group_0x4a7605_known = false;
 	std::vector<int32_t> monolith_destination_serialized_indices_0x4a7605;
+	// One 0x4a7605 call places one template connection. When its bookkeeping
+	// is known, destinations are that connection's ends only, so a reused
+	// descriptor colour does not merge two connections into one network.
+	int32_t monolith_connection_ordinal_0x4a7605 = -1;
+	int32_t monolith_network_index_0x4a7605 = -1;
+	int32_t monolith_zone_0x4a7605 = -1;
+	int32_t monolith_connection_source_zone_0x4a7605 = -1;
+	int32_t monolith_connection_target_zone_0x4a7605 = -1;
 };
 
 struct RuntimeMapPayloadProjection {
