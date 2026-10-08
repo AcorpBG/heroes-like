@@ -29,14 +29,14 @@ Saves keep `overworld.boats` and each hero's `boat_id`; normalization keeps them
 | Whirlpool (111) | Whirlpool |
 | Border Guard (9), Border Gate (212), Garrisons (33, 219), Quest Guard (215) | A pay-to-open gate that suits the terrain under it (frost bar on snow, thorn seal or root lease in swamp, ash sluice on lava, brass toll or pressure rail underground and on rough ground, charter bar or toll chain on grass and dirt) |
 | Keymaster's Tent (10) | Left off: gates open by payment, so no key is needed |
-| Monoliths (43, 44, 45) | Keep their native passage with the Slipgate Mirror art |
+| Monoliths (43, 44, 45) | Wayring (two-way), Waygate (one-way entrance) and Wayfall (one-way exit), each network in its own colour; see `docs/portal-networks.md` |
 | Subterranean Gate (103) | Keeps its native passage with the Basalt Undergate art |
 
 Shipyards and whirlpools only appear where the source map had one. The random-map object table never uses them as stand-ins for other HoMM3 sites: their `water_travel_live` status is excluded from the interactable pool (`water_travel_meaning_placement` in `content/random_map_object_eligibility.json`). Otherwise an inland service could become a shipyard with no water.
 
 Gates now ask before they take payment: visiting one opens a prompt with the gate's story, the price and an Open button; leaving it keeps the passage closed. An opened gate stays open for everyone.
 
-Saves from older random maps are migrated once on load (`overworld.generated_transit_translation_version`): boat sites become boats, shipyards and whirlpools get their sites, keymaster's tents disappear, unopened gates are re-picked for their terrain, opened gates stay open, and portals keep their passage with the new art.
+Saves from older random maps are migrated once on load (`overworld.generated_transit_translation_version`): boat sites become boats, shipyards and whirlpools get their sites, keymaster's tents disappear, unopened gates are re-picked for their terrain, opened gates stay open, and portals keep their passage with the new art (version 2 revisits portals only; `docs/portal-networks.md`).
 
 ## Content
 

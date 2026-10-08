@@ -8,6 +8,7 @@ extends RefCounted
 ## placement id, so the same package always yields the same map.
 
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
+const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
 
 const RARE_RESOURCES := ["aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]
 const COLLECTIBLE_RESOURCES := ["wood", "ore", "aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]
@@ -120,7 +121,9 @@ const ELDER_TREE_TYPE := 102
 # entities and keymaster's tents are left off: gates open by payment, so no
 # key is needed. Border guards, gates, garrisons and quest guards become the
 # pay-to-open gate that suits their terrain; portals and subterranean gates
-# keep their native passage with matching art.
+# keep their native passage with matching art. Each portal kind has its own art
+# (docs/portal-networks.md), and a portal network whose two sides are the same
+# zone is left off: it never takes a traveller anywhere new.
 const TYPE_BOAT := 8
 const TYPE_KEYMASTER := 10
 const TYPE_SHIPYARD := 87
@@ -132,7 +135,7 @@ const PORTAL_TYPES := [43, 44, 45]
 const TRANSIT_MEANING_TYPES := [8, 9, 10, 33, 43, 44, 45, 87, 103, 111, 212, 215, 219]
 const SHIPYARD_SITE := "site_shipyard"
 const WHIRLPOOL_SITE := "site_whirlpool"
-const PORTAL_SITE := "site_slipgate_mirror"
+const PORTAL_SITES := {45: "site_wayring", 43: "site_waygate", 44: "site_wayfall"}
 const UNDERGATE_SITE := "site_basalt_undergate"
 const GATE_SITES := ["site_charter_bar_gate", "site_thorn_seal_gate", "site_brass_toll_arch", "site_reef_chain_boom", "site_frost_toll_bar", "site_ash_sluice_lock", "site_toll_chain_court", "site_root_lease_gate", "site_pressure_rail_stop"]
 const GATE_SITES_BY_TERRAIN := {
@@ -184,7 +187,7 @@ static func resolve(object: Dictionary, towns: Array = [], terrain_rows: Array =
 	if type_id in GATE_TYPES:
 		return _node(object, _gate_site(object, key, terrain_rows), "resource_site", {})
 	if type_id in PORTAL_TYPES:
-		return _node(object, PORTAL_SITE, String(object.get("kind", "resource_site")), {})
+		return _node(object, String(PORTAL_SITES[type_id]), String(object.get("kind", "resource_site")), {})
 	match type_id:
 		TYPE_SHIPYARD:
 			return _node(object, SHIPYARD_SITE, "resource_site", {})
@@ -288,9 +291,9 @@ static func _visit_building(object: Dictionary, key: String, type_id: int) -> Di
 		return _node(object, _pick(_visit_fallback_sites(), key, "visit_fallback"), "resource_site", {})
 	return {}
 
-## Boats and keymaster's tents become no resource site.
+## Boats, keymaster's tents and dead-end portal networks become no resource site.
 static func is_skipped(object: Dictionary) -> bool:
-	return int(object.get("h3m_type_id", -1)) in SKIPPED_TYPES
+	return int(object.get("h3m_type_id", -1)) in SKIPPED_TYPES or NativeTransit.is_dead_end(object)
 
 ## A HoMM3 boat's water tile, or {} for any other object.
 static func boat_tile(object: Dictionary) -> Dictionary:

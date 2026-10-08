@@ -17196,6 +17196,57 @@
           "whirlpool": true
         }
       }
+    },
+    {
+      "id": "site_wayring",
+      "name": "Wayring",
+      "family": "transit_object",
+      "action_label": "Step Through",
+      "overworld_sprite_asset_id": "mapobj_wayring",
+      "public_text": "A two-way portal. Step in to come out at the other Wayring of the same colour, and back again. If its colour has several other Wayrings, you come out at one of them at random.",
+      "transit_profile": {
+        "mode": "native_portal_network",
+        "route_role": "two_way_portal",
+        "requires_repair": false,
+        "paired_link_required": false,
+        "one_way": false,
+        "metadata_only": false,
+        "runtime_route_effect_adopted": false
+      }
+    },
+    {
+      "id": "site_waygate",
+      "name": "Waygate",
+      "family": "transit_object",
+      "action_label": "Step Through",
+      "overworld_sprite_asset_id": "mapobj_waygate",
+      "public_text": "A one-way portal. Step in to come out at a Wayfall of the same colour, chosen at random when there are several. There is no way back through it.",
+      "transit_profile": {
+        "mode": "native_portal_network",
+        "route_role": "one_way_entrance",
+        "requires_repair": false,
+        "paired_link_required": false,
+        "one_way": true,
+        "metadata_only": false,
+        "runtime_route_effect_adopted": false
+      }
+    },
+    {
+      "id": "site_wayfall",
+      "name": "Wayfall",
+      "family": "transit_object",
+      "action_label": "Inspect",
+      "overworld_sprite_asset_id": "mapobj_wayfall",
+      "public_text": "Where travellers from Waygates of the same colour come out. It cannot be entered.",
+      "transit_profile": {
+        "mode": "native_portal_network",
+        "route_role": "one_way_exit",
+        "requires_repair": false,
+        "paired_link_required": false,
+        "one_way": true,
+        "metadata_only": false,
+        "runtime_route_effect_adopted": false
+      }
     }
   ]
 }

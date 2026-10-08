@@ -26,6 +26,56 @@ static func destinations(node: Dictionary) -> Array:
 	var values: Variant = link.get("destinations", [])
 	return values if values is Array else []
 
+const PORTAL_KIND_BY_TYPE := {43: "one_way_entrance", 44: "one_way_exit", 45: "two_way_portal"}
+# Network colours, shared by every portal kind (the art tells the kinds
+# apart). Index = the network's number within its kind (docs/portal-networks.md).
+const NETWORK_COLOURS := [
+	{"name": "Emerald", "color": Color(0.22, 0.86, 0.42)},
+	{"name": "Amber", "color": Color(1.0, 0.62, 0.12)},
+	{"name": "Violet", "color": Color(0.66, 0.40, 1.0)},
+	{"name": "Azure", "color": Color(0.22, 0.60, 1.0)},
+	{"name": "Crimson", "color": Color(0.96, 0.20, 0.26)},
+	{"name": "Gold", "color": Color(1.0, 0.88, 0.26)},
+	{"name": "Rose", "color": Color(1.0, 0.46, 0.76)},
+	{"name": "Teal", "color": Color(0.14, 0.86, 0.82)},
+	{"name": "Silver", "color": Color(0.86, 0.89, 0.96)},
+	{"name": "Lime", "color": Color(0.66, 1.0, 0.22)},
+	{"name": "Copper", "color": Color(0.86, 0.46, 0.22)},
+	{"name": "Indigo", "color": Color(0.38, 0.36, 0.96)},
+]
+
+## two_way_portal, one_way_entrance or one_way_exit for a native monolith;
+## "" for subterranean gates and everything else.
+static func portal_kind(node: Dictionary) -> String:
+	var kind := String(link_of(node).get("kind", ""))
+	if kind in PORTAL_KIND_BY_TYPE.values():
+		return kind
+	return String(PORTAL_KIND_BY_TYPE.get(int(node.get("h3m_type_id", -1)), ""))
+
+## The portal's network number within its kind. Packages without connection
+## bookkeeping fall back to the source colour (subtype).
+static func network_index(node: Dictionary) -> int:
+	var link := link_of(node)
+	return int(link.get("network_index", node.get("h3m_subtype", 0)))
+
+static func network_colour(node: Dictionary) -> Dictionary:
+	return NETWORK_COLOURS[posmod(network_index(node), NETWORK_COLOURS.size())]
+
+## A generated connection whose two sides are the same zone. Its portals never
+## take a traveller anywhere new, so random maps leave the whole network off.
+static func is_dead_end(object: Dictionary) -> bool:
+	return int(object.get("h3m_type_id", -1)) in PORTAL_KIND_BY_TYPE and bool(link_of(object).get("same_zone", false))
+
+## Destinations in the order a traveller tries them: a stable rotation keyed by
+## the trip, so a reload replays the same exit and a later trip can differ.
+static func exit_order(node: Dictionary, key: String) -> Array:
+	var options := destinations(node).duplicate(true)
+	if options.size() < 2:
+		return options
+	options.sort_custom(func(a, b): return String(a.get("target_placement_id", "")) < String(b.get("target_placement_id", "")))
+	var start := int(posmod(key.hash(), options.size()))
+	return options.slice(start) + options.slice(0, start)
+
 static func point(value: Variant) -> Vector3i:
 	if value is Dictionary:
 		return Vector3i(int(value.get("x", -1)), int(value.get("y", -1)), Levels.level_of(value))
@@ -173,13 +223,11 @@ static func _portal_contract_error(node: Dictionary, indexed: Dictionary) -> Str
 	for peer in indexed.values():
 		var peer_link := link_of(peer)
 		var peer_type := int(peer.get("h3m_type_id", -1))
-		if not is_native(peer) or int(peer.get("h3m_subtype", -2)) != int(node.get("h3m_subtype", -1)) or (peer_type == 45) != (type_id == 45):
+		# A network is one placed connection, or one source colour in packages
+		# without connection bookkeeping. Every record in it must agree.
+		if peer_type not in [43, 44, 45] or String(peer_link.get("group_id", "")) != String(link.group_id):
 			continue
-		if peer_type not in [43, 44, 45]:
-			continue
-		# All native records in this exact source descriptor group must agree;
-		# a missing contract cannot silently split an otherwise reachable group.
-		if peer_link.get("group_id", "") != link.group_id or int(peer_link.get("schema_version", 0)) != 1 or peer_link.get("source_function", "") != "0x4a7605" or peer_link.get("kind") != kinds[peer_type] or bool(peer_link.get("one_way", false)) != (peer_type != 45) or String(peer_link.get("source_placement_id", "")) != String(peer.get("placement_id", "")):
+		if (peer_type == 45) != (type_id == 45) or int(peer.get("h3m_subtype", -2)) != int(node.get("h3m_subtype", -1)) or int(peer_link.get("schema_version", 0)) != 1 or peer_link.get("source_function", "") != "0x4a7605" or peer_link.get("kind") != kinds[peer_type] or bool(peer_link.get("one_way", false)) != (peer_type != 45) or String(peer_link.get("source_placement_id", "")) != String(peer.get("placement_id", "")):
 			return "native_portal_source_group_mismatch"
 		var peer_id := String(peer.get("placement_id", ""))
 		if peer_id != id and ((type_id == 45 and peer_type == 45) or (type_id == 43 and peer_type == 44)):
@@ -232,7 +280,7 @@ static func resolve(nodes: Array, node: Dictionary, target_id: String = "") -> D
 	if options.is_empty():
 		return {"ok": false, "error": "native_passage_has_no_exit", "message": "This is an arrival-only portal." if link.get("kind") == "one_way_exit" else "This passage has no connected destination on this map."}
 	if target_id == "" and options.size() > 1:
-		return {"ok": false, "native_transit_choice_required": true, "destinations": options.duplicate(true), "message": "Choose a passage destination from the context actions."}
+		return {"ok": false, "native_transit_random_exit": true, "destinations": options.duplicate(true), "message": "This portal sends travellers to a random exit of its network."}
 	for destination in options:
 		if target_id == "" or String(destination.get("target_placement_id", "")) == target_id:
 			link["target_placement_id"] = destination.target_placement_id

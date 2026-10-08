@@ -42125,6 +42125,69 @@
       "runtime_sha256": "adacf7868d8c3c57ed24424fbf22d98ea0543f04087ea821806a0e5accc39f1a",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "runtime_role": "water_travel_boat"
+    },
+    "mapobj_wayring": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wayring.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/wayring-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/provenance.json",
+      "runtime_sha256": "33e973eb32204e3770aea07f9e4b8170ad5fb2d2a2e4c65814e16261dee95ccd",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_wayring",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_wayring_glow": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wayring_glow.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/wayring-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/provenance.json",
+      "runtime_sha256": "6861c73a9b4dda13e50b98cc7edaf7d054644235aeca978d2512b2a9ab790f55",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "presentation_role": "portal_network_glow_layer",
+      "tinted_by": "native portal network colour (NativeTransitRules.NETWORK_COLOURS)"
+    },
+    "mapobj_waygate": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_waygate.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/waygate-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/provenance.json",
+      "runtime_sha256": "675b795999cb7ff91a4cf9e96363556dbf95fad5451fc79cd87c1df895f606a1",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_waygate",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_waygate_glow": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_waygate_glow.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/waygate-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/provenance.json",
+      "runtime_sha256": "a232ae73a5f3f6fa9c8d09c78280af090428e5a547ba5ba69b109cb426ec4124",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "presentation_role": "portal_network_glow_layer",
+      "tinted_by": "native portal network colour (NativeTransitRules.NETWORK_COLOURS)"
+    },
+    "mapobj_wayfall": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wayfall.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/wayfall-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/provenance.json",
+      "runtime_sha256": "5414ce9266593e61e0292d025bea56d15f15fab71e9667fc03903c9cb68044db",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_wayfall",
+      "assigned_map_object_family": "transit_object"
+    },
+    "mapobj_wayfall_glow": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wayfall_glow.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/wayfall-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/provenance.json",
+      "runtime_sha256": "bf45e20b059bbc6f80aecb1c72610230529f1b90fdded38a5f4049b6f7cfb853",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "presentation_role": "portal_network_glow_layer",
+      "tinted_by": "native portal network colour (NativeTransitRules.NETWORK_COLOURS)"
     }
   },
   "resource_site_sprites": {

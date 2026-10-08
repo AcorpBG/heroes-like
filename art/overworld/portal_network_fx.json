@@ -1,0 +1,43 @@
+{
+  "schema_id": "aurelion_portal_network_fx_v1",
+  "source": "tools/pack_portal_network_sprites.py measures the packed glow layers; coordinates are fractions of the 512px object canvas",
+  "assets": {
+    "mapobj_wayring": {
+      "effect": "orbit",
+      "center": [
+        0.4873,
+        0.4365
+      ],
+      "radius": [
+        0.1357,
+        0.167
+      ]
+    },
+    "mapobj_waygate": {
+      "effect": "inward_spiral",
+      "center": [
+        0.4775,
+        0.4346
+      ],
+      "radius": [
+        0.0967,
+        0.1572
+      ]
+    },
+    "mapobj_wayfall": {
+      "effect": "falling_beam",
+      "beam_x": 0.498,
+      "beam_half_width": 0.0439,
+      "beam_top": 0.1875,
+      "beam_bottom": 0.6045,
+      "splash_center": [
+        0.499,
+        0.6045
+      ],
+      "splash_radius": [
+        0.1787,
+        0.1064
+      ]
+    }
+  }
+}

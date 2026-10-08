@@ -172,11 +172,11 @@
     ]
   },
   "coverage": {
-    "authored_map_object_count": 464,
+    "authored_map_object_count": 467,
     "foundation_decorative_or_blocker_distinct_count": 200,
     "preexisting_unique_non_decorative_count": 0,
-    "new_distinct_non_decorative_asset_count": 264,
-    "total_distinct_authored_map_object_count_after_pass": 464,
+    "new_distinct_non_decorative_asset_count": 267,
+    "total_distinct_authored_map_object_count_after_pass": 467,
     "by_family": {
       "faction_landmark": 9,
       "guarded_reward_site": 32,
@@ -191,7 +191,7 @@
       "sign_waypoint": 5,
       "staged_resource_front": 9,
       "support_producer": 6,
-      "transit_object": 27
+      "transit_object": 30
     }
   },
   "distinct_asset_ids": [
@@ -458,7 +458,10 @@
     "guarded_farmhouse",
     "mapobj_shard_warden_bastide",
     "mapobj_shipyard",
-    "mapobj_whirlpool"
+    "mapobj_whirlpool",
+    "mapobj_wayring",
+    "mapobj_waygate",
+    "mapobj_wayfall"
   ],
   "object_sprite_mappings": {
     "object_roadward_lodge": {
@@ -2254,6 +2257,24 @@
       "fit": "Original sprite assigned to the Whirlpool water travel site.",
       "assignment_source": "water_travel_20261007",
       "family": "repeatable_service"
+    },
+    "object_wayring": {
+      "asset_id": "mapobj_wayring",
+      "fit": "Wayring: two way portal sprite whose energy layer takes the network colour.",
+      "assignment_source": "portal_networks_20261008",
+      "family": "transit_object"
+    },
+    "object_waygate": {
+      "asset_id": "mapobj_waygate",
+      "fit": "Waygate: one way entrance sprite whose energy layer takes the network colour.",
+      "assignment_source": "portal_networks_20261008",
+      "family": "transit_object"
+    },
+    "object_wayfall": {
+      "asset_id": "mapobj_wayfall",
+      "fit": "Wayfall: one way exit sprite whose energy layer takes the network colour.",
+      "assignment_source": "portal_networks_20261008",
+      "family": "transit_object"
     }
   }
 }

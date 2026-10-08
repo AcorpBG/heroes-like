@@ -47,7 +47,7 @@ func _check_translation() -> void:
 	for y in range(4):
 		rows.append(["snow", "snow", "grass", "lava"])
 	var base := {"placement_id": "probe", "kind": "resource_site", "x": 0, "y": 1, "level": 0, "visit_tile": {"x": 0, "y": 1, "level": 0}}
-	var expect := {87: "site_shipyard", 111: "site_whirlpool", 43: "site_slipgate_mirror", 44: "site_slipgate_mirror", 45: "site_slipgate_mirror", 103: "site_basalt_undergate"}
+	var expect := {87: "site_shipyard", 111: "site_whirlpool", 43: "site_waygate", 44: "site_wayfall", 45: "site_wayring", 103: "site_basalt_undergate"}
 	for type_id in expect:
 		var object := base.duplicate(true)
 		object["h3m_type_id"] = type_id
