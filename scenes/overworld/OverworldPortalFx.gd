@@ -157,8 +157,10 @@ func _inward_vortex(entry: Dictionary, geometry: Dictionary, salt: float, t: flo
 		var angle := (_rand(salt, index, 2) + floorf(cycle) * 0.618) * TAU + phase * 1.4 * PI
 		_spark(center + Vector2(cos(angle) * radius.x, sin(angle) * radius.y) * reach, canvas.size.x * lerpf(0.04, 0.02, phase), colour, sin(phase * PI) * 0.6 * strength)
 
-# The Wayfall's painted beam flows down, fainter copies of it sliding toward
-# the dais; its painted splash ripples outward and a few streaks glint.
+# The Wayfall's beam is light: its white-hot core takes solid colour while the
+# wide haze and fainter copies sliding toward the dais are added as light, so
+# a colour far from the ground's never reads as a solid pillar. The painted
+# splash ripples outward and a few streaks glint.
 func _falling_beam(entry: Dictionary, geometry: Dictionary, salt: float, t: float, strength: float) -> void:
 	var canvas: Rect2 = entry.canvas_rect
 	var colour: Color = entry.color
@@ -172,10 +174,11 @@ func _falling_beam(entry: Dictionary, geometry: Dictionary, salt: float, t: floa
 	for copy in range(2):
 		var phase := fposmod(t / 3.0 + float(copy) * 0.5 + salt, 1.0)
 		_layer(entry, "splash", colour.lightened(0.2), (1.0 - phase) * 0.35 * strength, _scale_about(splash, lerpf(0.9, 1.35, phase)))
-	_layer(entry, "beam", colour, (0.92 + 0.06 * sin(t * 1.1 + salt * 4.0)) * strength)
+	_layer(entry, "beam", colour, (0.5 + 0.05 * sin(t * 1.1 + salt * 4.0)) * strength, Transform2D(), true)
 	for copy in range(2):
 		var phase := fposmod(t / 2.2 + float(copy) * 0.5 + salt, 1.0)
-		_layer(entry, "beam", colour.lightened(0.25), sin(phase * PI) * 0.3 * strength, Transform2D(0.0, Vector2(0.0, phase * (bottom - top) * 0.15)))
+		_layer(entry, "beam", colour, sin(phase * PI) * 0.25 * strength, Transform2D(0.0, Vector2(0.0, phase * (bottom - top) * 0.15)), true)
+	_layer(entry, "beam_core", colour.lerp(Color.WHITE, 0.15), 0.95 * strength)
 	for index in range(4):
 		var life := lerpf(1.8, 2.6, _rand(salt, index, 0))
 		var cycle := t / life + _rand(salt, index, 1)
@@ -185,9 +188,10 @@ func _falling_beam(entry: Dictionary, geometry: Dictionary, salt: float, t: floa
 
 # A painted effect layer over the portal's whole 512px canvas, tinted with the
 # network colour, optionally moved by a transform on the layer's coordinates.
-func _layer(entry: Dictionary, role: String, colour: Color, alpha: float, motion: Transform2D = Transform2D()) -> void:
+# Additive layers draw with the sparks, as light.
+func _layer(entry: Dictionary, role: String, colour: Color, alpha: float, motion: Transform2D = Transform2D(), additive: bool = false) -> void:
 	var texture: Variant = entry.get("layers", {}).get(role)
-	if _drawing_sparks or not (texture is Texture2D) or alpha <= 0.01:
+	if _drawing_sparks != additive or not (texture is Texture2D) or alpha <= 0.01:
 		return
 	_canvas.draw_set_transform_matrix(motion)
 	_canvas.draw_texture_rect(texture, entry.canvas_rect, false, Color(colour.r, colour.g, colour.b, clampf(alpha, 0.0, 1.0)))

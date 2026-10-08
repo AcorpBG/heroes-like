@@ -37,6 +37,10 @@ BOTTOM = 390
 # on the landing dais (Wayfall).
 VORTEX_FLOOR = 310
 BEAM_FLOOR = 255
+# Below BEAM_FLOOR the beam still stands in front of the dais's back until it
+# meets the dais here, within this half-width of the beam's centre.
+BEAM_FOOT = 300
+BEAM_FOOT_HALF_WIDTH = 30
 
 
 def key_weight(rgb: np.ndarray) -> np.ndarray:
@@ -98,6 +102,8 @@ def stonework(name: str, packed: Image.Image) -> tuple[Image.Image, np.ndarray, 
     brightness = rgb.mean(axis=2)
     # The magic as white light: the painted shading survives the network tint.
     light = np.clip(brightness * 1.35, 0.0, 1.0)
+    # The key hue has almost no green, so green is how white-hot a pixel is.
+    whiteness = rgb[..., 1].copy()
     # White-hot cores and sparks were painted without the key hue; near the
     # magic, anything that bright is magic too. Stone highlights stay darker.
     hot = np.clip((brightness - 0.62) / 0.18, 0.0, 1.0) * near(keyed > 0.2, 12) * painted
@@ -126,9 +132,18 @@ def stonework(name: str, packed: Image.Image) -> tuple[Image.Image, np.ndarray, 
         haze = (alpha < 0.95) & near(keyed > 0.1, 10)
         air = np.where(rows < BEAM_FLOOR, np.where(haze, 1.0, weight), haze.astype(np.float32))
         out[..., 3] = alpha * (1.0 - air)
+        # The beam's white-hot core, painted without the key hue, takes solid
+        # colour; the wide haze around it is added as light, so a colour far
+        # from the ground's never reads as a solid pillar.
+        core = np.clip((whiteness - 0.18) / 0.27, 0.0, 1.0)
+        columns = np.arange(CANVAS)[None, :]
+        centre = np.average(np.nonzero(keyed[:BEAM_FLOOR] > 0.5)[1])
+        foot = (rows >= BEAM_FLOOR) & (rows < BEAM_FOOT) & (np.abs(columns - centre) < BEAM_FOOT_HALF_WIDTH)
+        beam = np.maximum(air, foot * weight)
         layers = {
-            "beam": light_layer(light, alpha * air),
-            "splash": light_layer(light, alpha * weight * (rows >= BEAM_FLOOR) * (1.0 - haze)),
+            "beam": light_layer(light, alpha * beam),
+            "beam_core": light_layer(light, alpha * beam * core),
+            "splash": light_layer(light, alpha * weight * (rows >= BEAM_FLOOR) * (1.0 - haze) * (1.0 - foot)),
         }
     else:
         out[..., 3] = alpha
@@ -178,7 +193,7 @@ def fx_geometry(magic: dict) -> dict:
         "mapobj_waygate": {"effect": "inward_vortex", "layers": layer_ids("waygate", ("vortex", "spill")), **gate},
         "mapobj_wayfall": {
             "effect": "falling_beam",
-            "layers": layer_ids("wayfall", ("beam", "splash")),
+            "layers": layer_ids("wayfall", ("beam", "beam_core", "splash")),
             "beam_x": round((beam_left + beam_right) / 2 / CANVAS, 4),
             "beam_half_width": round(float(np.median(core_widths)) / 2 / CANVAS, 4),
             "beam_top": round(beam_top / CANVAS, 4),
