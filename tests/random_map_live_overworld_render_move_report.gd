@@ -568,7 +568,7 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 			var terrain: Dictionary = presentation.get("terrain_presentation", {}) if presentation.get("terrain_presentation", {}) is Dictionary else {}
 			var lighting: Dictionary = terrain.get("terrain_macro_lighting", {}) if terrain.get("terrain_macro_lighting", {}) is Dictionary else {}
 			var grain: Dictionary = terrain.get("terrain_grain_overlay", {}) if terrain.get("terrain_grain_overlay", {}) is Dictionary else {}
-			var detail: Dictionary = terrain.get("terrain_detail_decal", {}) if terrain.get("terrain_detail_decal", {}) is Dictionary else {}
+			var detail: Dictionary = terrain.get("terrain_decals", {}) if terrain.get("terrain_decals", {}) is Dictionary else {}
 			var water_ripples: Dictionary = terrain.get("water_surface_ripples", {}) if terrain.get("water_surface_ripples", {}) is Dictionary else {}
 			var shoreline: Dictionary = terrain.get("water_shoreline_contour", {}) if terrain.get("water_shoreline_contour", {}) is Dictionary else {}
 			var lighting_keys: Array = lighting.get("corner_keys", []) if lighting.get("corner_keys", []) is Array else []
@@ -610,53 +610,27 @@ func _terrain_transition_summary(overworld: Node) -> Dictionary:
 					and bool(grain.get("hidden_by_unexplored_shroud", false))
 				):
 					terrain_grain_exact_count += 1
+			# Ground decals (terrain_decals_v4) are scattered by the ground shader:
+			# each tile names the decal set of its ground; water has none.
 			terrain_detail_model_ids[String(detail.get("model", ""))] = true
-			terrain_detail_source_model_ids[String(detail.get("source_model", ""))] = true
+			terrain_detail_source_model_ids["terrain_decals_v4"] = true
 			if bool(detail.get("road_excluded", false)):
 				terrain_detail_road_excluded_count += 1
-			if bool(detail.get("water_excluded", false)):
-				terrain_detail_water_excluded_count += 1
+			var detail_set := String(detail.get("decal_set", ""))
 			var detail_exact: bool = (
-				String(detail.get("model", "")) == "biome_specific_painterly_landmark_clusters_denser_v4"
-				and String(detail.get("source_model", "")) == "built_in_imagegen_alpha_cleaned_4x4_world_surface_atlas"
-				and bool(detail.get("atlas_texture_loaded", false))
-				and detail.get("atlas_size", {}) == {"x": 1024, "y": 1024}
-				and detail.get("atlas_grid", {}) == {"x": 4, "y": 4}
-				and detail.get("atlas_cell_size", {}) == {"x": 256, "y": 256}
-				and int(detail.get("density_modulus", 0)) == 5
-				and detail.get("active_density_residues", []) == [0]
+				String(detail.get("model", "")) == "ground_shader_scattered_ground_specific_decals_v4"
+				and bool(detail.get("configured", false))
+				and bool(detail.get("scattered_in_ground_shader", false))
 				and not bool(detail.get("interactive", true))
 				and not bool(detail.get("collision", true))
-				and is_equal_approx(float(detail.get("modulate_alpha", 0.0)), 0.82)
-				and String(detail.get("draw_order", "")) == "after_macro_lighting_before_roads_objects_and_fog"
-				and bool(detail.get("hidden_by_unexplored_shroud", false))
-				and String(detail.get("variation_basis", "")) == "tile_coordinate_and_terrain_id_only"
+				and (detail_set == "" or float(detail.get("density", 0.0)) > 0.0)
 			)
-			if bool(detail.get("drawn", false)):
+			if detail_set != "":
 				terrain_detail_drawn_count += 1
-				terrain_detail_texture_paths[String(detail.get("atlas_texture_path", ""))] = true
-				terrain_detail_cell_ids[int(detail.get("cell_id", -1))] = true
-				var source_rect: Dictionary = detail.get("source_rect", {}) if detail.get("source_rect", {}) is Dictionary else {}
-				var destination_rect: Dictionary = detail.get("destination_rect", {}) if detail.get("destination_rect", {}) is Dictionary else {}
-				var offset: Dictionary = detail.get("offset_factor", {}) if detail.get("offset_factor", {}) is Dictionary else {}
-				var cell_id := int(detail.get("cell_id", -1))
-				detail_exact = (
-					detail_exact
-					and cell_id >= 0 and cell_id < 16
-					and int(source_rect.get("x", -1)) == (cell_id % 4) * 256
-					and int(source_rect.get("y", -1)) == floori(float(cell_id) / 4.0) * 256
-					and int(source_rect.get("width", 0)) == 256 and int(source_rect.get("height", 0)) == 256
-					and bool(detail.get("destination_contained", false))
-					and float(detail.get("extent_factor", 0.0)) >= 0.44 and float(detail.get("extent_factor", 0.0)) <= 0.68
-					and float(offset.get("x", -1.0)) >= -0.16 and float(offset.get("x", 1.0)) <= 0.16
-					and float(offset.get("y", -1.0)) >= -0.08 and float(offset.get("y", 1.0)) <= 0.14
-					and float(destination_rect.get("width", 0.0)) > 0.0
-					and is_equal_approx(float(destination_rect.get("width", 0.0)), float(destination_rect.get("height", -1.0)))
-					and not bool(detail.get("road_excluded", true))
-					and not bool(detail.get("water_excluded", true))
-				)
+				terrain_detail_texture_paths["res://art/overworld/runtime/terrain_tiles/detail/terrain_decals_v4.png"] = true
+				terrain_detail_cell_ids[detail_set] = true
 			else:
-				detail_exact = detail_exact and int(detail.get("cell_id", -2)) == -1
+				terrain_detail_water_excluded_count += 1
 			if detail_exact:
 				terrain_detail_exact_count += 1
 			else:
@@ -1072,9 +1046,9 @@ func _assert_terrain_transition_summary(summary: Dictionary, label: String) -> b
 		or summary.get("terrain_grain_texture_paths", []) != ["res://art/overworld/runtime/terrain_tiles/detail/terrain_grain_overlay.png"]
 		or terrain_grain_modulate_alphas.size() != 1
 		or not is_equal_approx(float(terrain_grain_modulate_alphas[0]), 0.72)
-		or summary.get("terrain_detail_model_ids", []) != ["biome_specific_painterly_landmark_clusters_denser_v4"]
-		or summary.get("terrain_detail_source_model_ids", []) != ["built_in_imagegen_alpha_cleaned_4x4_world_surface_atlas"]
-		or summary.get("terrain_detail_texture_paths", []) != ["res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_world_v3.png"]
+		or summary.get("terrain_detail_model_ids", []) != ["ground_shader_scattered_ground_specific_decals_v4"]
+		or summary.get("terrain_detail_source_model_ids", []) != ["terrain_decals_v4"]
+		or summary.get("terrain_detail_texture_paths", []) != ["res://art/overworld/runtime/terrain_tiles/detail/terrain_decals_v4.png"]
 		or summary.get("water_ripple_model_ids", []) != ["deterministic_broken_painterly_current_pairs"]
 	):
 		_fail("%s generated terrain transitions or continuous macro-lighting contract did not remain exact: %s" % [label, JSON.stringify(summary)])
@@ -1089,8 +1063,8 @@ func _assert_macro_lighting_render_profile(snapshot: Dictionary, label: String) 
 	var terrain_draws := int(last_static.get("terrain_tile_draws", 0))
 	var macro_polygon_draws := int(last_static.get("terrain_macro_lighting_polygon_draws", 0))
 	var grain_draws := int(last_static.get("terrain_grain_overlay_draws", 0))
-	var detail_draws := int(last_static.get("terrain_detail_decal_draws", 0))
-	if terrain_draws <= 0 or grain_draws != 1 or detail_draws <= 0 or detail_draws >= terrain_draws or macro_polygon_draws <= 0 or macro_polygon_draws > 12 or macro_polygon_draws * 8 >= terrain_draws:
+	# Ground decals are drawn by the ground shader, not per tile here.
+	if terrain_draws <= 0 or grain_draws != 1 or macro_polygon_draws <= 0 or macro_polygon_draws > 12 or macro_polygon_draws * 8 >= terrain_draws:
 		_fail("%s macro-lighting render pass was not materially batched below tile count: %s" % [label, JSON.stringify(last_static)])
 		return false
 	return true
