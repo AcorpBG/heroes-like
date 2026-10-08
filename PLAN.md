@@ -108,6 +108,10 @@ Rules:
 
 `ux-resource-bar-daily-income-20261008` (completed, owner request): the resource bar on the overworld and in town shows each resource's daily income after its amount ("5000 +500"; green for a gain, muted "+0"), and its tooltips and popup say "+N per day". The figure is the end-turn income forecast (`OverworldRules.player_daily_income`), so it is exactly what the next daybreak pays. `tests/resource_bar_daily_income_report.tscn` checks both bars and the payout on a generated map.
 
+### AI markets, out-of-the-way idle heroes, strength-scaled rewards
+
+`ai-market-parking-fight-rewards-20261008` (completed, owner review of the 2026-10-08 large-map game): the Marketplace costs 1,000 gold and the Trade Exchange 3,000 gold, 5 wood and 5 ore; computer towns value each market stage like a Storehouse (more while a resource is missing) and credit buildings for what they unlock, so every computer player builds a Marketplace on day 3. Idle AI heroes park in their town, waiting heroes keep off tiles that cut a way through, a hero blocked by its own idle hero asks it to step aside, the most experienced hero leads the main army, a full army swaps in stronger garrison stacks, built visit sites can be crossed, and a boxed-in hero fights its way out. The fight loss estimate is calibrated on 1,262 auto-resolved fights and an idle hero takes a clean win. Every battle pays by the strength beaten, mostly experience, half the gold and resources. Stripping garrisons stays (owner). Open: market weekly caps keep ore-poor factions hoarding gold. See `docs/ai-plays-by-player-rules.md`, `docs/town-market.md`.
+
 ### Full-army site claims
 
 `gameplay-site-recruit-overflow-20261008` (completed, owner playtest fix): a full army no longer blocks claiming a site that grants troops (Glassbound Eyrie, Railblock Camp and 66 others). The site is claimed and pays out; troops that fit join, and a dialog offers to dismiss a stack for the rest or leave them behind. AI heroes claim the same way and keep what fits. Free reward gates ask to Claim instead of "Pay nothing". See `docs/site-recruit-overflow.md`.

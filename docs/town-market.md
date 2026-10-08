@@ -4,7 +4,7 @@ Owner follow-ups, 2026-10-07:
 
 - The market and the magic guild each have one window, the building popout.
 - The market converts one resource into another.
-- The market costs only gold.
+- The market costs only gold. Owner decision, 2026-10-08: the Marketplace costs 1,000 gold and the Trade Exchange 3,000 gold, 5 wood and 5 ore (see Market costs).
 - Rare resources are fully tradeable, HoMM3 style: any resource for any other. This replaces the earlier rule that rare resources could only be bought at a Trade Exchange (the "rare import").
 
 ## One window
@@ -60,16 +60,18 @@ The market popout's main column is a HoMM-style desk. "You give" and "You get" e
 - `OverworldRules._town_market_state` prices every market resource (`MARKET_RESOURCE_KEYS`) and lists the rares in `rare_resources`. Market profiles in `content/buildings.json` carry the tier's rate adjustments, which rares share with wood and ore, and the per-resource weekly limit bonuses.
 - `TownBuildingPanelView` renders the desk from the model's quotes and emits `market_trade_requested(action_id)`; `TownShell` performs it and refreshes the popout in place.
 
-## Gold-only market
+## Market costs
 
-Every faction builds the same two market stages. The wood part of each cost became gold at 400 gold per wood, the value the economy uses to weigh construction costs (`EnemyTurnRules._resource_value`). The market itself buys wood at 500–760 and sells it at 260–410. The AI therefore weighs both buildings exactly as before.
+Every faction builds the same two market stages. On 2026-10-07 both became gold-only (the wood part turned into gold at 400 per wood). On 2026-10-08 the owner made the first stage cheap, because a town without a market falls behind for good when it lacks a single resource, and gave the second stage a small wood and ore cost:
 
-| Building | Before | After |
+| Building | 2026-10-07 | Now |
 | --- | --- | --- |
-| Marketplace (`building_market_square`) | 1,000 gold, 5 wood | 3,000 gold |
-| Trade Exchange (`building_dev_trade_exchange`) | 2,500 gold, 5 wood | 4,500 gold |
+| Marketplace (`building_market_square`) | 3,000 gold | 1,000 gold |
+| Trade Exchange (`building_dev_trade_exchange`) | 4,500 gold | 3,000 gold, 5 wood, 5 ore |
 
 This applies to Embercourt, Mireclaw, Sunvault, Thornwake, Brasshollow and Veilmourn alike. The retired faction exchanges (River Granary Exchange, Smugglers Flotilla, Resonant Exchange) are outside every town tree and unchanged.
+
+Computer towns value each market stage like a Storehouse: two weeks of the Storehouse's wood and ore income, 1.8 times that while a missing resource holds up their build list (`AiHeroRules._market_value`). The Marketplace therefore comes among a town's first builds, ahead of the hall upgrades, and the Trade Exchange about level with a Storehouse (`docs/ai-plays-by-player-rules.md`).
 
 ## Validation
 
@@ -78,7 +80,7 @@ This applies to Embercourt, Mireclaw, Sunvault, Thornwake, Brasshollow and Veilm
 - Wood and ore: the exact conversion rate, better than the gold path, a losing round trip, both weekly limits and bulk lots.
 - Rare resources, in every town at both tiers: all eight resources trade, rares are priced above wood and ore, the market values equal the AI valuation, the Trade Exchange is better for every resource, the limits are those listed above, and every pair quotes exactly.
 - No profitable buy/sell or conversion cycle in one town or across towns, and a saved import count that still counts.
-- Both market stages cost only gold in every faction.
+- The two market stages cost what the table under Market costs lists, in every faction.
 
 For every faction town (1920×1080 and 1280×720 alternate) it then drives the real TownShell:
 
