@@ -89,9 +89,9 @@ func run_match() -> void:
 		check(refreshed.get("id","")==raid.placement_id and refreshed.get("tile",Vector2i(-1,-1))==guard_approach(raid),"retained raid intent does not refresh its live approach")
 		active_target.clear()
 	check(normalized(session.to_dict())==before,"hidden/moving target controls mutated gameplay")
-	check(not admission.get("ok",true),"saved full army no longer reproduces unclaimable reward")
-	check(selected.get("id","")!=blocked_id,"driver repeatedly selects an army-capacity-blocked reward")
-	check(not resource_claim_feasible(node),"capacity admission policy disagrees with live claim")
+	check(not admission.get("ok",true),"saved full army no longer reproduces the full-army reward")
+	# Owner rule 2026-10-08: a full army no longer blocks the claim.
+	check(resource_claim_feasible(node),"a full army must not make the reward unclaimable")
 	# Detached admission controls use copies, never discard saved soldiers.
 	var live_session = session
 	var live_state: Dictionary=normalized(session.to_dict())
@@ -100,25 +100,22 @@ func run_match() -> void:
 	session=fixture
 	var rewards: Dictionary=OverworldRules._resource_site_claim_recruits(site)
 	fixture.overworld.army.stacks=fixture.overworld.army.stacks.slice(0,6)
-	check(not resource_claim_feasible(node),"two-unit reward incorrectly fits only one vacant slot")
+	check(resource_claim_feasible(node),"one vacant slot must not block a two-unit reward")
 	fixture.overworld.army.stacks=fixture.overworld.army.stacks.slice(0,Heroes.ARMY_SLOT_COUNT-rewards.size())
 	check(resource_claim_feasible(node),"fitting recruit reward incorrectly rejected")
-	for unit_id in rewards:
-		fixture.overworld.army.stacks.append({"unit_id":unit_id,"count":1,"slot":fixture.overworld.army.stacks.size()})
-	check(resource_claim_feasible(node),"matching seventh stack incorrectly rejected")
-	fixture.overworld.army.stacks=live_session.overworld.army.stacks.duplicate(true)
-	check(not resource_claim_feasible(node),"admission retained stale fitting-army result")
 	session=live_session
 	check(normalized(session.to_dict())==live_state,"detached admission controls changed real saved state")
 	observations.append({"case":"saved_policy","selected":selected,"admission":admission,"node":node,"hero":compact_state().hero})
 	# Exercise the same real pointer path even after policy is corrected.
 	await perform_target({"id":blocked_id,"kind":"resource","tile":Vector2i(15,50),"record":node})
-	check(OverworldRules.hero_position(session)==Vector2i(15,50),"actual pointer could not reach saved blocked reward")
-	check(not node.get("collected",false),"blocked reward was silently claimed")
-	check(normalized(session.overworld.army)==before.overworld.army,"blocked reward changed troops")
+	check(OverworldRules.hero_position(session)==Vector2i(15,50),"actual pointer could not reach saved full-army reward")
 	shell=get_tree().current_scene
-	check(shell._current_primary_action().is_empty() or shell._current_primary_action().get("disabled",false),"full-army claim remains enabled")
-	await screenshot("capacity_blocked_reward")
+	check(shell._validation_targets("resource","",blocked_id)[0].get("collected",false),"full-army reward was not claimed")
+	check(shell.validation_site_recruit_dialog().get("open",false) or OverworldRules.site_recruit_overflow_prompt(session).is_empty(),"troops without a slot did not offer the dismiss-or-leave dialog")
+	await screenshot("capacity_full_reward_offer")
+	if shell.validation_site_recruit_dialog().get("open",false):
+		shell.validation_site_recruit_leave()
+		await settle()
 	# Check escape before spending the remaining movement on a long route.
 	var origin := OverworldRules.hero_position(session)
 	shell._try_move(0,-1)

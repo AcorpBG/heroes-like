@@ -473,11 +473,10 @@ static func _raid_reinforcement_army(raid: Dictionary) -> Dictionary:
 		army = _base_enemy_army(String(raid.get("encounter_id", raid.get("id", ""))))
 	return army
 
+# Like the player, a full army does not stop the claim: troops that fit join
+# and the rest stay behind.
 static func _raid_site_recruit_admission(raid: Dictionary, site: Dictionary) -> Dictionary:
-	var recruits := _resource_site_claim_recruits(site)
-	if recruits.is_empty():
-		return {"ok": true}
-	return HeroCommandRulesScript.army_addition_plan(_raid_reinforcement_army(raid).get("stacks", []), recruits)
+	return HeroCommandRulesScript.army_addition_split(_raid_reinforcement_army(raid).get("stacks", []), _resource_site_claim_recruits(site))
 
 static func _player_hero_snapshots_for_intercept(session: SessionStateStoreScript.SessionData, read_only: bool = false) -> Array:
 	# read_only callers only inspect the records (path fingerprints, blocked
@@ -3066,8 +3065,6 @@ static func _secure_resource_target(
 		node = session.overworld.get("resource_nodes", [])[int(node_result.get("index", -1))]
 		if PlayerRules.resource_controller_id(node) == faction_id:
 			return _hire_at_own_dwelling_by_raid(session, raid, state, faction_id, int(node_result.get("index", -1)), site, config)
-	if not bool(_raid_site_recruit_admission(raid, site).get("ok", false)):
-		return {"encounter": raid, "state": state, "event_message": "", "capacity_blocked": true}
 	var nodes = session.overworld.get("resource_nodes", [])
 	var previous_node: Dictionary = node.duplicate(true)
 	var previous_controller = PlayerRules.resource_controller_id(node)
@@ -3515,7 +3512,7 @@ static func _apply_resource_site_claim_recruits_to_raid(
 	if session == null or faction_id == "" or raid.is_empty() or recruits.is_empty():
 		return {"raid": raid, "applied": false, "recruits": {}}
 	var admission := _raid_site_recruit_admission(raid, site)
-	if not bool(admission.get("ok", false)):
+	if admission.get("added", {}).is_empty():
 		return {"raid": raid, "applied": false, "recruits": {}, "reason": "army_capacity"}
 	var updated_raid := raid.duplicate(true)
 	var army := _raid_reinforcement_army(updated_raid)
@@ -3525,15 +3522,7 @@ static func _apply_resource_site_claim_recruits_to_raid(
 			"name": "Raid Host",
 			"stacks": [],
 		}
-	var applied := {}
-	var unit_ids := recruits.keys()
-	unit_ids.sort()
-	for unit_id_value in unit_ids:
-		var unit_id := String(unit_id_value)
-		var count: int = max(0, int(recruits.get(unit_id_value, 0)))
-		if unit_id == "" or count <= 0:
-			continue
-		applied[unit_id] = count
+	var applied: Dictionary = admission.get("added", {}).duplicate(true)
 	if applied.is_empty():
 		return {"raid": raid, "applied": false, "recruits": {}}
 	army["stacks"] = admission.get("stacks", [])

@@ -18,6 +18,9 @@ const GeneratedRewards = preload("res://scripts/persistence/GeneratedRewardRules
 const GENERATED_TRANSIT_TRANSLATION_KEY := "generated_transit_translation_version"
 const GENERATED_TRANSIT_TRANSLATION_VERSION := 1
 const ROUTE_LOCK_CHOICE_ID := "open_route"
+# Troops a claimed site offered that did not fit the visiting hero's army; the
+# hero may dismiss a stack to take them or leave them behind.
+const PENDING_SITE_RECRUITS_KEY := "pending_site_recruits"
 const CreatureDwellings = preload("res://scripts/core/CreatureDwellingRules.gd")
 
 const FOG_KEY := "fog"
@@ -1114,6 +1117,8 @@ static func try_move_along_route(
 	var path := _normalize_route_tiles(route_tiles)
 	if path.size() <= 1:
 		return {"ok": false, "message": "No route selected.", "route_steps": []}
+	# Walking away from a claimed site leaves its waiting troops behind.
+	session.overworld.erase(PENDING_SITE_RECRUITS_KEY)
 	var pos := hero_position(session)
 	if path[0] != pos:
 		return {"ok": false, "message": "The selected route no longer starts at the active hero.", "route_steps": []}
@@ -1273,6 +1278,7 @@ static func execute_prevalidated_route(
 	if path.size() <= 1:
 		_rules_profile_finish()
 		return {"ok": false, "message": "No route selected.", "route_steps": [], "route_validation_mode": "cached_prevalidated"}
+	session.overworld.erase(PENDING_SITE_RECRUITS_KEY)
 	if not _descriptor_matches_hero_level(session, destination_descriptor):
 		_rules_profile_finish()
 		return {"ok": false, "message": "The selected route belongs to another map level.", "route_steps": [], "route_validation_mode": "cached_prevalidated"}
@@ -1515,18 +1521,34 @@ static func choose_resource_reward(session: SessionStateStoreScript.SessionData,
 static func _route_lock_prompt(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> Dictionary:
 	var site_name := String(site.get("name", "The gate"))
 	var price := _resource_site_visit_cost(site)
-	var price_text := _describe_resource_delta(price) if not price.is_empty() else "nothing"
 	var summary := String(site.get("summary", "")).strip_edges()
+	var message := ""
+	var explanation := ""
+	var label := ""
+	if price.is_empty():
+		# A free route site (a reward camp across the road) is claimed, not paid.
+		var gains := PackedStringArray()
+		for part in [_resource_site_reward_summary(site), _describe_recruit_count(_resource_site_claim_recruits(site))]:
+			if String(part) != "":
+				gains.append(String(part))
+		message = "%s blocks this passage. Claim it to open the way." % site_name
+		explanation = "Claiming it opens the passage for everyone%s." % (" and gives %s" % ", ".join(gains) if not gains.is_empty() else "")
+		label = "Claim"
+	else:
+		var price_text := _describe_resource_delta(price)
+		message = "%s blocks this passage. Pay %s to open it." % [site_name, price_text]
+		explanation = "This gate blocks the passage until someone pays to open it. It stays open for everyone."
+		label = "%s · %s" % [String(site.get("action_label", "Open")), price_text]
 	return {
 		"ok": true,
 		"route": "reward_choice",
-		"message": "%s blocks this passage. Pay %s to open it." % [site_name, price_text],
+		"message": message,
 		"reward_choice": {
 			"title": site_name,
 			"asset_id": "mapobj_" + String(node.get("object_id", "")).trim_prefix("object_"),
 			"context": _resource_reward_choice_context(session, node),
-			"instruction": "%s\nThis gate blocks the passage until someone pays to open it. It stays open for everyone." % summary if summary != "" else "This gate blocks the passage until someone pays to open it. It stays open for everyone.",
-			"choices": [{"id": ROUTE_LOCK_CHOICE_ID, "label": "%s · %s" % [String(site.get("action_label", "Open")), price_text]}],
+			"instruction": "%s\n%s" % [summary, explanation] if summary != "" else explanation,
+			"choices": [{"id": ROUTE_LOCK_CHOICE_ID, "label": label}],
 		},
 	}
 
@@ -1668,11 +1690,8 @@ static func _collect_resource_node_result(
 			return {"ok": false, "message": "Choose one of this chest's available rewards."}
 	elif not reward_choice_id.is_empty():
 		return {"ok": false, "message": "This site does not offer a reward choice."}
-	var admission := HeroCommandRulesScript.army_addition_plan(session.overworld.get("army", {}).get("stacks", []), _resource_site_claim_recruits(site))
-	if not bool(admission.get("ok", false)):
-		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
-		_rules_profile_add_ms("resource_collect_total_ms", collect_started_usec)
-		return admission
+	# A full army never blocks the claim: troops without a slot wait for the
+	# hero's answer (pending_site_recruits).
 	var visit_cost := _resource_site_visit_cost(site)
 	if not _can_afford(session, visit_cost):
 		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
@@ -1740,7 +1759,7 @@ static func _collect_resource_node_result(
 	if route_opened:
 		messages.append("The route is open.")
 	var recruits_spells_xp_started_usec := _rules_profile_timer()
-	var recruit_message := _grant_site_claim_recruits(session, _resource_site_claim_recruits(site))
+	var recruit_message := _grant_site_claim_recruits(session, _resource_site_claim_recruits(site), node, site)
 	if recruit_message != "":
 		messages.append(recruit_message)
 	var claim_flags := _resource_site_claim_flags(site)
@@ -6940,13 +6959,14 @@ static func get_context_actions(session: SessionStateStoreScript.SessionData) ->
 					actions.append({"id": "native_transit:" + target_id, "label": "Travel: %s %d,%d" % ["Below" if tile.z > 0 else "Surface", tile.x, tile.y], "summary": "Travel to this connected destination." if bool(check.get("ok", false)) else String(check.get("message", "Passage unavailable.")), "disabled": not bool(check.get("ok", false))})
 			elif _resource_node_claimable_by_player(node, site, session):
 				var collection_resource_id := resource_site_primary_stockpile_resource_id(site)
-				var admission: Dictionary = HeroCommandRulesScript.army_addition_plan(session.overworld.get("army", {}).get("stacks", []), _resource_site_claim_recruits(site))
+				var admission: Dictionary = HeroCommandRulesScript.army_addition_split(session.overworld.get("army", {}).get("stacks", []), _resource_site_claim_recruits(site))
+				var overflow: Dictionary = admission.get("overflow", {})
 				actions.append(
 					{
 						"id": "collect_resource",
 						"label": _resource_site_action_label(node, site),
-						"summary": _context_action_summary(session, "collect_resource", context) if bool(admission.get("ok", false)) else String(admission.get("message", "")),
-						"disabled": not bool(admission.get("ok", false)),
+						"summary": _context_action_summary(session, "collect_resource", context) if overflow.is_empty() else "No room for %s: you may dismiss a stack to take them." % _describe_recruit_count(overflow),
+						"disabled": false,
 						"resource_id": collection_resource_id,
 						"resource_icon_path": resource_icon_path(collection_resource_id),
 					}
@@ -9954,19 +9974,129 @@ static func _resource_site_context_summary(session: SessionStateStoreScript.Sess
 		return "Claim the site to add its stores immediately."
 	return " | ".join(parts)
 
-static func _grant_site_claim_recruits(session: SessionStateStoreScript.SessionData, recruits: Variant) -> String:
+static func _grant_site_claim_recruits(session: SessionStateStoreScript.SessionData, recruits: Variant, node: Dictionary = {}, site: Dictionary = {}) -> String:
 	if not (recruits is Dictionary) or recruits.is_empty():
 		return ""
+	var split := _add_to_active_army(session, recruits)
+	var added: Dictionary = split.get("added", {})
+	var overflow: Dictionary = split.get("overflow", {})
+	var messages := []
+	if not added.is_empty():
+		messages.append("Auxiliaries join the field army (%s)." % _describe_recruit_delta(added))
+	if not overflow.is_empty():
+		session.overworld[PENDING_SITE_RECRUITS_KEY] = {
+			"hero_id": String(session.overworld.get("active_hero_id", "")),
+			"tile": _route_tile_payload(hero_position(session)),
+			"placement_id": String(node.get("placement_id", "")),
+			"site_name": String(site.get("name", "the site")),
+			"recruits": overflow.duplicate(true),
+		}
+		messages.append("No room for %s: dismiss a stack to take them, or leave them behind." % _describe_recruit_count(overflow))
+	return " ".join(messages)
+
+static func _add_to_active_army(session: SessionStateStoreScript.SessionData, recruits: Dictionary) -> Dictionary:
 	var hero = session.overworld.get("hero", {})
 	var army: Dictionary = hero.get("army", {}).duplicate(true)
-	var admission: Dictionary = HeroCommandRulesScript.army_addition_plan(army.get("stacks", []), recruits)
-	if not bool(admission.get("ok", false)):
-		return String(admission.get("message", ""))
-	army["stacks"] = admission.get("stacks", [])
+	var split := HeroCommandRulesScript.army_addition_split(army.get("stacks", []), recruits)
+	if not split.get("added", {}).is_empty():
+		army["stacks"] = split.get("stacks", [])
+		hero["army"] = army
+		session.overworld["hero"] = hero
+		session.overworld["army"] = army
+	return split
+
+static func _describe_recruit_count(recruits: Dictionary) -> String:
+	return _describe_recruit_delta(recruits).replace("+", "")
+
+## The waiting troops of a claimed site, while the hero who claimed it still
+## stands there; a stale offer (another hero, or the hero moved) is dropped.
+static func _pending_site_recruits(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var pending = session.overworld.get(PENDING_SITE_RECRUITS_KEY, {})
+	if not (pending is Dictionary) or pending.is_empty():
+		return {}
+	var tile: Variant = pending.get("tile", {})
+	var still_there: bool = String(pending.get("hero_id", "")) == String(session.overworld.get("active_hero_id", "")) and tile is Dictionary and Vector2i(int(tile.get("x", -1)), int(tile.get("y", -1))) == hero_position(session)
+	if not still_there or not (pending.get("recruits", {}) is Dictionary) or pending.get("recruits", {}).is_empty():
+		session.overworld.erase(PENDING_SITE_RECRUITS_KEY)
+		return {}
+	return pending
+
+## Dialog payload for troops that did not fit: the site, the waiting troops
+## (the first one takes the next freed slot) and the hero's seven slots.
+static func site_recruit_overflow_prompt(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null:
+		return {}
+	var pending := _pending_site_recruits(session)
+	if pending.is_empty():
+		return {}
+	var hero_id := String(pending.get("hero_id", ""))
+	var waiting := []
+	var recruits: Dictionary = pending.get("recruits", {})
+	var unit_ids := recruits.keys()
+	unit_ids.sort()
+	for unit_id_value in unit_ids:
+		var unit_id := String(unit_id_value)
+		waiting.append({
+			"unit_id": unit_id,
+			"unit_name": String(ContentService.get_unit(unit_id).get("name", unit_id)),
+			"count": int(recruits[unit_id_value]),
+			"portrait": String(ContentService.get_unit_art(unit_id).get("portrait", "")),
+		})
+	return {
+		"title": String(pending.get("site_name", "Claimed site")),
+		"site_name": String(pending.get("site_name", "")),
+		"waiting": waiting,
+		"slots": HeroCommandRulesScript.army_slot_snapshot(session, {}, hero_id).get("slots", []),
+		"context": {"hero_id": hero_id, "placement_id": String(pending.get("placement_id", ""))},
+	}
+
+static func _pending_matches(pending: Dictionary, expected_context: Dictionary) -> bool:
+	return not pending.is_empty() and String(pending.get("hero_id", "")) == String(expected_context.get("hero_id", "")) and String(pending.get("placement_id", "")) == String(expected_context.get("placement_id", ""))
+
+## Dismisses the stack in slot_index; the first waiting unit type takes its
+## place and any other waiting troops that now fit join too.
+static func take_site_recruits_by_dismissing(session: SessionStateStoreScript.SessionData, slot_index: int, expected_context: Dictionary) -> Dictionary:
+	var pending := _pending_site_recruits(session)
+	if not _pending_matches(pending, expected_context):
+		return {"ok": false, "message": "Those troops are no longer waiting."}
+	var hero = session.overworld.get("hero", {})
+	var army: Dictionary = hero.get("army", {}).duplicate(true)
+	var kept := []
+	var dismissed := {}
+	for stack in HeroCommandRulesScript._slotted_stacks(army.get("stacks", [])):
+		if dismissed.is_empty() and int(stack.get(HeroCommandRulesScript.ARMY_SLOT_INDEX_KEY, -1)) == slot_index:
+			dismissed = stack
+		else:
+			kept.append(stack)
+	if dismissed.is_empty():
+		return {"ok": false, "message": "Choose one of your stacks to dismiss."}
+	var split := HeroCommandRulesScript.army_addition_split(kept, pending.get("recruits", {}))
+	var added: Dictionary = split.get("added", {})
+	army["stacks"] = split.get("stacks", kept)
 	hero["army"] = army
 	session.overworld["hero"] = hero
 	session.overworld["army"] = army
-	return "Auxiliaries join the field army (%s)." % _describe_recruit_delta(recruits)
+	HeroCommandRulesScript.commit_active_hero(session)
+	var remaining: Dictionary = split.get("overflow", {})
+	if remaining.is_empty():
+		session.overworld.erase(PENDING_SITE_RECRUITS_KEY)
+	else:
+		pending["recruits"] = remaining
+		session.overworld[PENDING_SITE_RECRUITS_KEY] = pending
+	var message := "Dismissed %d %s. %s join the field army." % [
+		int(dismissed.get("count", 0)),
+		String(ContentService.get_unit(String(dismissed.get("unit_id", ""))).get("name", dismissed.get("unit_id", ""))),
+		_describe_recruit_count(added),
+	]
+	return {"ok": true, "message": message, "dismissed": dismissed, "added": added, "remaining": remaining.duplicate(true)}
+
+## Leaves the waiting troops behind; they are lost.
+static func leave_site_recruits(session: SessionStateStoreScript.SessionData, expected_context: Dictionary) -> Dictionary:
+	var pending := _pending_site_recruits(session)
+	if not _pending_matches(pending, expected_context):
+		return {"ok": false, "message": "Those troops are no longer waiting."}
+	session.overworld.erase(PENDING_SITE_RECRUITS_KEY)
+	return {"ok": true, "message": "%s stay behind at %s." % [_describe_recruit_count(pending.get("recruits", {})), String(pending.get("site_name", "the site"))]}
 
 static func _learn_site_spell(session: SessionStateStoreScript.SessionData, spell_id: String) -> String:
 	if spell_id == "":

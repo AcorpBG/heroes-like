@@ -19992,6 +19992,7 @@ def validate_confirmation_dialog_visual_surfaces(errors: list[str]) -> None:
             'FrontierVisualKit.apply_confirmation_dialog(_native_destination_dialog)',
             'FrontierVisualKit.apply_confirmation_dialog(_resource_reward_dialog)',
             'FrontierVisualKit.apply_confirmation_dialog(_dwelling_recruit_dialog)',
+            'FrontierVisualKit.apply_confirmation_dialog(_site_recruit_dialog)',
         ),
         "Battle": (
             'FrontierVisualKit.apply_confirmation_dialog(_quick_resolve_confirmation_dialog, "primary")',

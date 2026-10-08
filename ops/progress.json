@@ -114299,6 +114299,19 @@
         "docs/town-construction-board.md"
       ],
       "notes": "Owner playtest request: the construction board's header resource strip repeated the town's bottom resource bar, and View in town should give way to the header's Close button. TownConstructionScreen: header resource strip removed (stockpile still colours costs), Close (Esc) moved into the decision footer beside Build/Trade where View in town was, V still folds the board away (preview_selected_in_town; the legend keeps 'V views in town'). TownShell passes set_bottom_insets: the board and detail panel now end above the resource bar (it had hidden the legend and the panel's bottom edge) and the town view's Back bar sits above the army rows instead of overlapping them; the board column is sized after its tiles so a shrinking layout no longer keeps the old height. Validation: town_garrison_rows_report (generated small map) 58 checks pass including 9 new construction checks; windowed 1920x1080 captures inspected; validate_repo identical (828). River Pass construction tests had their View in town clicks switched to preview_selected_in_town but were not used as verification."
+    },
+    {
+      "id": "gameplay-site-recruit-overflow-20261008",
+      "title": "Full-army site claims: claim, keep what fits, dismiss a stack or leave the rest",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "gameplay_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/site-recruit-overflow.md"
+      ],
+      "notes": "Owner playtest report: stepping on beaten Glassbound Eyrie and Railblock Camp did nothing. Cause: sites with claim_recruits refused the whole claim when the troops' new unit types did not all fit the seven army slots (HeroCommandRules.army_addition_plan), with only a status line; the game has no other dismiss action, and AI raids were capacity-blocked the same way. Owner chose 'claim, ask to make room'. Now: HeroCommandRules.army_addition_split adds what fits; OverworldRules claims and pays out, stores the rest in overworld.pending_site_recruits (hero, tile, site, troops; survives save/reload; cleared when the hero walks away or another hero is active); site_recruit_overflow_prompt / take_site_recruits_by_dismissing / leave_site_recruits; the context action is no longer disabled. OverworldShell shows a dismiss-or-leave dialog (waiting troops, the hero's stacks, Dismiss and take them / Leave them) that holds movement and reopens for remaining troops; the level-up dialog waits for it. EnemyAdventureRules claims with a full army and keeps the troops that fit. Free route gates (Railblock Camp) ask to Claim and name the reward instead of 'Pay nothing to open it'. Validation: tests/site_recruit_overflow_report (generated small map) passes; owner Day 25 save copies: Eyrie and Railblock claims pay out and the dialog places the waiting troops; town_garrison_rows, ai_player_rules and native end-to-end reports pass; validate_repo identical. Old-rule assertions updated in army_capacity_regression (River Pass setup, not run) and the Linux-only generated_full_match_target_policy_regression plus the match driver's claim feasibility (not run here: needs xvfb and its saved match)."
     }
   ],
   "project": "heroes-like",

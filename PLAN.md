@@ -88,6 +88,10 @@ Rules:
 
 `ux-town-construction-close-20261008` (completed, owner playtest fix): the construction board drops its header resource strip (the town's bottom resource bar shows the stockpile and the board ends above it), and Close replaces View in town beside the build button; V still views the building in town. See `docs/town-construction-board.md`.
 
+### Full-army site claims
+
+`gameplay-site-recruit-overflow-20261008` (completed, owner playtest fix): a full army no longer blocks claiming a site that grants troops (Glassbound Eyrie, Railblock Camp and 66 others). The site is claimed and pays out; troops that fit join, and a dialog offers to dismiss a stack for the rest or leave them behind. AI heroes claim the same way and keep what fits. Free reward gates ask to Claim instead of "Pay nothing". See `docs/site-recruit-overflow.md`.
+
 ### Authored scenarios archived
 
 `content-authored-scenarios-archived-20261008` (completed, owner playtest fix): the 299 authored scenarios, 25 campaigns, their terrain layers and the authoring tools moved to `archive/authored-scenarios-2026-10-08/`. The game offers none of them (the Skirmish list shows only generated maps and Campaign reads 'Coming soon'), while `ContentService` still loads them by id as hidden test setups and for old saves.

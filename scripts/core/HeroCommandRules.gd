@@ -1052,6 +1052,30 @@ static func army_addition_plan(stacks_value: Variant, additions: Dictionary) -> 
 		occupied += 1
 	return {"ok": true, "stacks": stacks}
 
+## Adds what fits instead of refusing: unit types matching a stack merge, new
+## types take free slots in unit-id order, and the types left without a slot
+## come back as overflow.
+static func army_addition_split(stacks_value: Variant, additions: Dictionary) -> Dictionary:
+	var stacks: Array = stacks_value.duplicate(true) if stacks_value is Array else []
+	if _valid_stack_count(stacks) <= ARMY_SLOT_COUNT:
+		stacks = _slotted_stacks(stacks)
+	var added := {}
+	var overflow := {}
+	var unit_ids := additions.keys()
+	unit_ids.sort()
+	for unit_id_value in unit_ids:
+		var unit_id := String(unit_id_value)
+		var amount := maxi(0, int(additions.get(unit_id_value, 0)))
+		if unit_id == "" or amount == 0:
+			continue
+		var plan := army_addition_plan(stacks, {unit_id: amount})
+		if bool(plan.get("ok", false)):
+			stacks = plan.get("stacks", stacks)
+			added[unit_id] = amount
+		else:
+			overflow[unit_id] = amount
+	return {"stacks": stacks, "added": added, "overflow": overflow}
+
 static func army_slot_snapshot(
 	session: SessionStateStoreScript.SessionData,
 	town: Dictionary,

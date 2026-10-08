@@ -29,6 +29,9 @@ const UI_ART_OVERWORLD_RESOURCE_BAR := "res://art/ui/runtime/overworld/resource_
 var _native_destination_dialog: ConfirmationDialog
 var _resource_reward_dialog: ConfirmationDialog
 var _resource_reward_context: Dictionary = {}
+var _site_recruit_dialog: ConfirmationDialog
+var _site_recruit_context: Dictionary = {}
+var _site_recruit_selected_slot := -1
 var _dwelling_recruit_dialog: ConfirmationDialog
 var _dwelling_recruit_context: Dictionary = {}
 var _dwelling_recruit_rows: Array = []
@@ -999,6 +1002,8 @@ func _overworld_gameplay_movement_blocked_reason() -> String:
 		return "native_destination_dialog_open"
 	if _resource_reward_dialog != null and _resource_reward_dialog.visible:
 		return "resource_reward_dialog_open"
+	if is_instance_valid(_site_recruit_dialog) and _site_recruit_dialog.visible:
+		return "site_recruit_dialog_open"
 	if _end_turn_commit_in_progress:
 		return "end_turn_committing"
 	# F3/F4 are persistent, mouse-filter-ignoring observation layers. They must
@@ -2821,6 +2826,7 @@ func _refresh_with_request(request: Dictionary) -> void:
 		"request": request.duplicate(true),
 	})
 	call_deferred("_configure_overworld_keyboard_focus", false)
+	call_deferred("_sync_site_recruit_dialog")
 	call_deferred("_sync_hero_level_up_dialog")
 
 func _sync_overworld_ambient_audio(source: String) -> void:
@@ -3069,6 +3075,7 @@ func _resolve_level_up_dialog(specialty_id: String) -> void:
 func _sync_resource_reward_presentation(result: Dictionary) -> void:
 	if result.has("reward_choice"):
 		call_deferred("_open_resource_reward_dialog", result["reward_choice"].duplicate(true))
+	call_deferred("_sync_site_recruit_dialog")
 	if result.has("dwelling_recruit"):
 		call_deferred("_open_dwelling_recruit_dialog", result["dwelling_recruit"].duplicate(true))
 
@@ -3239,6 +3246,177 @@ func _on_resource_reward_selected(choice_id: StringName) -> void:
 	if bool(_handle_session_resolution().get("handled", false)): return
 	_refresh()
 	_record_resource_delta_presentation(result, "collect_resource", before)
+
+## Troops a claimed site offered that did not fit the army: pick a stack to
+## dismiss for them, or leave them behind. The offer lives in the session, so
+## the dialog returns after a reload until the hero answers.
+func _sync_site_recruit_dialog() -> void:
+	if _session == null or not is_inside_tree() or _session.game_state != "overworld":
+		return
+	if is_instance_valid(_site_recruit_dialog) and _site_recruit_dialog.visible:
+		return
+	var prompt := OverworldRules.site_recruit_overflow_prompt(_session)
+	if not prompt.is_empty():
+		_open_site_recruit_dialog(prompt)
+
+func _open_site_recruit_dialog(prompt: Dictionary) -> void:
+	if is_instance_valid(_site_recruit_dialog):
+		FrontierVisualKit.hide_exclusive_dialog(_site_recruit_dialog)
+		_site_recruit_dialog.queue_free()
+	_site_recruit_context = prompt.get("context", {}).duplicate(true)
+	_site_recruit_selected_slot = -1
+	_site_recruit_dialog = ConfirmationDialog.new()
+	_site_recruit_dialog.name = "SiteRecruitOverflow"
+	_site_recruit_dialog.title = String(prompt.get("title", "Claimed site"))
+	_site_recruit_dialog.ok_button_text = "Dismiss and take them"
+	_site_recruit_dialog.cancel_button_text = "Leave them"
+	add_child(_site_recruit_dialog)
+	FrontierVisualKit.apply_confirmation_dialog(_site_recruit_dialog)
+	var content := VBoxContainer.new()
+	content.add_theme_constant_override("separation", 12)
+	var waiting: Array = prompt.get("waiting", [])
+	var names := []
+	for entry in waiting:
+		names.append("%d %s" % [int(entry.get("count", 0)), String(entry.get("unit_name", ""))])
+	var instruction := Label.new()
+	instruction.text = "No room in your army for %s.\nChoose a stack to dismiss and %s take its place, or leave them behind." % [
+		", ".join(names), String(waiting[0].get("unit_name", "they")) if not waiting.is_empty() else "they",
+	]
+	instruction.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	FrontierVisualKit.apply_label(instruction, "body", 16)
+	content.add_child(instruction)
+	var waiting_row := HBoxContainer.new()
+	waiting_row.name = "SiteRecruitWaiting"
+	waiting_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	waiting_row.add_theme_constant_override("separation", 8)
+	for entry in waiting:
+		var cell := _site_recruit_cell(String(entry.get("portrait", "")), int(entry.get("count", 0)), "%d %s wait to join." % [int(entry.get("count", 0)), String(entry.get("unit_name", ""))])
+		cell.disabled = true
+		waiting_row.add_child(cell)
+	content.add_child(waiting_row)
+	var army_caption := Label.new()
+	army_caption.text = "Your army"
+	army_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	FrontierVisualKit.apply_label(army_caption, "muted", 14)
+	content.add_child(army_caption)
+	var army_row := HBoxContainer.new()
+	army_row.name = "SiteRecruitArmy"
+	army_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	army_row.add_theme_constant_override("separation", 8)
+	var group := ButtonGroup.new()
+	var first_cell: Button
+	for slot in prompt.get("slots", []):
+		if not bool(slot.get("occupied", false)):
+			continue
+		var slot_index := int(slot.get("slot_index", -1))
+		var cell := _site_recruit_cell(String(slot.get("portrait", "")), int(slot.get("count", 0)), "Dismiss %d %s." % [int(slot.get("count", 0)), String(slot.get("unit_name", ""))])
+		cell.name = "SiteRecruitSlot%d" % slot_index
+		cell.toggle_mode = true
+		cell.button_group = group
+		cell.pressed.connect(func(): _on_site_recruit_slot_pressed(slot_index))
+		army_row.add_child(cell)
+		if first_cell == null:
+			first_cell = cell
+	content.add_child(army_row)
+	_site_recruit_dialog.add_child(content)
+	_site_recruit_dialog.get_ok_button().disabled = true
+	_site_recruit_dialog.confirmed.connect(_on_site_recruit_confirmed)
+	_site_recruit_dialog.canceled.connect(_on_site_recruit_left)
+	_site_recruit_dialog.exclusive = true
+	_on_overworld_interaction_owner_opened()
+	_site_recruit_dialog.popup_centered(Vector2i(760, 400))
+	if first_cell != null:
+		first_cell.grab_focus()
+
+func _site_recruit_cell(portrait_path: String, count: int, tip: String) -> Button:
+	var cell := Button.new()
+	cell.custom_minimum_size = Vector2(76, 76)
+	cell.clip_contents = true
+	cell.tooltip_text = tip
+	for state in ["normal", "hover", "pressed", "hover_pressed", "focus", "disabled"]:
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color(0.035, 0.05, 0.05, 0.96)
+		var selected: bool = state in ["pressed", "hover_pressed"]
+		style.border_color = Color(1.0, 0.82, 0.34) if selected else (Color(0.88, 0.68, 0.27) if state in ["hover", "focus"] else Color(0.46, 0.37, 0.19))
+		style.set_border_width_all(3 if selected else 1)
+		style.set_corner_radius_all(6)
+		if state == "focus":
+			style.bg_color = Color(0, 0, 0, 0)
+		cell.add_theme_stylebox_override(state, style)
+	var art := TextureRect.new()
+	art.texture = _load_roster_icon(portrait_path)
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	art.offset_left = 3
+	art.offset_top = 3
+	art.offset_right = -3
+	art.offset_bottom = -3
+	cell.add_child(art)
+	var amount := Label.new()
+	amount.text = str(count)
+	amount.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	amount.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	amount.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	amount.offset_right = -5
+	amount.offset_bottom = -1
+	amount.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	amount.add_theme_font_size_override("font_size", 18)
+	amount.add_theme_color_override("font_color", Color(1.0, 0.95, 0.82))
+	amount.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.95))
+	amount.add_theme_constant_override("outline_size", 6)
+	cell.add_child(amount)
+	return cell
+
+func _on_site_recruit_slot_pressed(slot_index: int) -> void:
+	_site_recruit_selected_slot = slot_index
+	if is_instance_valid(_site_recruit_dialog):
+		_site_recruit_dialog.get_ok_button().disabled = false
+
+func _close_site_recruit_dialog() -> Dictionary:
+	var context := _site_recruit_context.duplicate(true)
+	_site_recruit_context.clear()
+	if is_instance_valid(_site_recruit_dialog):
+		FrontierVisualKit.hide_exclusive_dialog(_site_recruit_dialog)
+	call_deferred("_configure_overworld_keyboard_focus", true)
+	return context
+
+func _on_site_recruit_confirmed() -> void:
+	var slot_index := _site_recruit_selected_slot
+	var context := _close_site_recruit_dialog()
+	if slot_index < 0 or context.is_empty():
+		return
+	var result := OverworldRules.take_site_recruits_by_dismissing(_session, slot_index, context)
+	_last_message = String(result.get("message", ""))
+	_record_result_feedback("hero", result, "Army updated.")
+	_refresh()
+
+func _on_site_recruit_left() -> void:
+	var context := _close_site_recruit_dialog()
+	if context.is_empty():
+		return
+	var result := OverworldRules.leave_site_recruits(_session, context)
+	_last_message = String(result.get("message", ""))
+	_record_result_feedback("hero", result, "Troops left behind.")
+	_refresh()
+
+func validation_site_recruit_dialog() -> Dictionary:
+	var open := is_instance_valid(_site_recruit_dialog) and _site_recruit_dialog.visible
+	var slots := []
+	if open:
+		for cell in _site_recruit_dialog.find_children("SiteRecruitSlot*", "Button", true, false):
+			slots.append(int(String(cell.name).trim_prefix("SiteRecruitSlot")))
+	return {"open": open, "title": _site_recruit_dialog.title if open else "", "slots": slots, "waiting": _site_recruit_dialog.find_child("SiteRecruitWaiting", true, false).get_child_count() if open else 0}
+
+func validation_site_recruit_choose(slot_index: int) -> void:
+	var cell := _site_recruit_dialog.find_child("SiteRecruitSlot%d" % slot_index, true, false) as Button
+	cell.emit_signal("pressed")
+	cell.button_pressed = true
+	_site_recruit_dialog.get_ok_button().emit_signal("pressed")
+
+func validation_site_recruit_leave() -> void:
+	_site_recruit_dialog.get_cancel_button().emit_signal("pressed")
 
 func _open_native_destination_dialog() -> void:
 	if _session == null or not is_inside_tree():

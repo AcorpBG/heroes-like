@@ -309,7 +309,9 @@ func resource_claim_feasible(node: Dictionary) -> bool:
 	if Transit.is_native(node):
 		return true
 	var site: Dictionary = ContentService.get_resource_site(String(node.get("site_id","")))
-	return bool(Heroes.army_addition_plan(session.overworld.get("army",{}).get("stacks",[]),OverworldRules._resource_site_claim_recruits(site)).get("ok",false)) and OverworldRules._can_afford(session,OverworldRules._resource_site_visit_cost(site))
+	# A full army no longer blocks a claim (troops without a slot are offered
+	# for a dismissed stack or left behind), so only the visit cost decides.
+	return OverworldRules._can_afford(session,OverworldRules._resource_site_visit_cost(site))
 
 func target_precedes(a: Dictionary, b: Dictionary) -> bool:
 	# Intent is only an id, never a stale position or a bypass of today's

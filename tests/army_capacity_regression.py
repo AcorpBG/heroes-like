@@ -73,8 +73,10 @@ func admission_controls() -> void:
 	OverworldRules.invalidate_spatial_lookup(s)
 	before = state(s)
 	result = OverworldRules._collect_resource_node_result(s,{"index":0,"node":node})
-	check(not bool(result.get("ok",true)),"unit-bearing site must reject overflowing claim")
-	check(state(s)==before,"rejected site claim spent rewards, cost or claim state")
+	# Owner rule 2026-10-08: a full army never blocks the claim; the troops
+	# without a slot wait for a dismiss-or-leave answer.
+	check(bool(result.get("ok",false)) and s.overworld.resource_nodes[0].get("collected",false),"full army must not block a unit-bearing site claim")
+	check(s.overworld.army.stacks.size()==7 and not OverworldRules.site_recruit_overflow_prompt(s).is_empty(),"overflowing site troops must wait for the dismiss-or-leave answer")
 	# Split stacks must not multiply a single incoming grant.
 	var split := [{"unit_id":f.unit,"count":2,"slot_index":1},{"unit_id":f.unit,"count":3,"slot_index":5}]
 	var joined: Array = OverworldRules._add_army_stack(split,f.unit,4)
