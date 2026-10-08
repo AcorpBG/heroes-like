@@ -4896,7 +4896,7 @@ func _refresh_commander_card(compact: bool) -> void:
 
 func _refresh_resource_stockpile() -> void:
 	var summary := OverworldRules.describe_resource_stockpile(_session.overworld.get("resources", {}), true)
-	_resource_label.sync_stockpile(_session.overworld.get("resources", {}), summary, summary)
+	_resource_label.sync_stockpile(_session.overworld.get("resources", {}), summary, summary, OverworldRules.player_daily_income(_session))
 
 func _refresh_generated_commander_status() -> void:
 	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}

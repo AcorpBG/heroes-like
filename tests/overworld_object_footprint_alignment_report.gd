@@ -3,8 +3,9 @@ extends Node
 ## report 2026-10-08: Bell Spire and smelter sprites drawn beside their
 ## interaction tiles). A generated object's x/y is its bottom-right tile in
 ## HoMM3 placement and can even lie outside its body, so the sprite rect must
-## come from the body tiles: standing on the bottom row, centred over the
-## columns, and covering the interaction tile. Runs on a generated small map.
+## come from the body tiles: standing on the bottom row, centred on the
+## interaction tile (the art's entrance is its bottom centre). Runs on a
+## generated small map.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const OverworldShellScene = preload("res://scenes/overworld/OverworldShell.tscn")
@@ -67,8 +68,10 @@ func _run() -> void:
 			counts.anchor_outside_body += 1
 		if body.size.x > 1 or body.size.y > 1:
 			counts.multi_tile += 1
-		var centred := absf(rect.get_center().x - body_rect.get_center().x) < 0.5
+		# The art (painted with its entrance at the bottom centre) stands on the
+		# footprint's bottom row, centred on the interaction tile.
 		var grounded := absf(rect.end.y - body_rect.end.y) < 0.5
+		var centred := absf(rect.get_center().x - visit_rect.get_center().x) < 0.5
 		var covers_visit := rect.encloses(visit_rect)
 		if not (centred and grounded and covers_visit):
 			misplaced.append("%s at %s: rect %s body %s" % [node.get("site_id", ""), anchor, rect, body])

@@ -83,18 +83,22 @@ static func landscape_patches(tiles: Array) -> Array:
 	return result
 
 static func slice(formation: Dictionary, tile: Vector2i, cell_rect: Rect2, image_size: Vector2) -> Dictionary:
+	var art := painted_tiles(formation, image_size)
+	var painted := Rect2(cell_rect.position + (art.position - Vector2(tile)) * cell_rect.size, art.size * cell_rect.size)
+	return clip(painted, cell_rect, image_size)
+
+## The formation's painted art in tile units. Aspect-preserved art spans its
+## native body instead of resetting at each cell; bottom alignment leaves
+## natural upper silhouette/negative space.
+static func painted_tiles(formation: Dictionary, image_size: Vector2) -> Rect2:
 	var origin: Vector2i = formation.get("mass_origin", formation.origin)
 	var size: Vector2i = formation.get("mass_size", formation.size)
-	var bounds := Rect2(cell_rect.position + Vector2(origin - tile) * cell_rect.size, Vector2(size) * cell_rect.size)
+	var bounds := Rect2(Vector2(origin), Vector2(size))
 	if formation.has("paint_bounds"):
-		var art: Rect2 = formation.paint_bounds
-		bounds = Rect2(cell_rect.position + (art.position - Vector2(tile)) * cell_rect.size, art.size * cell_rect.size)
-	# Aspect-preserved art spans its native body instead of resetting at each
-	# cell. Bottom alignment leaves natural upper silhouette/negative space.
+		bounds = formation.paint_bounds
 	var scale := minf(bounds.size.x / maxf(image_size.x, 1.0), bounds.size.y / maxf(image_size.y, 1.0))
 	var painted_size := image_size * scale
-	var painted := Rect2(Vector2(bounds.get_center().x - painted_size.x * 0.5, bounds.end.y - painted_size.y), painted_size)
-	return clip(painted, cell_rect, image_size)
+	return Rect2(Vector2(bounds.get_center().x - painted_size.x * 0.5, bounds.end.y - painted_size.y), painted_size)
 
 static func clip(painted: Rect2, cell_rect: Rect2, image_size: Vector2) -> Dictionary:
 	var clipped := painted.intersection(cell_rect)

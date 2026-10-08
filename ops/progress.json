@@ -114326,6 +114326,57 @@
       "notes": "Owner playtest report: Bell Spire and smelter sprites drawn beside their interaction tiles, and other objects too. Cause: OverworldMapView._resource_footprint_rect anchored the content art profile (mostly bottom_center) at the node x/y, which for generated objects is the HoMM3 bottom-right tile of the def mask and can lie outside the body (37 of 519 sites in the owner's Day 44 save). Bell Spire (3x1 body, 1x1 profile) drew on its right tile, Glassbound Eyrie one tile right, Smelter Annex on the empty tile beside its only body tile. Now generated sites with body tiles use _resource_body_bounds: the rect stands on the body's bottom row, centred over its columns, at least the profile's size (sprite size still from the profile). Mines keep their CommonMineRules 3x2 art around the entry. Validation: new tests/overworld_object_footprint_alignment_report (generated small map: 66 sites incl. anchor-outside-body and multi-tile ones, every sprite grounded on and centred over its body and covering its interaction tile); windowed captures from the owner's save (Bell Spire, Eyrie, Smelter Annex, Clamp Forge, Orchard Levy Post, sawmill and peatwax mines); native end-to-end, town garrison rows and site recruit overflow reports pass; validate_repo identical. Found, not fixed: a claimed one-time guarded site (e.g. Glassbound Eyrie) counts as not present (resource_node_is_present), so it vanishes from the map and stops blocking although its map object says remains_after_visit and it has secured-state art."
     },
     {
+      "id": "ux-generated-object-placement-scan-20261008",
+      "title": "Scan every generated object's placement; centre site art on its entrance",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/generated-object-placement-scan.md"
+      ],
+      "notes": "Owner asked for every object to be checked, not only the reported ones. Scan on a copy of the owner's 108x108 map: per-object render/remove/re-render pixel differences for 1,096 objects (411 sites, 216 guards, 43 artifacts, 16 towns, one scenery piece per 410 shapes) and a whole-map with/without-scenery coverage pass over 11,664 tiles. The first fix (art centred over the footprint) still left wide sites with an end entrance (Tide Kiln, Basalt Oath Tomb, Barrow Vault, Brasswake Depot) with the art beside the interaction tile, so generated site art now stands on the bottom row centred on the interaction tile (art width from its profile), as mines already did. Re-scan of all 411 sites with the final rule; alignment report updated and passing. Towns and guards correct; artifacts on their tiles but tiny (2 hidden under scenery); no scenery art away from its blocks, 398 blocked scenery tiles (6%) look empty and 37 walkable tiles are mostly covered by canopy. Open, owner decision: art narrower than footprint (extra blocked tiles look walkable), low-visibility blockers/pickups, claimed one-time guarded sites vanish."
+    },
+    {
+      "id": "ux-generated-site-footprint-dressing-20261008",
+      "title": "Dress bare blocked site tiles; keep claimed sites that remain after their visit",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/generated-object-placement-scan.md"
+      ],
+      "notes": "Owner go-ahead on scan findings 1 and 4. (1) OverworldMapView._resource_flank_rock_tiles/_draw_resource_flank_rocks: package block tiles of a generated site that its painted art (or mine art) does not reach get a terrain rock from native_scenery rock_contact_palettes with the base ground tint; never the entrance, none for an opened route body; presentation only. (4) OverworldRules.resource_node_is_present keeps a collected one-time node present when its map object's interaction.remains_after_visit is true: looted guarded banks keep blocking with secured art, opened route camps (block tiles already cleared) stay visible and passable, pickups are still taken; AiHeroRules clears the pre-claim static body when a claim opens or removes a site. Validation, focused per owner (no full rescan): new tests/generated_site_footprint_dressing_report (custom yard on a generated small map with only the affected objects; 74 checks windowed incl. per-object render/remove pixel checks that every blocked tile shows art or a rock), overworld_object_footprint_alignment_report passes, validate_repo identical (828). ai_player_rules_report not rerun."
+    },
+    {
+      "id": "ux-scenery-pickup-readability-20261008",
+      "title": "Blocked scenery always shows art; pickups larger, never hidden, with a glint",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/generated-object-placement-scan.md"
+      ],
+      "notes": "Owner go-ahead on scan findings 2 and 3. Scenery: OverworldMapView._index_scenery_cell_fillers samples each blocked scenery cell's painted coverage (4x4 samples against 24px alpha masks of its own piece, formation slice, overlapping formations and rock contacts; bottom rows first, early exit) and gives cells under 30% a filler from native_scenery component_palettes for the cell's family and terrain (low cells excluded), drawn by _draw_native_scenery_fillers; _scenery_piece_tiles sets a 0.62-tile minimum for a cell's own piece; NativeSceneryFormation.painted_tiles shared by slice and coverage. Static caches (alpha masks, raster sizes, filler result per session/level/scenery signature): owner's 108x108 map 808 of 6,311 cells filled, ~0.3 s once per map per launch, ~5 ms on later overworld rebuilds. Pickups: artifact extent 0.62 (was 0.42), loose pickup 0.66 (was 0.56), drawn in the foreground pass instead of before scenery, static glint on visible pickups; validate_repo pins and overworld_object_scale_regression expectations updated. Validation (focused, per owner): new tests/overworld_scenery_pickup_readability_report windowed 21 checks (511/511 scenery tiles show art, 8 pickups incl. 6 just above scenery visible and readable), terrain crops from the owner's map reviewed (swamp, snow, grass, rough, dirt, sand), validate_repo identical (828). Full scan not rerun."
+    },
+    {
+      "id": "ux-resource-bar-daily-income-20261008",
+      "title": "Resource bar shows each resource's daily income",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md"
+      ],
+      "notes": "Owner request: show the daily income for each resource in the resource bar, separated by a + sign. ResourceStockpileMenu.sync_stockpile takes an optional daily_income; each inline cell shows the amount then a signed income label (green gain, red loss, muted +0), popup rows read 'Gold  5000  +500' and tooltips 'Gold: 5000 (+500 per day)'; validation_snapshot exposes daily_income. OverworldShell and TownShell feed OverworldRules.player_daily_income (new public wrapper over the end-turn forecast projection _player_daily_income_projection for day+1: towns at daybreak, hero artifacts/specialties, controlled sites, difficulty scaling). controlled_resource_site_income now checks the controller before the content lookup (same result; the bar asks on every refresh). Cost on a generated extra-large map: 0.9 ms on day 1, 1.7 ms with 4 towns/60 sites, 6.7 ms owning all 16 towns/952 sites, against a 225 ms route-preview refresh there. Validation: new tests/resource_bar_daily_income_report (generated small map, two flagged wood/ore sites: overworld and town bars show the rules income, labels and tooltips, next end_turn pays exactly the shown income; 106 checks) passes; windowed captures at 1920x1080 and 1280x720 (overworld) and town 1920x1080 show no clipping; town_garrison_rows, overworld_object_footprint_alignment and site_recruit_overflow reports pass; validate_repo identical to baseline (884 in this checkout). Pinned popup/tooltip format updated in validate_repo, resource_stockpile_icon_popover_runtime_report (River Pass setup, not run) and the Linux-only overworld_stockpile_text_fit_regression (not run here: needs xvfb and a saved match)."
+    },
+    {
       "id": "ai-market-parking-fight-rewards-20261008",
       "title": "Cheap markets the AI builds, idle AI heroes out of the way, strength-scaled battle rewards",
       "status": "completed",

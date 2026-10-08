@@ -9,6 +9,9 @@ const OverworldRules = preload("res://scripts/core/OverworldRules.gd")
 const SNAPSHOT_SCHEMA := "resource_stockpile_icon_menu_v1"
 const COMPACT_LABEL := "Stores"
 const POPUP_ICON_WIDTH := 24
+const INCOME_GAIN_COLOR := Color(0.62, 0.86, 0.50, 1.0)
+const INCOME_LOSS_COLOR := Color(0.93, 0.52, 0.42, 1.0)
+const INCOME_NONE_COLOR := Color(0.58, 0.64, 0.69, 0.80)
 
 # Overworld's fixed-width footer may overflow even on a wide viewport. Other
 # consumers retain their existing explicit compact/summary presentation.
@@ -23,6 +26,7 @@ var _full_summary := ""
 var _compact_mode := false
 var _return_focus_on_hide := false
 var _resource_values: Dictionary = {}
+var _resource_income: Dictionary = {}
 var _inline_row: HBoxContainer
 var _inline_cells: Dictionary = {}
 
@@ -60,16 +64,25 @@ func _sync_inline_icons() -> void:
 			glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			cell.add_child(glyph)
 			var amount := Label.new()
-			amount.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			amount.clip_text = true
 			amount.add_theme_font_size_override("font_size", 14)
 			amount.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			cell.add_child(amount)
+			var income := Label.new()
+			income.name = "Income"
+			income.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			income.clip_text = true
+			income.add_theme_font_size_override("font_size", 13)
+			income.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			cell.add_child(income)
 			_inline_row.add_child(cell)
 			_inline_cells[id] = cell
 		var cell: HBoxContainer = _inline_cells[id]
 		cell.get_child(0).texture = popup.get_item_icon(index)
 		cell.get_child(1).text = _inline_amount(int(data.amount))
+		var daily := int(data.get("daily_income", 0))
+		var income_label: Label = cell.get_child(2)
+		income_label.text = _income_text(daily)
+		income_label.add_theme_color_override("font_color", _income_color(daily))
 		cell.tooltip_text = popup.get_item_tooltip(index)
 		cell.accessibility_name = cell.tooltip_text
 	accessibility_name = "Resources: " + _full_summary
@@ -81,6 +94,17 @@ func _inline_amount(value: int) -> String:
 	if absi(value) >= 1000000: return "%.1fM" % (float(value) / 1000000.0)
 	if absi(value) >= 100000: return "%.0fk" % (float(value) / 1000.0)
 	return str(value)
+
+
+## Daily income beside the amount, signed: "+500", "-2", "+0".
+func _income_text(value: int) -> String:
+	return ("-" if value < 0 else "+") + _inline_amount(absi(value))
+
+
+func _income_color(value: int) -> Color:
+	if value > 0: return INCOME_GAIN_COLOR
+	if value < 0: return INCOME_LOSS_COLOR
+	return INCOME_NONE_COLOR
 
 
 func _ready() -> void:
@@ -103,12 +127,14 @@ func _notification(what: int) -> void:
 		_refresh_button_copy()
 
 
-func sync_stockpile(resources: Variant, normal_summary: String, full_summary: String) -> void:
+func sync_stockpile(resources: Variant, normal_summary: String, full_summary: String, daily_income: Variant = {}) -> void:
 	_resource_values.clear()
+	_resource_income.clear()
 	for resource_id_value in OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS:
 		var resource_id := String(resource_id_value)
 		var amount := int((resources as Dictionary).get(resource_id, 0)) if resources is Dictionary else 0
 		_resource_values[resource_id] = amount
+		_resource_income[resource_id] = int((daily_income as Dictionary).get(resource_id, 0)) if daily_income is Dictionary else 0
 	_normal_summary = normal_summary.strip_edges()
 	_full_summary = full_summary.strip_edges()
 	if _full_summary == "":
@@ -143,6 +169,7 @@ func validation_snapshot() -> Dictionary:
 		"schema": SNAPSHOT_SCHEMA,
 		"resource_ids": OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS.duplicate(),
 		"resources": _resource_values.duplicate(true),
+		"daily_income": _resource_income.duplicate(true),
 		"normal_summary": _normal_summary,
 		"full_summary": _full_summary,
 		"compact": _compact_mode,
@@ -212,7 +239,8 @@ func _rebuild_popup() -> void:
 		if display_name == "":
 			continue
 		var amount := int(_resource_values.get(resource_id, 0))
-		var item_text := "%s  %d" % [display_name, amount]
+		var daily := int(_resource_income.get(resource_id, 0))
+		var item_text := "%s  %d  %+d" % [display_name, amount, daily]
 		var icon_path := OverworldRules.resource_icon_path(resource_id)
 		var icon_texture: Texture2D = null
 		if icon_path != "":
@@ -229,11 +257,12 @@ func _rebuild_popup() -> void:
 			popup.set_item_disabled(index, true)
 		elif popup.get_item_text(index) != item_text:
 			popup.set_item_text(index, item_text)
-		popup.set_item_tooltip(index, "%s: %d" % [display_name, amount])
+		popup.set_item_tooltip(index, "%s: %d (%+d per day)" % [display_name, amount, daily])
 		popup.set_item_metadata(index, {
 			"resource_id": resource_id,
 			"display_name": display_name,
 			"amount": amount,
+			"daily_income": daily,
 			"icon_path": icon_path if icon_texture != null else "",
 		})
 	_sync_inline_icons()

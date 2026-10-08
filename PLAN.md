@@ -90,7 +90,15 @@ Rules:
 
 ### Generated object sprite placement
 
-`ux-generated-object-sprite-footprint-20261008` (completed, owner playtest fix): generated sites draw their sprite over their real footprint. Their x/y is the HoMM3 bottom-right tile (sometimes outside the body), so the sprite rect now comes from the body tiles: on the bottom row, centred over the columns, at least the art profile's size. Mines keep their three-by-two art around the entry. `tests/overworld_object_footprint_alignment_report.tscn` checks every site of a generated map.
+`ux-generated-object-sprite-footprint-20261008` (completed, owner playtest fix): generated sites draw their sprite over their real footprint. Their x/y is the HoMM3 bottom-right tile (sometimes outside the body), so the sprite rect now comes from the body tiles: on the bottom row, centred on the interaction tile (the art's entrance is its bottom centre, as for mines). `tests/overworld_object_footprint_alignment_report.tscn` checks every site of a generated map. A full scan of the owner's map (every site, guard, artifact and town, one scenery piece per shape, and whole-map scenery coverage) is in `docs/generated-object-placement-scan.md`, with the open readability findings.
+
+`ux-generated-site-footprint-dressing-20261008` (completed, owner go-ahead after the scan): blocked tiles a generated site's art leaves bare get a small terrain rock, so they no longer look walkable; claimed one-time sites whose object remains after its visit (looted guarded banks, opened route camps) stay on the map with their secured art instead of vanishing. Focused check: `tests/generated_site_footprint_dressing_report.tscn`.
+
+`ux-scenery-pickup-readability-20261008` (completed, owner go-ahead after the scan): blocked scenery cells whose painted art covers less than 30% get a filler from their family's terrain palette and single pieces are at least 0.62 tile, so no blocked tile looks walkable; artifacts (0.62 tile) and loose pickups (0.66) are larger, draw above neighbouring canopy and carry a faint static glint. Focused check: `tests/overworld_scenery_pickup_readability_report.tscn`.
+
+### Resource bar daily income
+
+`ux-resource-bar-daily-income-20261008` (completed, owner request): the resource bar on the overworld and in town shows each resource's daily income after its amount ("5000 +500"; green for a gain, muted "+0"), and its tooltips and popup say "+N per day". The figure is the end-turn income forecast (`OverworldRules.player_daily_income`), so it is exactly what the next daybreak pays. `tests/resource_bar_daily_income_report.tscn` checks both bars and the payout on a generated map.
 
 ### AI markets, out-of-the-way idle heroes, strength-scaled rewards
 

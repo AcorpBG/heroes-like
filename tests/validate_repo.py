@@ -36805,8 +36805,8 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     world_tile_extent_block = gd_function_block(map_text, "_object_world_tile_extent")
     visible_footprint_block = gd_function_block(map_text, "_object_visible_footprint_rect")
     for token in (
-        "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.42",
-        "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.56",
+        "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.62",
+        "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.66",
         'const WORLD_OBJECT_SCALE_HIERARCHY_MODEL := "classic_readable_semantic_landmark_bands_v6"',
         "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.88",
         "const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.82",
@@ -36829,6 +36829,8 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     ):
         ensure(map_text.count(token) == 1, errors, f"Overworld world-scale hierarchy must own one exact production constant: {token}")
     for rejected_token in (
+        "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.42",
+        "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.56",
         "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.34",
         "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.38",
         "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.44",
@@ -52504,7 +52506,7 @@ def validate_resource_stockpile_icon_popover(errors: list[str]) -> None:
         'what == NOTIFICATION_THEME_CHANGED and is_node_ready()',
         'fit_summary_to_width and _summary_exceeds_width()',
         'func _summary_exceeds_width() -> bool:',
-        "func sync_stockpile(resources: Variant, normal_summary: String, full_summary: String) -> void:",
+        "func sync_stockpile(resources: Variant, normal_summary: String, full_summary: String, daily_income: Variant = {}) -> void:",
         "for resource_id_value in OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS:",
         "_resource_values[resource_id] = amount",
         "func set_compact_mode(compact: bool) -> void:",
@@ -52528,7 +52530,7 @@ def validate_resource_stockpile_icon_popover(errors: list[str]) -> None:
         "popup.add_icon_item(icon_texture, item_text, index)",
         "popup.add_item(item_text, index)",
         "popup.set_item_disabled(index, true)",
-        'popup.set_item_tooltip(index, "%s: %d" % [display_name, amount])',
+        'popup.set_item_tooltip(index, "%s: %d (%+d per day)" % [display_name, amount, daily])',
         '"resource_id": resource_id',
         '"amount": amount',
         '"icon_path": icon_path if icon_texture != null else ""',
