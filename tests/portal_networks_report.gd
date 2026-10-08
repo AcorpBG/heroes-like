@@ -294,8 +294,9 @@ func _check_rendering(session) -> void:
 			# Review aid: a short close-up sequence of the animated cluster.
 			view.set("large_map_visible_tile_span_override", 9.0)
 			view.call("_invalidate_state_cache", "portal_networks_closeup")
+			var step := maxi(1, int(OS.get_environment("HEROES_PORTAL_FX_STEP"))) if OS.get_environment("HEROES_PORTAL_FX_STEP") != "" else 3
 			for index in range(int(OS.get_environment("HEROES_PORTAL_FX_FRAMES"))):
-				for _frame in range(3):
+				for _frame in range(step):
 					await get_tree().process_frame
 				await RenderingServer.frame_post_draw
 				get_viewport().get_texture().get_image().save_png("%s/closeup_%02d.png" % [CAPTURE_DIR, index])

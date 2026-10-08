@@ -27,27 +27,27 @@ static func destinations(node: Dictionary) -> Array:
 	return values if values is Array else []
 
 const PORTAL_KIND_BY_TYPE := {43: "one_way_entrance", 44: "one_way_exit", 45: "two_way_portal"}
-# Network colours (docs/portal-networks.md). Each network on a map gets its own
-# slot (assign_network_colours); past the palette colours repeat and the
-# portal's shape still tells the kinds apart. The magic is drawn as particles,
-# so any colour works.
+# Network colours (docs/portal-networks.md), fully saturated and ordered so
+# the first networks on a map get the most different hues. Each network gets
+# its own slot (assign_network_colours); past the palette colours repeat and
+# the portal's shape still tells the kinds apart.
 const NETWORK_COLOURS := [
-	{"name": "Emerald", "color": Color(0.22, 0.86, 0.42)},
-	{"name": "Amber", "color": Color(1.0, 0.62, 0.12)},
-	{"name": "Violet", "color": Color(0.66, 0.40, 1.0)},
-	{"name": "Azure", "color": Color(0.22, 0.60, 1.0)},
-	{"name": "Crimson", "color": Color(0.96, 0.20, 0.26)},
-	{"name": "Gold", "color": Color(1.0, 0.88, 0.26)},
-	{"name": "Rose", "color": Color(1.0, 0.46, 0.76)},
-	{"name": "Teal", "color": Color(0.14, 0.86, 0.82)},
-	{"name": "Silver", "color": Color(0.86, 0.89, 0.96)},
-	{"name": "Lime", "color": Color(0.66, 1.0, 0.22)},
-	{"name": "Copper", "color": Color(0.86, 0.46, 0.22)},
-	{"name": "Indigo", "color": Color(0.38, 0.36, 0.96)},
-	{"name": "Magenta", "color": Color(1.0, 0.26, 0.92)},
-	{"name": "Sky", "color": Color(0.56, 0.84, 1.0)},
-	{"name": "Flame", "color": Color(1.0, 0.36, 0.08)},
-	{"name": "Mint", "color": Color(0.56, 1.0, 0.74)},
+	{"name": "Emerald", "color": Color(0.05, 0.85, 0.3)},
+	{"name": "Crimson", "color": Color(0.95, 0.08, 0.15)},
+	{"name": "Azure", "color": Color(0.1, 0.45, 1.0)},
+	{"name": "Gold", "color": Color(1.0, 0.82, 0.05)},
+	{"name": "Violet", "color": Color(0.55, 0.2, 1.0)},
+	{"name": "Teal", "color": Color(0.0, 0.8, 0.75)},
+	{"name": "Flame", "color": Color(1.0, 0.42, 0.0)},
+	{"name": "Magenta", "color": Color(1.0, 0.1, 0.8)},
+	{"name": "Lime", "color": Color(0.6, 1.0, 0.0)},
+	{"name": "Indigo", "color": Color(0.25, 0.15, 0.85)},
+	{"name": "Sky", "color": Color(0.35, 0.8, 1.0)},
+	{"name": "Rose", "color": Color(1.0, 0.45, 0.65)},
+	{"name": "Mint", "color": Color(0.45, 1.0, 0.7)},
+	{"name": "Orchid", "color": Color(0.85, 0.5, 1.0)},
+	{"name": "Amber", "color": Color(1.0, 0.62, 0.15)},
+	{"name": "Silver", "color": Color(0.85, 0.88, 0.95)},
 ]
 
 ## two_way_portal, one_way_entrance or one_way_exit for a native monolith;
