@@ -728,7 +728,7 @@ static func _build_choice(session: SessionStateStoreScript.SessionData, town: Di
 		if troops > 0.0:
 			value += troops
 			reason = "troops"
-		var income := _payload_value(_pool_delta(_trial_income(trial), income_before), {}) * 7.0 * BUILD_HORIZON_WEEKS
+		var income := _build_value(_pool_delta(_trial_income(trial), income_before)) * 7.0 * BUILD_HORIZON_WEEKS
 		if income > value:
 			reason = "income"
 		value += income
@@ -745,7 +745,7 @@ static func _build_choice(session: SessionStateStoreScript.SessionData, town: Di
 			value += market
 			reason = "market"
 		value += 150.0 * float(_opens_count(town, building_id, trial_built))
-		var cost_value := maxf(1.0, _payload_value(cost, {}))
+		var cost_value := maxf(1.0, _build_value(cost))
 		var score := value / cost_value
 		if score > best_score:
 			best_score = score
@@ -815,9 +815,22 @@ static func _market_value(building: Dictionary, short: Dictionary) -> float:
 	if not (building.get("market_profile", {}) is Dictionary) or (building.get("market_profile", {}) as Dictionary).is_empty():
 		return 0.0
 	var storehouse: Dictionary = ContentService.get_building(MARKET_PEER_BUILDING_ID).get("income", {})
-	var value := _payload_value(storehouse, {}) * 7.0 * BUILD_HORIZON_WEEKS
+	var value := _build_value(storehouse) * 7.0 * BUILD_HORIZON_WEEKS
 	if not short.is_empty():
 		value *= SHORT_RESOURCE_MULTIPLIER
+	return value
+
+## What a building's cost or income is worth to the town planner: gold at face
+## value, every other resource at what the market charges for it
+## (`OverworldRules.MARKET_RESOURCE_VALUES`). Gold buys wood and ore only a few
+## a week, so a planner that priced them low spent its ore on gold income and
+## then sat on gold it could not build with.
+static func _build_value(payload: Dictionary) -> float:
+	var market_values: Dictionary = _overworld_rules().MARKET_RESOURCE_VALUES
+	var value := 0.0
+	for key in payload.keys():
+		var amount := float(payload[key]) if (payload[key] is int or payload[key] is float) else 0.0
+		value += amount * (1.0 if String(key) == "gold" else float(market_values.get(String(key), 0.0)))
 	return value
 
 static func _pool_delta(after: Dictionary, before: Dictionary) -> Dictionary:

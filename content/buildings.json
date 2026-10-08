@@ -164,10 +164,10 @@
           "wood"
         ],
         "buy_cap_bonus": {
-          "wood": 2
+          "wood": 8
         },
         "sell_cap_bonus": {
-          "wood": 2
+          "wood": 8
         },
         "specialty_summary": "River barges tighten wood rates and open double-wood convoy trades for construction or levy recovery."
       },
@@ -492,12 +492,12 @@
           "ore"
         ],
         "buy_cap_bonus": {
-          "wood": 2,
-          "ore": 2
+          "wood": 8,
+          "ore": 8
         },
         "sell_cap_bonus": {
-          "wood": 2,
-          "ore": 2
+          "wood": 8,
+          "ore": 8
         },
         "specialty_summary": "Midnight brokers favor liquidating captured cargo and move double lots of either wood or ore before the weekly chain-boom closes."
       },
@@ -754,10 +754,10 @@
           "ore"
         ],
         "buy_cap_bonus": {
-          "ore": 2
+          "ore": 8
         },
         "sell_cap_bonus": {
-          "ore": 2
+          "ore": 8
         },
         "specialty_summary": "Resonant relay brokers tighten ore rates and open double-ore lots for crystal feed and battery upkeep."
       },
@@ -4488,8 +4488,8 @@
           "ore"
         ],
         "buy_cap_bonus": {
-          "wood": 2,
-          "ore": 2,
+          "wood": 8,
+          "ore": 8,
           "aetherglass": 3,
           "embergrain": 3,
           "peatwax": 3,
@@ -4498,8 +4498,8 @@
           "memory_salt": 3
         },
         "sell_cap_bonus": {
-          "wood": 2,
-          "ore": 2,
+          "wood": 8,
+          "ore": 8,
           "aetherglass": 2,
           "embergrain": 2,
           "peatwax": 2,

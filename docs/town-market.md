@@ -46,8 +46,10 @@ The market popout's main column is a HoMM-style desk. "You give" and "You get" e
 
 | Market | Wood and ore bought / sold | Each rare bought / sold |
 | --- | --- | --- |
-| Marketplace | 6 / 8 | 2 / 3 |
-| Trade Exchange | 8 / 10 | 5 / 5 |
+| Marketplace | 12 / 16 | 2 / 3 |
+| Trade Exchange | 20 / 24 | 5 / 5 |
+
+  The faction markets (River Granary Exchange, Smugglers Flotilla, Resonant Exchange) give the Trade Exchange's 20 / 24 for the resources they specialise in and the Marketplace's 12 / 16 for the rest. Owner decision, 2026-10-08: the wood and ore limits doubled and the second stage's bonus went from 2 to 8, because at 6 and 8 a week a faction rich in gold and short of ore could never afford the large buildings (10-20 ore each) and sat on tens of thousands of gold. `OverworldRules.MARKET_BASE_BUY_CAP` / `MARKET_BASE_SELL_CAP` hold the base and each profile's `buy_cap_bonus` / `sell_cap_bonus` in `content/buildings.json` the bonus.
 
 - **Old imports.** The old Trade Exchange import (the faction's two rares at 1,200 gold, 5 a week, buy only) is gone; rares buy through the same path as everything else. Its weekly counter already lived in the town's `market_usage.buy` bucket, so a saved count carries over and counts against the rare buy limit. The AI's rare banking for T6/T7 projects (`OverworldRules.bank_town_rare_imports`) uses the same prices and limits for every rare at either tier.
 - Bulk lots apply per full lot, so buying three wood at a Trade Exchange costs one discounted lot of two plus one unit, never more than buying them separately.

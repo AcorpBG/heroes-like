@@ -3331,8 +3331,8 @@ def market_faction_cost_market_case(town_id: str, town: dict, faction: dict, bui
         sell_rates[resource_id] = sell_rate * value_scale
     buy_cap_bonus = profile.get("buy_cap_bonus", {}) if isinstance(profile.get("buy_cap_bonus", {}), dict) else {}
     sell_cap_bonus = profile.get("sell_cap_bonus", {}) if isinstance(profile.get("sell_cap_bonus", {}), dict) else {}
-    buy_caps = {resource_id: (2 if resource_id in ECONOMY_RARE_RESOURCE_IDS else 6) + max(0, int(buy_cap_bonus.get(resource_id, 0))) for resource_id in ECONOMY_MARKET_RESOURCE_IDS}
-    sell_caps = {resource_id: (3 if resource_id in ECONOMY_RARE_RESOURCE_IDS else 8) + max(0, int(sell_cap_bonus.get(resource_id, 0))) for resource_id in ECONOMY_MARKET_RESOURCE_IDS}
+    buy_caps = {resource_id: (2 if resource_id in ECONOMY_RARE_RESOURCE_IDS else 12) + max(0, int(buy_cap_bonus.get(resource_id, 0))) for resource_id in ECONOMY_MARKET_RESOURCE_IDS}
+    sell_caps = {resource_id: (3 if resource_id in ECONOMY_RARE_RESOURCE_IDS else 16) + max(0, int(sell_cap_bonus.get(resource_id, 0))) for resource_id in ECONOMY_MARKET_RESOURCE_IDS}
     exchange_resources = sorted(set(buy_rates.keys()) | set(sell_rates.keys()))
     return {
         "town_id": town_id,

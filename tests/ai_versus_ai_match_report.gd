@@ -9,6 +9,8 @@ extends Node
 # HEROES_AI_MATCH_SEED     match seed (factions and map); "random" draws one.
 # HEROES_AI_MATCH_MAX_DAYS day cap for an undecided match (default 160).
 # HEROES_AI_MATCH_OUT      where the JSON record goes (default user://).
+# HEROES_AI_MATCH_SWAP     1 plays the same map with the factions' starting
+#                          places swapped, to tell map balance from faction.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
@@ -37,6 +39,7 @@ func _run() -> void:
 	elif match_seed == "":
 		match_seed = DEFAULT_SEED
 	var max_days := int(OS.get_environment("HEROES_AI_MATCH_MAX_DAYS")) if OS.get_environment("HEROES_AI_MATCH_MAX_DAYS") != "" else (DEFAULT_MAX_DAYS if full_match else TEST_DAYS)
+	var swapped := OS.get_environment("HEROES_AI_MATCH_SWAP").strip_edges() not in ["", "0"]
 	var out_path := OS.get_environment("HEROES_AI_MATCH_OUT").strip_edges()
 	if out_path == "":
 		out_path = DEFAULT_OUT
@@ -59,22 +62,25 @@ func _run() -> void:
 	if seats.size() != 2:
 		_fail("Expected a two-player map, got %s." % JSON.stringify(seats))
 		return
-	if PlayerRules.faction_id(session, seats[1]) != drawn[1]:
-		_refound_seat(session, seats[1], drawn[1])
 	var start_treasury: Dictionary = session.overworld.get("resources", {}).duplicate(true)
 	if AiSeatRulesScript.hand_human_seat_to_ai(session) != seats[0]:
 		_fail("The human seat could not be handed to the computer.")
 		return
-	_set_treasury(session, seats[1], start_treasury)
+	# Swapping keeps the map and trades the two factions' starting places.
+	var seat_factions := [drawn[1], drawn[0]] if swapped else drawn
+	for index in range(seats.size()):
+		if PlayerRules.faction_id(session, seats[index]) != String(seat_factions[index]):
+			_refound_seat(session, seats[index], String(seat_factions[index]))
 	session.flags[AiHeroRulesScript.BATTLE_LOG_FLAG] = true
 
-	var handover := _check_handover(session, seats, drawn, start_treasury)
+	var handover := _check_handover(session, seats, seat_factions, start_treasury)
 	if _failed:
 		return
 
 	var setup := {
 		"match_seed": match_seed,
 		"map_seed": map_seed,
+		"swapped": swapped,
 		"scenario_id": String(session.scenario_id),
 		"map_size": session.overworld.get("map_size", {}),
 		"start_treasury": _live_resources(start_treasury),
@@ -172,8 +178,9 @@ func _start_session(map_seed: String, faction_id: String):
 	OverworldRules.normalize_overworld_state(session)
 	return session
 
-## The generator never gives two players one faction. A drawn faction the seat
-## did not get is set up as that faction's starting capital instead.
+## The generator never gives two players one faction, and a swapped match keeps
+## the map. A seat whose drawn faction differs from the generator's has its
+## capital set up as that faction's starting capital instead.
 func _refound_seat(session, seat: String, faction_id: String) -> void:
 	var town_id := String(RandomMapGeneratorRules.DEFAULT_TOWN_BY_FACTION.get(faction_id, ""))
 	var template := ContentService.get_town(town_id)
@@ -211,13 +218,6 @@ func _refound_seat(session, seat: String, faction_id: String) -> void:
 			town["available_recruits"] = OverworldRules._seed_recruits_for_town(town)
 			session.overworld.towns[index] = town
 
-func _set_treasury(session, seat: String, treasury: Dictionary) -> void:
-	var states: Array = session.overworld.get("enemy_states", [])
-	for index in range(states.size()):
-		if PlayerRules.controller_id(states[index]) == seat:
-			states[index]["treasury"] = treasury.duplicate(true)
-	session.overworld["enemy_states"] = states
-
 func _check_handover(session, seats: Array, drawn: Array, start_treasury: Dictionary) -> Dictionary:
 	if PlayerRules.has_human_seat(session):
 		_fail("A human seat is left after the handover.")
@@ -238,7 +238,7 @@ func _check_handover(session, seats: Array, drawn: Array, start_treasury: Dictio
 		if _towns_of(session, seat).is_empty():
 			_fail("%s holds no town." % seat)
 			return {}
-		if int(state.get("treasury", {}).get("gold", 0)) != int(start_treasury.get("gold", 0)):
+		if _live_resources(state.get("treasury", {})) != _live_resources(start_treasury):
 			_fail("%s starts with %s, not %s." % [seat, JSON.stringify(state.get("treasury", {})), JSON.stringify(start_treasury)])
 			return {}
 		result[seat] = {"faction": String(drawn[index]), "towns": _towns_of(session, seat).size()}

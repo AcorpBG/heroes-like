@@ -142,7 +142,7 @@ func _check_rare_rules() -> Dictionary:
 				_check(failures, int(market.buy_rates[rare]) > int(market.buy_rates[common]) and int(market.sell_rates[rare]) > int(market.sell_rates[common]), "%s is not worth more than %s" % [rare, common])
 			_check(failures, int(market.buy_caps[rare]) == (5 if exchange else 2) and int(market.sell_caps[rare]) == (5 if exchange else 3), "%s caps %d/%d" % [rare, market.buy_caps[rare], market.sell_caps[rare]])
 		for common in ["wood", "ore"]:
-			_check(failures, int(market.buy_caps[common]) == (8 if exchange else 6) and int(market.sell_caps[common]) == (10 if exchange else 8), "%s caps %d/%d" % [common, market.buy_caps[common], market.sell_caps[common]])
+			_check(failures, int(market.buy_caps[common]) == (20 if exchange else 12) and int(market.sell_caps[common]) == (24 if exchange else 16), "%s caps %d/%d" % [common, market.buy_caps[common], market.sell_caps[common]])
 		if exchange:
 			var square: Dictionary = markets[index - 1]
 			for resource_id in ids:
