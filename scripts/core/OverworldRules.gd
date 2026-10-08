@@ -7637,7 +7637,11 @@ static func resource_node_is_present(node: Dictionary, site: Dictionary = {}) ->
 		return true
 	if site.is_empty():
 		site = ContentService.get_resource_site(String(node.get("site_id", "")))
-	return _resource_site_is_persistent(site) or _resource_site_is_repeatable(site)
+	if _resource_site_is_persistent(site) or _resource_site_is_repeatable(site):
+		return true
+	# A one-time site whose object stays after its visit (a looted guarded bank,
+	# an opened route camp) remains in its claimed state; pickups are taken.
+	return bool(_map_object_for_resource_node(node).get("interaction", {}).get("remains_after_visit", false))
 
 static func _resource_node_matches_controller(node: Dictionary, controller_id: String) -> bool:
 	return PlayerRules.resource_controller_id(node) == controller_id

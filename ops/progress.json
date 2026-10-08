@@ -114337,6 +114337,19 @@
         "docs/generated-object-placement-scan.md"
       ],
       "notes": "Owner asked for every object to be checked, not only the reported ones. Scan on a copy of the owner's 108x108 map: per-object render/remove/re-render pixel differences for 1,096 objects (411 sites, 216 guards, 43 artifacts, 16 towns, one scenery piece per 410 shapes) and a whole-map with/without-scenery coverage pass over 11,664 tiles. The first fix (art centred over the footprint) still left wide sites with an end entrance (Tide Kiln, Basalt Oath Tomb, Barrow Vault, Brasswake Depot) with the art beside the interaction tile, so generated site art now stands on the bottom row centred on the interaction tile (art width from its profile), as mines already did. Re-scan of all 411 sites with the final rule; alignment report updated and passing. Towns and guards correct; artifacts on their tiles but tiny (2 hidden under scenery); no scenery art away from its blocks, 398 blocked scenery tiles (6%) look empty and 37 walkable tiles are mostly covered by canopy. Open, owner decision: art narrower than footprint (extra blocked tiles look walkable), low-visibility blockers/pickups, claimed one-time guarded sites vanish."
+    },
+    {
+      "id": "ux-generated-site-footprint-dressing-20261008",
+      "title": "Dress bare blocked site tiles; keep claimed sites that remain after their visit",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/generated-object-placement-scan.md"
+      ],
+      "notes": "Owner go-ahead on scan findings 1 and 4. (1) OverworldMapView._resource_flank_rock_tiles/_draw_resource_flank_rocks: package block tiles of a generated site that its painted art (or mine art) does not reach get a terrain rock from native_scenery rock_contact_palettes with the base ground tint; never the entrance, none for an opened route body; presentation only. (4) OverworldRules.resource_node_is_present keeps a collected one-time node present when its map object's interaction.remains_after_visit is true: looted guarded banks keep blocking with secured art, opened route camps (block tiles already cleared) stay visible and passable, pickups are still taken; AiHeroRules clears the pre-claim static body when a claim opens or removes a site. Validation, focused per owner (no full rescan): new tests/generated_site_footprint_dressing_report (custom yard on a generated small map with only the affected objects; 74 checks windowed incl. per-object render/remove pixel checks that every blocked tile shows art or a rock), overworld_object_footprint_alignment_report passes, validate_repo identical (828). ai_player_rules_report not rerun."
     }
   ],
   "project": "heroes-like",

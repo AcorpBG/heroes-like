@@ -2507,8 +2507,11 @@ static func _claim_resource(session: SessionStateStoreScript.SessionData, contex
 		commander = AdventureRules._normalize_enemy_progression(HeroProgressionRulesScript.add_experience(commander, experience).get("hero", commander))
 	entry["enemy_commander_state"] = commander
 	_store_entry(session, index, entry)
-	if was_present and not _overworld_rules().resource_node_is_present(claimed, site):
-		_clear_static_body(session, context, claimed)
+	# A claim can remove the site or open its route body; either frees the tiles
+	# the site blocked before the claim.
+	var opened: bool = node_before.get("package_block_tiles", []) != claimed.get("package_block_tiles", [])
+	if was_present and (opened or not _overworld_rules().resource_node_is_present(claimed, site)):
+		_clear_static_body(session, context, node_before)
 	events.append_array(result.get("ai_events", []))
 	if result.get("ai_event", {}) is Dictionary and not result.get("ai_event", {}).is_empty() and result.get("ai_events", []).is_empty():
 		events.append(result.get("ai_event", {}))

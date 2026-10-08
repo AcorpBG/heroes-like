@@ -3863,6 +3863,7 @@ func _draw_tile_state_icon(tile: Vector2i, rect: Rect2, include_scenery: bool = 
 	var resource_node := _resource_node_at(tile)
 	if not resource_node.is_empty() and not _object_is_portable(_resource_object_profile(resource_node)):
 		var resource_rect := _resource_draw_rect(resource_node, rect, tile)
+		_draw_resource_flank_rocks(resource_node, resource_rect, rect, tile, remembered)
 		if not _draw_resource_sprite(resource_node, resource_rect, remembered, tile):
 			_draw_resource_marker(resource_node, resource_rect, remembered, tile)
 		_draw_mine_control_flag(resource_node, rect, resource_rect, remembered)
@@ -6288,6 +6289,72 @@ func _resource_visit_tile(node: Dictionary) -> Vector2i:
 	if not (visit is Dictionary) or visit.is_empty():
 		return Vector2i(-1, -1)
 	return Vector2i(int(visit.get("x", -1)), int(visit.get("y", -1)))
+
+## A generated site's HoMM3 footprint can be wider than its painting. Blocked
+## tiles the art leaves bare get a small terrain rock (the scenery formations'
+## contact rocks), so a tile that cannot be walked does not look walkable. The
+## entrance and an opened route body stay clear. Presentation only.
+func _resource_flank_rock_tiles(node: Dictionary, resource_rect: Rect2, anchor_rect: Rect2, anchor_tile: Vector2i) -> Array:
+	var blocks: Variant = node.get("package_block_tiles", null)
+	if not (blocks is Array) or blocks.is_empty() or not bool(node.get("blocking_body", true)):
+		return []
+	var painted := _resource_painted_rect(node, resource_rect, anchor_tile)
+	if painted.size.x <= 0.0 or painted.size.y <= 0.0:
+		return []
+	var visit := _resource_visit_tile(node)
+	var tiles := []
+	for tile_value in blocks:
+		if not (tile_value is Dictionary):
+			continue
+		var tile := Vector2i(int(tile_value.get("x", -1)), int(tile_value.get("y", -1)))
+		if tile == visit:
+			continue
+		var cell := Rect2(anchor_rect.position + Vector2(tile - anchor_tile) * anchor_rect.size, anchor_rect.size)
+		var overlap := painted.intersection(cell)
+		if overlap.size.x >= cell.size.x * 0.4 and overlap.size.y >= cell.size.y * 0.3:
+			continue
+		tiles.append(tile)
+	return tiles
+
+func _draw_resource_flank_rocks(node: Dictionary, resource_rect: Rect2, anchor_rect: Rect2, anchor_tile: Vector2i, remembered: bool) -> void:
+	var tiles := _resource_flank_rock_tiles(node, resource_rect, anchor_rect, anchor_tile)
+	if tiles.is_empty():
+		return
+	var scenery: Dictionary = ContentService.load_json("res://art/overworld/native_scenery.json")
+	var palettes: Dictionary = scenery.get("rock_contact_palettes", {})
+	var terrain_palettes: Dictionary = scenery.get("terrain_rock_contact_palettes", {})
+	for tile in tiles:
+		var terrain := _terrain_at(tile)
+		var pool: Array = terrain_palettes.get(terrain, palettes.get(String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(terrain, "")), []))
+		if pool.is_empty():
+			continue
+		var seed := ("site-flank|%s|%s" % [String(node.get("placement_id", "")), _tile_key(tile)]).sha256_buffer().decode_u32(0)
+		var asset_id := String(pool[seed % pool.size()])
+		var texture = _object_texture_for_asset(asset_id)
+		if not (texture is Texture2D):
+			continue
+		var raster: Texture2D = _object_texture_visible_region(asset_id, texture).get("draw_texture", texture)
+		var target := Rect2(anchor_rect.position + (Vector2(tile - anchor_tile) + Vector2(0.06, 0.27)) * anchor_rect.size, Vector2(0.88, 0.66) * anchor_rect.size)
+		var scale := minf(target.size.x / raster.get_width(), target.size.y / raster.get_height())
+		var size := raster.get_size() * scale
+		var painted := Rect2(Vector2(target.get_center().x - size.x * 0.5, target.end.y - size.y), size)
+		var tint := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
+		tint *= _native_scenery_modulate({"native_scenery_art_version": preload("res://scripts/persistence/NativeSceneryRules.gd").PRESENTATION_VERSION}, tile, asset_id)
+		_canvas_draw_texture_rect_region(raster, painted, Rect2(Vector2.ZERO, raster.get_size()), tint)
+
+func _resource_painted_rect(node: Dictionary, rect: Rect2, tile: Vector2i) -> Rect2:
+	var mine := Mines.resource(node)
+	if not mine.is_empty():
+		var pose: Dictionary = _mine_art.payload(mine, rect)
+		return pose.get("rect", Rect2()) if not pose.is_empty() else Rect2()
+	var asset_id := _resource_asset_id(node)
+	var texture = _object_texture_for_asset(asset_id)
+	if not (texture is Texture2D):
+		return Rect2()
+	var town_adjunct_cap_tiles := TOWN_ADJUNCT_RESOURCE_VISIBLE_EXTENT_CAP_TILES if not _town_presentation_at(tile).is_empty() else 0.0
+	var metrics := _object_sprite_visual_metrics(rect, _resource_object_profile(node), 0.0, Rect2(), town_adjunct_cap_tiles)
+	var payload := _object_painted_sprite_draw_payload(asset_id, texture, metrics.get("sprite_center", rect.get_center()), float(metrics.get("sprite_extent_px", 12.0)))
+	return payload.get("draw_rect", Rect2())
 
 func _resource_draw_rect(node: Dictionary, anchor_rect: Rect2, anchor_tile: Vector2i) -> Rect2:
 	var footprint_rect := _resource_footprint_rect(node, anchor_rect, anchor_tile)

@@ -20,12 +20,17 @@ On a copy of the owner's 108x108 generated map (Day 48, single level, fog fully 
 | Artifacts | All on their tiles but drawn very small (handheld scale); 2 hidden under forest or mountain scenery. |
 | Scenery | No art far from its blocked tiles. 398 blocked tiles (6%, every terrain) look empty: small or faint single-tile pieces (twigs, shrubs, swamp reeds), gaps inside forest and mountain formations, a few under another object. 37 walkable tiles are more than 60% covered by neighbouring canopy or overhang. |
 
-## Not fixed (owner decision pending)
+## Fixed after the scan (owner go-ahead, slice `ux-generated-site-footprint-dressing-20261008`)
 
-- **Art narrower than the footprint**: some generated sites block more tiles than their art covers (HoMM3 footprint, smaller proxy art), e.g. Bell Spire (1x1 art, 3 tiles), Slipgate Mirror (1x1 art, 2 tiles), Tide Kiln and Basalt Oath Tomb (art on the entrance, footprint 3-5 wide). Their extra blocked tiles look walkable.
+- **Art narrower than the footprint**: blocked tiles of a generated site that its painting leaves bare get a small terrain rock from the scenery's rock-contact palette (`OverworldMapView._draw_resource_flank_rocks`), so they no longer look walkable. The entrance stays clear; an opened route body gets none. Presentation only: occupancy is unchanged.
+- **Claimed one-time sites vanished**: a collected site now stays on the map when its map object says `interaction.remains_after_visit` (`OverworldRules.resource_node_is_present`). A looted guarded bank keeps blocking and shows its secured art; an opened route camp stays visible but passable; pickups are still taken. AI heroes clear the tiles a site blocked before their claim when the claim opens or removes it (`AiHeroRules`).
+
+## Still open
+
 - **Low-visibility blockers and pickups**: the empty-looking scenery tiles, tiny artifact and cache sprites, and the pickups hidden under scenery.
-- **Claimed one-time guarded sites vanish** (`OverworldRules.resource_node_is_present`) instead of staying with their secured art and blocking.
 
 ## Validation
+
+`tests/generated_site_footprint_dressing_report.tscn` builds a custom yard on a generated small map with only the affected objects (Bell Spire on grass and snow, Slipgate Mirror, Tide Kiln, Basalt Oath Tomb, sawmill, looted Eyrie and Barrow Vault, opened Railblock Camp, unclaimed Eyrie, taken pickup) and checks presence, blocking, the flank rocks and, with a window, that every blocked tile shows art or a rock.
 
 `tests/overworld_object_footprint_alignment_report.tscn` checks every site of a generated map (grounded on the bottom row, centred on and covering the interaction tile; mines inside their three-by-two art).
