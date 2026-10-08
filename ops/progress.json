@@ -114391,6 +114391,19 @@
       "notes": "Owner accepted the prototype shown as before/after sheets. overworld_ground_surface.gdshader: border_warp (three rotated value-noise octaves, warp 0.36 tile + detail) bends the corner-weight lookup, faded to zero within 0.3 tile of tile centres so each tile's middle keeps its own ground; candidate materials score merged corner weight + border_priority (ground_materials.json, by slot) + painted-detail height (luminance above the material average, x1.3) and blend within blend_depth 0.26; the beach band uses the bent corner weights; decals fade by each ground's final blend share. OverworldGroundSurface passes border_priority. Validation: owner-map and generated-map border captures (sand/grass, snow/grass, swamp/grass, snow/dirt, dirt/grass, rough/dirt) and a generated coast reviewed; overworld_sandy_shore_regression 53/53 (tile-centre identity restored by the centre fade), overworld_ground_materials_contract passes, validate_repo identical (828)."
     },
     {
+      "id": "battle-stat-scaling-20261008",
+      "title": "Battle stat scaling: uncapped attack/defense, spell power that grows and matters, cohesion loss by share",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "gameplay_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/battle-stat-scaling.md"
+      ],
+      "notes": "Owner review: spell power, the attack/defense caps and big-stack cohesion felt underwhelming or wrong. Attack vs defense: new scripts/core/BattleDamageRules.gd (shared by BattleRules._damage_modifier and the BattleAiRules damage estimate) replaces the 5%/point clamp at +-8 with +5%/point of attack lead up to +300% and -2.5%/point of defense lead down to -70%. Spell power: level-ups follow heroes.json command_path (HeroProgressionRules.COMMAND_GAIN_ORDER, ten-level order; might A4 D4 P1 K1, magic P4 K4 A1 D1; old saves resolve the path from the template id, else the larger stat pair; build_hero_from_template stores command_path); damage spell power_scale x2.5 rounded half up (22 spells; validate_repo tier bands 10-13/15-18/20-23/25-30/33-38; 112-spell mechanics hash re-pinned); SpellRules.spell_duration_rounds adds a round per 4 power (max 3) to spell buffs, debuffs and riders, and summaries show it. BattleAiRules hexcaller-family control lean 2.4 -> 3.2 so those commanders still prefer control in a close call. Cohesion: BattleRules._casualty_cohesion_shift goes by the share of health lost only (-1 from 18%, -2 from 45%, -3 destroyed); the killed-creature thresholds are gone. Python benchmark mirrors the curve, cohesion and durations. Validation: new tests/battle_stat_scaling_report (36 checks, generated small map battle for hero attack) passes; magic_battle_spell_behavior, magic_resistance_countercontrol, magic_prism_bastion_root_countercontrol and magic_ai_valuation_casting_hooks (two live-cast fixture targets 220 -> 600 health so a power-8 tier-5 spell no longer ends the battle) pass; unit_ability_runtime_report (76 errors) and battle_intent_forecast_report (1) fail identically on the unchanged code; validate_repo output identical (828). Faction benchmark before/after (curated, 100 seeds): outliers 54 -> 52, still needs_tuning; mean pair deviation 25.4 -> 26.1 points; damage casts 6818 -> 9400; see docs/battle-stat-scaling.md. hero_hire_army_level_report and hero_level_up_regression (archived river-pass setups, not run) expectations updated to the path rule. Open: AiHeroRules.army_power ignores hero power when the AI weighs fights; healing spells restore only a stack's wounded top creature."
+    },
+    {
       "id": "ux-overworld-road-junctions-20261008",
       "title": "Road junctions draw as a T or a cross, not ladders and loops",
       "status": "completed",

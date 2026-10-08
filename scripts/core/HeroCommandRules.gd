@@ -146,6 +146,7 @@ static func build_hero_from_template(
 			"experience": 0,
 			"next_level_experience": 250,
 			"base_movement": max(1, int(hero_template.get("base_movement", 10))),
+			"command_path": String(hero_template.get("command_path", "")),
 			"command": {
 				"attack": int(command.get("attack", 0)),
 				"defense": int(command.get("defense", 0)),

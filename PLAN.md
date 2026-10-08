@@ -100,6 +100,10 @@ Rules:
 
 `ux-overworld-road-junctions-20261008` (completed, owner playtest fix): where generated roads run two tiles wide at a junction or side by side, the renderer links the roads entering each clump with one tree instead of joining every adjacent tile, so junctions read as a T or a cross instead of ladders and loops; real loops and crossings are unchanged. See `docs/overworld-road-junctions.md`.
 
+### Battle stat scaling
+
+`battle-stat-scaling-20261008` (completed, owner review): attack against defense no longer stops at ±8 points: +5% per point of attack lead up to +300%, -2.5% per point of defense lead down to -70%. Level-ups follow the hero's might or magic command path, so magic heroes grow power and knowledge; damage spells gain 2.5x as much per point of power, and every 4 power adds a round to spell buffs, debuffs and riders (up to 3). A hit's cohesion loss goes by the share of the stack it took, not by creatures killed, so big stacks no longer lose 2 cohesion to every hit. See `docs/battle-stat-scaling.md`.
+
 ### Organic ground borders
 
 `art-overworld-organic-ground-borders-20261008` (completed, owner-approved prototype): biome borders meander off the tile grid (noise-bent corner weights that fade out near tile centres) and grounds meet with a height-and-priority blend instead of a cross-fade, so one ground's detail fringes the other; coasts curve the same way. See `docs/overworld-ground-borders.md`.

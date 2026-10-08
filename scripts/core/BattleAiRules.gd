@@ -3,6 +3,7 @@ extends RefCounted
 
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const Footprint = preload("res://scripts/core/BattleFootprint.gd")
+const DamageRules = preload("res://scripts/core/BattleDamageRules.gd")
 
 const STATUS_HARRIED := "status_harried"
 const STATUS_STAGGERED := "status_staggered"
@@ -1341,8 +1342,10 @@ static func _commander_spell_role_modifier(enemy_hero: Dictionary, behavior: Dic
 	elif command_path == "might" and effect_type in ["damage_enemy", "attack_buff"]:
 		modifier += 0.25
 	if archetype in ["hexcaller", "starseer", "rootoracle", "denaugur", "drumoracle", "fogprophet", "funeralhexer"]:
+		# Damage spells hit 2.5x harder per point of power since 2026-10-08;
+		# the control lean grew with them so these casters still favour control.
 		if effect_type == "control_enemy" or role_categories.has("control") or primary_role == "control_enemy":
-			modifier += 2.4
+			modifier += 3.2
 		elif effect_type == "damage_enemy" and role_categories.has("debuff"):
 			modifier += 0.7
 	if archetype in ["warden", "castellan", "solarphysician", "recoverywarden", "granary", "sporedoctor", "graftprophet"]:
@@ -1959,7 +1962,7 @@ static func _estimate_damage(
 	if bool(defender.get("defending", false)):
 		defense_stat += 2
 
-	var modifier := 1.0 + (clampf(float(attack_stat - defense_stat), -8.0, 8.0) * 0.05)
+	var modifier := DamageRules.attack_defense_multiplier(attack_stat, defense_stat)
 	if is_ranged and String(battle.get("terrain", "")) == "forest":
 		modifier *= 0.8
 	var resolved_distance := int(battle.get("distance", 1)) if attack_distance < 0 else attack_distance

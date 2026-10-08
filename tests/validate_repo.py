@@ -883,7 +883,7 @@ SPELL_TIER_COST_BONUS_EFFECTS = {"control_enemy", "recover_ally", "cleanse_ally"
 SPELL_TIER_MOVEMENT_AMOUNT = {1: 3, 2: 5, 3: 7, 4: 10, 5: 14}
 SPELL_TIER_REVEAL_AMOUNT = {1: 7, 2: 9, 3: 11, 4: 14, 5: 18}
 SPELL_TIER_DAMAGE_BASE_BANDS = {1: (14, 18), 2: (24, 30), 3: (36, 44), 4: (50, 60), 5: (68, 82)}
-SPELL_TIER_DAMAGE_POWER_BANDS = {1: (4, 5), 2: (6, 7), 3: (8, 9), 4: (10, 12), 5: (13, 15)}
+SPELL_TIER_DAMAGE_POWER_BANDS = {1: (10, 13), 2: (15, 18), 3: (20, 23), 4: (25, 30), 5: (33, 38)}
 SPELL_TIER_WOUNDED_BONUS = {1: 4, 2: 8, 3: 12, 4: 16, 5: 22}
 SPELL_TIER_RECOVERY_BASE = {1: 18, 2: 28, 3: 40, 4: 56, 5: 76}
 SPELL_TIER_RECOVERY_POWER = {1: 4, 2: 6, 3: 8, 4: 11, 5: 14}
@@ -44974,7 +44974,8 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         ensure(not any("another tactical choice without changing the army roster" in description for description in descriptions), errors, "Production spell descriptions must not retain the catalog placeholder sentence")
         legacy_mechanics = [{key: value for key, value in spell.items() if key != "description"} for spell in spells[:112] if isinstance(spell, dict)]
         legacy_mechanics_hash = hashlib.sha256(json.dumps(legacy_mechanics, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
-        ensure(legacy_mechanics_hash == "8e146e0135f7efbdd371679a176bb2fe0695f768637ac0ff4ed0344bcd3cb0cc", errors, "The established 112-spell mechanics payload must remain unchanged while its copy is rewritten")
+        # Re-pinned 2026-10-08: damage spells gain 2.5x as much per point of power (battle-stat-scaling).
+        ensure(legacy_mechanics_hash == "b7555b7b9c031f84d603e3655b9b3442bada8e844837f7216c473851b0140ea0", errors, "The established 112-spell mechanics payload must remain unchanged while its copy is rewritten")
 
     signature_spell_contract = {
         "spell_beacon_lockfire_muster": ("beacon", "attack_buff", "town_rainwrit_bastion", "building_embercourt_beacon_court"),

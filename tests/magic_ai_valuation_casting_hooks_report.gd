@@ -451,7 +451,7 @@ func _run_battle_ai_rich_payload_spellbook_cast_case() -> Dictionary:
 		"combat_seed": 44014,
 		"stacks": [
 			_stack("enemy_payload_caster", "enemy", "Enemy Payload Caster", 6, 10, 60, []),
-			_stack("player_payload_fragile", "player", "Player Payload Fragile", 22, 10, 220, [], {
+			_stack("player_payload_fragile", "player", "Player Payload Fragile", 60, 10, 600, [], {
 				"ranged": true,
 				"shots_remaining": 5,
 			}),
@@ -500,7 +500,7 @@ func _run_battle_ai_rich_payload_spellbook_cast_case() -> Dictionary:
 	if not bool(result.get("ok", false)):
 		return {"ok": false, "error": "Rich payload live battle cast failed: result=%s decision=%s battle=%s" % [result, decision, session.battle]}
 	var target_after := _stack_by_id(session.battle, "player_payload_fragile")
-	if int(target_after.get("total_health", 0)) >= 220:
+	if int(target_after.get("total_health", 0)) >= 600:
 		return {"ok": false, "error": "Rich payload Loam Thorn should damage the target, got %s" % target_after}
 	var enemy_hero: Dictionary = session.battle.get("enemy_hero", {}) if session.battle.get("enemy_hero", {}) is Dictionary else {}
 	var spellbook: Dictionary = enemy_hero.get("spellbook", {}) if enemy_hero.get("spellbook", {}) is Dictionary else {}
@@ -542,7 +542,7 @@ func _run_battle_ai_normalized_rich_payload_spellbook_case() -> Dictionary:
 			_stack("enemy_normalized_payload_caster", "enemy", "Enemy Normalized Payload Caster", 6, 10, 60, [], {
 				"unit_id": "unit_mire_slinger",
 			}),
-			_stack("player_normalized_payload_target", "player", "Player Normalized Payload Target", 22, 10, 220, [], {
+			_stack("player_normalized_payload_target", "player", "Player Normalized Payload Target", 60, 10, 600, [], {
 				"unit_id": "unit_ember_archer",
 				"ranged": true,
 				"shots_remaining": 5,

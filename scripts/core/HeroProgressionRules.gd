@@ -106,6 +106,15 @@ const SPECIALTIES := [
 	},
 ]
 const RANK_LABELS := ["I", "II", "III"]
+## Each level-up raises one command stat, chosen by the hero's command path
+## (heroes.json): might commanders train attack and defense, magic commanders
+## power and knowledge, each with a one-in-ten share of the other path's two
+## stats. The order repeats every ten levels, so a hero grows the same way in
+## every game.
+const COMMAND_GAIN_ORDER := {
+	"might": ["attack", "defense", "attack", "defense", "power", "attack", "defense", "attack", "defense", "knowledge"],
+	"magic": ["power", "knowledge", "power", "knowledge", "attack", "power", "knowledge", "power", "knowledge", "defense"],
+}
 
 static func ensure_hero_progression(hero_state: Dictionary) -> Dictionary:
 	var hero := hero_state
@@ -130,8 +139,9 @@ static func level_up_summary(hero_state: Dictionary) -> Dictionary:
 	if previous >= level:
 		return {}
 	var gains := {}
+	var path := command_path(hero)
 	for earned_level in range(previous + 1, level + 1):
-		gains = _apply_base_command_gain(gains, earned_level)
+		gains = _apply_base_command_gain(gains, earned_level, path)
 	return {
 		"previous_level": previous,
 		"level": level,
@@ -150,7 +160,7 @@ static func add_experience(hero_state: Dictionary, amount: int) -> Dictionary:
 	hero["experience"] = int(hero.get("experience", 0)) + amount
 	while int(hero.get("experience", 0)) >= int(hero.get("next_level_experience", 250)):
 		hero["level"] = int(hero.get("level", 1)) + 1
-		hero["command"] = _apply_base_command_gain(hero.get("command", {}), int(hero.get("level", 1)))
+		hero["command"] = _apply_base_command_gain(hero.get("command", {}), int(hero.get("level", 1)), command_path(hero))
 		hero["next_level_experience"] = int(hero.get("next_level_experience", 250)) + 250 + (int(hero.get("level", 1)) * 100)
 		hero = _enqueue_choice_group(hero, int(hero.get("level", 1)))
 		messages.append("%s reached level %d." % [String(hero.get("name", "Hero")), int(hero.get("level", 1))])
@@ -618,17 +628,37 @@ static func _rotate_specialty_order(available: Array, seed_number: int) -> Array
 static func _specialty_is_available(hero_state: Dictionary, specialty_id: String) -> bool:
 	return not specialty_definition(specialty_id).is_empty() and specialty_rank(hero_state, specialty_id) < max_rank_for_specialty(specialty_id)
 
-static func _apply_base_command_gain(command_state: Variant, level_number: int) -> Dictionary:
+## The hero's command path: its own, else its template's (by id or roster id),
+## else whichever pair of its command stats is larger.
+static func command_path(hero_state: Dictionary) -> String:
+	var path := String(hero_state.get("command_path", "")).strip_edges()
+	if not COMMAND_GAIN_ORDER.has(path):
+		for key in ["id", "roster_hero_id", "hero_id"]:
+			var template_id := String(hero_state.get(key, "")).strip_edges()
+			if template_id != "":
+				path = String(ContentService.get_hero(template_id).get("command_path", ""))
+				if COMMAND_GAIN_ORDER.has(path):
+					break
+	if COMMAND_GAIN_ORDER.has(path):
+		return path
+	var command: Dictionary = hero_state.get("command", {}) if hero_state.get("command", {}) is Dictionary else {}
+	var magic := int(command.get("power", 0)) + int(command.get("knowledge", 0))
+	return "magic" if magic > int(command.get("attack", 0)) + int(command.get("defense", 0)) else "might"
+
+## The command stat a hero on `path` gains on reaching `level_number`.
+static func command_gain_stat(path: String, level_number: int) -> String:
+	var order: Array = COMMAND_GAIN_ORDER.get(path, COMMAND_GAIN_ORDER["might"])
+	return String(order[posmod(level_number - 2, order.size())])
+
+static func _apply_base_command_gain(command_state: Variant, level_number: int, path: String) -> Dictionary:
 	var command := {
 		"attack": max(0, int((command_state if command_state is Dictionary else {}).get("attack", 0))),
 		"defense": max(0, int((command_state if command_state is Dictionary else {}).get("defense", 0))),
 		"power": max(0, int((command_state if command_state is Dictionary else {}).get("power", 0))),
 		"knowledge": max(0, int((command_state if command_state is Dictionary else {}).get("knowledge", 0))),
 	}
-	if level_number % 2 == 0:
-		command["attack"] = int(command.get("attack", 0)) + 1
-	else:
-		command["defense"] = int(command.get("defense", 0)) + 1
+	var stat := command_gain_stat(path, level_number)
+	command[stat] = int(command.get(stat, 0)) + 1
 	return command
 
 static func _rank_in_array(specialty_ids: Array, specialty_id: String) -> int:
