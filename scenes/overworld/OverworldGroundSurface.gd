@@ -12,6 +12,7 @@ var fog_uploads := 0
 var last_upload_usec := 0
 var missing_terrain_ids: Array[String] = []
 var configured := false
+var decals_configured := false
 
 func configure(config: Dictionary, atlas: Texture2D) -> void:
 	texture = atlas
@@ -39,13 +40,54 @@ func configure(config: Dictionary, atlas: Texture2D) -> void:
 	shader_material.set_shader_parameter("material_span_tiles", float(config.get("material_span_tiles", 4.0)))
 	shader_material.set_shader_parameter("beach_slot", float(slots.get("sand", 5)))
 	shader_material.set_shader_parameter("water_slots", Vector3(float(slots.get("water", 12)), float(slots.get("coast", 13)), float(slots.get("shore", 14))))
+	# Which ground spills over which at a border, by material slot.
+	var priority := PackedFloat32Array()
+	priority.resize(16)
+	var priorities: Array = config.get("border_priority", [])
+	for slot in range(mini(priorities.size(), 16)):
+		priority[slot] = float(priorities[slot])
+	shader_material.set_shader_parameter("border_priority", priority)
 	material = shader_material
 	map_signature = -1
 	fog_signature = -1
 	lookup_bytes = PackedByteArray()
 	visible = false
 
-func sync_lookup(rows: Array, dimensions: Vector2i, terrain_signature: int, explored: Array, exploration_signature: int) -> void:
+## Ground detail decals (art/overworld/terrain_decals_v4.json): which decal
+## set each material slot uses and how densely it is scattered. The shader
+## places them; a ground without a set (water) stays clean.
+func configure_decals(config: Dictionary, atlas: Texture2D) -> void:
+	decals_configured = false
+	if material == null or atlas == null or atlas.get_size() != Vector2(2048, 2048):
+		if not config.is_empty():
+			push_error("Terrain decal atlas or manifest is missing/invalid.")
+		return
+	var set_for_slot := PackedFloat32Array()
+	set_for_slot.resize(16)
+	set_for_slot.fill(-1.0)
+	var density_for_set := PackedFloat32Array()
+	density_for_set.resize(16)
+	var sets: Array = config.get("sets", [])
+	for set_index in range(mini(sets.size(), 16)):
+		var entry: Dictionary = sets[set_index]
+		density_for_set[set_index] = float(entry.get("density", 0.0))
+		for slot in entry.get("material_slots", []):
+			if int(slot) >= 0 and int(slot) < 16:
+				set_for_slot[int(slot)] = float(set_index)
+	var pixels := atlas.get_image()
+	var texture: Texture2D = atlas
+	if pixels != null and not pixels.has_mipmaps():
+		if pixels.is_compressed(): pixels.decompress()
+		if pixels.generate_mipmaps() == OK: texture = ImageTexture.create_from_image(pixels)
+	material.set_shader_parameter("decals", texture)
+	material.set_shader_parameter("decal_set_for_slot", set_for_slot)
+	material.set_shader_parameter("decal_density_for_set", density_for_set)
+	material.set_shader_parameter("decal_cell_tiles", float(config.get("cell_tiles", 0.6)))
+	material.set_shader_parameter("decal_opacity", float(config.get("opacity", 0.92)))
+	decals_configured = true
+	material.set_shader_parameter("decals_enabled", true)
+
+func sync_lookup(rows: Array, dimensions: Vector2i, terrain_signature: int, explored: Array, exploration_signature: int, road_tiles: Array = []) -> void:
 	if not configured:
 		return
 	var byte_count := dimensions.x * dimensions.y * 4
@@ -78,6 +120,11 @@ func sync_lookup(rows: Array, dimensions: Vector2i, terrain_signature: int, expl
 				lookup_bytes[offset] = slot
 				lookup_bytes[offset + 3] = 255
 				offset += 4
+		# Blue marks road tiles, which keep their decals off.
+		for road in road_tiles:
+			var tile: Vector2i = road
+			if tile.x >= 0 and tile.y >= 0 and tile.x < dimensions.x and tile.y < dimensions.y:
+				lookup_bytes[(tile.y * dimensions.x + tile.x) * 4 + 2] = 255
 		map_signature = terrain_signature
 		map_uploads += 1
 	for y in range(dimensions.y):
@@ -110,7 +157,7 @@ func sync_layout(board: Rect2, viewport: Rect2, dimensions: Vector2i) -> void:
 	material.set_shader_parameter("world_span", clipped.size / tile_size)
 
 func validation_snapshot() -> Dictionary:
-	return {"configured": configured, "visible": visible, "map_uploads": map_uploads,
+	return {"configured": configured, "decals_configured": decals_configured, "visible": visible, "map_uploads": map_uploads,
 		"fog_uploads": fog_uploads, "last_upload_usec": last_upload_usec,
 		"missing_terrain_ids": missing_terrain_ids.duplicate(), "terrain_slots": slots.duplicate(),
 		"world_origin": material.get_shader_parameter("world_origin"),

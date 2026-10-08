@@ -6,6 +6,7 @@ const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRule
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
+const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 static var DifficultyRulesScript: Variant = load("res://scripts/core/DifficultyRules.gd")
 
 const HALL_BUILDING_ID := "building_wayfarers_hall"
@@ -39,6 +40,13 @@ static func normalize_session(
 	default_army: Dictionary = {}
 ) -> void:
 	if session == null:
+		return
+	if not PlayerRules.has_human_seat(session):
+		# The computer plays every seat: its heroes are map encounters.
+		session.hero_id = ""
+		session.overworld["player_heroes"] = []
+		session.overworld["active_hero_id"] = ""
+		_sync_active_hero_mirror(session)
 		return
 
 	var scenario := ContentService.get_scenario_readonly(session.scenario_id)

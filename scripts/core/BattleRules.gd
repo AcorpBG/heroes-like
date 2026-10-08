@@ -2212,7 +2212,7 @@ static func _battle_entry_stakes_line(
 		objective_line = objective_line.trim_prefix("Battle aim:").strip_edges()
 	if objective_line != "":
 		parts.append(objective_line)
-	var reward_line := _battle_entry_reward_line(session, encounter)
+	var reward_line := _battle_entry_reward_line(session, encounter, battle)
 	if reward_line != "":
 		parts.append("Reward %s" % reward_line)
 	var field_line := _field_objective_status_brief(battle)
@@ -2220,10 +2220,10 @@ static func _battle_entry_stakes_line(
 		parts.append("Field %s" % field_line)
 	return " | ".join(parts)
 
-static func _battle_entry_reward_line(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> String:
+static func _battle_entry_reward_line(session: SessionStateStoreScript.SessionData, encounter: Dictionary, battle: Dictionary = {}) -> String:
 	if encounter.is_empty():
 		return ""
-	var rewards = DifficultyRulesScript.scale_reward_resources(session, encounter.get("rewards", {}))
+	var rewards = DifficultyRulesScript.scale_reward_resources(session, battle_rewards_for_strength(encounter, _starting_enemy_stacks(battle), battle.get("enemy_hero", {})))
 	return OverworldRulesScript._describe_resource_delta(rewards)
 
 static func _battle_difficulty_value(encounter_placement: Dictionary, encounter: Dictionary) -> String:
@@ -7101,6 +7101,61 @@ static func _evaluate_outcome(session: SessionStateStoreScript.SessionData) -> D
 		return _finalize_stalemate(session)
 	return {"state": "", "message": ""}
 
+## A battle pays by the strength of the army beaten (the AI's army rating,
+## AiHeroRules.army_power), mostly in experience: half a point of experience
+## per point of strength, so a typical guard (about 300) pays about what the
+## encounter tables paid before. Gold and resources are half of the
+## encounter's own, scaled the same way against that typical guard, between a
+## quarter and four times.
+const REWARD_REFERENCE_STRENGTH := 300.0
+const REWARD_EXPERIENCE_PER_STRENGTH := 0.5
+const REWARD_RESOURCE_SHARE := 0.5
+const REWARD_RESOURCE_SCALE_MIN := 0.25
+const REWARD_RESOURCE_SCALE_MAX := 4.0
+
+static func battle_rewards_for_strength(encounter: Dictionary, beaten_stacks: Variant, commander: Variant = {}) -> Dictionary:
+	var listed: Dictionary = encounter.get("rewards", {}) if encounter.get("rewards", {}) is Dictionary else {}
+	var strength: float = load("res://scripts/core/AiHeroRules.gd").army_power(beaten_stacks, commander)
+	var rewards := {}
+	if strength <= 0.0:
+		return rewards
+	var scale := clampf(strength / REWARD_REFERENCE_STRENGTH, REWARD_RESOURCE_SCALE_MIN, REWARD_RESOURCE_SCALE_MAX)
+	for key in listed.keys():
+		if String(key) == "experience" or not (listed[key] is int or listed[key] is float):
+			continue
+		var amount := float(listed[key]) * REWARD_RESOURCE_SHARE * scale
+		var paid := int(round(amount / 10.0)) * 10 if String(key) == "gold" else int(round(amount))
+		if paid > 0:
+			rewards[String(key)] = paid
+	var experience := int(round(strength * REWARD_EXPERIENCE_PER_STRENGTH))
+	if experience > 0:
+		rewards["experience"] = experience
+	return rewards
+
+## The enemy creatures that fell or broke in this battle, by their starting
+## counts less those still standing.
+static func _beaten_enemy_stacks(battle: Dictionary) -> Array:
+	var beaten := []
+	for stack_value in battle.get("stacks", []):
+		if not (stack_value is Dictionary) or String(stack_value.get("side", "")) != "enemy":
+			continue
+		var count: int = max(0, int(stack_value.get("base_count", 0)) - _alive_count(stack_value))
+		if count > 0:
+			beaten.append({"unit_id": String(stack_value.get("unit_id", "")), "count": count})
+	return beaten
+
+## The whole enemy army as it took the field, for the reward a win would pay.
+static func _starting_enemy_stacks(battle: Dictionary) -> Array:
+	var stacks := []
+	for stack_value in battle.get("stacks", []):
+		if stack_value is Dictionary and String(stack_value.get("side", "")) == "enemy" and int(stack_value.get("base_count", 0)) > 0:
+			stacks.append({"unit_id": String(stack_value.get("unit_id", "")), "count": int(stack_value.get("base_count", 0))})
+	return stacks
+
+static func _battle_victory_rewards(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> Dictionary:
+	var battle: Dictionary = session.battle
+	return DifficultyRulesScript.scale_reward_resources(session, battle_rewards_for_strength(encounter, _beaten_enemy_stacks(battle), battle.get("enemy_hero", {})))
+
 static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var resolution_context_snapshot := {
 		"context": session.battle.get("context", {}).duplicate(true) if session.battle.get("context", {}) is Dictionary else {},
@@ -7117,7 +7172,7 @@ static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> D
 		_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
 
 	var encounter = ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
-	var rewards = DifficultyRulesScript.scale_reward_resources(session, encounter.get("rewards", {}))
+	var rewards = _battle_victory_rewards(session, encounter)
 	OverworldRulesScript._add_resources(session, rewards)
 	var reward_summary = OverworldRulesScript._describe_resource_delta(rewards)
 	var reward_detail := OverworldRulesScript._describe_reward_delta(rewards)
@@ -7448,7 +7503,7 @@ static func _finalize_enemy_withdrawal(session: SessionStateStoreScript.SessionD
 	)
 	var messages = [base_summary]
 	var encounter = ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
-	var rewards = DifficultyRulesScript.scale_reward_resources(session, encounter.get("rewards", {}))
+	var rewards = _battle_victory_rewards(session, encounter)
 	# Award experience before the force sync copies the commander back to the
 	# overworld; awarding afterwards only updated the discarded battle copy.
 	var experience_messages := []

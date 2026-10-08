@@ -38,4 +38,4 @@ The Town screen works like HoMM2/HoMM3: two permanent army rows instead of the T
 ## Follow-ups
 
 - The retired Town Log catalog code is still in `TownShell` behind validation hooks; remove it with the tests that drive it.
-- AI towns do not use garrison heroes.
+- AI towns do not use the garrison row. An idle computer hero parks in its town's doorway instead (one per town) and the town's troops stay in its garrison (`docs/ai-plays-by-player-rules.md`).

@@ -4430,7 +4430,7 @@
       "name": "Marketplace",
       "category": "economy",
       "cost": {
-        "gold": 3000
+        "gold": 1000
       },
       "requires": [
         "building_town_hall"
@@ -4461,7 +4461,9 @@
       "name": "Trade Exchange",
       "category": "economy",
       "cost": {
-        "gold": 4500
+        "gold": 3000,
+        "wood": 5,
+        "ore": 5
       },
       "requires": [
         "building_market_square"

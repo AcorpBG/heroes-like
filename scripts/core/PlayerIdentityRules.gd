@@ -67,6 +67,19 @@ static func identity_fields(session, controller: String) -> Dictionary:
 		result["team_id"] = String(record.get("team_id", ""))
 	return result
 
+## Whether a person plays this session. A session whose every seat was handed
+## to the computer (AiSeatRules) has none, and so no human heroes.
+static func has_human_seat(session) -> bool:
+	if session == null:
+		return false
+	var players = session.overworld.get("players", [])
+	if not (players is Array) or players.is_empty():
+		return true
+	for record in players:
+		if record is Dictionary and bool(record.get("human", false)):
+			return true
+	return false
+
 static func config_for_controller(session, controller: String) -> Dictionary:
 	var result := identity_fields(session, controller)
 	result["label"] = String(ContentService.get_faction(String(result.faction_id)).get("name", result.faction_id))

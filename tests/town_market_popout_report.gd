@@ -33,7 +33,7 @@ func _run() -> void:
 	var original_size := get_window().size
 	var rule_rows := _check_rules()
 	var rare_rows := _check_rare_rules()
-	var cost_rows := _check_gold_only_costs()
+	var cost_rows := _check_market_costs()
 	var only := OS.get_environment("MARKET_TOWN")
 	var rows := []
 	var templates := []
@@ -191,7 +191,22 @@ func _check_rare_rules() -> Dictionary:
 		_errors.append("rare rules: %s" % JSON.stringify(failures))
 	return {"ok": failures.is_empty(), "market_count": markets.size(), "failures": failures}
 
-func _check_gold_only_costs() -> Dictionary:
+## Owner decision 2026-10-08: the Marketplace costs 1,000 gold and the Trade
+## Exchange 3,000 gold, 5 wood and 5 ore, in every faction's town.
+const MARKET_COSTS := {
+	MARKET_ID: {"gold": 1000},
+	EXCHANGE_ID: {"gold": 3000, "wood": 5, "ore": 5},
+}
+
+func _cost_matches(cost: Dictionary, expected: Dictionary) -> bool:
+	if expected.is_empty() or cost.size() != expected.size():
+		return false
+	for key in expected.keys():
+		if int(cost.get(key, -1)) != int(expected[key]):
+			return false
+	return true
+
+func _check_market_costs() -> Dictionary:
 	var failures := []
 	var costs := {}
 	for town_value in ContentService.load_json("res://content/towns.json").get("items", []):
@@ -202,7 +217,8 @@ func _check_gold_only_costs() -> Dictionary:
 				continue
 			var cost: Dictionary = building.get("cost", {})
 			costs["%s/%s" % [String(template.get("faction_id", "")), String(building_id_value)]] = cost
-			_check(failures, cost.keys() == ["gold"] and int(cost.get("gold", 0)) > 0, "%s %s costs %s" % [template.get("id", ""), building_id_value, cost])
+			var expected: Dictionary = MARKET_COSTS.get(String(building_id_value), {})
+			_check(failures, _cost_matches(cost, expected), "%s %s costs %s, expected %s" % [template.get("id", ""), building_id_value, cost, expected])
 	if not failures.is_empty():
 		_errors.append("costs: %s" % JSON.stringify(failures))
 	return {"ok": failures.is_empty(), "costs": costs}
@@ -471,11 +487,11 @@ func _check_trade_routes(shell: Node, failures: Array, ids: Dictionary, base_uni
 	shell.call("_close_town_catalog", false)
 	await _frames(2)
 
-	# The market's own upgrade: Trade Exchange now costs gold only.
+	# The market's own upgrade: the Trade Exchange.
 	var market_info: Dictionary = await _open(shell, MARKET_ID)
 	var upgrade: Dictionary = market_info.get("panel", {}).get("upgrade", {})
 	_check(failures, String(upgrade.get("next_id", "")) == EXCHANGE_ID, "market upgrade line %s" % upgrade)
-	_check(failures, ContentService.get_building(EXCHANGE_ID).get("cost", {}).keys() == ["gold"], "Trade Exchange cost %s" % ContentService.get_building(EXCHANGE_ID).get("cost", {}))
+	_check(failures, _cost_matches(ContentService.get_building(EXCHANGE_ID).get("cost", {}), MARKET_COSTS[EXCHANGE_ID]), "Trade Exchange cost %s" % ContentService.get_building(EXCHANGE_ID).get("cost", {}))
 	return routes
 
 func _routed(failures: Array, shell: Node, info: Dictionary, label: String) -> bool:

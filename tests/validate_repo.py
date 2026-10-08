@@ -39919,6 +39919,10 @@ def validate_ai_hero_model(errors: list[str]) -> None:
         "func _passage_value",
         "func _idle_fight",
         "func _wait_by_home",
+        "func _cuts_a_way",
+        "func _clear_way",
+        "func _garrison_pickup",
+        "func _market_value",
         '"ai_hero_reinforced"',
         '"ai_heroes_met"',
         '"ai_town_captured"',
@@ -39932,6 +39936,10 @@ def validate_ai_hero_model(errors: list[str]) -> None:
         "_check_market_trades_like_the_player",
         "_check_hire_with_hero_in_doorway",
         "_check_expansion_on_walled_map",
+        "_check_wind_ridge_reach",
+        "_check_capital_pocket_exit",
+        "_check_garrison_pickup_swaps_in_stronger_stacks",
+        "_check_battle_rewards_scale_with_strength",
     ):
         ensure(required_token in report_text, errors, f"AI player rules report is missing case: {required_token}")
     memory_text = AI_KNOWN_WORLD_MEMORY_REPORT_SCRIPT_PATH.read_text(encoding="utf-8") if AI_KNOWN_WORLD_MEMORY_REPORT_SCRIPT_PATH.exists() else ""
@@ -43116,82 +43124,47 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     ):
         ensure(token in map_view_text, errors, f"Terrain presentation payload must prove procedural microtexture is disabled: {token}")
 
-    terrain_detail_path = ROOT / "art" / "overworld" / "runtime" / "terrain_tiles" / "detail" / "terrain_detail_decal_atlas_world_v3.png"
-    ensure(terrain_detail_path.is_file(), errors, "Overworld terrain detail decals must ship one project-local runtime atlas.")
-    if terrain_detail_path.is_file():
-        terrain_detail_bytes = terrain_detail_path.read_bytes()
-        ensure(png_size(terrain_detail_path) == (1024, 1024), errors, "Overworld terrain detail decal atlas must remain exactly 1024x1024.")
-        ensure(len(terrain_detail_bytes) > 25 and terrain_detail_bytes[:8] == b"\x89PNG\r\n\x1a\n" and terrain_detail_bytes[25] == 6, errors, "Overworld terrain detail decal atlas must remain an RGBA PNG with transparent cutout clusters.")
-        ensure(hashlib.sha256(terrain_detail_bytes).hexdigest() == "5fb4c87e5c80d5f03755028ef3aefd97ac178bf6952e5c018fd585bfa146c097", errors, "Overworld world-surface terrain detail atlas must retain the inspected alpha-cleaned production bitmap.")
+    # Ground detail decals (terrain_decals_v4): one generated set per ground,
+    # packed by tools/prepare_overworld_terrain_decals.py and scattered by the
+    # ground shader so they share its light and blend.
+    decal_manifest_path = ROOT / "art" / "overworld" / "terrain_decals_v4.json"
+    decal_source_manifest_path = ROOT / "art" / "overworld" / "source" / "generated" / "terrain" / "decals_v4" / "manifest.json"
+    decal_atlas_path = ROOT / "art" / "overworld" / "runtime" / "terrain_tiles" / "detail" / "terrain_decals_v4.png"
+    ensure(decal_manifest_path.is_file() and decal_source_manifest_path.is_file() and decal_atlas_path.is_file(), errors, "Ground detail decals must ship their runtime manifest, source manifest and atlas.")
+    if decal_manifest_path.is_file() and decal_source_manifest_path.is_file() and decal_atlas_path.is_file():
+        decal_manifest = json.loads(decal_manifest_path.read_text(encoding="utf-8"))
+        decal_sources = json.loads(decal_source_manifest_path.read_text(encoding="utf-8"))
+        decal_bytes = decal_atlas_path.read_bytes()
+        ensure(png_size(decal_atlas_path) == (2048, 2048) and decal_bytes[25] == 6, errors, "Ground decal atlas must be a 2048x2048 RGBA PNG.")
+        ensure(hashlib.sha256(decal_bytes).hexdigest() == decal_sources.get("runtime", {}).get("sha256"), errors, "Ground decal atlas must match its source manifest (rebuild with tools/prepare_overworld_terrain_decals.py).")
+        decal_sets = decal_manifest.get("sets", [])
+        ensure(len(decal_sets) == len(decal_sources.get("sources", [])) and 0 < len(decal_sets) <= 16, errors, "Every ground decal set must have exactly one generated source sheet.")
+        ground_slots = json.loads((ROOT / "art" / "overworld" / "ground_materials.json").read_text(encoding="utf-8")).get("terrain_slots", {})
+        covered_slots = {int(slot) for entry in decal_sets for slot in entry.get("material_slots", [])}
+        water_slots = {int(ground_slots.get(key, -1)) for key in ("water", "coast", "shore")}
+        ensure(covered_slots == set(int(slot) for slot in ground_slots.values()) - water_slots, errors, "Every land ground material must have its own decal set and water none.")
+        for source in decal_sources.get("sources", []):
+            source_path = ROOT / str(source.get("path", "")).removeprefix("res://")
+            # Source sheets live in the external source archive, not Git.
+            ensure(len(str(source.get("sha256", ""))) == 64 and str(source.get("prompt", "")).strip() != "", errors, f"Ground decal source must record its hash and prompt: {source.get('path')}")
+            if source_path.is_file():
+                ensure(hashlib.sha256(source_path.read_bytes()).hexdigest() == source.get("sha256"), errors, f"Ground decal source sheet must match its manifest: {source.get('path')}")
+    ground_shader_text = (ROOT / "scenes" / "overworld" / "overworld_ground_surface.gdshader").read_text(encoding="utf-8")
+    ground_surface_text = (ROOT / "scenes" / "overworld" / "OverworldGroundSurface.gd").read_text(encoding="utf-8")
     for token in (
-        'const TERRAIN_DETAIL_DECAL_MODEL := "biome_specific_painterly_landmark_clusters_denser_v4"',
-        'const TERRAIN_DETAIL_DECAL_SOURCE_MODEL := "built_in_imagegen_alpha_cleaned_4x4_world_surface_atlas"',
-        'const TERRAIN_DETAIL_DECAL_TEXTURE_PATH := "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_world_v3.png"',
-        "const TERRAIN_DETAIL_DECAL_ATLAS_SIZE := Vector2i(1024, 1024)",
-        "const TERRAIN_DETAIL_DECAL_GRID_SIZE := Vector2i(4, 4)",
-        "const TERRAIN_DETAIL_DECAL_CELL_SIZE := Vector2i(256, 256)",
-        "const TERRAIN_DETAIL_DECAL_DENSITY_MODULUS := 5",
-        "const TERRAIN_DETAIL_DECAL_ACTIVE_RESIDUES := [0]",
-        "const TERRAIN_DETAIL_DECAL_MIN_EXTENT_FACTOR := 0.44",
-        "const TERRAIN_DETAIL_DECAL_MAX_EXTENT_FACTOR := 0.68",
-        "const TERRAIN_DETAIL_DECAL_MAX_OFFSET_X_FACTOR := 0.16",
-        "const TERRAIN_DETAIL_DECAL_MIN_OFFSET_Y_FACTOR := -0.08",
-        "const TERRAIN_DETAIL_DECAL_MAX_OFFSET_Y_FACTOR := 0.14",
-        "const TERRAIN_DETAIL_DECAL_MODULATE := Color(0.96, 0.98, 0.92, 0.82)",
+        'const TERRAIN_DECAL_MANIFEST_PATH := "res://art/overworld/terrain_decals_v4.json"',
+        'const TERRAIN_DECAL_MODEL := "ground_shader_scattered_ground_specific_decals_v4"',
+        "_ground_surface.configure_decals(decal_config, _texture_from_path(str(decal_config.get(\"atlas\", \"\"))))",
     ):
-        ensure(map_view_text.count(token) == 1, errors, f"Terrain detail decals must own one exact bounded presentation constant: {token}")
-    detail_cells_block = gd_function_block(map_view_text, "_terrain_detail_decal_cells_for_group")
-    detail_payload_block = gd_function_block(map_view_text, "_terrain_detail_decal_payload")
-    detail_draw_block = gd_function_block(map_view_text, "_draw_terrain_detail_decal")
-    for token in (
-        '"grasslands":\n\t\t\treturn [0, 4, 8, 12]',
-        '"forest":\n\t\t\treturn [1, 5, 9, 13]',
-        '"mire":\n\t\t\treturn [3, 7, 11, 15]',
-        '"rough", "rock", "underground":\n\t\t\treturn [2, 6, 10, 14]',
-        '"dirt", "sand":\n\t\t\treturn [2, 6, 10, 14]',
-        '"ash":\n\t\t\treturn [2, 6, 10, 14]',
-    ):
-        ensure(token in detail_cells_block, errors, f"Terrain detail decals must retain exact biome-aware atlas choices: {token}")
-    for token in (
-        "var terrain := _terrain_at(tile)",
-        "var terrain_group := _terrain_group(terrain)",
-        'var seed := absi(("terrain_detail:%d:%d:%s" % [tile.x, tile.y, terrain]).hash())',
-        "var density_residue := posmod(seed, TERRAIN_DETAIL_DECAL_DENSITY_MODULUS)",
-        "var road_excluded := not _road_tile_payload(tile).is_empty()",
-        "not cell_ids.is_empty() and not road_excluded and density_residue in TERRAIN_DETAIL_DECAL_ACTIVE_RESIDUES",
-        '"active_density_residues": TERRAIN_DETAIL_DECAL_ACTIVE_RESIDUES.duplicate()',
-        '"interactive": false',
-        '"collision": false',
-        '"source_model": TERRAIN_DETAIL_DECAL_SOURCE_MODEL',
-        '"draw_order": "after_macro_lighting_before_roads_objects_and_fog"',
-        '"hidden_by_unexplored_shroud": true',
-        '"variation_basis": "tile_coordinate_and_terrain_id_only"',
-    ):
-        ensure(token in detail_payload_block, errors, f"Terrain detail payload must retain deterministic sparse presentation ownership: {token}")
-    for token in (
-        "var payload := _terrain_detail_decal_payload(tile, rect)",
-        'if not bool(payload.get("drawn", false)):',
-        "_canvas_draw_texture_rect_region(texture, destination_rect, source_rect, TERRAIN_DETAIL_DECAL_MODULATE)",
-        "return true",
-    ):
-        ensure(token in detail_draw_block, errors, f"Terrain detail decals must draw only the exact selected atlas cell: {token}")
-    ensure(
-        static_draw_block.find("_draw_terrain_macro_lighting_field(board_rect, visible_bounds)")
-        < static_draw_block.find("_draw_terrain_detail_decal(tile, rect)")
-        < static_draw_block.find("_draw_road_overlay(tile, rect)"),
-        errors,
-        "Terrain detail decals must draw after macro lighting and before authoritative roads.",
-    )
-    for token in (
-        "var terrain_detail_decal_draws := 0",
-        "terrain_detail_decal_draws += 1",
-        '_profile_add("terrain_detail_decal_draws", terrain_detail_decal_draws)',
-        '"terrain_detail_decal_draws": terrain_detail_decal_draws',
-    ):
-        ensure(token in static_draw_block, errors, f"Terrain detail decals must expose bounded live draw-count evidence: {token}")
-    for block_name, block in (("terrain-detail choices", detail_cells_block), ("terrain-detail payload", detail_payload_block), ("terrain-detail draw", detail_draw_block)):
-        for forbidden in ("rand", "Time.", "set_map_state", "queue_redraw", "await ", "create_timer", "collision_layer", "mouse_filter"):
-            ensure(forbidden not in block, errors, f"{block_name} must remain deterministic, presentation-only, and noninteractive: {forbidden}")
+        ensure(token in map_view_text, errors, f"Overworld map must configure the ground decals: {token}")
+    ensure("_draw_terrain_detail_decal" not in map_view_text and "TERRAIN_DETAIL_DECAL" not in map_view_text, errors, "The per-tile sticker decal renderer must stay retired.")
+    for token in ("uniform sampler2D decals", "vec4 decal_layer(", "data.b > 0.5", "textureLod(decals", "smoothstep(0.55, 0.9, ground_share)"):
+        ensure(token in ground_shader_text, errors, f"Ground shader must scatter decals per ground, off roads, with explicit mips and ground-blend fading: {token}")
+    for token in ("func configure_decals(", "lookup_bytes[(tile.y * dimensions.x + tile.x) * 4 + 2] = 255"):
+        ensure(token in ground_surface_text, errors, f"Ground surface must configure decals and mark roads: {token}")
+    decal_payload_block = gd_function_block(map_view_text, "_terrain_decal_payload")
+    for forbidden in ("rand", "Time.", "set_map_state", "queue_redraw", "await ", "create_timer", "collision_layer", "mouse_filter"):
+        ensure(forbidden not in decal_payload_block, errors, f"Ground decal payload must remain deterministic, presentation-only, and noninteractive: {forbidden}")
 
     ninefold_atlas_block = gd_function_block(ninefold_transition_text, "_assert_rich_terrain_detail_atlas")
     for token in (
@@ -43384,10 +43357,10 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"terrain_macro_lighting": terrain_macro_lighting',
         '"terrain_grain_overlay": _terrain_grain_overlay_payload(false)',
         '"terrain_grain_overlay": _terrain_grain_overlay_payload(true)',
-        '"terrain_detail_decal": {',
-        '"model": TERRAIN_DETAIL_DECAL_MODEL',
+        '"terrain_decals": {',
+        '"model": TERRAIN_DECAL_MODEL',
         '"terrain_identity_sampled": false',
-        '"terrain_detail_decal": _terrain_detail_decal_payload(tile, Rect2(Vector2.ZERO, Vector2.ONE))',
+        '"terrain_decals": _terrain_decal_payload(tile)',
         '"water_surface_ripples": {',
         '"model": WATER_SURFACE_RIPPLE_MODEL',
         '"water_surface_ripples": _water_surface_ripple_payload(tile, Rect2(Vector2.ZERO, Vector2.ONE))',
@@ -43522,9 +43495,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"terrain_grain_tile_count": terrain_grain_tile_count',
         '"terrain_grain_exact_count": terrain_grain_exact_count',
         '"terrain_grain_texture_paths": terrain_grain_texture_paths.keys()',
-		'var detail: Dictionary = terrain.get("terrain_detail_decal", {})',
+		'var detail: Dictionary = terrain.get("terrain_decals", {})',
 		'terrain_detail_model_ids[String(detail.get("model", ""))] = true',
-		'terrain_detail_source_model_ids[String(detail.get("source_model", ""))] = true',
 		'"terrain_detail_drawn_count": terrain_detail_drawn_count',
 		'"terrain_detail_exact_count": terrain_detail_exact_count',
 		'"terrain_detail_invalid_count": terrain_detail_invalid_count',
@@ -43584,9 +43556,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 		'int(summary.get("terrain_detail_exact_count", 0)) != explored_tile_count',
 		'int(summary.get("terrain_detail_invalid_count", -1)) != 0',
 		'int(summary.get("terrain_detail_drawn_count", 0)) <= 0',
-		'["biome_specific_painterly_landmark_clusters_denser_v4"]',
-		'["built_in_imagegen_alpha_cleaned_4x4_world_surface_atlas"]',
-		'["res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_world_v3.png"]',
+		'["ground_shader_scattered_ground_specific_decals_v4"]',
+		'["res://art/overworld/runtime/terrain_tiles/detail/terrain_decals_v4.png"]',
 		'int(summary.get("water_ripple_exact_count", 0)) != explored_tile_count',
 		'int(summary.get("water_ripple_invalid_count", -1)) != 0',
 		'int(summary.get("water_ripple_water_tile_count", 0)) <= 0',
@@ -43601,10 +43572,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'int(last_static.get("terrain_tile_draws", 0))',
         'int(last_static.get("terrain_macro_lighting_polygon_draws", 0))',
         'int(last_static.get("terrain_grain_overlay_draws", 0))',
-        'int(last_static.get("terrain_detail_decal_draws", 0))',
         "grain_draws != 1",
-        "detail_draws <= 0",
-        "detail_draws >= terrain_draws",
         "macro_polygon_draws > 12",
         "macro_polygon_draws * 8 >= terrain_draws",
     ):

@@ -19,9 +19,10 @@
     "tile_art_status": "original_quiet_tile_bank_runtime",
     "tile_art_source_basis": "original_procedural_reference_informed",
     "tile_art_preparation": "authored_original_64x64_tile_bank_with_procedural_special_terrain_fallback",
-    "surface_detail_atlas": "res://art/overworld/runtime/terrain_tiles/detail/terrain_detail_decal_atlas_world_v3.png",
-    "surface_detail_model": "biome_specific_painterly_landmark_clusters_denser_v4",
-    "surface_detail_source_manifest": "res://art/overworld/source/generated/terrain/world_surface_v3/manifest.json",
+    "surface_detail_atlas": "res://art/overworld/runtime/terrain_tiles/detail/terrain_decals_v4.png",
+    "surface_detail_model": "ground_shader_scattered_ground_specific_decals_v4",
+    "surface_detail_manifest": "res://art/overworld/terrain_decals_v4.json",
+    "surface_detail_source_manifest": "res://art/overworld/source/generated/terrain/decals_v4/manifest.json",
     "normal_play_microtexture_policy": "original_raster_only_no_procedural_strokes",
     "generated_blocker_body_presentation": "dedicated_cohesive_biome_palette_with_world_stable_overlap_v6",
     "raster_base_v2": {

@@ -1,0 +1,170 @@
+{
+ "schema": "overworld_terrain_decal_sources_v4",
+ "slice_id": "art-overworld-terrain-decals-v4-20261008",
+ "generation_mode": "codex_image_gen_transparent_with_ground_reference",
+ "date": "2026-10-08",
+ "originality": "Original generated painted ground details. Each sheet was generated with this project's own ground material as the only reference; no copyrighted game images.",
+ "layout": "4x4 per ground; rows 1-2 tiny, row 3 medium, row 4 large flat features",
+ "sources": [
+  {
+   "ground": "grass",
+   "path": "res://art/overworld/source/generated/terrain/decals_v4/grass.png",
+   "sha256": "a0b1c93deac183259d5837d67807c6e7d984c247cfbf8703877e3cdcf9396b37",
+   "size": [
+    1254,
+    1254
+   ],
+   "ground_material_slot": 0,
+   "reference": "res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png slot 0",
+   "prompt": "Create an original painted asset sheet for a top-down fantasy strategy game map: a 4x4 grid of 16 separate small ground details for grass terrain, on a fully transparent background.\n\nThe attached reference image is the grass ground texture these details will be painted onto. Match its colours, lighting, brush texture, level of detail and scale exactly, so every detail looks like part of that ground and not like a sticker placed on top of it.\n\nLayout: exactly 4 rows and 4 columns of equal square cells. Each detail is centred in its own cell with generous empty transparent space around it; nothing touches or crosses a cell boundary. No grid lines, frames, labels, numbers or text.\nSizes: rows 1 and 2 are tiny details, each filling about a third of its cell. Row 3 is medium details, about half of the cell. Row 4 is larger flat ground features, about two thirds of the cell.\n\nRow 1 (tiny): a small clover patch; a tuft of white daisies; a few yellow buttercups; three small grey pebbles\nRow 2 (tiny): a short grass tuft with seed heads; a dandelion rosette; a few fallen leaves; a tiny mushroom pair\nRow 3 (medium): a patch of wildflowers in white and violet; a low mole hill of fresh earth; a mossy flat stone half sunk in grass; a ring of tiny mushrooms\nRow 4 (large, flat): a worn bare earth patch with a few grass blades; a broad patch of taller meadow grass; a scatter of small stones in the grass; a soft patch of moss and clover\n\nStyle: seen from directly above like the reference texture, lying flat on the ground. Soft irregular edges that fade out into transparency. No outlines, no dark rim, no round patch or disc of ground under any detail, no cast shadows except a very soft contact darkening right under raised parts. Muted natural colours with low contrast against the reference ground. Hand painted, consistent soft daylight from the top left. Nothing that looks like a building, creature, person, treasure or item to pick up."
+  },
+  {
+   "ground": "plains",
+   "path": "res://art/overworld/source/generated/terrain/decals_v4/plains.png",
+   "sha256": "2ed38dd8b317104b4dc47a0500549faf684528ea7a08b9a6e05a2d3ef8cf3f5a",
+   "size": [
+    1254,
+    1254
+   ],
+   "ground_material_slot": 1,
+   "reference": "res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png slot 1",
+   "prompt": "Create an original painted asset sheet for a top-down fantasy strategy game map: a 4x4 grid of 16 separate small ground details for plains terrain, on a fully transparent background.\n\nThe attached reference image is the plains ground texture these details will be painted onto. Match its colours, lighting, brush texture, level of detail and scale exactly, so every detail looks like part of that ground and not like a sticker placed on top of it.\n\nLayout: exactly 4 rows and 4 columns of equal square cells. Each detail is centred in its own cell with generous empty transparent space around it; nothing touches or crosses a cell boundary. No grid lines, frames, labels, numbers or text.\nSizes: rows 1 and 2 are tiny details, each filling about a third of its cell. Row 3 is medium details, about half of the cell. Row 4 is larger flat ground features, about two thirds of the cell.\n\nRow 1 (tiny): a dry straw-coloured grass tuft; a few seed heads; two sun-bleached pebbles; a tiny dry thistle\nRow 2 (tiny): a small wild wheat cluster; a dry twig; a little rabbit burrow opening; a few dry yellow flowers\nRow 3 (medium): a clump of tall dry grass; a flat weathered stone; a patch of cracked dusty earth; a low thorny sprig\nRow 4 (large, flat): a broad patch of sparse dry grass on dust; a scatter of small stones and straw; a wind-flattened grass patch; a shallow dusty hollow\n\nStyle: seen from directly above like the reference texture, lying flat on the ground. Soft irregular edges that fade out into transparency. No outlines, no dark rim, no round patch or disc of ground under any detail, no cast shadows except a very soft contact darkening right under raised parts. Muted natural colours with low contrast against the reference ground. Hand painted, consistent soft daylight from the top left. Nothing that looks like a building, creature, person, treasure or item to pick up."
+  },
+  {
+   "ground": "forest",
+   "path": "res://art/overworld/source/generated/terrain/decals_v4/forest.png",
+   "sha256": "c45e3b4b14da6d33cd43eb7f13beca99500ace2287e1ab97ba0ac5536b727cba",
+   "size": [
+    1254,
+    1254
+   ],
+   "ground_material_slot": 2,
+   "reference": "res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png slot 2",
+   "prompt": "Create an original painted asset sheet for a top-down fantasy strategy game map: a 4x4 grid of 16 separate small ground details for forest terrain, on a fully transparent background.\n\nThe attached reference image is the forest ground texture these details will be painted onto. Match its colours, lighting, brush texture, level of detail and scale exactly, so every detail looks like part of that ground and not like a sticker placed on top of it.\n\nLayout: exactly 4 rows and 4 columns of equal square cells. Each detail is centred in its own cell with generous empty transparent space around it; nothing touches or crosses a cell boundary. No grid lines, frames, labels, numbers or text.\nSizes: rows 1 and 2 are tiny details, each filling about a third of its cell. Row 3 is medium details, about half of the cell. Row 4 is larger flat ground features, about two thirds of the cell.\n\nRow 1 (tiny): a young fern sprout; two pine cones; a few acorns; a small cluster of brown mushrooms\nRow 2 (tiny): a snapped twig; a tiny moss tuft; a patch of wood sorrel; a few fallen oak leaves\nRow 3 (medium): a mossy root bump; a small rotting log piece with moss; a pile of fallen leaves; a lichen-covered stone\nRow 4 (large, flat): a broad carpet of moss; a bed of pine needles and cones; a low patch of bracken; a dark damp leaf-litter patch with twigs\n\nStyle: seen from directly above like the reference texture, lying flat on the ground. Soft irregular edges that fade out into transparency. No outlines, no dark rim, no round patch or disc of ground under any detail, no cast shadows except a very soft contact darkening right under raised parts. Muted natural colours with low contrast against the reference ground. Hand painted, consistent soft daylight from the top left. Nothing that looks like a building, creature, person, treasure or item to pick up."
+  },
+  {
+   "ground": "swamp",
+   "path": "res://art/overworld/source/generated/terrain/decals_v4/swamp.png",
+   "sha256": "24b7ed4246f35e275cab3edf8d357d6ec9fa870d445604053ae2f9d9a4ffeb84",
+   "size": [
+    1254,
+    1254
+   ],
+   "ground_material_slot": 3,
+   "reference": "res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png slot 3",
+   "prompt": "Create an original painted asset sheet for a top-down fantasy strategy game map: a 4x4 grid of 16 separate small ground details for swamp terrain, on a fully transparent background.\n\nThe attached reference image is the swamp ground texture these details will be painted onto. Match its colours, lighting, brush texture, level of detail and scale exactly, so every detail looks like part of that ground and not like a sticker placed on top of it.\n\nLayout: exactly 4 rows and 4 columns of equal square cells. Each detail is centred in its own cell with generous empty transparent space around it; nothing touches or crosses a cell boundary. No grid lines, frames, labels, numbers or text.\nSizes: rows 1 and 2 are tiny details, each filling about a third of its cell. Row 3 is medium details, about half of the cell. Row 4 is larger flat ground features, about two thirds of the cell.\n\nRow 1 (tiny): a small reed tuft; two lily pads; a tuft of sedge; a few bog cotton heads\nRow 2 (tiny): a tiny marsh flower; a short cattail clump; a moss hummock; a floating twig\nRow 3 (medium): a small muddy puddle with reflections; a clump of reeds in shallow water; a green algae patch; a sunken log end in mud\nRow 4 (large, flat): a shallow brown pool edged with moss; a broad sedge patch; a dark peat patch with water; a mud flat with ripples\n\nStyle: seen from directly above like the reference texture, lying flat on the ground. Soft irregular edges that fade out into transparency. No outlines, no dark rim, no round patch or disc of ground under any detail, no cast shadows except a very soft contact darkening right under raised parts. Muted natural colours with low contrast against the reference ground. Hand painted, consistent soft daylight from the top left. Nothing that looks like a building, creature, person, treasure or item to pick up."
+  },
+  {
+   "ground": "dirt",
+   "path": "res://art/overworld/source/generated/terrain/decals_v4/dirt.png",
+   "sha256": "450ac8160283f815126f3ce153ccbd1c013964168e4e28a4c7b8fb595b17a944",
+   "size": [
+    1254,
+    1254
+   ],
+   "ground_material_slot": 4,
+   "reference": "res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png slot 4",
+   "prompt": "Create an original painted asset sheet for a top-down fantasy strategy game map: a 4x4 grid of 16 separate small ground details for dirt terrain, on a fully transparent background.\n\nThe attached reference image is the dirt ground texture these details will be painted onto. Match its colours, lighting, brush texture, level of detail and scale exactly, so every detail looks like part of that ground and not like a sticker placed on top of it.\n\nLayout: exactly 4 rows and 4 columns of equal square cells. Each detail is centred in its own cell with generous empty transparent space around it; nothing touches or crosses a cell boundary. No grid lines, frames, labels, numbers or text.\nSizes: rows 1 and 2 are tiny details, each filling about a third of its cell. Row 3 is medium details, about half of the cell. Row 4 is larger flat ground features, about two thirds of the cell.\n\nRow 1 (tiny): a few small pebbles; a dry twig; a tiny dry grass tuft; a small clod of earth\nRow 2 (tiny): a scatter of gravel; a dry fallen leaf; a small ant hill; a short root poking out\nRow 3 (medium): a patch of cracked dry earth; a small flat stone; a little dirt mound; a dry thistle clump\nRow 4 (large, flat): a broad cracked clay patch; a scatter of stones and gravel; a dry scrub patch with twigs; a shallow worn hollow in the dirt\n\nStyle: seen from directly above like the reference texture, lying flat on the ground. Soft irregular edges that fade out into transparency. No outlines, no dark rim, no round patch or disc of ground under any detail, no cast shadows except a very soft contact darkening right under raised parts. Muted natural colours with low contrast against the reference ground. Hand painted, consistent soft daylight from the top left. Nothing that looks like a building, creature, person, treasure or item to pick up."
+  },
+  {
+   "ground": "sand",
+   "path": "res://art/overworld/source/generated/terrain/decals_v4/sand.png",
+   "sha256": "aa5c46a377a539e2d23fa56f55508b51db0386168b919f7f4027ba3607dba666",
+   "size": [
+    1254,
+    1254
+   ],
+   "ground_material_slot": 5,
+   "reference": "res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png slot 5",
+   "prompt": "Create an original painted asset sheet for a top-down fantasy strategy game map: a 4x4 grid of 16 separate small ground details for sand terrain, on a fully transparent background.\n\nThe attached reference image is the sand ground texture these details will be painted onto. Match its colours, lighting, brush texture, level of detail and scale exactly, so every detail looks like part of that ground and not like a sticker placed on top of it.\n\nLayout: exactly 4 rows and 4 columns of equal square cells. Each detail is centred in its own cell with generous empty transparent space around it; nothing touches or crosses a cell boundary. No grid lines, frames, labels, numbers or text.\nSizes: rows 1 and 2 are tiny details, each filling about a third of its cell. Row 3 is medium details, about half of the cell. Row 4 is larger flat ground features, about two thirds of the cell.\n\nRow 1 (tiny): a few desert pebbles; a tiny dry desert grass tuft; a small bleached shell fragment; a dry twig half buried\nRow 2 (tiny): a little sand ripple; a small sandstone chip; a tiny desert flower; a few bleached bone fragments\nRow 3 (medium): a low sand drift; a dry tumbleweed; a half buried sandstone rock; a pale salt crust patch\nRow 4 (large, flat): a broad patch of wind ripples; a scatter of sun-bleached stones; a long low dune streak; a cracked dry sandstone slab partly buried\n\nStyle: seen from directly above like the reference texture, lying flat on the ground. Soft irregular edges that fade out into transparency. No outlines, no dark rim, no round patch or disc of ground under any detail, no cast shadows except a very soft contact darkening right under raised parts. Muted natural colours with low contrast against the reference ground. Hand painted, consistent soft daylight from the top left. Nothing that looks like a building, creature, person, treasure or item to pick up."
+  },
+  {
+   "ground": "rough",
+   "path": "res://art/overworld/source/generated/terrain/decals_v4/rough.png",
+   "sha256": "e9dc07c61f3fe9e1ab5f266e4b8471293e6446fc0984f622d0854a8f20ffb475",
+   "size": [
+    1254,
+    1254
+   ],
+   "ground_material_slot": 6,
+   "reference": "res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png slot 6",
+   "prompt": "Create an original painted asset sheet for a top-down fantasy strategy game map: a 4x4 grid of 16 separate small ground details for rough terrain, on a fully transparent background.\n\nThe attached reference image is the rough ground texture these details will be painted onto. Match its colours, lighting, brush texture, level of detail and scale exactly, so every detail looks like part of that ground and not like a sticker placed on top of it.\n\nLayout: exactly 4 rows and 4 columns of equal square cells. Each detail is centred in its own cell with generous empty transparent space around it; nothing touches or crosses a cell boundary. No grid lines, frames, labels, numbers or text.\nSizes: rows 1 and 2 are tiny details, each filling about a third of its cell. Row 3 is medium details, about half of the cell. Row 4 is larger flat ground features, about two thirds of the cell.\n\nRow 1 (tiny): a few small rough stones; a short tough grass tuft; a lichen spotted pebble; a tiny thorny sprig\nRow 2 (tiny): a sliver of broken rock; a small heather tuft; a scatter of gravel; a dry scrub twig\nRow 3 (medium): a small boulder with grass at its foot; a scree patch; a tussock of coarse grass; a cracked flat rock\nRow 4 (large, flat): a broad patch of scree and stones; a low heather and scrub patch; a weathered rock shelf; a stony trail of pebbles\n\nStyle: seen from directly above like the reference texture, lying flat on the ground. Soft irregular edges that fade out into transparency. No outlines, no dark rim, no round patch or disc of ground under any detail, no cast shadows except a very soft contact darkening right under raised parts. Muted natural colours with low contrast against the reference ground. Hand painted, consistent soft daylight from the top left. Nothing that looks like a building, creature, person, treasure or item to pick up."
+  },
+  {
+   "ground": "rock",
+   "path": "res://art/overworld/source/generated/terrain/decals_v4/rock.png",
+   "sha256": "5375379ce77e28841b16fdf1cfa1c4d9e15acfc94c230cb1489d03b003687105",
+   "size": [
+    1254,
+    1254
+   ],
+   "ground_material_slot": 7,
+   "reference": "res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png slot 7",
+   "prompt": "Create an original painted asset sheet for a top-down fantasy strategy game map: a 4x4 grid of 16 separate small ground details for rock terrain, on a fully transparent background.\n\nThe attached reference image is the rock ground texture these details will be painted onto. Match its colours, lighting, brush texture, level of detail and scale exactly, so every detail looks like part of that ground and not like a sticker placed on top of it.\n\nLayout: exactly 4 rows and 4 columns of equal square cells. Each detail is centred in its own cell with generous empty transparent space around it; nothing touches or crosses a cell boundary. No grid lines, frames, labels, numbers or text.\nSizes: rows 1 and 2 are tiny details, each filling about a third of its cell. Row 3 is medium details, about half of the cell. Row 4 is larger flat ground features, about two thirds of the cell.\n\nRow 1 (tiny): a few stone chips; a tiny lichen patch; a small crack; a pebble cluster\nRow 2 (tiny): a quartz vein fragment; a tiny alpine flower tuft; a moss filled crack; a small rubble pile\nRow 3 (medium): a small boulder; a fractured rock plate; a rain puddle in a rock hollow; a weathered pitted stone\nRow 4 (large, flat): a broad network of rock cracks; a patch of loose rubble; a wide lichen covered slab; a scree slope fragment\n\nStyle: seen from directly above like the reference texture, lying flat on the ground. Soft irregular edges that fade out into transparency. No outlines, no dark rim, no round patch or disc of ground under any detail, no cast shadows except a very soft contact darkening right under raised parts. Muted natural colours with low contrast against the reference ground. Hand painted, consistent soft daylight from the top left. Nothing that looks like a building, creature, person, treasure or item to pick up."
+  },
+  {
+   "ground": "ash",
+   "path": "res://art/overworld/source/generated/terrain/decals_v4/ash.png",
+   "sha256": "0fb328f14f48cb5591cc3c959a84511e21ffd5a51b6625b4e8c10689d7f42211",
+   "size": [
+    1254,
+    1254
+   ],
+   "ground_material_slot": 8,
+   "reference": "res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png slot 8",
+   "prompt": "Create an original painted asset sheet for a top-down fantasy strategy game map: a 4x4 grid of 16 separate small ground details for ash terrain, on a fully transparent background.\n\nThe attached reference image is the ash ground texture these details will be painted onto. Match its colours, lighting, brush texture, level of detail and scale exactly, so every detail looks like part of that ground and not like a sticker placed on top of it.\n\nLayout: exactly 4 rows and 4 columns of equal square cells. Each detail is centred in its own cell with generous empty transparent space around it; nothing touches or crosses a cell boundary. No grid lines, frames, labels, numbers or text.\nSizes: rows 1 and 2 are tiny details, each filling about a third of its cell. Row 3 is medium details, about half of the cell. Row 4 is larger flat ground features, about two thirds of the cell.\n\nRow 1 (tiny): a few black cinders; a charred twig; a small pumice stone; a tiny obsidian shard\nRow 2 (tiny): a scatter of charcoal bits; a small burnt grass tuft; a few dark ash pebbles; a yellow sulfur crust spot\nRow 3 (medium): a soft ash drift; a burnt stump fragment; a cracked ash crust patch; a scorch mark\nRow 4 (large, flat): a broad patch of ash ripples; a scatter of cooled lava pebbles; a wide sulfur crust patch; a long faintly smouldering crack\n\nStyle: seen from directly above like the reference texture, lying flat on the ground. Soft irregular edges that fade out into transparency. No outlines, no dark rim, no round patch or disc of ground under any detail, no cast shadows except a very soft contact darkening right under raised parts. Muted natural colours with low contrast against the reference ground. Hand painted, consistent soft daylight from the top left. Nothing that looks like a building, creature, person, treasure or item to pick up."
+  },
+  {
+   "ground": "lava",
+   "path": "res://art/overworld/source/generated/terrain/decals_v4/lava.png",
+   "sha256": "0e736f583df73cbaefb1c5423a782ec8b299c0b296016da838f4bbe2ca125be5",
+   "size": [
+    1254,
+    1254
+   ],
+   "ground_material_slot": 9,
+   "reference": "res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png slot 9",
+   "prompt": "Create an original painted asset sheet for a top-down fantasy strategy game map: a 4x4 grid of 16 separate small ground details for lava terrain, on a fully transparent background.\n\nThe attached reference image is the lava ground texture these details will be painted onto. Match its colours, lighting, brush texture, level of detail and scale exactly, so every detail looks like part of that ground and not like a sticker placed on top of it.\n\nLayout: exactly 4 rows and 4 columns of equal square cells. Each detail is centred in its own cell with generous empty transparent space around it; nothing touches or crosses a cell boundary. No grid lines, frames, labels, numbers or text.\nSizes: rows 1 and 2 are tiny details, each filling about a third of its cell. Row 3 is medium details, about half of the cell. Row 4 is larger flat ground features, about two thirds of the cell.\n\nRow 1 (tiny): a few glowing ember spots; a small obsidian shard; a few basalt pebbles; a tiny sulfur deposit\nRow 2 (tiny): a small glowing crack; a scoria rock; a cinder cluster; a dusting of grey ash\nRow 3 (medium): a cooled lava crust plate; a small faint steam vent; a cluster of glowing pebbles; a fissure with dim orange glow\nRow 4 (large, flat): a broad rippled cooled lava crust; a dark glassy obsidian pool; a wide crack network with faint glow; a field of scoria and cinders\n\nStyle: seen from directly above like the reference texture, lying flat on the ground. Soft irregular edges that fade out into transparency. No outlines, no dark rim, no round patch or disc of ground under any detail, no cast shadows except a very soft contact darkening right under raised parts. Muted natural colours with low contrast against the reference ground. Hand painted, consistent soft daylight from the top left. Nothing that looks like a building, creature, person, treasure or item to pick up."
+  },
+  {
+   "ground": "underground",
+   "path": "res://art/overworld/source/generated/terrain/decals_v4/underground.png",
+   "sha256": "9028f361f68fea19f32cfcc963a262c8aa0b35f4e05ae5372bba00cea09f6ddc",
+   "size": [
+    1254,
+    1254
+   ],
+   "ground_material_slot": 10,
+   "reference": "res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png slot 10",
+   "prompt": "Create an original painted asset sheet for a top-down fantasy strategy game map: a 4x4 grid of 16 separate small ground details for underground terrain, on a fully transparent background.\n\nThe attached reference image is the underground ground texture these details will be painted onto. Match its colours, lighting, brush texture, level of detail and scale exactly, so every detail looks like part of that ground and not like a sticker placed on top of it.\n\nLayout: exactly 4 rows and 4 columns of equal square cells. Each detail is centred in its own cell with generous empty transparent space around it; nothing touches or crosses a cell boundary. No grid lines, frames, labels, numbers or text.\nSizes: rows 1 and 2 are tiny details, each filling about a third of its cell. Row 3 is medium details, about half of the cell. Row 4 is larger flat ground features, about two thirds of the cell.\n\nRow 1 (tiny): a few cave pebbles; a tiny cluster of glowing blue mushrooms; a small crystal shard; a stalagmite stub\nRow 2 (tiny): a quartz chip cluster; a patch of luminous lichen; a small drip puddle; a few root tendrils\nRow 3 (medium): a cluster of pale cave fungus; a mineral vein in the floor; a cracked stone plate; a small dark pit hollow\nRow 4 (large, flat): a broad patch of glowing moss; a scatter of crystal shards and gravel; a wide shallow puddle; a dusty patch of fallen rubble\n\nStyle: seen from directly above like the reference texture, lying flat on the ground. Soft irregular edges that fade out into transparency. No outlines, no dark rim, no round patch or disc of ground under any detail, no cast shadows except a very soft contact darkening right under raised parts. Muted natural colours with low contrast against the reference ground. Hand painted, consistent soft daylight from the top left. Nothing that looks like a building, creature, person, treasure or item to pick up."
+  },
+  {
+   "ground": "snow",
+   "path": "res://art/overworld/source/generated/terrain/decals_v4/snow.png",
+   "sha256": "4ec62e99d3ffbdc8c98c1efc1e107fe87903accba9e36cfb2a012b301f52c495",
+   "size": [
+    1254,
+    1254
+   ],
+   "ground_material_slot": 11,
+   "reference": "res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png slot 11",
+   "prompt": "Create an original painted asset sheet for a top-down fantasy strategy game map: a 4x4 grid of 16 separate small ground details for snow terrain, on a fully transparent background.\n\nThe attached reference image is the snow ground texture these details will be painted onto. Match its colours, lighting, brush texture, level of detail and scale exactly, so every detail looks like part of that ground and not like a sticker placed on top of it.\n\nLayout: exactly 4 rows and 4 columns of equal square cells. Each detail is centred in its own cell with generous empty transparent space around it; nothing touches or crosses a cell boundary. No grid lines, frames, labels, numbers or text.\nSizes: rows 1 and 2 are tiny details, each filling about a third of its cell. Row 3 is medium details, about half of the cell. Row 4 is larger flat ground features, about two thirds of the cell.\n\nRow 1 (tiny): a few frosted grass blades poking through snow; a small snow-capped pebble; a twig in snow; a little ice crystal cluster\nRow 2 (tiny): a frozen berry sprig; a tiny frosted shrub tip; a small animal track pair in snow; a pine twig\nRow 3 (medium): a low snow drift; a frozen puddle; a stone poking through snow; a frosted dry grass clump\nRow 4 (large, flat): a broad wind-carved drift; a patch of blue ice in snow; a bare rock patch with snow around it; a long snow ripple streak\n\nStyle: seen from directly above like the reference texture, lying flat on the ground. Soft irregular edges that fade out into transparency. No outlines, no dark rim, no round patch or disc of ground under any detail, no cast shadows except a very soft contact darkening right under raised parts. Muted natural colours with low contrast against the reference ground. Hand painted, consistent soft daylight from the top left. Nothing that looks like a building, creature, person, treasure or item to pick up."
+  },
+  {
+   "ground": "ice",
+   "path": "res://art/overworld/source/generated/terrain/decals_v4/ice.png",
+   "sha256": "9c1acfd298f63e7cd54c8f3674baefc0f16fb70fa6131eb9e6f2337bbae1fbc3",
+   "size": [
+    1254,
+    1254
+   ],
+   "ground_material_slot": 15,
+   "reference": "res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png slot 15",
+   "prompt": "Create an original painted asset sheet for a top-down fantasy strategy game map: a 4x4 grid of 16 separate small ground details for ice terrain, on a fully transparent background.\n\nThe attached reference image is the ice ground texture these details will be painted onto. Match its colours, lighting, brush texture, level of detail and scale exactly, so every detail looks like part of that ground and not like a sticker placed on top of it.\n\nLayout: exactly 4 rows and 4 columns of equal square cells. Each detail is centred in its own cell with generous empty transparent space around it; nothing touches or crosses a cell boundary. No grid lines, frames, labels, numbers or text.\nSizes: rows 1 and 2 are tiny details, each filling about a third of its cell. Row 3 is medium details, about half of the cell. Row 4 is larger flat ground features, about two thirds of the cell.\n\nRow 1 (tiny): a small crack in ice; a frost flower; a few trapped air bubbles; a tiny snow tuft\nRow 2 (tiny): a frozen pebble under ice; a small rime patch; a frozen leaf in ice; a few ice crystal shards\nRow 3 (medium): a pressure ridge fragment; a snow dusting patch; a slush spot; a network of fine cracks\nRow 4 (large, flat): a broad network of deep blue cracks; a wide frost feather patch; a long snow streak across ice; a patch of milky rime ice\n\nStyle: seen from directly above like the reference texture, lying flat on the ground. Soft irregular edges that fade out into transparency. No outlines, no dark rim, no round patch or disc of ground under any detail, no cast shadows except a very soft contact darkening right under raised parts. Muted natural colours with low contrast against the reference ground. Hand painted, consistent soft daylight from the top left. Nothing that looks like a building, creature, person, treasure or item to pick up."
+  }
+ ],
+ "runtime": {
+  "path": "res://art/overworld/runtime/terrain_tiles/detail/terrain_decals_v4.png",
+  "sha256": "3ceebf2d90d0e34506cafc8b4d57148076db79c2ba842b9f86d11728234968a7"
+ }
+}

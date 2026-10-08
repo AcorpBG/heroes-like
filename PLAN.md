@@ -96,9 +96,29 @@ Rules:
 
 `ux-scenery-pickup-readability-20261008` (completed, owner go-ahead after the scan): blocked scenery cells whose painted art covers less than 30% get a filler from their family's terrain palette and single pieces are at least 0.62 tile, so no blocked tile looks walkable; artifacts (0.62 tile) and loose pickups (0.66) are larger, draw above neighbouring canopy and carry a faint static glint. Focused check: `tests/overworld_scenery_pickup_readability_report.tscn`.
 
+### Road junctions
+
+`ux-overworld-road-junctions-20261008` (completed, owner playtest fix): where generated roads run two tiles wide at a junction or side by side, the renderer links the roads entering each clump with one tree instead of joining every adjacent tile, so junctions read as a T or a cross instead of ladders and loops; real loops and crossings are unchanged. See `docs/overworld-road-junctions.md`.
+
+### Organic ground borders
+
+`art-overworld-organic-ground-borders-20261008` (completed, owner-approved prototype): biome borders meander off the tile grid (noise-bent corner weights that fade out near tile centres) and grounds meet with a height-and-priority blend instead of a cross-fade, so one ground's detail fringes the other; coasts curve the same way. See `docs/overworld-ground-borders.md`.
+
+### Ground detail decals
+
+`art-overworld-terrain-decals-v4-20261008` (completed, owner request): ground decals are reworked. Each land ground (13) has its own generated set of 16 details painted against that ground's material (tiny, medium and large flat features); the ground shader scatters them on a jittered grid with noise-driven clusters and clearings, off roads, water and biome borders, so they share the ground's light instead of sitting on it as stickers. See `docs/overworld-terrain-decals.md`.
+
 ### Resource bar daily income
 
 `ux-resource-bar-daily-income-20261008` (completed, owner request): the resource bar on the overworld and in town shows each resource's daily income after its amount ("5000 +500"; green for a gain, muted "+0"), and its tooltips and popup say "+N per day". The figure is the end-turn income forecast (`OverworldRules.player_daily_income`), so it is exactly what the next daybreak pays. `tests/resource_bar_daily_income_report.tscn` checks both bars and the payout on a generated map.
+
+### AI markets, out-of-the-way idle heroes, strength-scaled rewards
+
+`ai-market-parking-fight-rewards-20261008` (completed, owner review of the 2026-10-08 large-map game): the Marketplace costs 1,000 gold and the Trade Exchange 3,000 gold, 5 wood and 5 ore; computer towns value each market stage like a Storehouse (more while a resource is missing) and credit buildings for what they unlock, so every computer player builds a Marketplace on day 3. Idle AI heroes park in their town, waiting heroes keep off tiles that cut a way through, a hero blocked by its own idle hero asks it to step aside, the most experienced hero leads the main army, a full army swaps in stronger garrison stacks, built visit sites can be crossed, and a boxed-in hero fights its way out. The fight loss estimate is calibrated on 1,262 auto-resolved fights and an idle hero takes a clean win. Every battle pays by the strength beaten, mostly experience, half the gold and resources. Stripping garrisons stays (owner). Open: market weekly caps keep ore-poor factions hoarding gold. See `docs/ai-plays-by-player-rules.md`, `docs/town-market.md`.
+
+### AI against AI matches
+
+`ai-versus-ai-match-20261008` (completed, owner request): a match can be played with no human. `AiSeatRules` hands the human's seat to the computer and says who is still standing; a session flag keeps a log of every AI fight and town capture. `tests/ai_versus_ai_match_report` plays two random factions (mirror possible) on a small one-level generated map until one side has no town and no hero, and writes the battle log and a daily ledger per side as JSON. First match: Veilmourn beat Thornwake on day 25 after Thornwake's empty capital fell and its main hero never went back. Open: AI towns are left without troops and a lost capital is not retaken; computer players start with no treasury while the human gets 5,000 gold. See `docs/ai-plays-by-player-rules.md`.
 
 ### Full-army site claims
 

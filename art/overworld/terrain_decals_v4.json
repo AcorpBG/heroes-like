@@ -1,0 +1,107 @@
+{
+ "schema": "overworld_terrain_decals_v4",
+ "model": "ground_shader_scattered_ground_specific_decals_v4",
+ "atlas": "res://art/overworld/runtime/terrain_tiles/detail/terrain_decals_v4.png",
+ "source_manifest": "res://art/overworld/source/generated/terrain/decals_v4/manifest.json",
+ "atlas_grid": [
+  16,
+  16
+ ],
+ "cell_px": 128,
+ "decals_per_set": 16,
+ "cell_tiles": 1.0,
+ "opacity": 0.96,
+ "sets": [
+  {
+   "ground": "grass",
+   "material_slots": [
+    0
+   ],
+   "density": 0.55
+  },
+  {
+   "ground": "plains",
+   "material_slots": [
+    1
+   ],
+   "density": 0.5
+  },
+  {
+   "ground": "forest",
+   "material_slots": [
+    2
+   ],
+   "density": 0.6
+  },
+  {
+   "ground": "swamp",
+   "material_slots": [
+    3
+   ],
+   "density": 0.55
+  },
+  {
+   "ground": "dirt",
+   "material_slots": [
+    4
+   ],
+   "density": 0.45
+  },
+  {
+   "ground": "sand",
+   "material_slots": [
+    5
+   ],
+   "density": 0.35
+  },
+  {
+   "ground": "rough",
+   "material_slots": [
+    6
+   ],
+   "density": 0.5
+  },
+  {
+   "ground": "rock",
+   "material_slots": [
+    7
+   ],
+   "density": 0.45
+  },
+  {
+   "ground": "ash",
+   "material_slots": [
+    8
+   ],
+   "density": 0.45
+  },
+  {
+   "ground": "lava",
+   "material_slots": [
+    9
+   ],
+   "density": 0.4
+  },
+  {
+   "ground": "underground",
+   "material_slots": [
+    10
+   ],
+   "density": 0.5
+  },
+  {
+   "ground": "snow",
+   "material_slots": [
+    11
+   ],
+   "density": 0.4
+  },
+  {
+   "ground": "ice",
+   "material_slots": [
+    15
+   ],
+   "density": 0.35
+  }
+ ]
+}

@@ -114365,6 +114365,45 @@
       "notes": "Owner go-ahead on scan findings 2 and 3. Scenery: OverworldMapView._index_scenery_cell_fillers samples each blocked scenery cell's painted coverage (4x4 samples against 24px alpha masks of its own piece, formation slice, overlapping formations and rock contacts; bottom rows first, early exit) and gives cells under 30% a filler from native_scenery component_palettes for the cell's family and terrain (low cells excluded), drawn by _draw_native_scenery_fillers; _scenery_piece_tiles sets a 0.62-tile minimum for a cell's own piece; NativeSceneryFormation.painted_tiles shared by slice and coverage. Static caches (alpha masks, raster sizes, filler result per session/level/scenery signature): owner's 108x108 map 808 of 6,311 cells filled, ~0.3 s once per map per launch, ~5 ms on later overworld rebuilds. Pickups: artifact extent 0.62 (was 0.42), loose pickup 0.66 (was 0.56), drawn in the foreground pass instead of before scenery, static glint on visible pickups; validate_repo pins and overworld_object_scale_regression expectations updated. Validation (focused, per owner): new tests/overworld_scenery_pickup_readability_report windowed 21 checks (511/511 scenery tiles show art, 8 pickups incl. 6 just above scenery visible and readable), terrain crops from the owner's map reviewed (swamp, snow, grass, rough, dirt, sand), validate_repo identical (828). Full scan not rerun."
     },
     {
+      "id": "art-overworld-terrain-decals-v4-20261008",
+      "title": "Rework ground decals: one set per ground, scattered by the ground shader",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "art_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/overworld-terrain-decals.md"
+      ],
+      "notes": "Owner asked for a complete rework (different decals per ground type, more variety, seamless integration, more varied placement). Old: 16 clusters, 4 'grey rock with meadow grass' shared by rough/rock/underground/dirt/sand/ash, drawn per tile on every fifth tile as stickers. New: 13 generated 4x4 sheets (grass, plains, forest, swamp, dirt, sand, rough, rock, ash, lava, underground, snow, ice; 208 decals), each generated with its ground material as reference (sources, prompts, hashes in art/overworld/source/generated/terrain/decals_v4/manifest.json); tools/prepare_overworld_terrain_decals.py cuts, grades 12% toward the ground tone, feathers, bleeds and packs a reproducible 2048x2048 atlas. The ground shader scatters them (decal_layer): jittered 1-tile grid, tiny/medium/large classes, mirror, per-set density modulated by slow noise for clusters and clearings, roads (lookup blue channel), water and unexplored tiles excluded, fading by the ground's own blend weight at biome borders, explicit mip levels. The per-tile _draw_terrain_detail_decal path is removed; OverworldMapView._terrain_decal_payload reports the set. Validation: before/after captures on the owner's map (dirt, lava, snow, grass, swamp, rough, sand) reviewed; validate_repo identical (828) with the decal contract rewritten; random_map_live_overworld_render_move_report and overworld_raster_terrain_blocker_mass_report updated to the new payload. Old atlases kept as provenance; archived Ninefold smoke still references v3."
+    },
+    {
+      "id": "art-overworld-organic-ground-borders-20261008",
+      "title": "Organic ground borders: bent, height-and-priority blended biome edges",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "art_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/overworld-ground-borders.md"
+      ],
+      "notes": "Owner accepted the prototype shown as before/after sheets. overworld_ground_surface.gdshader: border_warp (three rotated value-noise octaves, warp 0.36 tile + detail) bends the corner-weight lookup, faded to zero within 0.3 tile of tile centres so each tile's middle keeps its own ground; candidate materials score merged corner weight + border_priority (ground_materials.json, by slot) + painted-detail height (luminance above the material average, x1.3) and blend within blend_depth 0.26; the beach band uses the bent corner weights; decals fade by each ground's final blend share. OverworldGroundSurface passes border_priority. Validation: owner-map and generated-map border captures (sand/grass, snow/grass, swamp/grass, snow/dirt, dirt/grass, rough/dirt) and a generated coast reviewed; overworld_sandy_shore_regression 53/53 (tile-centre identity restored by the centre fade), overworld_ground_materials_contract passes, validate_repo identical (828)."
+    },
+    {
+      "id": "ux-overworld-road-junctions-20261008",
+      "title": "Road junctions draw as a T or a cross, not ladders and loops",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/overworld-road-junctions.md"
+      ],
+      "notes": "Owner report: intersecting roads drew a doubled connection instead of a T. Cause: native generated roads are an unordered tile set laid two tiles wide at some junctions and side-by-side passes (HoMM3's stored road frames for those tiles also draw a fat clump), and OverworldMapView joined every orthogonally adjacent road tile. Owner's 108x108 map: 7 closed 2x2 blocks (two portal entrances, beside a town). Now _simplify_fat_road_clusters groups tiles in closed 2x2 blocks into clumps, takes as ports the clump tiles where roads leave plus object entrances (tile_has_route_interaction), links them with a turn-penalised tree (_road_cluster_path), drops other in-clump connections and hides off-tree clump tiles (presentation_hidden; 6 of 417 tiles on the owner's map). Roads are presentation only (no movement effect). Validation: new tests/overworld_road_junction_report (yard on a generated small map: fat-corner T, two-wide stretch, ring road, plain cross; 17 checks), before/after captures of the three spots on the owner's map, random_map_live_overworld_render_move_report passes, validate_repo identical (828)."
+    },
+    {
       "id": "ux-resource-bar-daily-income-20261008",
       "title": "Resource bar shows each resource's daily income",
       "status": "completed",
@@ -114375,6 +114414,33 @@
         "PLAN.md"
       ],
       "notes": "Owner request: show the daily income for each resource in the resource bar, separated by a + sign. ResourceStockpileMenu.sync_stockpile takes an optional daily_income; each inline cell shows the amount then a signed income label (green gain, red loss, muted +0), popup rows read 'Gold  5000  +500' and tooltips 'Gold: 5000 (+500 per day)'; validation_snapshot exposes daily_income. OverworldShell and TownShell feed OverworldRules.player_daily_income (new public wrapper over the end-turn forecast projection _player_daily_income_projection for day+1: towns at daybreak, hero artifacts/specialties, controlled sites, difficulty scaling). controlled_resource_site_income now checks the controller before the content lookup (same result; the bar asks on every refresh). Cost on a generated extra-large map: 0.9 ms on day 1, 1.7 ms with 4 towns/60 sites, 6.7 ms owning all 16 towns/952 sites, against a 225 ms route-preview refresh there. Validation: new tests/resource_bar_daily_income_report (generated small map, two flagged wood/ore sites: overworld and town bars show the rules income, labels and tooltips, next end_turn pays exactly the shown income; 106 checks) passes; windowed captures at 1920x1080 and 1280x720 (overworld) and town 1920x1080 show no clipping; town_garrison_rows, overworld_object_footprint_alignment and site_recruit_overflow reports pass; validate_repo identical to baseline (884 in this checkout). Pinned popup/tooltip format updated in validate_repo, resource_stockpile_icon_popover_runtime_report (River Pass setup, not run) and the Linux-only overworld_stockpile_text_fit_regression (not run here: needs xvfb and a saved match)."
+    },
+    {
+      "id": "ai-market-parking-fight-rewards-20261008",
+      "title": "Cheap markets the AI builds, idle AI heroes out of the way, strength-scaled battle rewards",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ai_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/ai-plays-by-player-rules.md",
+        "docs/town-market.md"
+      ],
+      "notes": "Owner review of the 2026-10-08 large-map playthrough (seed 1041912569): Embercourt never left its capital's pocket because its lesser hero waited on the only exit tile, no computer town ever built a Marketplace (a prerequisite scored nothing in the build planner), so ore-starved factions hoarded up to 60,000 gold, Mireclaw stopped exploring after day 18, and every AI hero paid a flat 140 gold / 160 experience when beaten. Owner decisions: Marketplace 1,000 gold, Trade Exchange 3,000 gold + 5 wood + 5 ore; computer towns value each market stage like a Storehouse (1.8x while a resource is missing) and credit buildings for what they unlock (_opens_count over the whole tree). Idle AI heroes park in their town doorway (ai_hero.parked); own heroes in a town block no one; waiting heroes avoid tiles that cut a way through (_cuts_a_way); a hero whose way is blocked by its own idle hero asks it to step aside (_clear_way, ai_hero.make_way). Found and fixed on the replay: the main army now follows the most experienced hero (a courier carrying a garrison used to become main), a full army trades its weakest stack for a stronger garrison stack and values town visits by what it can take (_garrison_pickup, ending a town ping-pong), built visit sites can be crossed, and a boxed-in hero fights the weakest guard at even odds. Fight loss estimate calibrated on 1,262 auto-resolved fights (1.3x square law + 1.2%); an idle hero takes a clean preview win. Every battle pays by the strength beaten (BattleRules.battle_rewards_for_strength: 0.5 experience per strength, half the encounter's resources scaled against a 300-strength guard). Stripping garrisons stays (owner). ai_player_rules_report replays the owner's map 24 days: markets on day 3, explored 1,480/1,375/2,252 (Embercourt/Mireclaw/Sunvault; owner game 443/1,114/2,234), no idle stalls; a 40-day replay shows AI-vs-AI conquest. Harness fixtures adjusted to the new roles (authored supply caches cleared, recruits seeded, experienced host). validate_repo identical to baseline. Pre-existing failures unchanged on base: town_market_popout_report (%TradeAction), town_market_exchange_completion_feedback_report, runtime_market_cap_persistence_report, economy_capture_income_expansion_report, core_systems_regression_smoke (diagonal move). Open: market weekly caps (6 ore/week) keep ore-poor factions hoarding gold."
+    },
+    {
+      "id": "ai-versus-ai-match-20261008",
+      "title": "AI against AI matches with a battle log",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ai_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Owner request: generate a small 2-player one-level map with no human, two AI players with completely random factions (a mirror allowed), play until one wins and write everything into a battle report. AiSeatRules.hand_human_seat_to_ai gives the human seat to the computer (player record computer, towns transferred under the same player id, treasury moved, heroes removed; HeroCommandRules.normalize_session keeps no player heroes without a human seat); standing_players/match_over decide the match. AiHeroRules logs every auto-resolved fight (BATTLE_LOG_KEY) and town capture (CAPTURE_LOG_KEY) when the session flag ai_battle_log_enabled is set. tests/ai_versus_ai_match_report plays the match (HEROES_AI_MATCH_SEED, random allowed; HEROES_AI_MATCH_MAX_DAYS; HEROES_AI_MATCH_OUT) and runs 40 days of a fixed seed as a regression check; both seats start with the human's 5,000 gold / 10 wood / 10 ore. First match ai-match-4199114532: Veilmourn beat Thornwake on day 25 in 16 battles, replayed identically. Findings for follow-up: AI capitals left without troops (15 of 15 captures unopposed; 45 of 48 in the 40-day mirror seed), couriers swap an empty capital twice a day, a main hero does not go back for a lost capital, loss estimates ran about twice the actual losses on this map (20% vs 9%), and computer players start with no treasury on generated maps while the human gets 5,000 gold."
     },
     {
       "id": "feature-portal-networks-20261008",

@@ -144,8 +144,8 @@ func _terrain_summary(map_view, session) -> Dictionary:
 			if bool(micro.get("drawn", false)) or int(micro.get("stroke_count", 0)) != 0:
 				procedural_microtexture_drawn += 1
 			procedural_microtexture_calls += int(micro.get("procedural_draw_calls", 0))
-			var detail: Dictionary = payload.get("terrain_detail_decal", {}) if payload.get("terrain_detail_decal", {}) is Dictionary else {}
-			if bool(detail.get("drawn", false)):
+			var detail: Dictionary = payload.get("terrain_decals", {}) if payload.get("terrain_decals", {}) is Dictionary else {}
+			if String(detail.get("decal_set", "")) != "":
 				raster_detail_drawn += 1
 	return {
 		"sampled_tile_count": sampled,
@@ -154,7 +154,7 @@ func _terrain_summary(map_view, session) -> Dictionary:
 		"procedural_microtexture_draw_calls": procedural_microtexture_calls,
 		"raster_detail_drawn_count": raster_detail_drawn,
 		"microtexture_model": "disabled_original_raster_surface_only_v2",
-		"detail_model": "biome_specific_painterly_landmark_clusters_denser_v4",
+		"detail_model": "ground_shader_scattered_ground_specific_decals_v4",
 	}
 
 func _validate_terrain_summary(summary: Dictionary) -> void:

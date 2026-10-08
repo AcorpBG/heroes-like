@@ -5,6 +5,8 @@
   "source_manifest": "res://art/overworld/source/generated/terrain/ground_materials_v3/manifest.json",
   "material_span_tiles": 4,
   "sampling": "bounded_mip_detail_with_cross_material_safe_inset",
+  "border_model": "warped_height_priority_blend_v4",
+  "border_priority": [0.18, 0.14, 0.18, 0.16, 0.10, 0.08, 0.12, 0.06, 0.10, 0.12, 0.06, 0.20, 0.0, 0.0, 0.0, 0.05],
   "terrain_slots": {
     "grass": 0,
     "plains": 1,
