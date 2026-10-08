@@ -70,6 +70,11 @@ var _pending_option_index := -1
 var _peek := false
 var _tiles: Dictionary = {}
 var _texture_cache: Dictionary = {}
+# Heights of the town's bottom furniture: the resource bar (the board and the
+# detail panel end above it) and the bar plus army rows (the town view's Back
+# bar sits above them).
+var _bottom_inset := 0.0
+var _peek_inset := 0.0
 
 var _backdrop: TextureRect
 var _shade: ColorRect
@@ -80,7 +85,6 @@ var _town_subtitle: Label
 var _header_divider: ColorRect
 var _today_chip: PanelContainer
 var _today_label: Label
-var _resource_row: HBoxContainer
 var _close_button: Button
 var _board_column: VBoxContainer
 var _row_boxes: Dictionary = {}
@@ -100,7 +104,6 @@ var _cost_flow: HFlowContainer
 var _req_flow: HFlowContainer
 var _primary_button: Button
 var _trade_button: Button
-var _view_button: Button
 var _peek_bar: PanelContainer
 var _peek_label: Label
 var _peek_back_button: Button
@@ -128,7 +131,6 @@ func configure(board: Dictionary, resources: Dictionary, backdrop_path: String) 
 	_town_label.text = String(board.get("town_name", "Town"))
 	_town_subtitle.text = String(board.get("faction_name", ""))
 	_refresh_today_chip(_frame.size.x > 0.0 and _frame.size.x < COMPACT_HEADER_WIDTH)
-	_rebuild_resources()
 	_rebuild_board()
 	if Board.slot_by_id(_board, _selected_slot_id).is_empty():
 		_selected_slot_id = _default_slot_id()
@@ -205,6 +207,23 @@ func set_peek(enabled: bool) -> void:
 
 func is_peeking() -> bool:
 	return _peek
+
+## Folds the board away to show the selected building in the town (the V key).
+func preview_selected_in_town() -> bool:
+	var building_id := _peek_building_id(selected_slot())
+	if _peek or building_id == "":
+		return false
+	set_peek(true)
+	view_in_town_requested.emit(building_id)
+	_peek_back_button.call_deferred("grab_focus")
+	return true
+
+func set_bottom_insets(board_inset: float, peek_inset: float) -> void:
+	if is_equal_approx(board_inset, _bottom_inset) and is_equal_approx(peek_inset, _peek_inset):
+		return
+	_bottom_inset = maxf(0.0, board_inset)
+	_peek_inset = maxf(0.0, peek_inset)
+	_layout()
 
 func handle_cancel() -> void:
 	if _peek:
@@ -388,21 +407,6 @@ func _build_header() -> void:
 	_today_label = _label("", BODY_TEXT, 13)
 	_today_label.name = "ConstructionToday"
 	_today_chip.add_child(_today_label)
-	var spacer := Control.new()
-	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(spacer)
-	_resource_row = HBoxContainer.new()
-	_resource_row.name = "ConstructionResources"
-	_resource_row.add_theme_constant_override("separation", 14)
-	row.add_child(_resource_row)
-	_close_button = Button.new()
-	_close_button.name = "ConstructionClose"
-	_close_button.text = "Close  (Esc)"
-	_close_button.tooltip_text = "Return to the town without building."
-	_close_button.accessibility_name = "Close construction and return to town"
-	FrontierVisualKit.apply_button(_close_button, "secondary", 128, 36, 13)
-	_close_button.pressed.connect(func(): close_requested.emit())
-	row.add_child(_close_button)
 	header.set_meta("layout_role", "header")
 
 func _build_body() -> void:
@@ -550,13 +554,16 @@ func _build_body() -> void:
 	FrontierVisualKit.apply_button(_trade_button, "secondary", 96, 48, 13)
 	_trade_button.pressed.connect(func(): trade_requested.emit(selected_building_id()))
 	buttons.add_child(_trade_button)
-	_view_button = Button.new()
-	_view_button.name = "ConstructionViewInTown"
-	_view_button.text = "View in town"
-	_view_button.tooltip_text = "Fold the board away and see where this building stands in the town. Nothing is built."
-	FrontierVisualKit.apply_button(_view_button, "secondary", 136, 48, 13)
-	_view_button.pressed.connect(_on_view_pressed)
-	buttons.add_child(_view_button)
+	# The stockpile shows in the town's resource bar below, so the header has no
+	# resource strip. V still folds the board away to view a building in town.
+	_close_button = Button.new()
+	_close_button.name = "ConstructionClose"
+	_close_button.text = "Close  (Esc)"
+	_close_button.tooltip_text = "Return to the town without building. Press V to see the selected building in the town."
+	_close_button.accessibility_name = "Close construction and return to town"
+	FrontierVisualKit.apply_button(_close_button, "secondary", 136, 48, 13)
+	_close_button.pressed.connect(func(): close_requested.emit())
+	buttons.add_child(_close_button)
 
 func _build_peek_bar() -> void:
 	_peek_bar = PanelContainer.new()
@@ -1075,7 +1082,6 @@ func _refresh_buttons(slot: Dictionary) -> void:
 	var status_id := String(slot.get("status", ""))
 	var next_name := _building_name(String(slot.get("next_id", "")))
 	_trade_button.visible = status_id == Board.STATUS_TRADE
-	_view_button.visible = _peek_building_id(slot) != ""
 	if String(slot.get("next_id", "")) == "":
 		_primary_button.visible = true
 		_primary_button.disabled = true
@@ -1126,14 +1132,6 @@ func _on_primary_pressed() -> void:
 		return
 	build_requested.emit(building_id)
 
-func _on_view_pressed() -> void:
-	var building_id := _peek_building_id(selected_slot())
-	if building_id == "":
-		return
-	set_peek(true)
-	view_in_town_requested.emit(building_id)
-	_peek_back_button.call_deferred("grab_focus")
-
 func _peek_building_id(slot: Dictionary) -> String:
 	if slot.is_empty():
 		return ""
@@ -1151,9 +1149,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 				_on_primary_pressed()
 		KEY_V:
-			if not _peek and _view_button.visible:
+			if preview_selected_in_town():
 				get_viewport().set_input_as_handled()
-				_on_view_pressed()
 		KEY_1, KEY_2:
 			var slot := selected_slot()
 			if not _peek and String(slot.get("kind", "")) == "choice":
@@ -1163,7 +1160,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 # --- keyboard and controller focus ----------------------------------------------------
 
 ## Explicit neighbours keep arrow navigation on the visual grid and inside this
-## screen; Tab cycles tiles, the decision controls and Close.
+## screen; Tab cycles tiles and the decision controls, Close last.
 func _wire_focus() -> void:
 	var grid_rows := []
 	for row_ids in [["town"], ["army"], ["growth", "training"], ["signature"]]:
@@ -1181,7 +1178,7 @@ func _wire_focus() -> void:
 			var tile: Control = row[index]
 			tile.focus_neighbor_left = tile.get_path_to(row[index - 1]) if index > 0 else NodePath("")
 			tile.focus_neighbor_right = tile.get_path_to(row[index + 1]) if index < row.size() - 1 else tile.get_path_to(detail_entry)
-			tile.focus_neighbor_top = tile.get_path_to(_nearest_tile(grid_rows[row_index - 1], tile)) if row_index > 0 else tile.get_path_to(_close_button)
+			tile.focus_neighbor_top = tile.get_path_to(_nearest_tile(grid_rows[row_index - 1], tile)) if row_index > 0 else tile.get_path_to(tile)
 			tile.focus_neighbor_bottom = tile.get_path_to(_nearest_tile(grid_rows[row_index + 1], tile)) if row_index < grid_rows.size() - 1 else tile.get_path_to(detail_entry)
 	var selected_tile: Control = _tiles.get(_selected_slot_id)
 	for control in detail_controls:
@@ -1191,13 +1188,10 @@ func _wire_focus() -> void:
 	for row in grid_rows:
 		cycle.append_array(row)
 	cycle.append_array(detail_controls)
-	cycle.append(_close_button)
 	for index in range(cycle.size()):
 		var control: Control = cycle[index]
 		control.focus_next = control.get_path_to(cycle[(index + 1) % cycle.size()])
 		control.focus_previous = control.get_path_to(cycle[(index - 1 + cycle.size()) % cycle.size()])
-	if selected_tile != null:
-		_close_button.focus_neighbor_bottom = _close_button.get_path_to(selected_tile)
 
 func _row_tiles(row_id: String) -> Array:
 	var box: HBoxContainer = _row_boxes.get(row_id)
@@ -1532,29 +1526,6 @@ func _refresh_today_chip(compact: bool = false) -> void:
 	else:
 		_today_label.text = "Day %d · %s" % [int(_board.get("day", 0)), "built today, next construction tomorrow" if used else "1 construction available today"]
 
-func _rebuild_resources() -> void:
-	for child in _resource_row.get_children():
-		_resource_row.remove_child(child)
-		child.queue_free()
-	for resource_id in Board.RESOURCE_ORDER:
-		var cell := HBoxContainer.new()
-		cell.name = resource_id
-		cell.add_theme_constant_override("separation", 5)
-		cell.tooltip_text = Board.resource_name(resource_id).capitalize()
-		cell.mouse_filter = Control.MOUSE_FILTER_PASS
-		var icon := TextureRect.new()
-		icon.custom_minimum_size = Vector2(24, 24)
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		icon.texture = _texture(OverworldRulesScript.resource_icon_path(resource_id))
-		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		cell.add_child(icon)
-		var amount := _label(Board.format_amount(int(_resources.get(resource_id, 0))), TITLE_TEXT, 15)
-		amount.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		cell.add_child(amount)
-		_resource_row.add_child(cell)
-
 # --- layout ------------------------------------------------------------------------
 
 func _layout() -> void:
@@ -1576,14 +1547,12 @@ func _layout() -> void:
 	header.size = Vector2(view.x, HEADER_HEIGHT)
 	var margin_x := clampf(view.x * 0.0167, 16.0, 40.0)
 	var top := HEADER_HEIGHT + 20.0
-	var bottom_margin := 18.0
+	var bottom_margin := maxf(18.0, _bottom_inset / fit + 10.0)
 	var detail_width := clampf(view.x * 0.30, 420.0, 600.0)
 	var board_width := maxf(560.0, view.x - margin_x * 2.0 - 28.0 - detail_width)
 	var body_height := view.y - top - bottom_margin
 	_detail_panel.position = Vector2(view.x - margin_x - detail_width, top)
 	_detail_panel.size = Vector2(detail_width, body_height)
-	_board_column.position = Vector2(margin_x, top)
-	_board_column.size = Vector2(board_width, body_height)
 	var tile_width := floorf((board_width - GAP * 6.0) / 7.0)
 	# Rows share the height that labels, gaps and the legend leave free.
 	var fixed := LABEL_HEIGHT * 4.0 + ROW_GAP * 9.0 + 24.0
@@ -1606,10 +1575,14 @@ func _layout() -> void:
 		var header_row: Control = _row_labels.get(row_id)
 		if header_row != null:
 			header_row.custom_minimum_size.x = tile_width * 3.0 + GAP * 2.0
+	# Sized after the tiles: a column sized first keeps the old, taller tiles'
+	# height when the space shrinks (a resize or the town's resource bar).
+	_board_column.position = Vector2(margin_x, top)
+	_board_column.size = Vector2(board_width, body_height)
 	_peek_bar.reset_size()
 	_peek_bar.scale = Vector2(fit, fit)
 	var peek_size := _peek_bar.get_combined_minimum_size() * fit
-	_peek_bar.position = Vector2((actual.x - peek_size.x) * 0.5, actual.y - peek_size.y - 150.0 * fit)
+	_peek_bar.position = Vector2((actual.x - peek_size.x) * 0.5, actual.y - peek_size.y - maxf(150.0 * fit, _peek_inset))
 
 func _layout_tile_overlays(tile: Control) -> void:
 	var pips := tile.get_node_or_null("StagePips") as Control

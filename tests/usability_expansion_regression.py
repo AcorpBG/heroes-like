@@ -135,7 +135,7 @@ func construction() -> void:
 	check(session.to_dict()==before,"construction inspection spent resources/changed save")
 	bounded(screen,"construction board exceeds viewport")
 	await capture("construction-discovery")
-	await click(screen.find_child("ConstructionViewInTown",true,false));await settle()
+	check(screen.preview_selected_in_town(),"construction did not fold away for the town view");await settle()
 	check(screen.is_peeking() and not screen.find_child("ConstructionFrame",true,false).visible,"folded view retains board controls")
 	bounded(screen._peek_bar,"folded construction clips")
 	await capture("construction-folded")

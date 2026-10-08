@@ -86,6 +86,8 @@ Rules:
 
 `ux-town-garrison-rows-20261008` (completed, owner playtest fix): the Town screen has HoMM-style permanent rows: a 2x2 block of command squares, then the garrison row (garrison hero portrait + seven slots) and the visiting row, with click, drag and split troop orders and portrait clicks for the hero sheet and garrison swaps. The overworld resource bar sits along the bottom of every town view, an icon town list switches towns directly, and the Town Log, Command card and footer are retired. A hero can hold a town's garrison (its army is the garrison and defends the town) and shows on the overworld as a medallion with a G badge. See `docs/town-garrison-rows.md`.
 
+`ux-town-construction-close-20261008` (completed, owner playtest fix): the construction board drops its header resource strip (the town's bottom resource bar shows the stockpile and the board ends above it), and Close replaces View in town beside the build button; V still views the building in town. See `docs/town-construction-board.md`.
+
 ### Authored scenarios archived
 
 `content-authored-scenarios-archived-20261008` (completed, owner playtest fix): the 299 authored scenarios, 25 campaigns, their terrain layers and the authoring tools moved to `archive/authored-scenarios-2026-10-08/`. The game offers none of them (the Skirmish list shows only generated maps and Campaign reads 'Coming soon'), while `ContentService` still loads them by id as hidden test setups and for old saves.

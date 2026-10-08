@@ -114286,6 +114286,19 @@
         "docs/authored-scenarios-obsolete.md"
       ],
       "notes": "Owner request: archive the obsolete authored scenarios and campaigns. scenarios.json (299), campaigns.json (25), terrain_layers.json and the 20 tools/author_*.py scripts moved to archive/authored-scenarios-2026-10-08/ (git mv, history kept; .gdignore). Their domain_status is archived_* with zero player-facing counts, so the Skirmish list offers no authored fronts (build_skirmish_browser_entries now checks the domain), skirmish setup refuses them, and the main menu shows Campaign as 'Coming soon' (disabled, normal plaque padding, default focus on New skirmish; CampaignRules.campaigns_available). ContentService.AUTHORED_ARCHIVE_DIR keeps them loadable by id as hidden test setups and for old saves; a missing archive (shipped builds) reads as empty without errors. Map editor, art manifest, tests and validate_repo paths point at the archive; validate_repo keeps roster-integrity checks on the archived catalogs (authored_roster_count) and now requires the archive to be non-player-facing. Validation: validate_repo identical to baseline (828); water_travel and hero_exchange (River Pass setups) still load and pass; town_garrison_rows, ai_player_rules, native end-to-end and terrain transit reports pass; RMG unit tests pass; town faction Python tests fail identically on HEAD."
+    },
+    {
+      "id": "ux-town-construction-close-20261008",
+      "title": "Construction board: drop the header resource strip, Close replaces View in town",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/town-construction-board.md"
+      ],
+      "notes": "Owner playtest request: the construction board's header resource strip repeated the town's bottom resource bar, and View in town should give way to the header's Close button. TownConstructionScreen: header resource strip removed (stockpile still colours costs), Close (Esc) moved into the decision footer beside Build/Trade where View in town was, V still folds the board away (preview_selected_in_town; the legend keeps 'V views in town'). TownShell passes set_bottom_insets: the board and detail panel now end above the resource bar (it had hidden the legend and the panel's bottom edge) and the town view's Back bar sits above the army rows instead of overlapping them; the board column is sized after its tiles so a shrinking layout no longer keeps the old height. Validation: town_garrison_rows_report (generated small map) 58 checks pass including 9 new construction checks; windowed 1920x1080 captures inspected; validate_repo identical (828). River Pass construction tests had their View in town clicks switched to preview_selected_in_town but were not used as verification."
     }
   ],
   "project": "heroes-like",

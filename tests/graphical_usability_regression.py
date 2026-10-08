@@ -306,7 +306,7 @@ func towns() -> void:
 	screen.select_slot(slot_id)
 	await settle()
 	var selected_id:String=shell._selected_build_action_id.trim_prefix("build:")
-	await click(screen.find_child("ConstructionViewInTown",true,false))
+	check(screen.preview_selected_in_town(),"construction did not fold away for the town view")
 	await settle()
 	check(screen.is_peeking() and shell._town_stage_view._construction_preview_id==selected_id,"scenic placement view did not show the selected building")
 	check(Rect2(Vector2.ZERO,Vector2(requested)).encloses(screen._peek_bar.get_global_rect()),"folded construction controls clip")

@@ -206,8 +206,7 @@ func _run_town(template_id: String, viewport_size: Vector2i) -> Dictionary:
 	screen.select_slot("fort")
 	await _frames(1)
 	var fort := Board.slot_by_id(screen.board(), "fort")
-	var view_button := screen.find_child("ConstructionViewInTown", true, false) as Button
-	view_button.emit_signal("pressed")
+	_check(failures, screen.preview_selected_in_town(), "V previews the selected building in town")
 	await _frames(2)
 	var stage = shell.get("_town_stage_view")
 	_check(failures, bool(screen.validation_snapshot().get("peek", false)), "peek on")

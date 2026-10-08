@@ -21,7 +21,7 @@ The Town screen works like HoMM2/HoMM3: two permanent army rows instead of the T
   - Troops: click a stack, then a slot, to move, merge or swap; Shift opens a split slider; drag and drop works too. Orders go through `TownRules.manage_army_slots_in_active_town`, so a hero is never left without creatures.
   - Heroes: click a portrait to select it, click it again (or double-click) for the hero sheet, click the other portrait (or drag onto it) to move the hero into or out of the garrison or swap them.
   - Escape cancels the split, then a selection, before it returns to the field.
-- **Resource bar**: the overworld's stockpile bar along the bottom edge of every town view, above building popouts and the construction screen.
+- **Resource bar**: the overworld's stockpile bar along the bottom edge of every town view, above building popouts and the construction screen. The construction board has no resource strip of its own and ends above the bar.
 - **Town list**, top right: one thumbnail per owned town with its name overlaid; the current town is outlined. Clicking another town opens it directly (`OverworldRules.set_active_town_visit`).
 - **Banner**: Return to Field replaces the old Stores chip.
 - **Retired**: the Town Log & Logistics window and its command, the Command card, the footer (Save, Guide, Settings, Main Menu; Escape returns to the field and those stay on the overworld, as in HoMM3), and the stage's "Defending troops" and "Garrison troops" chips (the rows show them).
@@ -33,7 +33,7 @@ The Town screen works like HoMM2/HoMM3: two permanent army rows instead of the T
 
 ## Validation
 
-`tests/town_garrison_rows_report.tscn` (49 checks, generated small map): the garrison rules (enter with troop merge, defense, swap, blocked step-out, step-out, refused overflow, walking away), the save round trip and one-time migration, the Town screen (panel, command squares, rows, resource bar above popouts, retired surfaces, banner, town list, stage chips, click-click and split orders, portrait swap, hero sheet, Escape), and the overworld medallion index and hero-list badge.
+`tests/town_garrison_rows_report.tscn` (58 checks, generated small map): the garrison rules (enter with troop merge, defense, swap, blocked step-out, step-out, refused overflow, walking away), the save round trip and one-time migration, the Town screen (panel, command squares, rows, resource bar above popouts, retired surfaces, banner, town list, stage chips, click-click and split orders, portrait swap, hero sheet, Escape), the construction board (no header resource strip, Close beside Build, board above the resource bar, V town view clear of the rows, Esc and Close), and the overworld medallion index and hero-list badge.
 
 ## Follow-ups
 

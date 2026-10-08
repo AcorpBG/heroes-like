@@ -184,6 +184,7 @@ func _town_ui_section(session, primary_id: String, second_id: String) -> void:
 	for plaque in shell.get("_town_stage_view").call("_status_plaque_payloads"):
 		kinds.append(String(plaque.get("kind", "")))
 	_check("guard" not in kinds and "garrison" not in kinds, "the stage no longer repeats troop counts")
+	await _construction_section(shell, bar)
 	# Slot orders through the rows.
 	var visiting_before := _troops(_army_stacks(session, primary_id))
 	var garrison_before := _troops(_army_stacks(session, second_id))
@@ -227,6 +228,41 @@ func _town_ui_section(session, primary_id: String, second_id: String) -> void:
 		_check(shell.is_inside_tree() and (rows.validation_snapshot().selection as Dictionary).is_empty(), "Escape clears a slot selection before it would leave the town")
 	shell.queue_free()
 	await _frames(2)
+
+## The construction screen leaves the stockpile to the town's resource bar and
+## keeps Close where View in town was; V still views a building in the town.
+func _construction_section(shell, bar: Control) -> void:
+	shell.call("validation_open_town_catalog", "build")
+	await _frames(3)
+	var screen = shell.get("_construction_screen")
+	_check(screen != null and screen.visible, "the construction screen opens")
+	if screen == null or not screen.visible:
+		return
+	_check(screen.find_child("ConstructionResources", true, false) == null, "the construction header has no resource strip")
+	_check(screen.find_child("ConstructionViewInTown", true, false) == null, "the View in town button is gone")
+	var close_button := screen.find_child("ConstructionClose", true, false) as Button
+	_check(close_button != null and close_button.is_visible_in_tree() and String(close_button.get_parent().name) == "ConstructionButtons", "Close sits beside the build button")
+	var bar_top := bar.get_global_rect().position.y
+	var detail_bottom: float = (screen.get("_detail_panel") as Control).get_global_rect().end.y
+	var legend: Control = screen.get("_legend_row")
+	_check(bar.is_visible_in_tree() and detail_bottom <= bar_top and legend.get_global_rect().end.y <= bar_top, "the board and detail panel end above the resource bar (%.0f, %.0f, bar %.0f)" % [detail_bottom, legend.get_global_rect().end.y, bar_top])
+	var key := InputEventKey.new()
+	key.keycode = KEY_V
+	key.pressed = true
+	screen._unhandled_key_input(key)
+	await _frames(2)
+	_check(screen.is_peeking() and String(shell.get("_town_stage_view").get("_construction_preview_id")) != "", "V shows the selected building in the town")
+	var peek_rect: Rect2 = (screen.get("_peek_bar") as Control).get_global_rect()
+	_check(not peek_rect.intersects((shell.get("_army_rows") as Control).get_global_rect()), "the town view's Back bar clears the army rows")
+	var cancel := InputEventAction.new()
+	cancel.action = "ui_cancel"
+	cancel.pressed = true
+	shell._input(cancel)
+	await _frames(2)
+	_check(screen.visible and not screen.is_peeking(), "Escape returns from the town view to the board")
+	close_button.emit_signal("pressed")
+	await _frames(2)
+	_check(not screen.visible and shell.is_inside_tree(), "Close returns to the town")
 
 # --- overworld -------------------------------------------------------------
 

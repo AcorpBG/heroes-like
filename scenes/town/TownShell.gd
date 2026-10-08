@@ -475,6 +475,10 @@ func _apply_responsive_layout() -> void:
 	_footer_panel.offset_right = -TOWN_EDGE_GAP
 	_footer_panel.offset_bottom = -TOWN_EDGE_GAP
 	var resource_bar_height := _layout_garrison_rows()
+	if _construction_screen != null:
+		var shell_height := size.y if size.y > 0.0 else get_viewport_rect().size.y
+		var rows_top := _army_rows.position.y if _army_rows != null and _army_rows.visible else shell_height - resource_bar_height
+		_construction_screen.set_bottom_insets(resource_bar_height, shell_height - rows_top + 12.0)
 	if _town_catalog_panel != null:
 		var catalog_center := _town_catalog_panel.get_parent() as CenterContainer
 		catalog_center.offset_left = 18.0
