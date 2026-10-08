@@ -17,7 +17,7 @@ const CONTENT_REFERENCE_PATHS := {
 	"neutral_dwellings": "res://content/neutral_dwellings.json",
 	"resource_sites": "res://content/resource_sites.json",
 	"encounters": "res://content/encounters.json",
-	"scenarios": "res://content/scenarios.json",
+	"scenarios": "res://archive/authored-scenarios-2026-10-08/scenarios.json",
 }
 const IMMUTABLE_CONTENT_ABILITY_IDS := [
 	"bramble_ground",

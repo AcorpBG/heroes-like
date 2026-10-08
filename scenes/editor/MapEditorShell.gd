@@ -1456,7 +1456,7 @@ func _selected_picker_metadata(picker: OptionButton, fallback: String = "") -> S
 	return String(picker.get_item_metadata(selected_index))
 
 func _legacy_authored_scenario_items_for_dev_validation() -> Array:
-	var raw := ContentService.load_json("res://content/scenarios.json")
+	var raw := ContentService.load_json(ContentService.SCENARIOS_PATH)
 	var items = raw.get("items", [])
 	return items if items is Array else []
 
@@ -6341,7 +6341,7 @@ func _authored_scenario_export_contract_payload(include_draft: bool = true) -> D
 			"scenario_name": String(scenario.get("name", _session.scenario_id)),
 			"dirty": _dirty,
 			"changed": _dirty,
-			"target_paths": ["res://content/scenarios.json", "res://content/terrain_layers.json"],
+			"target_paths": [ContentService.SCENARIOS_PATH, ContentService.TERRAIN_LAYERS_PATH],
 			"writeback_allowed": false,
 			"writeback_supported": false,
 			"writeback_state": "validated_draft_only",
@@ -6382,7 +6382,7 @@ func _authored_scenario_export_contract_payload(include_draft: bool = true) -> D
 		"dirty": _dirty,
 		"changed": not changed_domains.is_empty(),
 		"changed_domains": changed_domains,
-		"target_paths": ["res://content/scenarios.json", "res://content/terrain_layers.json"],
+		"target_paths": [ContentService.SCENARIOS_PATH, ContentService.TERRAIN_LAYERS_PATH],
 		"writeback_allowed": false,
 		"writeback_supported": false,
 		"writeback_state": "validated_draft_only",

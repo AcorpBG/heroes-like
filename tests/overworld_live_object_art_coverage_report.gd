@@ -163,7 +163,7 @@ func _audit_asset_id(kind: String, content_id: String, asset_id: String, object_
 		_record_failure("%s %s maps to unavailable asset %s at %s" % [kind, content_id, asset_id, path])
 
 func _audit_authored_scenarios(view: Variant) -> void:
-	var scenarios: Array = ContentService.load_json("res://content/scenarios.json").get("items", [])
+	var scenarios: Array = ContentService.load_json("res://archive/authored-scenarios-2026-10-08/scenarios.json").get("items", [])
 	for scenario_value in scenarios:
 		if not (scenario_value is Dictionary):
 			continue

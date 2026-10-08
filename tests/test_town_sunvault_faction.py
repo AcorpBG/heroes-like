@@ -17,7 +17,7 @@ class SunvaultFactionTests(unittest.TestCase):
         cls.manifest = json.loads((variants.ROOT/'content/town_building_scene_art_manifest.json').read_text())
         cls.towns = [t for t in json.loads((variants.ROOT/'content/towns.json').read_text())['items'] if t['faction_id']=='faction_sunvault']
         cls.buildings = {b['id']:b for b in json.loads((variants.ROOT/'content/buildings.json').read_text())['items']}
-        cls.scenarios = {s['id']:s for s in json.loads((variants.ROOT/'content/scenarios.json').read_text())['items']}
+        cls.scenarios = {s['id']:s for s in json.loads((variants.ROOT/'archive/authored-scenarios-2026-10-08/scenarios.json').read_text())['items']}
 
     def test_complete_five_town_union(self):
         union = {b for t in self.towns for b in t['starting_building_ids']+t['buildable_building_ids']} - {'building_town_hall'}

@@ -3,6 +3,7 @@ extends Control
 const MainMenuComposition = preload("res://scenes/menus/MainMenuComposition.gd")
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
+const CampaignRulesScript = preload("res://scripts/core/CampaignRules.gd")
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 
@@ -3645,7 +3646,7 @@ func _focus_first_view_command() -> void:
 		return
 	var focus_owner := get_viewport().gui_get_focus_owner()
 	if focus_owner == null or not is_ancestor_of(focus_owner):
-		_open_campaign_button.grab_focus()
+		_first_enabled_command_button().grab_focus()
 
 func _focus_stage_entry() -> void:
 	if (
@@ -3676,7 +3677,7 @@ func _focus_stage_entry() -> void:
 func _restore_first_view_focus() -> void:
 	if _stage_dock_is_open() or not is_inside_tree():
 		return
-	var target := _stage_return_focus if is_instance_valid(_stage_return_focus) else _open_campaign_button
+	var target := _stage_return_focus if is_instance_valid(_stage_return_focus) else _first_enabled_command_button()
 	if target != null and target.is_visible_in_tree():
 		target.grab_focus()
 
@@ -5323,6 +5324,19 @@ func _sync_first_view_command_tooltips() -> void:
 		"Command cue: Campaign opens the campaign board for arcs, carryover, and chapter launch handoffs. "
 		+ "It does not start a chapter until a campaign action is chosen."
 	)
+	# The authored campaigns are archived for a full rework (owner, 2026-10-08).
+	var campaigns_live := CampaignRulesScript.campaigns_available()
+	_open_campaign_button.disabled = not campaigns_live
+	_open_campaign_button.text = "Campaign" if campaigns_live else "Campaign · Coming soon"
+	_open_campaign_button.focus_mode = Control.FOCUS_ALL if campaigns_live else Control.FOCUS_NONE
+	if not campaigns_live:
+		_open_campaign_button.tooltip_text = "Campaigns are being rebuilt and return in a later update. Skirmish plays random maps meanwhile."
+		# Keep the plaque's padding; only the dimmed text marks it unavailable.
+		_open_campaign_button.add_theme_stylebox_override("disabled", _open_campaign_button.get_theme_stylebox("normal").duplicate())
+
+## Campaign is skipped while the campaigns are archived for their rework.
+func _first_enabled_command_button() -> Button:
+	return _open_skirmish_button if _open_campaign_button.disabled else _open_campaign_button
 	_open_skirmish_button.tooltip_text = (
 		"Command cue: Skirmish opens the front charter for scenario, difficulty, and launch readiness. "
 		+ "Fresh skirmishes do not change campaign progression."

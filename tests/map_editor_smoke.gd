@@ -2698,7 +2698,7 @@ func _assert_authored_scenario_export_contract(result: Dictionary, expected_dirt
 		_fail("Map editor smoke: authored scenario export contract had unexpected blockers: %s." % [contract.get("blockers", [])])
 		return false
 	var target_paths: Array = contract.get("target_paths", [])
-	for target_path in ["res://content/scenarios.json", "res://content/terrain_layers.json"]:
+	for target_path in ["res://archive/authored-scenarios-2026-10-08/scenarios.json", "res://archive/authored-scenarios-2026-10-08/terrain_layers.json"]:
 		if target_path not in target_paths:
 			_fail("Map editor smoke: authored scenario export contract missed target path %s: %s." % [target_path, target_paths])
 			return false

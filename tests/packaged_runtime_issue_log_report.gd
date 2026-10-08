@@ -60,7 +60,7 @@ func _run_issue_log_check() -> void:
 			"absolute_path": "/home/private-player/save.json",
 			"windows_path": "C:\\Users\\PrivatePlayer\\save.json",
 			"auth_token": "secret-support-token",
-			"resource_path": "res://content/scenarios.json",
+			"resource_path": "res://archive/authored-scenarios-2026-10-08/scenarios.json",
 			"vector": Vector2i(4, 9),
 			"nested": {
 				"color": Color(0.25, 0.5, 0.75, 1.0),
@@ -107,7 +107,7 @@ func _run_issue_log_check() -> void:
 	_expect(String(bundle.get("app", {}).get("version", "")) != "", "Support bundle must include the application version.")
 	_expect(bool(bundle.get("privacy", {}).get("local_only", false)) and not bool(bundle.get("privacy", {}).get("telemetry_uploaded", true)), "Support bundle privacy policy mismatch.")
 	_expect(not bundle_text.contains("/home/private-player") and not bundle_text.contains("PrivatePlayer") and not bundle_text.contains("secret-support-token"), "Support bundle leaked private path or token metadata.")
-	_expect(bundle_text.contains("res://content/scenarios.json"), "Support bundle must preserve safe project-relative diagnostic paths.")
+	_expect(bundle_text.contains("res://archive/authored-scenarios-2026-10-08/scenarios.json"), "Support bundle must preserve safe project-relative diagnostic paths.")
 	_expect(not bundle.has("absolute_path") and not bundle.has("save") and not bundle.has("campaign_progression"), "Support bundle exposed forbidden top-level state.")
 
 func _remove_support_bundle() -> void:

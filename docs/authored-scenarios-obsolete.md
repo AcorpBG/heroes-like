@@ -2,6 +2,8 @@
 
 Owner decision, 2026-10-05: every authored map and scenario is obsolete and needs revisiting. The owner will redo them completely. Until the owner selects that rework, put no effort into them.
 
+**Archived, 2026-10-08 (owner decision).** The catalogs moved to `archive/authored-scenarios-2026-10-08/` (`scenarios.json`, `campaigns.json`, `terrain_layers.json` and the `tools/author_*.py` scripts; see its README). Their `domain_status` is `archived_*`, so the game offers none of them: the Skirmish list has no authored fronts and the main menu shows Campaign as "Coming soon". `ContentService` still loads them by id, so tests keep using them as hidden setups and old saves still load. This replaces the rule below that kept the roster playable; paths in this document that say `content/scenarios.json`, `content/campaigns.json` or `tools/author_*.py` now live in the archive.
+
 Plan id: `content-authored-scenarios-obsolete-20261005` in `PLAN.md` (paused until the owner selects the rework).
 
 ## Covered
@@ -22,7 +24,7 @@ Plan id: `content-authored-scenarios-obsolete-20261005` in `PLAN.md` (paused unt
 
 - Do not add, extend, fix, retune, rebalance, re-art or re-validate authored scenarios or campaigns, and do not run `tools/author_*.py`. Do not select them as a slice.
 - Do not chase failures in the checks listed below. Report them as obsolete authored-scenario checks and move on. Do not delete, skip or weaken them either; the rework retires them.
-- Leave the scenario and campaign data as it is. Do not hide the roster through the `domain_status` fields: the game reads them. The authored scenarios stay playable unchanged until the rework replaces them.
+- Leave the scenario and campaign data as it is. Since 2026-10-08 the archive hides the roster through its `domain_status` fields; do not make it playable again before the rework.
 - Many system tests load an authored scenario only as a harness (351 more test files, most of them `river-pass` or `ninefold-confluence`). They still test their system: if one fails because of the system, fix the system. If it fails only because authored content drifted, do not repair the scenario; record it as an authored fixture for the rework to replace.
 - New work that needs a map uses a generated map.
 - Open items about authored content are dropped, including the six twin-command scenarios that lost their starting Wayfarers Hall (`content-validator-findings-20261004`). Those six findings are the only errors `tests/validate_repo.py` reported when this hold started.

@@ -95,7 +95,7 @@ func _assert_contract_boundary(contract: Dictionary, expected_dirty: bool) -> bo
 	if String(contract.get("write_context", "")).find("no authored file or campaign progress is written") < 0:
 		_fail("Export contract lost the no-write boundary: %s" % [String(contract.get("write_context", ""))])
 		return false
-	for target_path in ["res://content/scenarios.json", "res://content/terrain_layers.json"]:
+	for target_path in ["res://archive/authored-scenarios-2026-10-08/scenarios.json", "res://archive/authored-scenarios-2026-10-08/terrain_layers.json"]:
 		if target_path not in contract.get("target_paths", []):
 			_fail("Export contract missed target path %s." % [target_path])
 			return false

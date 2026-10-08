@@ -156,7 +156,7 @@ class ValidationArtifactLifecycleTests(unittest.TestCase):
 
         def corrupt_campaign(path):
             payload = original(path)
-            if path == validator.CONTENT_DIR / 'campaigns.json':
+            if path == validator.AUTHORED_ARCHIVE_DIR / 'campaigns.json':
                 for row in payload['items']:
                     if row['id'] == 'campaign_uncrowned_circuit':
                         row['name'] = ''

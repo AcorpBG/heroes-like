@@ -1,8 +1,8 @@
 extends Node
 
 const REPORT_ID := "MAP_EDITOR_PACKAGE_SAVE_COPY_REPORT"
-const SCENARIOS_PATH := "res://content/scenarios.json"
-const TERRAIN_LAYERS_PATH := "res://content/terrain_layers.json"
+const SCENARIOS_PATH := "res://archive/authored-scenarios-2026-10-08/scenarios.json"
+const TERRAIN_LAYERS_PATH := "res://archive/authored-scenarios-2026-10-08/terrain_layers.json"
 
 var _test_dir := ""
 var _report_scene: Node

@@ -46,7 +46,7 @@ class EmbercourtVariantTests(unittest.TestCase):
                 self.assertFalse({a,b} <= set(town['starting_building_ids']+town['buildable_building_ids']))
 
     def test_authored_orders_need_no_injected_state(self):
-        scenarios = {s['id']:s for s in json.loads((variants.ROOT/'content/scenarios.json').read_text())['items']}
+        scenarios = {s['id']:s for s in json.loads((variants.ROOT/'archive/authored-scenarios-2026-10-08/scenarios.json').read_text())['items']}
         towns = {t['id']:t for t in self.towns}
         for scenario_id,building_id in variants.AUTHORED_ORDERS.items():
             scenario = scenarios[scenario_id]

@@ -13,10 +13,11 @@ For native RMG work, read that file before editing code, tools, validators, repo
 
 Do not load all of `ops/progress.json` by default. It is an operations tracker, not onboarding context. Use the heroes-progress workflow/helper to query the current implementation status and selected next slice when needed. If available, run: `python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress_status.py /root/dev/heroes-like`.
 
-## Authored maps, scenarios and campaigns are obsolete
-- Owner decision, 2026-10-05: every authored map, scenario and campaign (`content/scenarios.json`, `content/campaigns.json`, `tools/author_*.py`) is obsolete and will be redone completely. Until the owner selects that rework, put no effort into them: do not add, fix, retune, rebalance or re-validate them, and do not select them as a slice.
-- Do not chase failures in the authored-scenario tests and `tests/validate_repo.py` checks listed in `docs/authored-scenarios-obsolete.md`. Do not delete or skip those checks either, and do not change the scenario data to hide it.
-- Generated maps, shared content definitions and the scenario/campaign runtime code are not covered and stay live. Plan id: `content-authored-scenarios-obsolete-20261005`.
+## Authored maps, scenarios and campaigns are archived
+- Owner decision, 2026-10-05: every authored map, scenario and campaign is obsolete and will be redone completely. Until the owner selects that rework, put no effort into them: do not add, fix, retune, rebalance or re-validate them, and do not select them as a slice.
+- Owner decision, 2026-10-08: they are archived in `archive/authored-scenarios-2026-10-08/` (`scenarios.json`, `campaigns.json`, `terrain_layers.json`, `tools/author_*.py`; see its README). The game offers none of them (archived `domain_status`; the main menu shows Campaign as "Coming soon"), but `ContentService` still loads them by id, so tests keep using them as hidden setups. Do not make them playable again before the rework.
+- Do not chase failures in the authored-scenario tests and `tests/validate_repo.py` checks listed in `docs/authored-scenarios-obsolete.md`, and do not use authored-scenario tests to verify new work: use generated maps.
+- Generated maps, shared content definitions and the scenario/campaign runtime code are not covered and stay live. Plan ids: `content-authored-scenarios-obsolete-20261005`, `content-authored-scenarios-archived-20261008`.
 
 ## Planning document roles
 - `project.md` is the strategic project document. It defines the game, phases, engine/script/content rules, architecture principles, and durable implementation constraints. Keep it concise and stable. Do not use it as a progress log, implementation diary, or place for near-term note piles.

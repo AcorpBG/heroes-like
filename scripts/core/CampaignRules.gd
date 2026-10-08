@@ -1072,6 +1072,11 @@ static func _active_campaign_items() -> Array:
 			items.append(campaign)
 	return items
 
+## False while the authored campaigns are archived for their rework; the main
+## menu then shows Campaign as coming soon.
+static func campaigns_available() -> bool:
+	return not _active_campaign_items().is_empty()
+
 static func _campaign_domain_is_player_facing() -> bool:
 	var raw := ContentService.load_json(ContentService.CAMPAIGNS_PATH)
 	var status := String(raw.get("domain_status", ""))

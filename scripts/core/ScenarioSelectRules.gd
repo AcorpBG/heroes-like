@@ -322,6 +322,9 @@ static func build_current_session_summary(session: SessionStateStoreScript.Sessi
 
 static func build_skirmish_browser_entries() -> Array:
 	var entries := []
+	# An archived authored catalog offers no scenarios (they stay test setups).
+	if not _scenario_domain_is_player_facing():
+		return entries
 	for scenario in _scenario_items():
 		if not (scenario is Dictionary):
 			continue

@@ -2,7 +2,12 @@ class_name HeroesContentService
 extends Node
 
 const CONTENT_DIR := "res://content"
-const SCENARIOS_PATH := "%s/scenarios.json" % CONTENT_DIR
+# Authored scenarios, campaigns and their terrain layers are archived (owner,
+# 2026-10-08; archive/authored-scenarios-2026-10-08/README.md). They are not
+# offered for play, but stay loadable by id as test setups and for old saves.
+# Shipped builds may leave the archive out; it then reads as empty.
+const AUTHORED_ARCHIVE_DIR := "res://archive/authored-scenarios-2026-10-08"
+const SCENARIOS_PATH := "%s/scenarios.json" % AUTHORED_ARCHIVE_DIR
 const ENCOUNTERS_PATH := "%s/encounters.json" % CONTENT_DIR
 const HEROES_PATH := "%s/heroes.json" % CONTENT_DIR
 const HERO_ART_PATH := "%s/hero_art_manifest.json" % CONTENT_DIR
@@ -19,7 +24,7 @@ const RESOURCES_PATH := "%s/resources.json" % CONTENT_DIR
 const RESOURCE_SITES_PATH := "%s/resource_sites.json" % CONTENT_DIR
 const BIOMES_PATH := "%s/biomes.json" % CONTENT_DIR
 const TERRAIN_GRAMMAR_PATH := "%s/terrain_grammar.json" % CONTENT_DIR
-const TERRAIN_LAYERS_PATH := "%s/terrain_layers.json" % CONTENT_DIR
+const TERRAIN_LAYERS_PATH := "%s/terrain_layers.json" % AUTHORED_ARCHIVE_DIR
 const MAP_OBJECTS_PATH := "%s/map_objects.json" % CONTENT_DIR
 const NEUTRAL_DWELLINGS_PATH := "%s/neutral_dwellings.json" % CONTENT_DIR
 const ARTIFACTS_PATH := "%s/artifacts.json" % CONTENT_DIR
@@ -27,7 +32,7 @@ const SPELLS_PATH := "%s/spells.json" % CONTENT_DIR
 const SPELL_ICONS_PATH := "%s/spell_icons.json" % CONTENT_DIR
 const SPELL_SCHOOL_ICONS_PATH := "%s/spell_school_icons.json" % CONTENT_DIR
 const BUILDING_CATEGORY_ICONS_PATH := "%s/building_category_icons.json" % CONTENT_DIR
-const CAMPAIGNS_PATH := "%s/campaigns.json" % CONTENT_DIR
+const CAMPAIGNS_PATH := "%s/campaigns.json" % AUTHORED_ARCHIVE_DIR
 const BIOME_TERRAIN_INDEX_KEY := "%s#map_tile_ids" % BIOMES_PATH
 
 var _cache: Dictionary = {}
@@ -61,6 +66,9 @@ func load_json(path: String) -> Dictionary:
 		return {}
 
 	if not FileAccess.file_exists(path):
+		if path.begins_with(AUTHORED_ARCHIVE_DIR):
+			_cache[path] = {}
+			return {}
 		push_error("Missing content file: %s" % path)
 		return {}
 

@@ -1,8 +1,8 @@
 extends Node
 
 const REPORT_ID := "MAP_PACKAGE_LEGACY_SCENARIO_CONVERSION_REPORT"
-const SCENARIOS_PATH := "res://content/scenarios.json"
-const TERRAIN_LAYERS_PATH := "res://content/terrain_layers.json"
+const SCENARIOS_PATH := "res://archive/authored-scenarios-2026-10-08/scenarios.json"
+const TERRAIN_LAYERS_PATH := "res://archive/authored-scenarios-2026-10-08/terrain_layers.json"
 
 func _ready() -> void:
 	call_deferred("_run")

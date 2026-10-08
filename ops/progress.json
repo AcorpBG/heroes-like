@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-garrison-rows-20261008",
-  "currentSliceId": "ux-town-garrison-rows-20261008",
-  "currentSliceNotes": "COMPLETED 2026-10-07. Owner request with an approved mockup. Rules: a player town may hold a garrison hero (town.garrison_hero_id, both town heroes on the entrance tile); entering an unheld garrison merges the town's garrison troops into the hero's army (refused when they do not fit in seven slots), entering a held garrison swaps the heroes, stepping out needs a free gate, walking away ends garrison duty, the garrison hero defends and receives recruits; HeroCommandRules.set_town_garrison_hero, town_garrison_hero, town_visiting_hero, town_garrison_holder_id, merge_stacks_into_army; OverworldRules keeps garrison_hero_id through town normalization; old saves migrate once (overworld.town_garrison_heroes_version). Town screen: new scenes/town/TownArmyRows.gd (2x2 rounded command squares Build/Muster/Market/Mage Guild, garrison row and visiting row of 8 squares using HeroExchangeSlot cells; click-click/drag to move-merge-swap, Shift split slider, portrait click selects, second click or double-click opens the HeroSheet, clicking the other portrait moves or swaps heroes, Escape cancels split/selection first), the overworld resource bar along the bottom edge above popouts and the construction screen, an icon town list top right that switches towns directly, Return to Field in the banner; the Town Log command, Command card, footer and the stage's troop chips are retired. Overworld: garrison heroes draw as a portrait medallion with a G badge on their town and carry a G badge in the hero list. Validation: tests/town_garrison_rows_report.tscn (49 checks, generated small map), ai_player_rules_report, large_generated_map_runtime_profile_report, native_rmg_end_to_end_runtime_boundary_report and town_transition_fast_path_regression pass; validate_repo identical to baseline after five pin updates. Authored-scenario town tests were not used as verification. Follow-ups: remove the dead Town Log catalog code; AI towns do not use garrison heroes.",
+  "currentSlice": "content-authored-scenarios-archived-20261008",
+  "currentSliceId": "content-authored-scenarios-archived-20261008",
+  "currentSliceNotes": "COMPLETED 2026-10-07. Owner request: archive the obsolete authored scenarios and campaigns. scenarios.json (299), campaigns.json (25), terrain_layers.json and the 20 tools/author_*.py scripts moved to archive/authored-scenarios-2026-10-08/ (git mv, history kept; .gdignore). Their domain_status is archived_* with zero player-facing counts, so the Skirmish list offers no authored fronts (build_skirmish_browser_entries now checks the domain), skirmish setup refuses them, and the main menu shows Campaign as 'Coming soon' (disabled, normal plaque padding, default focus on New skirmish; CampaignRules.campaigns_available). ContentService.AUTHORED_ARCHIVE_DIR keeps them loadable by id as hidden test setups and for old saves; a missing archive (shipped builds) reads as empty without errors. Map editor, art manifest, tests and validate_repo paths point at the archive; validate_repo keeps roster-integrity checks on the archived catalogs (authored_roster_count) and now requires the archive to be non-player-facing. Validation: validate_repo identical to baseline (828); water_travel and hero_exchange (River Pass setups) still load and pass; town_garrison_rows, ai_player_rules, native end-to-end and terrain transit reports pass; RMG unit tests pass; town faction Python tests fail identically on HEAD.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "HoMM-style town garrison and visiting rows, resource bar and town list",
-  "currentSliceUpdatedAt": "2026-10-08T12:00:00Z",
+  "currentSliceTitle": "Archive the authored scenarios and campaigns",
+  "currentSliceUpdatedAt": "2026-10-08T14:00:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -114272,6 +114272,20 @@
         "docs/town-garrison-rows.md"
       ],
       "notes": "Owner request with an approved mockup. Rules: a player town may hold a garrison hero (town.garrison_hero_id, both town heroes on the entrance tile); entering an unheld garrison merges the town's garrison troops into the hero's army (refused when they do not fit in seven slots), entering a held garrison swaps the heroes, stepping out needs a free gate, walking away ends garrison duty, the garrison hero defends and receives recruits; HeroCommandRules.set_town_garrison_hero, town_garrison_hero, town_visiting_hero, town_garrison_holder_id, merge_stacks_into_army; OverworldRules keeps garrison_hero_id through town normalization; old saves migrate once (overworld.town_garrison_heroes_version). Town screen: new scenes/town/TownArmyRows.gd (2x2 rounded command squares Build/Muster/Market/Mage Guild, garrison row and visiting row of 8 squares using HeroExchangeSlot cells; click-click/drag to move-merge-swap, Shift split slider, portrait click selects, second click or double-click opens the HeroSheet, clicking the other portrait moves or swaps heroes, Escape cancels split/selection first), the overworld resource bar along the bottom edge above popouts and the construction screen, an icon town list top right that switches towns directly, Return to Field in the banner; the Town Log command, Command card, footer and the stage's troop chips are retired. Overworld: garrison heroes draw as a portrait medallion with a G badge on their town and carry a G badge in the hero list. Validation: tests/town_garrison_rows_report.tscn (49 checks, generated small map), ai_player_rules_report, large_generated_map_runtime_profile_report, native_rmg_end_to_end_runtime_boundary_report and town_transition_fast_path_regression pass; validate_repo identical to baseline after five pin updates. Authored-scenario town tests were not used as verification. Follow-ups: remove the dead Town Log catalog code; AI towns do not use garrison heroes."
+    },
+    {
+      "id": "content-authored-scenarios-archived-20261008",
+      "title": "Archive the authored scenarios and campaigns",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "content_archive_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "archive/authored-scenarios-2026-10-08/README.md",
+        "docs/authored-scenarios-obsolete.md"
+      ],
+      "notes": "Owner request: archive the obsolete authored scenarios and campaigns. scenarios.json (299), campaigns.json (25), terrain_layers.json and the 20 tools/author_*.py scripts moved to archive/authored-scenarios-2026-10-08/ (git mv, history kept; .gdignore). Their domain_status is archived_* with zero player-facing counts, so the Skirmish list offers no authored fronts (build_skirmish_browser_entries now checks the domain), skirmish setup refuses them, and the main menu shows Campaign as 'Coming soon' (disabled, normal plaque padding, default focus on New skirmish; CampaignRules.campaigns_available). ContentService.AUTHORED_ARCHIVE_DIR keeps them loadable by id as hidden test setups and for old saves; a missing archive (shipped builds) reads as empty without errors. Map editor, art manifest, tests and validate_repo paths point at the archive; validate_repo keeps roster-integrity checks on the archived catalogs (authored_roster_count) and now requires the archive to be non-player-facing. Validation: validate_repo identical to baseline (828); water_travel and hero_exchange (River Pass setups) still load and pass; town_garrison_rows, ai_player_rules, native end-to-end and terrain transit reports pass; RMG unit tests pass; town faction Python tests fail identically on HEAD."
     }
   ],
   "project": "heroes-like",
@@ -114931,7 +114945,7 @@
   ],
   "summary": "Owner-directed overworld actor readability completed: 112 original generated hero/creature sprites, full-size town visitors, painted-bound scale and cached alpha-edge contrast. Source/Linux/Windows visual/runtime acceptance, Large travel/AI/fog, existing reports, full repository and official exports/parity pass; 3.255 GB disposable outputs cleaned. Prior generated-world quality work remains completed; gameplay/native generation and save schema are unchanged. Broader production/release limits remain in project.md.",
   "taskId": "10236",
-  "updatedAt": "2026-10-08T12:00:00Z",
+  "updatedAt": "2026-10-08T14:00:00Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",
