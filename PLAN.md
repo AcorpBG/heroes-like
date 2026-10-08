@@ -90,7 +90,7 @@ Rules:
 
 ### Generated object sprite placement
 
-`ux-generated-object-sprite-footprint-20261008` (completed, owner playtest fix): generated sites draw their sprite over their real footprint. Their x/y is the HoMM3 bottom-right tile (sometimes outside the body), so the sprite rect now comes from the body tiles: on the bottom row, centred over the columns, at least the art profile's size. Mines keep their three-by-two art around the entry. `tests/overworld_object_footprint_alignment_report.tscn` checks every site of a generated map.
+`ux-generated-object-sprite-footprint-20261008` (completed, owner playtest fix): generated sites draw their sprite over their real footprint. Their x/y is the HoMM3 bottom-right tile (sometimes outside the body), so the sprite rect now comes from the body tiles: on the bottom row, centred on the interaction tile (the art's entrance is its bottom centre, as for mines). `tests/overworld_object_footprint_alignment_report.tscn` checks every site of a generated map. A full scan of the owner's map (every site, guard, artifact and town, one scenery piece per shape, and whole-map scenery coverage) is in `docs/generated-object-placement-scan.md`, with the open readability findings.
 
 ### Full-army site claims
 

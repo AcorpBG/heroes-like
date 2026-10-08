@@ -6247,10 +6247,13 @@ func _resource_footprint_rect(node: Dictionary, anchor_rect: Rect2, anchor_tile:
 	if body.size != Vector2i.ZERO:
 		# Generated objects carry their real footprint, and their x/y is its
 		# bottom-right tile (HoMM3 placement), not the art profile's anchor. The
-		# sprite stands on the footprint's bottom row, centred over its columns,
-		# with at least the profile's own size.
-		var size := Vector2(maxi(body.size.x, footprint.x), maxi(body.size.y, footprint.y))
-		var origin_tiles := Vector2(float(body.position.x) - (size.x - float(body.size.x)) * 0.5, float(body.end.y) - size.y)
+		# art is painted with its entrance at the bottom centre, so it stands on
+		# the footprint's bottom row over the interaction tile (as mines do);
+		# objects without one centre on their footprint.
+		var size := Vector2(footprint.x, maxi(body.size.y, footprint.y))
+		var visit := _resource_visit_tile(node)
+		var center_x := float(visit.x) + 0.5 if visit.x >= 0 else float(body.position.x) + float(body.size.x) * 0.5
+		var origin_tiles := Vector2(center_x - size.x * 0.5, float(body.end.y) - size.y)
 		return Rect2(anchor_rect.position + (origin_tiles - Vector2(anchor_tile)) * anchor_rect.size, size * anchor_rect.size)
 	if footprint == Vector2i(1, 1):
 		return anchor_rect
@@ -6278,6 +6281,13 @@ func _resource_body_bounds(node: Dictionary) -> Rect2i:
 	if high.x < 0:
 		return Rect2i()
 	return Rect2i(low, high - low + Vector2i.ONE)
+
+func _resource_visit_tile(node: Dictionary) -> Vector2i:
+	var tiles: Variant = node.get("package_visit_tiles", [])
+	var visit: Variant = tiles[0] if tiles is Array and not tiles.is_empty() else node.get("visit_tile", {})
+	if not (visit is Dictionary) or visit.is_empty():
+		return Vector2i(-1, -1)
+	return Vector2i(int(visit.get("x", -1)), int(visit.get("y", -1)))
 
 func _resource_draw_rect(node: Dictionary, anchor_rect: Rect2, anchor_tile: Vector2i) -> Rect2:
 	var footprint_rect := _resource_footprint_rect(node, anchor_rect, anchor_tile)
