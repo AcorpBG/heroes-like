@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ai-town-defense-recapture-20261008",
-  "currentSliceId": "ai-town-defense-recapture-20261008",
-  "currentSliceNotes": "COMPLETED 2026-10-08. AI town defense and recapture; see plannedSlices ai-town-defense-recapture-20261008.",
+  "currentSlice": "ai-strength-battle-scaling-20261008",
+  "currentSliceId": "ai-strength-battle-scaling-20261008",
+  "currentSliceNotes": "COMPLETED 2026-10-08. See plannedSlices ai-strength-battle-scaling-20261008.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "AI town defense and recapture",
-  "currentSliceUpdatedAt": "2026-10-08T20:10:00Z",
+  "currentSliceTitle": "AI strength estimate for the battle stat scaling",
+  "currentSliceUpdatedAt": "2026-10-08T21:40:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -114506,6 +114506,19 @@
         "docs/ai-plays-by-player-rules.md"
       ],
       "notes": "Owner request after the AI-against-AI matches (towns left empty, captured towns walked away from, lost capitals never retaken). Found: _hostile_heroes saw only human heroes, so no AI town was ever threatened by another AI and the existing keep-garrison / hold-the-gate rules never fired; a town could be captured from under an AI hero standing in its doorway; towns were worth a flat 4,000 (about a mine); a captured town got no troops until the next turn; and the XP-led main-hero rule made a beaten veteran (65 strength) main so an 821-strength hero handed its army to a town. Changes in AiHeroRules: _hostile_heroes includes visible rival AI heroes; _town_hero_defender_index makes an attacker fight a hostile hero in the doorway first and counts it in the town's defense; _town_worth (4,000 + two weeks of income and troop growth at market value, x2 when homeless) for town targets and threatened own towns; _threatened_town_share adds half a threatened town's worth to killing the raider; _holds_gate keeps the main hero in a threatened own town unless it can attack and reach the threat today, and _leave_guard drops just enough creatures of one kind (<= 25% of its strength) against a raider it cannot catch; _recruit_town buys a captured town's troops at once; _main_hero_id picks the most experienced among heroes with >= half the strongest army. _holds_gate applies to every hero standing in a threatened own town (only the main hero stands against a threat it cannot attack). Results: 40-day regression seed 48 captures / 45 unopposed -> decided day 13 after 1 capture past defenders; Thornwake-Veilmourn pair 37 and 25 captures -> 11 and 3; random seed eval-defense-1 (Mireclaw-Brasshollow) 87 days / 69 captures / 38 unopposed -> 37 days / 19 / 12. ai_versus_ai_match_report fails above 12 unopposed captures. Fixtures: the harness live-route case auto-resolves the human's battles (the main hero now attacks the human hero by its town); the recruitment host leads 40 creatures so it stays main. Tests: 11 AI scenes pass."
+    },
+    {
+      "id": "ai-strength-battle-scaling-20261008",
+      "title": "AI strength estimate for the battle stat scaling",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ai_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "After battle-stat-scaling-20261008 (035ec6946) the harness failed: AI heroes kept attacking a human hero whose Cinder Burst (48 per cast) beat armies twice hers, and the difficulty sweep warned on Hard pacing. AiHeroRules.army_power: hero attack/defense via BattleDamageRules.attack_defense_multiplier (sqrt of damage dealt over damage taken), plus _spell_damage_per_round (best affordable battle damage spell, once a round over BATTLE_ROUNDS_ESTIMATE 4 rounds) as sqrt(1 + spell/army damage). Calibrated on 1,600 auto-resolved battles of random hero-led armies (10-1,000 strength, levels 1-6): winner called 82.8% (86% with a small side) vs 73.8% for the old 5%-per-point estimate. GUARD_WIN_RATIO 1.5 -> 1.3 (walled map back to 645 tiles / 7 guards / 17 sites). _holds_gate records goal kind hold. Tests: harness accepts the sweep's report-only combat-feel warning when the sweep has no failures; town-defense fixtures strengthen the human hero to 2x the computer hero and accept goal hold; assault-grouping fixture garrisons the human's towns between the support hero's and the grouped army's strength. All 11 AI scenes pass. Matches: ai-match-4199114532 Veilmourn (south) day 28 and swapped Thornwake (south) day 37, one capture each, past defenders; four random matches 14-64 days; loss expected 12-22% vs actual 10-16%."
     }
   ],
   "project": "heroes-like",

@@ -124,6 +124,7 @@ func _river_pass_commander_raids_group_for_town_assault() -> Dictionary:
 	var config := _enemy_config()
 	var leader := _raid_seed("grouping_commander_leader_vaska", 7, 2, 8, true, session, config, "hero_vaska")
 	var support := _raid_seed("grouping_commander_support_sable", 7, 3, 4, true, session, config, "hero_sable")
+	_garrison_between(session, support, leader)
 	var leader_strength_before := EnemyAdventureRules.raid_strength(leader)
 	var support_strength_before := EnemyAdventureRules.raid_strength(support)
 	var leader_count_before := _creature_count(leader)
@@ -191,6 +192,7 @@ func _river_pass_raids_group_after_leader_movement_for_town_assault() -> Diction
 	var config := _enemy_config()
 	var leader := _raid_seed("post_move_grouping_assault_vaska", 6, 2, 7, true, session, config)
 	var support := _raid_seed("post_move_grouping_support_column", POST_MOVE_SUPPORT_TILE.x, POST_MOVE_SUPPORT_TILE.y, 3, true, session, config, "hero_sable")
+	_garrison_between(session, support, leader)
 	if maxi(absi(int(leader.x) - int(support.x)), absi(int(leader.y) - int(support.y))) <= 1:
 		_fail("Post-move grouping fixture started with adjacent support; it should require movement first.")
 		return {}
@@ -384,6 +386,24 @@ func _set_player_captured_retake_front(session, placement_id: String) -> void:
 		session.overworld["towns"] = towns
 		return
 	_fail("Could not find town %s for retake-front fixture." % placement_id)
+
+## Garrisons the support hero cannot take alone but the grouped army can, in
+## every town the human holds:
+## since the 2026-10-08 battle stat scaling a hero's damage spells count in its
+## strength, and the town's starting garrison no longer stops four creatures
+## led by a caster.
+func _garrison_between(session, support: Dictionary, leader: Dictionary) -> void:
+	var support_power := AiHeroRulesScript.hero_power(support)
+	var grouped_stacks: Array = leader.get("enemy_army", {}).get("stacks", []).duplicate(true)
+	grouped_stacks.append({"unit_id": "unit_bog_brute", "count": _creature_count(support) - 1})
+	var grouped_power := AiHeroRulesScript.army_power(grouped_stacks, leader.get("enemy_commander_state", {}))
+	var target := (support_power + grouped_power) * 0.5 / AiHeroRulesScript.TOWN_ATTACK_RATIO
+	var guard_power := AiHeroRulesScript.army_power([{"unit_id": "unit_river_guard", "count": 1}])
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		if towns[index] is Dictionary and String(towns[index].get("owner", "")) == "player":
+			towns[index]["garrison"] = [{"unit_id": "unit_river_guard", "count": maxi(1, int(round(target / guard_power)))}]
+	session.overworld["towns"] = towns
 
 func _encounter(session, placement_id: String) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):
