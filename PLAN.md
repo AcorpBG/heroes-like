@@ -104,6 +104,8 @@ Rules:
 
 `battle-stat-scaling-20261008` (completed, owner review): attack against defense no longer stops at ±8 points: +5% per point of attack lead up to +300%, -2.5% per point of defense lead down to -70%. Level-ups roll one stat weighted by the hero's might or magic command path (40/40/10/10 toward attack and defense or power and knowledge), seeded per hero so saves never re-roll; damage spells gain 2.5x as much per point of power, and every 4 power adds a round to spell buffs, debuffs and riders (up to 3). A hit's cohesion loss goes by the share of the stack it took, not by creatures killed, so big stacks no longer lose 2 cohesion to every hit. See `docs/battle-stat-scaling.md`.
 
+`ux-hero-level-up-roll-display-20261008` (completed, owner request): the level-up popup shows what the hero rolled above the specialty choices: a "Rolled +1 Spell power" headline, the four command stats with their new values (rolled ones lit gold with their gain, a short pulse unless reduced motion is on), the path's odds and, for several levels at once, each level's roll. See `docs/hero-level-up-popup.md`.
+
 ### Organic ground borders
 
 `art-overworld-organic-ground-borders-20261008` (completed, owner-approved prototype): biome borders meander off the tile grid (noise-bent corner weights that fade out near tile centres) and grounds meet with a height-and-priority blend instead of a cross-fade, so one ground's detail fringes the other; coasts curve the same way. See `docs/overworld-ground-borders.md`.

@@ -114391,6 +114391,19 @@
       "notes": "Owner accepted the prototype shown as before/after sheets. overworld_ground_surface.gdshader: border_warp (three rotated value-noise octaves, warp 0.36 tile + detail) bends the corner-weight lookup, faded to zero within 0.3 tile of tile centres so each tile's middle keeps its own ground; candidate materials score merged corner weight + border_priority (ground_materials.json, by slot) + painted-detail height (luminance above the material average, x1.3) and blend within blend_depth 0.26; the beach band uses the bent corner weights; decals fade by each ground's final blend share. OverworldGroundSurface passes border_priority. Validation: owner-map and generated-map border captures (sand/grass, snow/grass, swamp/grass, snow/dirt, dirt/grass, rough/dirt) and a generated coast reviewed; overworld_sandy_shore_regression 53/53 (tile-centre identity restored by the centre fade), overworld_ground_materials_contract passes, validate_repo identical (828)."
     },
     {
+      "id": "ux-hero-level-up-roll-display-20261008",
+      "title": "Level-up popup shows the rolled command stat",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/hero-level-up-popup.md"
+      ],
+      "notes": "Owner request: on level-up, show what the hero rolled on the screen with the specialization choices. HeroProgressionRules.level_up_summary adds command_rolls (level and stat per earned level), command_path and command_odds. HeroLevelUpDialog replaces the small 'Command gained' line with a CommandRolls section above the specialty buttons: a 'Rolled +1 X' headline, four stat tiles (Attack, Defense, Spell power, Knowledge) with the hero's new values, rolled tiles gold-bordered with a +N gain and a 0.7 s brightness pulse (skipped when reduced motion is on), the path odds per level, and a per-level roll line when several levels arrive together; the dialog grows to 680x660 (460 without choices). Validation: new tests/hero_level_up_roll_display_report (real dialog, real level-ups: magic one and two levels, might one level; headline, tile values, gains only on rolled stats, odds, per-level list, specialty buttons; 52 checks) passes headless; windowed captures at 1280x720 and 1920x1080 reviewed (dialog fits 720p)."
+    },
+    {
       "id": "battle-stat-scaling-20261008",
       "title": "Battle stat scaling: uncapped attack/defense, spell power that grows and matters, cohesion loss by share",
       "status": "completed",
