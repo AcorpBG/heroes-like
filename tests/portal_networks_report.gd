@@ -188,6 +188,13 @@ func _check_text(session) -> void:
 		if NativeTransit.portal_kind(node) == "two_way_portal":
 			names[OverworldRules.native_portal_display_name(node)] = true
 	_check(names.size() == 9, "each two-way network has its own colour name (got %d)" % names.size())
+	var colour_by_network := {}
+	for node in nodes:
+		colour_by_network[String(NativeTransit.link_of(node).group_id)] = String(NativeTransit.network_colour(node).name)
+	var distinct := {}
+	for colour in colour_by_network.values():
+		distinct[colour] = true
+	_check(colour_by_network.size() == 15 and distinct.size() == 15, "every one of the 15 networks on the map has its own colour (got %d colours for %d networks)" % [distinct.size(), colour_by_network.size()])
 
 # --- migration -----------------------------------------------------------------
 
@@ -224,17 +231,25 @@ func _check_migration(session, dead_ends: Array) -> void:
 func _check_art() -> void:
 	var manifest: Dictionary = ContentService.load_json("res://art/overworld/manifest.json")
 	for slug in ["wayring", "waygate", "wayfall"]:
-		for layer in ["", "_glow"]:
-			var asset: Dictionary = manifest.get("object_assets", {}).get("mapobj_%s%s" % [slug, layer], {})
-			var image := Image.load_from_file(ProjectSettings.globalize_path(String(asset.get("path", ""))))
-			_check(image != null and image.get_size() == Vector2i(512, 512) and image.detect_alpha() != Image.ALPHA_NONE, "mapobj_%s%s is a 512px sprite with transparency" % [slug, layer])
+		var asset: Dictionary = manifest.get("object_assets", {}).get("mapobj_%s" % slug, {})
+		var image := Image.load_from_file(ProjectSettings.globalize_path(String(asset.get("path", ""))))
+		_check(image != null and image.get_size() == Vector2i(512, 512) and image.detect_alpha() != Image.ALPHA_NONE, "mapobj_%s is a 512px sprite with transparency" % slug)
+		_check(not manifest.get("object_assets", {}).has("mapobj_%s_glow" % slug), "mapobj_%s has no painted glow layer: its magic is particles" % slug)
+		if image != null:
+			var geometry: Dictionary = ContentService.load_json("res://art/overworld/portal_network_fx.json").get("assets", {}).get("mapobj_%s" % slug, {})
+			var middle: Array = geometry.get("center", [geometry.get("beam_x", 0.5), geometry.get("beam_top", 0.5) + 0.1])
+			var pixel := image.get_pixel(int(float(middle[0]) * 512.0), int(float(middle[1]) * 512.0))
+			if slug == "wayfall":
+				_check(pixel.a < 0.05, "the Wayfall's beam is open air in its sprite (alpha %.2f)" % pixel.a)
+			else:
+				_check(pixel.a > 0.95 and pixel.get_luminance() < 0.15, "the %s opening is a dark, solid void in its sprite (%s)" % [slug, str(pixel)])
 		var mapped := ContentService.get_map_object_for_resource_site("site_%s" % slug)
 		_check(String(mapped.get("id", "")) == "object_%s" % slug, "site_%s links to object_%s" % [slug, slug])
 
 # --- rendering -----------------------------------------------------------------
 
-## The real map view draws each kind's sprite with its network glow. With a
-## window, the south-west cluster is captured for review.
+## The real map view draws each kind's stonework and its particle magic. With
+## a window, the south-west cluster is captured for review.
 func _check_rendering(session) -> void:
 	# Open ground amid the zone 23 cluster: Waygates and Wayfalls of two
 	# one-way networks and two Wayrings sit within a few tiles of it.
@@ -259,10 +274,9 @@ func _check_rendering(session) -> void:
 		var asset_id: String = view.call("_resource_asset_id", node) if view != null else ""
 		var slug := String(SITE_BY_KIND[kind]).trim_prefix("site_")
 		_check(asset_id == "mapobj_%s" % slug, "the map view draws %s with mapobj_%s (got %s)" % [kind, slug, asset_id])
-		_check(view != null and view.call("_object_texture_for_asset", asset_id + "_glow") is Texture2D, "the map view loads the %s glow layer" % slug)
 	var fx: Dictionary = view.call("validation_portal_fx_snapshot") if view != null else {}
 	var effects: Array = fx.get("effects", [])
-	_check(["orbit", "inward_spiral", "falling_beam"].all(func(effect): return effects.has(effect)), "the cluster animates all three portal kinds %s" % str(fx))
+	_check(["swirl_disc", "inward_vortex", "falling_beam"].all(func(effect): return effects.has(effect)) and bool(fx.get("animating", false)), "the cluster animates all three portal kinds %s" % str(fx))
 	if DisplayServer.get_name() != "headless":
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(CAPTURE_DIR))
 		await RenderingServer.frame_post_draw
@@ -289,7 +303,15 @@ func _check_rendering(session) -> void:
 	view.call("_invalidate_state_cache", "portal_networks_reduced_motion")
 	for _frame in range(4):
 		await get_tree().process_frame
-	_check(int(view.call("validation_portal_fx_snapshot").get("portals", -1)) == 0, "reduced motion keeps portals still")
+	var still: Dictionary = view.call("validation_portal_fx_snapshot")
+	_check(int(still.get("portals", 0)) > 0 and not bool(still.get("animating", true)), "reduced motion keeps the portal magic as a still frame %s" % str(still))
+	if DisplayServer.get_name() != "headless":
+		await RenderingServer.frame_post_draw
+		var frozen := get_viewport().get_texture().get_image()
+		for _frame in range(12):
+			await get_tree().process_frame
+		await RenderingServer.frame_post_draw
+		_check(not _images_differ(frozen, get_viewport().get_texture().get_image(), still.get("viewport_rects", [])), "with reduced motion the portal magic does not move")
 	SettingsService.set_reduced_motion_enabled(false)
 	shell.queue_free()
 	for _frame in range(2):

@@ -2260,19 +2260,19 @@
     },
     "object_wayring": {
       "asset_id": "mapobj_wayring",
-      "fit": "Wayring: two way portal sprite whose energy layer takes the network colour.",
+      "fit": "Wayring: two way portal stonework; its magic is drawn as particles in the network colour.",
       "assignment_source": "portal_networks_20261008",
       "family": "transit_object"
     },
     "object_waygate": {
       "asset_id": "mapobj_waygate",
-      "fit": "Waygate: one way entrance sprite whose energy layer takes the network colour.",
+      "fit": "Waygate: one way entrance stonework; its magic is drawn as particles in the network colour.",
       "assignment_source": "portal_networks_20261008",
       "family": "transit_object"
     },
     "object_wayfall": {
       "asset_id": "mapobj_wayfall",
-      "fit": "Wayfall: one way exit sprite whose energy layer takes the network colour.",
+      "fit": "Wayfall: one way exit stonework; its magic is drawn as particles in the network colour.",
       "assignment_source": "portal_networks_20261008",
       "family": "transit_object"
     }

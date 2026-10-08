@@ -315,6 +315,7 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 	_migrate_generated_transit_meanings(session)
 	WaterTravel.normalize(session)
 	NativeTransit.normalize_legacy_session(session)
+	NativeTransit.assign_network_colours(session.overworld.get("resource_nodes", []))
 	if not session.overworld.has("hero_position") or not (session.overworld.get("hero_position") is Dictionary):
 		session.overworld["hero_position"] = scenario.get("start", {"x": 0, "y": 0})
 	_refresh_blocked_tile_index(session)

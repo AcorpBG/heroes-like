@@ -27,8 +27,10 @@ static func destinations(node: Dictionary) -> Array:
 	return values if values is Array else []
 
 const PORTAL_KIND_BY_TYPE := {43: "one_way_entrance", 44: "one_way_exit", 45: "two_way_portal"}
-# Network colours, shared by every portal kind (the art tells the kinds
-# apart). Index = the network's number within its kind (docs/portal-networks.md).
+# Network colours (docs/portal-networks.md). Each network on a map gets its own
+# slot (assign_network_colours); past the palette colours repeat and the
+# portal's shape still tells the kinds apart. The magic is drawn as particles,
+# so any colour works.
 const NETWORK_COLOURS := [
 	{"name": "Emerald", "color": Color(0.22, 0.86, 0.42)},
 	{"name": "Amber", "color": Color(1.0, 0.62, 0.12)},
@@ -42,6 +44,10 @@ const NETWORK_COLOURS := [
 	{"name": "Lime", "color": Color(0.66, 1.0, 0.22)},
 	{"name": "Copper", "color": Color(0.86, 0.46, 0.22)},
 	{"name": "Indigo", "color": Color(0.38, 0.36, 0.96)},
+	{"name": "Magenta", "color": Color(1.0, 0.26, 0.92)},
+	{"name": "Sky", "color": Color(0.56, 0.84, 1.0)},
+	{"name": "Flame", "color": Color(1.0, 0.36, 0.08)},
+	{"name": "Mint", "color": Color(0.56, 1.0, 0.74)},
 ]
 
 ## two_way_portal, one_way_entrance or one_way_exit for a native monolith;
@@ -59,7 +65,25 @@ static func network_index(node: Dictionary) -> int:
 	return int(link.get("network_index", node.get("h3m_subtype", 0)))
 
 static func network_colour(node: Dictionary) -> Dictionary:
-	return NETWORK_COLOURS[posmod(network_index(node), NETWORK_COLOURS.size())]
+	return NETWORK_COLOURS[posmod(int(node.get("portal_colour", network_index(node))), NETWORK_COLOURS.size())]
+
+## Gives every portal network on the map its own colour slot (portal_colour):
+## two-way networks first, then one-way, each in network order.
+static func assign_network_colours(nodes: Array) -> void:
+	var slots := {}
+	for node in nodes:
+		if node is Dictionary and portal_kind(node) != "":
+			slots[_network_colour_key(node)] = 0
+	var ordered: Array = slots.keys()
+	ordered.sort()
+	for index in range(ordered.size()):
+		slots[ordered[index]] = index
+	for node in nodes:
+		if node is Dictionary and portal_kind(node) != "":
+			node["portal_colour"] = slots[_network_colour_key(node)]
+
+static func _network_colour_key(node: Dictionary) -> String:
+	return "%d:%06d" % [0 if portal_kind(node) == "two_way_portal" else 1, network_index(node)]
 
 ## A generated connection whose two sides are the same zone. Its portals never
 ## take a traveller anywhere new, so random maps leave the whole network off.

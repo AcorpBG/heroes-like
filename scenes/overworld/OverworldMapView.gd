@@ -1058,7 +1058,7 @@ func _portal_fx_motion_enabled() -> bool:
 	return not SettingsService.reduced_motion_enabled()
 
 func _portal_fx_should_animate() -> bool:
-	return _portal_fx != null and _portal_fx.has_portals() and _portal_fx_motion_enabled()
+	return _portal_fx != null and _portal_fx.is_animating()
 
 func _raise_portal_fx() -> void:
 	if _portal_fx == null or not is_instance_valid(_state_layer):
@@ -2178,6 +2178,7 @@ func _draw_state_layer() -> void:
 	_scenery_batches.begin(_state_layer)
 	if _portal_fx != null:
 		_portal_fx.clear()
+		_portal_fx.animate = _portal_fx_motion_enabled()
 	if _session == null:
 		_scenery_batches.finish()
 		return
@@ -4299,37 +4300,26 @@ func _draw_resource_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile
 	if not _draw_object_sprite(asset_id, rect, remembered, profile, tile):
 		return false
 	if NativeTransit.portal_kind(node) != "":
-		_draw_portal_network_glow(node, asset_id, rect, remembered, profile, tile)
+		_register_portal_fx(node, asset_id, rect, remembered, profile, tile)
 	return true
 
-## A portal's energy is painted as a separate white layer (<asset>_glow) and
-## tinted with its network colour, so every end of one network glows alike
-## (docs/portal-networks.md).
-func _draw_portal_network_glow(node: Dictionary, asset_id: String, rect: Rect2, remembered: bool, profile: Dictionary, tile: Vector2i) -> void:
+## A portal's magic is drawn as particles in its network colour above the
+## bare stonework (OverworldPortalFx.gd, docs/portal-networks.md).
+func _register_portal_fx(node: Dictionary, asset_id: String, rect: Rect2, remembered: bool, profile: Dictionary, tile: Vector2i) -> void:
 	var texture = _object_texture_for_asset(asset_id)
-	var glow = _object_texture_for_asset(asset_id + "_glow")
-	if not (texture is Texture2D) or not (glow is Texture2D):
+	if not (texture is Texture2D) or _draw_canvas_item != _state_layer or _portal_fx == null:
 		return
 	var town_adjunct_cap_tiles := TOWN_ADJUNCT_RESOURCE_VISIBLE_EXTENT_CAP_TILES if not _town_presentation_at(tile).is_empty() else 0.0
 	var metrics := _object_sprite_visual_metrics(rect, profile, 0.0, Rect2(), town_adjunct_cap_tiles)
 	var payload := _object_painted_sprite_draw_payload(asset_id, texture, metrics.get("sprite_center", rect.get_center()), float(metrics.get("sprite_extent_px", 12.0)))
 	var colour: Color = NativeTransit.network_colour(node).get("color", Color.WHITE)
-	if remembered:
-		colour *= OBJECT_SPRITE_MEMORY_MODULATE
-	var glow_rect: Rect2 = payload.get("draw_rect", rect)
-	var glow_source: Rect2 = payload.get("source_rect", Rect2(Vector2.ZERO, glow.get_size()))
-	_canvas_draw_texture_rect_region(glow, glow_rect, glow_source, colour)
-	# A remembered portal under fog stays still; a visible one is animated.
-	if not remembered and _draw_canvas_item == _state_layer and _portal_fx != null and _portal_fx_motion_enabled():
-		_portal_fx.add({
-			"asset_id": asset_id,
-			"color": colour,
-			"canvas_rect": payload.get("canvas_draw_rect", glow_rect),
-			"glow": glow,
-			"glow_rect": glow_rect,
-			"glow_source": glow_source,
-			"seed": float(posmod(String(node.get("placement_id", "")).hash(), 10007)) / 10007.0,
-		})
+	_portal_fx.add({
+		"asset_id": asset_id,
+		"color": colour * OBJECT_SPRITE_MEMORY_MODULATE if remembered else colour,
+		"canvas_rect": payload.get("canvas_draw_rect", rect),
+		"remembered": remembered,
+		"seed": float(posmod(String(node.get("placement_id", "")).hash(), 10007)) / 10007.0,
+	})
 
 func _draw_mine(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	var resource := Mines.resource(node)
