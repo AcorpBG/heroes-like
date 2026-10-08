@@ -1118,12 +1118,15 @@ static func _create_hero(session: SessionStateStoreScript.SessionData, context: 
 	if template.is_empty():
 		return {}
 	var position := LevelRules.town_entrance(town)
+	# Level-up rolls come from the hero's growth seed: seed it from the session,
+	# as the human's hires are, so the same game plays out the same way.
+	var growth_seed := HeroCommandRulesScript.new_growth_seed("%s|%s|%d" % [controller, hero_id, int(session.day)], session)
 	var hero := {}
 	if not start_stacks.is_empty():
-		hero = HeroCommandRulesScript.build_recruited_hero(template, position, AI_DIFFICULTY, 1, {"id": "%s_army" % hero_id, "name": "Field Army", "stacks": start_stacks})
+		hero = HeroCommandRulesScript.build_recruited_hero(template, position, AI_DIFFICULTY, 1, {"id": "%s_army" % hero_id, "name": "Field Army", "stacks": start_stacks}, "", growth_seed)
 	else:
 		var offer := HeroCommandRulesScript.tavern_offer(session, hero_id)
-		hero = HeroCommandRulesScript.build_recruited_hero(template, position, AI_DIFFICULTY, int(offer.get("level", 1)), offer.get("army", {}))
+		hero = HeroCommandRulesScript.build_recruited_hero(template, position, AI_DIFFICULTY, int(offer.get("level", 1)), offer.get("army", {}), "", growth_seed)
 	if hero.is_empty():
 		return {}
 	var army_stacks: Array = hero.get("army", {}).get("stacks", []).duplicate(true) if hero.get("army", {}) is Dictionary else []

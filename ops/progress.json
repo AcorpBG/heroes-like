@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ai-strength-battle-scaling-20261008",
-  "currentSliceId": "ai-strength-battle-scaling-20261008",
-  "currentSliceNotes": "COMPLETED 2026-10-08. See plannedSlices ai-strength-battle-scaling-20261008.",
+  "currentSlice": "ai-match-series-20261008",
+  "currentSliceId": "ai-match-series-20261008",
+  "currentSliceNotes": "COMPLETED 2026-10-08. See plannedSlices ai-match-series-20261008.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "AI strength estimate for the battle stat scaling",
-  "currentSliceUpdatedAt": "2026-10-08T21:40:00Z",
+  "currentSliceTitle": "AI match series on ten random maps, reproducible AI level-ups",
+  "currentSliceUpdatedAt": "2026-10-08T22:30:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -114519,6 +114519,18 @@
         "docs/ai-plays-by-player-rules.md"
       ],
       "notes": "After battle-stat-scaling-20261008 (035ec6946) the harness failed: AI heroes kept attacking a human hero whose Cinder Burst (48 per cast) beat armies twice hers, and the difficulty sweep warned on Hard pacing. AiHeroRules.army_power: hero attack/defense via BattleDamageRules.attack_defense_multiplier (sqrt of damage dealt over damage taken), plus _spell_damage_per_round (best affordable battle damage spell, once a round over BATTLE_ROUNDS_ESTIMATE 4 rounds) as sqrt(1 + spell/army damage). Calibrated on 1,600 auto-resolved battles of random hero-led armies (10-1,000 strength, levels 1-6): winner called 82.8% (86% with a small side) vs 73.8% for the old 5%-per-point estimate. GUARD_WIN_RATIO 1.5 -> 1.3 (walled map back to 645 tiles / 7 guards / 17 sites). _holds_gate records goal kind hold. Tests: harness accepts the sweep's report-only combat-feel warning when the sweep has no failures; town-defense fixtures strengthen the human hero to 2x the computer hero and accept goal hold; assault-grouping fixture garrisons the human's towns between the support hero's and the grouped army's strength. All 11 AI scenes pass. Matches: ai-match-4199114532 Veilmourn (south) day 28 and swapped Thornwake (south) day 37, one capture each, past defenders; four random matches 14-64 days; loss expected 12-22% vs actual 10-16%."
+    },
+    {
+      "id": "ai-match-series-20261008",
+      "title": "AI match series on ten random maps, reproducible AI level-ups",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ai_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Owner request: 10 random small maps, each played both ways round (seeds series-20261008-1..10). Found while running: AI hires built heroes without a session, so HeroCommandRules.new_growth_seed rolled a random growth seed (and the levels a veteran hire arrives with) and identical mirror games diverged. build_recruited_hero takes an optional growth_seed applied before starting levels; AiHeroRules._create_hero passes a session seed. All three mirror pairs then replayed identically. ai_versus_ai_match_report: the both-sides-fought check applies to the regression run only (a full match can end on day 4). Results: 20 games all decided, days 4-56 (median 31); of 7 pairs with different factions 3 decided by starting place, 4 by faction; Veilmourn 4/4, Brasshollow 2/2, Thornwake 4/6, Embercourt 1/2, Sunvault 2/6, Mireclaw 1/8; Day-2 main hero strength 158 (Embercourt) to 288 (Brasshollow); loss estimate 14.5% vs actual 14.3% over 383 battles; map 6 game 1 had 42 captures (28 unopposed) around Mireclaw's capital. Report: claude.ai artifact AI Match Series."
     }
   ],
   "project": "heroes-like",

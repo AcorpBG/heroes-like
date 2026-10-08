@@ -182,7 +182,8 @@ static func build_recruited_hero(
 	movement_source: Variant,
 	level: int = 1,
 	army_state: Variant = {},
-	seed_key: String = ""
+	seed_key: String = "",
+	growth_seed: String = ""
 ) -> Dictionary:
 	if hero_template.is_empty():
 		return {}
@@ -193,6 +194,10 @@ static func build_recruited_hero(
 	var hero := build_hero_from_template(hero_template, position, army, movement_source)
 	if hero.is_empty():
 		return hero
+	# A caller without a session (the computer player's hires) passes its own
+	# seed, so the levels a hire arrives with roll the same way every time.
+	if growth_seed != "":
+		hero["growth_seed"] = growth_seed
 	if level > 1:
 		hero = HeroProgressionRulesScript.advance_to_level(hero, level)
 	# Specialty mana counts toward the new commander's full reserve.

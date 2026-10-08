@@ -156,7 +156,7 @@ func _run() -> void:
 	var fought := {}
 	for battle in battles:
 		fought[String(battle.get("player_id", ""))] = true
-	if fought.size() < 2:
+	if not full_match and fought.size() < 2:
 		_fail("Only %s fought in %d days." % [JSON.stringify(fought.keys()), int(session.day)])
 		return
 	var summary := {
