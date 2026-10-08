@@ -4,12 +4,14 @@ Each source painting keeps its magic in one key colour (pure magenta). The
 runtime sprite, mapobj_<name>.png on the shared 512px object canvas, keeps
 only the solid stonework: the keyed magic inside a Wayring's ring or a
 Waygate's arch becomes a dark empty opening, a Wayfall's beam becomes open
-air, and light the painter spilled on stone becomes plain stone. The overworld
-draws all of the magic as particles in the network's colour
-(scenes/overworld/OverworldPortalFx.gd).
+air, and light the painter spilled on stone becomes plain stone.
 
-It also measures where the magic was painted and writes
-art/overworld/portal_network_fx.json, which places those particles.
+The painted magic itself becomes white-light effect layers on the same
+canvas (mapobj_<name>_vortex/_spill, mapobj_wayfall_beam/_splash), which the
+overworld tints with the network colour and animates
+(scenes/overworld/OverworldPortalFx.gd). The tool also measures where the
+magic was painted and writes art/overworld/portal_network_fx.json, which
+places and names those layers.
 
 Packing matches the other generated object sprites: alpha above 60 sets the
 crop box, then an aspect-preserving resize, centred and bottom-aligned.
@@ -87,13 +89,15 @@ def opening_of(mask: np.ndarray, floor: int) -> np.ndarray:
     return filled
 
 
-def stonework(name: str, packed: Image.Image) -> tuple[Image.Image, np.ndarray]:
-    """The solid sprite and the packed magic weight it was cut from."""
+def stonework(name: str, packed: Image.Image) -> tuple[Image.Image, np.ndarray, dict]:
+    """The solid sprite, the packed magic weight and the magic's effect layers."""
     pixels = np.asarray(packed, dtype=np.float32) / 255.0
     rgb, alpha = pixels[..., :3], pixels[..., 3]
     painted = alpha > 0.0
     keyed = key_weight(rgb) * painted
     brightness = rgb.mean(axis=2)
+    # The magic as white light: the painted shading survives the network tint.
+    light = np.clip(brightness * 1.35, 0.0, 1.0)
     # White-hot cores and sparks were painted without the key hue; near the
     # magic, anything that bright is magic too. Stone highlights stay darker.
     hot = np.clip((brightness - 0.62) / 0.18, 0.0, 1.0) * near(keyed > 0.2, 12) * painted
@@ -122,9 +126,25 @@ def stonework(name: str, packed: Image.Image) -> tuple[Image.Image, np.ndarray]:
         haze = (alpha < 0.95) & near(keyed > 0.1, 10)
         air = np.where(rows < BEAM_FLOOR, np.where(haze, 1.0, weight), haze.astype(np.float32))
         out[..., 3] = alpha * (1.0 - air)
+        layers = {
+            "beam": light_layer(light, alpha * air),
+            "splash": light_layer(light, alpha * weight * (rows >= BEAM_FLOOR) * (1.0 - haze)),
+        }
     else:
         out[..., 3] = alpha
-    return to_image(out), keyed * alpha
+        soft_opening = np.asarray(Image.fromarray((opening * 255).astype(np.uint8), "L").filter(ImageFilter.GaussianBlur(1.2)), dtype=np.float32) / 255.0
+        layers = {
+            "vortex": light_layer(light, alpha * soft_opening),
+            "spill": light_layer(light, alpha * weight * (1.0 - opening)),
+        }
+    return to_image(out), keyed * alpha, layers
+
+
+def light_layer(light: np.ndarray, coverage: np.ndarray) -> Image.Image:
+    layer = np.empty(light.shape + (4,), dtype=np.float32)
+    layer[..., 3] = np.clip(coverage, 0.0, 1.0)
+    layer[..., :3] = (light * (layer[..., 3] > 0.0))[..., None]
+    return to_image(layer)
 
 
 def band_box(weight: np.ndarray, top: int, bottom: int, threshold: float = 0.35) -> tuple[float, float, float, float]:
@@ -142,6 +162,10 @@ def normalized_ellipse(bounds: tuple[float, float, float, float]) -> dict:
     }
 
 
+def layer_ids(name: str, roles: tuple) -> dict:
+    return {role: f"mapobj_{name}_{role}" for role in roles}
+
+
 def fx_geometry(magic: dict) -> dict:
     ring = normalized_ellipse(band_box(magic["wayring"], 0, VORTEX_FLOOR))
     gate = normalized_ellipse(band_box(magic["waygate"], 0, VORTEX_FLOOR))
@@ -150,10 +174,11 @@ def fx_geometry(magic: dict) -> dict:
     core_widths = [np.ptp(np.nonzero(fall[row] > 0.6)[0]) for row in range(int(beam_top) + 20, BEAM_FLOOR - 10) if np.count_nonzero(fall[row] > 0.6) > 1]
     splash = normalized_ellipse(band_box(fall, BEAM_FLOOR, CANVAS))
     return {
-        "mapobj_wayring": {"effect": "swirl_disc", **ring},
-        "mapobj_waygate": {"effect": "inward_vortex", **gate},
+        "mapobj_wayring": {"effect": "swirl_disc", "layers": layer_ids("wayring", ("vortex", "spill")), **ring},
+        "mapobj_waygate": {"effect": "inward_vortex", "layers": layer_ids("waygate", ("vortex", "spill")), **gate},
         "mapobj_wayfall": {
             "effect": "falling_beam",
+            "layers": layer_ids("wayfall", ("beam", "splash")),
             "beam_x": round((beam_left + beam_right) / 2 / CANVAS, 4),
             "beam_half_width": round(float(np.median(core_widths)) / 2 / CANVAS, 4),
             "beam_top": round(beam_top / CANVAS, 4),
@@ -172,8 +197,10 @@ def main() -> int:
     for name in NAMES:
         source = Image.open(SOURCE_DIR / f"{name}-source.png").convert("RGBA")
         crop = source.getchannel("A").point(lambda v: 255 if v > 60 else 0).getbbox()
-        sprite, magic[name] = stonework(name, pack(source, crop))
+        sprite, magic[name], layers = stonework(name, pack(source, crop))
         sprite.save(args.out / f"mapobj_{name}.png", optimize=True)
+        for role, layer in layers.items():
+            layer.save(args.out / f"mapobj_{name}_{role}.png", optimize=True)
         print(f"{name}: crop {crop} -> {args.out / f'mapobj_{name}.png'}")
     fx = {
         "schema_id": "aurelion_portal_network_fx_v1",

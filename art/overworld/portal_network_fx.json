@@ -4,6 +4,10 @@
   "assets": {
     "mapobj_wayring": {
       "effect": "swirl_disc",
+      "layers": {
+        "vortex": "mapobj_wayring_vortex",
+        "spill": "mapobj_wayring_spill"
+      },
       "center": [
         0.4873,
         0.4346
@@ -15,6 +19,10 @@
     },
     "mapobj_waygate": {
       "effect": "inward_vortex",
+      "layers": {
+        "vortex": "mapobj_waygate_vortex",
+        "spill": "mapobj_waygate_spill"
+      },
       "center": [
         0.4736,
         0.4336
@@ -26,6 +34,10 @@
     },
     "mapobj_wayfall": {
       "effect": "falling_beam",
+      "layers": {
+        "beam": "mapobj_wayfall_beam",
+        "splash": "mapobj_wayfall_splash"
+      },
       "beam_x": 0.501,
       "beam_half_width": 0.0459,
       "beam_top": 0.1875,
