@@ -10,6 +10,45 @@ const ATTACK_BONUS_MAX := 3.0
 const DEFENSE_REDUCTION_PER_POINT := 0.025
 const DEFENSE_REDUCTION_MAX := 0.7
 
+## Commander specialty values a battle hero payload carries (content
+## hero_specialties.json bonuses); BattleRules._hero_payload_from_state fills them.
+const HERO_SPECIALTY_BATTLE_KEYS := [
+	"melee_damage_pct",
+	"ranged_damage_pct",
+	"damage_taken_pct",
+	"retaliation_damage_pct",
+	"siege_damage_pct",
+	"defend_defense_bonus",
+	"battle_cohesion",
+	"battle_momentum",
+	"creature_health_pct",
+	"victory_recovery_pct",
+	"mana_after_victory",
+	"reward_bonus_pct",
+]
+
+## The side assaulting a town in this battle, "" when it is no town fight.
+static func town_assault_side(battle: Dictionary) -> String:
+	var context = battle.get("context", {})
+	var context_type := String(context.get("type", "")) if context is Dictionary else ""
+	if context_type == "town_assault":
+		return "player"
+	if context_type == "town_defense":
+		return "enemy"
+	return ""
+
+## Specialty damage between two commanders: the attacker's melee or ranged
+## bonus, plus retaliation and siege bonuses when they apply, against the
+## defender's damage reduction.
+static func hero_damage_multiplier(attacker_hero: Dictionary, defender_hero: Dictionary, is_ranged: bool, is_retaliation: bool, is_town_assault: bool) -> float:
+	var pct := int(attacker_hero.get("ranged_damage_pct" if is_ranged else "melee_damage_pct", 0))
+	if is_retaliation:
+		pct += int(attacker_hero.get("retaliation_damage_pct", 0))
+	if is_town_assault:
+		pct += int(attacker_hero.get("siege_damage_pct", 0))
+	var taken := maxf(0.1, 1.0 + float(int(defender_hero.get("damage_taken_pct", 0))) / 100.0)
+	return (1.0 + float(pct) / 100.0) * taken
+
 static func attack_defense_multiplier(attack_stat: int, defense_stat: int) -> float:
 	var difference := attack_stat - defense_stat
 	if difference >= 0:

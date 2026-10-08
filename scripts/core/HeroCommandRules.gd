@@ -348,6 +348,7 @@ static func movement_max_for_hero(hero_state: Dictionary, movement_source: Varia
 		+ int(specialty_bonuses.get("overworld_movement", 0))
 		+ difficulty_bonus
 		+ _week_bonus(hero_state, "movement")
+		+ maxi(0, int(hero_state.get("movement_carry", 0)))
 	)
 
 # Visit buildings can raise movement or mana until the week ends.

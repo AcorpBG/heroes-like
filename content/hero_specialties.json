@@ -1,0 +1,1762 @@
+{
+  "schema": "hero_specialties_v1",
+  "max_rank": 4,
+  "max_specialties_per_hero": 6,
+  "groups": {
+    "adventure": "Adventure and economy",
+    "command": "Command and battle",
+    "magic": "Magic"
+  },
+  "items": [
+    {
+      "id": "wayfinder",
+      "name": "Wayfinder's Instinct",
+      "short_name": "Wayfinder",
+      "group": "adventure",
+      "path": "any",
+      "max_rank": 4,
+      "summary": "+1 map movement",
+      "ranks": [
+        {
+          "text": "+1 map movement",
+          "bonuses": {
+            "overworld_movement": 1
+          }
+        },
+        {
+          "text": "+2 map movement",
+          "bonuses": {
+            "overworld_movement": 2
+          }
+        },
+        {
+          "text": "+4 map movement",
+          "bonuses": {
+            "overworld_movement": 4
+          }
+        },
+        {
+          "text": "+6 map movement",
+          "bonuses": {
+            "overworld_movement": 6
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_wayfinder",
+      "icon_region": [
+        0,
+        0,
+        28,
+        28
+      ],
+      "icon_description": "A round trail compass crossed by a winding path needle.",
+      "icon_subject": "Brass trail compass with a winding path needle"
+    },
+    {
+      "id": "borderwarden",
+      "name": "Border Warden's Watch",
+      "short_name": "Border Warden",
+      "group": "adventure",
+      "path": "any",
+      "max_rank": 4,
+      "summary": "+1 scouting radius, raids take 10% less",
+      "ranks": [
+        {
+          "text": "+1 scouting radius, raids take 10% less",
+          "bonuses": {
+            "scouting_radius": 1,
+            "raid_pillage_resistance": 0.1
+          }
+        },
+        {
+          "text": "+2 scouting radius, raids take 20% less",
+          "bonuses": {
+            "scouting_radius": 2,
+            "raid_pillage_resistance": 0.2
+          }
+        },
+        {
+          "text": "+3 scouting radius, raids take 30% less",
+          "bonuses": {
+            "scouting_radius": 3,
+            "raid_pillage_resistance": 0.3
+          }
+        },
+        {
+          "text": "+4 scouting radius, raids take 40% less",
+          "bonuses": {
+            "scouting_radius": 4,
+            "raid_pillage_resistance": 0.4
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_borderwarden",
+      "icon_region": [
+        168,
+        0,
+        28,
+        28
+      ],
+      "icon_description": "A tall lantern watchtower flanked by two uneven boundary stakes.",
+      "icon_subject": "Lantern watchtower between two boundary stakes"
+    },
+    {
+      "id": "ledgerkeeper",
+      "name": "Ledgerkeeper's Oath",
+      "short_name": "Ledgerkeeper",
+      "group": "adventure",
+      "path": "any",
+      "max_rank": 4,
+      "summary": "+75 gold a day",
+      "ranks": [
+        {
+          "text": "+75 gold a day",
+          "bonuses": {
+            "daily_income": {
+              "gold": 75
+            }
+          }
+        },
+        {
+          "text": "+150 gold a day",
+          "bonuses": {
+            "daily_income": {
+              "gold": 150
+            }
+          }
+        },
+        {
+          "text": "+225 gold a day",
+          "bonuses": {
+            "daily_income": {
+              "gold": 225
+            }
+          }
+        },
+        {
+          "text": "+300 gold a day",
+          "bonuses": {
+            "daily_income": {
+              "gold": 300
+            }
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_ledgerkeeper",
+      "icon_region": [
+        28,
+        0,
+        28,
+        28
+      ],
+      "icon_description": "A square campaign ledger with a coin clasp and two tally pegs.",
+      "icon_subject": "Campaign ledger with a coin clasp and supply tally pegs"
+    },
+    {
+      "id": "prospector",
+      "name": "Prospector's Assay",
+      "short_name": "Prospector",
+      "group": "adventure",
+      "path": "any",
+      "max_rank": 4,
+      "summary": "+1 wood and +1 ore a day",
+      "ranks": [
+        {
+          "text": "+1 wood and +1 ore a day",
+          "bonuses": {
+            "daily_income": {
+              "wood": 1,
+              "ore": 1
+            }
+          }
+        },
+        {
+          "text": "+2 wood and +2 ore a day",
+          "bonuses": {
+            "daily_income": {
+              "wood": 2,
+              "ore": 2
+            }
+          }
+        },
+        {
+          "text": "+3 wood and +3 ore a day",
+          "bonuses": {
+            "daily_income": {
+              "wood": 3,
+              "ore": 3
+            }
+          }
+        },
+        {
+          "text": "+4 wood and +4 ore a day",
+          "bonuses": {
+            "daily_income": {
+              "wood": 4,
+              "ore": 4
+            }
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_prospector",
+      "icon_region": [
+        0,
+        28,
+        28,
+        28
+      ],
+      "icon_description": "A short pick resting across a split ore nugget beside a log.",
+      "icon_subject": "Prospector pick over a split ore nugget and a cut log"
+    },
+    {
+      "id": "alchemist",
+      "name": "Alchemist's Retort",
+      "short_name": "Alchemist",
+      "group": "adventure",
+      "path": "any",
+      "max_rank": 4,
+      "summary": "+1 of the faction's main rare resource a day",
+      "ranks": [
+        {
+          "text": "+1 of the faction's main rare resource a day",
+          "bonuses": {
+            "daily_income": {
+              "faction_rare_main": 1
+            }
+          }
+        },
+        {
+          "text": "+1 main and +1 second rare resource a day",
+          "bonuses": {
+            "daily_income": {
+              "faction_rare_main": 1,
+              "faction_rare_secondary": 1
+            }
+          }
+        },
+        {
+          "text": "+2 main and +1 second rare resource a day",
+          "bonuses": {
+            "daily_income": {
+              "faction_rare_main": 2,
+              "faction_rare_secondary": 1
+            }
+          }
+        },
+        {
+          "text": "+3 main and +1 second rare resource a day",
+          "bonuses": {
+            "daily_income": {
+              "faction_rare_main": 3,
+              "faction_rare_secondary": 1
+            }
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_alchemist",
+      "icon_region": [
+        28,
+        28,
+        28,
+        28
+      ],
+      "icon_description": "A round-bellied retort flask on a tripod with a curled spout.",
+      "icon_subject": "Glass retort flask on a small tripod with a curled spout"
+    },
+    {
+      "id": "mustercaptain",
+      "name": "Muster Captain's Call",
+      "short_name": "Muster Captain",
+      "group": "adventure",
+      "path": "any",
+      "max_rank": 4,
+      "summary": "+10% recruit growth, recruits cost 5% less",
+      "ranks": [
+        {
+          "text": "+10% recruit growth, recruits cost 5% less",
+          "bonuses": {
+            "recruit_growth_multiplier": 0.1,
+            "recruit_cost_delta": -0.05
+          }
+        },
+        {
+          "text": "+20% recruit growth, recruits cost 10% less",
+          "bonuses": {
+            "recruit_growth_multiplier": 0.2,
+            "recruit_cost_delta": -0.1
+          }
+        },
+        {
+          "text": "+30% recruit growth, recruits cost 15% less",
+          "bonuses": {
+            "recruit_growth_multiplier": 0.3,
+            "recruit_cost_delta": -0.15
+          }
+        },
+        {
+          "text": "+40% recruit growth, recruits cost 20% less",
+          "bonuses": {
+            "recruit_growth_multiplier": 0.4,
+            "recruit_cost_delta": -0.2
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_mustercaptain",
+      "icon_region": [
+        140,
+        0,
+        28,
+        28
+      ],
+      "icon_description": "A curved rally horn carrying three differently cut troop pennants.",
+      "icon_subject": "Rally horn hung with three cut troop pennants"
+    },
+    {
+      "id": "nightmarch",
+      "name": "Night March",
+      "short_name": "Night March",
+      "group": "adventure",
+      "path": "any",
+      "max_rank": 4,
+      "summary": "Carry up to 1 unused movement into the next day",
+      "ranks": [
+        {
+          "text": "Carry up to 1 unused movement into the next day",
+          "bonuses": {
+            "movement_carry": 1
+          }
+        },
+        {
+          "text": "Carry up to 2 unused movement into the next day",
+          "bonuses": {
+            "movement_carry": 2
+          }
+        },
+        {
+          "text": "Carry up to 3 unused movement into the next day",
+          "bonuses": {
+            "movement_carry": 3
+          }
+        },
+        {
+          "text": "Carry up to 4 unused movement into the next day",
+          "bonuses": {
+            "movement_carry": 4
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_nightmarch",
+      "icon_region": [
+        56,
+        28,
+        28,
+        28
+      ],
+      "icon_description": "A crescent moon over a single marching boot print on a road.",
+      "icon_subject": "Crescent moon above a boot print on a road"
+    },
+    {
+      "id": "plunderer",
+      "name": "Plunderer's Eye",
+      "short_name": "Plunderer",
+      "group": "adventure",
+      "path": "any",
+      "max_rank": 4,
+      "summary": "+10% gold and resources from pickups and won battles",
+      "ranks": [
+        {
+          "text": "+10% gold and resources from pickups and won battles",
+          "bonuses": {
+            "reward_bonus_pct": 10
+          }
+        },
+        {
+          "text": "+20% gold and resources from pickups and won battles",
+          "bonuses": {
+            "reward_bonus_pct": 20
+          }
+        },
+        {
+          "text": "+30% gold and resources from pickups and won battles",
+          "bonuses": {
+            "reward_bonus_pct": 30
+          }
+        },
+        {
+          "text": "+40% gold and resources from pickups and won battles",
+          "bonuses": {
+            "reward_bonus_pct": 40
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_plunderer",
+      "icon_region": [
+        84,
+        28,
+        28,
+        28
+      ],
+      "icon_description": "An open sack spilling coins beside a pried-open strongbox lid.",
+      "icon_subject": "Open coin sack beside a pried strongbox lid"
+    },
+    {
+      "id": "scholar",
+      "name": "Scholar's Patience",
+      "short_name": "Scholar",
+      "group": "adventure",
+      "path": "any",
+      "max_rank": 4,
+      "summary": "+5% experience",
+      "ranks": [
+        {
+          "text": "+5% experience",
+          "bonuses": {
+            "experience_bonus_pct": 5
+          }
+        },
+        {
+          "text": "+10% experience",
+          "bonuses": {
+            "experience_bonus_pct": 10
+          }
+        },
+        {
+          "text": "+15% experience",
+          "bonuses": {
+            "experience_bonus_pct": 15
+          }
+        },
+        {
+          "text": "+20% experience",
+          "bonuses": {
+            "experience_bonus_pct": 20
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_scholar",
+      "icon_region": [
+        112,
+        28,
+        28,
+        28
+      ],
+      "icon_description": "A stacked pair of books held shut by a ribboned bookmark.",
+      "icon_subject": "Two stacked books bound by a ribboned bookmark"
+    },
+    {
+      "id": "armsmaster",
+      "name": "Armsmaster's Temper",
+      "short_name": "Armsmaster",
+      "group": "command",
+      "path": "might",
+      "max_rank": 4,
+      "summary": "+1 battle attack and defense",
+      "ranks": [
+        {
+          "text": "+1 battle attack and defense",
+          "bonuses": {
+            "battle_attack": 1,
+            "battle_defense": 1
+          }
+        },
+        {
+          "text": "+2 battle attack and defense",
+          "bonuses": {
+            "battle_attack": 2,
+            "battle_defense": 2
+          }
+        },
+        {
+          "text": "+3 battle attack and defense",
+          "bonuses": {
+            "battle_attack": 3,
+            "battle_defense": 3
+          }
+        },
+        {
+          "text": "+4 battle attack and defense",
+          "bonuses": {
+            "battle_attack": 4,
+            "battle_defense": 4
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_armsmaster",
+      "icon_region": [
+        112,
+        0,
+        28,
+        28
+      ],
+      "icon_description": "A sword and war hammer crossed over a low anvil.",
+      "icon_subject": "Sword and war hammer crossed over an anvil"
+    },
+    {
+      "id": "drillmaster",
+      "name": "Drillmaster's Cadence",
+      "short_name": "Drillmaster",
+      "group": "command",
+      "path": "might",
+      "max_rank": 4,
+      "summary": "+1 battle initiative",
+      "ranks": [
+        {
+          "text": "+1 battle initiative",
+          "bonuses": {
+            "battle_initiative": 1
+          }
+        },
+        {
+          "text": "+2 battle initiative",
+          "bonuses": {
+            "battle_initiative": 2
+          }
+        },
+        {
+          "text": "+3 battle initiative",
+          "bonuses": {
+            "battle_initiative": 3
+          }
+        },
+        {
+          "text": "+4 battle initiative",
+          "bonuses": {
+            "battle_initiative": 4
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_drillmaster",
+      "icon_region": [
+        84,
+        0,
+        28,
+        28
+      ],
+      "icon_description": "A broad marching drum crossed by a notched command baton.",
+      "icon_subject": "Marching drum crossed by a notched command baton"
+    },
+    {
+      "id": "vanguard",
+      "name": "Vanguard Drill",
+      "short_name": "Vanguard",
+      "group": "command",
+      "path": "might",
+      "max_rank": 4,
+      "summary": "+5% melee damage",
+      "ranks": [
+        {
+          "text": "+5% melee damage",
+          "bonuses": {
+            "melee_damage_pct": 5
+          }
+        },
+        {
+          "text": "+10% melee damage",
+          "bonuses": {
+            "melee_damage_pct": 10
+          }
+        },
+        {
+          "text": "+15% melee damage",
+          "bonuses": {
+            "melee_damage_pct": 15
+          }
+        },
+        {
+          "text": "+20% melee damage",
+          "bonuses": {
+            "melee_damage_pct": 20
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_vanguard",
+      "icon_region": [
+        140,
+        28,
+        28,
+        28
+      ],
+      "icon_description": "A forward-leaning spearhead above a short row of shield rims.",
+      "icon_subject": "Spearhead pointing forward over a row of shield rims"
+    },
+    {
+      "id": "marksman",
+      "name": "Marksman's Eye",
+      "short_name": "Marksman",
+      "group": "command",
+      "path": "might",
+      "max_rank": 4,
+      "summary": "+5% ranged damage",
+      "ranks": [
+        {
+          "text": "+5% ranged damage",
+          "bonuses": {
+            "ranged_damage_pct": 5
+          }
+        },
+        {
+          "text": "+10% ranged damage",
+          "bonuses": {
+            "ranged_damage_pct": 10
+          }
+        },
+        {
+          "text": "+15% ranged damage",
+          "bonuses": {
+            "ranged_damage_pct": 15
+          }
+        },
+        {
+          "text": "+20% ranged damage",
+          "bonuses": {
+            "ranged_damage_pct": 20
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_marksman",
+      "icon_region": [
+        168,
+        28,
+        28,
+        28
+      ],
+      "icon_description": "A drawn bow with one arrow centred on a ringed target.",
+      "icon_subject": "Drawn bow with an arrow aimed at a ringed target"
+    },
+    {
+      "id": "shieldwall",
+      "name": "Shieldwall Oath",
+      "short_name": "Shieldwall",
+      "group": "command",
+      "path": "might",
+      "max_rank": 4,
+      "summary": "Troops take 4% less damage",
+      "ranks": [
+        {
+          "text": "Troops take 4% less damage",
+          "bonuses": {
+            "damage_taken_pct": -4
+          }
+        },
+        {
+          "text": "Troops take 8% less damage",
+          "bonuses": {
+            "damage_taken_pct": -8
+          }
+        },
+        {
+          "text": "Troops take 12% less damage",
+          "bonuses": {
+            "damage_taken_pct": -12
+          }
+        },
+        {
+          "text": "Troops take 16% less damage",
+          "bonuses": {
+            "damage_taken_pct": -16
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_shieldwall",
+      "icon_region": [
+        0,
+        56,
+        28,
+        28
+      ],
+      "icon_description": "Three overlapping kite shields locked edge to edge.",
+      "icon_subject": "Three overlapping kite shields locked edge to edge"
+    },
+    {
+      "id": "retinue",
+      "name": "Retinue Drill",
+      "short_name": "Retinue",
+      "group": "command",
+      "path": "might",
+      "max_rank": 4,
+      "summary": "Defending stacks get +1 more defense",
+      "ranks": [
+        {
+          "text": "Defending stacks get +1 more defense",
+          "bonuses": {
+            "defend_defense_bonus": 1
+          }
+        },
+        {
+          "text": "Defending stacks get +2 more defense",
+          "bonuses": {
+            "defend_defense_bonus": 2
+          }
+        },
+        {
+          "text": "Defending stacks get +3 more defense",
+          "bonuses": {
+            "defend_defense_bonus": 3
+          }
+        },
+        {
+          "text": "Defending stacks get +4 more defense",
+          "bonuses": {
+            "defend_defense_bonus": 4
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_retinue",
+      "icon_region": [
+        28,
+        56,
+        28,
+        28
+      ],
+      "icon_description": "A planted tower shield with a short spear braced behind it.",
+      "icon_subject": "Planted tower shield with a braced short spear"
+    },
+    {
+      "id": "counterstroke",
+      "name": "Counterstroke",
+      "short_name": "Counterstroke",
+      "group": "command",
+      "path": "might",
+      "max_rank": 4,
+      "summary": "+10% retaliation damage",
+      "ranks": [
+        {
+          "text": "+10% retaliation damage",
+          "bonuses": {
+            "retaliation_damage_pct": 10
+          }
+        },
+        {
+          "text": "+20% retaliation damage",
+          "bonuses": {
+            "retaliation_damage_pct": 20
+          }
+        },
+        {
+          "text": "+30% retaliation damage",
+          "bonuses": {
+            "retaliation_damage_pct": 30
+          }
+        },
+        {
+          "text": "+40% retaliation damage",
+          "bonuses": {
+            "retaliation_damage_pct": 40
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_counterstroke",
+      "icon_region": [
+        56,
+        56,
+        28,
+        28
+      ],
+      "icon_description": "Two curved blades meeting in a crossed parry with a spark.",
+      "icon_subject": "Two curved blades meeting in a crossed parry"
+    },
+    {
+      "id": "banner",
+      "name": "Banner of Resolve",
+      "short_name": "Banner",
+      "group": "command",
+      "path": "might",
+      "max_rank": 4,
+      "summary": "Troops start battle with +1 cohesion",
+      "ranks": [
+        {
+          "text": "Troops start battle with +1 cohesion",
+          "bonuses": {
+            "battle_cohesion": 1
+          }
+        },
+        {
+          "text": "Troops start battle with +2 cohesion",
+          "bonuses": {
+            "battle_cohesion": 2
+          }
+        },
+        {
+          "text": "Troops start battle with +3 cohesion",
+          "bonuses": {
+            "battle_cohesion": 3
+          }
+        },
+        {
+          "text": "Troops start battle with +4 cohesion",
+          "bonuses": {
+            "battle_cohesion": 4
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_banner",
+      "icon_region": [
+        84,
+        56,
+        28,
+        28
+      ],
+      "icon_description": "A swallow-tailed banner on a pole planted in a cairn of stones.",
+      "icon_subject": "Swallow-tailed banner planted in a stone cairn"
+    },
+    {
+      "id": "fortune",
+      "name": "Fortune's Favour",
+      "short_name": "Fortune",
+      "group": "command",
+      "path": "might",
+      "max_rank": 4,
+      "summary": "Troops start battle with +1 momentum",
+      "ranks": [
+        {
+          "text": "Troops start battle with +1 momentum",
+          "bonuses": {
+            "battle_momentum": 1
+          }
+        },
+        {
+          "text": "Troops start battle with +2 momentum",
+          "bonuses": {
+            "battle_momentum": 2
+          }
+        },
+        {
+          "text": "Troops start battle with +3 momentum",
+          "bonuses": {
+            "battle_momentum": 3
+          }
+        },
+        {
+          "text": "Troops start battle with +4 momentum",
+          "bonuses": {
+            "battle_momentum": 4
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_fortune",
+      "icon_region": [
+        112,
+        56,
+        28,
+        28
+      ],
+      "icon_description": "A four-leaf token on a cord beside a single rolled die.",
+      "icon_subject": "Four-leaf token on a cord beside a rolled die"
+    },
+    {
+      "id": "siegecraft",
+      "name": "Siegecraft",
+      "short_name": "Siegecraft",
+      "group": "command",
+      "path": "might",
+      "max_rank": 4,
+      "summary": "+10% damage when assaulting a town",
+      "ranks": [
+        {
+          "text": "+10% damage when assaulting a town",
+          "bonuses": {
+            "siege_damage_pct": 10
+          }
+        },
+        {
+          "text": "+20% damage when assaulting a town",
+          "bonuses": {
+            "siege_damage_pct": 20
+          }
+        },
+        {
+          "text": "+30% damage when assaulting a town",
+          "bonuses": {
+            "siege_damage_pct": 30
+          }
+        },
+        {
+          "text": "+40% damage when assaulting a town",
+          "bonuses": {
+            "siege_damage_pct": 40
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_siegecraft",
+      "icon_region": [
+        140,
+        56,
+        28,
+        28
+      ],
+      "icon_description": "A small trebuchet arm cocked beside a cracked wall block.",
+      "icon_subject": "Small trebuchet arm beside a cracked wall block"
+    },
+    {
+      "id": "fieldsurgeon",
+      "name": "Field Surgeon",
+      "short_name": "Field Surgeon",
+      "group": "command",
+      "path": "might",
+      "max_rank": 4,
+      "summary": "5% of fallen creatures recover after a won battle",
+      "ranks": [
+        {
+          "text": "5% of fallen creatures recover after a won battle",
+          "bonuses": {
+            "victory_recovery_pct": 5
+          }
+        },
+        {
+          "text": "10% of fallen creatures recover after a won battle",
+          "bonuses": {
+            "victory_recovery_pct": 10
+          }
+        },
+        {
+          "text": "15% of fallen creatures recover after a won battle",
+          "bonuses": {
+            "victory_recovery_pct": 15
+          }
+        },
+        {
+          "text": "20% of fallen creatures recover after a won battle",
+          "bonuses": {
+            "victory_recovery_pct": 20
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_fieldsurgeon",
+      "icon_region": [
+        168,
+        56,
+        28,
+        28
+      ],
+      "icon_description": "A rolled bandage and a curved needle laid over a satchel flap.",
+      "icon_subject": "Rolled bandage and curved needle on a satchel flap"
+    },
+    {
+      "id": "hardened",
+      "name": "Hardened Ranks",
+      "short_name": "Hardened",
+      "group": "command",
+      "path": "might",
+      "max_rank": 4,
+      "summary": "Creatures have +3% health in battle",
+      "ranks": [
+        {
+          "text": "Creatures have +3% health in battle",
+          "bonuses": {
+            "creature_health_pct": 3
+          }
+        },
+        {
+          "text": "Creatures have +6% health in battle",
+          "bonuses": {
+            "creature_health_pct": 6
+          }
+        },
+        {
+          "text": "Creatures have +9% health in battle",
+          "bonuses": {
+            "creature_health_pct": 9
+          }
+        },
+        {
+          "text": "Creatures have +12% health in battle",
+          "bonuses": {
+            "creature_health_pct": 12
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_hardened",
+      "icon_region": [
+        0,
+        84,
+        28,
+        28
+      ],
+      "icon_description": "A riveted breastplate with a hammered dent and a thick strap.",
+      "icon_subject": "Riveted breastplate with a hammered dent"
+    },
+    {
+      "id": "spellwright",
+      "name": "Spellwright's Reserve",
+      "short_name": "Spellwright",
+      "group": "magic",
+      "path": "magic",
+      "max_rank": 4,
+      "summary": "+3 max mana",
+      "ranks": [
+        {
+          "text": "+3 max mana",
+          "bonuses": {
+            "max_mana": 3
+          }
+        },
+        {
+          "text": "+6 max mana, spells cost 1 less",
+          "bonuses": {
+            "max_mana": 6,
+            "mana_cost_discount": 1
+          }
+        },
+        {
+          "text": "+9 max mana, spells cost 1 less",
+          "bonuses": {
+            "max_mana": 9,
+            "mana_cost_discount": 1
+          }
+        },
+        {
+          "text": "+12 max mana, spells cost 2 less",
+          "bonuses": {
+            "max_mana": 12,
+            "mana_cost_discount": 2
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_spellwright",
+      "icon_region": [
+        56,
+        0,
+        28,
+        28
+      ],
+      "icon_description": "A diagonal feather quill clasping a faceted mana reservoir.",
+      "icon_subject": "Feather quill clasping a faceted mana reservoir"
+    },
+    {
+      "id": "arcanefocus",
+      "name": "Arcane Focus",
+      "short_name": "Arcane Focus",
+      "group": "magic",
+      "path": "magic",
+      "max_rank": 4,
+      "summary": "+1 spell power",
+      "ranks": [
+        {
+          "text": "+1 spell power",
+          "bonuses": {
+            "battle_power": 1
+          }
+        },
+        {
+          "text": "+2 spell power",
+          "bonuses": {
+            "battle_power": 2
+          }
+        },
+        {
+          "text": "+3 spell power",
+          "bonuses": {
+            "battle_power": 3
+          }
+        },
+        {
+          "text": "+4 spell power",
+          "bonuses": {
+            "battle_power": 4
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_arcanefocus",
+      "icon_region": [
+        28,
+        84,
+        28,
+        28
+      ],
+      "icon_description": "A clenched gauntlet holding a small orb ringed by a thin halo.",
+      "icon_subject": "Gauntlet holding an orb ringed by a thin halo"
+    },
+    {
+      "id": "sorcery",
+      "name": "Sorcery",
+      "short_name": "Sorcery",
+      "group": "magic",
+      "path": "magic",
+      "max_rank": 4,
+      "summary": "+5% spell damage",
+      "ranks": [
+        {
+          "text": "+5% spell damage",
+          "bonuses": {
+            "spell_damage_pct": 5
+          }
+        },
+        {
+          "text": "+10% spell damage",
+          "bonuses": {
+            "spell_damage_pct": 10
+          }
+        },
+        {
+          "text": "+15% spell damage",
+          "bonuses": {
+            "spell_damage_pct": 15
+          }
+        },
+        {
+          "text": "+20% spell damage",
+          "bonuses": {
+            "spell_damage_pct": 20
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_sorcery",
+      "icon_region": [
+        56,
+        84,
+        28,
+        28
+      ],
+      "icon_description": "A forked bolt striking down from an open spellbook page.",
+      "icon_subject": "Forked bolt striking from an open spellbook page"
+    },
+    {
+      "id": "lingeringweave",
+      "name": "Lingering Weave",
+      "short_name": "Lingering Weave",
+      "group": "magic",
+      "path": "magic",
+      "max_rank": 4,
+      "summary": "Spell buffs last 1 round longer",
+      "ranks": [
+        {
+          "text": "Spell buffs last 1 round longer",
+          "bonuses": {
+            "buff_duration_bonus": 1
+          }
+        },
+        {
+          "text": "Spell buffs, debuffs and riders last 1 round longer",
+          "bonuses": {
+            "buff_duration_bonus": 1,
+            "debuff_duration_bonus": 1
+          }
+        },
+        {
+          "text": "Buffs last 2 rounds longer, debuffs and riders 1",
+          "bonuses": {
+            "buff_duration_bonus": 2,
+            "debuff_duration_bonus": 1
+          }
+        },
+        {
+          "text": "Spell buffs, debuffs and riders last 2 rounds longer",
+          "bonuses": {
+            "buff_duration_bonus": 2,
+            "debuff_duration_bonus": 2
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_lingeringweave",
+      "icon_region": [
+        84,
+        84,
+        28,
+        28
+      ],
+      "icon_description": "An hourglass wrapped by a single looping thread of light.",
+      "icon_subject": "Hourglass wrapped in a looping thread"
+    },
+    {
+      "id": "ward",
+      "name": "Ward of Refusal",
+      "short_name": "Ward",
+      "group": "magic",
+      "path": "magic",
+      "max_rank": 4,
+      "summary": "+5% spell resistance",
+      "ranks": [
+        {
+          "text": "+5% spell resistance",
+          "bonuses": {
+            "battle_spell_resistance_pct": 5
+          }
+        },
+        {
+          "text": "+10% spell resistance",
+          "bonuses": {
+            "battle_spell_resistance_pct": 10
+          }
+        },
+        {
+          "text": "+15% spell resistance",
+          "bonuses": {
+            "battle_spell_resistance_pct": 15
+          }
+        },
+        {
+          "text": "+20% spell resistance",
+          "bonuses": {
+            "battle_spell_resistance_pct": 20
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_ward",
+      "icon_region": [
+        112,
+        84,
+        28,
+        28
+      ],
+      "icon_description": "An upraised open palm before a round sigil plate.",
+      "icon_subject": "Upraised open palm before a round sigil plate"
+    },
+    {
+      "id": "ironwill",
+      "name": "Iron Will",
+      "short_name": "Iron Will",
+      "group": "magic",
+      "path": "magic",
+      "max_rank": 4,
+      "summary": "+5% control resistance",
+      "ranks": [
+        {
+          "text": "+5% control resistance",
+          "bonuses": {
+            "battle_control_resistance_pct": 5
+          }
+        },
+        {
+          "text": "+10% control resistance",
+          "bonuses": {
+            "battle_control_resistance_pct": 10
+          }
+        },
+        {
+          "text": "+15% control resistance",
+          "bonuses": {
+            "battle_control_resistance_pct": 15
+          }
+        },
+        {
+          "text": "+20% control resistance",
+          "bonuses": {
+            "battle_control_resistance_pct": 20
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_ironwill",
+      "icon_region": [
+        140,
+        84,
+        28,
+        28
+      ],
+      "icon_description": "A helmeted head in profile bound by a closed iron circlet.",
+      "icon_subject": "Helmeted profile bound by an iron circlet"
+    },
+    {
+      "id": "leychanneler",
+      "name": "Ley Channeler",
+      "short_name": "Ley Channeler",
+      "group": "magic",
+      "path": "magic",
+      "max_rank": 4,
+      "summary": "Regain 2 mana after each won battle",
+      "ranks": [
+        {
+          "text": "Regain 2 mana after each won battle",
+          "bonuses": {
+            "mana_after_victory": 2
+          }
+        },
+        {
+          "text": "Regain 4 mana after each won battle",
+          "bonuses": {
+            "mana_after_victory": 4
+          }
+        },
+        {
+          "text": "Regain 6 mana after each won battle",
+          "bonuses": {
+            "mana_after_victory": 6
+          }
+        },
+        {
+          "text": "Regain 8 mana after each won battle",
+          "bonuses": {
+            "mana_after_victory": 8
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_leychanneler",
+      "icon_region": [
+        168,
+        84,
+        28,
+        28
+      ],
+      "icon_description": "A forked dowsing rod over three converging ley lines.",
+      "icon_subject": "Forked dowsing rod over converging ley lines"
+    },
+    {
+      "id": "mastery_beacon",
+      "name": "Beacon Mastery",
+      "short_name": "Beacon Mastery",
+      "group": "magic",
+      "path": "magic",
+      "max_rank": 4,
+      "summary": "Beacon spells: +8% damage and healing",
+      "ranks": [
+        {
+          "text": "Beacon spells: +8% damage and healing",
+          "bonuses": {
+            "school_potency_pct": {
+              "beacon": 8
+            }
+          }
+        },
+        {
+          "text": "Beacon spells: +16% damage and healing, -1 mana",
+          "bonuses": {
+            "school_potency_pct": {
+              "beacon": 16
+            },
+            "school_mana_discount": {
+              "beacon": 1
+            }
+          }
+        },
+        {
+          "text": "Beacon spells: +24% damage and healing, -1 mana, +1 round",
+          "bonuses": {
+            "school_potency_pct": {
+              "beacon": 24
+            },
+            "school_mana_discount": {
+              "beacon": 1
+            },
+            "school_duration_bonus": {
+              "beacon": 1
+            }
+          }
+        },
+        {
+          "text": "Beacon spells: +32% damage and healing, -2 mana, +1 round",
+          "bonuses": {
+            "school_potency_pct": {
+              "beacon": 32
+            },
+            "school_mana_discount": {
+              "beacon": 2
+            },
+            "school_duration_bonus": {
+              "beacon": 1
+            }
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_mastery_beacon",
+      "icon_region": [
+        0,
+        112,
+        28,
+        28
+      ],
+      "icon_description": "A tall signal lantern on a rod whose beam splits into three rays.",
+      "icon_subject": "A tall signal lantern on a rod whose beam splits into three rays"
+    },
+    {
+      "id": "mastery_mire",
+      "name": "Mire Mastery",
+      "short_name": "Mire Mastery",
+      "group": "magic",
+      "path": "magic",
+      "max_rank": 4,
+      "summary": "Mire spells: +8% damage and healing",
+      "ranks": [
+        {
+          "text": "Mire spells: +8% damage and healing",
+          "bonuses": {
+            "school_potency_pct": {
+              "mire": 8
+            }
+          }
+        },
+        {
+          "text": "Mire spells: +16% damage and healing, -1 mana",
+          "bonuses": {
+            "school_potency_pct": {
+              "mire": 16
+            },
+            "school_mana_discount": {
+              "mire": 1
+            }
+          }
+        },
+        {
+          "text": "Mire spells: +24% damage and healing, -1 mana, +1 round",
+          "bonuses": {
+            "school_potency_pct": {
+              "mire": 24
+            },
+            "school_mana_discount": {
+              "mire": 1
+            },
+            "school_duration_bonus": {
+              "mire": 1
+            }
+          }
+        },
+        {
+          "text": "Mire spells: +32% damage and healing, -2 mana, +1 round",
+          "bonuses": {
+            "school_potency_pct": {
+              "mire": 32
+            },
+            "school_mana_discount": {
+              "mire": 2
+            },
+            "school_duration_bonus": {
+              "mire": 1
+            }
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_mastery_mire",
+      "icon_region": [
+        28,
+        112,
+        28,
+        28
+      ],
+      "icon_description": "A reed bundle rising from a pool with two drifting spore bubbles.",
+      "icon_subject": "A reed bundle rising from a pool with two drifting spore bubbles"
+    },
+    {
+      "id": "mastery_lens",
+      "name": "Lens Mastery",
+      "short_name": "Lens Mastery",
+      "group": "magic",
+      "path": "magic",
+      "max_rank": 4,
+      "summary": "Lens spells: +8% damage and healing",
+      "ranks": [
+        {
+          "text": "Lens spells: +8% damage and healing",
+          "bonuses": {
+            "school_potency_pct": {
+              "lens": 8
+            }
+          }
+        },
+        {
+          "text": "Lens spells: +16% damage and healing, -1 mana",
+          "bonuses": {
+            "school_potency_pct": {
+              "lens": 16
+            },
+            "school_mana_discount": {
+              "lens": 1
+            }
+          }
+        },
+        {
+          "text": "Lens spells: +24% damage and healing, -1 mana, +1 round",
+          "bonuses": {
+            "school_potency_pct": {
+              "lens": 24
+            },
+            "school_mana_discount": {
+              "lens": 1
+            },
+            "school_duration_bonus": {
+              "lens": 1
+            }
+          }
+        },
+        {
+          "text": "Lens spells: +32% damage and healing, -2 mana, +1 round",
+          "bonuses": {
+            "school_potency_pct": {
+              "lens": 32
+            },
+            "school_mana_discount": {
+              "lens": 2
+            },
+            "school_duration_bonus": {
+              "lens": 1
+            }
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_mastery_lens",
+      "icon_region": [
+        56,
+        112,
+        28,
+        28
+      ],
+      "icon_description": "A faceted round lens in a brass ring casting a narrow beam.",
+      "icon_subject": "A faceted round lens in a brass ring casting a narrow beam"
+    },
+    {
+      "id": "mastery_root",
+      "name": "Root Mastery",
+      "short_name": "Root Mastery",
+      "group": "magic",
+      "path": "magic",
+      "max_rank": 4,
+      "summary": "Root spells: +8% damage and healing",
+      "ranks": [
+        {
+          "text": "Root spells: +8% damage and healing",
+          "bonuses": {
+            "school_potency_pct": {
+              "root": 8
+            }
+          }
+        },
+        {
+          "text": "Root spells: +16% damage and healing, -1 mana",
+          "bonuses": {
+            "school_potency_pct": {
+              "root": 16
+            },
+            "school_mana_discount": {
+              "root": 1
+            }
+          }
+        },
+        {
+          "text": "Root spells: +24% damage and healing, -1 mana, +1 round",
+          "bonuses": {
+            "school_potency_pct": {
+              "root": 24
+            },
+            "school_mana_discount": {
+              "root": 1
+            },
+            "school_duration_bonus": {
+              "root": 1
+            }
+          }
+        },
+        {
+          "text": "Root spells: +32% damage and healing, -2 mana, +1 round",
+          "bonuses": {
+            "school_potency_pct": {
+              "root": 32
+            },
+            "school_mana_discount": {
+              "root": 2
+            },
+            "school_duration_bonus": {
+              "root": 1
+            }
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_mastery_root",
+      "icon_region": [
+        84,
+        112,
+        28,
+        28
+      ],
+      "icon_description": "A knotted root coiling around a seed pod that sprouts two leaves.",
+      "icon_subject": "A knotted root coiling around a seed pod that sprouts two leaves"
+    },
+    {
+      "id": "mastery_furnace",
+      "name": "Furnace Mastery",
+      "short_name": "Furnace Mastery",
+      "group": "magic",
+      "path": "magic",
+      "max_rank": 4,
+      "summary": "Furnace spells: +8% damage and healing",
+      "ranks": [
+        {
+          "text": "Furnace spells: +8% damage and healing",
+          "bonuses": {
+            "school_potency_pct": {
+              "furnace": 8
+            }
+          }
+        },
+        {
+          "text": "Furnace spells: +16% damage and healing, -1 mana",
+          "bonuses": {
+            "school_potency_pct": {
+              "furnace": 16
+            },
+            "school_mana_discount": {
+              "furnace": 1
+            }
+          }
+        },
+        {
+          "text": "Furnace spells: +24% damage and healing, -1 mana, +1 round",
+          "bonuses": {
+            "school_potency_pct": {
+              "furnace": 24
+            },
+            "school_mana_discount": {
+              "furnace": 1
+            },
+            "school_duration_bonus": {
+              "furnace": 1
+            }
+          }
+        },
+        {
+          "text": "Furnace spells: +32% damage and healing, -2 mana, +1 round",
+          "bonuses": {
+            "school_potency_pct": {
+              "furnace": 32
+            },
+            "school_mana_discount": {
+              "furnace": 2
+            },
+            "school_duration_bonus": {
+              "furnace": 1
+            }
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_mastery_furnace",
+      "icon_region": [
+        112,
+        112,
+        28,
+        28
+      ],
+      "icon_description": "A squat crucible over a flame with a rivet-banded lid.",
+      "icon_subject": "A squat crucible over a flame with a rivet-banded lid"
+    },
+    {
+      "id": "mastery_veil",
+      "name": "Veil Mastery",
+      "short_name": "Veil Mastery",
+      "group": "magic",
+      "path": "magic",
+      "max_rank": 4,
+      "summary": "Veil spells: +8% damage and healing",
+      "ranks": [
+        {
+          "text": "Veil spells: +8% damage and healing",
+          "bonuses": {
+            "school_potency_pct": {
+              "veil": 8
+            }
+          }
+        },
+        {
+          "text": "Veil spells: +16% damage and healing, -1 mana",
+          "bonuses": {
+            "school_potency_pct": {
+              "veil": 16
+            },
+            "school_mana_discount": {
+              "veil": 1
+            }
+          }
+        },
+        {
+          "text": "Veil spells: +24% damage and healing, -1 mana, +1 round",
+          "bonuses": {
+            "school_potency_pct": {
+              "veil": 24
+            },
+            "school_mana_discount": {
+              "veil": 1
+            },
+            "school_duration_bonus": {
+              "veil": 1
+            }
+          }
+        },
+        {
+          "text": "Veil spells: +32% damage and healing, -2 mana, +1 round",
+          "bonuses": {
+            "school_potency_pct": {
+              "veil": 32
+            },
+            "school_mana_discount": {
+              "veil": 2
+            },
+            "school_duration_bonus": {
+              "veil": 1
+            }
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_mastery_veil",
+      "icon_region": [
+        140,
+        112,
+        28,
+        28
+      ],
+      "icon_description": "A hooded mask half-hidden behind a hanging fold of mist cloth.",
+      "icon_subject": "A hooded mask half-hidden behind a hanging fold of mist cloth"
+    },
+    {
+      "id": "mastery_old_measure",
+      "name": "Old Measure Mastery",
+      "short_name": "Old Measure Mastery",
+      "group": "magic",
+      "path": "magic",
+      "max_rank": 4,
+      "summary": "Old Measure spells: +8% damage and healing",
+      "ranks": [
+        {
+          "text": "Old Measure spells: +8% damage and healing",
+          "bonuses": {
+            "school_potency_pct": {
+              "old_measure": 8
+            }
+          }
+        },
+        {
+          "text": "Old Measure spells: +16% damage and healing, -1 mana",
+          "bonuses": {
+            "school_potency_pct": {
+              "old_measure": 16
+            },
+            "school_mana_discount": {
+              "old_measure": 1
+            }
+          }
+        },
+        {
+          "text": "Old Measure spells: +24% damage and healing, -1 mana, +1 round",
+          "bonuses": {
+            "school_potency_pct": {
+              "old_measure": 24
+            },
+            "school_mana_discount": {
+              "old_measure": 1
+            },
+            "school_duration_bonus": {
+              "old_measure": 1
+            }
+          }
+        },
+        {
+          "text": "Old Measure spells: +32% damage and healing, -2 mana, +1 round",
+          "bonuses": {
+            "school_potency_pct": {
+              "old_measure": 32
+            },
+            "school_mana_discount": {
+              "old_measure": 2
+            },
+            "school_duration_bonus": {
+              "old_measure": 1
+            }
+          }
+        }
+      ],
+      "icon_id": "specialty_insignia_mastery_old_measure",
+      "icon_region": [
+        168,
+        112,
+        28,
+        28
+      ],
+      "icon_description": "A pair of dividers standing over a notched measuring rule.",
+      "icon_subject": "A pair of dividers standing over a notched measuring rule"
+    }
+  ]
+}

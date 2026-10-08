@@ -1768,7 +1768,10 @@ static func _collect_resource_node_result(
 
 	var reward_started_usec := _rules_profile_timer()
 	# Explicit choices grant exactly the amount shown on their buttons.
-	var rewards = choice_rewards if not choices.is_empty() else DifficultyRulesScript.scale_reward_resources(session, _resource_site_claim_rewards(site))
+	var rewards = choice_rewards if not choices.is_empty() else apply_reward_bonus(
+		DifficultyRulesScript.scale_reward_resources(session, _resource_site_claim_rewards(site)),
+		int(HeroProgressionRulesScript.aggregate_bonuses(session.overworld.get("hero", {})).get("reward_bonus_pct", 0))
+	)
 	if not visit_cost.is_empty():
 		_spend_resources(session, visit_cost)
 	_add_resources(session, rewards)
@@ -13458,6 +13461,19 @@ static func _spend_resources(session: SessionStateStoreScript.SessionData, cost:
 			resources[resource_key] = max(0, int(resources.get(resource_key, 0)) - int(cost[key]))
 	session.overworld["resources"] = resources
 
+## `rewards` with every gold and resource amount raised by `pct` percent
+## (Plunderer's Eye); experience and other entries are left as they are.
+static func apply_reward_bonus(rewards: Variant, pct: int) -> Dictionary:
+	var result: Dictionary = rewards.duplicate(true) if rewards is Dictionary else {}
+	if pct <= 0:
+		return result
+	for key in result.keys():
+		var value = result[key]
+		if String(key) == "experience" or not (value is int or value is float) or int(value) <= 0:
+			continue
+		result[key] = int(value) + int(value) * pct / 100
+	return result
+
 static func _add_resources(session: SessionStateStoreScript.SessionData, delta: Variant) -> void:
 	var resources := _normalize_live_resource_stockpile(session.overworld.get("resources", {}))
 	if delta is Dictionary:
@@ -16255,6 +16271,9 @@ static func _refresh_all_player_heroes_for_new_day(session: SessionStateStoreScr
 		if new_week:
 			hero.erase(VisitBuildings.WEEK_BONUSES)
 		hero = SpellRulesScript.refresh_daily_mana(hero)
+		var carry_limit := int(HeroProgressionRulesScript.aggregate_bonuses(hero).get("movement_carry", 0))
+		var leftover := int(hero.get("movement", {}).get("current", 0)) if hero.get("movement", {}) is Dictionary else 0
+		hero["movement_carry"] = clampi(leftover, 0, carry_limit)
 		var movement_max := _movement_max_from_hero(hero, session)
 		hero["movement"] = {"current": movement_max, "max": movement_max}
 		heroes[index] = hero

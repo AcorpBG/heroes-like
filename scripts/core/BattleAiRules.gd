@@ -1960,7 +1960,7 @@ static func _estimate_damage(
 	attack_stat += _hero_bonus_for_side(battle, String(attacker.get("side", "")), "attack")
 	defense_stat += _hero_bonus_for_side(battle, String(defender.get("side", "")), "defense")
 	if bool(defender.get("defending", false)):
-		defense_stat += 2
+		defense_stat += 2 + _hero_bonus_for_side(battle, String(defender.get("side", "")), "defend_defense_bonus")
 
 	var modifier := DamageRules.attack_defense_multiplier(attack_stat, defense_stat)
 	if is_ranged and String(battle.get("terrain", "")) == "forest":
@@ -1978,6 +1978,13 @@ static func _estimate_damage(
 	modifier *= _field_objective_cover_damage_modifier(attacker, defender, battle, is_ranged, resolved_distance)
 	modifier *= _faction_damage_modifier(attacker, defender, battle, is_ranged, resolved_distance)
 	modifier *= _commander_damage_modifier(attacker, defender, battle, is_ranged, resolved_distance)
+	modifier *= DamageRules.hero_damage_multiplier(
+		_hero_payload_for_side(battle, String(attacker.get("side", ""))),
+		_hero_payload_for_side(battle, String(defender.get("side", ""))),
+		is_ranged,
+		is_retaliation,
+		DamageRules.town_assault_side(battle) == String(attacker.get("side", ""))
+	)
 	modifier *= _damage_multiplier_for_side(battle, String(attacker.get("side", "")))
 
 	return max(1, int(round(float(base_damage) * modifier)))
@@ -2238,9 +2245,7 @@ static func _stack_missing_health(stack: Dictionary) -> int:
 	return SpellRulesScript.battle_spell_recoverable_health(stack)
 
 static func _battle_recovery_amount(hero_state: Dictionary, spell: Dictionary) -> int:
-	var effect = spell.get("effect", {})
-	var power := int(hero_state.get("command", {}).get("power", 0))
-	return max(1, int(effect.get("base_restore", effect.get("amount", 0))) + (max(0, power) * int(effect.get("power_scale", 0))))
+	return SpellRulesScript._battle_spell_recovery_amount(hero_state, spell)
 
 static func _health_ratio(stack: Dictionary) -> float:
 	var max_health: int = max(1, int(stack.get("base_count", 0)) * max(1, int(stack.get("unit_hp", 1))))

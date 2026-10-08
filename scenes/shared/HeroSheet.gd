@@ -280,7 +280,7 @@ func _filter_artifacts() -> void:
 func _build_specializations(box: VBoxContainer) -> void:
 	_label(box, "Learned specializations", 18, "gold")
 	var learned := 0
-	for specialty in Progression.SPECIALTIES:
+	for specialty in Progression.specialties():
 		var specialty_id := String(specialty.id)
 		var rank := Progression.specialty_rank(hero, specialty_id)
 		if rank <= 0: continue
@@ -293,7 +293,7 @@ func _build_specializations(box: VBoxContainer) -> void:
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		row.add_child(icon)
-		_label(row, "%s · %s\n%s" % [String(specialty.name), Progression.rank_label(rank), String(specialty.summary)], 16)
+		_label(row, "%s · %s\n%s" % [String(specialty.name), Progression.rank_label(rank), Progression.rank_text(specialty_id, rank)], 16)
 	if learned == 0: _label(box, "No specializations learned yet.", 16)
 	var pending := Progression.pending_choices_remaining(hero)
 	_label(box, "%d pending specialization choice%s" % [pending, "" if pending == 1 else "s"], 17, "gold")

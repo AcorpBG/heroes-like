@@ -1094,7 +1094,12 @@ SUPPORTED_ARTIFACT_BONUS_TYPES = {
     "adventure_effect",
     "tradeoff",
 }
-VALID_SPECIALTY_IDS = {"wayfinder", "ledgerkeeper", "spellwright", "drillmaster", "armsmaster", "mustercaptain", "borderwarden"}
+HERO_SPECIALTIES_PATH = ROOT / "content" / "hero_specialties.json"
+VALID_SPECIALTY_IDS = {
+    str(item.get("id", ""))
+    for item in json.loads(HERO_SPECIALTIES_PATH.read_text(encoding="utf-8")).get("items", [])
+    if isinstance(item, dict)
+}
 RELEASE_PLAYER_FACTIONS = {"faction_embercourt", "faction_mireclaw", "faction_sunvault"}
 SIX_FACTION_BIBLE_IDS = {
     "faction_embercourt",
@@ -26417,15 +26422,19 @@ def validate_hero_progression(errors: list[str]) -> None:
             "scale_raid_pillage",
         ],
     )
+    specialty_catalog = load_json(HERO_SPECIALTIES_PATH)
+    specialty_items = specialty_catalog.get("items", [])
+    ensure(specialty_catalog.get("schema") == "hero_specialties_v1" and int(specialty_catalog.get("max_rank", 0)) == 4 and int(specialty_catalog.get("max_specialties_per_hero", 0)) == 6, errors, "Hero specialty catalog must keep four ranks and six specialties per hero")
+    ensure(isinstance(specialty_items, list) and len(specialty_items) == 35, errors, "Hero specialty catalog must hold the 35 specialties")
+    for original_id in ("wayfinder", "ledgerkeeper", "spellwright", "drillmaster", "armsmaster", "mustercaptain", "borderwarden"):
+        ensure(original_id in VALID_SPECIALTY_IDS, errors, f"Hero specialty catalog must keep saved specialty {original_id}")
+    for item in specialty_items if isinstance(specialty_items, list) else []:
+        ranks = item.get("ranks", []) if isinstance(item, dict) else []
+        ensure(isinstance(ranks, list) and len(ranks) == 4 and all(isinstance(rank, dict) and str(rank.get("text", "")).strip() and isinstance(rank.get("bonuses"), dict) and rank.get("bonuses") for rank in ranks), errors, f"Specialty {item.get('id', '') if isinstance(item, dict) else item} must define text and bonuses for each of its four ranks")
+        ensure(isinstance(item, dict) and item.get("group") in {"adventure", "command", "magic"} and item.get("path") in {"any", "might", "magic"}, errors, f"Specialty {item.get('id', '') if isinstance(item, dict) else item} needs a group and a command path")
     for required_token in (
-        "const SPECIALTIES",
-        '"wayfinder"',
-        '"ledgerkeeper"',
-        '"spellwright"',
-        '"drillmaster"',
-        '"armsmaster"',
-        '"mustercaptain"',
-        '"borderwarden"',
+        "static func specialties() -> Array:",
+        "const SPECIALTIES_PATH := \"res://content/hero_specialties.json\"",
         '"specialty_focus_ids"',
         '"pending_specialty_choices"',
     ):
@@ -50662,7 +50671,7 @@ def validate_hero_specialty_insignia(errors: list[str]) -> None:
         end = text.find("\nfunc ", start + 1)
         return text[start:] if end < 0 else text[start:end]
 
-    specialty_ids = (
+    original_ids = (
         "wayfinder", "ledgerkeeper", "spellwright", "drillmaster",
         "armsmaster", "mustercaptain", "borderwarden",
     )
@@ -50683,7 +50692,8 @@ def validate_hero_specialty_insignia(errors: list[str]) -> None:
     town_path = ROOT / "scenes" / "town" / "TownShell.gd"
     report_path = ROOT / "tests" / "hero_specialty_insignia_runtime_report.gd"
     report_scene_path = ROOT / "tests" / "hero_specialty_insignia_runtime_report.tscn"
-    required_paths = (manifest_path, atlas_path, rules_path, overworld_path, town_path, report_path, report_scene_path)
+    pack_tool_path = ROOT / "tools" / "pack_hero_specialty_insignia.py"
+    required_paths = (manifest_path, atlas_path, rules_path, overworld_path, town_path, report_path, report_scene_path, HERO_SPECIALTIES_PATH, pack_tool_path)
     for path in required_paths:
         ensure(path.is_file(), errors, f"Missing hero specialty insignia owner: {path.relative_to(ROOT)}")
     if not all(path.is_file() for path in required_paths):
@@ -50691,38 +50701,47 @@ def validate_hero_specialty_insignia(errors: list[str]) -> None:
 
     manifest = load_json(manifest_path)
     items = manifest.get("items", [])
-    ensure(manifest.get("schema") == "hero_specialty_insignia_generated_sources_v1", errors, "Hero specialty insignia source manifest schema changed")
+    catalog_items = [item for item in load_json(HERO_SPECIALTIES_PATH).get("items", []) if isinstance(item, dict)]
+    catalog = {str(item.get("id", "")): item for item in catalog_items}
+    ensure(manifest.get("schema") == "hero_specialty_insignia_generated_sources_v2", errors, "Hero specialty insignia source manifest schema changed")
     ensure(manifest.get("generator") == "openai_builtin_image_generation", errors, "Hero specialty insignia sources must retain built-in image-generation provenance")
     ensure(manifest.get("runtime_atlas") == "res://art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png", errors, "Hero specialty insignia runtime atlas path changed")
-    ensure(manifest.get("atlas_size") == [196, 28] and manifest.get("cell_size") == [28, 28] and manifest.get("runtime_icon_content_size") == [24, 24], errors, "Hero specialty insignia compact atlas geometry changed")
+    ensure(manifest.get("atlas_size") == [196, 140] and manifest.get("cell_size") == [28, 28] and manifest.get("runtime_icon_content_size") == [24, 24], errors, "Hero specialty insignia atlas geometry changed")
     ensure(bool(manifest.get("sources_excluded_from_release_packages", False)), errors, "Hero specialty insignia manifest must retain source-art package exclusion")
-    ensure(isinstance(items, list) and [str(row.get("specialty_id", "")) for row in items if isinstance(row, dict)] == list(specialty_ids), errors, "Hero specialty insignia manifest must own exactly seven ordered specialties")
-    source_payloads: list[bytes] = []
+    manifest_ids = [str(row.get("specialty_id", "")) for row in items if isinstance(row, dict)] if isinstance(items, list) else []
+    ensure(manifest_ids[:7] == list(original_ids) and sorted(manifest_ids) == sorted(catalog), errors, "Hero specialty insignia manifest must own every catalog specialty, the seven originals first")
     regions: list[tuple[int, int, int, int]] = []
-    descriptions: list[str] = []
-    for index, specialty_id in enumerate(specialty_ids):
-        row = items[index] if isinstance(items, list) and index < len(items) and isinstance(items[index], dict) else {}
-        expected_region = [index * 28, 0, 28, 28]
-        expected_source = f"res://art/heroes/source/generated/specialties/{specialty_id}_source.png"
-        ensure(row.get("icon_id") == f"specialty_insignia_{specialty_id}", errors, f"Specialty {specialty_id} icon ownership changed")
-        ensure(row.get("source") == expected_source and row.get("atlas_region") == expected_region, errors, f"Specialty {specialty_id} source or atlas rect changed")
-        ensure(row.get("source_sha256") == source_hashes[specialty_id] and bool(str(row.get("prompt_subject", "")).strip()), errors, f"Specialty {specialty_id} generated provenance changed")
-        source_path = res_path_to_disk(expected_source)
-        regions.append(tuple(expected_region))
-    ensure(len(set(regions)) == 7, errors, 'All seven specialty atlas rects must remain distinct')
+    for row in items if isinstance(items, list) else []:
+        if not isinstance(row, dict):
+            continue
+        specialty_id = str(row.get("specialty_id", ""))
+        region = row.get("atlas_region")
+        ensure(row.get("icon_id") == f"specialty_insignia_{specialty_id}" and catalog.get(specialty_id, {}).get("icon_id") == f"specialty_insignia_{specialty_id}", errors, f"Specialty {specialty_id} icon ownership changed")
+        ensure(region == catalog.get(specialty_id, {}).get("icon_region") and isinstance(region, list) and len(region) == 4 and region[2:] == [28, 28] and region[0] % 28 == 0 and region[1] % 28 == 0 and region[0] < 196 and region[1] < 140, errors, f"Specialty {specialty_id} atlas cell must match the catalog")
+        if isinstance(region, list) and len(region) == 4:
+            regions.append(tuple(region))
+        if specialty_id in original_ids:
+            index = original_ids.index(specialty_id)
+            ensure(region == [index * 28, 0, 28, 28] and row.get("source") == f"res://art/heroes/source/generated/specialties/{specialty_id}_source.png" and row.get("source_sha256") == source_hashes[specialty_id], errors, f"Specialty {specialty_id} original source or atlas rect changed")
+        else:
+            ensure(bool(str(row.get("prompt_subject", "")).strip()) and str(row.get("source", "")).startswith("res://art/heroes/source/generated/specialties/catalog_sheet_"), errors, f"Specialty {specialty_id} generated provenance changed")
+    ensure(len(regions) == 35 and len(set(regions)) == 35, errors, "All 35 specialty atlas cells must be distinct")
+    for sheet in manifest.get("generated_sheets", []):
+        sheet_path = res_path_to_disk(str(sheet.get("source", "")))
+        ensure(isinstance(sheet.get("specialty_ids"), list) and int(sheet.get("columns", 0)) * int(sheet.get("rows", 0)) == len(sheet.get("specialty_ids", [])), errors, f"Specialty insignia sheet {sheet.get('source', '')} grid changed")
+        if sheet_path.is_file():
+            ensure(hashlib.sha256(sheet_path.read_bytes()).hexdigest() == sheet.get("source_sha256"), errors, f"Specialty insignia sheet {sheet.get('source', '')} hash changed")
 
     atlas_payload = atlas_path.read_bytes()
-    ensure(png_size(atlas_path) == (196, 28), errors, "Hero specialty insignia atlas must remain 196x28")
-    ensure(hashlib.sha256(atlas_payload).hexdigest() == "7e7f88c9b3ac4692e294c951b6b69261391f6b69b1beb08c76056bde753aa36e" and len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6}, errors, "Hero specialty insignia atlas bytes or alpha changed")
+    ensure(png_size(atlas_path) == (196, 140), errors, "Hero specialty insignia atlas must be 196x140")
+    ensure(hashlib.sha256(atlas_payload).hexdigest() == manifest.get("runtime_sha256") and len(atlas_payload) >= 26 and atlas_payload[25] in {4, 6}, errors, "Hero specialty insignia atlas bytes or alpha changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Hero specialty insignia runtime atlas import metadata is missing")
 
     rules_text = rules_path.read_text(encoding="utf-8")
-    for index, specialty_id in enumerate(specialty_ids):
-        ensure(f'"icon_id": "specialty_insignia_{specialty_id}"' in rules_text, errors, f"HeroProgressionRules is missing {specialty_id} icon ownership")
-        ensure(f'"icon_region": [{index * 28}, 0, 28, 28]' in rules_text, errors, f"HeroProgressionRules is missing {specialty_id} atlas rect")
     for token in (
         'const SPECIALTY_INSIGNIA_ATLAS_PATH := "res://art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png"',
         "const SPECIALTY_INSIGNIA_CELL_SIZE := Vector2i(28, 28)",
+        "const SPECIALTY_INSIGNIA_ATLAS_SIZE := Vector2i(196, 140)",
         "static func specialty_id_for_action(action_id: String) -> String:",
         "static func specialty_insignia_description(specialty_id: String) -> String:",
         "static func specialty_insignia_texture(specialty_id: String) -> Texture2D:",
@@ -50730,8 +50749,8 @@ def validate_hero_specialty_insignia(errors: list[str]) -> None:
         "texture := AtlasTexture.new()",
     ):
         ensure(token in rules_text, errors, f"Hero specialty insignia resolver is missing exact fail-closed ownership: {token}")
-    descriptions = re.findall(r'"icon_description": "([^"]+)"', rules_text)
-    ensure(len(descriptions) == 7 and len(set(descriptions)) == 7 and all(len(value) >= 24 for value in descriptions), errors, "Hero specialty insignia non-color descriptions must remain complete and distinct")
+    descriptions = [str(item.get("icon_description", "")) for item in catalog_items]
+    ensure(len(descriptions) == 35 and len(set(descriptions)) == 35 and all(len(value) >= 24 for value in descriptions), errors, "Hero specialty insignia non-color descriptions must remain complete and distinct")
 
     for shell_path in (overworld_path, town_path):
         shell_text = shell_path.read_text(encoding="utf-8")

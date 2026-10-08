@@ -106,6 +106,10 @@ Rules:
 
 `ux-hero-level-up-roll-display-20261008` (completed, owner request): the level-up popup shows what the hero rolled above the specialty choices: a "Rolled +1 Spell power" headline, the four command stats with their new values (rolled ones lit gold with their gain, a short pulse unless reduced motion is on), the path's odds and, for several levels at once, each level's roll. See `docs/hero-level-up-popup.md`.
 
+### Hero specialties
+
+`content-hero-specialty-catalog-20261008` (completed, owner request): 35 specialties with four ranks each (was 7 with two), at most six per hero. The catalog moved to `content/hero_specialties.json`: 9 adventure and economy, 12 command and battle, 14 magic (including a mastery per spell school); every new effect has a real hook in the map, economy, battle or spell rules. Level-up offers lead with an upgrade and a new specialty, lean to the hero's path and are seeded per hero; the computer picks by focus, path and rank. 28 new insignia were generated in the original style. See `docs/hero-specialties.md`.
+
 ### Organic ground borders
 
 `art-overworld-organic-ground-borders-20261008` (completed, owner-approved prototype): biome borders meander off the tile grid (noise-bent corner weights that fade out near tile centres) and grounds meet with a height-and-priority blend instead of a cross-fade, so one ground's detail fringes the other; coasts curve the same way. See `docs/overworld-ground-borders.md`.

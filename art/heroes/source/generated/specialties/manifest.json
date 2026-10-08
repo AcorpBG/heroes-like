@@ -1,11 +1,20 @@
 {
-  "schema": "hero_specialty_insignia_generated_sources_v1",
+  "schema": "hero_specialty_insignia_generated_sources_v2",
   "generator": "openai_builtin_image_generation",
   "generated_at": "2026-08-29",
   "runtime_atlas": "res://art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png",
-  "atlas_size": [196, 28],
-  "cell_size": [28, 28],
-  "runtime_icon_content_size": [24, 24],
+  "atlas_size": [
+    196,
+    140
+  ],
+  "cell_size": [
+    28,
+    28
+  ],
+  "runtime_icon_content_size": [
+    24,
+    24
+  ],
   "sources_excluded_from_release_packages": true,
   "items": [
     {
@@ -13,7 +22,12 @@
       "icon_id": "specialty_insignia_wayfinder",
       "source": "res://art/heroes/source/generated/specialties/wayfinder_source.png",
       "source_sha256": "d655472042eb10b0c77ba723d0cf8187b050670052ac716907969f3153f37dd3",
-      "atlas_region": [0, 0, 28, 28],
+      "atlas_region": [
+        0,
+        0,
+        28,
+        28
+      ],
       "prompt_subject": "Brass trail compass with a winding path needle"
     },
     {
@@ -21,7 +35,12 @@
       "icon_id": "specialty_insignia_ledgerkeeper",
       "source": "res://art/heroes/source/generated/specialties/ledgerkeeper_source.png",
       "source_sha256": "839d0dd392c51083a1d43fd3929133238b4f89f3b318c8404d63a7470566fe4c",
-      "atlas_region": [28, 0, 28, 28],
+      "atlas_region": [
+        28,
+        0,
+        28,
+        28
+      ],
       "prompt_subject": "Campaign ledger with a coin clasp and supply tally pegs"
     },
     {
@@ -29,7 +48,12 @@
       "icon_id": "specialty_insignia_spellwright",
       "source": "res://art/heroes/source/generated/specialties/spellwright_source.png",
       "source_sha256": "5088245d3cbaaed48c1dc8d1d41abbd15c3127f2e4abe2f7badf823e2da743ae",
-      "atlas_region": [56, 0, 28, 28],
+      "atlas_region": [
+        56,
+        0,
+        28,
+        28
+      ],
       "prompt_subject": "Feather quill clasping a faceted mana reservoir"
     },
     {
@@ -37,7 +61,12 @@
       "icon_id": "specialty_insignia_drillmaster",
       "source": "res://art/heroes/source/generated/specialties/drillmaster_source.png",
       "source_sha256": "469f7543da77b79c7a9e49db84eabdfa316511b579b9d1b1514d81702fe8c480",
-      "atlas_region": [84, 0, 28, 28],
+      "atlas_region": [
+        84,
+        0,
+        28,
+        28
+      ],
       "prompt_subject": "Marching drum crossed by a command baton"
     },
     {
@@ -45,7 +74,12 @@
       "icon_id": "specialty_insignia_armsmaster",
       "source": "res://art/heroes/source/generated/specialties/armsmaster_source.png",
       "source_sha256": "4e5deecb44119286595c1bf89aa130aab70e257434d87dc5284df10bd552cf92",
-      "atlas_region": [112, 0, 28, 28],
+      "atlas_region": [
+        112,
+        0,
+        28,
+        28
+      ],
       "prompt_subject": "Sword and war hammer crossed over an anvil"
     },
     {
@@ -53,7 +87,12 @@
       "icon_id": "specialty_insignia_mustercaptain",
       "source": "res://art/heroes/source/generated/specialties/mustercaptain_source.png",
       "source_sha256": "7cac051613328b131d86876713f984748aa78b66879582592973d356068e8775",
-      "atlas_region": [140, 0, 28, 28],
+      "atlas_region": [
+        140,
+        0,
+        28,
+        28
+      ],
       "prompt_subject": "Rally horn with three differently cut troop pennants"
     },
     {
@@ -61,8 +100,431 @@
       "icon_id": "specialty_insignia_borderwarden",
       "source": "res://art/heroes/source/generated/specialties/borderwarden_source.png",
       "source_sha256": "1157f830f22a6ca386c03e70a7986d89e7fb3db6e99c1369053e3d0cf73f83c2",
-      "atlas_region": [168, 0, 28, 28],
+      "atlas_region": [
+        168,
+        0,
+        28,
+        28
+      ],
       "prompt_subject": "Lantern watchtower flanked by two boundary stakes"
+    },
+    {
+      "specialty_id": "prospector",
+      "icon_id": "specialty_insignia_prospector",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_cell": 0,
+      "atlas_region": [
+        0,
+        28,
+        28,
+        28
+      ],
+      "prompt_subject": "Prospector pick over a split ore nugget and a cut log"
+    },
+    {
+      "specialty_id": "alchemist",
+      "icon_id": "specialty_insignia_alchemist",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_cell": 1,
+      "atlas_region": [
+        28,
+        28,
+        28,
+        28
+      ],
+      "prompt_subject": "Glass retort flask on a small tripod with a curled spout"
+    },
+    {
+      "specialty_id": "nightmarch",
+      "icon_id": "specialty_insignia_nightmarch",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_cell": 2,
+      "atlas_region": [
+        56,
+        28,
+        28,
+        28
+      ],
+      "prompt_subject": "Crescent moon above a boot print on a road"
+    },
+    {
+      "specialty_id": "plunderer",
+      "icon_id": "specialty_insignia_plunderer",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_cell": 3,
+      "atlas_region": [
+        84,
+        28,
+        28,
+        28
+      ],
+      "prompt_subject": "Open coin sack beside a pried strongbox lid"
+    },
+    {
+      "specialty_id": "scholar",
+      "icon_id": "specialty_insignia_scholar",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_cell": 4,
+      "atlas_region": [
+        112,
+        28,
+        28,
+        28
+      ],
+      "prompt_subject": "Two stacked books bound by a ribboned bookmark"
+    },
+    {
+      "specialty_id": "vanguard",
+      "icon_id": "specialty_insignia_vanguard",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_cell": 5,
+      "atlas_region": [
+        140,
+        28,
+        28,
+        28
+      ],
+      "prompt_subject": "Spearhead pointing forward over a row of shield rims"
+    },
+    {
+      "specialty_id": "marksman",
+      "icon_id": "specialty_insignia_marksman",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_cell": 6,
+      "atlas_region": [
+        168,
+        28,
+        28,
+        28
+      ],
+      "prompt_subject": "Drawn bow with an arrow aimed at a ringed target"
+    },
+    {
+      "specialty_id": "shieldwall",
+      "icon_id": "specialty_insignia_shieldwall",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_cell": 7,
+      "atlas_region": [
+        0,
+        56,
+        28,
+        28
+      ],
+      "prompt_subject": "Three overlapping kite shields locked edge to edge"
+    },
+    {
+      "specialty_id": "retinue",
+      "icon_id": "specialty_insignia_retinue",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_cell": 8,
+      "atlas_region": [
+        28,
+        56,
+        28,
+        28
+      ],
+      "prompt_subject": "Planted tower shield with a braced short spear"
+    },
+    {
+      "specialty_id": "counterstroke",
+      "icon_id": "specialty_insignia_counterstroke",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_cell": 9,
+      "atlas_region": [
+        56,
+        56,
+        28,
+        28
+      ],
+      "prompt_subject": "Two curved blades meeting in a crossed parry"
+    },
+    {
+      "specialty_id": "banner",
+      "icon_id": "specialty_insignia_banner",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_cell": 10,
+      "atlas_region": [
+        84,
+        56,
+        28,
+        28
+      ],
+      "prompt_subject": "Swallow-tailed banner planted in a stone cairn"
+    },
+    {
+      "specialty_id": "fortune",
+      "icon_id": "specialty_insignia_fortune",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_cell": 11,
+      "atlas_region": [
+        112,
+        56,
+        28,
+        28
+      ],
+      "prompt_subject": "Four-leaf token on a cord beside a rolled die"
+    },
+    {
+      "specialty_id": "siegecraft",
+      "icon_id": "specialty_insignia_siegecraft",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_cell": 12,
+      "atlas_region": [
+        140,
+        56,
+        28,
+        28
+      ],
+      "prompt_subject": "Small trebuchet arm beside a cracked wall block"
+    },
+    {
+      "specialty_id": "fieldsurgeon",
+      "icon_id": "specialty_insignia_fieldsurgeon",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_cell": 13,
+      "atlas_region": [
+        168,
+        56,
+        28,
+        28
+      ],
+      "prompt_subject": "Rolled bandage and curved needle on a satchel flap"
+    },
+    {
+      "specialty_id": "hardened",
+      "icon_id": "specialty_insignia_hardened",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_cell": 14,
+      "atlas_region": [
+        0,
+        84,
+        28,
+        28
+      ],
+      "prompt_subject": "Riveted breastplate with a hammered dent"
+    },
+    {
+      "specialty_id": "arcanefocus",
+      "icon_id": "specialty_insignia_arcanefocus",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_cell": 15,
+      "atlas_region": [
+        28,
+        84,
+        28,
+        28
+      ],
+      "prompt_subject": "Gauntlet holding an orb ringed by a thin halo"
+    },
+    {
+      "specialty_id": "sorcery",
+      "icon_id": "specialty_insignia_sorcery",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_b_source.png",
+      "source_cell": 0,
+      "atlas_region": [
+        56,
+        84,
+        28,
+        28
+      ],
+      "prompt_subject": "Forked bolt striking from an open spellbook page"
+    },
+    {
+      "specialty_id": "lingeringweave",
+      "icon_id": "specialty_insignia_lingeringweave",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_b_source.png",
+      "source_cell": 1,
+      "atlas_region": [
+        84,
+        84,
+        28,
+        28
+      ],
+      "prompt_subject": "Hourglass wrapped in a looping thread"
+    },
+    {
+      "specialty_id": "ward",
+      "icon_id": "specialty_insignia_ward",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_b_source.png",
+      "source_cell": 2,
+      "atlas_region": [
+        112,
+        84,
+        28,
+        28
+      ],
+      "prompt_subject": "Upraised open palm before a round sigil plate"
+    },
+    {
+      "specialty_id": "ironwill",
+      "icon_id": "specialty_insignia_ironwill",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_b_source.png",
+      "source_cell": 3,
+      "atlas_region": [
+        140,
+        84,
+        28,
+        28
+      ],
+      "prompt_subject": "Helmeted profile bound by an iron circlet"
+    },
+    {
+      "specialty_id": "leychanneler",
+      "icon_id": "specialty_insignia_leychanneler",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_b_source.png",
+      "source_cell": 4,
+      "atlas_region": [
+        168,
+        84,
+        28,
+        28
+      ],
+      "prompt_subject": "Forked dowsing rod over converging ley lines"
+    },
+    {
+      "specialty_id": "mastery_beacon",
+      "icon_id": "specialty_insignia_mastery_beacon",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_b_source.png",
+      "source_cell": 5,
+      "atlas_region": [
+        0,
+        112,
+        28,
+        28
+      ],
+      "prompt_subject": "A tall signal lantern on a rod whose beam splits into three rays"
+    },
+    {
+      "specialty_id": "mastery_mire",
+      "icon_id": "specialty_insignia_mastery_mire",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_b_source.png",
+      "source_cell": 6,
+      "atlas_region": [
+        28,
+        112,
+        28,
+        28
+      ],
+      "prompt_subject": "A reed bundle rising from a pool with two drifting spore bubbles"
+    },
+    {
+      "specialty_id": "mastery_lens",
+      "icon_id": "specialty_insignia_mastery_lens",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_b_source.png",
+      "source_cell": 7,
+      "atlas_region": [
+        56,
+        112,
+        28,
+        28
+      ],
+      "prompt_subject": "A faceted round lens in a brass ring casting a narrow beam"
+    },
+    {
+      "specialty_id": "mastery_root",
+      "icon_id": "specialty_insignia_mastery_root",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_b_source.png",
+      "source_cell": 8,
+      "atlas_region": [
+        84,
+        112,
+        28,
+        28
+      ],
+      "prompt_subject": "A knotted root coiling around a seed pod that sprouts two leaves"
+    },
+    {
+      "specialty_id": "mastery_furnace",
+      "icon_id": "specialty_insignia_mastery_furnace",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_b_source.png",
+      "source_cell": 9,
+      "atlas_region": [
+        112,
+        112,
+        28,
+        28
+      ],
+      "prompt_subject": "A squat crucible over a flame with a rivet-banded lid"
+    },
+    {
+      "specialty_id": "mastery_veil",
+      "icon_id": "specialty_insignia_mastery_veil",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_b_source.png",
+      "source_cell": 10,
+      "atlas_region": [
+        140,
+        112,
+        28,
+        28
+      ],
+      "prompt_subject": "A hooded mask half-hidden behind a hanging fold of mist cloth"
+    },
+    {
+      "specialty_id": "mastery_old_measure",
+      "icon_id": "specialty_insignia_mastery_old_measure",
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_b_source.png",
+      "source_cell": 11,
+      "atlas_region": [
+        168,
+        112,
+        28,
+        28
+      ],
+      "prompt_subject": "A pair of dividers standing over a notched measuring rule"
     }
-  ]
+  ],
+  "catalog": "res://content/hero_specialties.json",
+  "generated_sheets": [
+    {
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_a_source.png",
+      "source_sha256": "44dac501feefc4dab8275032c2e9885b7c549f69cf3115185d5981c16e6b5d11",
+      "prompt": "res://art/heroes/source/generated/specialties/catalog_sheet_a_prompt.txt",
+      "style_reference": "the 2026-08-29 seven-insignia atlas upscaled 8x",
+      "generated_at": "2026-10-08",
+      "columns": 4,
+      "rows": 4,
+      "specialty_ids": [
+        "prospector",
+        "alchemist",
+        "nightmarch",
+        "plunderer",
+        "scholar",
+        "vanguard",
+        "marksman",
+        "shieldwall",
+        "retinue",
+        "counterstroke",
+        "banner",
+        "fortune",
+        "siegecraft",
+        "fieldsurgeon",
+        "hardened",
+        "arcanefocus"
+      ]
+    },
+    {
+      "source": "res://art/heroes/source/generated/specialties/catalog_sheet_b_source.png",
+      "source_sha256": "646a1d0a7119332aebba01ae545de14f0558564e4b7a4a8ed77d917bbe8ff3bd",
+      "prompt": "res://art/heroes/source/generated/specialties/catalog_sheet_b_prompt.txt",
+      "style_reference": "the 2026-08-29 seven-insignia atlas upscaled 8x",
+      "generated_at": "2026-10-08",
+      "columns": 4,
+      "rows": 3,
+      "specialty_ids": [
+        "sorcery",
+        "lingeringweave",
+        "ward",
+        "ironwill",
+        "leychanneler",
+        "mastery_beacon",
+        "mastery_mire",
+        "mastery_lens",
+        "mastery_root",
+        "mastery_furnace",
+        "mastery_veil",
+        "mastery_old_measure"
+      ]
+    }
+  ],
+  "runtime_sha256": "e792997a49649bbd26612732f66d60f6b0a5a8755e4d08e5ef43a1ff54480392"
 }

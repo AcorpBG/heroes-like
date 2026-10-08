@@ -55,7 +55,8 @@ func open_level_up(prompt: Dictionary) -> void:
 			var definition := Progression.specialty_definition(id)
 			var button := Button.new()
 			button.name = "Specialty_" + id
-			button.text = "%s %s\n%s" % [String(definition.get("name", id)), Progression.rank_label(Progression.specialty_rank(hero, id) + 1), String(definition.get("summary", ""))]
+			var next_rank := Progression.specialty_rank(hero, id) + 1
+			button.text = "%s %s\n%s" % [String(definition.get("name", id)), Progression.rank_label(next_rank), Progression.rank_text(id, next_rank)]
 			button.icon = Progression.specialty_insignia_texture(id)
 			button.add_theme_constant_override("icon_max_width", 36)
 			button.accessibility_name = button.text.replace("\n", ". ")

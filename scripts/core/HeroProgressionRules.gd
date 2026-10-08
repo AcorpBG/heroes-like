@@ -4,108 +4,18 @@ extends RefCounted
 const CHOICE_SIZE := 3
 const SPECIALTY_INSIGNIA_ATLAS_PATH := "res://art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png"
 const SPECIALTY_INSIGNIA_CELL_SIZE := Vector2i(28, 28)
-const SPECIALTIES := [
-	{
-		"id": "wayfinder",
-		"name": "Wayfinder's Instinct",
-		"short_name": "Wayfinder",
-		"icon_id": "specialty_insignia_wayfinder",
-		"icon_region": [0, 0, 28, 28],
-		"icon_description": "A round trail compass crossed by a winding path needle.",
-		"max_rank": 2,
-		"summary": "+2 overworld movement per rank.",
-		"bonuses": {
-			"overworld_movement": 2,
-		},
-	},
-	{
-		"id": "ledgerkeeper",
-		"name": "Ledgerkeeper's Oath",
-		"short_name": "Ledgerkeeper",
-		"icon_id": "specialty_insignia_ledgerkeeper",
-		"icon_region": [28, 0, 28, 28],
-		"icon_description": "A square campaign ledger with a coin clasp and two tally pegs.",
-		"max_rank": 2,
-		"summary": "+100 gold, +1 wood, and +1 ore at each daybreak per rank.",
-		"bonuses": {
-			"daily_income": {
-				"gold": 100,
-				"wood": 1,
-				"ore": 1,
-			},
-		},
-	},
-	{
-		"id": "spellwright",
-		"name": "Spellwright's Reserve",
-		"short_name": "Spellwright",
-		"icon_id": "specialty_insignia_spellwright",
-		"icon_region": [56, 0, 28, 28],
-		"icon_description": "A diagonal feather quill clasping a faceted mana reservoir.",
-		"max_rank": 2,
-		"summary": "+4 max mana and -1 spell mana cost per rank.",
-		"bonuses": {
-			"max_mana": 4,
-			"mana_cost_discount": 1,
-		},
-	},
-	{
-		"id": "drillmaster",
-		"name": "Drillmaster's Cadence",
-		"short_name": "Drillmaster",
-		"icon_id": "specialty_insignia_drillmaster",
-		"icon_region": [84, 0, 28, 28],
-		"icon_description": "A broad marching drum crossed by a notched command baton.",
-		"max_rank": 2,
-		"summary": "+1 battle initiative per rank.",
-		"bonuses": {
-			"battle_initiative": 1,
-		},
-	},
-	{
-		"id": "armsmaster",
-		"name": "Armsmaster's Temper",
-		"short_name": "Armsmaster",
-		"icon_id": "specialty_insignia_armsmaster",
-		"icon_region": [112, 0, 28, 28],
-		"icon_description": "A sword and war hammer crossed over a low anvil.",
-		"max_rank": 2,
-		"summary": "+1 battle attack and +1 battle defense per rank.",
-		"bonuses": {
-			"battle_attack": 1,
-			"battle_defense": 1,
-		},
-	},
-	{
-		"id": "mustercaptain",
-		"name": "Muster Captain's Call",
-		"short_name": "Muster Captain",
-		"icon_id": "specialty_insignia_mustercaptain",
-		"icon_region": [140, 0, 28, 28],
-		"icon_description": "A curved rally horn carrying three differently cut troop pennants.",
-		"max_rank": 2,
-		"summary": "+20% recruit growth and -10% recruit cost per rank.",
-		"bonuses": {
-			"recruit_growth_multiplier": 0.2,
-			"recruit_cost_delta": -0.1,
-		},
-	},
-	{
-		"id": "borderwarden",
-		"name": "Border Warden's Watch",
-		"short_name": "Border Warden",
-		"icon_id": "specialty_insignia_borderwarden",
-		"icon_region": [168, 0, 28, 28],
-		"icon_description": "A tall lantern watchtower flanked by two uneven boundary stakes.",
-		"max_rank": 2,
-		"summary": "+1 scouting radius per rank.",
-		"bonuses": {
-			"scouting_radius": 1,
-			"raid_pillage_resistance": 0.15,
-		},
-	},
-]
-const RANK_LABELS := ["I", "II", "III"]
+const RANK_LABELS := ["I", "II", "III", "IV"]
+## The specialty catalog: content/hero_specialties.json (ids, names, per-rank
+## text and bonuses, icon cells, group and command path).
+const SPECIALTIES_PATH := "res://content/hero_specialties.json"
+const SPECIALTY_INSIGNIA_ATLAS_SIZE := Vector2i(196, 140)
+## Level-up offers lean toward a hero's own focus specialties, then toward
+## those of its command path (might: command, magic: magic).
+const OFFER_FOCUS_WEIGHT := 4.0
+const OFFER_PATH_WEIGHT := 2.5
+const OFFER_OTHER_WEIGHT := 1.0
+static var _catalog_source: Variant = null
+static var _catalog_index := {}
 ## Each level-up rolls one command stat, weighted by the hero's command path
 ## (heroes.json): might commanders mostly train attack and defense, magic
 ## commanders power and knowledge. The roll comes from the hero's growth seed
@@ -159,6 +69,15 @@ static func level_up_summary(hero_state: Dictionary) -> Dictionary:
 	}
 
 static func add_experience(hero_state: Dictionary, amount: int) -> Dictionary:
+	return _add_experience(hero_state, experience_with_bonus(hero_state, amount))
+
+## `amount` of earned experience with the hero's experience bonus.
+static func experience_with_bonus(hero_state: Dictionary, amount: int) -> int:
+	if amount <= 0:
+		return amount
+	return amount + amount * int(aggregate_bonuses(hero_state).get("experience_bonus_pct", 0)) / 100
+
+static func _add_experience(hero_state: Dictionary, amount: int) -> Dictionary:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
 	var messages := []
 	if amount <= 0:
@@ -205,7 +124,7 @@ static func advance_to_level(hero_state: Dictionary, target_level: int) -> Dicti
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
 	var missing := experience_for_level(target_level) - int(hero.get("experience", 0))
 	if missing > 0:
-		hero = add_experience(hero, missing).get("hero", hero)
+		hero = _add_experience(hero, missing).get("hero", hero)
 	while pending_choices_remaining(hero) > 0:
 		var options: Array = current_pending_choice(hero).get("options", [])
 		if options.is_empty():
@@ -272,7 +191,7 @@ static func get_choice_actions(hero_state: Dictionary) -> Array:
 				"summary": "%s %s | %s" % [
 					String(specialty.get("name", specialty_id)),
 					rank_label(next_rank),
-					String(specialty.get("summary", "")),
+					rank_text(specialty_id, next_rank),
 				],
 				"disabled": false,
 			}
@@ -283,7 +202,7 @@ static func describe_specialties(hero_state: Dictionary) -> String:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
 	var lines := ["Specialties"]
 	var chosen_lines := []
-	for specialty in SPECIALTIES:
+	for specialty in specialties():
 		var specialty_id := String(specialty.get("id", ""))
 		var rank := specialty_rank(hero, specialty_id)
 		if rank <= 0:
@@ -293,7 +212,7 @@ static func describe_specialties(hero_state: Dictionary) -> String:
 			% [
 				String(specialty.get("name", specialty_id)),
 				rank_label(rank),
-				String(specialty.get("summary", "")),
+				rank_text(specialty_id, rank),
 			]
 		)
 	lines.append("\n".join(chosen_lines) if not chosen_lines.is_empty() else "- No specialties chosen yet")
@@ -316,7 +235,7 @@ static func describe_specialties(hero_state: Dictionary) -> String:
 static func brief_summary(hero_state: Dictionary) -> String:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
 	var parts := []
-	for specialty in SPECIALTIES:
+	for specialty in specialties():
 		var specialty_id := String(specialty.get("id", ""))
 		var rank := specialty_rank(hero, specialty_id)
 		if rank <= 0:
@@ -369,11 +288,42 @@ static func specialty_rank(hero_state: Dictionary, specialty_id: String) -> int:
 				count += 1
 	return count
 
+## The catalog's specialties in authored order (read-only rows).
+static func specialties() -> Array:
+	var items = ContentService.load_json(SPECIALTIES_PATH).get("items", [])
+	return items if items is Array else []
+
+## How many different specialties one hero can hold.
+static func max_specialties_per_hero() -> int:
+	return maxi(1, int(ContentService.load_json(SPECIALTIES_PATH).get("max_specialties_per_hero", 6)))
+
 static func specialty_definition(specialty_id: String) -> Dictionary:
-	for specialty in SPECIALTIES:
-		if String(specialty.get("id", "")) == specialty_id:
-			return specialty.duplicate(true)
-	return {}
+	var row := _specialty_row(specialty_id)
+	return row.duplicate(true) if not row.is_empty() else {}
+
+## What `specialty_id` gives at `rank` (1-based), as shown to the player.
+static func rank_text(specialty_id: String, rank: int) -> String:
+	var ranks: Array = _specialty_row(specialty_id).get("ranks", [])
+	if rank < 1 or rank > ranks.size():
+		return ""
+	return String(ranks[rank - 1].get("text", ""))
+
+static func _specialty_row(specialty_id: String) -> Dictionary:
+	var items := specialties()
+	if not is_same(items, _catalog_source):
+		_catalog_source = items
+		_catalog_index = {}
+		for specialty in items:
+			if specialty is Dictionary:
+				_catalog_index[String(specialty.get("id", ""))] = specialty
+	return _catalog_index.get(specialty_id, {})
+
+static func _rank_bonuses(specialty_id: String, rank: int) -> Dictionary:
+	var ranks: Array = _specialty_row(specialty_id).get("ranks", [])
+	if rank < 1 or ranks.is_empty():
+		return {}
+	var bonuses = ranks[mini(rank, ranks.size()) - 1].get("bonuses", {})
+	return bonuses if bonuses is Dictionary else {}
 
 static func specialty_id_for_action(action_id: String) -> String:
 	const PREFIX := "choose_specialty:"
@@ -383,10 +333,10 @@ static func specialty_id_for_action(action_id: String) -> String:
 	return specialty_id if not specialty_definition(specialty_id).is_empty() else ""
 
 static func specialty_insignia_description(specialty_id: String) -> String:
-	return String(specialty_definition(specialty_id).get("icon_description", ""))
+	return String(_specialty_row(specialty_id).get("icon_description", ""))
 
 static func specialty_insignia_texture(specialty_id: String) -> Texture2D:
-	var specialty := specialty_definition(specialty_id)
+	var specialty := _specialty_row(specialty_id)
 	var region_value: Variant = specialty.get("icon_region", [])
 	if specialty.is_empty() \
 		or String(specialty.get("icon_id", "")) != "specialty_insignia_%s" % specialty_id \
@@ -403,11 +353,11 @@ static func specialty_insignia_texture(specialty_id: String) -> Texture2D:
 	if region.size != Vector2(SPECIALTY_INSIGNIA_CELL_SIZE) \
 		or region.position.x < 0.0 \
 		or region.position.y < 0.0 \
-		or region.end.x > 196.0 \
-		or region.end.y > 28.0:
+		or region.end.x > float(SPECIALTY_INSIGNIA_ATLAS_SIZE.x) \
+		or region.end.y > float(SPECIALTY_INSIGNIA_ATLAS_SIZE.y):
 		return null
 	var atlas := load(SPECIALTY_INSIGNIA_ATLAS_PATH) as Texture2D
-	if atlas == null or atlas.get_size() != Vector2(196, 28):
+	if atlas == null or atlas.get_size() != Vector2(SPECIALTY_INSIGNIA_ATLAS_SIZE):
 		return null
 	var texture := AtlasTexture.new()
 	texture.atlas = atlas
@@ -415,7 +365,7 @@ static func specialty_insignia_texture(specialty_id: String) -> Texture2D:
 	return texture
 
 static func max_rank_for_specialty(specialty_id: String) -> int:
-	return max(1, int(specialty_definition(specialty_id).get("max_rank", 1)))
+	return max(1, int(_specialty_row(specialty_id).get("max_rank", 1)))
 
 static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
@@ -432,35 +382,60 @@ static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 		"recruit_cost_delta": 0.0,
 		"raid_pillage_resistance": 0.0,
 	}
-	for specialty in SPECIALTIES:
-		var specialty_id := String(specialty.get("id", ""))
-		var rank := specialty_rank(hero, specialty_id)
-		if rank <= 0:
+	var counted := {}
+	for specialty_id_value in hero.get("specialties", []):
+		var specialty_id := String(specialty_id_value)
+		if counted.has(specialty_id):
 			continue
-		var specialty_bonuses = specialty.get("bonuses", {})
-		if not (specialty_bonuses is Dictionary):
-			continue
-		for key in specialty_bonuses.keys():
-			var bonus_key := String(key)
-			if bonus_key == "daily_income":
-				var specialty_income = specialty_bonuses.get(bonus_key, {})
-				if specialty_income is Dictionary:
-					for resource_key in specialty_income.keys():
-						bonuses["daily_income"][String(resource_key)] = int(bonuses["daily_income"].get(String(resource_key), 0)) + (int(specialty_income[resource_key]) * rank)
-			else:
-				var current_value = bonuses.get(bonus_key, 0)
-				var specialty_value = specialty_bonuses.get(bonus_key, 0)
-				if typeof(current_value) == TYPE_FLOAT or typeof(specialty_value) == TYPE_FLOAT:
-					bonuses[bonus_key] = float(current_value) + (float(specialty_value) * float(rank))
-				else:
-					bonuses[bonus_key] = int(current_value) + (int(specialty_value) * rank)
+		counted[specialty_id] = true
+		_merge_bonuses(bonuses, _rank_bonuses(specialty_id, specialty_rank(hero, specialty_id)), hero)
 	return bonuses
+
+static func _merge_bonuses(target: Dictionary, source: Dictionary, hero_state: Dictionary) -> void:
+	for key in source.keys():
+		var bonus_key := String(key)
+		var value = source[key]
+		if value is Dictionary:
+			var nested: Dictionary = target.get(bonus_key, {}) if target.get(bonus_key, {}) is Dictionary else {}
+			for nested_key in value.keys():
+				var resolved := _resolve_bonus_key(String(nested_key), hero_state)
+				if resolved == "":
+					continue
+				nested[resolved] = _sum_bonus(nested.get(resolved, 0), value[nested_key])
+			target[bonus_key] = nested
+		else:
+			target[bonus_key] = _sum_bonus(target.get(bonus_key, 0), value)
+
+static func _sum_bonus(current: Variant, added: Variant) -> Variant:
+	if typeof(current) == TYPE_FLOAT or typeof(added) == TYPE_FLOAT:
+		return float(current) + float(added)
+	return int(current) + int(added)
+
+## faction_rare_main and faction_rare_secondary name the hero's faction's
+## town resources (factions.json town_resources).
+static func _resolve_bonus_key(key: String, hero_state: Dictionary) -> String:
+	if key != "faction_rare_main" and key != "faction_rare_secondary":
+		return key
+	var faction_id := String(hero_state.get("faction_id", ""))
+	if faction_id == "":
+		for id_key in ["id", "roster_hero_id", "hero_id"]:
+			faction_id = String(ContentService.get_hero(String(hero_state.get(id_key, ""))).get("faction_id", ""))
+			if faction_id != "":
+				break
+	var resources = ContentService.get_faction(faction_id).get("town_resources", {})
+	if not (resources is Dictionary):
+		return ""
+	return String(resources.get("main" if key == "faction_rare_main" else "secondary", ""))
 
 static func mana_max_bonus(hero_state: Dictionary) -> int:
 	return int(aggregate_bonuses(hero_state).get("max_mana", 0))
 
-static func adjusted_mana_cost(hero_state: Dictionary, base_cost: int) -> int:
-	var discount := int(aggregate_bonuses(hero_state).get("mana_cost_discount", 0))
+static func adjusted_mana_cost(hero_state: Dictionary, base_cost: int, school_id: String = "") -> int:
+	var bonuses := aggregate_bonuses(hero_state)
+	var discount := int(bonuses.get("mana_cost_discount", 0))
+	var school_discounts = bonuses.get("school_mana_discount", {})
+	if school_id != "" and school_discounts is Dictionary:
+		discount += int(school_discounts.get(school_id, 0))
 	return max(0, base_cost - max(0, discount))
 
 static func daily_income_bonus(hero_state: Dictionary) -> Dictionary:
@@ -552,7 +527,7 @@ static func _reconcile_pending_choices(hero_state: Dictionary) -> Dictionary:
 			var specialty_id := String(specialty_id_value)
 			if _specialty_is_available(hero, specialty_id) and specialty_id not in options:
 				options.append(specialty_id)
-		for specialty_id in _rotated_available_specialties(hero, level):
+		for specialty_id in _offer_order(hero, level):
 			if options.size() >= min(CHOICE_SIZE, available_specialty_ids(hero).size()):
 				break
 			if specialty_id not in options:
@@ -593,7 +568,7 @@ static func _enqueue_choice_group(hero_state: Dictionary, level_number: int) -> 
 	return hero
 
 static func _build_choice_group(hero_state: Dictionary, level_number: int) -> Dictionary:
-	var options := _rotated_available_specialties(hero_state, level_number)
+	var options := _offer_order(hero_state, level_number)
 	if options.is_empty():
 		return {}
 	return {
@@ -603,42 +578,62 @@ static func _build_choice_group(hero_state: Dictionary, level_number: int) -> Di
 
 static func available_specialty_ids(hero_state: Dictionary) -> Array:
 	var available := []
-	for specialty in SPECIALTIES:
+	for specialty in specialties():
 		var specialty_id := String(specialty.get("id", ""))
 		if _specialty_is_available(hero_state, specialty_id):
 			available.append(specialty_id)
 	return available
 
-static func _rotated_available_specialties(hero_state: Dictionary, level_number: int) -> Array:
+## Specialties a level-up can offer, best first: one upgrade of a specialty
+## the hero holds and one new specialty (while it has room) lead, then the
+## rest. Each candidate's place is a weighted draw (focus and path weights,
+## Efraimidis-Spirakis keys) seeded by the hero's growth seed and the level,
+## so a saved or re-read choice never changes.
+static func _offer_order(hero_state: Dictionary, level_number: int) -> Array:
 	var available := available_specialty_ids(hero_state)
 	if available.is_empty():
 		return available
-	var preferred_available := []
-	for specialty_id in _normalize_specialty_id_list(hero_state.get("specialty_focus_ids", [])):
-		if specialty_id in available and specialty_id not in preferred_available:
-			preferred_available.append(specialty_id)
-	var remaining := []
+	var focus := _normalize_specialty_id_list(hero_state.get("specialty_focus_ids", []))
+	var path := command_path(hero_state)
+	var seed_text := growth_seed(hero_state)
+	var keyed := []
 	for specialty_id in available:
-		if specialty_id not in preferred_available:
-			remaining.append(specialty_id)
-	if preferred_available.is_empty():
-		return _rotate_specialty_order(remaining, level_number + int(hero_state.get("specialties", []).size()))
-	var rotated := _rotate_specialty_order(preferred_available, level_number)
-	if not remaining.is_empty():
-		rotated.append_array(_rotate_specialty_order(remaining, level_number + int(hero_state.get("specialties", []).size())))
-	return rotated
+		var weight := OFFER_OTHER_WEIGHT
+		if specialty_id in focus:
+			weight = OFFER_FOCUS_WEIGHT
+		elif String(_specialty_row(specialty_id).get("path", "any")) == path:
+			weight = OFFER_PATH_WEIGHT
+		var digest := ("%s|offer|%d|%s" % [seed_text, level_number, specialty_id]).sha256_text()
+		var draw := (float(digest.substr(0, 8).hex_to_int()) + 1.0) / 4294967297.0
+		keyed.append({"id": specialty_id, "key": pow(draw, 1.0 / weight)})
+	keyed.sort_custom(func(a, b): return float(a.key) > float(b.key))
+	var ordered := []
+	for entry in keyed:
+		ordered.append(String(entry.id))
+	var result := []
+	for want_held in [true, false]:
+		for specialty_id in ordered:
+			if (specialty_rank(hero_state, specialty_id) > 0) == want_held:
+				result.append(specialty_id)
+				break
+	for specialty_id in ordered:
+		if specialty_id not in result:
+			result.append(specialty_id)
+	return result
 
-static func _rotate_specialty_order(available: Array, seed_number: int) -> Array:
-	if available.is_empty():
-		return []
-	var rotated := []
-	var start_index := posmod(seed_number, available.size())
-	for offset in range(available.size()):
-		rotated.append(available[(start_index + offset) % available.size()])
-	return rotated
+static func _distinct_specialty_count(hero_state: Dictionary) -> int:
+	var seen := {}
+	for specialty_id in hero_state.get("specialties", []):
+		seen[String(specialty_id)] = true
+	return seen.size()
 
 static func _specialty_is_available(hero_state: Dictionary, specialty_id: String) -> bool:
-	return not specialty_definition(specialty_id).is_empty() and specialty_rank(hero_state, specialty_id) < max_rank_for_specialty(specialty_id)
+	if _specialty_row(specialty_id).is_empty():
+		return false
+	var rank := specialty_rank(hero_state, specialty_id)
+	if rank >= max_rank_for_specialty(specialty_id):
+		return false
+	return rank > 0 or _distinct_specialty_count(hero_state) < max_specialties_per_hero()
 
 ## The hero's command path: its own, else its template's (by id or roster id),
 ## else whichever pair of its command stats is larger.

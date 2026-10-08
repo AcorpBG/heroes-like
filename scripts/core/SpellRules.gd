@@ -140,7 +140,7 @@ static func adjusted_spell_mana_cost(hero_state: Dictionary, spell: Variant) -> 
 	if spell_dict.is_empty():
 		return 0
 	var base_cost := int(spell_dict.get("mana_cost", 0))
-	var progression_cost := HeroProgressionRulesScript.adjusted_mana_cost(hero, base_cost)
+	var progression_cost := HeroProgressionRulesScript.adjusted_mana_cost(hero, base_cost, String(spell_dict.get("school_id", "")))
 	var artifact_delta := ArtifactRulesScript.spell_mana_cost_delta(hero, spell_dict)
 	return max(0, progression_cost + artifact_delta)
 
@@ -829,7 +829,7 @@ static func _battle_spell_effect_summary(
 			if status_effect is Dictionary and not status_effect.is_empty():
 				summary += "; applies %s %dr" % [
 					String(status_effect.get("label", "effect")),
-					spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1)),
+					spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1), spell, "debuff"),
 				]
 			if _wounded_bonus_applies(effect, target_stack):
 				summary += "; wounded target bonus"
@@ -839,7 +839,7 @@ static func _battle_spell_effect_summary(
 			return "applies %s to %s for %d rounds" % [
 				String(status_effect.get("label", "control")),
 				String(target_stack.get("name", "selected enemy")),
-				spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1)),
+				spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1), spell, "debuff"),
 			]
 		"recover_ally":
 			var target_label := String(active_stack.get("name", "active stack"))
@@ -849,7 +849,7 @@ static func _battle_spell_effect_summary(
 			if not modifiers.is_empty():
 				summary += "; %s for %d rounds" % [
 					_modifier_summary(modifiers),
-					spell_duration_rounds(hero_state, effect.get("duration_rounds", 1)),
+					spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff"),
 				]
 			return summary
 		"cleanse_ally":
@@ -862,7 +862,7 @@ static func _battle_spell_effect_summary(
 			if not cleanse_modifiers.is_empty():
 				cleanse_summary += "; %s for %d rounds" % [
 					_modifier_summary(cleanse_modifiers),
-					spell_duration_rounds(hero_state, effect.get("duration_rounds", 1)),
+					spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff"),
 				]
 			return cleanse_summary
 		"defense_buff", "initiative_buff", "attack_buff":
@@ -870,7 +870,7 @@ static func _battle_spell_effect_summary(
 			return "%s to %s for %d rounds" % [
 				_modifier_summary(battle_spell_modifiers(spell)),
 				target_label,
-				spell_duration_rounds(hero_state, effect.get("duration_rounds", 1)),
+				spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff"),
 			]
 		_:
 			return "No supported battle effect"
@@ -1503,12 +1503,30 @@ static func build_battle_effect(
 ## spell's buffs, debuffs and riders one round longer, up to
 ## MAX_POWER_EXTRA_ROUNDS extra rounds.
 static func spell_duration_bonus(hero_state: Dictionary) -> int:
+	return mini(MAX_POWER_EXTRA_ROUNDS, spell_power(hero_state) / POWER_PER_EXTRA_ROUND)
+
+## A battle spell effect's rounds: its own, the power bonus, and the caster's
+## specialties (Lingering Weave for buffs or debuffs, the spell's school
+## mastery). `kind` is "buff" for effects on allies, "debuff" for control
+## effects and damage riders.
+static func spell_duration_rounds(hero_state: Dictionary, base_rounds: Variant, spell: Dictionary = {}, kind: String = "buff") -> int:
+	var rounds: int = max(1, int(base_rounds)) + spell_duration_bonus(hero_state)
+	var bonuses := HeroProgressionRulesScript.aggregate_bonuses(hero_state)
+	rounds += int(bonuses.get("debuff_duration_bonus" if kind == "debuff" else "buff_duration_bonus", 0))
+	rounds += _school_bonus(bonuses, "school_duration_bonus", spell)
+	return rounds
+
+## The caster's spell power: command power plus specialty spell power.
+static func spell_power(hero_state: Dictionary) -> int:
 	var command = hero_state.get("command", {})
 	var power: int = max(0, int(command.get("power", 0))) if command is Dictionary else 0
-	return mini(MAX_POWER_EXTRA_ROUNDS, power / POWER_PER_EXTRA_ROUND)
+	return power + max(0, int(HeroProgressionRulesScript.aggregate_bonuses(hero_state).get("battle_power", 0)))
 
-static func spell_duration_rounds(hero_state: Dictionary, base_rounds: Variant) -> int:
-	return max(1, int(base_rounds)) + spell_duration_bonus(hero_state)
+static func _school_bonus(bonuses: Dictionary, key: String, spell: Dictionary) -> int:
+	var by_school = bonuses.get(key, {})
+	if not (by_school is Dictionary) or spell.is_empty():
+		return 0
+	return int(by_school.get(String(spell.get("school_id", "")), 0))
 
 static func battle_spell_modifiers(spell: Dictionary) -> Dictionary:
 	var effect = spell.get("effect", {})
@@ -1540,7 +1558,7 @@ static func _effect_payload(spell: Dictionary, effect: Dictionary, battle: Dicti
 		"spell:%s:%s" % [String(spell.get("id", "")), String(effect.get("type", ""))],
 		String(spell.get("name", "Spell")),
 		modifiers,
-		spell_duration_rounds(hero_state, effect.get("duration_rounds", 1)),
+		spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff"),
 		battle,
 		"spell",
 		String(spell.get("id", "")),
@@ -1574,7 +1592,7 @@ static func _battle_spell_action_summary(
 				var control_pct := control_resistance_pct(battle, target_stack, spell)
 				summary += " Applies %s for %d rounds." % [
 					String(status_effect.get("label", "a battle effect")),
-					spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1)),
+					spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1), spell, "debuff"),
 				]
 				if target_is_immune_to_status(target_stack, battle, String(status_payload.get("effect_id", ""))):
 					summary += " Target is immune to that rider."
@@ -1588,7 +1606,7 @@ static func _battle_spell_action_summary(
 			var summary := "Apply %s to %s for %d rounds." % [
 				String(control_effect.get("label", "control")),
 				String(target_stack.get("name", "the selected enemy")),
-				spell_duration_rounds(hero_state, control_effect.get("duration_rounds", 1)),
+				spell_duration_rounds(hero_state, control_effect.get("duration_rounds", 1), spell, "debuff"),
 			]
 			var control_payload := _status_effect_from_spell_effect(spell, battle, hero_state)
 			var control_pct := control_resistance_pct(battle, target_stack, spell)
@@ -1608,7 +1626,7 @@ static func _battle_spell_action_summary(
 			if not recovery_modifiers.is_empty():
 				recovery_summary += " Grant %s for %d rounds." % [
 					_modifier_summary(recovery_modifiers),
-					spell_duration_rounds(hero_state, effect.get("duration_rounds", 1)),
+					spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff"),
 				]
 			if timing_hint != "":
 				recovery_summary += " Timing: %s" % timing_hint
@@ -1622,7 +1640,7 @@ static func _battle_spell_action_summary(
 			if not cleanse_modifiers.is_empty():
 				cleanse_summary += " Grant %s for %d rounds." % [
 					_modifier_summary(cleanse_modifiers),
-					spell_duration_rounds(hero_state, effect.get("duration_rounds", 1)),
+					spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff"),
 				]
 			if timing_hint != "":
 				cleanse_summary += " Timing: %s" % timing_hint
@@ -1631,7 +1649,7 @@ static func _battle_spell_action_summary(
 			var summary := "Grant %s to %s for %d rounds." % [
 				_modifier_summary(battle_spell_modifiers(spell)),
 				String(active_stack.get("name", "the active stack")),
-				spell_duration_rounds(hero_state, effect.get("duration_rounds", 1)),
+				spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff"),
 			]
 			if timing_hint != "":
 				summary += " Timing: %s" % timing_hint
@@ -1640,7 +1658,7 @@ static func _battle_spell_action_summary(
 			var summary := "Grant %s to %s for %d rounds." % [
 				_modifier_summary(battle_spell_modifiers(spell)),
 				String(active_stack.get("name", "the active stack")),
-				spell_duration_rounds(hero_state, effect.get("duration_rounds", 1)),
+				spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff"),
 			]
 			if timing_hint != "":
 				summary += " Timing: %s" % timing_hint
@@ -2069,7 +2087,7 @@ static func _status_effect_from_spell_effect(spell: Dictionary, battle: Dictiona
 		effect_id,
 		String(status_effect.get("label", effect_id.capitalize())),
 		status_effect.get("modifiers", {}),
-		spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1)),
+		spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1), spell, "debuff"),
 		battle,
 		"spell",
 		String(spell.get("id", "")),
@@ -2078,11 +2096,12 @@ static func _status_effect_from_spell_effect(spell: Dictionary, battle: Dictiona
 
 static func _battle_spell_damage(hero_state: Dictionary, spell: Dictionary, target_stack: Dictionary) -> int:
 	var effect = spell.get("effect", {})
-	var power := int(hero_state.get("command", {}).get("power", 0))
-	var damage := int(max(1, int(effect.get("base_damage", 0)) + (max(0, power) * int(effect.get("power_scale", 0)))))
+	var damage := int(max(1, int(effect.get("base_damage", 0)) + (spell_power(hero_state) * int(effect.get("power_scale", 0)))))
 	if _wounded_bonus_applies(effect, target_stack):
 		damage += max(0, int(effect.get("wounded_bonus_damage", 0)))
-	return damage
+	var bonuses := HeroProgressionRulesScript.aggregate_bonuses(hero_state)
+	var potency := int(bonuses.get("spell_damage_pct", 0)) + _school_bonus(bonuses, "school_potency_pct", spell)
+	return max(1, damage + damage * potency / 100)
 
 static func _wounded_bonus_applies(effect: Dictionary, target_stack: Dictionary) -> bool:
 	if target_stack.is_empty():
@@ -2095,8 +2114,9 @@ static func _wounded_bonus_applies(effect: Dictionary, target_stack: Dictionary)
 
 static func _battle_spell_recovery_amount(hero_state: Dictionary, spell: Dictionary) -> int:
 	var effect = spell.get("effect", {})
-	var power: int = max(0, int(hero_state.get("command", {}).get("power", 0)))
-	return max(1, int(effect.get("base_restore", effect.get("amount", 0))) + (power * int(effect.get("power_scale", 0))))
+	var amount: int = max(1, int(effect.get("base_restore", effect.get("amount", 0))) + (spell_power(hero_state) * int(effect.get("power_scale", 0))))
+	var potency := _school_bonus(HeroProgressionRulesScript.aggregate_bonuses(hero_state), "school_potency_pct", spell)
+	return amount + amount * potency / 100
 
 static func _cleanse_labels(effect: Dictionary) -> Array:
 	var labels := []

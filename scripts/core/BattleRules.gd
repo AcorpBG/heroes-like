@@ -353,6 +353,7 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 
 	_apply_hero_battle_boosts(session, stacks, player_commander_state)
 	battle["stacks"] = stacks
+	_apply_specialty_battle_starts(battle)
 	var town_context_type := String(battle_context.get("type", ""))
 	if town_context_type in ["town_defense", "town_assault"]:
 		var defending_town: Dictionary = _find_town_by_placement(session, String(battle_context.get("town_placement_id", ""))).get("town", {})
@@ -394,6 +395,71 @@ static func _apply_hero_battle_boosts(session: SessionStateStoreScript.SessionDa
 		hero.erase("battle_boosts")
 		session.overworld["hero"] = hero
 		HeroCommandRulesScript.commit_active_hero(session)
+
+## Commander specialties at the start of a battle: Banner of Resolve adds
+## cohesion, Fortune's Favour momentum and Hardened Ranks creature health to
+## that commander's stacks.
+static func _apply_specialty_battle_starts(battle: Dictionary) -> void:
+	var stacks: Array = battle.get("stacks", [])
+	for side in ["player", "enemy"]:
+		var hero := _hero_payload_for_side(battle, side)
+		var cohesion := int(hero.get("battle_cohesion", 0))
+		var momentum := int(hero.get("battle_momentum", 0))
+		var health_pct := int(hero.get("creature_health_pct", 0))
+		if cohesion == 0 and momentum == 0 and health_pct == 0:
+			continue
+		for index in range(stacks.size()):
+			var stack = stacks[index]
+			if not (stack is Dictionary) or String(stack.get("side", "")) != side:
+				continue
+			if cohesion != 0:
+				stack["cohesion_base"] = clamp(int(stack.get("cohesion_base", 5)) + cohesion, COHESION_MIN, COHESION_MAX)
+				stack["cohesion"] = clamp(int(stack.get("cohesion", stack.get("cohesion_base", 5))) + cohesion, COHESION_MIN, COHESION_MAX)
+			if momentum != 0:
+				stack["momentum"] = clamp(int(stack.get("momentum", 0)) + momentum, 0, MOMENTUM_MAX)
+			if health_pct > 0:
+				var unit_hp: int = maxi(1, int(stack.get("unit_hp", 1)))
+				unit_hp += maxi(1, unit_hp * health_pct / 100)
+				stack["unit_hp"] = unit_hp
+				stack["total_health"] = int(stack.get("base_count", 0)) * unit_hp
+			stacks[index] = stack
+	battle["stacks"] = stacks
+
+## Field Surgeon: part of the winning side's fallen creatures stand up again
+## before its survivors go back to the map.
+static func _apply_victory_recovery(battle: Dictionary, side: String) -> int:
+	var pct := int(_hero_payload_for_side(battle, side).get("victory_recovery_pct", 0))
+	if pct <= 0:
+		return 0
+	var recovered_total := 0
+	var stacks: Array = battle.get("stacks", [])
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if not (stack is Dictionary) or String(stack.get("side", "")) != side:
+			continue
+		var fallen: int = maxi(0, int(stack.get("base_count", 0)) - _alive_count(stack))
+		var recovered: int = (fallen * pct + 50) / 100
+		if recovered <= 0:
+			continue
+		var unit_hp: int = maxi(1, int(stack.get("unit_hp", 1)))
+		stack["total_health"] = (_alive_count(stack) + recovered) * unit_hp
+		stacks[index] = stack
+		recovered_total += recovered
+	battle["stacks"] = stacks
+	return recovered_total
+
+## Ley Channeler: a winning commander regains mana.
+static func _apply_victory_mana(commander_state: Dictionary, battle: Dictionary, side: String) -> int:
+	var amount := int(_hero_payload_for_side(battle, side).get("mana_after_victory", 0))
+	var spellbook = commander_state.get("spellbook", {})
+	if amount <= 0 or not (spellbook is Dictionary):
+		return 0
+	var mana: Dictionary = spellbook.get("mana", {}) if spellbook.get("mana", {}) is Dictionary else {}
+	var before := int(mana.get("current", 0))
+	mana["current"] = mini(int(mana.get("max", before)), before + amount)
+	spellbook["mana"] = mana
+	commander_state["spellbook"] = spellbook
+	return int(mana["current"]) - before
 
 static func normalize_battle_state_bridge(session) -> bool:
 	return normalize_battle_state(session)
@@ -7173,7 +7239,7 @@ static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> D
 		_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
 
 	var encounter = ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
-	var rewards = _battle_victory_rewards(session, encounter)
+	var rewards = OverworldRulesScript.apply_reward_bonus(_battle_victory_rewards(session, encounter), int(_hero_payload_for_side(session.battle, "player").get("reward_bonus_pct", 0)))
 	OverworldRulesScript._add_resources(session, rewards)
 	var reward_summary = OverworldRulesScript._describe_resource_delta(rewards)
 	var reward_detail := OverworldRulesScript._describe_reward_delta(rewards)
@@ -7182,8 +7248,16 @@ static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> D
 	var experience_amount = max(0, int(rewards.get("experience", 0)))
 	if experience_amount > 0:
 		var hero_name = String(_player_commander_state(session).get("name", "The commander"))
-		messages.append("%s gains %d experience." % [hero_name, experience_amount])
+		messages.append("%s gains %d experience." % [hero_name, HeroProgressionRulesScript.experience_with_bonus(_player_commander_state(session), experience_amount)])
 	messages.append_array(_award_commander_experience(session, experience_amount))
+	var recovered := _apply_victory_recovery(session.battle, "player")
+	if recovered > 0:
+		messages.append("Field surgeons return %d fallen creature%s to the ranks." % [recovered, "" if recovered == 1 else "s"])
+	var commander_after := _player_commander_state(session).duplicate(true)
+	var mana_regained := _apply_victory_mana(commander_after, session.battle, "player")
+	if mana_regained > 0:
+		session.battle["player_commander_state"] = commander_after
+		messages.append("%s draws %d mana from the ley lines." % [String(commander_after.get("name", "The commander")), mana_regained])
 	_sync_player_force_from_battle(session)
 	var artifact_salvage := _apply_player_battle_salvage_reward(session)
 	_append_nonempty_message(messages, String(artifact_salvage.get("message", "")))
@@ -7328,6 +7402,7 @@ static func _finalize_primary_defeat(
 	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_ROUT_VICTORY)
 	_finish_enemy_battle_task_assignment(session, "completed", "valid")
 	var commander_summary := _enemy_commander_exit_reaction(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_ROUT_VICTORY)
+	_apply_enemy_victory_specialties(session)
 	_sync_enemy_force_from_battle(session, false)
 	var front_summary := ""
 	if _is_town_assault_context(session.battle.get("context", {})):
@@ -7373,6 +7448,7 @@ static func _finalize_secondary_hero_defeat(session: SessionStateStoreScript.Ses
 	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_ROUT_VICTORY)
 	_finish_enemy_battle_task_assignment(session, "completed", "valid")
 	var commander_summary := _enemy_commander_exit_reaction(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_ROUT_VICTORY)
+	_apply_enemy_victory_specialties(session)
 	_sync_enemy_force_from_battle(session, false)
 	var front_summary := ""
 	if _is_town_assault_context(session.battle.get("context", {})):
@@ -7424,6 +7500,7 @@ static func _finalize_retreat(session: SessionStateStoreScript.SessionData) -> D
 	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_PURSUIT_VICTORY)
 	_finish_enemy_battle_task_assignment(session, "completed", "valid")
 	var commander_summary := _enemy_commander_exit_reaction(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_PURSUIT_VICTORY)
+	_apply_enemy_victory_specialties(session)
 	_sync_enemy_force_from_battle(session, false)
 	var front_summary := ""
 	if _is_town_assault_context(session.battle.get("context", {})):
@@ -7463,6 +7540,7 @@ static func _finalize_surrender(session: SessionStateStoreScript.SessionData) ->
 	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_CAPITULATION)
 	_finish_enemy_battle_task_assignment(session, "completed", "valid")
 	var commander_summary := _enemy_commander_exit_reaction(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_CAPITULATION)
+	_apply_enemy_victory_specialties(session)
 	_sync_enemy_force_from_battle(session, false)
 	var front_summary := ""
 	if _is_town_assault_context(session.battle.get("context", {})):
@@ -9277,7 +9355,10 @@ static func _prepare_round(battle: Dictionary, round_number: int) -> void:
 		stack = SpellRulesScript.purge_expired_stack_effects(stack, round_number)
 		stack["defending"] = false
 		stack["retaliations_left"] = int(stack.get("retaliations", 1))
-		stack["momentum"] = max(0, int(stack.get("momentum", 0)) - 1)
+		# Momentum a stack brings into the battle (visit-building boosts,
+		# Fortune's Favour) lasts through the first round; it fades from round 2.
+		if round_number > 1:
+			stack["momentum"] = max(0, int(stack.get("momentum", 0)) - 1)
 		stacks[index] = stack
 		if expired_effect_count > 0:
 			_mark_stack_animation_event(battle, String(stack.get("battle_id", "")), "battle_status_expired")
@@ -9456,8 +9537,10 @@ static func _damage_modifier(
 	var defense_bonus = int(_hero_payload_for_side(battle, String(defender.get("side", ""))).get("defense", 0))
 	var attack_stat = _stack_attack_total(attacker, battle) + attack_bonus
 	var defense_stat = _stack_defense_total(defender, battle) + defense_bonus
+	var attacker_hero := _hero_payload_for_side(battle, String(attacker.get("side", "")))
+	var defender_hero := _hero_payload_for_side(battle, String(defender.get("side", "")))
 	if bool(defender.get("defending", false)):
-		defense_stat += 2
+		defense_stat += 2 + int(defender_hero.get("defend_defense_bonus", 0))
 
 	var modifier = DamageRules.attack_defense_multiplier(attack_stat, defense_stat)
 	var resolved_distance = int(battle.get("distance", 1)) if attack_distance < 0 else attack_distance
@@ -9476,7 +9559,8 @@ static func _damage_modifier(
 	modifier *= _faction_damage_modifier(attacker, defender, battle, is_ranged, resolved_distance)
 	modifier *= _commander_damage_modifier(attacker, defender, battle, is_ranged, resolved_distance)
 	modifier *= TownBattle.damage_multiplier(battle, attacker, defender, is_ranged)
-	modifier *= float(_hero_payload_for_side(battle, String(attacker.get("side", ""))).get("damage_multiplier", 1.0))
+	modifier *= DamageRules.hero_damage_multiplier(attacker_hero, defender_hero, is_ranged, is_retaliation, DamageRules.town_assault_side(battle) == String(attacker.get("side", "")))
+	modifier *= float(attacker_hero.get("damage_multiplier", 1.0))
 	return modifier
 
 static func _damage_range_preview(
@@ -11555,6 +11639,16 @@ static func _sync_enemy_force_from_battle(session: SessionStateStoreScript.Sessi
 	if encounter_resolved:
 		_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
 
+static func _apply_enemy_victory_specialties(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null or session.battle.is_empty():
+		return
+	_apply_victory_recovery(session.battle, "enemy")
+	var commander_state = session.battle.get("enemy_hero", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		var updated: Dictionary = commander_state.duplicate(true)
+		if _apply_victory_mana(updated, session.battle, "enemy") > 0:
+			session.battle["enemy_hero"] = updated
+
 static func _enemy_commander_state_for_force_sync(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {}
@@ -13225,7 +13319,7 @@ static func _hero_payload_from_state(
 		specialty_bonuses.get("battle_school_resistance_pct", {})
 	)
 	var mana = hero_state.get("spellbook", {}).get("mana", {})
-	return {
+	var payload := {
 		"attack": int(command.get("attack", 0)) + int(resolved_bonuses.get("battle_attack", 0)),
 		"defense": int(command.get("defense", 0)) + int(resolved_bonuses.get("battle_defense", 0)),
 		"initiative": int(resolved_bonuses.get("battle_initiative", 0)) + DifficultyRulesScript.initiative_bonus_for_side(session, side),
@@ -13237,6 +13331,9 @@ static func _hero_payload_from_state(
 		"mana_max": int(mana.get("max", 0)),
 		"battle_traits": battle_traits,
 	}
+	for key in DamageRules.HERO_SPECIALTY_BATTLE_KEYS:
+		payload[key] = int(specialty_bonuses.get(key, 0))
+	return payload
 
 static func _enemy_hero_payload_from_state(
 	hero_state: Dictionary,
@@ -13314,7 +13411,7 @@ static func _side_payload_with_commander_fallback(
 		"battle_school_resistance_pct",
 		"mana_current",
 		"mana_max",
-	]:
+	] + DamageRules.HERO_SPECIALTY_BATTLE_KEYS:
 		if not merged.has(key) and fallback_payload.has(key):
 			merged[key] = fallback_payload.get(key)
 	return merged

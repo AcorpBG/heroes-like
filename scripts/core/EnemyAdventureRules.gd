@@ -2316,15 +2316,34 @@ static func _award_enemy_commander_experience(commander_state: Dictionary, amoun
 	var result := HeroProgressionRulesScript.add_experience(commander_state, amount)
 	return _normalize_enemy_progression(result.get("hero", commander_state))
 
+## A computer commander's pick: its focus specialties first, then those of
+## its command path, battle and magic ones over adventure ones (whose economy
+## and map effects reach only player heroes so far), and ranking up what it
+## holds over starting something new.
 static func _preferred_enemy_specialty_id(commander_state: Dictionary, pending_choice: Dictionary) -> String:
 	var options = pending_choice.get("options", [])
 	if not (options is Array) or options.is_empty():
 		return ""
-	for specialty_id_value in commander_state.get("specialty_focus_ids", []):
-		var specialty_id := String(specialty_id_value)
-		if specialty_id in options:
-			return specialty_id
-	return String(options[0])
+	var focus: Array = commander_state.get("specialty_focus_ids", []) if commander_state.get("specialty_focus_ids", []) is Array else []
+	var path := HeroProgressionRulesScript.command_path(commander_state)
+	var best := String(options[0])
+	var best_score := -1.0
+	for option in options:
+		var specialty_id := String(option)
+		var specialty := HeroProgressionRulesScript.specialty_definition(specialty_id)
+		var score := 0.0
+		if specialty_id in focus:
+			score += 4.0
+		if String(specialty.get("path", "any")) == path:
+			score += 2.0
+		if String(specialty.get("group", "")) != "adventure":
+			score += 1.0
+		if HeroProgressionRulesScript.specialty_rank(commander_state, specialty_id) > 0:
+			score += 1.5
+		if score > best_score:
+			best_score = score
+			best = specialty_id
+	return best
 
 static func _normalized_specialty_ranks(primary: Variant, secondary: Variant = []) -> Array:
 	var hero_stub := {"specialties": []}

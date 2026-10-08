@@ -75,7 +75,7 @@ func _catalog_contract() -> Dictionary:
 			or region != EXPECTED_REGIONS[specialty_id]
 			or atlas_texture.atlas == null
 			or atlas_texture.atlas.resource_path != HeroProgressionRules.SPECIALTY_INSIGNIA_ATLAS_PATH
-			or atlas_texture.atlas.get_size() != Vector2(196, 28)
+			or atlas_texture.atlas.get_size() != Vector2(196, 140)
 			or description.length() < 24
 		):
 			return {
