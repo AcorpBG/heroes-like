@@ -20,6 +20,7 @@ const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
 const VisitBuildings = preload("res://scripts/core/VisitBuildingRules.gd")
 const TownServices = preload("res://scripts/core/EnemyTownServices.gd")
 const AdventureRules = preload("res://scripts/core/EnemyAdventureRules.gd")
+const BattleDamage = preload("res://scripts/core/BattleDamageRules.gd")
 
 const AI_HERO_KEY := "ai_hero"
 # Battle settings (terrain, length, rewards) for fights against an AI hero. The
@@ -37,7 +38,11 @@ const MAX_DECISIONS_PER_DAY := 6
 const SEARCH_DAYS := 3
 const FAR_SEARCH_DAYS := 7
 const MIN_SEARCH_RADIUS := 14
-const GUARD_WIN_RATIO := 1.5
+## A guard is considered (and previewed) from this strength margin. With the
+## strength estimate calibrated on the 2026-10-08 battle stats, a 1.3x margin
+## wins about 86% of battles; the old estimate overrated a hero's attack and
+## defense and needed 1.5x.
+const GUARD_WIN_RATIO := 1.3
 const HERO_ATTACK_RATIO := 1.3
 const TOWN_ATTACK_RATIO := 1.4
 const THREAT_RATIO := 1.15
@@ -51,6 +56,8 @@ const THREAT_KILL_SHARE := 0.5
 const GUARD_SHARE_MAX := 0.25
 ## The main hero holds at least this share of the strongest hero's army.
 const MAIN_ARMY_SHARE := 0.5
+## Rounds a battle lasts for the strength estimate of a hero's spells.
+const BATTLE_ROUNDS_ESTIMATE := 4
 const TROOP_VALUE_PER_POWER := 10.0
 ## Builds weigh a dwelling's troops and a building's income over two weeks.
 const BUILD_HORIZON_WEEKS := 2.0
@@ -1557,7 +1564,12 @@ static func _run_hero_day(session: SessionStateStoreScript.SessionData, context:
 		var home := _own_town_at(session, String(context.controller), entry)
 		if not home.is_empty() and _holds_gate(session, context, entry, home, placement_id == _main_hero_id(session, String(context.controller))):
 			# A hostile hero is a day away: the hero holds the gate, unless it
-			# can catch and beat that hero today.
+			# can catch and beat that hero today. The goal says so.
+			entry = session.overworld.encounters[index]
+			var holding: Dictionary = entry.get(AI_HERO_KEY, {})
+			holding["goal"] = {"kind": "hold", "id": String(home.get("placement_id", ""))}
+			entry[AI_HERO_KEY] = holding
+			_store_entry(session, index, entry)
 			break
 		var plan := _choose_plan(session, context, entry)
 		if plan.is_empty():
@@ -3592,9 +3604,10 @@ static func _neutral_army(encounter: Dictionary) -> Dictionary:
 # --- Strength -----------------------------------------------------------------
 
 ## Rough fighting value: per creature sqrt(hp * average damage), scaled by
-## attack and defense, and by the leading hero's command.
+## attack and defense, and by the leading hero's command and spells.
 static func army_power(stacks: Variant, commander: Variant = {}) -> float:
 	var total := 0.0
+	var damage_per_round := 0.0
 	if not (stacks is Array):
 		return total
 	for stack in stacks:
@@ -3612,10 +3625,48 @@ static func army_power(stacks: Variant, commander: Variant = {}) -> float:
 		if bool(unit.get("ranged", false)):
 			per *= 1.15
 		total += per * float(count)
+		damage_per_round += damage * float(count)
 	if commander is Dictionary and not commander.is_empty():
+		# Strength is the square root of health times damage. The hero's attack
+		# raises the army's damage and its defense cuts the damage it takes, by
+		# the battle's own curve (BattleDamageRules); its spells add to the
+		# army's damage per round, so a few casts barely move a big army and
+		# count for a lot behind a small one. Calibrated 2026-10-08 on 1,600
+		# auto-resolved battles of random hero-led armies after the battle stat
+		# scaling: it calls the winner in 83% of them (86% when one side is
+		# small), against 74% for the old 5% per attack and defense point
+		# without spells.
 		var command: Dictionary = commander.get("command", {}) if commander.get("command", {}) is Dictionary else {}
-		total *= 1.0 + 0.05 * float(int(command.get("attack", 0)) + int(command.get("defense", 0)))
+		var damage_dealt: float = BattleDamage.attack_defense_multiplier(maxi(0, int(command.get("attack", 0))), 0)
+		var damage_taken: float = BattleDamage.attack_defense_multiplier(0, maxi(0, int(command.get("defense", 0))))
+		total *= sqrt(damage_dealt / maxf(0.01, damage_taken))
+		var spell_damage := _spell_damage_per_round(commander)
+		if spell_damage > 0.0 and damage_per_round > 0.0:
+			total *= sqrt(1.0 + spell_damage / damage_per_round)
 	return total
+
+## Damage a hero's spells add per round over a typical battle: the strongest
+## battle damage spell it knows and can pay for, cast once a round while its
+## mana lasts.
+static func _spell_damage_per_round(commander: Dictionary) -> float:
+	var spellbook: Dictionary = commander.get("spellbook", {}) if commander.get("spellbook", {}) is Dictionary else {}
+	var known = spellbook.get("known_spell_ids", [])
+	if not (known is Array) or known.is_empty():
+		return 0.0
+	var mana_state: Dictionary = spellbook.get("mana", {}) if spellbook.get("mana", {}) is Dictionary else {}
+	var mana := int(mana_state.get("current", mana_state.get("max", 0)))
+	var power := maxi(0, int(commander.get("command", {}).get("power", 0)) if commander.get("command", {}) is Dictionary else 0)
+	var best := 0.0
+	for spell_id in known:
+		var spell := ContentService.get_spell(String(spell_id))
+		var effect: Dictionary = spell.get("effect", {}) if spell.get("effect", {}) is Dictionary else {}
+		if String(spell.get("context", "")) != "battle" or String(effect.get("type", "")) != "damage_enemy":
+			continue
+		var cost := maxi(1, int(spell.get("mana_cost", 1)))
+		var casts := mini(BATTLE_ROUNDS_ESTIMATE, mana / cost)
+		var per_cast := float(int(effect.get("base_damage", 0)) + power * int(effect.get("power_scale", 0)))
+		best = maxf(best, per_cast * float(casts))
+	return best / float(BATTLE_ROUNDS_ESTIMATE)
 
 static func hero_power(entry: Dictionary) -> float:
 	return army_power(entry.get("enemy_army", {}).get("stacks", []) if entry.get("enemy_army", {}) is Dictionary else [], entry.get("enemy_commander_state", {}))

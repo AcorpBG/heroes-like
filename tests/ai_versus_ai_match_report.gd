@@ -25,8 +25,8 @@ const DEFAULT_OUT := "user://ai_versus_ai_match.json"
 const TEST_DAYS := 40
 ## In the regression run's 40 days (capitals 9 tiles apart) a town may fall to
 ## the other player without a fight at most this often. Before towns were
-## defended 45 of 48 captures were; with defense the match is decided on day 13
-## after one capture, past defenders.
+## defended 45 of 48 captures were; with defense and the 2026-10-08 battle
+## stat scaling the match is decided on day 17 with 9 of 11.
 const MAX_UNOPPOSED_CAPTURES := 12
 
 var _failed := false

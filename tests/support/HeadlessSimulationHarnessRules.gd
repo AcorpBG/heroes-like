@@ -103,6 +103,10 @@ const RECRUITMENT_HOST_EXPERIENCE := 5000
 ## Creatures the host leads: the main hero holds at least half the strongest
 ## army, which a tavern hire's starting army must not outweigh.
 const RECRUITMENT_HOST_COUNT := 40
+## The human hero threatening a town in the town-defense cases is at least this
+## many times the computer hero's strength, so it holds the gate rather than
+## attack (AiHeroRules.HERO_ATTACK_RATIO is 1.3).
+const HUMAN_THREAT_STRENGTH := 2.0
 ## What a computer player's heroes visibly get done on the map.
 const AI_HERO_OBJECTIVE_EVENT_TYPES := ["ai_site_seized", "ai_artifact_secured", "ai_guard_defeated", "ai_town_captured"]
 const STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET := 100
@@ -4515,6 +4519,27 @@ static func _set_town_retake_front(
 		return
 	failures.append("Missing town %s for live town-retake fixture." % placement_id)
 
+## Scales the human's heroes' armies up to at least `power` each: the threat
+## in the town-defense cases is a hero the computer hero cannot attack.
+static func _strengthen_player_heroes(session: SessionStateStoreScript.SessionData, power: float) -> void:
+	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
+	for index in range(heroes.size()):
+		var hero = heroes[index]
+		if not (hero is Dictionary) or not (hero.get("army", {}) is Dictionary):
+			continue
+		var stacks: Array = hero.army.get("stacks", [])
+		var current := AiHeroRulesScript.army_power(stacks, hero)
+		if current <= 0.0 or current >= power:
+			continue
+		var scale := power / current
+		for stack in stacks:
+			if stack is Dictionary:
+				stack["count"] = int(ceil(float(stack.get("count", 0)) * scale))
+		hero["army"]["stacks"] = stacks
+		heroes[index] = hero
+	session.overworld["player_heroes"] = heroes
+	HeroCommandRules.normalize_session(session)
+
 static func _set_player_position(session: SessionStateStoreScript.SessionData, position: Dictionary) -> void:
 	session.overworld["hero_position"] = {"x": int(position.get("x", 0)), "y": int(position.get("y", 0))}
 	var heroes: Array = session.overworld.get("heroes", []) if session.overworld.get("heroes", []) is Array else []
@@ -4849,6 +4874,7 @@ static func _hero_town_defense_run(scenario_id: String, faction_id: String, hero
 	var encounters: Array = session.overworld.get("encounters", [])
 	encounters.append(host)
 	session.overworld["encounters"] = encounters
+	_strengthen_player_heroes(session, AiHeroRulesScript.hero_power(host) * HUMAN_THREAT_STRENGTH)
 	OverworldRules.invalidate_spatial_lookup(session)
 	var threat_context := AiHeroRulesScript._new_context(session, PlayerRulesScript.config_for_controller(session, faction_id), _enemy_state_for_faction(session, faction_id))
 	var town_threatened: bool = AiHeroRulesScript._town_threatened(session, threat_context, town)
@@ -4858,7 +4884,7 @@ static func _hero_town_defense_run(scenario_id: String, faction_id: String, hero
 	var goal: Dictionary = hero.get(AiHeroRulesScript.AI_HERO_KEY, {}).get("goal", {}) if hero.get(AiHeroRulesScript.AI_HERO_KEY, {}) is Dictionary else {}
 	var at_gate := int(hero.get("x", -1)) == int(entrance.get("x", -2)) and int(hero.get("y", -1)) == int(entrance.get("y", -2)) and LevelRulesScript.level_of(hero) == LevelRulesScript.level_of(entrance)
 	var held_gate := bool(turn_result.get("ok", false)) and AiHeroRulesScript.is_ai_hero(hero) and town_threatened and at_gate \
-		and String(goal.get("kind", "")) == "town_own" and String(goal.get("id", "")) == town_id \
+		and String(goal.get("kind", "")) in ["town_own", "hold"] and String(goal.get("id", "")) == town_id \
 		and String(_town_by_placement(session, town_id).get("owner", "")) == "enemy"
 	return {
 		"town_id": town_id,
