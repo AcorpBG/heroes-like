@@ -106,15 +106,16 @@ const SPECIALTIES := [
 	},
 ]
 const RANK_LABELS := ["I", "II", "III"]
-## Each level-up raises one command stat, chosen by the hero's command path
-## (heroes.json): might commanders train attack and defense, magic commanders
-## power and knowledge, each with a one-in-ten share of the other path's two
-## stats. The order repeats every ten levels, so a hero grows the same way in
-## every game.
-const COMMAND_GAIN_ORDER := {
-	"might": ["attack", "defense", "attack", "defense", "power", "attack", "defense", "attack", "defense", "knowledge"],
-	"magic": ["power", "knowledge", "power", "knowledge", "attack", "power", "knowledge", "power", "knowledge", "defense"],
+## Each level-up rolls one command stat, weighted by the hero's command path
+## (heroes.json): might commanders mostly train attack and defense, magic
+## commanders power and knowledge. The roll comes from the hero's growth seed
+## and the level reached, so saving, loading or the tavern's preview never
+## re-roll it, while each game's heroes draw their own seeds.
+const COMMAND_GAIN_WEIGHTS := {
+	"might": {"attack": 40, "defense": 40, "power": 10, "knowledge": 10},
+	"magic": {"attack": 10, "defense": 10, "power": 40, "knowledge": 40},
 }
+const COMMAND_STATS := ["attack", "defense", "power", "knowledge"]
 
 static func ensure_hero_progression(hero_state: Dictionary) -> Dictionary:
 	var hero := hero_state
@@ -139,9 +140,8 @@ static func level_up_summary(hero_state: Dictionary) -> Dictionary:
 	if previous >= level:
 		return {}
 	var gains := {}
-	var path := command_path(hero)
 	for earned_level in range(previous + 1, level + 1):
-		gains = _apply_base_command_gain(gains, earned_level, path)
+		gains = _apply_command_gain(gains, command_gain_stat(hero, earned_level))
 	return {
 		"previous_level": previous,
 		"level": level,
@@ -158,9 +158,14 @@ static func add_experience(hero_state: Dictionary, amount: int) -> Dictionary:
 		return {"hero": hero, "messages": messages}
 
 	hero["experience"] = int(hero.get("experience", 0)) + amount
+	if int(hero.get("experience", 0)) >= int(hero.get("next_level_experience", 250)):
+		# Pin what the rolls come from, so later reads (the level-up popup)
+		# and later levels roll from the same path and seed.
+		hero["command_path"] = command_path(hero)
+		hero["growth_seed"] = growth_seed(hero)
 	while int(hero.get("experience", 0)) >= int(hero.get("next_level_experience", 250)):
 		hero["level"] = int(hero.get("level", 1)) + 1
-		hero["command"] = _apply_base_command_gain(hero.get("command", {}), int(hero.get("level", 1)), command_path(hero))
+		hero["command"] = _apply_command_gain(hero.get("command", {}), command_gain_stat(hero, int(hero.get("level", 1))))
 		hero["next_level_experience"] = int(hero.get("next_level_experience", 250)) + 250 + (int(hero.get("level", 1)) * 100)
 		hero = _enqueue_choice_group(hero, int(hero.get("level", 1)))
 		messages.append("%s reached level %d." % [String(hero.get("name", "Hero")), int(hero.get("level", 1))])
@@ -632,32 +637,53 @@ static func _specialty_is_available(hero_state: Dictionary, specialty_id: String
 ## else whichever pair of its command stats is larger.
 static func command_path(hero_state: Dictionary) -> String:
 	var path := String(hero_state.get("command_path", "")).strip_edges()
-	if not COMMAND_GAIN_ORDER.has(path):
+	if not COMMAND_GAIN_WEIGHTS.has(path):
 		for key in ["id", "roster_hero_id", "hero_id"]:
 			var template_id := String(hero_state.get(key, "")).strip_edges()
 			if template_id != "":
 				path = String(ContentService.get_hero(template_id).get("command_path", ""))
-				if COMMAND_GAIN_ORDER.has(path):
+				if COMMAND_GAIN_WEIGHTS.has(path):
 					break
-	if COMMAND_GAIN_ORDER.has(path):
+	if COMMAND_GAIN_WEIGHTS.has(path):
 		return path
 	var command: Dictionary = hero_state.get("command", {}) if hero_state.get("command", {}) is Dictionary else {}
 	var magic := int(command.get("power", 0)) + int(command.get("knowledge", 0))
 	return "magic" if magic > int(command.get("attack", 0)) + int(command.get("defense", 0)) else "might"
 
-## The command stat a hero on `path` gains on reaching `level_number`.
-static func command_gain_stat(path: String, level_number: int) -> String:
-	var order: Array = COMMAND_GAIN_ORDER.get(path, COMMAND_GAIN_ORDER["might"])
-	return String(order[posmod(level_number - 2, order.size())])
+## The command stat `hero_state` gains on reaching `level_number`: a roll
+## weighted by its command path, drawn from its growth seed and that level.
+static func command_gain_stat(hero_state: Dictionary, level_number: int) -> String:
+	var weights: Dictionary = COMMAND_GAIN_WEIGHTS[command_path(hero_state)]
+	var total := 0
+	for stat in COMMAND_STATS:
+		total += int(weights[stat])
+	var digest := ("%s|level|%d" % [growth_seed(hero_state), level_number]).sha256_text()
+	var roll := posmod(digest.substr(0, 8).hex_to_int(), total)
+	for stat in COMMAND_STATS:
+		roll -= int(weights[stat])
+		if roll < 0:
+			return String(stat)
+	return String(COMMAND_STATS[0])
 
-static func _apply_base_command_gain(command_state: Variant, level_number: int, path: String) -> Dictionary:
+## What a hero's level-up rolls come from: the seed it drew when created, else
+## (heroes saved before growth seeds) its id.
+static func growth_seed(hero_state: Dictionary) -> String:
+	var stored := String(hero_state.get("growth_seed", "")).strip_edges()
+	if stored != "":
+		return stored
+	for key in ["id", "roster_hero_id", "hero_id", "name"]:
+		var value := String(hero_state.get(key, "")).strip_edges()
+		if value != "":
+			return value
+	return "hero"
+
+static func _apply_command_gain(command_state: Variant, stat: String) -> Dictionary:
 	var command := {
 		"attack": max(0, int((command_state if command_state is Dictionary else {}).get("attack", 0))),
 		"defense": max(0, int((command_state if command_state is Dictionary else {}).get("defense", 0))),
 		"power": max(0, int((command_state if command_state is Dictionary else {}).get("power", 0))),
 		"knowledge": max(0, int((command_state if command_state is Dictionary else {}).get("knowledge", 0))),
 	}
-	var stat := command_gain_stat(path, level_number)
 	command[stat] = int(command.get(stat, 0)) + 1
 	return command
 

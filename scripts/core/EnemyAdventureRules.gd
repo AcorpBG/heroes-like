@@ -1058,6 +1058,10 @@ static func build_roster_commander_state(
 	}
 	if String(existing_state.get("player_id", "")) != "":
 		commander_state["player_id"] = String(existing_state.player_id)
+	# Level-up rolls (HeroProgressionRules.command_gain_stat) keep their path and seed.
+	for key in ["command_path", "growth_seed"]:
+		if String(existing_state.get(key, "")) != "":
+			commander_state[key] = String(existing_state.get(key, ""))
 	commander_state = _normalize_enemy_progression(commander_state)
 	var with_metadata := _apply_commander_army_metadata(
 		_apply_commander_record_metadata(

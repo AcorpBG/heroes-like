@@ -160,6 +160,7 @@ static func build_hero_from_template(
 			"specialty_focus_ids": _normalize_authored_specialties(hero_template.get("specialty_focus_ids", [])),
 		}
 	)
+	hero["growth_seed"] = new_growth_seed(String(hero.get("id", "")), movement_source)
 	hero["position"] = _normalize_position(position)
 	hero["army"] = _normalize_army(army_state, String(hero.get("id", "")))
 	var movement_max := movement_max_for_hero(hero, movement_source)
@@ -319,6 +320,16 @@ static func keep_hero_troop_from_garrison(session: SessionStateStoreScript.Sessi
 	_set_holder_stacks(session, town, HOLDER_GARRISON, garrison)
 	_set_holder_stacks(session, town, hero_id, [{"unit_id": unit_id, "count": 1, ARMY_SLOT_INDEX_KEY: 0}])
 	return true
+
+## A new hero's growth seed (HeroProgressionRules.command_gain_stat): from the
+## session and hero when a session is known, so the tavern's preview and the
+## hire it shows roll alike, else drawn at random.
+static func new_growth_seed(hero_id: String, session_source: Variant = null) -> String:
+	if session_source is SessionStateStoreScript.SessionData:
+		return "%s|%s|%s" % [String(session_source.session_id), String(session_source.scenario_id), hero_id]
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	return "%08x%08x" % [rng.randi(), rng.randi()]
 
 static func movement_max_for_hero(hero_state: Dictionary, movement_source: Variant = null) -> int:
 	var artifact_bonuses = ArtifactRulesScript.aggregate_bonuses(hero_state)
@@ -2183,6 +2194,8 @@ static func _normalize_player_hero(
 	var hero := hero_state.duplicate(true)
 	hero["id"] = hero_id
 	hero["name"] = String(hero.get("name", hero_template.get("name", hero_id)))
+	if String(hero.get("growth_seed", "")) == "":
+		hero["growth_seed"] = new_growth_seed(hero_id, session)
 	hero["base_movement"] = max(1, int(hero.get("base_movement", hero_template.get("base_movement", 10))))
 	hero["specialty_focus_ids"] = _normalize_authored_specialties(
 		hero.get("specialty_focus_ids", hero_template.get("specialty_focus_ids", []))

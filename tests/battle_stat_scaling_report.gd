@@ -2,7 +2,7 @@ extends Node
 ## Battle stat scaling (owner review 2026-10-08: spell power, the attack and
 ## defense caps and big-stack cohesion felt wrong). Checks the attack/defense
 ## curve, its use for hero attack in a battle on a generated small map,
-## proportional cohesion loss, level-up growth by command path, and spell
+## proportional cohesion loss, level-up rolls weighted by command path, and spell
 ## damage and durations scaling with power.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
@@ -99,33 +99,86 @@ func _check_cohesion() -> void:
 	_check(BattleRules._casualty_cohesion_shift(giants, _after(giants, 300)) == -3, "stack destroyed: -3")
 	_check(BattleRules._casualty_cohesion_shift(giants, _after(giants, 40)) == 0, "a scratch on one giant: no loss")
 
-func _grown(hero_id: String, level: int, drop_path: bool = false) -> Dictionary:
+const STATS := ["attack", "defense", "power", "knowledge"]
+
+func _built(hero_id: String, growth_seed: String = "") -> Dictionary:
 	var hero := HeroCommandRules.build_hero_from_template(ContentService.get_hero(hero_id), {}, {}, "normal")
-	if drop_path:
-		hero.erase("command_path")
-	return HeroProgressionRules.advance_to_level(hero, level)
+	if growth_seed != "":
+		hero["growth_seed"] = growth_seed
+	return hero
 
 func _gains(hero_id: String, hero: Dictionary) -> Dictionary:
 	var start: Dictionary = ContentService.get_hero(hero_id).get("command", {})
 	var result := {}
-	for stat in ["attack", "defense", "power", "knowledge"]:
+	for stat in STATS:
 		result[stat] = int(hero.get("command", {}).get(stat, 0)) - int(start.get(stat, 0))
 	return result
 
+func _total(gains: Dictionary) -> int:
+	var total := 0
+	for stat in STATS:
+		total += int(gains.get(stat, 0))
+	return total
+
 func _check_level_growth() -> void:
-	var might := _gains("hero_caelen", _grown("hero_caelen", 12))
-	_check(might == {"attack": 5, "defense": 4, "power": 1, "knowledge": 1}, "might hero, 11 level-ups: %s" % might)
-	var magic := _gains("hero_lyra", _grown("hero_lyra", 12))
-	_check(magic == {"attack": 1, "defense": 1, "power": 5, "knowledge": 4}, "magic hero, 11 level-ups: %s" % magic)
-	var old_save := _gains("hero_lyra", _grown("hero_lyra", 12, true))
-	_check(old_save == magic, "a hero saved without command_path follows its template's path: %s" % old_save)
-	var lyra := _grown("hero_lyra", 12)
+	# Rolls are reproducible from a hero's seed: same seed, same growth.
+	var first := _gains("hero_lyra", HeroProgressionRules.advance_to_level(_built("hero_lyra", "seed-a"), 12))
+	var again := _gains("hero_lyra", HeroProgressionRules.advance_to_level(_built("hero_lyra", "seed-a"), 12))
+	_check(first == again, "the same growth seed grows the same way: %s vs %s" % [first, again])
+	_check(_total(first) == 11 and STATS.all(func(stat): return int(first[stat]) >= 0), "11 level-ups give 11 command points: %s" % first)
+	var distinct := {}
+	for index in range(12):
+		distinct[str(_gains("hero_lyra", HeroProgressionRules.advance_to_level(_built("hero_lyra", "seed-%d" % index), 12)))] = true
+	_check(distinct.size() >= 6, "different seeds grow the same hero differently (%d distinct of 12)" % distinct.size())
+	# Each new hero draws its own seed; a session seeds by session and hero,
+	# so the tavern's preview and the hire roll alike.
+	_check(_built("hero_lyra").get("growth_seed", "") != _built("hero_lyra").get("growth_seed", ""), "heroes built without a session draw different seeds")
+	var session := SessionStateStore.SessionData.new("growth-session", "growth-scenario")
+	var seeded := HeroCommandRules.build_hero_from_template(ContentService.get_hero("hero_lyra"), {}, {}, session)
+	_check(String(seeded.get("growth_seed", "")) == "growth-session|growth-scenario|hero_lyra", "a session seeds its heroes: %s" % seeded.get("growth_seed", ""))
+	var preview := HeroCommandRules.build_recruited_hero(ContentService.get_hero("hero_lyra"), {}, session, 3)
+	var hire := HeroCommandRules.build_recruited_hero(ContentService.get_hero("hero_lyra"), {}, session, 3)
+	_check(preview.get("command", {}) == hire.get("command", {}), "a level-3 tavern preview and the hire roll alike: %s vs %s" % [preview.get("command", {}), hire.get("command", {})])
+	# AI commanders keep the seed and path of the hero they were hired as.
+	var commander := EnemyAdventureRules.build_roster_commander_state("hero_lyra", "faction_embercourt", _built("hero_lyra", "seed-ai"))
+	_check(String(commander.get("growth_seed", "")) == "seed-ai", "an AI commander keeps its growth seed (%s)" % commander.get("growth_seed", ""))
+	var commander_grown: Dictionary = HeroProgressionRules.add_experience(commander, HeroProgressionRules.experience_for_level(6)).get("hero", commander)
+	var expected := (commander.get("command", {}) as Dictionary).duplicate()
+	for level in range(2, 7):
+		expected[HeroProgressionRules.command_gain_stat(commander, level)] += 1
+	_check(commander_grown.get("command", {}) == expected, "an AI commander rolls from its seed: %s vs %s" % [commander_grown.get("command", {}), expected])
+	# Odds by path: about 40/40/10/10 over many rolls.
+	for path in ["might", "magic"]:
+		var counts := {"attack": 0, "defense": 0, "power": 0, "knowledge": 0}
+		var rolls := 0
+		for index in range(400):
+			var hero := {"id": "odds_%d" % index, "command_path": path, "growth_seed": "odds-%s-%d" % [path, index]}
+			for level in range(2, 22):
+				counts[HeroProgressionRules.command_gain_stat(hero, level)] += 1
+				rolls += 1
+		var weights: Dictionary = HeroProgressionRules.COMMAND_GAIN_WEIGHTS[path]
+		for stat in STATS:
+			var share := 100.0 * float(counts[stat]) / float(rolls)
+			_check(absf(share - float(weights[stat])) <= 2.5, "%s heroes roll %s %.1f%% of the time (weight %d%%)" % [path, stat, share, int(weights[stat])])
+	# A hero saved before growth seeds and paths rolls from its id and template.
+	var legacy := _built("hero_lyra")
+	legacy.erase("growth_seed")
+	legacy.erase("command_path")
+	var legacy_a := HeroProgressionRules.advance_to_level(legacy, 12)
+	var legacy_b := HeroProgressionRules.advance_to_level(legacy.duplicate(true), 12)
+	_check(legacy_a.get("command", {}) == legacy_b.get("command", {}) and HeroProgressionRules.command_path(legacy_a) == "magic", "an old-save hero rolls the same way from its id and template path")
+	var lyra := HeroProgressionRules.advance_to_level(_built("hero_lyra"), 12)
 	var mana_max := int(SpellRules.mana_state(lyra).get("max", 0))
 	_check(mana_max == SpellRules.mana_max_from_command(lyra.get("command", {})) + HeroProgressionRules.mana_max_bonus(lyra), "mana follows the knowledge gained (%d)" % mana_max)
-	var fresh := HeroCommandRules.build_hero_from_template(ContentService.get_hero("hero_lyra"), {}, {}, "normal")
-	fresh = HeroProgressionRules.add_experience(fresh, HeroProgressionRules.experience_for_level(3)).get("hero", fresh)
+	# The level-up popup shows exactly the gains applied.
+	var fresh := _built("hero_lyra")
+	var before: Dictionary = fresh.get("command", {}).duplicate()
+	fresh = HeroProgressionRules.add_experience(fresh, HeroProgressionRules.experience_for_level(5)).get("hero", fresh)
 	var summary := HeroProgressionRules.level_up_summary(fresh)
-	_check(summary.get("command_gains", {}) == {"attack": 0, "defense": 0, "power": 1, "knowledge": 1}, "level-up popup shows a magic hero's gains: %s" % summary.get("command_gains", {}))
+	var applied := {}
+	for stat in STATS:
+		applied[stat] = int(fresh.get("command", {}).get(stat, 0)) - int(before.get(stat, 0))
+	_check(summary.get("command_gains", {}) == applied and _total(applied) == 4, "level-up popup gains %s match the applied gains %s" % [summary.get("command_gains", {}), applied])
 
 func _caster(power: int, spell_ids: Array) -> Dictionary:
 	return SpellRules.ensure_hero_spellbook({
