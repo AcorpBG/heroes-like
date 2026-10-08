@@ -96,6 +96,10 @@ Rules:
 
 `ux-scenery-pickup-readability-20261008` (completed, owner go-ahead after the scan): blocked scenery cells whose painted art covers less than 30% get a filler from their family's terrain palette and single pieces are at least 0.62 tile, so no blocked tile looks walkable; artifacts (0.62 tile) and loose pickups (0.66) are larger, draw above neighbouring canopy and carry a faint static glint. Focused check: `tests/overworld_scenery_pickup_readability_report.tscn`.
 
+### Road junctions
+
+`ux-overworld-road-junctions-20261008` (completed, owner playtest fix): where generated roads run two tiles wide at a junction or side by side, the renderer links the roads entering each clump with one tree instead of joining every adjacent tile, so junctions read as a T or a cross instead of ladders and loops; real loops and crossings are unchanged. See `docs/overworld-road-junctions.md`.
+
 ### Organic ground borders
 
 `art-overworld-organic-ground-borders-20261008` (completed, owner-approved prototype): biome borders meander off the tile grid (noise-bent corner weights that fade out near tile centres) and grounds meet with a height-and-priority blend instead of a cross-fade, so one ground's detail fringes the other; coasts curve the same way. See `docs/overworld-ground-borders.md`.
