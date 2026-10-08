@@ -25,6 +25,13 @@ const AI_HERO_KEY := "ai_hero"
 # Battle settings (terrain, length, rewards) for fights against an AI hero. The
 # template's army and commander are never used: the hero brings its own.
 const AI_HERO_ENCOUNTER_ID := "encounter_mire_raid"
+## A match that sets this flag keeps every auto-resolved fight in
+## `session.flags[BATTLE_LOG_KEY]` (see `_log_battle`) and every town capture
+## in `session.flags[CAPTURE_LOG_KEY]`.
+const BATTLE_LOG_FLAG := "ai_battle_log_enabled"
+const BATTLE_LOG_KEY := "ai_battle_log"
+const BATTLE_LOG_OWNER_KEY := "battle_log_owner"
+const CAPTURE_LOG_KEY := "ai_capture_log"
 const AI_DIFFICULTY := "normal"
 const MAX_DECISIONS_PER_DAY := 6
 const SEARCH_DAYS := 3
@@ -3043,6 +3050,7 @@ static func _attack_town(session: SessionStateStoreScript.SessionData, context: 
 			"placement_id": "town_garrison:%s" % String(town.get("placement_id", "")),
 			"encounter_id": AI_HERO_ENCOUNTER_ID,
 			"enemy_army": {"id": "town_garrison", "name": "%s Garrison" % _turn_rules()._town_name(town), "stacks": garrison},
+			BATTLE_LOG_OWNER_KEY: PlayerRules.town_controller_id(town) if owner == "enemy" else owner,
 		})
 		events.append_array(fight.get("events", []))
 		towns = session.overworld.get("towns", [])
@@ -3053,11 +3061,25 @@ static func _attack_town(session: SessionStateStoreScript.SessionData, context: 
 		if not bool(fight.get("won", false)):
 			return {"arrived": true, "events": events}
 	var previous_owner := owner
+	var previous_controller := PlayerRules.town_controller_id(town) if owner == "enemy" else owner
 	var transition: Dictionary = _overworld_rules().transition_town_control(session, String(town.get("placement_id", "")), "enemy", controller, "ai_hero_capture")
 	if not bool(transition.get("ok", false)):
 		return {"arrived": true, "events": events}
 	context["topology_changed"] = true
 	var entry: Dictionary = session.overworld.encounters[index]
+	if bool(session.flags.get(BATTLE_LOG_FLAG, false)):
+		var captures: Array = session.flags.get(CAPTURE_LOG_KEY, [])
+		captures.append({
+			"day": int(session.day),
+			"player_id": controller,
+			"hero": hero_name(entry),
+			"hero_power": hero_power(entry),
+			"town_placement_id": String(town.get("placement_id", "")),
+			"town": _turn_rules()._town_name(town),
+			"from": previous_controller,
+			"garrison_power": army_power(garrison),
+		})
+		session.flags[CAPTURE_LOG_KEY] = captures
 	TurnPlayback.action(session, entry, "captures a town")
 	events.append(_event(session, context, "ai_town_captured", entry, {
 		"target_kind": "town",
@@ -3248,6 +3270,7 @@ static func _auto_resolve(session: SessionStateStoreScript.SessionData, context:
 	var preview: Dictionary = context.get("fight_preview", {})
 	context.erase("fight_preview")
 	var outcome: Dictionary = preview.get("outcome", {}) if String(preview.get("key", "")) == _battle_key(entry, defender, int(context.auto_battle_count)) else {}
+	var previewed := not outcome.is_empty()
 	if outcome.is_empty():
 		outcome = _simulate_battle(session, context, entry, defender, int(context.auto_battle_count))
 	if not bool(outcome.get("ok", false)):
@@ -3260,6 +3283,8 @@ static func _auto_resolve(session: SessionStateStoreScript.SessionData, context:
 	var enemy_survivors: Array = outcome.get("enemy_survivors", [])
 	var gained: Dictionary = outcome.get("resources_gained", {})
 	_add_pool(context.state.treasury, gained)
+	if bool(session.flags.get(BATTLE_LOG_FLAG, false)):
+		_log_battle(session, context, entry, defender, outcome, previewed)
 	var events := []
 	var label := _defender_label(defender)
 	if not lost:
@@ -3291,6 +3316,50 @@ static func _auto_resolve(session: SessionStateStoreScript.SessionData, context:
 		context["topology_changed"] = true
 		events.append(_event(session, context, "ai_hero_defeated", entry, _defender_target(defender, label), "%s falls fighting %s." % [hero_name(entry), label], ["hero_defeated"]))
 	return {"won": won, "ok": true, "state": final_state, "enemy_survivors": enemy_survivors, "events": events, "resources_gained": gained}
+
+## One auto-resolved fight, kept in `session.flags` when a match asks for a
+## battle log (an AI-against-AI evaluation). Normal games keep none.
+static func _log_battle(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, defender: Dictionary, outcome: Dictionary, previewed: bool) -> void:
+	var defender_stacks: Array = []
+	if defender.get("enemy_army", {}) is Dictionary and defender.get("enemy_army", {}).has("stacks"):
+		defender_stacks = defender.get("enemy_army", {}).get("stacks", [])
+	else:
+		defender_stacks = _neutral_army(defender).get("stacks", [])
+	var placement_id := String(defender.get("placement_id", ""))
+	var kind := "hero" if is_ai_hero(defender) else ("town" if placement_id.begins_with("town_garrison:") else "guard")
+	var commander: Dictionary = entry.get("enemy_commander_state", {}) if entry.get("enemy_commander_state", {}) is Dictionary else {}
+	var hero_after: Dictionary = outcome.get("hero_after", {})
+	var stacks: Array = entry.get("enemy_army", {}).get("stacks", []) if entry.get("enemy_army", {}) is Dictionary else []
+	var power := army_power(stacks, commander)
+	var defender_power := army_power(defender_stacks, defender.get("enemy_commander_state", {}) if kind == "hero" else {})
+	var won := bool(outcome.get("won", false))
+	var lost := bool(outcome.get("lost", false))
+	var records: Array = session.flags.get(BATTLE_LOG_KEY, [])
+	records.append({
+		"day": int(session.day),
+		"player_id": String(context.controller),
+		"hero_placement_id": String(entry.get("placement_id", "")),
+		"hero": hero_name(entry),
+		"hero_level": int(commander.get("level", 1)),
+		"experience_gained": 0 if lost else maxi(0, int(hero_after.get("experience", 0)) - int(commander.get("experience", 0))),
+		"x": int(entry.get("x", 0)),
+		"y": int(entry.get("y", 0)),
+		"stacks": stacks.duplicate(true),
+		"power": power,
+		"survivors": [] if lost else outcome.get("hero_survivors", []).duplicate(true),
+		"survivor_power": 0.0 if lost else army_power(outcome.get("hero_survivors", []), hero_after),
+		"estimated_loss_share": _expected_loss_value(power, defender_power) / maxf(0.001, power * TROOP_VALUE_PER_POWER),
+		"defender_kind": kind,
+		"defender": _defender_label(defender),
+		"defender_player_id": String(defender.get(BATTLE_LOG_OWNER_KEY, PlayerRules.raid_controller_id(defender))),
+		"defender_stacks": defender_stacks.duplicate(true),
+		"defender_power": defender_power,
+		"defender_survivors": [] if won else outcome.get("enemy_survivors", []).duplicate(true),
+		"result": "won" if won else ("lost" if lost else "standstill"),
+		"previewed": previewed,
+		"resources_gained": outcome.get("resources_gained", {}).duplicate(true),
+	})
+	session.flags[BATTLE_LOG_KEY] = records
 
 static func _defender_label(defender: Dictionary) -> String:
 	if is_ai_hero(defender):

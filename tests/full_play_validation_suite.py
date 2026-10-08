@@ -93,6 +93,7 @@ RMG_SCENES = [
     "save_summary_deferred_payload_report",
     "ai_known_world_memory_report",
     "ai_player_rules_report",
+    "ai_versus_ai_match_report",
     "ai_hero_task_live_turn_execution_report",
     "ai_hero_task_state_normalizer_preservation_report",
     "ai_raid_assault_grouping_report",

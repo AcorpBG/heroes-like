@@ -16614,11 +16614,11 @@
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-authored-scenarios-archived-20261008",
-  "currentSliceId": "ai-market-parking-fight-rewards-20261008",
+  "currentSliceId": "ai-versus-ai-match-20261008",
   "currentSliceNotes": "COMPLETED 2026-10-07. Owner request: archive the obsolete authored scenarios and campaigns. scenarios.json (299), campaigns.json (25), terrain_layers.json and the 20 tools/author_*.py scripts moved to archive/authored-scenarios-2026-10-08/ (git mv, history kept; .gdignore). Their domain_status is archived_* with zero player-facing counts, so the Skirmish list offers no authored fronts (build_skirmish_browser_entries now checks the domain), skirmish setup refuses them, and the main menu shows Campaign as 'Coming soon' (disabled, normal plaque padding, default focus on New skirmish; CampaignRules.campaigns_available). ContentService.AUTHORED_ARCHIVE_DIR keeps them loadable by id as hidden test setups and for old saves; a missing archive (shipped builds) reads as empty without errors. Map editor, art manifest, tests and validate_repo paths point at the archive; validate_repo keeps roster-integrity checks on the archived catalogs (authored_roster_count) and now requires the archive to be non-player-facing. Validation: validate_repo identical to baseline (828); water_travel and hero_exchange (River Pass setups) still load and pass; town_garrison_rows, ai_player_rules, native end-to-end and terrain transit reports pass; RMG unit tests pass; town faction Python tests fail identically on HEAD.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Cheap markets the AI builds, idle AI heroes out of the way, strength-scaled battle rewards",
-  "currentSliceUpdatedAt": "2026-10-08T17:50:00Z",
+  "currentSliceTitle": "AI against AI matches with a battle log",
+  "currentSliceUpdatedAt": "2026-10-08T17:31:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -114415,6 +114415,19 @@
         "docs/town-market.md"
       ],
       "notes": "Owner review of the 2026-10-08 large-map playthrough (seed 1041912569): Embercourt never left its capital's pocket because its lesser hero waited on the only exit tile, no computer town ever built a Marketplace (a prerequisite scored nothing in the build planner), so ore-starved factions hoarded up to 60,000 gold, Mireclaw stopped exploring after day 18, and every AI hero paid a flat 140 gold / 160 experience when beaten. Owner decisions: Marketplace 1,000 gold, Trade Exchange 3,000 gold + 5 wood + 5 ore; computer towns value each market stage like a Storehouse (1.8x while a resource is missing) and credit buildings for what they unlock (_opens_count over the whole tree). Idle AI heroes park in their town doorway (ai_hero.parked); own heroes in a town block no one; waiting heroes avoid tiles that cut a way through (_cuts_a_way); a hero whose way is blocked by its own idle hero asks it to step aside (_clear_way, ai_hero.make_way). Found and fixed on the replay: the main army now follows the most experienced hero (a courier carrying a garrison used to become main), a full army trades its weakest stack for a stronger garrison stack and values town visits by what it can take (_garrison_pickup, ending a town ping-pong), built visit sites can be crossed, and a boxed-in hero fights the weakest guard at even odds. Fight loss estimate calibrated on 1,262 auto-resolved fights (1.3x square law + 1.2%); an idle hero takes a clean preview win. Every battle pays by the strength beaten (BattleRules.battle_rewards_for_strength: 0.5 experience per strength, half the encounter's resources scaled against a 300-strength guard). Stripping garrisons stays (owner). ai_player_rules_report replays the owner's map 24 days: markets on day 3, explored 1,480/1,375/2,252 (Embercourt/Mireclaw/Sunvault; owner game 443/1,114/2,234), no idle stalls; a 40-day replay shows AI-vs-AI conquest. Harness fixtures adjusted to the new roles (authored supply caches cleared, recruits seeded, experienced host). validate_repo identical to baseline. Pre-existing failures unchanged on base: town_market_popout_report (%TradeAction), town_market_exchange_completion_feedback_report, runtime_market_cap_persistence_report, economy_capture_income_expansion_report, core_systems_regression_smoke (diagonal move). Open: market weekly caps (6 ore/week) keep ore-poor factions hoarding gold."
+    },
+    {
+      "id": "ai-versus-ai-match-20261008",
+      "title": "AI against AI matches with a battle log",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ai_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Owner request: generate a small 2-player one-level map with no human, two AI players with completely random factions (a mirror allowed), play until one wins and write everything into a battle report. AiSeatRules.hand_human_seat_to_ai gives the human seat to the computer (player record computer, towns transferred under the same player id, treasury moved, heroes removed; HeroCommandRules.normalize_session keeps no player heroes without a human seat); standing_players/match_over decide the match. AiHeroRules logs every auto-resolved fight (BATTLE_LOG_KEY) and town capture (CAPTURE_LOG_KEY) when the session flag ai_battle_log_enabled is set. tests/ai_versus_ai_match_report plays the match (HEROES_AI_MATCH_SEED, random allowed; HEROES_AI_MATCH_MAX_DAYS; HEROES_AI_MATCH_OUT) and runs 40 days of a fixed seed as a regression check; both seats start with the human's 5,000 gold / 10 wood / 10 ore. First match ai-match-4199114532: Veilmourn beat Thornwake on day 25 in 16 battles, replayed identically. Findings for follow-up: AI capitals left without troops (15 of 15 captures unopposed; 45 of 48 in the 40-day mirror seed), couriers swap an empty capital twice a day, a main hero does not go back for a lost capital, loss estimates ran about twice the actual losses on this map (20% vs 9%), and computer players start with no treasury on generated maps while the human gets 5,000 gold."
     }
   ],
   "project": "heroes-like",
