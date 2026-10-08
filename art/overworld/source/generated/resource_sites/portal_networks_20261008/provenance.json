@@ -4,7 +4,7 @@
     "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_basalt_undergate.png",
     "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_slipgate_mirror.png"
   ],
-  "purpose": "Original sprites for random-map portal networks (docs/portal-networks.md): a two-way Wayring, a one-way Waygate entrance and a Wayfall exit, told apart by shape. The runtime keeps only the stonework; the magic is drawn as particles in the network colour.",
+  "purpose": "Original sprites for random-map portal networks (docs/portal-networks.md): a two-way Wayring, a one-way Waygate entrance and a Wayfall exit, told apart by shape. The runtime keeps the stonework as the sprite and the painted magic as white-light effect layers that the overworld tints per network and animates.",
   "images": [
     {
       "asset_id": "mapobj_wayring",
@@ -35,5 +35,5 @@
     }
   ],
   "key_colour": "Each painting keeps its magic in pure magenta (#FF00FF) and nothing else in that hue.",
-  "packing": "tools/pack_portal_network_sprites.py: mechanical alpha trim (alpha above 60 for the crop box) and aspect-preserving resize to 300px on the shared 512px transparent canvas, centered and bottom-aligned at y=390. The magenta-keyed magic (plus white-hot pixels near it) is cut out: a dark empty opening inside the Wayring ring and Waygate arch, open air where the Wayfall beam stood, plain neutral stone where light spilled; a magenta cast on stone is turned grey. No repainting. The tool also measures where the magic was and writes art/overworld/portal_network_fx.json for the particles."
+  "packing": "tools/pack_portal_network_sprites.py: mechanical alpha trim (alpha above 60 for the crop box) and aspect-preserving resize to 300px on the shared 512px transparent canvas, centered and bottom-aligned at y=390. The magenta-keyed magic (plus white-hot pixels near it) is cut out: a dark empty opening inside the Wayring ring and Waygate arch, open air where the Wayfall beam stood, plain neutral stone where light spilled; a magenta cast on stone is turned grey. No repainting. The cut-out magic is written as white-light layers (brightness = mean RGB x 1.35, coverage from the key, the white-hot pixels near it and the opening), and the tool writes art/overworld/portal_network_fx.json with the layers and their geometry."
 }

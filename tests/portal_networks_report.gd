@@ -234,7 +234,13 @@ func _check_art() -> void:
 		var asset: Dictionary = manifest.get("object_assets", {}).get("mapobj_%s" % slug, {})
 		var image := Image.load_from_file(ProjectSettings.globalize_path(String(asset.get("path", ""))))
 		_check(image != null and image.get_size() == Vector2i(512, 512) and image.detect_alpha() != Image.ALPHA_NONE, "mapobj_%s is a 512px sprite with transparency" % slug)
-		_check(not manifest.get("object_assets", {}).has("mapobj_%s_glow" % slug), "mapobj_%s has no painted glow layer: its magic is particles" % slug)
+		_check(not manifest.get("object_assets", {}).has("mapobj_%s_glow" % slug), "mapobj_%s keeps no glow baked into its own sprite" % slug)
+		var layer_ids: Dictionary = ContentService.load_json("res://art/overworld/portal_network_fx.json").get("assets", {}).get("mapobj_%s" % slug, {}).get("layers", {})
+		_check(layer_ids.size() == (3 if slug == "wayfall" else 2), "mapobj_%s has its painted light layers %s" % [slug, str(layer_ids)])
+		for role in layer_ids:
+			var layer_asset: Dictionary = manifest.get("object_assets", {}).get(String(layer_ids[role]), {})
+			var layer := Image.load_from_file(ProjectSettings.globalize_path(String(layer_asset.get("path", ""))))
+			_check(layer != null and layer.get_size() == Vector2i(512, 512) and layer.detect_alpha() != Image.ALPHA_NONE, "%s is a registered 512px light layer" % String(layer_ids[role]))
 		if image != null:
 			var geometry: Dictionary = ContentService.load_json("res://art/overworld/portal_network_fx.json").get("assets", {}).get("mapobj_%s" % slug, {})
 			var middle: Array = geometry.get("center", [geometry.get("beam_x", 0.5), geometry.get("beam_top", 0.5) + 0.1])

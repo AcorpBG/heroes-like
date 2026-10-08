@@ -42165,6 +42165,76 @@
       "assigned_map_object_family": "transit_object",
       "presentation_role": "portal_network_stonework",
       "particle_magic": "res://art/overworld/portal_network_fx.json"
+    },
+    "mapobj_wayring_vortex": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wayring_vortex.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/wayring-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/provenance.json",
+      "runtime_sha256": "f9724cfc7605d0b4ea8e1af8a3d5df1b0ee8d2a183ee64ffac545f4818db472d",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "presentation_role": "portal_network_vortex_light_layer",
+      "tinted_by": "native portal network colour (NativeTransitRules.NETWORK_COLOURS), animated by OverworldPortalFx.gd"
+    },
+    "mapobj_wayring_spill": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wayring_spill.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/wayring-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/provenance.json",
+      "runtime_sha256": "cf9c7221435ab40e7016cca8f8d32c036e8c7bdd7e9b4ebba5da5f87ce85a693",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "presentation_role": "portal_network_spill_light_layer",
+      "tinted_by": "native portal network colour (NativeTransitRules.NETWORK_COLOURS), animated by OverworldPortalFx.gd"
+    },
+    "mapobj_waygate_vortex": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_waygate_vortex.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/waygate-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/provenance.json",
+      "runtime_sha256": "ab60ffadfe4d0ad76ad19af5b650f601f350747e85b4b0057b2fc4c43bdf7c2f",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "presentation_role": "portal_network_vortex_light_layer",
+      "tinted_by": "native portal network colour (NativeTransitRules.NETWORK_COLOURS), animated by OverworldPortalFx.gd"
+    },
+    "mapobj_waygate_spill": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_waygate_spill.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/waygate-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/provenance.json",
+      "runtime_sha256": "45924abeb6df7b556a269149ce1de8a984bc26e55f5a293b6404c0cb8cd0345e",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "presentation_role": "portal_network_spill_light_layer",
+      "tinted_by": "native portal network colour (NativeTransitRules.NETWORK_COLOURS), animated by OverworldPortalFx.gd"
+    },
+    "mapobj_wayfall_beam": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wayfall_beam.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/wayfall-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/provenance.json",
+      "runtime_sha256": "5a44a0dde5b4cf25e882f91eb710b055657b9b6055ec9cbb3fbc3692217083ff",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "presentation_role": "portal_network_beam_light_layer",
+      "tinted_by": "native portal network colour (NativeTransitRules.NETWORK_COLOURS), animated by OverworldPortalFx.gd"
+    },
+    "mapobj_wayfall_splash": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wayfall_splash.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/wayfall-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/provenance.json",
+      "runtime_sha256": "fc7f7eb1035475b7dbb2246d9ec399dfcd08266e12fc0423192c8c0c7cd27975",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "presentation_role": "portal_network_splash_light_layer",
+      "tinted_by": "native portal network colour (NativeTransitRules.NETWORK_COLOURS), animated by OverworldPortalFx.gd"
+    },
+    "mapobj_wayfall_beam_core": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wayfall_beam_core.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/wayfall-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/provenance.json",
+      "runtime_sha256": "297c528f5c812ace5bdc9cba496c25e1f51b86618dafe17f6a42fb4f25d5fb64",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "presentation_role": "portal_network_beam_core_light_layer",
+      "tinted_by": "native portal network colour (NativeTransitRules.NETWORK_COLOURS), animated by OverworldPortalFx.gd"
     }
   },
   "resource_site_sprites": {

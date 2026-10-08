@@ -4303,8 +4303,9 @@ func _draw_resource_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile
 		_register_portal_fx(node, asset_id, rect, remembered, profile, tile)
 	return true
 
-## A portal's magic is drawn as particles in its network colour above the
-## bare stonework (OverworldPortalFx.gd, docs/portal-networks.md).
+## A portal's magic is its painted light, drawn as tinted, gently moving effect
+## layers in its network colour above the bare stonework (OverworldPortalFx.gd,
+## docs/portal-networks.md).
 func _register_portal_fx(node: Dictionary, asset_id: String, rect: Rect2, remembered: bool, profile: Dictionary, tile: Vector2i) -> void:
 	var texture = _object_texture_for_asset(asset_id)
 	if not (texture is Texture2D) or _draw_canvas_item != _state_layer or _portal_fx == null:
@@ -4313,8 +4314,15 @@ func _register_portal_fx(node: Dictionary, asset_id: String, rect: Rect2, rememb
 	var metrics := _object_sprite_visual_metrics(rect, profile, 0.0, Rect2(), town_adjunct_cap_tiles)
 	var payload := _object_painted_sprite_draw_payload(asset_id, texture, metrics.get("sprite_center", rect.get_center()), float(metrics.get("sprite_extent_px", 12.0)))
 	var colour: Color = NativeTransit.network_colour(node).get("color", Color.WHITE)
+	var layers := {}
+	var layer_assets: Dictionary = _portal_fx.layer_assets(asset_id)
+	for role in layer_assets:
+		var layer = _object_texture_for_asset(String(layer_assets[role]))
+		if layer is Texture2D:
+			layers[role] = layer
 	_portal_fx.add({
 		"asset_id": asset_id,
+		"layers": layers,
 		"color": colour * OBJECT_SPRITE_MEMORY_MODULATE if remembered else colour,
 		"canvas_rect": payload.get("canvas_draw_rect", rect),
 		"remembered": remembered,
