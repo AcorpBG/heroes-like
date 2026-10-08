@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "perf-town-recruit-responsiveness-20261007",
-  "currentSliceId": "perf-town-recruit-responsiveness-20261007",
-  "currentSliceNotes": "COMPLETED 2026-10-07. Owner playtest: recruiting felt delayed, worst on the full Muster Hall screen. On the owner's Day 8 save a recruit click took about 410 ms (Muster), 454 ms (dwelling popout) and 380 ms (plain order), mostly a full town entity cache rebuild plus repeated reads. Recruit orders now share one read scope after the order (TownShell._commit_recruit_order), reuse the post-order town read as the next order's preflight (guarded by a mutable-state hash), skip a redundant normalize in recruit_active_town, update Muster and popout recruit cards in place (TownRecruitCard.update_state), and use exact memos (active buildings, requirement checks, build status, seeded growth, muster catalog). Hidden surfaces stay lazy (event strip tooltip, hero portrait texture, stockpile popup). Also fixes the Muster Hall troop-upgrade caption being replaced after a recruit. Coordinator probe on merged main: popout 75 ms, plain order 70 ms; agent probe: Muster 70 ms. Validation: town_recruit_responsiveness_report (post-recruit UI equals a fresh render; one town-view build per recruit), 34 town reports unchanged against main, validate_repo unchanged.",
+  "currentSlice": "perf-battle-refresh-read-scope-20261008",
+  "currentSliceId": "perf-battle-refresh-read-scope-20261008",
+  "currentSliceNotes": "COMPLETED 2026-10-07. Follow-up to the battle entry slice: one ~350 ms frame remained right after a battle faded in, and every battle action paid the same refresh cost. BattleRules now memoizes reachable hexes per stack, attack legality and melee approaches per exact stack pair, and attackable target ids inside a board read scope (each key carries a hash of stacks, objectives, distance and round, so a changed board misses the cache). The battle shell opens one scope per refresh; a full refresh on the owner's battle drops from about 365 to 131 ms. Hidden surfaces build when shown: the save bar shows its status from SaveService.in_session_save_bar_status() and builds the full surface and tooltips on hover/focus (kept current while hovered); the collapsed Tactical Details sidebar builds when opened; commander cards stay in every refresh. Coordinator verification on the owner's Day 8 save (generated map): longest frame after the battle appears 348 ms -> 12.5 ms, battle visible about 0.85 s after the attack click, every-frame captures show no gray frame (max default-gray share 0.18%); ai_player_rules_report game outcomes identical before and after over 16 generated-map days (auto-resolve battles exercise the memoized rules); native_rmg_end_to_end, large_generated_map_runtime_profile and random_map_terrain_transit_semantics pass; validate_repo identical. The agent's battle_board_read_scope_report uses authored scenarios and was not used as verification.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town recruit clicks are fast (Muster Hall, popouts, orders)",
-  "currentSliceUpdatedAt": "2026-10-08T01:00:00Z",
+  "currentSliceTitle": "Battle refresh reads each board state once; hidden battle surfaces build when shown",
+  "currentSliceUpdatedAt": "2026-10-08T09:00:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -114246,6 +114246,19 @@
         "docs/town-recruit-responsiveness.md"
       ],
       "notes": "Owner playtest: recruiting felt delayed, worst on the full Muster Hall screen. On the owner's Day 8 save a recruit click took about 410 ms (Muster), 454 ms (dwelling popout) and 380 ms (plain order), mostly a full town entity cache rebuild plus repeated reads. Recruit orders now share one read scope after the order (TownShell._commit_recruit_order), reuse the post-order town read as the next order's preflight (guarded by a mutable-state hash), skip a redundant normalize in recruit_active_town, update Muster and popout recruit cards in place (TownRecruitCard.update_state), and use exact memos (active buildings, requirement checks, build status, seeded growth, muster catalog). Hidden surfaces stay lazy (event strip tooltip, hero portrait texture, stockpile popup). Also fixes the Muster Hall troop-upgrade caption being replaced after a recruit. Coordinator probe on merged main: popout 75 ms, plain order 70 ms; agent probe: Muster 70 ms. Validation: town_recruit_responsiveness_report (post-recruit UI equals a fresh render; one town-view build per recruit), 34 town reports unchanged against main, validate_repo unchanged."
+    },
+    {
+      "id": "perf-battle-refresh-read-scope-20261008",
+      "title": "Battle refresh reads each board state once; hidden battle surfaces build when shown",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "runtime_performance_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/battle-entry-transition.md"
+      ],
+      "notes": "Follow-up to the battle entry slice: one ~350 ms frame remained right after a battle faded in, and every battle action paid the same refresh cost. BattleRules now memoizes reachable hexes per stack, attack legality and melee approaches per exact stack pair, and attackable target ids inside a board read scope (each key carries a hash of stacks, objectives, distance and round, so a changed board misses the cache). The battle shell opens one scope per refresh; a full refresh on the owner's battle drops from about 365 to 131 ms. Hidden surfaces build when shown: the save bar shows its status from SaveService.in_session_save_bar_status() and builds the full surface and tooltips on hover/focus (kept current while hovered); the collapsed Tactical Details sidebar builds when opened; commander cards stay in every refresh. Coordinator verification on the owner's Day 8 save (generated map): longest frame after the battle appears 348 ms -> 12.5 ms, battle visible about 0.85 s after the attack click, every-frame captures show no gray frame (max default-gray share 0.18%); ai_player_rules_report game outcomes identical before and after over 16 generated-map days (auto-resolve battles exercise the memoized rules); native_rmg_end_to_end, large_generated_map_runtime_profile and random_map_terrain_transit_semantics pass; validate_repo identical. The agent's battle_board_read_scope_report uses authored scenarios and was not used as verification."
     }
   ],
   "project": "heroes-like",
@@ -114905,7 +114918,7 @@
   ],
   "summary": "Owner-directed overworld actor readability completed: 112 original generated hero/creature sprites, full-size town visitors, painted-bound scale and cached alpha-edge contrast. Source/Linux/Windows visual/runtime acceptance, Large travel/AI/fog, existing reports, full repository and official exports/parity pass; 3.255 GB disposable outputs cleaned. Prior generated-world quality work remains completed; gameplay/native generation and save schema are unchanged. Broader production/release limits remain in project.md.",
   "taskId": "10236",
-  "updatedAt": "2026-10-08T01:00:00Z",
+  "updatedAt": "2026-10-08T09:00:00Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",
