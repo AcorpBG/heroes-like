@@ -158,30 +158,6 @@ func resolve_routes() -> void:
 			if not bool(result.get("ok",false)):
 				failures.append("required battle report save failed")
 				return
-		elif scene_path().ends_with("OverworldShell.tscn") and scene._native_destination_dialog != null and scene._native_destination_dialog.visible:
-			# A player must explicitly choose an exit; an open choice is not a
-			# successful trip and must not strand the driver behind a modal.
-			var selected := -1
-			var oldest := 2147483647
-			for index in range(scene._native_destination_actions.size()):
-				var action: Dictionary = scene._native_destination_actions[index]
-				var visited := int(waypoint_visits.get("passage:" + String(action.get("id", "")), 0))
-				if not bool(action.get("disabled", false)) and visited < oldest:
-					selected = index
-					oldest = visited
-			if selected < 0:
-				scene._native_destination_dialog.canceled.emit()
-				await settle()
-				return
-			var started := Time.get_ticks_usec()
-			var before: Dictionary = session.overworld.hero_position.duplicate(true)
-			var action_id := String(scene._native_destination_actions[selected].get("id", ""))
-			scene._native_destination_picker.select(selected)
-			scene._on_native_destination_selected(selected)
-			scene._native_destination_dialog.confirmed.emit()
-			await settle()
-			waypoint_visits["passage:" + action_id] = serial + 1
-			record("passage_choice", started, {"id":action_id,"before":before,"after":session.overworld.hero_position.duplicate(true)})
 		else:
 			return
 	failures.append("battle/outcome routing did not settle")

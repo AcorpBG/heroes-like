@@ -1,0 +1,43 @@
+{
+  "schema_id": "aurelion_portal_network_fx_v1",
+  "source": "tools/pack_portal_network_sprites.py measures the keyed magic of the packed paintings; coordinates are fractions of the 512px object canvas",
+  "assets": {
+    "mapobj_wayring": {
+      "effect": "swirl_disc",
+      "center": [
+        0.4873,
+        0.4346
+      ],
+      "radius": [
+        0.1357,
+        0.1689
+      ]
+    },
+    "mapobj_waygate": {
+      "effect": "inward_vortex",
+      "center": [
+        0.4736,
+        0.4336
+      ],
+      "radius": [
+        0.1006,
+        0.1602
+      ]
+    },
+    "mapobj_wayfall": {
+      "effect": "falling_beam",
+      "beam_x": 0.501,
+      "beam_half_width": 0.0459,
+      "beam_top": 0.1875,
+      "beam_bottom": 0.6045,
+      "splash_center": [
+        0.499,
+        0.6045
+      ],
+      "splash_radius": [
+        0.1787,
+        0.1064
+      ]
+    }
+  }
+}

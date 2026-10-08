@@ -42126,6 +42126,45 @@
       "runtime_sha256": "adacf7868d8c3c57ed24424fbf22d98ea0543f04087ea821806a0e5accc39f1a",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "runtime_role": "water_travel_boat"
+    },
+    "mapobj_wayring": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wayring.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/wayring-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/provenance.json",
+      "runtime_sha256": "0d86af477f9ef50ffe56b04237083f1b82a553c93d24c4dc24a58612ee34b905",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_wayring",
+      "assigned_map_object_family": "transit_object",
+      "presentation_role": "portal_network_stonework",
+      "particle_magic": "res://art/overworld/portal_network_fx.json"
+    },
+    "mapobj_waygate": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_waygate.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/waygate-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/provenance.json",
+      "runtime_sha256": "d8a4bf8ea6d1a4228761fdb85b7625f870006de1b77f1c2e2e477b5615370b58",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_waygate",
+      "assigned_map_object_family": "transit_object",
+      "presentation_role": "portal_network_stonework",
+      "particle_magic": "res://art/overworld/portal_network_fx.json"
+    },
+    "mapobj_wayfall": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wayfall.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/wayfall-source.png",
+      "source_model": "built_in_image_gen",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/portal_networks_20261008/provenance.json",
+      "runtime_sha256": "de4cf854af053d81b3ebb8e983daffed6a1d4181b5a343a1c53dc9f9234a10af",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_wayfall",
+      "assigned_map_object_family": "transit_object",
+      "presentation_role": "portal_network_stonework",
+      "particle_magic": "res://art/overworld/portal_network_fx.json"
     }
   },
   "resource_site_sprites": {

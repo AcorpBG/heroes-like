@@ -18098,6 +18098,12 @@ static ConnectionDirectEndpointDispatchResult4a7605 connection_direct_endpoint_d
 		output_vector.count = int32_t(output_keys.size());
 		output_vector.count_known = true;
 		output_vector.contents_known = true;
+		GeneratorObjectPrivateState::MonolithConnectionEnd4a7605 &connection_end =
+				state.monolith_connection_end_by_object_key_4a7605[object_record_key];
+		connection_end.connection_ordinal = state.monolith_connection_count_4a7605;
+		connection_end.zone = owner.runtime_zone_index;
+		connection_end.source_zone = source_owner.runtime_zone_index;
+		connection_end.target_zone = target_owner.runtime_zone_index;
 		append_relation_owner_local_vector_record_0x404(
 				owner,
 				picker.selected_candidate.x,
@@ -18169,6 +18175,7 @@ static ConnectionDirectEndpointDispatchResult4a7605 connection_direct_endpoint_d
 	state.source_pair_vector_edc.contents_known = true;
 	state.source_pair_vector_edc.count_known = true;
 	state.source_pair_vector_edc.count = int32_t(state.source_pair_records_edc.size());
+	state.monolith_connection_count_4a7605 += 1;
 	result.applied = true;
 	return result;
 }
@@ -43178,6 +43185,32 @@ static RuntimeMapPayloadProjection attach_owned_monolith_transit_groups(
 	const auto &entrances = state.monolith_one_way_entrance_descriptor_entries_2e8_2ec;
 	const auto &exits = state.monolith_one_way_exit_descriptor_entries_2f8_2fc;
 	const auto &two_way = state.monolith_two_way_descriptor_entries_308_30c;
+	// 0x4a79a3 cycles the descriptor cursor modulo the lane count
+	// (0x4a7e5b..0x4a7e64), so a 17th connection reuses a colour, and 0x49b3fb
+	// can leave the second record of a duplicate or self link open for another
+	// connection. Runtime networks therefore follow the connection that placed
+	// each end when every end has that bookkeeping; otherwise they keep the
+	// colour grouping, as older packages and replayed sequences do.
+	bool connections_known = true;
+	for (auto &object : projection.objects) {
+		if (object.type_id < 43 || object.type_id > 45) {
+			continue;
+		}
+		if (object.source_vector_index < 0 || size_t(object.source_vector_index) >= private_objects.size()) {
+			connections_known = false;
+			continue;
+		}
+		const auto end = state.monolith_connection_end_by_object_key_4a7605.find(
+				private_objects[size_t(object.source_vector_index)].object_record_key);
+		if (end == state.monolith_connection_end_by_object_key_4a7605.end()) {
+			connections_known = false;
+			continue;
+		}
+		object.monolith_connection_ordinal_0x4a7605 = end->second.connection_ordinal;
+		object.monolith_zone_0x4a7605 = end->second.zone;
+		object.monolith_connection_source_zone_0x4a7605 = end->second.source_zone;
+		object.monolith_connection_target_zone_0x4a7605 = end->second.target_zone;
+	}
 	for (auto &object : projection.objects) {
 		if (object.type_id < 43 || object.type_id > 45) {
 			continue;
@@ -43245,6 +43278,7 @@ static RuntimeMapPayloadProjection attach_owned_monolith_transit_groups(
 			if (peer.serialized_index == object.serialized_index
 					|| peer.type_id != (object.type_id == 45 ? 45 : 44)
 					|| peer.subtype != object.subtype
+					|| (connections_known && peer.monolith_connection_ordinal_0x4a7605 != object.monolith_connection_ordinal_0x4a7605)
 					|| peer.source_vector_index < 0
 					|| size_t(peer.source_vector_index) >= private_objects.size()) {
 				continue;
@@ -43253,6 +43287,39 @@ static RuntimeMapPayloadProjection attach_owned_monolith_transit_groups(
 			if (peer_source.descriptor_source_key_0x00 == destination_descriptor.source_key_0x00
 					&& std::count(keys.begin(), keys.end(), peer_source.object_record_key) == 1) {
 				object.monolith_destination_serialized_indices_0x4a7605.push_back(peer.serialized_index);
+			}
+		}
+	}
+	// Networks are numbered per kind in placement order, so the first eight
+	// two-way and one-way networks keep their source colour order.
+	std::map<int32_t, int32_t> two_way_networks;
+	std::map<int32_t, int32_t> one_way_networks;
+	for (auto &object : projection.objects) {
+		if (object.type_id < 43 || object.type_id > 45) {
+			continue;
+		}
+		if (!connections_known) {
+			object.monolith_connection_ordinal_0x4a7605 = -1;
+			object.monolith_zone_0x4a7605 = -1;
+			object.monolith_connection_source_zone_0x4a7605 = -1;
+			object.monolith_connection_target_zone_0x4a7605 = -1;
+			object.monolith_network_index_0x4a7605 = object.subtype;
+			continue;
+		}
+		auto &networks = object.type_id == 45 ? two_way_networks : one_way_networks;
+		networks.emplace(object.monolith_connection_ordinal_0x4a7605, 0);
+	}
+	for (auto *networks : { &two_way_networks, &one_way_networks }) {
+		int32_t next = 0;
+		for (auto &entry : *networks) {
+			entry.second = next++;
+		}
+	}
+	if (connections_known) {
+		for (auto &object : projection.objects) {
+			if (object.type_id >= 43 && object.type_id <= 45) {
+				const auto &networks = object.type_id == 45 ? two_way_networks : one_way_networks;
+				object.monolith_network_index_0x4a7605 = networks.at(object.monolith_connection_ordinal_0x4a7605);
 			}
 		}
 	}

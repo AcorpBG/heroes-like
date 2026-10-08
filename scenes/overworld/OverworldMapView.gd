@@ -52,6 +52,8 @@ const GroundSurface = preload("res://scenes/overworld/OverworldGroundSurface.gd"
 const ActorStyle = preload("res://scenes/overworld/OverworldActorStyle.gd")
 const CreatureIdle = preload("res://scenes/overworld/OverworldCreatureIdle.gd")
 const Mines = preload("res://scripts/core/MineRules.gd")
+const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
+const PortalFx = preload("res://scenes/overworld/OverworldPortalFx.gd")
 const MineArt = preload("res://scenes/overworld/OverworldMine.gd")
 const ControlFlag = preload("res://scenes/overworld/OverworldControlFlag.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
@@ -614,6 +616,8 @@ var _encounter_default_asset_id := ""
 var _session_static_layer: Control = null
 var _terrain_ambient_layer: Control = null
 var _state_layer: Control = null
+# Animated portal light, a child of the state layer (OverworldPortalFx.gd).
+var _portal_fx: Control = null
 var _scenery_batches = SceneryBatch.new()
 var _scenery_manifest: Dictionary = {}
 var _dynamic_layer: Control = null
@@ -1041,12 +1045,29 @@ func _process(delta: float) -> void:
 		if _spell_cast_elapsed_sec >= _spell_cast_duration_sec:
 			dismiss_spell_cast_presentation()
 			redraw_dynamic = true
+	if _portal_fx_should_animate():
+		_portal_fx.advance(elapsed_delta)
 	_sync_presentation_processing()
 	if redraw_dynamic:
 		_invalidate_dynamic_layer("overworld_presentation_frame")
 
 func _sync_presentation_processing() -> void:
-	set_process(_overworld_terrain_ambient_should_animate() or _hero_movement_active or _object_resolution_active or _object_resolution_queued or _route_blocked_active or _spell_cast_active)
+	set_process(_overworld_terrain_ambient_should_animate() or _hero_movement_active or _object_resolution_active or _object_resolution_queued or _route_blocked_active or _spell_cast_active or _portal_fx_should_animate())
+
+func _portal_fx_motion_enabled() -> bool:
+	return not SettingsService.reduced_motion_enabled()
+
+func _portal_fx_should_animate() -> bool:
+	return _portal_fx != null and _portal_fx.is_animating()
+
+func _raise_portal_fx() -> void:
+	if _portal_fx == null or not is_instance_valid(_state_layer):
+		return
+	_state_layer.move_child(_portal_fx, -1)
+	_sync_presentation_processing()
+
+func validation_portal_fx_snapshot() -> Dictionary:
+	return _portal_fx.snapshot() if _portal_fx != null else {}
 
 func present_spell_cast_presentation(presentation: Dictionary) -> Dictionary:
 	_sync_spell_cast_presentation(presentation)
@@ -1510,6 +1531,8 @@ func _ensure_render_layers() -> void:
 	_session_static_layer = _create_render_layer("SessionStaticLayer", Callable(self, "_draw_session_static_layer"))
 	_terrain_ambient_layer = _create_render_layer("TerrainAmbientLayer", Callable(self, "_draw_terrain_ambient_layer"))
 	_state_layer = _create_render_layer("StateLayer", Callable(self, "_draw_state_layer"))
+	_portal_fx = PortalFx.new()
+	_state_layer.add_child(_portal_fx)
 	_dynamic_layer = _create_render_layer("DynamicLayer", Callable(self, "_draw_dynamic_layer"))
 	_frame_layer = _create_render_layer("FrameLayer", Callable(self, "_draw_frame_layer"))
 
@@ -2153,6 +2176,9 @@ func _draw_terrain_ambient_layer() -> void:
 
 func _draw_state_layer() -> void:
 	_scenery_batches.begin(_state_layer)
+	if _portal_fx != null:
+		_portal_fx.clear()
+		_portal_fx.animate = _portal_fx_motion_enabled()
 	if _session == null:
 		_scenery_batches.finish()
 		return
@@ -2195,6 +2221,9 @@ func _draw_state_layer() -> void:
 	OverworldRulesScript.end_fog_read_scope(_session)
 	_scenery_batches.finish()
 	_draw_canvas_item = previous_target
+	# Scenery batches are added to the state layer as needed; keep the portal
+	# light above them, and start or stop its frame loop.
+	call_deferred("_raise_portal_fx")
 	_profile_add("state_tile_checks", tile_checks)
 	_profile_add("hidden_tile_checks", hidden_checks)
 	_profile_add("object_presentation_checks", object_presentations)
@@ -4266,7 +4295,31 @@ func _draw_spell_cast_procedural_rings(rect: Rect2, motion_progress: float, alph
 
 func _draw_resource_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	if _draw_mine(node, rect, remembered, tile): return true
-	return _draw_object_sprite(_resource_asset_id(node), rect, remembered, _resource_object_profile(node), tile)
+	var asset_id := _resource_asset_id(node)
+	var profile := _resource_object_profile(node)
+	if not _draw_object_sprite(asset_id, rect, remembered, profile, tile):
+		return false
+	if NativeTransit.portal_kind(node) != "":
+		_register_portal_fx(node, asset_id, rect, remembered, profile, tile)
+	return true
+
+## A portal's magic is drawn as particles in its network colour above the
+## bare stonework (OverworldPortalFx.gd, docs/portal-networks.md).
+func _register_portal_fx(node: Dictionary, asset_id: String, rect: Rect2, remembered: bool, profile: Dictionary, tile: Vector2i) -> void:
+	var texture = _object_texture_for_asset(asset_id)
+	if not (texture is Texture2D) or _draw_canvas_item != _state_layer or _portal_fx == null:
+		return
+	var town_adjunct_cap_tiles := TOWN_ADJUNCT_RESOURCE_VISIBLE_EXTENT_CAP_TILES if not _town_presentation_at(tile).is_empty() else 0.0
+	var metrics := _object_sprite_visual_metrics(rect, profile, 0.0, Rect2(), town_adjunct_cap_tiles)
+	var payload := _object_painted_sprite_draw_payload(asset_id, texture, metrics.get("sprite_center", rect.get_center()), float(metrics.get("sprite_extent_px", 12.0)))
+	var colour: Color = NativeTransit.network_colour(node).get("color", Color.WHITE)
+	_portal_fx.add({
+		"asset_id": asset_id,
+		"color": colour * OBJECT_SPRITE_MEMORY_MODULATE if remembered else colour,
+		"canvas_rect": payload.get("canvas_draw_rect", rect),
+		"remembered": remembered,
+		"seed": float(posmod(String(node.get("placement_id", "")).hash(), 10007)) / 10007.0,
+	})
 
 func _draw_mine(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	var resource := Mines.resource(node)
@@ -6517,6 +6570,10 @@ func _sprite_extent_fraction(profile: Dictionary, footprint: Vector2i) -> float:
 			base = OBJECT_DECORATION_VISIBLE_EXTENT_TILES
 		_:
 			base = OBJECT_DEFAULT_VISIBLE_EXTENT_TILES
+	# Portals are travel landmarks: their kind and network colour must read
+	# at a glance, so they draw at landmark size on their one-tile footprint.
+	if bool(profile.get("portal_network", false)):
+		base = OBJECT_LANDMARK_VISIBLE_EXTENT_TILES
 	if scale_class in ["durable_structure", "waypoint", "landmark", "terrain_blocker"]:
 		base += float(maxi(footprint.x - 1, 0)) * 0.06
 		base += float(maxi(footprint.y - 1, 0)) * 0.03
@@ -12387,6 +12444,8 @@ func _resource_object_profile(node: Dictionary) -> Dictionary:
 	if profile is Dictionary and not profile.is_empty():
 		var resolved_profile: Dictionary = profile.duplicate(true)
 		resolved_profile["presentation_kind"] = String(node.get("kind", ""))
+		if NativeTransit.portal_kind(node) != "":
+			resolved_profile["portal_network"] = true
 		if node.get("runtime_footprint", {}) is Dictionary and not node.get("runtime_footprint", {}).is_empty():
 			var runtime_footprint: Dictionary = node.get("runtime_footprint", {}).duplicate(true)
 			resolved_profile["footprint"] = runtime_footprint

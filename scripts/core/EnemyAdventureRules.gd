@@ -2999,17 +2999,12 @@ static func _encounter_is_objective_anchor(session: SessionStateStoreScript.Sess
 	return false
 
 static func _secure_native_passage_target(session: SessionStateStoreScript.SessionData, raid: Dictionary, state: Dictionary, faction_id: String, node: Dictionary, preserve_target: bool = false) -> Dictionary:
-	var selected_exit := String(raid.get("native_transit_target_exit_id", ""))
-	var check: Dictionary = OverworldRulesScript.native_passage_travel_check(session, node, NativeTransit.point(raid), String(raid.get("placement_id", "")), selected_exit)
-	if selected_exit == "" and bool(check.get("native_transit_choice_required", false)):
-		# An explicitly planned destination is never silently replaced. For an
-		# exploratory gate visit, committed source order is deterministic and
-		# every candidate still goes through the shared occupancy/guard rules.
-		for destination in NativeTransit.destinations(node):
-			var candidate: Dictionary = OverworldRulesScript.native_passage_travel_check(session, node, NativeTransit.point(raid), String(raid.get("placement_id", "")), String(destination.get("target_placement_id", "")))
-			if bool(candidate.get("ok", false)):
-				check = candidate
-				break
+	var actor_id := String(raid.get("placement_id", ""))
+	var check: Dictionary = OverworldRulesScript.native_passage_travel_check(session, node, NativeTransit.point(raid), actor_id)
+	if bool(check.get("native_transit_random_exit", false)):
+		# Raids roll the same random exit as the player; every candidate still
+		# goes through the shared occupancy/guard rules.
+		check = OverworldRulesScript.native_random_exit_check(session, node, NativeTransit.point(raid), actor_id)
 	if not bool(check.get("ok", false)):
 		return {"encounter": raid, "state": state, "event_message": "", "native_transit_error": String(check.get("message", ""))}
 	var updated := raid.duplicate(true)
@@ -3021,6 +3016,7 @@ static func _secure_native_passage_target(session: SessionStateStoreScript.Sessi
 	else:
 		updated["level"] = destination.z
 	updated["native_transit_last_exit_id"] = String(check.link.target_placement_id)
+	OverworldRulesScript.note_native_trip(session, actor_id)
 	TurnPlayback.move(session, updated, LevelRules.position(raid))
 	updated.erase("native_transit_target_exit_id")
 	if not preserve_target:

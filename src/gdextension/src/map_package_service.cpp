@@ -1348,7 +1348,21 @@ Dictionary runtime_objects(
 				transit["schema_version"] = 1;
 				transit["kind"] = source.type_id == 45 ? "two_way_portal" : (source.type_id == 43 ? "one_way_entrance" : "one_way_exit");
 				transit["source_function"] = "0x4a7605";
-				transit["group_id"] = "native_portal_" + map_id + (source.type_id == 45 ? "_two_way_" : "_one_way_") + String::num_int64(source.subtype);
+				transit["network_index"] = source.monolith_network_index_0x4a7605;
+				if (source.monolith_connection_ordinal_0x4a7605 >= 0) {
+					// One network per placed connection; see
+					// attach_owned_monolith_transit_groups for why colours repeat.
+					transit["group_id"] = "native_portal_" + map_id + "_connection_" + String::num_int64(source.monolith_connection_ordinal_0x4a7605);
+					transit["connection_index"] = source.monolith_connection_ordinal_0x4a7605;
+					transit["zone"] = source.monolith_zone_0x4a7605;
+					Array connection_zones;
+					connection_zones.append(source.monolith_connection_source_zone_0x4a7605);
+					connection_zones.append(source.monolith_connection_target_zone_0x4a7605);
+					transit["connection_zones"] = connection_zones;
+					transit["same_zone"] = source.monolith_connection_source_zone_0x4a7605 == source.monolith_connection_target_zone_0x4a7605;
+				} else {
+					transit["group_id"] = "native_portal_" + map_id + (source.type_id == 45 ? "_two_way_" : "_one_way_") + String::num_int64(source.subtype);
+				}
 				transit["source_placement_id"] = runtime_placement_id(map_id, source.serialized_index);
 				transit["entry"] = runtime_tile_points(source.action_tiles)[0];
 				transit["one_way"] = source.type_id != 45;
