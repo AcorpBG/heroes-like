@@ -51,7 +51,7 @@ func menu_contract(button, resources: Dictionary, label: String) -> void:
 		var id: String = OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS[index]
 		check(row.resource_id==id and row.amount==int(resources.get(id,0)),label+": exact ordered value "+id)
 		check(row.icon_loaded and row.icon_resource_path==OverworldRules.resource_icon_path(id),label+": exact icon "+id)
-		check(row.disabled and row.tooltip=="%s: %d" % [row.display_name,row.amount],label+": read-only tooltip "+id)
+		check(row.disabled and row.tooltip=="%s: %d (%+d per day)" % [row.display_name,row.amount,row.daily_income],label+": read-only tooltip "+id)
 func action(name: String) -> void:
 	for pressed in [true,false]:
 		var event := InputEventAction.new()

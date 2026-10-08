@@ -114337,6 +114337,18 @@
         "docs/generated-object-placement-scan.md"
       ],
       "notes": "Owner asked for every object to be checked, not only the reported ones. Scan on a copy of the owner's 108x108 map: per-object render/remove/re-render pixel differences for 1,096 objects (411 sites, 216 guards, 43 artifacts, 16 towns, one scenery piece per 410 shapes) and a whole-map with/without-scenery coverage pass over 11,664 tiles. The first fix (art centred over the footprint) still left wide sites with an end entrance (Tide Kiln, Basalt Oath Tomb, Barrow Vault, Brasswake Depot) with the art beside the interaction tile, so generated site art now stands on the bottom row centred on the interaction tile (art width from its profile), as mines already did. Re-scan of all 411 sites with the final rule; alignment report updated and passing. Towns and guards correct; artifacts on their tiles but tiny (2 hidden under scenery); no scenery art away from its blocks, 398 blocked scenery tiles (6%) look empty and 37 walkable tiles are mostly covered by canopy. Open, owner decision: art narrower than footprint (extra blocked tiles look walkable), low-visibility blockers/pickups, claimed one-time guarded sites vanish."
+    },
+    {
+      "id": "ux-resource-bar-daily-income-20261008",
+      "title": "Resource bar shows each resource's daily income",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md"
+      ],
+      "notes": "Owner request: show the daily income for each resource in the resource bar, separated by a + sign. ResourceStockpileMenu.sync_stockpile takes an optional daily_income; each inline cell shows the amount then a signed income label (green gain, red loss, muted +0), popup rows read 'Gold  5000  +500' and tooltips 'Gold: 5000 (+500 per day)'; validation_snapshot exposes daily_income. OverworldShell and TownShell feed OverworldRules.player_daily_income (new public wrapper over the end-turn forecast projection _player_daily_income_projection for day+1: towns at daybreak, hero artifacts/specialties, controlled sites, difficulty scaling). controlled_resource_site_income now checks the controller before the content lookup (same result; the bar asks on every refresh). Cost on a generated extra-large map: 0.9 ms on day 1, 1.7 ms with 4 towns/60 sites, 6.7 ms owning all 16 towns/952 sites, against a 225 ms route-preview refresh there. Validation: new tests/resource_bar_daily_income_report (generated small map, two flagged wood/ore sites: overworld and town bars show the rules income, labels and tooltips, next end_turn pays exactly the shown income; 106 checks) passes; windowed captures at 1920x1080 and 1280x720 (overworld) and town 1920x1080 show no clipping; town_garrison_rows, overworld_object_footprint_alignment and site_recruit_overflow reports pass; validate_repo identical to baseline (884 in this checkout). Pinned popup/tooltip format updated in validate_repo, resource_stockpile_icon_popover_runtime_report (River Pass setup, not run) and the Linux-only overworld_stockpile_text_fit_regression (not run here: needs xvfb and a saved match)."
     }
   ],
   "project": "heroes-like",
