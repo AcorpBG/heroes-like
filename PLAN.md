@@ -96,6 +96,10 @@ Rules:
 
 `ux-scenery-pickup-readability-20261008` (completed, owner go-ahead after the scan): blocked scenery cells whose painted art covers less than 30% get a filler from their family's terrain palette and single pieces are at least 0.62 tile, so no blocked tile looks walkable; artifacts (0.62 tile) and loose pickups (0.66) are larger, draw above neighbouring canopy and carry a faint static glint. Focused check: `tests/overworld_scenery_pickup_readability_report.tscn`.
 
+### Organic ground borders
+
+`art-overworld-organic-ground-borders-20261008` (completed, owner-approved prototype): biome borders meander off the tile grid (noise-bent corner weights that fade out near tile centres) and grounds meet with a height-and-priority blend instead of a cross-fade, so one ground's detail fringes the other; coasts curve the same way. See `docs/overworld-ground-borders.md`.
+
 ### Ground detail decals
 
 `art-overworld-terrain-decals-v4-20261008` (completed, owner request): ground decals are reworked. Each land ground (13) has its own generated set of 16 details painted against that ground's material (tiny, medium and large flat features); the ground shader scatters them on a jittered grid with noise-driven clusters and clearings, off roads, water and biome borders, so they share the ground's light instead of sitting on it as stickers. See `docs/overworld-terrain-decals.md`.

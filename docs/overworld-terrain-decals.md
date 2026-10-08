@@ -18,7 +18,7 @@ Decals are scattered by the ground shader (`scenes/overworld/overworld_ground_su
 
 - A jittered grid of candidate points (one per `cell_tiles`, 1.0 tile). Each point takes the ground under it, a size class (tiny 52%, medium 32%, large 16%), a random decal of that class and a mirror.
 - Density per set (`art/overworld/terrain_decals_v4.json`) is modulated by slow noise, so decals cluster into patches with clearings between them instead of an even sprinkle.
-- No decals on roads (the lookup texture's blue channel marks road tiles), unexplored tiles or water. A decal fades with its own ground's blend weight where it reaches toward a different ground, so none crosses a biome border.
+- No decals on roads (the lookup texture's blue channel marks road tiles), unexplored tiles or water. A decal fades with its ground's final share of the border blend (`docs/overworld-ground-borders.md`), so none crosses a biome border.
 - Mip levels are explicit (`textureLod`), since implicit derivatives are undefined inside the scatter loop. The ground's local brightness lightly modulates each decal.
 - Presentation only: no gameplay, saves or collision. `OverworldMapView._terrain_decal_payload` reports a tile's set for tests.
 
