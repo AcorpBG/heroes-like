@@ -114312,6 +114312,18 @@
         "docs/site-recruit-overflow.md"
       ],
       "notes": "Owner playtest report: stepping on beaten Glassbound Eyrie and Railblock Camp did nothing. Cause: sites with claim_recruits refused the whole claim when the troops' new unit types did not all fit the seven army slots (HeroCommandRules.army_addition_plan), with only a status line; the game has no other dismiss action, and AI raids were capacity-blocked the same way. Owner chose 'claim, ask to make room'. Now: HeroCommandRules.army_addition_split adds what fits; OverworldRules claims and pays out, stores the rest in overworld.pending_site_recruits (hero, tile, site, troops; survives save/reload; cleared when the hero walks away or another hero is active); site_recruit_overflow_prompt / take_site_recruits_by_dismissing / leave_site_recruits; the context action is no longer disabled. OverworldShell shows a dismiss-or-leave dialog (waiting troops, the hero's stacks, Dismiss and take them / Leave them) that holds movement and reopens for remaining troops; the level-up dialog waits for it. EnemyAdventureRules claims with a full army and keeps the troops that fit. Free route gates (Railblock Camp) ask to Claim and name the reward instead of 'Pay nothing to open it'. Validation: tests/site_recruit_overflow_report (generated small map) passes; owner Day 25 save copies: Eyrie and Railblock claims pay out and the dialog places the waiting troops; town_garrison_rows, ai_player_rules and native end-to-end reports pass; validate_repo identical. Old-rule assertions updated in army_capacity_regression (River Pass setup, not run) and the Linux-only generated_full_match_target_policy_regression plus the match driver's claim feasibility (not run here: needs xvfb and its saved match)."
+    },
+    {
+      "id": "ux-generated-object-sprite-footprint-20261008",
+      "title": "Generated site sprites stand on their real footprint",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md"
+      ],
+      "notes": "Owner playtest report: Bell Spire and smelter sprites drawn beside their interaction tiles, and other objects too. Cause: OverworldMapView._resource_footprint_rect anchored the content art profile (mostly bottom_center) at the node x/y, which for generated objects is the HoMM3 bottom-right tile of the def mask and can lie outside the body (37 of 519 sites in the owner's Day 44 save). Bell Spire (3x1 body, 1x1 profile) drew on its right tile, Glassbound Eyrie one tile right, Smelter Annex on the empty tile beside its only body tile. Now generated sites with body tiles use _resource_body_bounds: the rect stands on the body's bottom row, centred over its columns, at least the profile's size (sprite size still from the profile). Mines keep their CommonMineRules 3x2 art around the entry. Validation: new tests/overworld_object_footprint_alignment_report (generated small map: 66 sites incl. anchor-outside-body and multi-tile ones, every sprite grounded on and centred over its body and covering its interaction tile); windowed captures from the owner's save (Bell Spire, Eyrie, Smelter Annex, Clamp Forge, Orchard Levy Post, sawmill and peatwax mines); native end-to-end, town garrison rows and site recruit overflow reports pass; validate_repo identical. Found, not fixed: a claimed one-time guarded site (e.g. Glassbound Eyrie) counts as not present (resource_node_is_present), so it vanishes from the map and stops blocking although its map object says remains_after_visit and it has secured-state art."
     }
   ],
   "project": "heroes-like",

@@ -6243,6 +6243,15 @@ func _resource_footprint_rect(node: Dictionary, anchor_rect: Rect2, anchor_tile:
 		return Rect2(anchor_rect.position + Vector2(Mines.origin(node) - anchor_tile) * anchor_rect.size, anchor_rect.size * Vector2(3, 2))
 	var profile := _resource_object_profile(node)
 	var footprint := _object_profile_footprint(profile)
+	var body := _resource_body_bounds(node)
+	if body.size != Vector2i.ZERO:
+		# Generated objects carry their real footprint, and their x/y is its
+		# bottom-right tile (HoMM3 placement), not the art profile's anchor. The
+		# sprite stands on the footprint's bottom row, centred over its columns,
+		# with at least the profile's own size.
+		var size := Vector2(maxi(body.size.x, footprint.x), maxi(body.size.y, footprint.y))
+		var origin_tiles := Vector2(float(body.position.x) - (size.x - float(body.size.x)) * 0.5, float(body.end.y) - size.y)
+		return Rect2(anchor_rect.position + (origin_tiles - Vector2(anchor_tile)) * anchor_rect.size, size * anchor_rect.size)
 	if footprint == Vector2i(1, 1):
 		return anchor_rect
 	var origin := _object_footprint_origin_for_anchor(anchor_tile, footprint, _object_profile_footprint_anchor(profile))
@@ -6251,6 +6260,24 @@ func _resource_footprint_rect(node: Dictionary, anchor_rect: Rect2, anchor_tile:
 		anchor_rect.position + Vector2(float(origin.x - anchor_tile.x) * tile_size.x, float(origin.y - anchor_tile.y) * tile_size.y),
 		Vector2(tile_size.x * float(footprint.x), tile_size.y * float(footprint.y))
 	)
+
+## Tile bounds of a generated object's body (its package footprint); empty for
+## objects without one, which keep the art profile's anchor.
+func _resource_body_bounds(node: Dictionary) -> Rect2i:
+	var tiles: Variant = node.get("package_body_tiles", node.get("body_tiles", []))
+	if not (tiles is Array) or tiles.is_empty():
+		return Rect2i()
+	var low := Vector2i(1 << 30, 1 << 30)
+	var high := Vector2i(-1, -1)
+	for tile_value in tiles:
+		if not (tile_value is Dictionary):
+			continue
+		var tile := Vector2i(int(tile_value.get("x", -1)), int(tile_value.get("y", -1)))
+		low = Vector2i(mini(low.x, tile.x), mini(low.y, tile.y))
+		high = Vector2i(maxi(high.x, tile.x), maxi(high.y, tile.y))
+	if high.x < 0:
+		return Rect2i()
+	return Rect2i(low, high - low + Vector2i.ONE)
 
 func _resource_draw_rect(node: Dictionary, anchor_rect: Rect2, anchor_tile: Vector2i) -> Rect2:
 	var footprint_rect := _resource_footprint_rect(node, anchor_rect, anchor_tile)
