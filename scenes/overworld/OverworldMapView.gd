@@ -3286,7 +3286,7 @@ func _water_shoreline_band_polygon(direction: String, rect: Rect2, inner_profile
 
 func _draw_road_overlay(tile: Vector2i, rect: Rect2) -> void:
 	var road := _road_tile_payload(tile)
-	if road.is_empty():
+	if road.is_empty() or bool(road.get("presentation_hidden", false)):
 		return
 	var render_model := _road_render_model(tile, road)
 	if render_model == ROAD_SOURCE_FRAME_RENDER_MODEL and _draw_road_overlay_art(tile, rect, road):
@@ -11729,6 +11729,128 @@ func _rebuild_road_adjacency_connections() -> void:
 			var neighbor_payload: Dictionary = _road_tiles.get(_tile_key(neighbor), {})
 			if _road_payloads_can_connect(payload, neighbor_payload):
 				_add_road_connection(tile, direction)
+	_simplify_fat_road_clusters()
+
+## Generated roads can run two tiles wide where two roads meet or pass side by
+## side (the HoMM3 generator does this too). Joining every adjacent tile drew
+## those clumps as ladders and loops. Inside each clump of 2x2 road blocks,
+## keep one tree that links the roads entering the clump (and any object
+## entrance on it), preferring straight lines, so a junction reads as a T or a
+## cross; clump tiles off that tree are not drawn. Presentation only: roads do
+## not change movement.
+func _simplify_fat_road_clusters() -> void:
+	var fat := {}
+	for key in _road_tiles:
+		var payload: Dictionary = _road_tiles[key]
+		var tile := Vector2i(int(payload.get("tile_x", -1)), int(payload.get("tile_y", -1)))
+		for corner in [Vector2i(0, 0), Vector2i(-1, 0), Vector2i(0, -1), Vector2i(-1, -1)]:
+			if _road_block_closed(tile + corner):
+				fat[tile] = true
+				break
+	var seen := {}
+	for start in fat:
+		if seen.has(start):
+			continue
+		var cluster := {}
+		var queue: Array = [start]
+		seen[start] = true
+		while not queue.is_empty():
+			var tile: Vector2i = queue.pop_back()
+			cluster[tile] = true
+			for direction in ROAD_CARDINAL_DIRECTIONS:
+				var next: Vector2i = tile + direction
+				if fat.has(next) and not seen.has(next) and _road_connected(tile, direction):
+					seen[next] = true
+					queue.append(next)
+		_simplify_road_cluster(cluster)
+
+## All four sides of the 2x2 block whose top-left tile is origin are joined.
+func _road_block_closed(origin: Vector2i) -> bool:
+	return _road_connected(origin, Vector2i.RIGHT) and _road_connected(origin, Vector2i.DOWN) 		and _road_connected(origin + Vector2i.RIGHT, Vector2i.DOWN) and _road_connected(origin + Vector2i.DOWN, Vector2i.RIGHT)
+
+func _road_connected(tile: Vector2i, direction: Vector2i) -> bool:
+	var payload: Dictionary = _road_tiles.get(_tile_key(tile), {})
+	return not payload.is_empty() and _direction_key(direction) in payload.get("connections", [])
+
+func _simplify_road_cluster(cluster: Dictionary) -> void:
+	var ports := []
+	for tile in cluster:
+		var entry := false
+		for direction in ROAD_CARDINAL_DIRECTIONS:
+			if _road_connected(tile, direction) and not cluster.has(tile + direction):
+				entry = true
+		if entry or (_session != null and OverworldRulesScript.tile_has_route_interaction(_session, tile.x, tile.y, _level, true)):
+			ports.append(tile)
+	ports.sort_custom(func(a: Vector2i, b: Vector2i): return a.y < b.y or (a.y == b.y and a.x < b.x))
+	if ports.is_empty():
+		ports.append(cluster.keys()[0])
+	var tree := {ports[0]: true}
+	var tree_edges := {}
+	for port in ports.slice(1):
+		if tree.has(port):
+			continue
+		for step in _road_cluster_path(cluster, tree, port):
+			tree[step[0]] = true
+			tree[step[1]] = true
+			tree_edges[_road_edge_key(step[0], step[1])] = true
+	for tile in cluster:
+		var key := _tile_key(tile)
+		var payload: Dictionary = _road_tiles[key]
+		var kept := []
+		for direction in ROAD_CARDINAL_DIRECTIONS:
+			if not _road_connected(tile, direction):
+				continue
+			var next: Vector2i = tile + direction
+			if not cluster.has(next) or tree_edges.has(_road_edge_key(tile, next)):
+				kept.append(_direction_key(direction))
+		payload["connections"] = kept
+		payload["fat_cluster_simplified"] = true
+		payload["presentation_hidden"] = not tree.has(tile)
+		_road_tiles[key] = payload
+
+## Cheapest path inside the clump from the tree to a port; turns cost extra so
+## the road runs straight where it can.
+func _road_cluster_path(cluster: Dictionary, tree: Dictionary, target: Vector2i) -> Array:
+	var best := {}
+	var previous := {}
+	var frontier: Array = []
+	for tile in tree:
+		for direction in ROAD_CARDINAL_DIRECTIONS:
+			best[[tile, direction]] = 0.0
+			frontier.append([0.0, tile, direction])
+	var found := []
+	while not frontier.is_empty():
+		var low := 0
+		for index in range(frontier.size()):
+			if float(frontier[index][0]) < float(frontier[low][0]):
+				low = index
+		var current: Array = frontier.pop_at(low)
+		var tile: Vector2i = current[1]
+		var heading: Vector2i = current[2]
+		if float(current[0]) > float(best.get([tile, heading], INF)):
+			continue
+		if tile == target:
+			found = [tile, heading]
+			break
+		for direction in ROAD_CARDINAL_DIRECTIONS:
+			var next: Vector2i = tile + direction
+			if not cluster.has(next) or tree.has(next) and next != target or not _road_connected(tile, direction):
+				continue
+			var cost := float(current[0]) + 1.0 + (0.0 if direction == heading else 0.35)
+			if cost < float(best.get([next, direction], INF)):
+				best[[next, direction]] = cost
+				previous[[next, direction]] = [tile, heading]
+				frontier.append([cost, next, direction])
+	var steps := []
+	var state: Array = found
+	while not state.is_empty() and previous.has(state):
+		var before: Array = previous[state]
+		steps.append([before[0], state[0]])
+		state = before
+	return steps
+
+func _road_edge_key(a: Vector2i, b: Vector2i) -> String:
+	return "%s|%s" % [_tile_key(a), _tile_key(b)] if a.x < b.x or (a.x == b.x and a.y < b.y) else "%s|%s" % [_tile_key(b), _tile_key(a)]
 
 func _road_payloads_can_connect(payload: Dictionary, neighbor_payload: Dictionary) -> bool:
 	if payload.is_empty() or neighbor_payload.is_empty():

@@ -114391,6 +114391,19 @@
       "notes": "Owner accepted the prototype shown as before/after sheets. overworld_ground_surface.gdshader: border_warp (three rotated value-noise octaves, warp 0.36 tile + detail) bends the corner-weight lookup, faded to zero within 0.3 tile of tile centres so each tile's middle keeps its own ground; candidate materials score merged corner weight + border_priority (ground_materials.json, by slot) + painted-detail height (luminance above the material average, x1.3) and blend within blend_depth 0.26; the beach band uses the bent corner weights; decals fade by each ground's final blend share. OverworldGroundSurface passes border_priority. Validation: owner-map and generated-map border captures (sand/grass, snow/grass, swamp/grass, snow/dirt, dirt/grass, rough/dirt) and a generated coast reviewed; overworld_sandy_shore_regression 53/53 (tile-centre identity restored by the centre fade), overworld_ground_materials_contract passes, validate_repo identical (828)."
     },
     {
+      "id": "ux-overworld-road-junctions-20261008",
+      "title": "Road junctions draw as a T or a cross, not ladders and loops",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/overworld-road-junctions.md"
+      ],
+      "notes": "Owner report: intersecting roads drew a doubled connection instead of a T. Cause: native generated roads are an unordered tile set laid two tiles wide at some junctions and side-by-side passes (HoMM3's stored road frames for those tiles also draw a fat clump), and OverworldMapView joined every orthogonally adjacent road tile. Owner's 108x108 map: 7 closed 2x2 blocks (two portal entrances, beside a town). Now _simplify_fat_road_clusters groups tiles in closed 2x2 blocks into clumps, takes as ports the clump tiles where roads leave plus object entrances (tile_has_route_interaction), links them with a turn-penalised tree (_road_cluster_path), drops other in-clump connections and hides off-tree clump tiles (presentation_hidden; 6 of 417 tiles on the owner's map). Roads are presentation only (no movement effect). Validation: new tests/overworld_road_junction_report (yard on a generated small map: fat-corner T, two-wide stretch, ring road, plain cross; 17 checks), before/after captures of the three spots on the owner's map, random_map_live_overworld_render_move_report passes, validate_repo identical (828)."
+    },
+    {
       "id": "ux-resource-bar-daily-income-20261008",
       "title": "Resource bar shows each resource's daily income",
       "status": "completed",
