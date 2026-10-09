@@ -1,0 +1,144 @@
+extends Node
+## Quick Resolve focus target (bug found 2026-10-09). When Quick Resolve has no
+## scored order the active stack can carry out, it falls back to shoot, strike,
+## advance or defend against a focus enemy: the weakest living enemy stack by
+## total health, then by creatures left. Battle stacks have no "count", and the
+## focus check read one, so it skipped every enemy and the fallback kept
+## whatever target was already selected. AI battles (AiHeroRules) resolve the
+## same way. The battle comes from a generated small map.
+
+const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
+const BattleAutoResolveRulesScript = preload("res://scripts/core/BattleAutoResolveRules.gd")
+const REPORT_ID := "BATTLE_QUICK_RESOLVE_FOCUS_REPORT"
+const SEED := "battle-quick-resolve-focus-20261009"
+
+var _checks := 0
+var _failures := []
+
+func _ready() -> void:
+	call_deferred("_run")
+
+func _check(condition: bool, label: String) -> void:
+	_checks += 1
+	if not condition:
+		_failures.append(label)
+		push_error("%s check failed: %s" % [REPORT_ID, label])
+
+func _run() -> void:
+	var session = _session()
+	if session != null:
+		var battle: Dictionary = session.battle.duplicate(true)
+		_check_rooted_order(session, battle.duplicate(true))
+		_check_focus_rules(session, battle.duplicate(true))
+		_check_quick_resolve(session, battle.duplicate(true))
+	var report := {"ok": _failures.is_empty(), "checks": _checks, "failures": _failures}
+	print("%s %s" % [REPORT_ID, JSON.stringify(report)])
+	get_tree().quit(0 if _failures.is_empty() else 1)
+
+## A battle against a guard of two or more stacks, starting out of reach.
+func _session():
+	var config := ScenarioSelectRulesScript.build_random_map_player_config(SEED, "", "", 2, "land", false, "homm3_small", ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT, "faction_embercourt", "hero_caelen")
+	var setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY)
+	_check(bool(setup.get("ok", false)), "small generated setup")
+	if not bool(setup.get("ok", false)):
+		return null
+	var session = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
+	OverworldRules.normalize_overworld_state(session)
+	for encounter in session.overworld.get("encounters", []):
+		var battle := BattleRules.create_battle_payload(session, encounter)
+		if _line_up(battle).size() >= 2 and int(battle.get("distance", 0)) > 0 and not _melee_player_stack(battle).is_empty():
+			session.battle = battle
+			session.game_state = "battle"
+			return session
+	_check(false, "a guard of two or more stacks to fight on the generated map")
+	return null
+
+## Living enemy stacks in battle order.
+func _line_up(battle: Dictionary) -> Array:
+	return battle.get("stacks", []).filter(func(stack): return String(stack.get("side", "")) == "enemy" and BattleRules._alive_count(stack) > 0)
+
+func _weaker(a: Dictionary, b: Dictionary) -> bool:
+	if int(a.get("total_health", 0)) != int(b.get("total_health", 0)):
+		return int(a.get("total_health", 0)) < int(b.get("total_health", 0))
+	return BattleRules._alive_count(a) < BattleRules._alive_count(b)
+
+func _melee_player_stack(battle: Dictionary) -> Dictionary:
+	for stack in battle.get("stacks", []):
+		if String(stack.get("side", "")) == "player" and not bool(stack.get("ranged", false)) and BattleRules._alive_count(stack) > 0:
+			return stack
+	return {}
+
+## The last enemy stack in the line-up is barely standing, so it alone is the
+## weakest and a pick of the first enemy would miss it.
+func _barely_standing(battle: Dictionary) -> String:
+	var last: Dictionary = _line_up(battle).back()
+	last["total_health"] = 1
+	return String(last.get("battle_id", ""))
+
+func _act_as(battle: Dictionary, stack: Dictionary) -> void:
+	var id := String(stack.get("battle_id", ""))
+	battle["active_stack_id"] = id
+	battle["turn_index"] = maxi(0, battle.get("turn_order", []).find(id))
+
+func _root(battle: Dictionary, stack: Dictionary) -> void:
+	var effect := SpellRules.build_battle_effect(BattleRules.STATUS_ROOTED, "Rooted", {"defense": -1}, 1, battle, "spell", "report")
+	BattleRules._apply_stack_effect(battle, String(stack.get("battle_id", "")), SpellRules._counted_in_turns(effect, 1))
+
+## A melee stack rooted out of reach (as by an enemy hero's Briar Bind) is
+## scored an advance it cannot make, so Quick Resolve falls back. With another
+## enemy selected, the fallback first selects the weakest one and gives its
+## order against it.
+func _check_rooted_order(session, battle: Dictionary) -> void:
+	session.battle = battle
+	var melee := _melee_player_stack(battle)
+	_act_as(battle, melee)
+	_root(battle, melee)
+	# The hero has cast this round, so a spell cannot stand in for the order.
+	BattleRules._mark_commander_spell_cast(battle, "player")
+	var weakest := _barely_standing(battle)
+	var first := String(_line_up(battle)[0].get("battle_id", ""))
+	BattleRules.select_target(session, first)
+	_check(String(battle.get("selected_target_id", "")) == first, "setup: the first enemy stack is selected")
+	var decision := BattleAutoResolveRulesScript.player_autoplay_decision(session, true)
+	_check(String(decision.get("reason", "")) == "scored_order_unavailable", "setup: Quick Resolve falls back for the rooted stack: %s" % JSON.stringify(decision))
+	_check(String(session.battle.get("selected_target_id", "")) == weakest, "the fallback selects the weakest enemy %s before its order (selected %s)" % [weakest, session.battle.get("selected_target_id", "")])
+	_check(String(decision.get("target_battle_id", "")) == weakest, "the fallback order is given against it: %s" % JSON.stringify(decision))
+	var action := String(decision.get("action", ""))
+	_check(bool(BattleRules.action_availability(session.battle).get(action, false)), "the fallback order (%s) is one the stack can carry out" % action)
+	var result: Dictionary = BattleAutoResolveRulesScript._perform_player_order(session, decision, action)
+	_check(String(result.get("state", "")) != "invalid", "Quick Resolve carries it out: %s" % result.get("message", ""))
+
+## A dead stack is never the focus, even the one selected when it fell, and of
+## two equally hurt stacks the one with fewer creatures left is.
+func _check_focus_rules(session, battle: Dictionary) -> void:
+	_act_as(battle, _melee_player_stack(battle))
+	session.battle = battle.duplicate(true)
+	var dead := _barely_standing(session.battle)
+	BattleRules.select_target(session, dead)
+	BattleRules._get_stack_by_id(session.battle, dead)["total_health"] = 0
+	BattleAutoResolveRulesScript._select_focus_enemy(session)
+	var focus := BattleRules._get_stack_by_id(session.battle, String(session.battle.get("selected_target_id", "")))
+	var least: Dictionary = _line_up(session.battle).reduce(func(best, stack): return stack if _weaker(stack, best) else best)
+	_check(not focus.is_empty() and String(focus.get("battle_id", "")) != dead and not _weaker(least, focus), "a dead stack is skipped for the weakest living one (selected %s)" % focus.get("battle_id", ""))
+
+	session.battle = battle.duplicate(true)
+	var line_up := _line_up(session.battle)
+	for stack in line_up:
+		stack["total_health"] = 10000
+	var many: Dictionary = line_up[0]
+	var few: Dictionary = line_up[1]
+	many["unit_hp"] = 10
+	many["total_health"] = 120
+	few["unit_hp"] = 40
+	few["total_health"] = 120
+	BattleAutoResolveRulesScript._select_focus_enemy(session)
+	_check(String(session.battle.get("selected_target_id", "")) == String(few.get("battle_id", "")), "equal health goes to the stack with fewer creatures left (selected %s)" % session.battle.get("selected_target_id", ""))
+
+## Quick Resolve plays a battle of rooted stacks out with orders it can carry out.
+func _check_quick_resolve(session, battle: Dictionary) -> void:
+	for stack in battle.get("stacks", []):
+		if String(stack.get("side", "")) == "player":
+			_root(battle, stack)
+	session.battle = battle
+	var result: Dictionary = BattleAutoResolveRulesScript.resolve_active_battle(session)
+	_check(bool(result.get("completed", false)) and int(result.get("invalid_orders", 0)) == 0, "Quick Resolve finishes the battle with no invalid order: %s" % JSON.stringify(result.get("action_counts", {})))

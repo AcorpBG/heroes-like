@@ -50,7 +50,6 @@ static func player_autoplay_decision(
 		commander_payload
 	)
 	if decision.is_empty():
-		_select_focus_enemy(session)
 		return _fallback_player_autoplay_decision(
 			session,
 			"no_scored_tactical_order",
@@ -247,20 +246,25 @@ static func _fallback_player_autoplay_decision(
 	}
 
 
+## The weakest living enemy stack: least total health, then fewest creatures
+## left (battle stacks have no "count"; see BattleRules._alive_count).
 static func _select_focus_enemy(session: SessionStateStoreScript.SessionData) -> void:
 	var best_id := ""
-	var best_score := 2147483647
+	var best_health := 0
+	var best_alive := 0
 	for stack in session.battle.get("stacks", []):
 		if not (stack is Dictionary):
 			continue
 		if String(stack.get("side", "")) != "enemy":
 			continue
-		if int(stack.get("count", 0)) <= 0 or int(stack.get("total_health", 0)) <= 0:
+		var alive := BattleRulesScript._alive_count(stack)
+		if alive <= 0:
 			continue
-		var score := int(stack.get("total_health", 0)) * 1000 + int(stack.get("count", 0))
-		if score < best_score:
-			best_score = score
+		var health := int(stack.get("total_health", 0))
+		if best_id == "" or health < best_health or (health == best_health and alive < best_alive):
 			best_id = String(stack.get("battle_id", ""))
+			best_health = health
+			best_alive = alive
 	if best_id != "":
 		BattleRulesScript.select_target(session, best_id)
 

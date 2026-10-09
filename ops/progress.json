@@ -114741,6 +114741,20 @@
       "notes": "Owner report 2026-10-09: an enemy hero walked right past the main hero and no battle started; a hero blocked only its own tile. OverworldRules.hero_guard_zone_tiles gives a hero's zone (eight neighbours, same land/water side, none in a town doorway). Human side: hostile AI heroes join guard_engagement_by_tile, so routes end on and never cross the zone, selecting the hero walks to the nearest zone tile and arriving (also through a portal) starts the battle; portal endpoint safety ignores hero zones. AI side: AiHeroRules._search marks the human's and rival players' hero zones as route ends (hero_zone, portal exits too); a zone tile offers only the hero fight; parking and portal scouting skip zones; _follow_plan stops and fights when a step lands in a zone. Tests: new hero_guard_zone_report (medium generated map, 6 checks) passes; ai_player_rules_report and player_elimination_rules_report pass; two 3-player AI matches (small, medium) end with winners on days 52 and 56, no script errors; the same seeds on the old rules: days 49 and 46, hero battles 21/19 against 25/18 now. validate_repo: 883 known failures plus the worktree's missing godot-cpp submodule, none from this change.",
       "updatedAt": "2026-10-09T16:00:00Z",
       "validatedAt": "2026-10-09T16:00:00Z"
+    },
+    {
+      "id": "bugfix-quick-resolve-focus-target-20261009",
+      "title": "Quick Resolve fallback orders target the weakest living enemy",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Bug found while surveying battle rules: BattleAutoResolveRules._select_focus_enemy skipped stacks without a \"count\" and scored by it, but battle stacks carry only total_health and unit_hp (creatures left = BattleRules._alive_count), so it skipped every enemy and Quick Resolve's fallback order (shoot, strike, advance or defend when the scored order cannot be carried out) kept whatever target was selected. It now selects the weakest living enemy by total health, then fewest creatures left; the duplicate call before the empty-decision fallback is gone. AI battles (AiHeroRules._simulate_battle) resolve the same way. New tests/battle_quick_resolve_focus_report (10 checks, generated small map): a rooted melee stack out of reach is scored an advance it cannot make, Quick Resolve falls back, selects the weakest enemy before its order and carries the order out; a dead stack is skipped even when selected; equal health goes to fewer creatures; Quick Resolve finishes a battle of rooted stacks with no invalid order. With the old function it fails 4 checks. Same seeds before and after: 474 hero-versus-guard battles on 3 generated small maps reached the fallback 0 times in 1,020 orders, and 194 times in 1,081 with every player stack rooted (87 of those on another enemy than the weakest), with no change in any result or survivors; 4 AI matches (two 2-player and one 3-player small, one 4-player medium; 164 battles) are identical except one town assault in the 3-player match (day 45, still won with 8.5% fewer losses), with the same winner and final day. battle_spell_effects (105), battle_stack_health_normalize (89), player_elimination_rules and ai_player_rules reports pass; battle_autoplay_tactical_order_report fails before and after on an unrelated check (Battle AI enemy estimate did not use enemy_hero fallback).",
+      "updatedAt": "2026-10-09T15:31:00Z",
+      "validatedAt": "2026-10-09T15:31:00Z"
     }
   ],
   "project": "heroes-like",
