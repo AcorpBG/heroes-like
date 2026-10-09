@@ -429,8 +429,7 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 	var best := best_attack if force_engaged_attack and not best_attack.is_empty() else {"action": "defend", "score": defend_score}
 	if not force_engaged_attack and not best_attack.is_empty() and _candidate_beats(best_attack, best):
 		best = best_attack
-	var rooted := SpellRulesScript.has_effect_id(active_stack, scoring_battle, STATUS_ROOTED)
-	if (distance > 0 or best_attack.is_empty()) and not lethal_attack_available and not rooted:
+	if (distance > 0 or best_attack.is_empty()) and not lethal_attack_available and not _stack_is_rooted(active_stack, scoring_battle):
 		var advance_candidate := {"action": "advance", "score": advance_score}
 		if _candidate_beats(advance_candidate, best):
 			best = advance_candidate
@@ -705,7 +704,7 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 	var best := best_attack if force_attack and not best_attack.is_empty() else {"action": "defend", "score": defend_score}
 	if not force_attack and not best_attack.is_empty() and _candidate_beats(best_attack, best):
 		best = best_attack
-	if (int(scoring_battle.get("distance", 1)) > 0 or best_attack.is_empty()) and not lethal_attack_available:
+	if (int(scoring_battle.get("distance", 1)) > 0 or best_attack.is_empty()) and not lethal_attack_available and not _stack_is_rooted(active_stack, scoring_battle):
 		var advance_candidate := {"action": "advance", "score": advance_score}
 		if _candidate_beats(advance_candidate, best):
 			best = advance_candidate
@@ -1726,6 +1725,10 @@ static func _defend_score(battle: Dictionary, active_stack: Dictionary, targets:
 	return score
 
 static func _advance_score(battle: Dictionary, active_stack: Dictionary, targets: Array) -> float:
+	# A rooted stack cannot move (BattleRules.action_availability), so advancing
+	# or repositioning is not an order it can be given.
+	if _stack_is_rooted(active_stack, battle):
+		return -9999.0
 	var current_distance := int(battle.get("distance", 1))
 	var side := String(active_stack.get("side", ""))
 	var round_number := int(battle.get("round", 1))
@@ -1949,6 +1952,9 @@ static func _enemy_withdrawal_urgency_scale(battle: Dictionary) -> float:
 	elif last_outcome in ["field_victory", "assault_victory", "pursuit_victory", "rout_victory", "town_captured", "resource_secured", "artifact_secured"]:
 		scale -= 0.03
 	return clamp(scale, 0.86, 1.18)
+
+static func _stack_is_rooted(stack: Dictionary, battle: Dictionary) -> bool:
+	return SpellRulesScript.has_effect_id(stack, battle, STATUS_ROOTED)
 
 static func _should_close_distance(active_stack: Dictionary) -> bool:
 	if not bool(active_stack.get("ranged", false)):

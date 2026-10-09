@@ -6,6 +6,11 @@ extends Node
 ## focus check read one, so it skipped every enemy and the fallback kept
 ## whatever target was already selected. AI battles (AiHeroRules) resolve the
 ## same way. The battle comes from a generated small map.
+##
+## A rooted melee stack out of reach used to be scored an advance it cannot
+## make, so Quick Resolve fell back (bug found 2026-10-09). The tactical scoring
+## now leaves advance out for a rooted stack, on either side, and scores an
+## order the stack can carry out.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const BattleAutoResolveRulesScript = preload("res://scripts/core/BattleAutoResolveRules.gd")
@@ -29,6 +34,7 @@ func _run() -> void:
 	if session != null:
 		var battle: Dictionary = session.battle.duplicate(true)
 		_check_rooted_order(session, battle.duplicate(true))
+		_check_fallback_focus(session, battle.duplicate(true))
 		_check_focus_rules(session, battle.duplicate(true))
 		_check_quick_resolve(session, battle.duplicate(true))
 	var report := {"ok": _failures.is_empty(), "checks": _checks, "failures": _failures}
@@ -46,7 +52,7 @@ func _session():
 	OverworldRules.normalize_overworld_state(session)
 	for encounter in session.overworld.get("encounters", []):
 		var battle := BattleRules.create_battle_payload(session, encounter)
-		if _line_up(battle).size() >= 2 and int(battle.get("distance", 0)) > 0 and not _melee_player_stack(battle).is_empty():
+		if _line_up(battle).size() >= 2 and int(battle.get("distance", 0)) > 0 and not _melee_player_stack(battle).is_empty() and not _melee_enemy_stack(battle).is_empty():
 			session.battle = battle
 			session.game_state = "battle"
 			return session
@@ -63,8 +69,14 @@ func _weaker(a: Dictionary, b: Dictionary) -> bool:
 	return BattleRules._alive_count(a) < BattleRules._alive_count(b)
 
 func _melee_player_stack(battle: Dictionary) -> Dictionary:
+	return _melee_stack(battle, "player")
+
+func _melee_enemy_stack(battle: Dictionary) -> Dictionary:
+	return _melee_stack(battle, "enemy")
+
+func _melee_stack(battle: Dictionary, side: String) -> Dictionary:
 	for stack in battle.get("stacks", []):
-		if String(stack.get("side", "")) == "player" and not bool(stack.get("ranged", false)) and BattleRules._alive_count(stack) > 0:
+		if String(stack.get("side", "")) == side and not bool(stack.get("ranged", false)) and BattleRules._alive_count(stack) > 0:
 			return stack
 	return {}
 
@@ -85,9 +97,8 @@ func _root(battle: Dictionary, stack: Dictionary) -> void:
 	BattleRules._apply_stack_effect(battle, String(stack.get("battle_id", "")), SpellRules._counted_in_turns(effect, 1))
 
 ## A melee stack rooted out of reach (as by an enemy hero's Briar Bind) is
-## scored an advance it cannot make, so Quick Resolve falls back. With another
-## enemy selected, the fallback first selects the weakest one and gives its
-## order against it.
+## scored an order it can carry out, never an advance, by Quick Resolve and by
+## the enemy side's own scoring alike.
 func _check_rooted_order(session, battle: Dictionary) -> void:
 	session.battle = battle
 	var melee := _melee_player_stack(battle)
@@ -95,12 +106,36 @@ func _check_rooted_order(session, battle: Dictionary) -> void:
 	_root(battle, melee)
 	# The hero has cast this round, so a spell cannot stand in for the order.
 	BattleRules._mark_commander_spell_cast(battle, "player")
+	var enemy_battle: Dictionary = battle.duplicate(true)
+	var decision := BattleAutoResolveRulesScript.player_autoplay_decision(session, true)
+	var action := String(decision.get("action", ""))
+	_check(String(decision.get("reason", "")) == "scored_tactical_order", "Quick Resolve scores an order the rooted stack can carry out: %s" % JSON.stringify(decision))
+	_check(action != "advance" and bool(BattleRules.action_availability(session.battle).get(action, false)), "the scored order (%s) is not an advance and is available" % action)
+	_check(float(decision.get("candidate_scores", {}).get("advance", 0.0)) <= -9999.0, "advance is scored out for the rooted stack: %s" % JSON.stringify(decision.get("candidate_scores", {})))
+	var result: Dictionary = BattleAutoResolveRulesScript._perform_player_order(session, decision, action)
+	_check(String(result.get("state", "")) != "invalid", "Quick Resolve carries it out: %s" % result.get("message", ""))
+
+	# The enemy side: a rooted melee guard stack out of reach, scored by the
+	# shared tactical order and by the enemy turn's own choice.
+	var enemy_melee := _melee_enemy_stack(enemy_battle)
+	_act_as(enemy_battle, enemy_melee)
+	_root(enemy_battle, enemy_melee)
+	BattleRules._mark_commander_spell_cast(enemy_battle, "enemy")
+	var shared := BattleAiRules.choose_stack_tactical_order(enemy_battle, enemy_melee, "player")
+	var own := BattleAiRules.choose_enemy_action(enemy_battle, enemy_melee, {})
+	_check(String(shared.get("action", "")) != "advance" and String(own.get("action", "")) != "advance", "a rooted enemy stack is not ordered to advance (shared %s, enemy turn %s)" % [shared.get("action", ""), own.get("action", "")])
+	_check(float(shared.get("candidate_scores", {}).get("advance", 0.0)) <= -9999.0 and float(own.get("candidate_scores", {}).get("advance", 0.0)) <= -9999.0, "both score advance out for the rooted enemy stack")
+
+## When the scored order cannot be carried out, the fallback first selects the
+## weakest enemy (another one is selected) and gives its order against it.
+func _check_fallback_focus(session, battle: Dictionary) -> void:
+	session.battle = battle
+	_act_as(battle, _melee_player_stack(battle))
 	var weakest := _barely_standing(battle)
 	var first := String(_line_up(battle)[0].get("battle_id", ""))
 	BattleRules.select_target(session, first)
 	_check(String(battle.get("selected_target_id", "")) == first, "setup: the first enemy stack is selected")
-	var decision := BattleAutoResolveRulesScript.player_autoplay_decision(session, true)
-	_check(String(decision.get("reason", "")) == "scored_order_unavailable", "setup: Quick Resolve falls back for the rooted stack: %s" % JSON.stringify(decision))
+	var decision := BattleAutoResolveRulesScript._fallback_player_autoplay_decision(session, "scored_order_unavailable", true)
 	_check(String(session.battle.get("selected_target_id", "")) == weakest, "the fallback selects the weakest enemy %s before its order (selected %s)" % [weakest, session.battle.get("selected_target_id", "")])
 	_check(String(decision.get("target_battle_id", "")) == weakest, "the fallback order is given against it: %s" % JSON.stringify(decision))
 	var action := String(decision.get("action", ""))
