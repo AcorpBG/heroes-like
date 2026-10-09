@@ -21135,6 +21135,7 @@ def validate_main_menu_battle_shake_picker_theme_parity(errors: list[str]) -> No
                 "_generated_hero_picker",
                 "_generated_player_count_picker",
                 "_generated_water_picker",
+                "_generated_monster_strength_picker",
                 "_generated_underground_toggle",
                 "_presentation_mode_picker",
                 "_resolution_picker",
