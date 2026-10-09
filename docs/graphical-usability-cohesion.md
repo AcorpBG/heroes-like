@@ -29,6 +29,8 @@ from `project.md` and the six suggestions explicitly approved by the owner.
    internals or promise exact casualties. Inspection must not move/cast/attack;
    commitment keeps the established order path. Owners: OverworldShell and
    a shared read-only inspection model/view.
+   Holding the right mouse button on a map tile shows the same report for
+   that tile without a button; releasing it closes the report.
 5. `ux-town-construction-preview-20260917`: hover/focus a construction option to
    preview its exact existing raster/position in the town scene with cost,
    prerequisites and useful effect text. No preview building gains a hotspot or

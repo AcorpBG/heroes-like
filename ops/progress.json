@@ -23208,13 +23208,15 @@
       "status": "completed",
       "targets": [
         "scenes/overworld/OverworldShell.gd",
-        "scripts/ui/OverworldInspection.gd"
+        "scripts/ui/OverworldInspection.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "scenes/shared/ScoutInspectionDialog.gd"
       ],
       "completionCriteria": [
         "Requirement 4 in docs/graphical-usability-cohesion.md implemented with real input/render coverage"
       ],
       "completedAt": "2026-09-17T20:48:37Z",
-      "notes": "Implemented and accepted in the coordinated batch; see docs/graphical-usability-cohesion.md for live behavior, checks and platform limits."
+      "notes": "Implemented and accepted in the coordinated batch; see docs/graphical-usability-cohesion.md for live behavior, checks and platform limits. 2026-10-09: right mouse button held on a map tile shows its scout report until release (tests/overworld_right_click_hold_inspection_regression.tscn)."
     },
     {
       "phase": "phase-6-production-alpha-layer",

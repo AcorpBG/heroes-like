@@ -3,12 +3,18 @@ extends AcceptDialog
 const VisualKit := preload("res://scripts/ui/FrontierVisualKit.gd")
 var snapshot: Dictionary = {}
 var _content: VBoxContainer
+# Mouse button that keeps a held report open; MOUSE_BUTTON_NONE for the normal
+# dialog that waits for "Return to map".
+var held_button := MOUSE_BUTTON_NONE
 
 func _ready() -> void:
 	title = "Scout report"
 	dialog_hide_on_ok = false
 	confirmed.connect(func(): VisualKit.hide_exclusive_dialog(self))
 	canceled.connect(func(): VisualKit.hide_exclusive_dialog(self))
+	visibility_changed.connect(func(): if not visible: _end_hold())
+	window_input.connect(_on_window_input)
+	set_process(false)
 	_apply_visual_theme()
 	var scroll := ScrollContainer.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -26,8 +32,10 @@ func _apply_visual_theme() -> void:
 	add_theme_stylebox_override("embedded_border", frame.duplicate())
 	add_theme_color_override("title_color", VisualKit.text_color("gold"))
 
-func open_report(report: Dictionary, viewport_size: Vector2) -> void:
+func open_report(report: Dictionary, viewport_size: Vector2, hold_button := MOUSE_BUTTON_NONE) -> void:
 	_apply_visual_theme()
+	held_button = hold_button
+	get_ok_button().visible = held_button == MOUSE_BUTTON_NONE
 	snapshot = report.duplicate(true)
 	for child in _content.get_children():
 		_content.remove_child(child)
@@ -57,7 +65,30 @@ func open_report(report: Dictionary, viewport_size: Vector2) -> void:
 	_add_label("Reward / guarded site · %s" % report.get("reward", "None disclosed"), "gold", 13)
 	_add_label(String(report.get("summary", "")), "muted", 13)
 	popup_centered(Vector2i(minf(480, viewport_size.x - 48), minf(480, viewport_size.y - 100)))
-	get_ok_button().grab_focus()
+	if held_button == MOUSE_BUTTON_NONE:
+		get_ok_button().grab_focus()
+		return
+	set_process(true)
+	# The button may already be up when the report opens (a very short click).
+	_close_if_released()
+
+func _process(_delta: float) -> void:
+	_close_if_released()
+
+func _on_window_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == held_button and not event.pressed:
+		_close_if_released()
+
+# The release can land on the map, on this window or outside the game window,
+# so the held report follows the button state rather than one release event.
+func _close_if_released() -> void:
+	if held_button == MOUSE_BUTTON_NONE or not visible: return
+	if Input.is_mouse_button_pressed(held_button): return
+	VisualKit.hide_exclusive_dialog(self)
+
+func _end_hold() -> void:
+	held_button = MOUSE_BUTTON_NONE
+	set_process(false)
 
 func _add_label(text: String, tone: String, font_size: int) -> void:
 	var label := Label.new()

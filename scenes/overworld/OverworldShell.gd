@@ -216,7 +216,7 @@ func _configure_scout_controls() -> void:
 	_inspect_tile_button = Button.new()
 	_inspect_tile_button.name = "InspectSelectedTile"
 	_inspect_tile_button.text = "Inspect"
-	_inspect_tile_button.tooltip_text = "Inspect the selected tile: scouted army, approximate strength, terrain and known reward. Does not move or attack."
+	_inspect_tile_button.tooltip_text = "Inspect the selected tile: scouted army, approximate strength, terrain and known reward. Hold the right mouse button on any map tile to inspect it until you let go. Does not move or attack."
 	_inspect_tile_button.accessibility_name = "Inspect selected tile without committing an order"
 	FrontierVisualKit.apply_button(_inspect_tile_button, "secondary", 74, 26, 12)
 	_inspect_tile_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -259,6 +259,12 @@ func _open_scout_inspection() -> void:
 	_clear_controller_move_state()
 	var report := Inspection.inspect_tile(_session, _selected_tile, LevelRules.view_level(_session))
 	_scout_dialog.open_report(report, get_viewport_rect().size)
+
+func _on_map_tile_inspect_held(tile: Vector2i) -> void:
+	if _session == null or _overworld_gameplay_movement_blocked_reason() != "": return
+	_clear_controller_move_state()
+	var report := Inspection.inspect_tile(_session, tile, LevelRules.view_level(_session))
+	_scout_dialog.open_report(report, get_viewport_rect().size, MOUSE_BUTTON_RIGHT)
 
 func _select_next_movable_hero() -> void:
 	if _overworld_gameplay_movement_blocked_reason() != "" or _overworld_order_input_blocked(): return
@@ -462,6 +468,7 @@ func _ready() -> void:
 	FrontierVisualKit.apply_button(_map_level_button, "secondary", 120.0, 24.0, 11)
 	_map_view.tile_pressed.connect(_on_map_tile_pressed)
 	_map_view.tile_hovered.connect(_on_map_tile_hovered)
+	_map_view.tile_inspect_held.connect(_on_map_tile_inspect_held)
 	# Mouse drags and wheel pans move the camera inside the map view; keep the
 	# minimap's viewport box on the same view.
 	_map_view.camera_changed.connect(_sync_minimap_viewport)
