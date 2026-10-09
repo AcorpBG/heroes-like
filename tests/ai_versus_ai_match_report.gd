@@ -12,6 +12,8 @@ extends Node
 # HEROES_AI_MATCH_TRACE    1 prints each day's heroes, goals and towns.
 # HEROES_AI_MATCH_SWAP     1 plays the same map with the factions' starting
 #                          places swapped, to tell map balance from faction.
+# HEROES_AI_MATCH_PLAYERS  computer players on the map (default 2); a match
+#                          of more ends when one player is left standing.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
@@ -46,6 +48,7 @@ func _run() -> void:
 		match_seed = DEFAULT_SEED
 	var max_days := int(OS.get_environment("HEROES_AI_MATCH_MAX_DAYS")) if OS.get_environment("HEROES_AI_MATCH_MAX_DAYS") != "" else (DEFAULT_MAX_DAYS if full_match else TEST_DAYS)
 	var swapped := OS.get_environment("HEROES_AI_MATCH_SWAP").strip_edges() not in ["", "0"]
+	var player_count := clampi(int(OS.get_environment("HEROES_AI_MATCH_PLAYERS")), 2, 8) if OS.get_environment("HEROES_AI_MATCH_PLAYERS") != "" else 2
 	var trace := OS.get_environment("HEROES_AI_MATCH_TRACE").strip_edges() not in ["", "0"]
 	var out_path := OS.get_environment("HEROES_AI_MATCH_OUT").strip_edges()
 	if out_path == "":
@@ -57,24 +60,31 @@ func _run() -> void:
 	for option in ScenarioSelectRulesScript.random_map_faction_options():
 		faction_ids.append(String(option.get("id", "")))
 	faction_ids.sort()
-	var drawn := [String(faction_ids[rng.randi_range(0, faction_ids.size() - 1)]), String(faction_ids[rng.randi_range(0, faction_ids.size() - 1)])]
+	var drawn := []
+	for _seat in range(player_count):
+		drawn.append(String(faction_ids[rng.randi_range(0, faction_ids.size() - 1)]))
 	var map_seed := str(rng.randi())
+	# A two-player match keeps the map seed it always drew.
+	if player_count != 2:
+		map_seed = "%s-p%d" % [map_seed, player_count]
 
-	var session = _start_session(map_seed, drawn[0])
+	var session = _start_session(map_seed, drawn[0], player_count)
 	if session == null:
 		return
 	var seats := []
 	for record in session.overworld.get("players", []):
 		seats.append(String(record.get("player_id", "")))
-	if seats.size() != 2:
-		_fail("Expected a two-player map, got %s." % JSON.stringify(seats))
+	if seats.size() != player_count:
+		_fail("Expected a %d-player map, got %s." % [player_count, JSON.stringify(seats)])
 		return
 	var start_treasury: Dictionary = session.overworld.get("resources", {}).duplicate(true)
 	if AiSeatRulesScript.hand_human_seat_to_ai(session) != seats[0]:
 		_fail("The human seat could not be handed to the computer.")
 		return
 	# Swapping keeps the map and trades the two factions' starting places.
-	var seat_factions := [drawn[1], drawn[0]] if swapped else drawn
+	var seat_factions := drawn.duplicate()
+	if swapped:
+		seat_factions.reverse()
 	for index in range(seats.size()):
 		if PlayerRules.faction_id(session, seats[index]) != String(seat_factions[index]):
 			_refound_seat(session, seats[index], String(seat_factions[index]))
@@ -163,7 +173,7 @@ func _run() -> void:
 		"ok": true,
 		"match_seed": match_seed,
 		"map_seed": map_seed,
-		"factions": [setup.seats[0].faction_id, setup.seats[1].faction_id],
+		"factions": setup.seats.map(func(row): return row.faction_id),
 		"handover": handover,
 		"winner": winner,
 		"winner_faction": PlayerRules.faction_id(session, winner) if winner not in ["", "none"] else "",
@@ -178,9 +188,9 @@ func _run() -> void:
 	_cleanup()
 	get_tree().quit(0)
 
-func _start_session(map_seed: String, faction_id: String):
+func _start_session(map_seed: String, faction_id: String, player_count: int = 2):
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
-		map_seed, "", "", 2, "land", false, "homm3_small",
+		map_seed, "", "", player_count, "land", false, "homm3_small",
 		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
 		faction_id, ""
 	)
