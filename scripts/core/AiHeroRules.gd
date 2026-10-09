@@ -52,6 +52,9 @@ const TOWN_BASE_VALUE := 4000.0
 const HOMELESS_TOWN_MULTIPLIER := 2.0
 ## Killing a hero that threatens one of our towns is worth this share of the town.
 const THREAT_KILL_SHARE := 0.5
+## A visible hostile hero this many times a hero's strength is a danger to it:
+## the hero keeps out of its reach (`_dangers`).
+const DANGER_RATIO := 1.15
 ## The most of its strength a main hero leaves behind to guard a town.
 const GUARD_SHARE_MAX := 0.25
 ## The main hero holds at least this share of the strongest hero's army.
@@ -596,7 +599,7 @@ static func _ensure_starting_hero(session: SessionStateStoreScript.SessionData, 
 		return {}
 	var hero_id := String(offer[0])
 	var faction_id := PlayerRules.faction_id(session, controller)
-	var army_id := String(load("res://scripts/core/RandomMapGeneratorRules.gd").DEFAULT_ARMY_BY_FACTION.get(faction_id, ""))
+	var army_id := String(load("res://scripts/persistence/NativeRandomMapPackageSessionBridge.gd").GENERATED_START_ARMY_BY_FACTION.get(faction_id, ""))
 	var stacks := []
 	for stack in ContentService.get_army_group(army_id).get("stacks", []):
 		if stack is Dictionary and int(stack.get("count", 0)) > 0:
@@ -1449,7 +1452,11 @@ static func _holds_gate(session: SessionStateStoreScript.SessionData, context: D
 	if threat.is_empty():
 		return false
 	if float(threat.power) * HERO_ATTACK_RATIO > hero_power(entry):
-		return is_main
+		# Holding the gate is worth it while the hero and the garrison make
+		# the town too strong to storm (TOWN_ATTACK_RATIO); against more, the
+		# hero would only be lost with the town, so it keeps out of reach.
+		var defense := hero_power(entry) + army_power(town.get("garrison", []))
+		return is_main and float(threat.power) < defense * TOWN_ATTACK_RATIO
 	var distance := maxi(absi(int(threat.x) - int(entry.get("x", 0))), absi(int(threat.y) - int(entry.get("y", 0))))
 	if distance <= int(entry.get(AI_HERO_KEY, {}).get("movement", {}).get("current", 0)):
 		return false
@@ -1684,6 +1691,8 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 		search = _search(session, context, entry, movement_max * FAR_SEARCH_DAYS)
 		best = _vetted_candidate(session, context, entry, search, movement_max)
 	if best.is_empty():
+		best = _evade(session, context, entry, search)
+	if best.is_empty():
 		best = _cornered_fight(session, entry, search, context)
 	if best.is_empty():
 		best = _idle_fight(session, context, entry, search)
@@ -1693,6 +1702,77 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 		return {}
 	best["path"] = _path_to(search, int(best.tile_index))
 	return best
+
+## Visible hostile heroes strong enough to beat this one (DANGER_RATIO), with
+## where they stand and how far they reach next turn. Kept for the decision.
+static func _dangers(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> Array:
+	var cache: Dictionary = context.get("decision", {})
+	var key := "dangers:%s" % String(entry.get("placement_id", ""))
+	if cache.has(key):
+		return cache[key]
+	if not cache.has("hostile"):
+		cache["hostile"] = _hostile_heroes(session, String(context.controller))
+	var power := hero_power(entry)
+	var result := []
+	for threat in cache.hostile:
+		if float(threat.power) >= power * DANGER_RATIO:
+			result.append(threat)
+	cache[key] = result
+	context["decision"] = cache
+	return result
+
+## Whether the hero standing in this town of its own, with the garrison, makes
+## it too strong for the strongest of `dangers` to storm (TOWN_ATTACK_RATIO).
+static func _deters(session: SessionStateStoreScript.SessionData, entry: Dictionary, town: Dictionary, dangers: Array) -> bool:
+	var strongest := 0.0
+	for threat in dangers:
+		strongest = maxf(strongest, float(threat.power))
+	return strongest < (hero_power(entry) + army_power(town.get("garrison", []))) * TOWN_ATTACK_RATIO
+
+## Whether a tile lies where one of `dangers` can reach next turn.
+static func _in_danger(dangers: Array, x: int, y: int, level: int) -> bool:
+	for threat in dangers:
+		if int(threat.get("level", 0)) != level:
+			continue
+		if maxi(absi(int(threat.x) - x), absi(int(threat.y) - y)) <= int(threat.get("reach", 10)) + 1:
+			return true
+	return false
+
+## A hero within reach of a much stronger hostile hero, with nothing safe to
+## do, walks to the tile it can reach today that lies farthest from it, so it
+## lives to fight on better terms. A human pulls back the same way.
+static func _evade(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary) -> Dictionary:
+	var dangers := _dangers(session, context, entry)
+	var level := LevelRules.level_of(entry)
+	if dangers.is_empty() or not _in_danger(dangers, int(entry.get("x", 0)), int(entry.get("y", 0)), level):
+		return {}
+	var size: Vector2i = context.map_size
+	var today := int(entry.get(AI_HERO_KEY, {}).get("movement", {}).get("current", 0))
+	var order: PackedInt32Array = search.get("order", PackedInt32Array())
+	var stops: Dictionary = search.get("stops", {})
+	var best_tile := -1
+	var best_gap := _danger_gap(dangers, int(entry.get("x", 0)), int(entry.get("y", 0)), level)
+	for position in range(1, int(search.get("order_count", 0))):
+		var tile_index := order[position]
+		if int(search.dist[tile_index]) > today or stops.has(tile_index):
+			continue
+		var gap := _danger_gap(dangers, tile_index % size.x, tile_index / size.x, level)
+		if gap > best_gap:
+			best_gap = gap
+			best_tile = tile_index
+	if best_tile < 0:
+		return {}
+	return {"kind": "wait", "id": "evade:%d" % best_tile, "index": best_tile, "value": 0.0, "tile_index": best_tile, "distance": int(search.dist[best_tile])}
+
+## How far a tile lies outside the reach of the nearest of `dangers` (negative
+## inside it).
+static func _danger_gap(dangers: Array, x: int, y: int, level: int) -> int:
+	var gap := 1 << 20
+	for threat in dangers:
+		if int(threat.get("level", 0)) != level:
+			continue
+		gap = mini(gap, maxi(absi(int(threat.x) - x), absi(int(threat.y) - y)) - int(threat.get("reach", 10)) - 1)
+	return gap
 
 ## A hero with nothing in reach looks past the player's own idle heroes. When
 ## something worth doing lies beyond one of them, that hero is asked to step
@@ -2029,8 +2109,13 @@ static func _best_candidate(session: SessionStateStoreScript.SessionData, contex
 	var needs := _resource_needs(session, context)
 	var known := _explored(session, context, LevelRules.level_of(entry))
 	var stops: Dictionary = search.get("stops", {})
+	var dangers := _dangers(session, context, entry)
+	var size: Vector2i = context.map_size
 	for tile_index in stops.keys():
 		var distance := int(search.dist[int(tile_index)])
+		# A much stronger hostile hero could reach it: the hero keeps away,
+		# except to hold its own town where that stops the attack.
+		var in_danger := not dangers.is_empty() and _in_danger(dangers, int(tile_index) % size.x, int(tile_index) / size.x, LevelRules.level_of(entry))
 		# Stepping into a guard's zone means fighting it first, as it does for
 		# the human: whatever else lies there is reached through that fight.
 		var guarded := false
@@ -2047,8 +2132,12 @@ static func _best_candidate(session: SessionStateStoreScript.SessionData, contex
 			if seen.has(key) and int(seen[key]) <= distance:
 				continue
 			seen[key] = distance
+			if in_danger and int(ref.kind) != STOP_TOWN:
+				continue
 			var candidate := _candidate(session, context, entry, ref, power, needs, search)
 			if candidate.is_empty() or int(avoid.get(String(candidate.get("id", "")), -1)) >= int(session.day):
+				continue
+			if in_danger and (String(candidate.get("kind", "")) != "town_own" or not _deters(session, entry, session.overworld.towns[int(candidate.index)], dangers)):
 				continue
 			var value := float(candidate.get("value", 0.0))
 			if value <= 0.0:
@@ -2063,6 +2152,8 @@ static func _best_candidate(session: SessionStateStoreScript.SessionData, contex
 				candidate["score"] = score
 				best = candidate
 	var explore := _exploration_candidate(session, context, entry, search)
+	if not explore.is_empty() and not dangers.is_empty() and _in_danger(dangers, int(explore.tile_index) % size.x, int(explore.tile_index) / size.x, LevelRules.level_of(entry)):
+		explore = {}
 	if not explore.is_empty():
 		var explore_score := float(explore.value) / (1.0 + float(explore.distance) / float(movement_max))
 		if String(goal.get("kind", "")) == "explore":

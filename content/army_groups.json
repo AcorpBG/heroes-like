@@ -5062,6 +5062,65 @@
         {"unit_id": "unit_veilmourn_gloamkeel_bulwarks", "count": 4}
       ],
       "content_batch_id": "content-six-uncrowned-sovereign-roads-10184"
+    },
+    {
+      "id": "army_start_embercourt",
+      "name": "Emberwell Muster",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_river_guard", "count": 16},
+        {"unit_id": "unit_ember_archer", "count": 7}
+      ]
+    },
+    {
+      "id": "army_start_mireclaw",
+      "name": "Blackbranch Muster",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 14},
+        {"unit_id": "unit_mire_slinger", "count": 8},
+        {"unit_id": "unit_bog_brute", "count": 2}
+      ]
+    },
+    {
+      "id": "army_start_sunvault",
+      "name": "Prismarch Muster",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_shard_guard", "count": 10},
+        {"unit_id": "unit_prism_adept", "count": 7},
+        {"unit_id": "unit_mirror_duelist", "count": 4}
+      ]
+    },
+    {
+      "id": "army_start_thornwake",
+      "name": "Graftroot Muster",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 11},
+        {"unit_id": "unit_thornwake_thornwhip_carriers", "count": 6},
+        {"unit_id": "unit_thornwake_sporeglass_menders", "count": 2}
+      ]
+    },
+    {
+      "id": "army_start_brasshollow",
+      "name": "Orevein Muster",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 9},
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 6},
+        {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 3}
+      ]
+    },
+    {
+      "id": "army_start_veilmourn",
+      "name": "Bellwake Muster",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 10},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 6},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 3}
+      ]
     }
   ]
 }

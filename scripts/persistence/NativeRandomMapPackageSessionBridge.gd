@@ -22,13 +22,19 @@ const H3M_TOWN_TYPE_PROJECT_IDENTITY := {
 	"fortress": {"faction_id": "faction_mireclaw", "town_id": "town_blackfen_gate"},
 	"elemental": {"faction_id": "faction_sunvault", "town_id": "town_prismhearth"},
 }
+## Every player's start hero on a generated map leads its faction's starting
+## muster, the human's and the computer players' alike (AiHeroRules reads this
+## table). The musters are about equal in strength (138-142 by the AI's
+## estimate); the faction army groups they copy ranged from 90 (Embercourt) to
+## 169 (Veilmourn), and the strongest two won every AI-against-AI game against
+## another faction (owner decision, 2026-10-08).
 const GENERATED_START_ARMY_BY_FACTION := {
-	"faction_embercourt": "army_emberwell_vanguard",
-	"faction_mireclaw": "army_blackbranch_raiders",
-	"faction_sunvault": "army_prismarch_vanguard",
-	"faction_thornwake": "army_graftroot_wardens",
-	"faction_brasshollow": "army_orevein_exactors",
-	"faction_veilmourn": "army_bellwake_privateers",
+	"faction_embercourt": "army_start_embercourt",
+	"faction_mireclaw": "army_start_mireclaw",
+	"faction_sunvault": "army_start_sunvault",
+	"faction_thornwake": "army_start_thornwake",
+	"faction_brasshollow": "army_start_brasshollow",
+	"faction_veilmourn": "army_start_veilmourn",
 }
 
 static func build_session_from_adoption(
@@ -256,7 +262,7 @@ static func _primary_hero_id(scenario_document: Variant, fallback: String) -> St
 static func _hero_state(hero_id: String, start: Dictionary, difficulty: String) -> Dictionary:
 	var hero_template := ContentService.get_hero(hero_id)
 	var faction_id := String(hero_template.get("faction_id", "faction_embercourt"))
-	var army_id := String(GENERATED_START_ARMY_BY_FACTION.get(faction_id, "army_emberwell_vanguard"))
+	var army_id := String(GENERATED_START_ARMY_BY_FACTION.get(faction_id, "army_start_embercourt"))
 	var army_state := _army_state(ContentService.get_army_group(army_id))
 	if not HeroCommandRulesScript.army_has_troops(army_state):
 		army_state = HeroCommandRulesScript.starting_army_for_hero(hero_template, "generated_start|%s" % hero_id)

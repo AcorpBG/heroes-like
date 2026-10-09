@@ -58,6 +58,10 @@ Rules:
 
 `ai-plays-by-player-rules-20261007` (completed, owner playtest fix): computer players act only through real heroes and towns under the human's rules (`AiHeroRules`): daily movement, fog-honest knowledge, utility-chosen errands (mines, sites, guards, towns, human heroes), auto-resolve fights checked with a preview, troop hand-overs to the main hero, and towns that hire, recruit, build and trade at the human's prices. Raids are gone and old saves migrate raid hosts to heroes once. Follow-ups: AI boats and level transit, scenario objectives. See `docs/ai-plays-by-player-rules.md`.
 
+### Even starting musters, AI avoids stronger heroes
+
+`ai-even-musters-danger-20261008` (in progress, owner request after the series-20261008 map 8 day-5 loss): every faction starts a generated map with a muster rated about 140 (`army_start_<faction>`, was 90-169), and AI heroes keep out of the next-turn reach of a visible hostile hero 1.15x their strength unless holding their own town deters it; the main hero holds a gate only while hero plus garrison deter the attack. Open: the walled test map run explores 530 tiles (needs 560) on the new trajectory. See `docs/ai-plays-by-player-rules.md`.
+
 ### Raid director removal
 
 `ai-raid-director-removal-20261007` (completed, follow-up of `ai-plays-by-player-rules-20261007`): the raid director nothing live called is removed from `EnemyAdventureRules`/`EnemyTurnRules` with its unit-level tests; the save migration, the AI site seizure and the multi-level path surfaces the RMG validation tools use stay. The headless harness raid cases (town and site defense, regroup, pressure coverage, objective targeting) are rewritten for heroes, and a computer player's own hero in a town's doorway no longer blocks hiring there. Open owner decision: the now inert Border Warden pillage resistance and `DifficultyRules` enemy pressure and raid knobs. See `docs/ai-plays-by-player-rules.md`.

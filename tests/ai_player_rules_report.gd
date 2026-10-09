@@ -295,20 +295,16 @@ func _start_session(size_class_id: String = "homm3_small", player_count: int = 2
 	OverworldRules.normalize_overworld_state(session)
 	return session
 
-## The human never moves in this run. A large army at home keeps a sensible AI
-## from ending the game early, so the run shows it working the map instead.
+## The human never moves in this run. A large garrison at home keeps a sensible
+## AI from ending the game early, so the run shows it working the map instead.
+## The idle hero keeps its own army: a hero forty times a computer hero's
+## strength would rightly keep the computer's heroes out of a fifth of a small
+## map (AiHeroRules._dangers).
 func _fortify_idle_human(session, faction_id: String = PLAYER_FACTION_ID) -> void:
 	var army_id := String(RandomMapGeneratorRules.DEFAULT_ARMY_BY_FACTION.get(faction_id, ""))
 	var stacks := []
 	for stack in ContentService.get_army_group(army_id).get("stacks", []):
 		stacks.append({"unit_id": String(stack.get("unit_id", "")), "count": int(stack.get("count", 0)) * 40})
-	var heroes: Array = session.overworld.get("player_heroes", [])
-	for index in range(heroes.size()):
-		var hero: Dictionary = heroes[index]
-		hero["army"] = {"id": "%s_army" % String(hero.get("id", "")), "name": "Field Army", "stacks": stacks.duplicate(true)}
-		heroes[index] = hero
-	session.overworld["player_heroes"] = heroes
-	session.overworld["army"] = {"id": "fortified", "name": "Field Army", "stacks": stacks.duplicate(true)}
 	for town in session.overworld.get("towns", []):
 		if town is Dictionary and String(town.get("owner", "")) == "player":
 			town["garrison"] = stacks.duplicate(true)

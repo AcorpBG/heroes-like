@@ -114531,6 +114531,18 @@
         "docs/ai-plays-by-player-rules.md"
       ],
       "notes": "Owner request: 10 random small maps, each played both ways round (seeds series-20261008-1..10). Found while running: AI hires built heroes without a session, so HeroCommandRules.new_growth_seed rolled a random growth seed (and the levels a veteran hire arrives with) and identical mirror games diverged. build_recruited_hero takes an optional growth_seed applied before starting levels; AiHeroRules._create_hero passes a session seed. All three mirror pairs then replayed identically. ai_versus_ai_match_report: the both-sides-fought check applies to the regression run only (a full match can end on day 4). Results: 20 games all decided, days 4-56 (median 31); of 7 pairs with different factions 3 decided by starting place, 4 by faction; Veilmourn 4/4, Brasshollow 2/2, Thornwake 4/6, Embercourt 1/2, Sunvault 2/6, Mireclaw 1/8; Day-2 main hero strength 158 (Embercourt) to 288 (Brasshollow); loss estimate 14.5% vs actual 14.3% over 383 battles; map 6 game 1 had 42 captures (28 unopposed) around Mireclaw's capital. Report: claude.ai artifact AI Match Series."
+    },
+    {
+      "id": "ai-even-musters-danger-20261008",
+      "title": "Even faction starting musters; AI heroes avoid much stronger hostile heroes",
+      "status": "in_progress",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ai_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Owner request after series map 8 (Veilmourn beat Mireclaw days 4-5). Implemented: army_start_<faction> musters rated 138-142 for generated maps (were 90-169); AiHeroRules DANGER_RATIO 1.15 with _dangers/_deters/_in_danger/_evade, gate holding only while it deters. Map 8 rerun: games last 13 and 39 days, both won from the (20,21) start. ai_versus_ai_match_report passes. Open: ai_player_rules_report walled map 530 tiles explored / 9 sites (needs 560 / 10) - the larger muster changes the trajectory (old army: 637 / 15; danger avoidance off: same 530), the main hero idles at home days 18-29 behind guards it cannot beat. Harness: town-defense threat now scaled to 1.35x down as well as up; remaining harness failures are on authored River Pass / Ninefold fixtures (route progression, site retake, Ninefold Brasshollow hold row), not chased per owner direction. Map 8 open route between capitals: generated package leaves an 18-tile obstacle-free path between the zone1-zone2 link guard and neighbouring guards; native RMG parity question for the H3MapEd obstacle/connection sealing phase, no same-seed H3MapEd reference available."
     }
   ],
   "project": "heroes-like",

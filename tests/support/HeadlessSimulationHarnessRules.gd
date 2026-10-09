@@ -103,10 +103,11 @@ const RECRUITMENT_HOST_EXPERIENCE := 5000
 ## Creatures the host leads: the main hero holds at least half the strongest
 ## army, which a tavern hire's starting army must not outweigh.
 const RECRUITMENT_HOST_COUNT := 40
-## The human hero threatening a town in the town-defense cases is at least this
-## many times the computer hero's strength, so it holds the gate rather than
-## attack (AiHeroRules.HERO_ATTACK_RATIO is 1.3).
-const HUMAN_THREAT_STRENGTH := 2.0
+## The human hero threatening a town in the town-defense cases is this many
+## times the computer hero's strength: too strong to attack (HERO_ATTACK_RATIO
+## 1.3) but not strong enough to storm the town it holds (TOWN_ATTACK_RATIO
+## 1.4), so the computer hero holds the gate.
+const HUMAN_THREAT_STRENGTH := 1.35
 ## What a computer player's heroes visibly get done on the map.
 const AI_HERO_OBJECTIVE_EVENT_TYPES := ["ai_site_seized", "ai_artifact_secured", "ai_guard_defeated", "ai_town_captured"]
 const STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET := 100
@@ -4519,8 +4520,10 @@ static func _set_town_retake_front(
 		return
 	failures.append("Missing town %s for live town-retake fixture." % placement_id)
 
-## Scales the human's heroes' armies up to at least `power` each: the threat
-## in the town-defense cases is a hero the computer hero cannot attack.
+## Scales the human's heroes' armies to about `power` each, down as well as
+## up: the threat in the town-defense cases is a hero the computer hero cannot
+## attack but that cannot storm the town it holds either, so a scenario's own
+## much larger army would make the computer hero rightly keep away instead.
 static func _strengthen_player_heroes(session: SessionStateStoreScript.SessionData, power: float) -> void:
 	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
 	for index in range(heroes.size()):
@@ -4528,13 +4531,31 @@ static func _strengthen_player_heroes(session: SessionStateStoreScript.SessionDa
 		if not (hero is Dictionary) or not (hero.get("army", {}) is Dictionary):
 			continue
 		var stacks: Array = hero.army.get("stacks", [])
-		var current := AiHeroRulesScript.army_power(stacks, hero)
-		if current <= 0.0 or current >= power:
-			continue
-		var scale := power / current
-		for stack in stacks:
-			if stack is Dictionary:
-				stack["count"] = int(ceil(float(stack.get("count", 0)) * scale))
+		# Spells add strength that does not scale with the troops: scale past
+		# the target, then drop single creatures while it stays within 3% below.
+		for _pass in range(4):
+			var current := AiHeroRulesScript.army_power(stacks, hero)
+			if current <= 0.0 or (_pass > 0 and current >= power):
+				break
+			for stack in stacks:
+				if stack is Dictionary:
+					stack["count"] = int(ceil(float(stack.get("count", 0)) * power / current))
+		for _trim in range(500):
+			var best := -1
+			var best_power := INF
+			for stack_index in range(stacks.size()):
+				var stack = stacks[stack_index]
+				if not (stack is Dictionary) or int(stack.get("count", 0)) <= 1:
+					continue
+				stack["count"] = int(stack.count) - 1
+				var trimmed := AiHeroRulesScript.army_power(stacks, hero)
+				stack["count"] = int(stack.count) + 1
+				if trimmed >= power * 0.97 and trimmed < best_power:
+					best = stack_index
+					best_power = trimmed
+			if best < 0:
+				break
+			stacks[best]["count"] = int(stacks[best].count) - 1
 		hero["army"]["stacks"] = stacks
 		heroes[index] = hero
 	session.overworld["player_heroes"] = heroes
