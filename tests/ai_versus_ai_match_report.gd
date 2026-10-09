@@ -116,6 +116,7 @@ func _run() -> void:
 	var captures_seen := [0]
 	var ai_ms_max := 0
 	var winner := ""
+	var town_weeks := [_town_snapshot(session)]
 	ledger.append(_day_row(session, seats))
 	while int(session.day) < max_days:
 		var started := Time.get_ticks_msec()
@@ -128,6 +129,8 @@ func _run() -> void:
 		if trace:
 			_print_trace(session, seats)
 		ledger.append(_day_row(session, seats))
+		if int(session.day) % 7 == 1:
+			town_weeks.append(_town_snapshot(session))
 		if AiSeatRulesScript.match_over(session):
 			var standing := AiSeatRulesScript.standing_players(session)
 			winner = String(standing[0]) if not standing.is_empty() else "none"
@@ -146,6 +149,7 @@ func _run() -> void:
 		"timeline": timeline,
 		"heroes": heroes_seen.values(),
 		"ledger": ledger,
+		"town_weeks": town_weeks,
 	}
 	var file := FileAccess.open(out_path, FileAccess.WRITE)
 	if file != null:
@@ -355,6 +359,26 @@ func _print_trace(session, seats: Array) -> void:
 		for town in _towns_of(session, seat):
 			towns.append("%s@%d,%d g%d" % [_town_name(town), int(town.get("x", 0)), int(town.get("y", 0)), int(AiHeroRulesScript.army_power(town.get("garrison", []))) ])
 		print("MATCH_TRACE d%d %s gold=%d %s | %s" % [int(session.day), seat, int(_state(session, seat).get("treasury", {}).get("gold", 0)), " ".join(heroes), " ".join(towns)])
+
+## Every town on the map as the week starts: who holds it, what stands in it,
+## what it still has for hire and what guards it.
+func _town_snapshot(session) -> Dictionary:
+	var rows := []
+	for town in session.overworld.get("towns", []):
+		if not (town is Dictionary):
+			continue
+		var owner := "neutral"
+		if String(town.get("owner", "")) == "enemy":
+			owner = PlayerRules.town_controller_id(town)
+		rows.append({
+			"name": _town_name(town), "x": int(town.get("x", 0)), "y": int(town.get("y", 0)), "owner": owner,
+			"faction": String(ContentService.get_town(String(town.get("town_id", ""))).get("faction_id", "")),
+			"built": (town.get("built_buildings", []) as Array).duplicate(),
+			"recruits": (town.get("available_recruits", {}) as Dictionary).duplicate(),
+			"garrison": AiHeroRulesScript.army_power(town.get("garrison", [])),
+			"stacks": (town.get("garrison", []) as Array).map(func(stack): return "%s:%d" % [String(stack.get("unit_id", "")), int(stack.get("count", 0))]),
+		})
+	return {"day": int(session.day), "towns": rows}
 
 func _day_row(session, seats: Array) -> Dictionary:
 	var row := {"day": int(session.day), "sides": {}}

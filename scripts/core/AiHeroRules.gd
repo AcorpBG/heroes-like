@@ -1265,6 +1265,8 @@ static func _recruit_town(session: SessionStateStoreScript.SessionData, context:
 				continue
 			var plan := HeroCommandRulesScript.army_addition_plan(town.get("garrison", []), {unit_id: count})
 			if not bool(plan.get("ok", false)):
+				plan = _make_room(town.get("garrison", []), unit_id, count)
+			if not bool(plan.get("ok", false)):
 				continue
 			var total: Dictionary = turn_rules._scale_resource_pool(cost, count)
 			_market_cover(session, town, treasury, total, true)
@@ -1282,6 +1284,26 @@ static func _recruit_town(session: SessionStateStoreScript.SessionData, context:
 		towns[index] = town
 		session.overworld["towns"] = towns
 	return events
+
+## A full garrison dismisses its weakest stack, as a human dismisses one from a
+## full army, when the creatures it would buy are stronger than that stack.
+## Without it a garrison holding seven odd stacks (strays of other factions,
+## two or three creatures left behind by heroes) bought nothing more: in a
+## four-player match a captured town kept the same seven stacks for four weeks
+## while its growth piled up unbought and the treasury reached 900,000 gold.
+static func _make_room(garrison: Array, unit_id: String, count: int) -> Dictionary:
+	var stacks := garrison.duplicate(true)
+	var weakest := -1
+	var weakest_power := INF
+	for index in range(stacks.size()):
+		var stack_power := army_power([stacks[index]])
+		if stack_power < weakest_power:
+			weakest = index
+			weakest_power = stack_power
+	if weakest < 0 or weakest_power >= army_power([{"unit_id": unit_id, "count": count}]):
+		return {"ok": false}
+	stacks.remove_at(weakest)
+	return HeroCommandRulesScript.army_addition_plan(stacks, {unit_id: count})
 
 ## Army transfers in an owned town, as a human would arrange them: the main
 ## (strongest) hero takes the garrison along unless the town is under threat;

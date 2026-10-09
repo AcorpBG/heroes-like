@@ -114543,6 +114543,18 @@
         "docs/ai-plays-by-player-rules.md"
       ],
       "notes": "Owner request after series map 8 (Veilmourn beat Mireclaw days 4-5). Implemented: army_start_<faction> musters rated 138-142 for generated maps (were 90-169); AiHeroRules DANGER_RATIO 1.15 with _dangers/_deters/_in_danger/_evade, gate holding only while it deters. Map 8 rerun: games last 13 and 39 days, both won from the (20,21) start. ai_versus_ai_match_report passes. Open: ai_player_rules_report walled map 530 tiles explored / 9 sites (needs 560 / 10) - the larger muster changes the trajectory (old army: 637 / 15; danger avoidance off: same 530), the main hero idles at home days 18-29 behind guards it cannot beat. Harness: town-defense threat now scaled to 1.35x down as well as up; remaining harness failures are on authored River Pass / Ninefold fixtures (route progression, site retake, Ninefold Brasshollow hold row), not chased per owner direction. Map 8 open route between capitals: generated package leaves an 18-tile obstacle-free path between the zone1-zone2 link guard and neighbouring guards; native RMG parity question for the H3MapEd obstacle/connection sealing phase, no same-seed H3MapEd reference available."
+    },
+    {
+      "id": "ai-garrison-room-20261009",
+      "title": "AI towns make room in a full garrison to recruit",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ai_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Owner question after a four-player AI match (seed ai-match-3854663367) ended in a 160-day stalemate with 922k/409k gold hoards. Weekly town snapshots (ai_versus_ai_match_report town_weeks) showed garrisons stuck at seven odd stacks so army_addition_plan rejected every new unit kind and growth piled up unbought for weeks. AiHeroRules._make_room dismisses the weakest garrison stack when the purchase is stronger. Same seed: decided Day 77, 24 captures (5 unopposed) instead of undecided at 160 with 82 (25). Random 4-player ai-match-3463369466: Thornwake wins Day 42. ai_versus_ai_match_report passes; ai_player_rules_report walled map unchanged (530 tiles, open in ai-even-musters-danger-20261008). ai_versus_ai_match_report gains HEROES_AI_MATCH_PLAYERS and weekly town snapshots."
     }
   ],
   "project": "heroes-like",
