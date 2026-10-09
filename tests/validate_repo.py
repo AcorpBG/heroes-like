@@ -27843,7 +27843,7 @@ def validate_battle_timing_check_detail_prefix_deduplication(errors: list[str]) 
             'var ready_spell_subject := ready_spell_label.trim_prefix("Cast ").strip_edges()',
             'if ready_spell_subject == "":',
             'ready_spell_subject = ready_spell_label',
-            'next_step = "Cast %s now if it improves this exchange, or keep mana and use a stack order." % ready_spell_subject',
+            'next_step = "Cast %s now if it helps; the stack still gives its order after the cast." % ready_spell_subject',
             '"ready_spell": ready_spell_label',
         ))
         ensure(all(index >= 0 for index in cue_order) and list(cue_order) == sorted(cue_order), errors, "Battle Timing cue must normalize only the next-action subject while preserving the exact ready action payload")

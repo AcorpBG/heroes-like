@@ -19,9 +19,13 @@ const TERMINAL_STATES := [
 ]
 
 
+## The next order on a player stack's turn: the hero's free cast when it
+## should cast now, else the stack's own order. allow_hero_cast false asks for
+## the stack's order only.
 static func player_autoplay_decision(
 	session: SessionStateStoreScript.SessionData,
-	apply_selection: bool = false
+	apply_selection: bool = false,
+	allow_hero_cast: bool = true
 ) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {
@@ -47,7 +51,8 @@ static func player_autoplay_decision(
 		session.battle,
 		active_stack,
 		"enemy",
-		commander_payload
+		commander_payload,
+		allow_hero_cast
 	)
 	if decision.is_empty():
 		return _fallback_player_autoplay_decision(
@@ -104,15 +109,13 @@ static func player_autoplay_decision(
 		if bool(validation.get("ok", false)):
 			decision["reason"] = "scored_tactical_spell_order"
 			return decision
-		decision["spell_validation_message"] = String(
+		# The hero cannot cast it: the stack still gives its own order.
+		var stack_order := player_autoplay_decision(session, apply_selection, false)
+		stack_order["refused_hero_cast"] = decision.duplicate(true)
+		stack_order["spell_validation_message"] = String(
 			validation.get("message", "Spell order unavailable.")
 		)
-		return _fallback_player_autoplay_decision(
-			session,
-			"scored_spell_order_unavailable",
-			apply_selection,
-			decision
-		)
+		return stack_order
 	var availability: Dictionary = BattleRulesScript.action_availability(session.battle)
 	if bool(availability.get(action, false)):
 		decision["reason"] = "scored_tactical_order"
@@ -163,6 +166,22 @@ static func resolve_active_battle(
 			continue
 		var decision := player_autoplay_decision(session, true)
 		var action := String(decision.get("action", "defend"))
+		if action == "cast_spell":
+			# The hero's cast is a free action: the same stack still gives its
+			# order in this step, so casting never uses up the step limit.
+			var cast_result: Dictionary = _perform_player_order(session, decision, action)
+			if String(cast_result.get("state", "")) == "invalid":
+				invalid_orders += 1
+			else:
+				action_counts[action] = int(action_counts.get(action, 0)) + 1
+				player_orders += 1
+				last_result = cast_result.duplicate(true)
+				final_state = String(cast_result.get("state", final_state))
+				if is_terminal_state(final_state):
+					terminal_result = cast_result.duplicate(true)
+					break
+			decision = player_autoplay_decision(session, true, false)
+			action = String(decision.get("action", "defend"))
 		if action in PLAYER_EXIT_ACTIONS:
 			forbidden_exit_orders += 1
 			action = "defend"

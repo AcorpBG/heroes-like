@@ -941,18 +941,27 @@ func _run_battle_ai_lethal_attack_priority_case() -> Dictionary:
 	var spell_selected: Dictionary = spell_report.get("selected", {}) if spell_report.get("selected", {}) is Dictionary else {}
 	if String(spell_selected.get("spell_id", "")) != "spell_lantern_phalanx":
 		return {"ok": false, "error": "Lethal priority fixture should expose a non-lethal setup spell candidate, got %s" % spell_report}
+	# The hero's cast is a free action (battle rework, 2026-10-09): the setup
+	# spell may go first, and the stack still takes the guaranteed kill.
 	var live_action := BattleAiRules.choose_enemy_action(battle, active, enemy_hero)
-	if String(live_action.get("action", "")) != "shoot" or String(live_action.get("target_battle_id", "")) != "player_fragile":
-		return {"ok": false, "error": "Live enemy choice should take guaranteed lethal shot instead of setup spell, got %s spell_report=%s" % [live_action, spell_report]}
 	var candidate_evidence: Dictionary = live_action.get("candidate_scores", {}) if live_action.get("candidate_scores", {}) is Dictionary else {}
 	if not candidate_evidence.has("cast_spell"):
 		return {"ok": false, "error": "Lethal priority fixture did not keep setup spell candidate evidence: %s" % live_action}
+	var stack_order := BattleAiRules.choose_enemy_action(battle, active, enemy_hero, false)
+	if String(stack_order.get("action", "")) != "shoot" or String(stack_order.get("target_battle_id", "")) != "player_fragile":
+		return {"ok": false, "error": "The stack's own order should take the guaranteed lethal shot, got %s spell_report=%s" % [stack_order, spell_report]}
+	var cast_battle := battle.duplicate(true)
+	cast_battle["commander_spell_cast_rounds"] = {"enemy": int(cast_battle.get("round", 1))}
+	var after_cast := BattleAiRules.choose_enemy_action(cast_battle, _stack_by_id(cast_battle, "enemy_lethal_archer"), enemy_hero)
+	if String(after_cast.get("action", "")) != "shoot" or String(after_cast.get("target_battle_id", "")) != "player_fragile":
+		return {"ok": false, "error": "After the hero's cast the stack should take the guaranteed lethal shot, got %s" % after_cast}
 	return {
 		"ok": true,
 		"selected_spell_id": String(spell_selected.get("spell_id", "")),
 		"spell_target_id": String(spell_selected.get("target_battle_id", "")),
 		"live_action": String(live_action.get("action", "")),
-		"live_target_id": String(live_action.get("target_battle_id", "")),
+		"stack_order": String(stack_order.get("action", "")),
+		"stack_order_target_id": String(stack_order.get("target_battle_id", "")),
 		"setup_spell_candidate_present": true,
 	}
 

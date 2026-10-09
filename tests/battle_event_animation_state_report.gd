@@ -6,6 +6,8 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 
 const OUTPUT_DIR := "res://.artifacts/battle_event_animation_state_report"
 const REPORT_ID := "BATTLE_EVENT_ANIMATION_STATE_REPORT"
+# The player's hero casts every spell in this report.
+const PLAYER_HERO_ID := "hero:player"
 
 var _errors: Array[String] = []
 var _original_settings: Dictionary = {}
@@ -731,33 +733,33 @@ func _validate_spell_cast_state() -> void:
 	session.battle["player_commander_state"] = _spellcaster_state()
 	_set_stack_field(session.battle, "enemy_0", "total_health", 999)
 	var result := BattleRulesScript.cast_player_spell(session, "spell_cinder_burst")
-	var caster_state := _state_for(session, "player_0")
+	var caster_state := BattleRulesScript.animation_state_for_stack(session.battle, {"battle_id": PLAYER_HERO_ID})
 	var target_state := _state_for(session, "enemy_0")
 	_expect_ok("spell cast action", result)
+	_expect_equal("spell cast keeps the stack's turn", String(session.battle.get("active_stack_id", "")), "player_0")
 	_expect_equal("spell caster animation state", caster_state, "cast_support_anchor")
 	_expect_equal("spell target animation state", target_state, "status_applied")
-	_expect_event("spell caster queue", session.battle, "player_0", "battle_unit_cast", "cast_support_anchor")
+	_expect_event("spell caster queue", session.battle, PLAYER_HERO_ID, "battle_unit_cast", "cast_support_anchor")
 	_expect_event("spell target queue", session.battle, "enemy_0", "battle_status_applied", "status_applied")
 	await get_tree().create_timer(0.08).timeout
 	var board_summary := _board_summary_for_session(session)
-	var caster_stack := _summary_stack_entry(board_summary, "player_0")
+	var active_stack := _summary_stack_entry(board_summary, "player_0")
 	var target_stack := _summary_stack_entry(board_summary, "enemy_0")
 	var motion_count := int(board_summary.get("presentation_motion_count", 0))
 	var motion_roles: Dictionary = board_summary.get("presentation_motion_roles", {}) if board_summary.get("presentation_motion_roles", {}) is Dictionary else {}
-	_expect_equal("spell caster presentation role", String(caster_stack.get("presentation_motion_role", "")), "cast_anchor")
-	_expect_equal("spell caster presentation target", String(caster_stack.get("presentation_motion_target_battle_id", "")), "enemy_0")
+	_expect_equal("spell active stack stays put", String(active_stack.get("presentation_motion_role", "")), "")
 	_expect_equal("spell target presentation role", String(target_stack.get("presentation_motion_role", "")), "status_pulse")
-	_expect_equal("spell target presentation source", String(target_stack.get("presentation_motion_source_battle_id", "")), "player_0")
-	if motion_count < 2:
+	_expect_equal("spell target presentation source", String(target_stack.get("presentation_motion_source_battle_id", "")), PLAYER_HERO_ID)
+	if motion_count < 1:
 		_error("Spell/status presentation motion count was too low: %s." % board_summary)
-	if int(motion_roles.get("cast_anchor", 0)) < 1 or int(motion_roles.get("status_pulse", 0)) < 1:
+	if int(motion_roles.get("cast_anchor", 0)) != 0 or int(motion_roles.get("status_pulse", 0)) < 1:
 		_error("Spell/status presentation roles were not counted in board summary: %s." % board_summary)
-	var caster_event := _event_record_for(session.battle, "player_0", "battle_unit_cast")
+	var caster_event := _event_record_for(session.battle, PLAYER_HERO_ID, "battle_unit_cast")
 	var target_event := _event_record_for(session.battle, "enemy_0", "battle_status_applied")
 	_expect_equal("spell caster event spell id", String(caster_event.get("spell_id", "")), "spell_cinder_burst")
 	_expect_equal("spell target event spell id", String(target_event.get("spell_id", "")), "spell_cinder_burst")
 	var cue_playback: Dictionary = board_summary.get("cue_playback", {}) if board_summary.get("cue_playback", {}) is Dictionary else {}
-	var caster_cue := _cue_record_for(cue_playback, "player_0")
+	var caster_cue := _cue_record_for(cue_playback, PLAYER_HERO_ID)
 	_expect_array_contains("spell caster cue vfx", caster_cue.get("selected_vfx_cue_ids", []), "vfx_spell_cinder_burst")
 	_expect_array_contains("spell caster cue audio", caster_cue.get("selected_audio_cue_ids", []), "audio_spell_cinder_burst")
 	_expect_array_contains("spell caster generic vfx fallback", caster_cue.get("selected_vfx_cue_ids", []), "vfx_placeholder_cast_anchor")
@@ -766,12 +768,14 @@ func _validate_spell_cast_state() -> void:
 	var cast_anchor_vfx := _vfx_entry_for(vfx_playback, "cast_anchor")
 	_expect_equal("cast anchor imported vfx", str(bool(cast_anchor_vfx.get("asset_loaded", false))), "true")
 	_expect_equal("cast anchor vfx asset path", String(cast_anchor_vfx.get("asset_path", "")), "res://art/battle/vfx/core_cast_anchor.png")
+	# The hero stands beside its army: the cast plays past the player's edge.
+	_expect_int("cast anchor beside the player's edge", int(cast_anchor_vfx.get("subject_q", 0)), -1)
 	var spell_vfx := _vfx_entry_for(vfx_playback, "spell_cinder_burst")
 	_expect_equal("spell-specific vfx cue", String(spell_vfx.get("cue_id", "")), "vfx_spell_cinder_burst")
 	_expect_equal("spell-specific imported vfx", str(bool(spell_vfx.get("asset_loaded", false))), "true")
 	_expect_equal("spell-specific imported asset", String(spell_vfx.get("asset_path", "")), "res://art/battle/vfx/spell_cinder_burst.png")
 	var audio_playback: Dictionary = board_summary.get("audio_playback", {}) if board_summary.get("audio_playback", {}) is Dictionary else {}
-	var caster_audio := _audio_record_for(audio_playback, "player_0")
+	var caster_audio := _audio_record_for(audio_playback, PLAYER_HERO_ID)
 	_expect_array_contains("spell caster runtime audio", caster_audio.get("selected_audio_cue_ids", []), "audio_spell_cinder_burst")
 	if String(_audio_asset_path_for(caster_audio, "audio_spell_cinder_burst")).find("spell_cinder_burst.wav") < 0:
 		_error("Spell-specific audio did not use the imported Cinder Burst runtime WAV asset: %s" % caster_audio)
@@ -781,8 +785,8 @@ func _validate_spell_cast_state() -> void:
 		"events": BattleRulesScript.animation_event_states(session.battle),
 		"queue": BattleRulesScript.animation_event_queue(session.battle),
 	}
-	case_payload["caster_presentation_role"] = String(caster_stack.get("presentation_motion_role", ""))
-	case_payload["caster_presentation_target"] = String(caster_stack.get("presentation_motion_target_battle_id", ""))
+	case_payload["active_stack_presentation_role"] = String(active_stack.get("presentation_motion_role", ""))
+	case_payload["cast_anchor_vfx"] = cast_anchor_vfx
 	case_payload["target_presentation_role"] = String(target_stack.get("presentation_motion_role", ""))
 	case_payload["target_presentation_source"] = String(target_stack.get("presentation_motion_source_battle_id", ""))
 	case_payload["presentation_motion_count"] = motion_count
@@ -968,7 +972,7 @@ func _validate_spell_school_batch_vfx_identities() -> void:
 		var normal_summary := await _board_summary_for_session_after_started_playback(normal_session)
 		_expect_equal("school batch presentation authority %s" % spell_id, JSON.stringify(normal_session.to_dict()), JSON.stringify(normal_authority))
 		var normal_cues: Dictionary = normal_summary.get("cue_playback", {}) if normal_summary.get("cue_playback", {}) is Dictionary else {}
-		var normal_cue := _cue_record_for(normal_cues, "player_0")
+		var normal_cue := _cue_record_for(normal_cues, PLAYER_HERO_ID)
 		_expect_array_contains("school batch exact vfx cue %s" % spell_id, normal_cue.get("selected_vfx_cue_ids", []), expected_cue_id)
 		var normal_vfx: Dictionary = normal_summary.get("vfx_playback", {}) if normal_summary.get("vfx_playback", {}) is Dictionary else {}
 		var normal_entry := _vfx_entry_for_cue(normal_vfx, expected_cue_id)
@@ -982,7 +986,7 @@ func _validate_spell_school_batch_vfx_identities() -> void:
 		_expect_equal("school batch reduced authority parity %s" % spell_id, JSON.stringify(reduced_session.to_dict()), JSON.stringify(normal_authority))
 		var reduced_summary := await _board_summary_for_session_after_started_playback(reduced_session)
 		var reduced_cues: Dictionary = reduced_summary.get("cue_playback", {}) if reduced_summary.get("cue_playback", {}) is Dictionary else {}
-		var reduced_cue := _cue_record_for(reduced_cues, "player_0")
+		var reduced_cue := _cue_record_for(reduced_cues, PLAYER_HERO_ID)
 		if reduced_cue.get("selected_vfx_cue_ids", []).has(expected_cue_id):
 			_error("Reduced presentation retained school-batch strong VFX %s: %s." % [spell_id, reduced_cue])
 		rows[spell_id] = {
@@ -1089,7 +1093,7 @@ func _validate_generic_spell_batch_vfx_identities() -> void:
 		var normal_summary := await _board_summary_for_session_after_started_playback(normal_session)
 		_expect_equal("generic batch presentation authority %s" % spell_id, JSON.stringify(normal_session.to_dict()), JSON.stringify(normal_authority))
 		var normal_cues: Dictionary = normal_summary.get("cue_playback", {}) if normal_summary.get("cue_playback", {}) is Dictionary else {}
-		var normal_cue := _cue_record_for(normal_cues, "player_0")
+		var normal_cue := _cue_record_for(normal_cues, PLAYER_HERO_ID)
 		_expect_array_contains("generic batch exact vfx cue %s" % spell_id, normal_cue.get("selected_vfx_cue_ids", []), expected_cue_id)
 		var normal_vfx: Dictionary = normal_summary.get("vfx_playback", {}) if normal_summary.get("vfx_playback", {}) is Dictionary else {}
 		var normal_entry := _vfx_entry_for_cue(normal_vfx, expected_cue_id)
@@ -1103,7 +1107,7 @@ func _validate_generic_spell_batch_vfx_identities() -> void:
 		_expect_equal("generic batch reduced authority parity %s" % spell_id, JSON.stringify(reduced_session.to_dict()), JSON.stringify(normal_authority))
 		var reduced_summary := await _board_summary_for_session_after_started_playback(reduced_session)
 		var reduced_cues: Dictionary = reduced_summary.get("cue_playback", {}) if reduced_summary.get("cue_playback", {}) is Dictionary else {}
-		var reduced_cue := _cue_record_for(reduced_cues, "player_0")
+		var reduced_cue := _cue_record_for(reduced_cues, PLAYER_HERO_ID)
 		if reduced_cue.get("selected_vfx_cue_ids", []).has(expected_cue_id):
 			_error("Reduced presentation retained generic-batch strong VFX %s: %s." % [spell_id, reduced_cue])
 		effect_type_counts[effect_type] = int(effect_type_counts.get(effect_type, 0)) + 1
@@ -1201,17 +1205,17 @@ func _resonant_chorus_policy_case(reduce_motion: bool, reduce_flashes: bool) -> 
 	session.battle["player_commander_state"] = _spellcaster_state(["spell_resonant_chorus"])
 	var result := BattleRulesScript.cast_player_spell(session, "spell_resonant_chorus")
 	_expect_ok("resonant chorus policy action", result)
-	var cast_event := _event_record_for(session.battle, "player_0", "battle_unit_cast")
+	var cast_event := _event_record_for(session.battle, PLAYER_HERO_ID, "battle_unit_cast")
 	_expect_equal("resonant chorus public cast event spell id", String(cast_event.get("spell_id", "")), "spell_resonant_chorus")
 	var authority_after_cast: Dictionary = session.to_dict()
 	var summary := await _board_summary_for_session_after_audio(session)
 	_expect_equal("resonant chorus presentation preserves session authority", JSON.stringify(session.to_dict()), JSON.stringify(authority_after_cast))
 	var cue_playback: Dictionary = summary.get("cue_playback", {}) if summary.get("cue_playback", {}) is Dictionary else {}
-	var cue := _cue_record_for(cue_playback, "player_0")
+	var cue := _cue_record_for(cue_playback, PLAYER_HERO_ID)
 	var vfx_playback: Dictionary = summary.get("vfx_playback", {}) if summary.get("vfx_playback", {}) is Dictionary else {}
 	var vfx := _vfx_entry_for_cue(vfx_playback, "vfx_spell_resonant_chorus") if not reduce_motion and not reduce_flashes else {}
 	var audio_playback: Dictionary = summary.get("audio_playback", {}) if summary.get("audio_playback", {}) is Dictionary else {}
-	var audio := _audio_record_for(audio_playback, "player_0")
+	var audio := _audio_record_for(audio_playback, PLAYER_HERO_ID)
 	return {
 		"reduce_motion": reduce_motion,
 		"reduce_flashes": reduce_flashes,
@@ -1248,7 +1252,7 @@ func _validate_reduced_flash_spell_state() -> void:
 	SettingsService.settings["accessibility"]["reduce_motion"] = original_reduce_motion
 	SettingsService.settings["accessibility"]["reduce_flashes"] = original_reduce_flashes
 	var cue_playback: Dictionary = summary.get("cue_playback", {}) if summary.get("cue_playback", {}) is Dictionary else {}
-	var caster_cue := _cue_record_for(cue_playback, "player_0")
+	var caster_cue := _cue_record_for(cue_playback, PLAYER_HERO_ID)
 	var selected_vfx: Array = caster_cue.get("selected_vfx_cue_ids", []) if caster_cue.get("selected_vfx_cue_ids", []) is Array else []
 	var selected_audio: Array = caster_cue.get("selected_audio_cue_ids", []) if caster_cue.get("selected_audio_cue_ids", []) is Array else []
 	_expect_equal("reduced-flash caster animation state", String(caster_cue.get("selected_animation_state", "")), "cast_support_anchor")
@@ -1259,11 +1263,11 @@ func _validate_reduced_flash_spell_state() -> void:
 		_error("Reduced-flash battle playback retained a strong spell overlay: %s" % caster_cue)
 	_expect_array_contains("reduced-flash spell audio", selected_audio, "audio_spell_cinder_burst")
 	_expect_array_contains("reduced-flash generic audio", selected_audio, "audio_placeholder_cast")
-	var caster_stack := _summary_stack_entry(summary, "player_0")
-	_expect_equal("reduced-flash caster motion role", String(caster_stack.get("presentation_motion_role", "")), "cast_anchor")
+	var active_stack := _summary_stack_entry(summary, "player_0")
+	_expect_equal("reduced-flash active stack stays put", String(active_stack.get("presentation_motion_role", "")), "")
 	_report["cases"]["reduced_flash_spell"] = {
 		"cue": caster_cue,
-		"stack": caster_stack,
+		"stack": active_stack,
 		"vfx_playback": summary.get("vfx_playback", {}),
 		"audio_playback": summary.get("audio_playback", {}),
 	}

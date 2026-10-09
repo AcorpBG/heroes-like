@@ -1650,9 +1650,9 @@ func _play_next_action_frame() -> void:
 
 func _record_battle_log_frame(frame: Dictionary) -> String:
 	var event: Dictionary = frame.get("playback_event", {})
-	var actor := BattleRules._get_stack_by_id(frame, String(event.get("battle_id", "")))
+	var actor_id := String(event.get("battle_id", ""))
 	var target := BattleRules._get_stack_by_id(frame, String(event.get("target_battle_id", "")))
-	var caption := "%s · %s: %s" % [String(actor.get("side", "")).capitalize(), BattleRules._stack_label(actor), String(event.get("event_id", "action")).trim_prefix("battle_unit_").trim_prefix("battle_").replace("_", " ").capitalize()]
+	var caption := "%s · %s: %s" % [BattleRules.battle_actor_side(frame, actor_id).capitalize(), BattleRules.battle_actor_label(frame, actor_id), String(event.get("event_id", "action")).trim_prefix("battle_unit_").trim_prefix("battle_").replace("_", " ").capitalize()]
 	if not target.is_empty(): caption += " → " + BattleRules._stack_label(target)
 	if int(event.get("damage",0)) > 0:
 		caption += " · %d damage · %d lost" % [int(event.damage),int(event.get("casualties",0))]
@@ -3167,7 +3167,7 @@ func _battle_timing_check_cue_surface(timing_board: String = "") -> Dictionary:
 		var ready_spell_subject := ready_spell_label.trim_prefix("Cast ").strip_edges()
 		if ready_spell_subject == "":
 			ready_spell_subject = ready_spell_label
-		next_step = "Cast %s now if it improves this exchange, or keep mana and use a stack order." % ready_spell_subject
+		next_step = "Cast %s now if it helps; the stack still gives its order after the cast." % ready_spell_subject
 	elif spell_window.to_lower().contains("cast this round") or spell_window.to_lower().contains("unit timing"):
 		readiness = "Order"
 		next_step = "Use the best ready stack order; the commander spell window is not the main lever now."

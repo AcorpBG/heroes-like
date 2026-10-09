@@ -81,6 +81,9 @@ const PLAYBACK_APPLIED_CASUALTIES_KEY := "_playback_applied_casualties"
 const PLAYBACK_TARGET_BEFORE_KEY := "_playback_target_before"
 const COMMANDER_SPELL_CAST_ROUNDS_KEY := "commander_spell_cast_rounds"
 const ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY := "_enemy_commander_spell_cast_in_drain"
+# A hero casts from beside its army, not from a stack: its animation and
+# presentation events name it "hero:player" or "hero:enemy".
+const HERO_ACTOR_PREFIX := "hero:"
 const SELECTED_TARGET_CONTINUITY_KEY := "selected_target_continuity_id"
 const SELECTED_TARGET_CLOSING_KEY := "selected_target_closing_context"
 # Stacks that waited this round, in the order they waited; cleared each round.
@@ -2667,7 +2670,7 @@ static func spell_consequence_preview(session: SessionStateStoreScript.SessionDa
 		effect = "%d damage; %d lost | No retaliation" % [damage, int(losses.min_units)]
 	return {"ok": true, "action": "cast_spell:" + spell_id, "target_id": String(target.get("battle_id", "")),
 		"destination": _stack_hex(active).duplicate(true), "mana_cost": cost, "damage": damage, "casualties": int(losses.min_units),
-		"message": "%s → %s | %d mana | End %s\n%s" % [String(spell.get("name", spell_id)), _stack_label(target), cost, _hex_label(_stack_hex(active)), effect]}
+		"message": "%s → %s | %d mana | %s keeps its turn\n%s" % [String(spell.get("name", spell_id)), _stack_label(target), cost, _stack_label(active), effect]}
 
 static func describe_initiative_track(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
@@ -3083,7 +3086,7 @@ static func action_readiness_confirmation_payload(session: SessionStateStoreScri
 
 	var option_parts := []
 	if spell_label != "":
-		option_parts.append("cast %s" % spell_label)
+		option_parts.append("cast %s first (the stack keeps its order)" % spell_label)
 	if hold_ready and action_id != "defend":
 		option_parts.append("Defend to hold")
 	var option_text := ""
@@ -6046,9 +6049,10 @@ static func latest_animation_event_presentation_payload(session: SessionStateSto
 	var actor := _get_stack_by_id(session.battle, battle_id)
 	var source := _get_stack_by_id(session.battle, String(event.get("source_battle_id", "")))
 	var target := _get_stack_by_id(session.battle, String(event.get("target_battle_id", "")))
-	var actor_label := _stack_label(actor) if not actor.is_empty() else battle_id
+	var actor_label := battle_actor_label(session.battle, battle_id) if is_hero_actor_id(battle_id) else (_stack_label(actor) if not actor.is_empty() else battle_id)
 	var target_label := _stack_label(target) if not target.is_empty() else ""
-	var source_label := _stack_label(source) if not source.is_empty() else ""
+	var source_id := String(event.get("source_battle_id", ""))
+	var source_label := battle_actor_label(session.battle, source_id) if is_hero_actor_id(source_id) else (_stack_label(source) if not source.is_empty() else "")
 	var event_id := String(event.get("event_id", ""))
 	var action_text := _animation_event_action_text(event_id, actor_label, source_label, target_label, event)
 	if action_text == "":
@@ -6089,8 +6093,11 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 		return {"ok": false, "message": "No battle is active.", "state": "invalid"}
 
 	var active_stack = get_active_stack(session.battle)
+	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
+		return {"ok": false, "message": "It is not the player's turn.", "state": "invalid"}
 	if _commander_spell_cast_this_round(session.battle, "player"):
 		return {"ok": false, "message": "The commander has already cast a spell this round.", "state": "invalid"}
+	var caster := _hero_caster(session.battle, "player")
 	_ensure_damage_rng_state(session, session.battle)
 	var resolution := _player_spell_resolution(session, spell_id, target_id)
 	if not bool(resolution.get("ok", false)):
@@ -6185,7 +6192,7 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 		var spell_target_after = _get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))
 		var pressure_messages = _apply_damage_pressure(
 			session.battle,
-			active_stack,
+			caster,
 			target_before,
 			spell_target_after,
 			true,
@@ -6193,10 +6200,10 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 		)
 		if not pressure_messages.is_empty():
 			message = _join_messages([message, " ".join(pressure_messages)])
-	_mark_spell_animation_states(session.battle, active_stack, animation_resolution)
+	_mark_spell_animation_states(session.battle, caster, animation_resolution)
 	_append_spell_presentation_events(
 		session.battle,
-		active_stack,
+		caster,
 		resolution,
 		target_before,
 		_get_stack_by_id(session.battle, String(resolution.get("target_battle_id", ""))),
@@ -6208,15 +6215,18 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 		session.battle,
 		{
 			"action": "cast_spell",
-			"side": String(active_stack.get("side", "")),
-			"battle_id": String(active_stack.get("battle_id", "")),
+			"side": "player",
+			"battle_id": String(caster.get("battle_id", "")),
 			"target_battle_id": String(resolution.get("target_battle_id", "")),
 		}
 	)
 	if not objective_messages.is_empty():
 		message = _join_messages([message, " ".join(objective_messages)])
 
-	return _complete_action(session, message)
+	# The cast is the hero's free action: the active stack keeps its turn.
+	var result := _complete_action(session, message, false)
+	result["hero_cast"] = true
+	return result
 
 static func move_active_stack_to_hex(session: SessionStateStoreScript.SessionData, q: int, r: int) -> Dictionary:
 	if session == null or session.battle.is_empty():
@@ -6760,9 +6770,30 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 		active_stack,
 		session.battle.get("enemy_hero", {})
 	)
+	if String(action.get("action", "")) != "cast_spell":
+		return _run_enemy_stack_order(session, active_stack, action)
+	# The hero casts first, as a free action; then the stack gives its own order.
+	var cast_result := _cast_enemy_spell(session, active_stack, action)
+	var cast_state := String(cast_result.get("state", "continue"))
+	if bool(cast_result.get("ok", false)) and cast_state != "continue":
+		return cast_result
+	var cast_message := String(cast_result.get("message", "")) if bool(cast_result.get("ok", false)) else ""
+	active_stack = _get_stack_by_id(session.battle, String(active_stack.get("battle_id", "")))
+	var order = BattleAiRulesScript.choose_enemy_action(
+		session.battle,
+		active_stack,
+		session.battle.get("enemy_hero", {}),
+		false
+	)
+	var order_result := _run_enemy_stack_order(session, active_stack, order)
+	if cast_message != "":
+		order_result["message"] = _join_messages([cast_message, String(order_result.get("message", ""))])
+	return order_result
+
+## The active enemy stack's own order (never a cast: the hero casts first).
+static func _run_enemy_stack_order(session: SessionStateStoreScript.SessionData, active_stack: Dictionary, action: Dictionary) -> Dictionary:
+	var targets = _alive_stacks_for_side(session.battle, "player")
 	match String(action.get("action", "")):
-		"cast_spell":
-			return _cast_enemy_spell(session, active_stack, action)
 		"retreat":
 			if not _battle_retreat_allowed(session.battle):
 				return {"ok": false, "message": "Enemy retreat is locked for this battle.", "state": "invalid"}
@@ -6890,6 +6921,7 @@ static func _resolve_enemy_defend(session: SessionStateStoreScript.SessionData, 
 
 static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, active_stack: Dictionary, action: Dictionary) -> Dictionary:
 	var target = _get_stack_by_id(session.battle, String(action.get("target_battle_id", "")))
+	var caster := _hero_caster(session.battle, "enemy")
 	var raw_enemy_hero: Dictionary = session.battle.get("enemy_hero", {}) if session.battle.get("enemy_hero", {}) is Dictionary else {}
 	var resolved_enemy_hero := BattleAiRulesScript._commander_payload_for_tactical_scoring(
 		BattleAiRulesScript._enemy_hero_state_for_ai(session.battle, raw_enemy_hero)
@@ -6994,7 +7026,7 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 		var spell_target_after = _get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))
 		var pressure_messages = _apply_damage_pressure(
 			session.battle,
-			active_stack,
+			caster,
 			target_before,
 			spell_target_after,
 			true,
@@ -7002,10 +7034,10 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 		)
 		if not pressure_messages.is_empty():
 			message = _join_messages([message, " ".join(pressure_messages)])
-	_mark_spell_animation_states(session.battle, active_stack, animation_resolution)
+	_mark_spell_animation_states(session.battle, caster, animation_resolution)
 	_append_spell_presentation_events(
 		session.battle,
-		active_stack,
+		caster,
 		resolution,
 		target_before,
 		_get_stack_by_id(session.battle, String(resolution.get("target_battle_id", ""))),
@@ -7017,15 +7049,23 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 		session.battle,
 		{
 			"action": "cast_spell",
-			"side": String(active_stack.get("side", "")),
-			"battle_id": String(active_stack.get("battle_id", "")),
+			"side": "enemy",
+			"battle_id": String(caster.get("battle_id", "")),
 			"target_battle_id": String(action.get("target_battle_id", "")),
 		}
 	)
 	if not objective_messages.is_empty():
 		message = _join_messages([message, " ".join(objective_messages)])
 
-	return _complete_enemy_action(session, message)
+	# The cast is the hero's free action: the active stack still gives its order.
+	var outcome = _evaluate_outcome(session)
+	if String(outcome.get("state", "")) != "":
+		return {
+			"ok": true,
+			"message": _join_messages([message, String(outcome.get("message", ""))]),
+			"state": String(outcome.get("state", "")),
+		}
+	return {"ok": true, "message": message, "state": "continue", "hero_cast": true}
 
 static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, attacker: Dictionary, target: Dictionary, is_ranged: bool) -> Dictionary:
 	if target.is_empty():
@@ -8710,6 +8750,43 @@ static func _mark_commander_spell_cast(battle: Dictionary, side: String) -> void
 	)
 	cast_rounds[side] = int(battle.get("round", 1))
 	battle[COMMANDER_SPELL_CAST_ROUNDS_KEY] = cast_rounds
+
+static func hero_actor_id(side: String) -> String:
+	return HERO_ACTOR_PREFIX + side
+
+static func is_hero_actor_id(actor_id: String) -> bool:
+	return actor_id.begins_with(HERO_ACTOR_PREFIX)
+
+static func hero_actor_side(actor_id: String) -> String:
+	return actor_id.trim_prefix(HERO_ACTOR_PREFIX) if is_hero_actor_id(actor_id) else ""
+
+## The name of the hero commanding a side, or "" when the battle has none.
+static func commander_name(battle: Dictionary, side: String) -> String:
+	var keys := ["player_commander_state", "player_hero"] if side == "player" else ["enemy_hero", "enemy_hero_payload"]
+	for key in keys:
+		var payload = battle.get(key, {})
+		if payload is Dictionary and String(payload.get("name", "")).strip_edges() != "":
+			return String(payload.get("name", "")).strip_edges()
+	return ""
+
+## The casting hero in the shape events and labels read from a stack.
+static func _hero_caster(battle: Dictionary, side: String) -> Dictionary:
+	var name := commander_name(battle, side)
+	if name == "":
+		name = "Your hero" if side == "player" else "The enemy hero"
+	return {"battle_id": hero_actor_id(side), "side": side, "name": name}
+
+## The label of an event's actor: a stack's name or the casting hero's.
+static func battle_actor_label(battle: Dictionary, actor_id: String) -> String:
+	if is_hero_actor_id(actor_id):
+		return String(_hero_caster(battle, hero_actor_side(actor_id)).get("name", ""))
+	return _stack_label(_get_stack_by_id(battle, actor_id))
+
+## The side of an event's actor, stack or hero.
+static func battle_actor_side(battle: Dictionary, actor_id: String) -> String:
+	if is_hero_actor_id(actor_id):
+		return hero_actor_side(actor_id)
+	return String(_get_stack_by_id(battle, actor_id).get("side", ""))
 
 static func _ensure_battle_hex_state(battle: Dictionary) -> void:
 	if battle.is_empty():
@@ -15116,6 +15193,8 @@ static func _append_spell_presentation_events(
 	var base_context := {
 		"action_id": action_id,
 		"actor_battle_id": String(caster_stack.get("battle_id", "")),
+		"actor_name": _stack_label(caster_stack),
+		"side": String(caster_stack.get("side", "")),
 		"target_battle_id": String(target_stack.get("battle_id", "")),
 		"spell_id": spell_id,
 		"spell_name": spell_name,

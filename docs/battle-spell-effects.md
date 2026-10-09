@@ -34,7 +34,7 @@ Every spell shows the status by its real name. By their flavour, the Snares, Bou
 ## Durations count the stack's own turns
 
 - A spell effect lasts for the next N turns of the stack it is on ("its next 2 turns"), however the rounds fall. Content keeps the field name `duration_rounds`; for spells it is that turn count (plus the power and specialty bonuses).
-- A spell cast on the stack whose turn it is does not spend that turn (casting ends the turn), so a 1-turn buff on it covers its next turn.
+- A spell cast on the stack whose turn it is does not spend that turn, so a 1-turn buff on it covers this turn and its next one ("until the end of its next turn"). Casting is the hero's free action (`docs/battle-rework.md`): a haste cast before the stack moves speeds up this move and still lasts through its next turn.
 - `turns_left` ticks down when the affected stack's turn ends (`BattleRules.spend_effect_turns`, called from `advance_turn`); round starts no longer end spell effects. Effects from other sources (abilities, towns) still last rounds.
 - When an effect changes initiative, the stacks still to act this round are put back in initiative order at once (`_resort_remaining_turn_order`), so haste and Staggered count the same round.
 

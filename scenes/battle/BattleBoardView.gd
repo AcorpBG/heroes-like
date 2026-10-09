@@ -2563,6 +2563,9 @@ func _sync_animation_playback_records() -> void:
 			var battle_id := String(stack.get("battle_id", ""))
 			if battle_id != "":
 				stack_ids[battle_id] = true
+	# A hero's cast plays its cues from beside its army (_hero_anchor_cell).
+	for side in ["player", "enemy"]:
+		stack_ids[BattleRulesScript.hero_actor_id(side)] = true
 	for battle_id in _stack_animation_playback_records.keys():
 		if not stack_ids.has(String(battle_id)):
 			_stack_animation_playback_records.erase(battle_id)
@@ -3554,10 +3557,11 @@ func _attack_presentation_motion(record: Dictionary, battle_id: String, cell: Ve
 
 func _impact_presentation_motion(record: Dictionary, battle_id: String, cell: Vector2i, hex_layout: Dictionary, stack_cells: Dictionary, progress: float) -> Dictionary:
 	var source_id := String(record.get("source_battle_id", "")).strip_edges()
-	if source_id == "" or not stack_cells.has(source_id):
+	var source_cells := _actor_cells(stack_cells)
+	if source_id == "" or not source_cells.has(source_id):
 		return {}
-	var source_cell: Vector2i = stack_cells.get(source_id)
-	if not _cell_in_bounds(cell) or not _cell_in_bounds(source_cell):
+	var source_cell: Vector2i = source_cells.get(source_id)
+	if not _cell_in_bounds(cell) or not _actor_cell_drawable(source_cell):
 		return {}
 	var source := _hex_center(source_cell, hex_layout)
 	var origin := _hex_center(cell, hex_layout)
@@ -3594,8 +3598,9 @@ func _status_clear_presentation_motion(record: Dictionary, battle_id: String, ce
 		return {}
 	var source_id := String(record.get("source_battle_id", "")).strip_edges()
 	var source_cell := cell
-	if source_id != "" and stack_cells.has(source_id):
-		source_cell = stack_cells.get(source_id)
+	var source_cells := _actor_cells(stack_cells)
+	if source_id != "" and source_cells.has(source_id):
+		source_cell = source_cells.get(source_id)
 	var origin := _hex_center(cell, hex_layout)
 	var radius := float(hex_layout.get("radius", 1.0))
 	var lift := sin(progress * PI) * radius * 0.08
@@ -3773,16 +3778,17 @@ func _draw_combat_vfx_foreground(hex_layout: Dictionary, stack_cells: Dictionary
 func _vfx_draw_entries(hex_layout: Dictionary, stack_cells: Dictionary) -> Array:
 	var entries: Array = []
 	var radius := float(hex_layout.get("radius", 1.0))
+	var actor_cells := _actor_cells(stack_cells)
 	for battle_id_value in _stack_animation_cue_playback_records.keys():
 		var battle_id := String(battle_id_value)
 		var record: Dictionary = _stack_animation_cue_playback_records.get(battle_id, {}) if _stack_animation_cue_playback_records.get(battle_id, {}) is Dictionary else {}
 		if BattleUnitPose.waiting_for_start(record, Time.get_ticks_msec()):
 			continue
 		var cue_ids: Array = record.get("selected_vfx_cue_ids", []) if record.get("selected_vfx_cue_ids", []) is Array else []
-		if cue_ids.is_empty() or not stack_cells.has(battle_id):
+		if cue_ids.is_empty() or not actor_cells.has(battle_id):
 			continue
-		var subject_cell: Vector2i = stack_cells.get(battle_id)
-		if not _cell_in_bounds(subject_cell):
+		var subject_cell: Vector2i = actor_cells.get(battle_id)
+		if not _actor_cell_drawable(subject_cell):
 			continue
 		var source_id := String(record.get("source_battle_id", "")).strip_edges()
 		if source_id == "":
@@ -3790,8 +3796,8 @@ func _vfx_draw_entries(hex_layout: Dictionary, stack_cells: Dictionary) -> Array
 		var target_id := String(record.get("target_battle_id", "")).strip_edges()
 		if target_id == "":
 			target_id = battle_id
-		var source_cell: Vector2i = stack_cells.get(source_id, subject_cell)
-		var target_cell: Vector2i = stack_cells.get(target_id, subject_cell)
+		var source_cell: Vector2i = actor_cells.get(source_id, subject_cell)
+		var target_cell: Vector2i = actor_cells.get(target_id, subject_cell)
 		var has_event_path := _cell_in_bounds(Vector2i(int(record.get("from_q", -1)), int(record.get("from_r", -1)))) and _cell_in_bounds(Vector2i(int(record.get("to_q", -1)), int(record.get("to_r", -1))))
 		if has_event_path:
 			source_cell = Vector2i(int(record.get("from_q", -1)), int(record.get("from_r", -1)))
@@ -3821,7 +3827,7 @@ func _vfx_draw_entries(hex_layout: Dictionary, stack_cells: Dictionary) -> Array
 				start = source_center
 				end = target_center
 				center = source_center.lerp(target_center, progress)
-			elif source_id != "" and stack_cells.has(source_id):
+			elif source_id != "" and actor_cells.has(source_id):
 				start = source_center
 			var asset_spec := _battle_vfx_manifest_cue(cue_id)
 			var asset_path := String(asset_spec.get("texture_path", "")).strip_edges()
@@ -5568,6 +5574,22 @@ func _stack_hex_cell(stack: Dictionary) -> Vector2i:
 
 func _cell_in_bounds(cell: Vector2i) -> bool:
 	return cell.x >= 0 and cell.x < HEX_COLUMNS and cell.y >= 0 and cell.y < HEX_ROWS
+
+## A hero casts from beside its army: its cast plays half a hex past the
+## board's edge on its side, level with the middle row.
+func _hero_anchor_cell(side: String) -> Vector2i:
+	return Vector2i(-1 if side == "player" else HEX_COLUMNS, int(HEX_ROWS / 2))
+
+## The stacks' cells plus both heroes' anchors, for effects that start at a
+## hero or point away from it.
+func _actor_cells(stack_cells: Dictionary) -> Dictionary:
+	var cells := stack_cells.duplicate()
+	for side in ["player", "enemy"]:
+		cells[BattleRulesScript.hero_actor_id(side)] = _hero_anchor_cell(side)
+	return cells
+
+func _actor_cell_drawable(cell: Vector2i) -> bool:
+	return _cell_in_bounds(cell) or cell == _hero_anchor_cell("player") or cell == _hero_anchor_cell("enemy")
 
 func _hex_cell_at_position(position: Vector2) -> Vector2i:
 	if _battle.is_empty():

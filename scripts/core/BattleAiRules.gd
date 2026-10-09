@@ -408,7 +408,11 @@ static func _field_objective_action_influence(
 					return 1 if acting_side == controller else 0
 	return 0
 
-static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, enemy_hero: Dictionary) -> Dictionary:
+## The next order on an enemy stack's turn. The hero's cast is a free action
+## that comes first: "cast_spell" when the hero should cast now (see
+## _hero_cast_worthwhile), else the stack's own order. With allow_hero_cast
+## false, or once the hero has cast this round, only the stack's order.
+static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, enemy_hero: Dictionary, allow_hero_cast: bool = true) -> Dictionary:
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "enemy":
 		return {}
 
@@ -418,7 +422,7 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 	if targets.is_empty():
 		return {}
 
-	var best_spell := _best_spell_action(scoring_battle, active_stack, resolved_enemy_hero, targets)
+	var best_spell := _best_spell_action(scoring_battle, active_stack, resolved_enemy_hero, targets) if allow_hero_cast else {}
 	var best_attack := _best_attack_action(scoring_battle, active_stack, targets)
 	var lethal_attack_available := _candidate_is_lethal_attack(best_attack, scoring_battle, active_stack)
 	var lethal_spell_available := _candidate_is_lethal_damage_spell(best_spell, scoring_battle, resolved_enemy_hero)
@@ -451,11 +455,18 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 		candidate_scores["cast_spell"] = float(best_spell.get("score", 0.0))
 	if not withdrawal_candidate.is_empty():
 		candidate_scores[String(withdrawal_candidate.get("action", "withdraw"))] = float(withdrawal_candidate.get("score", 0.0))
-	if not best_spell.is_empty() and (not preservation_exit_selected or lethal_spell_available):
-		if lethal_spell_available and not lethal_attack_available:
-			best = best_spell
-		elif (not lethal_attack_available or lethal_spell_available) and _candidate_beats(best_spell, best):
-			best = best_spell
+	if (not preservation_exit_selected or lethal_spell_available) and _hero_cast_worthwhile(
+		best_spell,
+		best_attack,
+		scoring_battle,
+		active_stack,
+		targets,
+		resolved_enemy_hero,
+		lethal_spell_available,
+		lethal_attack_available,
+		false
+	):
+		best = best_spell
 	var report := best.duplicate(true)
 	report["candidate_scores"] = candidate_scores
 	if String(report.get("action", "")) in ["retreat", "surrender"]:
@@ -690,7 +701,10 @@ static func _stack_by_battle_id(battle: Dictionary, battle_id: String) -> Dictio
 			return stack
 	return {}
 
-static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictionary, target_side: String = "", commander_payload: Dictionary = {}) -> Dictionary:
+## The next order on any stack's turn, for Quick Resolve, computer players'
+## battles and the suggested order: the hero's free cast first when it should
+## cast now, else the stack's own order (see choose_enemy_action).
+static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictionary, target_side: String = "", commander_payload: Dictionary = {}, allow_hero_cast: bool = true) -> Dictionary:
 	if battle.is_empty() or active_stack.is_empty() or _alive_count(active_stack) <= 0:
 		return {}
 	var acting_side := String(active_stack.get("side", ""))
@@ -703,7 +717,7 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 	if targets.is_empty():
 		return {}
 
-	var best_spell := _best_spell_action(scoring_battle, active_stack, resolved_commander_payload, targets)
+	var best_spell := _best_spell_action(scoring_battle, active_stack, resolved_commander_payload, targets) if allow_hero_cast else {}
 	var best_attack := _best_attack_action(scoring_battle, active_stack, targets)
 	var lethal_attack_available := _candidate_is_lethal_attack(best_attack, scoring_battle, active_stack)
 	var lethal_spell_available := _candidate_is_lethal_damage_spell(best_spell, scoring_battle, resolved_commander_payload)
@@ -723,9 +737,9 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 		var best_attack_score := float(best_attack.get("score", -9999.0))
 		if best_attack_score >= float(best.get("score", -9999.0)) - 0.25:
 			best = best_attack
-	if _shared_tactical_spell_candidate_beats(
+	if _hero_cast_worthwhile(
 		best_spell,
-		best,
+		best_attack,
 		scoring_battle,
 		active_stack,
 		targets,
@@ -752,45 +766,56 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 	report["candidate_scores"] = candidate_scores
 	return report
 
-static func _shared_tactical_spell_candidate_beats(
+## Whether the hero should cast its best spell now. The cast is a free action
+## (the stack still gives its order after it), so the spell is weighed on its
+## own worth, not against that order: it goes when it destroys its target or
+## when its score clears the mana conservation bar below. A hostile spell on
+## the stack this stack's own attack already destroys is held back.
+static func _hero_cast_worthwhile(
 	best_spell: Dictionary,
-	current_best: Dictionary,
+	best_attack: Dictionary,
 	battle: Dictionary,
 	active_stack: Dictionary,
 	hostile_targets: Array,
 	commander_payload: Dictionary,
 	lethal_spell_available: bool,
-	lethal_attack_available: bool
+	lethal_attack_available: bool,
+	support_needs_pressure: bool = true
 ) -> bool:
 	if best_spell.is_empty():
 		return false
-	if lethal_spell_available != lethal_attack_available:
-		return lethal_spell_available
 	if lethal_spell_available:
-		return _candidate_beats(best_spell, current_best)
+		return true
 	var spell := ContentService.get_spell(String(best_spell.get("spell_id", "")))
 	var behavior := SpellRulesScript.battle_spell_behavior(spell)
 	if behavior.is_empty():
 		return false
-	var spell_score := float(best_spell.get("score", -9999.0))
-	var best_score := float(current_best.get("score", -9999.0))
-	var required_delta := _shared_tactical_spell_conservation_delta(
+	var target_id := String(best_spell.get("target_battle_id", ""))
+	if lethal_attack_available and String(behavior.get("effect_type", "")) in ["damage_enemy", "control_enemy"] and target_id == String(best_attack.get("target_battle_id", "")):
+		return false
+	var conservation_bar := _shared_tactical_spell_conservation_delta(
 		battle,
 		active_stack,
-		_stack_by_battle_id(battle, String(best_spell.get("target_battle_id", ""))),
+		_stack_by_battle_id(battle, target_id),
 		hostile_targets,
 		commander_payload,
-		behavior
+		behavior,
+		support_needs_pressure
 	)
-	return spell_score >= best_score + required_delta
+	return float(best_spell.get("score", -9999.0)) >= conservation_bar
 
+## The score a spell needs before the hero spends mana on it. With
+## support_needs_pressure (the player's side under Quick Resolve and computer
+## players' battles) a buff goes only when its stack is hurt or threatened;
+## the battle AI's own heroes buff whenever the spell clears the bar.
 static func _shared_tactical_spell_conservation_delta(
 	battle: Dictionary,
 	active_stack: Dictionary,
 	target_stack: Dictionary,
 	hostile_targets: Array,
 	commander_payload: Dictionary,
-	behavior: Dictionary
+	behavior: Dictionary,
+	support_needs_pressure: bool = true
 ) -> float:
 	var effect_type := String(behavior.get("effect_type", ""))
 	var delta := 1.75
@@ -802,7 +827,7 @@ static func _shared_tactical_spell_conservation_delta(
 		"recover_ally", "cleanse_ally":
 			delta = 1.0
 		"defense_buff", "initiative_buff", "attack_buff":
-			delta = 1.75 if _support_spell_has_active_pressure(battle, active_stack, target_stack, hostile_targets) else 100.0
+			delta = 1.75 if not support_needs_pressure or _support_spell_has_active_pressure(battle, active_stack, target_stack, hostile_targets) else 100.0
 	var command_path := String(commander_payload.get("command_path", "")).to_lower()
 	var archetype := String(commander_payload.get("archetype", "")).to_lower()
 	if command_path == "magic" or archetype in ["hexcaller", "starseer", "rootoracle", "denaugur", "drumoracle", "fogprophet", "funeralhexer", "artillerist", "sharpshooter", "beaconscribe", "pressuremath", "slagalchemist", "heatrice"]:

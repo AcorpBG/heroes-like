@@ -47,6 +47,9 @@ static func capture(battle: Dictionary, event: Dictionary) -> void:
 	# the loop above skips the two queues replaced here.
 	snapshot["battle_animation_events"] = [record]
 	snapshot["stack_animation_states"] = {String(record.get("battle_id", "")): record}
-	snapshot["active_stack_id"] = String(record.get("source_battle_id", "")) if String(record.get("source_battle_id", "")) != "" else String(record.get("battle_id", ""))
+	var actor_id := String(record.get("source_battle_id", "")) if String(record.get("source_battle_id", "")) != "" else String(record.get("battle_id", ""))
+	# A hero's cast ("hero:<side>") is not a stack: the active stack stays lit.
+	if not actor_id.begins_with("hero:"):
+		snapshot["active_stack_id"] = actor_id
 	snapshot["selected_target_id"] = String(record.get("target_battle_id", ""))
 	frames.append(snapshot)
