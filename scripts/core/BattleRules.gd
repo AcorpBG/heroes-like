@@ -8582,7 +8582,9 @@ static func _normalize_stack(stack: Variant) -> Dictionary:
 	var unit = ContentService.get_unit(unit_id)
 	if unit.is_empty():
 		return {}
-	var unit_hp = max(1, int(unit.get("hp", 1)))
+	# Creature health is battle state, like total_health: Hardened Ranks raises
+	# it when the battle starts. Content hp only fills in for stacks without it.
+	var unit_hp = max(1, int(stack.get("unit_hp", unit.get("hp", 1))))
 	var cohesion_base = _cohesion_base_for_unit(unit)
 	var normalized_hex := _normalize_hex_cell(stack.get(STACK_HEX_KEY, {}))
 	var faction_id := String(stack.get("faction_id", unit.get("faction_id", "")))

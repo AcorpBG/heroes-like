@@ -29,7 +29,7 @@ The seven original ids are kept, so saved heroes keep their specialties; their v
 | Night March | `OverworldRules._refresh_all_player_heroes_for_new_day` stores `movement_carry` (unused movement up to the rank); `HeroCommandRules.movement_max_for_hero` adds it to that day |
 | Plunderer's Eye | `OverworldRules.apply_reward_bonus` on won battles and site pickups (not explicit reward choices) |
 | Melee, ranged, retaliation and siege damage; damage taken; defend bonus | `BattleDamageRules.hero_damage_multiplier` and the defend bonus in `BattleRules._damage_modifier` and the battle AI estimate |
-| Starting cohesion, momentum, creature health | `BattleRules._apply_specialty_battle_starts` when a battle is created, for both sides |
+| Starting cohesion, momentum, creature health | `BattleRules._apply_specialty_battle_starts` when a battle is created, for both sides; the raised creature health (`unit_hp`) is battle state that `_normalize_stack` keeps on battle entry and save load |
 | Field Surgeon, Ley Channeler | `_apply_victory_recovery` and `_apply_victory_mana` for the winner (player victory; enemy on a player defeat, retreat or surrender) |
 | Spell power, spell damage, school potency and mana, spell durations | `SpellRules.spell_power`, `_battle_spell_damage`, `_battle_spell_recovery_amount`, `spell_duration_rounds` (buffs and debuffs separately) |
 | Spell and control resistance | the hero battle payload (existing) |
@@ -45,3 +45,5 @@ Open: computer commanders' economy ignores specialty income (as it already did f
 ## Validation
 
 `tests/hero_specialty_catalog_report.tscn` (152 checks): the catalog, rank texts and every insignia; Wayfinder by rank; the six-specialty limit and mastered specialties; offers (upgrade then new, seeded, path lean); a level-24 recruit's build; AI picks; each adventure, magic and battle effect, the battle ones on a generated small map.
+
+`tests/battle_stack_health_normalize_report.tscn` (89 checks, generated small map): Hardened Ranks IV stacks keep their creature count and raised health per creature through battle entry, a second normalization and a JSON reload; health ratio, healing caps and survivors follow the raised health; a stack saved without `unit_hp` takes the content value. Before the fix, normalizing reset `unit_hp` to content and kept `total_health`, so 16 River Guards became 18 and the army went home larger.
