@@ -462,6 +462,17 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 		report["scoring_policy"] = ENEMY_WITHDRAWAL_SCORING_POLICY
 	return report
 
+## A melee stack that cannot reach an enemy this turn waits while enemies
+## still have to act this round: they close in, and it strikes first.
+static func should_wait_for_contact(battle: Dictionary, active_stack: Dictionary, can_wait: bool, opposing_stacks_still_to_act: int) -> bool:
+	if not can_wait or opposing_stacks_still_to_act <= 0:
+		return false
+	if active_stack.is_empty() or _alive_count(active_stack) <= 0:
+		return false
+	if bool(active_stack.get("ranged", false)) and int(active_stack.get("shots_remaining", 0)) > 0:
+		return false
+	return not _can_make_melee_attack(active_stack, battle)
+
 static func _battle_with_enemy_hero_payload(battle: Dictionary, enemy_hero: Dictionary) -> Dictionary:
 	return _battle_with_side_hero_payload(battle, "enemy", enemy_hero)
 

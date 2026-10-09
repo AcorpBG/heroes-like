@@ -641,6 +641,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Defend"
 
+[node name="Wait" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Wait"
+
 [node name="QuickResolve" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -768,6 +773,7 @@ dialog_text = "Confirm this army-wide battle exit order?"
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Strike" to="." method="_on_strike_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Shoot" to="." method="_on_shoot_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Defend" to="." method="_on_defend_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Wait" to="." method="_on_wait_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/QuickResolve" to="." method="_on_quick_resolve_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Retreat" to="." method="_on_retreat_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Surrender" to="." method="_on_surrender_pressed"]

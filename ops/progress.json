@@ -114821,7 +114821,7 @@
     {
       "id": "battle-rework-wait-turn-order-20261009",
       "title": "Wait command and a live turn order across this round, waiting stacks and the next round",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "gameplay_implementation_slice",
       "source": "PLAN.md",
@@ -114829,8 +114829,10 @@
         "PLAN.md",
         "docs/battle-rework.md"
       ],
-      "notes": "Wait once per round: the stack joins a waiting queue that acts after every other stack (owner decision: slowest first as in HoMM3, recommended, or initiative order); no second wait in a round; Defend unchanged. A rules turn-order forecast returns this round's remaining order, the waiting queue and the predicted next round (effect expiry and initiative changes included) for the ribbon. The AI may wait. Save/load carries the waiting queue. Validation: focused report (waiting order, no double wait, forecast equals the actual next round, save/load mid-wait), generated-map battle reports.",
-      "updatedAt": "2026-10-09T15:35:00Z"
+      "notes": "Wait once per round: the stack joins a waiting queue that acts after every other stack (owner decision: slowest first as in HoMM3, recommended, or initiative order); no second wait in a round; Defend unchanged. A rules turn-order forecast returns this round's remaining order, the waiting queue and the predicted next round (effect expiry and initiative changes included) for the ribbon. The AI may wait. Save/load carries the waiting queue. Validation: focused report (waiting order, no double wait, forecast equals the actual next round, save/load mid-wait), generated-map battle reports. Built 2026-10-09 (built before the board slice; the two are independent). Rules (scripts/core/BattleRules.gd): Wait order (perform_player_action \"wait\", action_availability and get_action_surface \"wait\" entries, footer text); waited_stack_ids per round, cleared in _prepare_round and normalized on load; _apply_wait moves the active stack behind every stack that has not waited, waiting stacks slowest first (score, speed, then the order they waited), without spending the stack's turn (_complete_action turn_spent=false), so its effects do not count down; _resort_remaining_turn_order keeps the waiting segment and breaks equal keys by the previous place (sort_custom is not stable); a battle_unit_wait event for playback and the log; turn_order_forecast returns this round from the active stack, the waiting stacks and the predicted next round, computed on a copy with the remaining turns spent and _prepare_round run (effect expiry, momentum decay, initiative shifts). Enemy: a melee stack with no approach this turn waits while player stacks are still to act (BattleAiRules.should_wait_for_contact, wired in the enemy advance branch; \"wait\" also accepted as an AI action). Screen (until the full-screen slice replaces it): a Wait button with the W key beside Defend; the turn strip shows this round, the waiting stacks with a W badge and the predicted next round after a divider. Validation: new tests/battle_wait_turn_order_report.tscn on a generated small map, 45/45 (order after a wait, slowest first, no second wait, effect turns not spent, round end and queue reset, forecast equals the next round's real order with a one-turn haste running out, an out-of-reach computer melee stack waits, JSON save/load mid-wait, the player's Wait through perform_presented_action with its playback event and the blocked second Wait); generated-map/synthetic battle reports pass (spell effects 105, stat scaling 50, quick resolve focus 10, wounded target 18, stack health normalize 89, shell living count 12, deterministic RNG, autoplay tactical order, AI withdrawal, magic spell behavior, magic AI valuation, hero specialty catalog 155); battle_intent_forecast_report (1 error) and battle_event_animation_state_report (55 errors) fail identically on the unchanged code; tests/validate_repo.py failure set identical to the unchanged code.",
+      "updatedAt": "2026-10-09T21:30:00Z",
+      "startedAt": "2026-10-09T21:30:00Z",
+      "completedAt": "2026-10-09T21:30:00Z"
     },
     {
       "id": "battle-rework-hero-casting-20261009",

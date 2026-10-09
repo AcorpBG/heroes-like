@@ -73,6 +73,8 @@ const COMMANDER_SPELL_CAST_ROUNDS_KEY := "commander_spell_cast_rounds"
 const ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY := "_enemy_commander_spell_cast_in_drain"
 const SELECTED_TARGET_CONTINUITY_KEY := "selected_target_continuity_id"
 const SELECTED_TARGET_CLOSING_KEY := "selected_target_closing_context"
+# Stacks that waited this round, in the order they waited; cleared each round.
+const WAITED_STACK_IDS_KEY := "waited_stack_ids"
 const BATTLE_HEX_COLUMNS := 11
 const BATTLE_HEX_ROWS := 7
 const COHESION_MIN := 0
@@ -88,6 +90,7 @@ const ANIMATION_STATE_BY_EVENT := {
 	"battle_status_applied": "status_applied",
 	"battle_status_expired": "status_expired",
 	"battle_unit_defend": "defend_brace",
+	"battle_unit_wait": "wait_hold",
 	"battle_retaliation": "retaliation_release",
 	"battle_unit_retreat": "retreat_withdraw_column",
 	"battle_unit_surrender": "surrender_stand_down",
@@ -105,6 +108,7 @@ const ANIMATION_STATE_PRIORITY := {
 	"cast_support_anchor": 60,
 	"move_path_step": 58,
 	"defend_brace": 55,
+	"wait_hold": 54,
 }
 
 static func create_town_assault_payload(
@@ -1426,6 +1430,7 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 		session
 	)
 
+	session.battle[WAITED_STACK_IDS_KEY] = _normalize_waited_stack_ids(session.battle)
 	var current_turn_order = session.battle.get("turn_order", [])
 	if int(session.battle.get("round", 1)) <= 1 and current_turn_order is Array and current_turn_order.is_empty():
 		_prepare_round(session.battle, 1)
@@ -3274,7 +3279,7 @@ static func _intent_forecast_target_label(action_id: String, active_stack: Dicti
 			return _stack_label(target) if not target.is_empty() else "selected target"
 		"advance":
 			return _stack_label(target) if not target.is_empty() else "nearest lane"
-		"defend":
+		"defend", "wait":
 			return _stack_label(active_stack) if not active_stack.is_empty() else "active stack"
 		"retreat", "surrender":
 			return "whole army"
@@ -4007,6 +4012,8 @@ static func _enemy_action_preview_summary(battle: Dictionary, enemy_stack: Dicti
 			return "%s is set to close the distance and press the lane." % _stack_label(enemy_stack)
 		"defend":
 			return "%s is set to hold and steady the hostile line." % _stack_label(enemy_stack)
+		"wait":
+			return "%s is set to wait and let the line come to it." % _stack_label(enemy_stack)
 	return "%s is best placed to keep pressure on the line." % _stack_label(enemy_stack)
 
 static func _attack_action_summary(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> String:
@@ -5546,6 +5553,12 @@ static func get_action_surface(session: SessionStateStoreScript.SessionData) -> 
 		"summary": locked_summary if not player_turn else _defend_action_summary(battle, active_stack),
 	}
 	_enrich_action_surface_entry(surface["defend"], "defend", session, battle, active_stack, target, availability)
+	surface["wait"] = {
+		"label": "Wait",
+		"disabled": not player_turn or not bool(availability.get("wait", false)),
+		"summary": locked_summary if not player_turn else _wait_action_summary(battle, active_stack),
+	}
+	_enrich_action_surface_entry(surface["wait"], "wait", session, battle, active_stack, target, availability)
 	var retreat_summary = locked_summary
 	if player_turn:
 		retreat_summary = _retreat_action_summary(session)
@@ -5618,7 +5631,9 @@ static func _action_confirmation_line(
 		"advance":
 			return "move this stack on the tactical grid; initiative advances after the move resolves."
 		"defend":
-			return "brace in place as the hold/wait order; initiative advances."
+			return "brace in place until this stack's next turn; initiative advances."
+		"wait":
+			return "step out of the order; this stack acts after every stack that has not waited, slowest first."
 		"retreat":
 			return "leave the field and route back through the battle outcome."
 		"surrender":
@@ -5633,7 +5648,7 @@ static func _action_target_label(action_id: String, active_stack: Dictionary, ta
 			if not target.is_empty():
 				return "Close toward %s" % _stack_label(target)
 			return "Nearest lane"
-		"defend":
+		"defend", "wait":
 			return _stack_label(active_stack) if not active_stack.is_empty() else "Active stack"
 		"retreat", "surrender":
 			return "Whole army"
@@ -5670,7 +5685,7 @@ static func _action_range_line(action_id: String, active_stack: Dictionary, targ
 				destinations.size(),
 				"" if destinations.size() == 1 else "es",
 			]
-		"defend":
+		"defend", "wait":
 			return "Current hex"
 		"retreat", "surrender":
 			return "Exit order"
@@ -5709,6 +5724,8 @@ static func _action_why_line(
 			return "the line is already engaged or no legal movement hex is open."
 		"defend":
 			return _active_ability_window_summary(active_stack, battle, target) if _active_ability_window_summary(active_stack, battle, target) != "" else "bracing buys cohesion and keeps retaliation or firing posture intact."
+		"wait":
+			return "waiting lets the enemy move first, so this stack can strike once they come close." if ready else _wait_action_summary(battle, active_stack)
 		"retreat":
 			return "withdrawal preserves survivors but yields this battle's field result." if ready else _retreat_action_summary(session)
 		"surrender":
@@ -5921,6 +5938,8 @@ static func _post_action_label(action_id: String) -> String:
 			return "Move"
 		"defend":
 			return "Defend"
+		"wait":
+			return "Wait"
 		"retreat":
 			return "Retreat"
 		"surrender":
@@ -6323,6 +6342,13 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 			if not defend_objective_messages.is_empty():
 				defend_message = _join_messages([defend_message, " ".join(defend_objective_messages)])
 			return _complete_action(session, defend_message)
+		"wait":
+			if not can_wait(session.battle):
+				return {"ok": false, "message": "%s has already waited this round." % _stack_label(active_stack), "state": "invalid"}
+			_clear_stack_animation_states(session.battle)
+			_clear_selected_target_continuity(session.battle)
+			_clear_selected_target_closing(session.battle)
+			return _complete_action(session, _resolve_wait(session.battle, active_stack), false)
 		"retreat":
 			if _is_town_defense_context(session.battle.get("context", {})):
 				return {"ok": false, "message": "Town defenders cannot abandon the walls mid-assault.", "state": "invalid"}
@@ -6363,6 +6389,7 @@ static func action_availability(battle: Dictionary) -> Dictionary:
 			"strike": false,
 			"shoot": false,
 			"defend": false,
+			"wait": false,
 			"retreat": false,
 			"surrender": false,
 		}
@@ -6375,6 +6402,7 @@ static func action_availability(battle: Dictionary) -> Dictionary:
 			and _can_make_ranged_attack(active_stack, battle, selected_target)
 		),
 		"defend": true,
+		"wait": can_wait(battle),
 		"retreat": _battle_retreat_allowed(battle),
 		"surrender": _battle_surrender_allowed(battle),
 	}
@@ -6660,7 +6688,9 @@ static func _clear_post_move_transition_result_fields(result: Dictionary) -> voi
 	]:
 		result.erase(key)
 
-static func _complete_action(session: SessionStateStoreScript.SessionData, initial_message: String) -> Dictionary:
+## `turn_spent` is false when the order already handed the turn on without
+## spending it (Wait).
+static func _complete_action(session: SessionStateStoreScript.SessionData, initial_message: String, turn_spent: bool = true) -> Dictionary:
 	var messages = [initial_message]
 	_record_event(session.battle, initial_message)
 	var outcome = _evaluate_outcome(session)
@@ -6668,7 +6698,8 @@ static func _complete_action(session: SessionStateStoreScript.SessionData, initi
 		_append_nonempty_message(messages, String(outcome.get("message", "")))
 		return {"ok": true, "message": " ".join(messages), "state": String(outcome.get("state", ""))}
 
-	advance_turn(session.battle)
+	if turn_spent:
+		advance_turn(session.battle)
 	outcome = _evaluate_outcome(session)
 	if String(outcome.get("state", "")) != "":
 		_append_nonempty_message(messages, String(outcome.get("message", "")))
@@ -6754,6 +6785,8 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 			if not bool(active_stack.get("ranged", false)) and not approach.is_empty():
 				_apply_melee_approach(session.battle, active_stack, approach)
 				return _resolve_ai_attack(session, _get_stack_by_id(session.battle,String(active_stack.get("battle_id",""))), approach_target, false)
+			if BattleAiRulesScript.should_wait_for_contact(session.battle, active_stack, can_wait(session.battle), _opposing_stacks_still_to_act(session.battle, active_stack)):
+				return _resolve_enemy_wait(session, active_stack)
 			var start_distance := int(session.battle.get("distance", 1))
 			var distance_delta := _apply_auto_advance_movement(session.battle, active_stack, start_distance)
 			_append_presentation_event(
@@ -6786,6 +6819,8 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 			return _complete_enemy_action(session, advance_message)
 		"defend":
 			return _resolve_enemy_defend(session, active_stack)
+		"wait":
+			return _resolve_enemy_wait(session, active_stack)
 		_:
 			var fallback = _lowest_health_stack(targets)
 			if bool(active_stack.get("ranged", false)) and int(active_stack.get("shots_remaining", 0)) > 0:
@@ -9394,6 +9429,7 @@ static func _prepare_round(battle: Dictionary, round_number: int) -> void:
 	_sync_occupied_hexes(battle)
 	_sync_distance_from_hexes(battle)
 	_apply_round_pressure_shifts(battle)
+	battle[WAITED_STACK_IDS_KEY] = []
 	battle["turn_order"] = _sorted_turn_order(battle)
 	battle["turn_index"] = 0
 	battle["active_stack_id"] = _advance_to_next_alive(battle, 0)
@@ -9439,9 +9475,21 @@ static func _sorted_turn_order(battle: Dictionary) -> Array:
 static func _compare_stack_order_keys(lhs: Dictionary, rhs: Dictionary) -> bool:
 	if int(lhs.score) == int(rhs.score):
 		if int(lhs.speed) == int(rhs.speed):
-			return bool(lhs.player) and not bool(rhs.player)
+			if bool(lhs.player) == bool(rhs.player):
+				# Keys built for a re-sort carry each stack's previous place,
+				# so equal stacks keep their order (sort_custom is not stable).
+				return int(lhs.get("order", 0)) < int(rhs.get("order", 0))
+			return bool(lhs.player)
 		return int(lhs.speed) > int(rhs.speed)
 	return int(lhs.score) > int(rhs.score)
+
+## Waiting stacks act slowest first; equal ones in the order they waited.
+static func _compare_waiting_order_keys(lhs: Dictionary, rhs: Dictionary) -> bool:
+	if int(lhs.score) == int(rhs.score):
+		if int(lhs.speed) == int(rhs.speed):
+			return int(lhs.waited) < int(rhs.waited)
+		return int(lhs.speed) < int(rhs.speed)
+	return int(lhs.score) < int(rhs.score)
 
 static func _advance_to_next_alive(battle: Dictionary, start_index: int) -> String:
 	var turn_order = battle.get("turn_order", [])
@@ -10307,17 +10355,168 @@ static func _resort_remaining_turn_order(battle: Dictionary) -> void:
 	var active_index := turn_order.find(String(battle.get("active_stack_id", "")))
 	if active_index < 0 or active_index >= turn_order.size() - 2:
 		return
-	var remaining: Array = turn_order.slice(active_index + 1)
+	battle["turn_order"] = turn_order.slice(0, active_index + 1) + _ordered_remaining_actors(battle, turn_order.slice(active_index + 1))
+
+## Stacks still to act this round: those that have not waited by initiative,
+## then the waiting stacks slowest first. `waited_override` previews a wait.
+static func _ordered_remaining_actors(battle: Dictionary, battle_ids: Array, waited_override: Variant = null) -> Array:
+	var waited: Array = waited_override if waited_override is Array else waited_stack_ids(battle)
 	var keys := {}
-	for battle_id in remaining:
-		var stack := _get_stack_by_id(battle, String(battle_id))
+	var acting := []
+	var waiting := []
+	for index in range(battle_ids.size()):
+		var battle_id := String(battle_ids[index])
+		var stack := _get_stack_by_id(battle, battle_id)
 		keys[battle_id] = {
 			"score": _stack_initiative_total(stack, battle) if not stack.is_empty() else -999,
 			"speed": int(stack.get("speed", 0)),
 			"player": String(stack.get("side", "")) == "player",
+			"order": index,
+			"waited": waited.find(battle_id),
 		}
-	remaining.sort_custom(func(left, right): return _compare_stack_order_keys(keys[left], keys[right]))
-	battle["turn_order"] = turn_order.slice(0, active_index + 1) + remaining
+		if waited.has(battle_id):
+			waiting.append(battle_id)
+		else:
+			acting.append(battle_id)
+	acting.sort_custom(func(left, right): return _compare_stack_order_keys(keys[left], keys[right]))
+	waiting.sort_custom(func(left, right): return _compare_waiting_order_keys(keys[left], keys[right]))
+	return acting + waiting
+
+## Wait: once per round a stack steps out of the order and acts after every
+## stack that has not waited, slowest first (HoMM3). Its turn is not spent,
+## so its effects do not count down.
+static func waited_stack_ids(battle: Dictionary) -> Array:
+	var value: Variant = battle.get(WAITED_STACK_IDS_KEY, [])
+	return value if value is Array else []
+
+static func stack_has_waited(battle: Dictionary, battle_id: String) -> bool:
+	return battle_id != "" and waited_stack_ids(battle).has(battle_id)
+
+static func can_wait(battle: Dictionary) -> bool:
+	var active_stack := get_active_stack(battle)
+	if active_stack.is_empty() or _alive_count(active_stack) <= 0:
+		return false
+	return not stack_has_waited(battle, String(active_stack.get("battle_id", "")))
+
+static func _normalize_waited_stack_ids(battle: Dictionary) -> Array:
+	var normalized := []
+	for battle_id_value in waited_stack_ids(battle):
+		var battle_id := String(battle_id_value)
+		if battle_id != "" and not normalized.has(battle_id) and not _get_stack_by_id(battle, battle_id).is_empty():
+			normalized.append(battle_id)
+	return normalized
+
+## Moves the active stack into the waiting segment and hands the turn on.
+static func _apply_wait(battle: Dictionary) -> void:
+	var active_id := String(battle.get("active_stack_id", ""))
+	var turn_order: Array = (battle.get("turn_order", []) as Array).duplicate() if battle.get("turn_order", []) is Array else []
+	var active_index := turn_order.find(active_id)
+	if active_id == "" or active_index < 0:
+		return
+	var waited := waited_stack_ids(battle).duplicate()
+	waited.append(active_id)
+	battle[WAITED_STACK_IDS_KEY] = waited
+	turn_order.remove_at(active_index)
+	var remaining: Array = turn_order.slice(active_index)
+	remaining.append(active_id)
+	battle["turn_order"] = turn_order.slice(0, active_index) + _ordered_remaining_actors(battle, remaining)
+	# Never empty: the waiting stack itself is still to act.
+	battle["active_stack_id"] = _advance_to_next_alive(battle, active_index)
+	_assign_default_target(battle)
+
+## Living stacks of the other side that still act this round after this one.
+static func _opposing_stacks_still_to_act(battle: Dictionary, stack: Dictionary) -> int:
+	var turn_order: Array = battle.get("turn_order", []) if battle.get("turn_order", []) is Array else []
+	var side := String(stack.get("side", ""))
+	var count := 0
+	for index in range(turn_order.find(String(stack.get("battle_id", ""))) + 1, turn_order.size()):
+		var other := _get_stack_by_id(battle, String(turn_order[index]))
+		if _alive_count(other) > 0 and String(other.get("side", "")) != side:
+			count += 1
+	return count
+
+## How many living stacks would act before this one if it waited now.
+static func _stacks_ahead_after_wait(battle: Dictionary, battle_id: String) -> int:
+	var turn_order: Array = battle.get("turn_order", []) if battle.get("turn_order", []) is Array else []
+	var index := turn_order.find(battle_id)
+	if battle_id == "" or index < 0:
+		return 0
+	var remaining: Array = turn_order.slice(index + 1)
+	remaining.append(battle_id)
+	var waited := waited_stack_ids(battle).duplicate()
+	waited.append(battle_id)
+	var ahead := 0
+	for other_id in _ordered_remaining_actors(battle, remaining, waited):
+		if String(other_id) == battle_id:
+			break
+		if _alive_count(_get_stack_by_id(battle, String(other_id))) > 0:
+			ahead += 1
+	return ahead
+
+static func _wait_action_summary(battle: Dictionary, stack: Dictionary) -> String:
+	var battle_id := String(stack.get("battle_id", ""))
+	if stack_has_waited(battle, battle_id):
+		return "%s has already waited this round." % _stack_label(stack)
+	var ahead := _stacks_ahead_after_wait(battle, battle_id)
+	if ahead <= 0:
+		return "No other stack is left to act this round, so the turn comes straight back."
+	return "Act later this round, after %d more stack%s. Once per round; the turn is not spent." % [ahead, "" if ahead == 1 else "s"]
+
+static func _resolve_wait(battle: Dictionary, active_stack: Dictionary) -> String:
+	var battle_id := String(active_stack.get("battle_id", ""))
+	var ahead := _stacks_ahead_after_wait(battle, battle_id)
+	var message := "%s waits." % _stack_label(active_stack)
+	if ahead > 0:
+		message = "%s waits; %d stack%s act%s first." % [_stack_label(active_stack), ahead, "" if ahead == 1 else "s", "s" if ahead == 1 else ""]
+	_mark_stack_animation_event(battle, battle_id, "battle_unit_wait")
+	_apply_wait(battle)
+	_append_presentation_event(battle, "wait", message, {"action_id": "wait", "actor_battle_id": battle_id})
+	return message
+
+static func _resolve_enemy_wait(session: SessionStateStoreScript.SessionData, active_stack: Dictionary) -> Dictionary:
+	if not can_wait(session.battle):
+		return _resolve_enemy_defend(session, active_stack)
+	return {"ok": true, "message": _resolve_wait(session.battle, active_stack), "state": "continue"}
+
+## Turn order forecast: the rest of this round from the active stack, the
+## stacks waiting at its end, and the predicted order of the next round once
+## this round's turns are spent and its effects run out. Works on a copy; the
+## battle and its RNG are untouched.
+static func turn_order_forecast(battle: Dictionary) -> Dictionary:
+	var forecast := {"round": int(battle.get("round", 1)), "current": [], "waiting": [], "next_round": []}
+	var turn_order: Array = battle.get("turn_order", []) if battle.get("turn_order", []) is Array else []
+	if battle.is_empty() or turn_order.is_empty():
+		return forecast
+	var active_id := String(battle.get("active_stack_id", ""))
+	var start := turn_order.find(active_id)
+	if start < 0:
+		start = clampi(int(battle.get("turn_index", 0)), 0, turn_order.size())
+	var waited := waited_stack_ids(battle)
+	var still_to_act := []
+	for index in range(start, turn_order.size()):
+		var battle_id := String(turn_order[index])
+		if _alive_count(_get_stack_by_id(battle, battle_id)) <= 0:
+			continue
+		still_to_act.append(battle_id)
+		if battle_id != active_id and waited.has(battle_id):
+			forecast["waiting"].append(battle_id)
+		else:
+			forecast["current"].append(battle_id)
+	forecast["next_round"] = _projected_next_round_order(battle, still_to_act)
+	return forecast
+
+static func _projected_next_round_order(battle: Dictionary, still_to_act: Array) -> Array:
+	var projection := {}
+	for key in battle.keys():
+		if key in [PRESENTATION_EVENT_QUEUE_KEY, ANIMATION_EVENT_QUEUE_KEY, STACK_ANIMATION_STATES_KEY, "recent_events", ActionPlayback.CAPTURE_KEY]:
+			continue
+		projection[key] = battle[key]
+	projection = projection.duplicate(true)
+	for battle_id in still_to_act:
+		spend_effect_turns(projection, String(battle_id))
+	_prepare_round(projection, int(battle.get("round", 1)) + 1)
+	var order: Variant = projection.get("turn_order", [])
+	return (order as Array).duplicate() if order is Array else []
 
 static func _expired_stack_effect_count(stack: Dictionary, round_number: int) -> int:
 	var expired := 0
@@ -15081,6 +15280,8 @@ static func _animation_event_action_text(
 			return "%s has a status cleared." % actor_label
 		"battle_unit_defend":
 			return "%s braces." % actor_label
+		"battle_unit_wait":
+			return "%s waits." % actor_label
 		"battle_retaliation":
 			return "%s retaliates against %s." % [actor_label, target_label if target_label != "" else "the attacker"]
 		"battle_unit_retreat":
