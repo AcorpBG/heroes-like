@@ -114701,6 +114701,20 @@
         "docs/ai-plays-by-player-rules.md"
       ],
       "notes": "Owner decisions 2026-10-09. Main and field armies search 12 days of movement for towns, hostile heroes, war-path guards and unexplored ground (_strategic_candidate). Heroes use random-exit portal networks with the human's exit roll, planning with exits they have seen; portals with unseen exits are explored. PlayerEliminationRules: generated maps eliminate a player with no town and no hero, or with no town for 7 days (human: countdown then defeat; AI: heroes leave); losing the starting hero no longer ends the game (HeroCommandRules.hand_over_primary, fallen heroes not rebuilt). Match runner always records each hero decision with its top alternatives and turn time by phase. Tests: player_elimination_rules_report (5 cases), ai_player_rules, ai_known_world_memory, ai_hero_task_live_turn_execution pass. Replays of the 4 stalled large-map seeds still run to day 160: armies plan town attacks 600-840 times per game but stay fragmented across field heroes (no decisive force), towns trade at parity, and a lone strong hero holding its last town survives. Open: army concentration on large maps."
+    },
+    {
+      "id": "bugfix-battle-stack-health-normalize-20261009",
+      "title": "Battle normalization keeps Hardened Ranks creature health",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/hero-specialties.md"
+      ],
+      "notes": "Bug found while surveying battle rules: BattleRules._normalize_stack took unit_hp from content but kept the stored total_health, so after normalize_battle_state (BattleShell entry, save load) a Hardened Ranks stack had more, weaker creatures (_alive_count = ceil(total_health / unit_hp)) and _battle_survivor_stacks sent the extra creatures home. _normalize_stack now keeps the stack's stored unit_hp and uses content hp only for stacks saved without it; _alive_count, _health_ratio, healing caps (SpellRules.battle_spell_recoverable_health, _restore_stack_health, foundry repair, town root ward), victory recovery and playback casualties all read the stack's unit_hp. New tests/battle_stack_health_normalize_report (89 checks, generated small map, Hardened Ranks IV): counts, unit_hp and total_health unchanged through entry, a second normalization and a JSON reload; wounded health ratio and healing cap use the raised health; survivors equal the deployed count; a stack without unit_hp takes content hp. With the old line it fails 18 checks (16 River Guards of 10 health became 18 of 9; 23 creatures went home as 26). hero_specialty_catalog (155), battle_spell_effects (105) and battle_stat_scaling (50) reports pass. Not repaired: a battle saved mid-fight between 2026-10-08 and this fix keeps its already reset unit_hp, and the extra creatures, for that battle.",
+      "updatedAt": "2026-10-09T15:25:00Z",
+      "validatedAt": "2026-10-09T15:25:00Z"
     }
   ],
   "project": "heroes-like",
