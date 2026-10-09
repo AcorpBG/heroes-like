@@ -4507,6 +4507,8 @@ func _town_sprite_draw_payload(asset_id: String, texture: Texture2D, footprint_r
 func _draw_encounter_sprite(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	if _draw_encounter_creature_idle(encounter, rect, remembered, tile):
 		return true
+	if _draw_generated_company_still(encounter, rect, remembered, tile):
+		return true
 	if bool(encounter.get("prefer_identity_landmark", false)) and _draw_preferred_encounter_landmark(encounter, rect, remembered, tile):
 		return true
 	if _draw_encounter_commander_sprite(encounter, rect, remembered, tile):
@@ -4525,6 +4527,10 @@ func _draw_preferred_encounter_landmark(encounter: Dictionary, rect: Rect2, reme
 func _encounter_idle_unit_id(encounter: Dictionary) -> String:
 	if not _enemy_commander_hero_template(encounter).is_empty():
 		return ""
+	# Generated companies name the unit that leads them.
+	var lead_unit_id := _generated_company_lead_unit_id(encounter)
+	if lead_unit_id != "":
+		return lead_unit_id
 	var identity := _encounter_identity_asset_id(encounter)
 	# Generated guards also set prefer_identity_landmark: its explicit identity
 	# can be a creature, not just a building. Consult the actor manifest first.
@@ -4533,6 +4539,31 @@ func _encounter_idle_unit_id(encounter: Dictionary) -> String:
 	# An authored camp/landmark is not the creature guarding it.
 	if not identity.is_empty() or bool(encounter.get("prefer_identity_landmark", false)): return ""
 	return _encounter_primary_unit_id(encounter)
+
+func _generated_company_lead_unit_id(encounter: Dictionary) -> String:
+	var neutral_profile = encounter.get("generated_neutral_profile", {})
+	if not (neutral_profile is Dictionary):
+		return ""
+	var unit_id := String(neutral_profile.get("primary_unit_id", "")).strip_edges()
+	return unit_id if _creature_idle.units.has(unit_id) else ""
+
+## Outside the animated state layer (turn playback), a generated company with
+## no actor painting of its own shows its lead unit's idle pose, held still.
+func _draw_generated_company_still(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	if _encounter_identity_asset_id(encounter) != "":
+		return false
+	var unit_id := _generated_company_lead_unit_id(encounter)
+	if unit_id == "":
+		return false
+	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)
+	var ground: Vector2 = anchor.get("center", rect.get_center())
+	var pose := _creature_idle.payload(unit_id, ground, minf(rect.size.x, rect.size.y) * OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES)
+	var still := _creature_idle.still_frame(unit_id)
+	if pose.is_empty() or still == null:
+		return false
+	_draw_actor_art({"draw_texture": still, "draw_rect": pose.rect}, remembered)
+	_draw_procedural_contact_marks(anchor, "encounter", remembered)
+	return true
 
 func _draw_encounter_creature_idle(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	if _draw_canvas_item != _state_layer or not _scenery_batches.recording: return false

@@ -84,7 +84,8 @@ func verify_exploration(session, adoption: Dictionary, label: String) -> Diction
 		if not guard.has("native_guard_quantity"):continue
 		var headcount := 0
 		for stack in guard.enemy_army.stacks:headcount+=int(stack.count)
-		check(headcount==int(guard.native_guard_quantity),label+": source guard headcount changed")
+		# Guards field battle power for the native budget, not the native headcount.
+		check(int(guard.generated_neutral_profile.native_budget)==int(guard.native_guard_quantity)*int(guard.native_guard_ai_value),label+": source guard budget changed")
 		guard_rows.append({"id":guard.placement_id,"quantity":headcount,"source_level":guard.native_guard_level,"source_ai_value":guard.native_guard_ai_value,"army_strength":Neutral._army_strength(guard.enemy_army)})
 	return {"scenery_records":scenery_count,"artifacts":source_artifacts,"distinct_artifacts":artifact_ids.size(),"artifact_visit_tiles":artifact_anchors,"artifact_anchor_mismatches":artifact_anchor_mismatches,"guarded_banks":banks,"guards":guard_rows,"starting_army_strength":Neutral._army_strength(session.overworld.army)}
 

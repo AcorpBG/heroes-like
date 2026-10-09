@@ -9,6 +9,10 @@ const CONTENT_DIR := "res://content"
 const AUTHORED_ARCHIVE_DIR := "res://archive/authored-scenarios-2026-10-08"
 const SCENARIOS_PATH := "%s/scenarios.json" % AUTHORED_ARCHIVE_DIR
 const ENCOUNTERS_PATH := "%s/encounters.json" % CONTENT_DIR
+# Generated-guard companies carry their own encounter definitions
+# (tools/build_generated_neutral_companies.py); get_encounter falls back to them.
+const GENERATED_COMPANIES_PATH := "%s/generated_neutral_companies.json" % CONTENT_DIR
+const GENERATED_COMPANY_ENCOUNTER_PREFIX := "encounter_company_"
 const HEROES_PATH := "%s/heroes.json" % CONTENT_DIR
 const HERO_ART_PATH := "%s/hero_art_manifest.json" % CONTENT_DIR
 const FACTIONS_PATH := "%s/factions.json" % CONTENT_DIR
@@ -346,7 +350,10 @@ func unregister_generated_scenario_draft(id: String) -> void:
 	_content_revision += 1
 
 func get_encounter(id: String) -> Dictionary:
-	return get_content_by_id(ENCOUNTERS_PATH, id)
+	var encounter := get_content_by_id(ENCOUNTERS_PATH, id)
+	if encounter.is_empty() and id.begins_with(GENERATED_COMPANY_ENCOUNTER_PREFIX):
+		return _indexed_content_row(GENERATED_COMPANIES_PATH, id, "encounters", "id")
+	return encounter
 
 func get_content_by_id(path: String, id: String, list_key: String = "items") -> Dictionary:
 	if path == TOWNS_PATH and list_key == "items":

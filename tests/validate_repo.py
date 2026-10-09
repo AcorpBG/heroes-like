@@ -80639,6 +80639,40 @@ def validate_overworld_scenery_animation(errors: list[str]) -> None:
                 errors.append(f"Invalid normalized building activity region: {profile_id}")
 
 
+def validate_generated_neutral_companies(errors: list[str]) -> None:
+    """Generated-guard companies: rebuilt from the roster, and battle-ready definitions."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("build_generated_neutral_companies", ROOT / "tools" / "build_generated_neutral_companies.py")
+    builder = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(builder)
+    path = ROOT / "content" / "generated_neutral_companies.json"
+    try:
+        expected = builder.serialize(builder.build())
+    except AssertionError as error:
+        ensure(False, errors, f"Generated neutral company catalog does not build: {error}")
+        return
+    ensure(path.is_file() and path.read_text(encoding="utf-8") == expected, errors, "content/generated_neutral_companies.json is stale; run tools/build_generated_neutral_companies.py")
+    catalog = json.loads(expected)
+    ensure(float(catalog.get("power_per_native_value", 0)) > 0, errors, "Generated companies need a positive power_per_native_value")
+    authored = {item["id"] for item in load_json(ROOT / "content" / "encounters.json")["items"]}
+    definitions = {row["id"]: row for row in catalog["encounters"]}
+    ensure(not (set(definitions) & authored), errors, "Generated company encounters must not shadow authored encounter ids")
+    resources = {item["id"] for item in load_json(ROOT / "content" / "resources.json")["items"]}
+    for company in catalog["companies"]:
+        encounter_id = company["encounter_id"]
+        ensure(encounter_id in authored or encounter_id in definitions, errors, f"Generated company {company['id']} has no encounter definition")
+        ensure(encounter_id in authored or encounter_id.startswith("encounter_company_"), errors, f"Generated company {company['id']} encounter id is outside ContentService's fallback prefix")
+    tiers = {company["tier"] for company in catalog["companies"]}
+    ensure(tiers == set(range(1, 8)), errors, "Generated companies must cover every native guard tier 1-7")
+    for definition in definitions.values():
+        ensure(definition["battlefield_tags"] and set(definition["battlefield_tags"]) <= SUPPORTED_BATTLEFIELD_TAGS, errors, f"{definition['id']} uses unsupported battlefield tags")
+        traits = definition["enemy_commander"]["battle_traits"]
+        ensure(traits and set(traits) <= VALID_BATTLE_TRAIT_IDS, errors, f"{definition['id']} uses unsupported commander traits")
+        ensure(int(definition["max_rounds"]) > 0, errors, f"{definition['id']} needs a round limit")
+        for key in definition["rewards"]:
+            ensure(key == "experience" or key in resources, errors, f"{definition['id']} rewards unknown resource {key}")
+
+
 def main() -> int:
     global REQUIRE_HISTORICAL_SMOKE_REPORTS
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
@@ -80698,6 +80732,7 @@ def main() -> int:
     validate_overworld_resource_assault_victory_return_feedback(errors)
     validate_overworld_encounter_victory_return_feedback(errors)
     validate_content(errors)
+    validate_generated_neutral_companies(errors)
     validate_gold_only_unit_costs(errors)
     validate_scenario_script_active_army_reinforcements(errors)
     validate_stonewake_watch_chapter_one_sequential_viability(errors)

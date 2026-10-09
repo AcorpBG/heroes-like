@@ -3,6 +3,30 @@
 Owner-directed Phase 6 slice: `bugfix-generated-neutral-encounter-variety-20260910`.
 Sources: `project.md`, `PLAN.md`, `docs/lessons-learned.md`.
 
+## Budget-sized companies (2026-10-09)
+
+Slice `content-generated-guard-companies-20261009`, owner request. It replaces the headcount rule and the 51-profile catalog described below for newly generated maps. Saved games keep their stored armies.
+
+**Strength follows the native budget.** The native generator gives each guard a budget, its headcount times the creature's value. Keeping the headcount threw most of that budget away: native creature value grows about 100x from tier 1 to tier 7, but our units' battle power grows only about 8x. Strong monsters therefore barely changed a fight. Now each guard fields battle power (`AiHeroRules.army_power`, the rating that also pays battle rewards) equal to its budget times `power_per_native_value`.
+- Three anchors agree on about 0.045 for that rate: the same fighting value as the native creatures, the same gold cost, and the same multiple of a hero's starting army (the original median start army is worth 3,153; ours rates about 140).
+- The default is 0.06. The owner's Large Veilmourn playtest (Days 18–25) beat guards at a median of 0.2x the hero's army.
+- On Medium seed 10, the same route guard rates about 200 on Weak, 250–335 on Normal and 530–590 on Strong. Before, all three were about the same. Small tier-1 guards come out about 40% below the old headcount rule; tier-3 and higher guards are stronger.
+
+**790 companies instead of 51.** `tools/build_generated_neutral_companies.py` builds `content/generated_neutral_companies.json` from the unit roster, using hand-written faction and neutral-theme vocabulary.
+- Every faction upgrade line has five companies: a levy of recruits, a seasoned company with a few upgraded veterans, an upgraded cadre with recruits, an elite of upgraded units only, and a combined-arms line with a same-faction unit of the other role. Lines of tier 3 and above also have a warband with lower-tier escorts.
+- Single faction units, every neutral unit (alone, in pairs from their themes and authored partners, and in tier-3+ hosts), and neutral free companies hiring faction deserters fill out the rest.
+- The 51 authored companies remain, with their names, art and proportions.
+- A company is a lead tier plus power shares per unit. Headcounts come from the guard's power, so a support too small for one creature passes its share to the lead.
+
+**Selection.** The native creature level picks the tier. The placement picks one of that tier's 160 families (unit lines and neutral leads), then a company in it. Guards with a large native headcount lean toward elites, cadres, warbands and hosts; small ones lean toward levies and packs.
+
+**Definitions and art.** Each new company carries its own encounter definition: name, commander title and command by tier, terrain, battlefield tags, round limit and tier-median rewards. `ContentService.get_encounter` reads it for `encounter_company_*` ids, so `content/encounters.json` and its validators are unchanged. The map animates the company's lead unit from `art/overworld/creature_idle.json`, which covers all 232 units. Outside the animated layer (turn playback) it holds the idle strip's resting frame. Authored companies keep their actor paintings.
+
+**Validation.**
+- The focused contract checks power against budget across 7 tiers x 20 species x 5 sizes: 235 companies, 11 kinds, 198 armies mixing a unit with its upgrade.
+- Real Medium and Large maps: 65 guards with 65 compositions, and 207 guards with 137 companies. Battle rosters match, save/restore is exact, and the renderer has art for every lead.
+- `validate_repo` rebuilds the catalog and checks definitions against the supported tags, traits and resources.
+
 ## Requirement
 
 Generated maps must not collapse unrelated neutral guards into the same Mireclaw raid and fixed army. Provide appropriate original-content species/companies, varied quantities and stack compositions, with map icons representing the actual encounter army. Variation must be deterministic and readable, not random cosmetic labels over identical battles.

@@ -72,7 +72,7 @@ func run():
 	var fog: Dictionary = session.overworld.fog
 	fog.explored_tiles[tile.y][tile.x]=true
 	fog.visible_tiles[tile.y][tile.x]=true
-	var generated: Dictionary = Neutrals.resolve({"native_guard_quantity":12,"native_guard_level":1,"native_guard_creature_subtype":5,"placement_id":"idle_probe","x":tile.x,"y":tile.y})
+	var generated: Dictionary = Neutrals.resolve({"native_guard_quantity":12,"native_guard_level":1,"native_guard_creature_subtype":5,"native_guard_ai_value":145,"placement_id":"idle_probe","x":tile.x,"y":tile.y})
 	check(bool(generated.get("ok",false)),"real generated guard fixture failed")
 	view._encounters_by_tile[view._tile_key(tile)]=generated.encounter
 	view._invalidate_state_cache("creature_idle_fixture")
