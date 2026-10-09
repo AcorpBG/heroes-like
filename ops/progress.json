@@ -114769,6 +114769,147 @@
       "notes": "Owner request 2026-10-09 after comparing the Glassbound Eyrie with the HoMM3 Crypt it translates (CRBANKS.TXT from the local install). GeneratedRewardRules.CREATURE_BANKS rolls one Crypt level per placement by stable hash (30/30/30/10). The claim pays 1,500/2,000/2,500/5,000 gold, and on levels 3-4 one random artifact of the rarity the random map gives HoMM3 treasure artifacts (common), skipping artifacts the hero holds (ArtifactRules._select_rarity_source_reward). No ore, experience, recruits, faction relic or survey: new ResourceNodePayloadRules keys payload_recruits, payload_vision_radius, payload_artifact_rarity, kept by node normalization. The supplemental site guard fields the level's army (GeneratedNeutralEncounterRules.stacks_for_native_budget): Skeletons, Walking Dead, Wights and Vampires become Kitehook Runners, Cliffhawk Wardens, Windglass Slingers and Galehorn Striders at AI value x headcount x 0.06, giving power 225/287/508/672 against the old 7+3 guard's 80. Authored placements and older saves keep the site definition. Tests: creature_banks_report (new) passes; pickups_income_rules, artifact_guarded_site_reward_execution, site_recruit_overflow, creature_dwellings, visit_buildings, water_travel, native_rmg_end_to_end_runtime_boundary and ai_player_rules reports pass. artifact_source_reward_report still fails on its stale 9-table count (14 tables since 2026-08). validate_repo's failure set is identical before and after (886 lines). Open: other HoMM3 banks (Creature Bank subtypes, Derelict Ship, Shipwreck, Dragon Utopia, Pyramid, Warrior's Tomb) still map to a random guarded site with its authored payload; the common artifact pool holds only 2 artifacts; the looted-Crypt morale penalty is not carried over.",
       "updatedAt": "2026-10-09T16:00:00Z",
       "validatedAt": "2026-10-09T16:00:00Z"
+    },
+    {
+      "id": "battle-rework-design-20261009",
+      "title": "Battle screen and battle flow rework: plan and iterated mockup",
+      "status": "in_progress",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "documentation_design",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/battle-rework.md"
+      ],
+      "notes": "Owner request 2026-10-09 with eleven points (small battle window, spells cast by units, no hero on the field, turn order only for the current round, no wait, no choice of the melee end hex, no right-button details, no sword/arrow cursor with damage, shots and retaliations not shown, plain ground without obstacles, ranged vs melee not readable). Documentation and mockup only, no game code changed: docs/battle-rework.md (current code facts, design D1-D16, rule changes, slices, open owner decisions) and an interactive HTML mockup published as a private artifact, pass 1: https://claude.ai/artifact/Hy6UZnkYaLjXSwsAhqtsBF (playable battle on 11x9, 11x7 and 15x11 boards with the game's unit, hero, obstacle, spell and effect art). Stays in progress through the owner's iteration passes; the battle-rework-*-20261009 implementation slices stay pending until the owner signs off the mockup and the open decisions.",
+      "startedAt": "2026-10-09T15:35:00Z",
+      "updatedAt": "2026-10-09T15:35:00Z"
+    },
+    {
+      "id": "battle-rework-board-obstacles-20261009",
+      "title": "Battle board: 11x9 hexes, edge deployment, blocking obstacles, no distance bands",
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "gameplay_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/battle-rework.md"
+      ],
+      "notes": "Board rows 9 (owner decision: 11x9 recommended, 11x7 today, 15x11 option); edge deployment (player first column, 2-hex units the first two; enemy mirrored; rows spread over the height); blocking obstacles as battle-state cells (1-2 hexes, deterministic per battle seed and terrain, never on deployment columns, always a path between the armies) honoured by reachability, approach, placement and the AI; retire the legacy distance bands (the x0.6 shot penalty moves from band 0 to a shooter next to an enemy); save/load carries obstacles. Validation: focused report on a generated-map battle (blocked cells unreachable, paths route around, same layout per seed, save/load round trip), existing generated-map battle reports, AI benchmark before/after.",
+      "updatedAt": "2026-10-09T15:35:00Z"
+    },
+    {
+      "id": "battle-rework-wait-turn-order-20261009",
+      "title": "Wait command and a live turn order across this round, waiting stacks and the next round",
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "gameplay_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/battle-rework.md"
+      ],
+      "notes": "Wait once per round: the stack joins a waiting queue that acts after every other stack (owner decision: slowest first as in HoMM3, recommended, or initiative order); no second wait in a round; Defend unchanged. A rules turn-order forecast returns this round's remaining order, the waiting queue and the predicted next round (effect expiry and initiative changes included) for the ribbon. The AI may wait. Save/load carries the waiting queue. Validation: focused report (waiting order, no double wait, forecast equals the actual next round, save/load mid-wait), generated-map battle reports.",
+      "updatedAt": "2026-10-09T15:35:00Z"
+    },
+    {
+      "id": "battle-rework-hero-casting-20261009",
+      "title": "The hero casts battle spells as a free action once per round; the stack keeps its turn",
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "gameplay_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/battle-rework.md"
+      ],
+      "notes": "The commander already supplies mana and power and casts at most once per round (COMMANDER_SPELL_CAST_ROUNDS_KEY), but cast_player_spell ends the active stack's turn (_complete_action -> advance_turn) and the stack plays the cast. Change: the cast is a free action during any of the side's stack turns, the active stack keeps its whole turn, and the hero figure plays the cast; armies without a hero cannot cast. An effect that lands on the active stack during its own turn still does not spend that turn (owner decision). The enemy hero keeps casting through the existing spell valuation, at most once per round. Validation: focused report (cast keeps the turn, second cast in a round refused, mana spent once, effect turns with and without the active stack, AI casts at most once per round), battle_spell_effects_report and battle_stat_scaling_report, AI benchmark.",
+      "updatedAt": "2026-10-09T15:35:00Z"
+    },
+    {
+      "id": "battle-rework-melee-approach-20261009",
+      "title": "Player-chosen melee approach hex",
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "gameplay_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/battle-rework.md"
+      ],
+      "notes": "Rules list the legal approach cells for an attacker and target (adjacent cells reachable this turn, 2-hex head/tail placements, obstacles, occupancy, Rooted) and accept a melee order with an explicit approach cell, validated; the current nearest-cell choice (melee_approach_destination) stays the default. The AI scores approach cells. Validation: focused report (every legal side accepted, illegal ones refused, 2-hex placements, Rooted only from where it stands), battle readability regression updated to the new order.",
+      "updatedAt": "2026-10-09T15:35:00Z"
+    },
+    {
+      "id": "battle-rework-fullscreen-screen-20261009",
+      "title": "Full-screen battle screen with heroes on the field, top ribbon and bottom command bar",
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/battle-rework.md"
+      ],
+      "notes": "BattleShell composition per the mockup: painted battlefield across the window, board scaled to the field, both heroes standing at the edges with name and mana plates (click: spellbook; cast animation on the figure), top turn ribbon, bottom command bar (Options, Surrender, Retreat, Auto | latest log line and log popover | Spellbook with mana, Wait, Defend) with hotkeys, compact result overlay; single-click orders; retire the sidebars, caption plates, staged confirmations and distance-band displays. Validation: rendered captures at 1920x1080 and 1280x720 on Windows and Linux, a whole generated-map battle by mouse only and by keyboard only, screen composition rules, affected battle UI reports updated.",
+      "updatedAt": "2026-10-09T15:35:00Z"
+    },
+    {
+      "id": "battle-rework-cursor-forecast-20261009",
+      "title": "Sword and arrow cursors with kill, damage and strike-back forecasts; pointing picks the approach hex",
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/battle-rework.md"
+      ],
+      "notes": "Cursors: sword turned toward the struck side, arrow, broken arrow (penalised shot), move, spell, blocked, info; a forecast badge beside the cursor: kills and damage range, strike-back losses or why there is none, shots before and after, steps; pointing around a target picks the approach hex (sector snapping, ghost at the end hex, path, Q/E cycles); spell targeting shows the spell's forecast. Numbers come from the rules' damage preview without using the battle RNG. Validation: forecast bounds equal the resolved damage bounds in a focused report; rendered captures of every cursor.",
+      "updatedAt": "2026-10-09T15:35:00Z"
+    },
+    {
+      "id": "battle-rework-plates-details-20261009",
+      "title": "Stack plates with role, shots and strike-back pips; right-button details cards",
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/battle-rework.md"
+      ],
+      "notes": "Plates: count, bow or sword role icon, shots left, strike-back pips (retaliations left this round), status icons, waiting and defending flags, active highlight; ribbon chips carry the same role and count badges. Holding the right button on a stack, ribbon chip, hero figure or hero plate opens a details card (stats with modifiers, top creature health, shots, strike-backs, cohesion, momentum, abilities, effects with turns left); release closes it. Validation: rendered captures; card values equal the rules values in a focused report.",
+      "updatedAt": "2026-10-09T15:35:00Z"
+    },
+    {
+      "id": "battle-rework-battlefield-art-20261009",
+      "title": "Painted battlefields and obstacle props per terrain; grid and speed options",
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "art_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/battle-rework.md"
+      ],
+      "notes": "One painted battlefield per terrain family (original art, 1920x1080, open centre for the board, scenery at the edges for the heroes) and an obstacle prop set per terrain (1-2 hex footprints, bases on hex centres); hex grid Full / Range only / Off and battle speed in Options. Validation: art provenance per project rules, rendered captures per terrain, import settings, package size check.",
+      "updatedAt": "2026-10-09T15:35:00Z"
+    },
+    {
+      "id": "battle-rework-ai-balance-20261009",
+      "title": "Battle AI and balance for the reworked flow",
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ai_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/battle-rework.md"
+      ],
+      "notes": "AI for waiting, hero cast timing and targets, obstacles and approach choice; Auto battle plays the player's side through the same AI; quick resolve and auto-resolve follow the new rules. Validation: BattleAiRules benchmark before/after, AI-vs-AI generated-map matches, generated-map battle reports, owner playtest.",
+      "updatedAt": "2026-10-09T15:35:00Z"
     }
   ],
   "project": "heroes-like",
