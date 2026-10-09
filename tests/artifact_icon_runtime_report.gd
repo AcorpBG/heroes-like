@@ -129,16 +129,19 @@ func _surface_case(viewport_size: Vector2i, surface: String) -> Dictionary:
 		if management_tabs == null:
 			return await _finish_case(shell, {"ok": false, "failure": "management_tabs_missing", "surface": surface})
 		management_tabs.current_tab = 4
+	# Overworld artifact orders live on the hero sheet's Artifacts tab.
+	var container: Control = null
+	if surface == "town":
+		container = shell.get_node_or_null("%ArtifactActions") as Container
 	else:
-		shell.validation_open_command_drawer()
+		container = shell.validation_open_hero_sheet("Artifacts")
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var live_session = SessionState.ensure_active_session()
-	var container := shell.get_node_or_null("%ArtifactActions") as Container
-	if container == null:
+	if container == null or (surface != "town" and container.current_tab() != "Artifacts"):
 		return await _finish_case(shell, {"ok": false, "failure": "artifact_actions_missing", "surface": surface})
 	var actions: Array = TownRules.get_artifact_actions(live_session) if surface == "town" else OverworldRules.get_artifact_actions(live_session)
-	var initial_buttons := _button_contract(container, actions, live_session)
+	var initial_buttons: Dictionary = await _button_contract(container, actions, live_session)
 	var equip_action_id := "equip_artifact:%s" % ARTIFACT_ID
 	var equip_button := _button_for_action(container, actions, equip_action_id)
 	if equip_button == null or not _icon_exact(equip_button, EXPECTED_ICONS[ARTIFACT_ID]):
@@ -161,7 +164,7 @@ func _surface_case(viewport_size: Vector2i, surface: String) -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var final_actions: Array = TownRules.get_artifact_actions(live_session) if surface == "town" else OverworldRules.get_artifact_actions(live_session)
-	var final_buttons := _button_contract(container, final_actions, live_session)
+	var final_buttons: Dictionary = await _button_contract(container, final_actions, live_session)
 	var row := {
 		"ok": (
 			bool(initial_buttons.get("ok", false))
@@ -181,13 +184,16 @@ func _surface_case(viewport_size: Vector2i, surface: String) -> Dictionary:
 	}
 	return await _finish_case(shell, row)
 
-func _button_contract(container: Container, actions: Array, session) -> Dictionary:
+func _button_contract(container: Control, actions: Array, session) -> Dictionary:
 	var buttons := []
 	for action_value in actions:
 		if not (action_value is Dictionary):
 			continue
 		var action: Dictionary = action_value
 		var button := _button_for_action(container, actions, String(action.get("id", "")))
+		if button != null and not (container is Container) and _sheet_scroll(button) != null:
+			_sheet_scroll(button).ensure_control_visible(button)
+			await get_tree().process_frame
 		var artifact_id := ArtifactRules.artifact_id_for_management_action(session.overworld.get("hero", {}), String(action.get("id", "")))
 		var expected_path := ArtifactRules.artifact_icon_path(artifact_id)
 		var button_rect: Rect2 = button.get_global_rect() if button != null else Rect2()
@@ -197,7 +203,7 @@ func _button_contract(container: Container, actions: Array, session) -> Dictiona
 			"artifact_id": artifact_id,
 			"expected_path": expected_path,
 			"button_present": button != null,
-			"copy_exact": button != null and button.text == String(action.get("label", "")) and button.tooltip_text.contains(String(action.get("summary", ""))),
+			"copy_exact": button != null and (button.text if container is Container else button.accessibility_name) == String(action.get("label", "")) and button.tooltip_text.contains(String(action.get("summary", ""))),
 			"icon_exact": button != null and ((_icon_exact(button, expected_path)) if expected_path != "" else button.icon == null),
 			"contained": button != null and get_viewport().get_visible_rect().encloses(button_rect),
 			"visible": button != null and button.is_visible_in_tree(),
@@ -207,7 +213,10 @@ func _button_contract(container: Container, actions: Array, session) -> Dictiona
 		})
 	return {"ok": buttons.size() == actions.size() and buttons.all(func(row): return bool(row.get("button_present", false)) and bool(row.get("copy_exact", false)) and bool(row.get("icon_exact", false)) and bool(row.get("contained", false)) and bool(row.get("visible", false))), "button_count": buttons.size(), "action_count": actions.size(), "buttons": buttons}
 
-func _button_for_action(container: Container, actions: Array, action_id: String) -> Button:
+func _button_for_action(container: Control, actions: Array, action_id: String) -> Button:
+	if not (container is Container):
+		# Hero sheet: one named order button per artifact row.
+		return container.find_child("ArtifactOrder_%s" % action_id.replace(":", "_"), true, false) as Button
 	var expected_label := ""
 	for action_value in actions:
 		if action_value is Dictionary and String(action_value.get("id", "")) == action_id:
@@ -236,7 +245,19 @@ func _action_for_id(actions: Array, action_id: String) -> Dictionary:
 	return {}
 
 func _icon_exact(button: Button, expected_path: String) -> bool:
+	if String(button.name).begins_with("ArtifactOrder_"):
+		# The hero sheet shows the icon on the artifact row beside its order button.
+		var row_button := button.get_parent().get_child(0) as Button
+		return row_button != null and row_button != button and row_button.icon != null and row_button.icon.resource_path == expected_path and row_button.expand_icon and row_button.get_theme_constant("icon_max_width") == 54
 	return button.icon != null and button.icon.resource_path == expected_path and button.expand_icon and button.get_theme_constant("icon_max_width") == 24
+
+func _sheet_scroll(button: Control) -> ScrollContainer:
+	var ancestor := button.get_parent()
+	while ancestor != null:
+		if ancestor is ScrollContainer:
+			return ancestor
+		ancestor = ancestor.get_parent()
+	return null
 
 func _artifact_session(at_town: bool):
 	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)

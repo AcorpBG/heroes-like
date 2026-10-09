@@ -22,7 +22,8 @@ const EXPECTED_PANELS := {
 			"SidebarShell": "res://art/ui/runtime/overworld/sidebar_frame.png",
 			"MapFrame": "res://art/ui/runtime/overworld/minimap_frame.png",
 			"HeroPanel": "res://art/ui/runtime/overworld/hero_frame.png",
-			"CommandPanel": "res://art/ui/runtime/overworld/wood_panel.png",
+			"ContextPanel": "res://art/ui/runtime/overworld/parchment_panel.png",
+			"OrdersPanel": "res://art/ui/runtime/overworld/wood_panel.png",
 		},
 		"buttons": {
 			"PrimaryAction": "res://art/ui/runtime/shared/button_primary_normal.png",

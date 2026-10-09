@@ -1,18 +1,30 @@
 extends Control
-## Read-only owned-commander dossier. No gameplay intents or save fields.
+## Owned-commander dossier. Read-only unless opened with `orders`; then it asks
+## its owning screen to cast spells, manage artifacts and stacks, choose
+## specialties and meet heroes. It never changes the session itself.
 
 signal closed
+signal spell_cast_requested(spell_id: String)
+signal artifact_action_requested(action_id: String)
+signal specialty_requested(action_id: String)
+signal army_operation_requested(source_holder_id: String, source_slot_index: int, target_holder_id: String, target_slot_index: int, amount_token: String)
+signal meet_requested(hero_id: String)
 
 const Visuals = preload("res://scripts/ui/FrontierVisualKit.gd")
 const Heroes = preload("res://scripts/core/HeroCommandRules.gd")
 const Progression = preload("res://scripts/core/HeroProgressionRules.gd")
 const Artifacts = preload("res://scripts/core/ArtifactRules.gd")
 const SpellbookViewScript = preload("res://scenes/shared/SpellbookView.gd")
+const ArmyStackBarScript = preload("res://scenes/shared/ArmyStackBar.gd")
 const DecisionDetails = preload("res://scripts/ui/DecisionDetails.gd")
 const FRAME := "res://art/ui/runtime/overworld/parchment_panel.png"
 const PORTRAIT_FRAME := "res://art/ui/runtime/overworld/hero_frame.png"
 
 var hero: Dictionary = {}
+## Live orders for an interactive sheet: spell_actions, artifact_actions,
+## specialty_actions (action lists), army_holder (army slot snapshot) and
+## meet_partners (heroes on the same tile). Empty keeps the sheet read-only.
+var orders: Dictionary = {}
 ## The close button names where the player returns (the Town screen sets its own).
 var close_label := "Return to map"
 var _panel: PanelContainer
@@ -21,6 +33,8 @@ var _tabs: TabContainer
 var _close: Button
 var _return_focus: WeakRef
 var _focusable: Array[Control] = []
+# Controls whose own focusable children join the focus cycle.
+var _focus_groups: Array[Control] = []
 var _spellbook_view: VBoxContainer
 var _artifact_search: LineEdit
 var _artifact_rows: Array[Control] = []
@@ -48,22 +62,51 @@ func _ready() -> void:
 	_panel.add_child(_body)
 	resized.connect(_layout)
 
-func open_hero(snapshot: Dictionary, return_control: Control) -> void:
-	hero = snapshot.duplicate(true)
+## `tab` opens a named tab ("Army", "Artifacts", "Specializations", "Spellbook").
+func open_hero(snapshot: Dictionary, return_control: Control, live_orders: Dictionary = {}, tab: String = "") -> void:
 	_return_focus = weakref(return_control) if return_control != null else null
-	for child in _body.get_children():
-		_body.remove_child(child)
-		child.queue_free()
-	_focusable.clear()
-	_artifact_rows.clear()
-	_artifact_empty_slots.clear()
-	_build()
+	_rebuild(snapshot, live_orders)
+	if tab != "": show_tab(tab)
 	show()
 	move_to_front()
 	set_process_input(true)
 	_layout()
 	_focus_cycle()
 	_close.call_deferred("grab_focus")
+
+## Rebuilds after an order, keeping the open tab.
+func refresh_hero(snapshot: Dictionary, live_orders: Dictionary) -> void:
+	if not visible: return
+	var tab := current_tab()
+	_rebuild(snapshot, live_orders)
+	show_tab(tab)
+	_layout()
+	_focus_cycle()
+	_tabs.get_tab_bar().call_deferred("grab_focus")
+
+func show_tab(title: String) -> void:
+	for index in range(_tabs.get_tab_count()):
+		if _tabs.get_tab_control(index).name == title:
+			_tabs.current_tab = index
+			return
+
+func current_tab() -> String:
+	return String(_tabs.get_current_tab_control().name) if _tabs != null and _tabs.get_current_tab_control() != null else ""
+
+func is_interactive() -> bool:
+	return not orders.is_empty()
+
+func _rebuild(snapshot: Dictionary, live_orders: Dictionary) -> void:
+	hero = snapshot.duplicate(true)
+	orders = live_orders.duplicate(true)
+	for child in _body.get_children():
+		_body.remove_child(child)
+		child.queue_free()
+	_focusable.clear()
+	_focus_groups.clear()
+	_artifact_rows.clear()
+	_artifact_empty_slots.clear()
+	_build()
 
 func close_sheet() -> void:
 	if not visible: return
@@ -89,6 +132,14 @@ func _build() -> void:
 	_body.add_child(header)
 	var title := _label(header, String(hero.get("name", "Hero")), 26, "gold")
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	for partner in orders.get("meet_partners", []):
+		var partner_id := String(partner.get("id", ""))
+		var partner_name := String(partner.get("name", "Commander"))
+		var meet := _button(header, "Meet %s" % partner_name.get_slice(" ", 0), "Meet %s to exchange troops, artifacts and spells." % partner_name, Vector2(150, 38))
+		meet.name = "Meet_%s" % partner_id
+		meet.icon = _texture(String(ContentService.get_hero_art(partner_id).get("portrait", "")))
+		meet.add_theme_constant_override("icon_max_width", 26)
+		meet.pressed.connect(func(): meet_requested.emit(partner_id))
 	_close = _button(header, close_label, "Close hero sheet · Escape / controller Back", Vector2(160, 38))
 	_close.name = "CloseHeroSheet"
 	_close.pressed.connect(close_sheet)
@@ -149,13 +200,30 @@ func _build() -> void:
 	_build_specializations(_tab("Specializations"))
 	_spellbook_view = SpellbookViewScript.new()
 	_tabs.add_child(_spellbook_view)
-	_spellbook_view.configure(hero, hero.get("spellbook", {}).get("known_spell_ids", []))
+	if is_interactive():
+		_spellbook_view.configure(hero, hero.get("spellbook", {}).get("known_spell_ids", []), "overworld", _spell_availability())
+		_spellbook_view.spell_requested.connect(func(spell_id: String): spell_cast_requested.emit(spell_id))
+	else:
+		_spellbook_view.configure(hero, hero.get("spellbook", {}).get("known_spell_ids", []))
 	_spellbook_view.controls_changed.connect(_focus_cycle)
 	_tabs.get_tab_bar().focus_mode = Control.FOCUS_ALL
 	_tabs.get_tab_bar().accessibility_name = "Hero information tabs"
 	_tabs.tab_changed.connect(func(_index: int): _focus_cycle())
 	_focusable.append(_tabs.get_tab_bar())
 	_focus_cycle()
+
+func _spell_availability() -> Dictionary:
+	var availability := {}
+	for action in orders.get("spell_actions", []):
+		var spell_id := String(action.get("id", "")).trim_prefix("cast_spell:")
+		var reason := String(action.get("invalid_reason", ""))
+		availability[spell_id] = {"enabled": not bool(action.get("disabled", false)), "message": reason if reason != "" else String(action.get("readiness", ""))}
+	return availability
+
+func _action(list_key: String, action_id: String) -> Dictionary:
+	for action in orders.get(list_key, []):
+		if action is Dictionary and String(action.get("id", "")) == action_id: return action
+	return {}
 
 func _tab(title: String) -> VBoxContainer:
 	var scroll := ScrollContainer.new()
@@ -177,6 +245,10 @@ func _tab(title: String) -> VBoxContainer:
 	return box
 
 func _build_army(box: VBoxContainer) -> void:
+	var holder: Dictionary = orders.get("army_holder", {})
+	if not holder.is_empty():
+		_build_managed_army(box, holder)
+		return
 	_label(box, "Field army  ·  Select a stack to inspect", 16, "gold")
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 6)
@@ -206,7 +278,27 @@ func _build_army(box: VBoxContainer) -> void:
 	for stack in hero.get("inspection_overflow_stacks", []):
 		var unit := ContentService.get_unit(String(stack.get("unit_id", "")))
 		_label(box, "Legacy overflow · %s × %d\n%s" % [String(unit.get("name", "Unit")), int(stack.get("count", 0)), _unit_description(unit, int(stack.get("count", 0)))], 15)
-	_label(box, "Troop statistics are base values; command bonuses and battlefield effects apply in combat. Manage stacks from the Overworld command drawer or Town.", 14, "muted")
+	_label(box, "Troop statistics are base values; command bonuses and battlefield effects apply in combat. Manage stacks from the hero sheet on the adventure map or in Town.", 14, "muted")
+
+## Click or drag a stack onto another slot to move, swap, merge or split it.
+func _build_managed_army(box: VBoxContainer, holder: Dictionary) -> void:
+	_label(box, "Field army  ·  Click or drag a stack to move, merge or split it", 16, "gold")
+	var bar := ArmyStackBarScript.new()
+	bar.name = "HeroArmyStacks"
+	box.add_child(bar)
+	bar.configure([holder], true)
+	_focus_groups.append(bar)
+	var details := _label(box, "Select a stack to see its statistics.", 16)
+	details.name = "UnitDetails"
+	bar.operation_requested.connect(func(source_holder_id: String, source_slot_index: int, target_holder_id: String, target_slot_index: int, amount_token: String):
+		army_operation_requested.emit(source_holder_id, source_slot_index, target_holder_id, target_slot_index, amount_token))
+	bar.selection_changed.connect(func(snapshot: Dictionary):
+		var slot_index := int(snapshot.get("selected_slot_index", -1))
+		for stack in hero.get("inspection_army_slots", []):
+			if int(stack.get("slot_index", -1)) == slot_index:
+				details.text = _unit_description(ContentService.get_unit(String(stack.get("unit_id", ""))), int(stack.get("count", 0)))
+		call_deferred("_focus_cycle"))
+	_label(box, "Troop statistics are base values; command bonuses and battlefield effects apply in combat.", 14, "muted")
 
 func _unit_description(unit: Dictionary, count: int) -> String:
 	var text := "%s  × %d\nTier %d · %s\n\nAttack %d   Defense %d   Health %d\nDamage %d–%d   Speed %d   Initiative %d" % [String(unit.get("name", "Unit")), count, int(unit.get("tier", 1)), String(unit.get("role", "")).capitalize(), int(unit.get("attack", 0)), int(unit.get("defense", 0)), int(unit.get("hp", 0)), int(unit.get("min_damage", 0)), int(unit.get("max_damage", 0)), int(unit.get("speed", 0)), int(unit.get("initiative", 0))]
@@ -229,17 +321,20 @@ func _build_artifacts(box: VBoxContainer) -> void:
 	_label(box, "Equipped", 18, "gold")
 	var equipped: Dictionary = hero.get("artifacts", {}).get("equipped", {})
 	for slot in Artifacts.EQUIPMENT_SLOTS:
-		_artifact_row(box, String(equipped.get(slot, "")), String(slot).replace("_2", " II").capitalize())
+		_artifact_row(box, String(equipped.get(slot, "")), String(slot).replace("_2", " II").capitalize(), "unequip_artifact:%s" % slot)
 	_label(box, "Backpack", 18, "gold")
 	var inventory: Array = hero.get("artifacts", {}).get("inventory", [])
 	if inventory.is_empty(): _label(box, "No carried artifacts.", 15, "muted")
-	for artifact_id in inventory: _artifact_row(box, String(artifact_id), "Carried")
+	for artifact_id in inventory: _artifact_row(box, String(artifact_id), "Carried", "equip_artifact:%s" % artifact_id)
 	_artifact_empty = _label(box, "No artifacts match this search.", 15, "muted")
 	_artifact_empty.hide()
+	_build_artifact_sets(box)
 	_label(box, Artifacts.describe_impact_summary(hero.duplicate(true)), 15)
-	_label(box, "Equipment changes remain in the Overworld command drawer. Inspecting an artifact does not equip it.", 14, "muted")
+	if not is_interactive():
+		_label(box, "Equip and stow artifacts from the hero sheet on the adventure map. Inspecting an artifact does not equip it.", 14, "muted")
 
-func _artifact_row(box: VBoxContainer, artifact_id: String, slot: String) -> void:
+## `order_id` is the equip/stow order offered for this row, if any.
+func _artifact_row(box: VBoxContainer, artifact_id: String, slot: String, order_id: String = "") -> void:
 	if artifact_id == "":
 		_artifact_empty_slots.append(_label(box, "%s · Empty" % slot, 15, "muted"))
 		return
@@ -247,8 +342,20 @@ func _artifact_row(box: VBoxContainer, artifact_id: String, slot: String) -> voi
 	entry.set_meta("artifact_name", Artifacts.artifact_name(artifact_id))
 	_artifact_rows.append(entry)
 	box.add_child(entry)
-	var button := _button(entry, "%s · %s" % [slot, Artifacts.artifact_name(artifact_id)], "Show artifact effects", Vector2(0, 48))
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	entry.add_child(row)
+	var button := _button(row, "%s · %s" % [slot, Artifacts.artifact_name(artifact_id)], "Show artifact effects", Vector2(0, 48))
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	var order := _action("artifact_actions", order_id)
+	if not order.is_empty():
+		var label := String(order.get("label", ""))
+		var verb := "Stow" if order_id.begins_with("unequip_artifact:") else ("Swap in" if label.begins_with("Swap In") else "Equip")
+		var order_button := _button(row, verb, String(order.get("summary", label)), Vector2(110, 48))
+		order_button.name = "ArtifactOrder_%s" % order_id.replace(":", "_")
+		order_button.accessibility_name = label
+		order_button.pressed.connect(func(): artifact_action_requested.emit(order_id))
 	button.icon = _texture(Artifacts.artifact_icon_path(artifact_id))
 	button.set_meta("artifact_id", artifact_id)
 	button.accessibility_name = button.text
@@ -257,6 +364,41 @@ func _artifact_row(box: VBoxContainer, artifact_id: String, slot: String) -> voi
 	button.pressed.connect(func():
 		detail.visible = not detail.visible
 		if detail.visible: call_deferred("_reveal_artifact_entry", entry))
+
+## One insignia row per artifact set the hero carries pieces of.
+func _build_artifact_sets(box: VBoxContainer) -> void:
+	for set_state in Artifacts.artifact_set_runtime_state(hero):
+		if not (set_state is Dictionary) or not (set_state.get("insignia", {}) is Dictionary): continue
+		var texture := _insignia_texture(set_state.insignia)
+		if texture == null: continue
+		var row := HBoxContainer.new()
+		row.name = "ArtifactSetInsignia_%s" % String(set_state.get("set_id", "set"))
+		row.set_meta("artifact_set_id", String(set_state.get("set_id", "")))
+		row.set_meta("artifact_set_complete", bool(set_state.get("complete", false)))
+		row.tooltip_text = String(set_state.insignia.get("alt_text", ""))
+		box.add_child(row)
+		var icon := TextureRect.new()
+		icon.name = "SetInsignia"
+		icon.custom_minimum_size = Vector2(32, 32)
+		icon.texture = texture
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(icon)
+		var label := _label(row, "%s %d/%d" % [String(set_state.get("name", "Artifact Set")), int(set_state.get("equipped_piece_count", 0)), int(set_state.get("piece_count", 0))], 15, "gold")
+		label.name = "SetProgress"
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+func _insignia_texture(insignia: Dictionary) -> Texture2D:
+	var region: Dictionary = insignia.get("atlas_region", {}) if insignia.get("atlas_region", {}) is Dictionary else {}
+	var atlas := _texture(String(insignia.get("atlas_path", "")).strip_edges())
+	if atlas == null or region.is_empty(): return null
+	var rect := Rect2(float(region.get("x", -1)), float(region.get("y", -1)), float(region.get("width", 0)), float(region.get("height", 0)))
+	if rect.position.x < 0.0 or rect.position.y < 0.0 or not rect.has_area() or not Rect2(Vector2.ZERO, atlas.get_size()).encloses(rect): return null
+	var texture := AtlasTexture.new()
+	texture.atlas = atlas
+	texture.region = rect
+	return texture
 
 func _reveal_artifact_entry(entry: Control) -> void:
 	if not is_inside_tree(): return
@@ -298,7 +440,22 @@ func _build_specializations(box: VBoxContainer) -> void:
 	var pending := Progression.pending_choices_remaining(hero)
 	_label(box, "%d pending specialization choice%s" % [pending, "" if pending == 1 else "s"], 17, "gold")
 	if pending > 0:
-		_label(box, "Choose upgrades from the Overworld command drawer after returning to the map.\n" + Progression.pending_choice_summary(Progression.current_pending_choice(hero)), 15)
+		var choices: Array = orders.get("specialty_actions", [])
+		if choices.is_empty():
+			_label(box, "Choose upgrades from the hero sheet on the adventure map.\n" + Progression.pending_choice_summary(Progression.current_pending_choice(hero)), 15)
+		for choice in choices:
+			var action_id := String(choice.get("id", ""))
+			var specialty_id := Progression.specialty_id_for_action(action_id)
+			var tooltip := String(choice.get("summary", ""))
+			var insignia := Progression.specialty_insignia_description(specialty_id)
+			if insignia != "": tooltip += "\nInsignia: " + insignia
+			var choose := _button(box, String(choice.get("label", "Choose specialty")), tooltip, Vector2(0, 48))
+			choose.name = "Specialty_%s" % action_id.replace(":", "_")
+			choose.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			choose.disabled = bool(choice.get("disabled", false))
+			choose.icon = Progression.specialty_insignia_texture(specialty_id)
+			choose.add_theme_constant_override("icon_max_width", 34)
+			choose.pressed.connect(func(): specialty_requested.emit(action_id))
 	var template := Heroes.hero_template(hero)
 	_label(box, String(template.get("identity_summary", "")), 16)
 	var focus := Progression.summarize_specialty_ids(template.get("specialty_focus_ids", []))
@@ -335,6 +492,8 @@ func _focus_cycle() -> void:
 	var controls: Array[Control] = []
 	for control in _focusable:
 		if control.is_visible_in_tree() and not (control is Button and control.disabled): controls.append(control)
+	for group in _focus_groups:
+		if is_instance_valid(group) and group.is_visible_in_tree(): _append_focusable_descendants(group, controls)
 	if is_instance_valid(_spellbook_view) and _spellbook_view.is_visible_in_tree():
 		controls.append_array(_spellbook_view.focus_controls())
 	for index in range(controls.size()):
@@ -345,6 +504,13 @@ func _focus_cycle() -> void:
 		if controls[index] is Button:
 			controls[index].focus_neighbor_left = controls[index].focus_previous
 			controls[index].focus_neighbor_right = controls[index].focus_next
+
+func _append_focusable_descendants(node: Node, controls: Array[Control]) -> void:
+	for child in node.get_children():
+		if child is BaseButton:
+			if child.is_visible_in_tree() and not child.disabled and child.focus_mode != Control.FOCUS_NONE: controls.append(child)
+		elif child is Control and child.is_visible_in_tree():
+			_append_focusable_descendants(child, controls)
 
 func _texture(path: String) -> Texture2D:
 	return ResourceLoader.load(path, "Texture2D") as Texture2D if path != "" and ResourceLoader.exists(path, "Texture2D") else null

@@ -276,7 +276,10 @@ func run_match() -> void:
 			if variant=="current":check(focus_retained,input_kind+" lost logical roster focus")
 			observations.append({"variant":variant,"stage":input_kind+"_focus","focus_retained":focus_retained})
 			control_state(input_kind);hud(shell,input_kind)
-		check(shell._active_drawer=="" and not shell._command_panel.visible and not shell._frontier_panel.visible,"movement opened a drawer")
+		# The reference shell still has the retired Command/Frontier drawers; the
+		# current shell keeps hero orders on the hero sheet instead.
+		if "_active_drawer" in shell:check(shell._active_drawer=="" and not shell._command_panel.visible and not shell._frontier_panel.visible,"movement opened a drawer")
+		else:check(not (is_instance_valid(shell._hero_sheet) and shell._hero_sheet.visible),"movement opened the hero sheet")
 		check(shell.route_scope_expansions==0,"route-only request rebuilt full status or roster")
 		var steps := 0
 		while int(session.overworld.movement.current)>0 and steps<64:

@@ -44,3 +44,23 @@ static func town_badge(parent: Control, troops: int) -> void:
 	label.text = str(troops) if troops > 0 else "0 !"
 	label.add_theme_color_override("font_color", Color("ffe3a1") if troops > 0 else Color("ff9c80"))
 	label.accessibility_name = "%d defending troops%s" % [troops, "; undefended" if troops == 0 else ""]
+
+## A small painted status medallion in the top-right corner; hidden when not shown.
+static func status_badge(parent: Control, key: String, texture: Texture2D, shown: bool, description: String) -> void:
+	var badge := parent.get_node_or_null(NodePath(key)) as TextureRect
+	if badge == null:
+		if not shown: return
+		badge = TextureRect.new()
+		badge.name = key
+		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		parent.add_child(badge)
+		badge.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+		badge.offset_left = -24
+		badge.offset_right = -3
+		badge.offset_top = 3
+		badge.offset_bottom = 24
+	badge.texture = texture
+	badge.visible = shown
+	badge.accessibility_name = description if shown else ""

@@ -2948,7 +2948,7 @@ static func build_in_active_town(session: SessionStateStoreScript.SessionData, b
 		return {"ok": false, "message": "Capture the town before issuing orders there."}
 
 	var build_status := get_town_build_status(town, building_id)
-	if int(town.get("last_build_day", 0)) == int(session.day):
+	if town_built_today(town, int(session.day)):
 		return {"ok": false, "message": "This town has already completed a build order today."}
 	if not bool(build_status.get("buildable", false)):
 		return {"ok": false, "message": String(build_status.get("blocked_message", "That building is not available in this town."))}
@@ -3075,7 +3075,7 @@ static func cast_overworld_spell(session: SessionStateStoreScript.SessionData, s
 	normalize_overworld_state(session)
 	var hero = session.overworld.get("hero", {})
 	var movement = session.overworld.get("movement", {})
-	var result := SpellRulesScript.cast_overworld_spell(hero, movement, spell_id)
+	var result := SpellRulesScript.cast_overworld_spell(hero, movement, spell_id, session.day)
 	if not bool(result.get("ok", false)):
 		return {"ok": false, "message": String(result.get("message", "Spell casting failed."))}
 
@@ -4110,6 +4110,17 @@ static func town_footprint_tiles(town: Dictionary) -> Array:
 	if entrance_tile.x >= 0 and entrance_tile.y >= 0 and entrance_tile not in tiles:
 		tiles.append(entrance_tile)
 	return tiles
+
+## A town completes at most one build order per day.
+static func town_built_today(town: Dictionary, day: int) -> bool:
+	return day > 0 and int(town.get("last_build_day", 0)) == day
+
+## True when the player's hero has used today's overworld spell.
+static func hero_cast_spell_today(session: SessionStateStoreScript.SessionData, hero_id: String) -> bool:
+	if session == null or hero_id == "":
+		return false
+	var hero: Dictionary = session.overworld.get("hero", {}) if hero_id == String(session.overworld.get("active_hero_id", "")) else HeroCommandRulesScript.hero_by_id(session, hero_id)
+	return SpellRulesScript.cast_overworld_spell_on_day(hero, int(session.day))
 
 ## Every tile a mine stands on: its body and its entrance. Empty if the node is not a mine.
 static func mine_footprint_tiles(node: Dictionary) -> Array:
@@ -7213,7 +7224,8 @@ static func get_spell_actions(session: SessionStateStoreScript.SessionData) -> A
 	normalize_overworld_state_for_runtime(session)
 	return SpellRulesScript.get_overworld_actions(
 		session.overworld.get("hero", {}),
-		session.overworld.get("movement", {})
+		session.overworld.get("movement", {}),
+		session.day
 	)
 
 static func get_hero_actions(session: SessionStateStoreScript.SessionData) -> Array:

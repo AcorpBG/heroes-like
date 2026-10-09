@@ -67,8 +67,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	var cue_row := shell.get_node_or_null("%ResourceDeltaCueRow") as Control
 	var cue_icon := shell.get_node_or_null("%ResourceDeltaCueIcon") as TextureRect
 	var cue := shell.get_node_or_null("%ResourceDeltaCue") as Label
-	var open_command := shell.get_node_or_null("%OpenCommand") as Button
-	if primary_action == null or cue_row == null or cue_icon == null or cue == null or open_command == null:
+	if primary_action == null or cue_row == null or cue_icon == null or cue == null:
 		return await _finish_case(shell, {"ok": false, "failure": "live_surface_missing"})
 	var initial: Dictionary = shell.validation_snapshot()
 	var primary_payload: Dictionary = initial.get("primary_action", {}) if initial.get("primary_action", {}) is Dictionary else {}
@@ -164,9 +163,12 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	shell.call("_refresh")
 	var refreshed := _presentation(shell)
 	var refresh_exact: bool = int(refreshed.get("serial", 0)) == serial and bool(refreshed.get("active", false)) and float(refreshed.get("progress", -1.0)) >= progress_before and live_session.to_dict() == live_after and PresentationAudio.validation_records() == audio_records
-	open_command.emit_signal("pressed")
-	var after_command := _presentation(shell)
-	var nonblocking_exact: bool = String(shell.get("_active_drawer")) == "command" and bool(after_command.get("active", false)) and live_session.to_dict() == live_after
+	# The cue does not block orders: the hero sheet still opens while it plays.
+	var sheet = shell.validation_open_hero_sheet()
+	var after_sheet := _presentation(shell)
+	var nonblocking_exact: bool = sheet != null and sheet.visible and bool(after_sheet.get("active", false)) and live_session.to_dict() == live_after
+	if sheet != null:
+		sheet.close_sheet()
 	var settle_frames := 0
 	while bool(_presentation(shell).get("active", false)) and settle_frames < 120:
 		await get_tree().process_frame

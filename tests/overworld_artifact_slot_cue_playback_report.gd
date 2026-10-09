@@ -58,13 +58,12 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	var live_session = shell.get("_session")
 	if live_session == null:
 		live_session = active_session
-	var artifact_actions := shell.get_node_or_null("%ArtifactActions") as Container
 	var artifact_cue_row := shell.get_node_or_null("%ArtifactActionCueRow") as Control
 	var artifact_cue_icon := shell.get_node_or_null("%ArtifactActionCueIcon") as TextureRect
 	var artifact_cue := shell.get_node_or_null("%ArtifactActionCue") as Label
 	var map_cue := shell.get_node_or_null("%MapCue") as Label
 	var spell_blocker := shell.get_node_or_null("%SpellCastInputBlocker") as Control
-	if artifact_actions == null or artifact_cue_row == null or artifact_cue_icon == null or artifact_cue == null or map_cue == null or spell_blocker == null:
+	if artifact_cue_row == null or artifact_cue_icon == null or artifact_cue == null or map_cue == null or spell_blocker == null:
 		return await _finish_case(shell, {"ok": false, "failure": "live_surface_missing"})
 
 	var malformed_before := _artifact_presentation(shell)
@@ -76,12 +75,17 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	})
 	var malformed_fail_closed: bool = malformed_after == malformed_before and not artifact_cue_row.visible and not artifact_cue_icon.visible and not artifact_cue.visible and map_cue.visible and not spell_blocker.visible and PresentationAudio.validation_records().is_empty()
 
+	# Artifact orders live on the hero sheet's Artifacts tab.
+	var sheet = shell.validation_open_hero_sheet("Artifacts")
+	await get_tree().process_frame
+	if sheet == null or not sheet.is_interactive() or sheet.current_tab() != "Artifacts":
+		return await _finish_case(shell, {"ok": false, "failure": "hero_sheet_artifacts_missing"})
 	var live_before: Dictionary = live_session.to_dict()
 	var control = SessionDataScript.SessionData.new()
 	control.from_dict(live_before.duplicate(true))
 	var equip_action_id := "equip_artifact:%s" % ARTIFACT_ID
 	var equip_control_result: Dictionary = OverworldRules.perform_artifact_action(control, equip_action_id)
-	var equip_button := _enabled_artifact_button(artifact_actions, live_session, equip_action_id)
+	var equip_button := _enabled_artifact_button(sheet, live_session, equip_action_id)
 	if equip_button == null:
 		return await _finish_case(shell, {"ok": false, "failure": "equip_button_missing"})
 	equip_button.emit_signal("pressed")
@@ -104,7 +108,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 
 	var stow_action_id := "unequip_artifact:%s" % ARTIFACT_SLOT
 	var stow_control_result: Dictionary = OverworldRules.perform_artifact_action(control, stow_action_id)
-	var stow_button := _enabled_artifact_button(artifact_actions, live_session, stow_action_id)
+	var stow_button := _enabled_artifact_button(sheet, live_session, stow_action_id)
 	if stow_button == null:
 		return await _finish_case(shell, {"ok": false, "failure": "stow_button_missing", "equip_presentation": equip_presentation})
 	var equip_was_still_active := bool(equip_presentation.get("active", false))
@@ -125,7 +129,9 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		mode,
 		2
 	) and bool(stow_control_result.get("ok", false)) and live_after == control.to_dict() and artifact_cue_row.is_visible_in_tree() and artifact_cue.is_visible_in_tree() and artifact_cue_icon.is_visible_in_tree() == not bool(mode.get("reduced_motion", false)) and not map_cue.visible and stow_audio_records.size() == 2 and stow_audio_exact
-	var nonblocking_exact: bool = equip_was_still_active and stow_exact and not spell_blocker.visible
+	var nonblocking_exact: bool = equip_was_still_active and stow_exact and not spell_blocker.visible and sheet.visible and sheet.current_tab() == "Artifacts"
+	sheet.close_sheet()
+	await get_tree().process_frame
 
 	var serial := int(stow_presentation.get("serial", 0))
 	var progress_before_refresh := float(stow_presentation.get("progress", 0.0))
@@ -213,18 +219,18 @@ func _artifact_session():
 	session.overworld["player_heroes"] = player_heroes
 	return session
 
-func _enabled_artifact_button(container: Container, session, action_id: String) -> Button:
-	var expected_label := ""
+func _enabled_artifact_button(sheet: Control, session, action_id: String) -> Button:
+	var offered := false
 	for action_value in OverworldRules.get_artifact_actions(session):
 		if action_value is Dictionary and String(action_value.get("id", "")) == action_id:
 			if bool(action_value.get("disabled", false)):
 				return null
-			expected_label = String(action_value.get("label", ""))
+			offered = true
 			break
-	for child in container.get_children():
-		if child is Button and not child.disabled and child.text == expected_label:
-			return child
-	return null
+	if not offered or not sheet.visible:
+		return null
+	var button := sheet.find_child("ArtifactOrder_%s" % action_id.replace(":", "_"), true, false) as Button
+	return button if button != null and not button.disabled and button.is_visible_in_tree() else null
 
 func _artifact_presentation(shell: Node) -> Dictionary:
 	var snapshot: Dictionary = shell.validation_snapshot()

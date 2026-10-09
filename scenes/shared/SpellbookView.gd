@@ -1,5 +1,6 @@
 extends VBoxContainer
-## Shared, read-only spell catalogue. Only the owning screen can issue orders.
+## Shared spell catalogue. In "battle" and "overworld" modes the selected spell
+## can be requested; only the owning screen issues the order.
 
 signal spell_requested(spell_id: String)
 signal controls_changed
@@ -138,7 +139,9 @@ func configure(hero: Dictionary, spell_ids: Array, mode: String = "inspect", ava
 		_mana_costs[String(spell.id)] = Spells.adjusted_spell_mana_cost(_hero, spell)
 	_spells.sort_custom(func(a: Dictionary, b: Dictionary): return String(a.name).naturalnocasecmp_to(String(b.name)) < 0)
 	if is_node_ready():
-		_context.select(1 if mode == "battle" else 0)
+		_context.select(1 if mode == "battle" else (2 if mode == "overworld" else 0))
+		_prepare.text = "Cast spell" if mode == "overworld" else "Prepare spell"
+		_prepare.accessibility_name = "Cast the selected overworld spell" if mode == "overworld" else "Prepare selected spell; choose and confirm a battlefield target next"
 		_role.select(0)
 		_search.text = ""
 		_affordable.set_pressed_no_signal(false)
@@ -241,7 +244,7 @@ func _rebuild() -> void:
 	_empty.visible = ids.is_empty()
 	_empty.text = "No spells match these filters." if not _spells.is_empty() else ("Build the town's spell archives to unlock its library. Visiting heroes learn available spells automatically." if _mode == "town" else "This hero has not learned any spells. Visit an owned town with spell archives.")
 	_scroll.visible = not ids.is_empty()
-	_prepare.visible = _mode == "battle"
+	_prepare.visible = _mode in ["battle", "overworld"]
 	_selected_id = _selected_id if _selected_id in ids else (String(ids[0]) if not ids.is_empty() else "")
 	_select(_selected_id)
 	_layout_columns()
@@ -260,7 +263,7 @@ func _select(spell_id: String) -> void:
 	if not state.is_empty(): _details.text += "\n" + String(state.get("message", ""))
 	var was_disabled := _prepare.disabled
 	_prepare.disabled = not bool(state.get("enabled", false)) or spell_id == ""
-	_prepare.tooltip_text = String(state.get("message", "Select a learned battle spell with a legal target."))
+	_prepare.tooltip_text = String(state.get("message", "Select a learned overworld spell." if _mode == "overworld" else "Select a learned battle spell with a legal target."))
 	for button in _grid.get_children():
 		button.self_modulate = Color("ffe3a1") if String(button.get_meta("spell_id", "")) == spell_id else Color.WHITE
 	if was_disabled != _prepare.disabled: controls_changed.emit()

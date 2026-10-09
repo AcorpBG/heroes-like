@@ -70,10 +70,7 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _map_frame_panel: PanelContainer = %MapFrame
 @onready var _sidebar_shell_panel: PanelContainer = %SidebarShell
 @onready var _hero_panel: PanelContainer = %HeroPanel
-@onready var _action_panel: PanelContainer = %ActionPanel
 @onready var _command_spine: VBoxContainer = %CommandSpine
-@onready var _command_panel: PanelContainer = %CommandPanel
-@onready var _frontier_panel: PanelContainer = %FrontierPanel
 @onready var _context_panel: PanelContainer = %ContextPanel
 @onready var _command_band_panel: PanelContainer = %CommandBand
 @onready var _command_row: HBoxContainer = $ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow
@@ -102,18 +99,7 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _heroes_label: Label = %Heroes
 @onready var _roster_scroll: ScrollContainer = %RosterScroll
 @onready var _roster_columns: HBoxContainer = %RosterColumns
-@onready var _action_title_label: Label = %ActionTitle
-@onready var _frontier_indicator_label: Label = %FrontierIndicator
-@onready var _command_title_label: Label = %CommandTitle
-@onready var _specialty_label: Label = %Specialties
-@onready var _spell_label: Label = %Spellbook
-@onready var _artifact_label: Label = %Artifacts
 @onready var _context_title_label: Label = %ContextTitle
-@onready var _frontier_title_label: Label = %FrontierTitle
-@onready var _visibility_label: Label = %Visibility
-@onready var _objective_label: Label = %Objectives
-@onready var _threat_label: Label = %Threats
-@onready var _forecast_label: Label = %Forecast
 @onready var _orders_title_label: Label = %OrdersTitle
 @onready var _objective_brief_label: Label = %ObjectiveBrief
 @onready var _primary_action_button: Button = %PrimaryAction
@@ -122,18 +108,9 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _context_actions: Container = %ContextActions
 @onready var _hero_actions: Container = %HeroActions
 @onready var _town_actions: Container = %TownActions
-@onready var _spell_actions: Container = %SpellActions
-@onready var _specialty_actions: Container = %SpecialtyActions
-@onready var _artifact_actions: Container = %ArtifactActions
 @onready var _artifact_action_cue_row: HBoxContainer = %ArtifactActionCueRow
 @onready var _artifact_action_cue_icon: TextureRect = %ArtifactActionCueIcon
 @onready var _artifact_action_cue: Label = %ArtifactActionCue
-@onready var _rendezvous_label: Label = %Rendezvous
-@onready var _rendezvous_controls: Container = %RendezvousControls
-@onready var _open_command_button: Button = %OpenCommand
-@onready var _open_frontier_button: Button = %OpenFrontier
-@onready var _close_command_button: Button = %CloseCommand
-@onready var _close_frontier_button: Button = %CloseFrontier
 @onready var _end_turn_button: Button = %EndTurn
 @onready var _save_status_label: Label = %SaveStatus
 @onready var _route_cursor_live_label: Label = %RouteCursorLive
@@ -192,9 +169,6 @@ const REFRESH_PHASE_ACTION_RAILS := "action_rails"
 const REFRESH_PHASE_HERO_ACTIONS := "hero_actions"
 const REFRESH_PHASE_CONTEXT_ACTIONS := "context_actions"
 const REFRESH_PHASE_CONTEXT_ROUTE := "route_preview"
-const REFRESH_PHASE_SPELL_RAILS := "spell_rails"
-const REFRESH_PHASE_SPECIALTY_RAILS := "specialty_rails"
-const REFRESH_PHASE_ARTIFACT_RAILS := "artifact_rails"
 const REFRESH_PHASE_STATUS_SURFACES := "status_surfaces"
 const REFRESH_PHASE_SAVE_SURFACE := "save_surface"
 const REFRESH_PHASE_GENERATED_SURFACES := "generated_surfaces"
@@ -204,9 +178,6 @@ const REFRESH_ALL_PHASES := [
 	REFRESH_PHASE_HERO_ACTIONS,
 	REFRESH_PHASE_CONTEXT_ACTIONS,
 	REFRESH_PHASE_CONTEXT_ROUTE,
-	REFRESH_PHASE_SPELL_RAILS,
-	REFRESH_PHASE_SPECIALTY_RAILS,
-	REFRESH_PHASE_ARTIFACT_RAILS,
 	REFRESH_PHASE_STATUS_SURFACES,
 	REFRESH_PHASE_SAVE_SURFACE,
 	REFRESH_PHASE_GENERATED_SURFACES,
@@ -222,6 +193,8 @@ var _highlight_interactions_button: Button
 var _inspect_tile_button: Button
 var _scout_dialog: AcceptDialog
 const Readiness := preload("res://scripts/ui/ReadinessWidgets.gd")
+const BUILT_TODAY_BADGE := preload("res://art/ui/runtime/overworld/badge_built_today.png")
+const SPELL_CAST_TODAY_BADGE := preload("res://art/ui/runtime/overworld/badge_spell_cast_today.png")
 var _next_movable_hero: Button
 
 func _configure_scout_controls() -> void:
@@ -375,7 +348,6 @@ var _validation_generated_opening_autosave_reconciliation_count := 0
 var _last_generated_opening_autosave_reconciliation_result: Dictionary = {}
 var _opening_route_suggested := false
 var _opening_route_suggestion_kind := ""
-var _active_drawer := ""
 var _refresh_cache: Dictionary = {}
 var _hero_actions_cache: Array = []
 var _hero_actions_cache_signature := ""
@@ -612,11 +584,10 @@ func _apply_responsive_layout() -> void:
 	_top_strip_panel.custom_minimum_size.y = 38.0 if compact_layout else 44.0
 	_hero_panel.custom_minimum_size.y = 168.0 if compact_layout else 190.0
 	_roster_scroll.custom_minimum_size.y = 70.0 if compact_layout else (176.0 if available_size.y >= 1000.0 else 94.0)
-	_action_panel.custom_minimum_size.y = 44.0 if compact_layout else 76.0
 	_command_band_panel.custom_minimum_size.y = 46.0 if compact_layout else 50.0
 	_briefing_panel.visible = false
 	_commitment_panel.visible = false
-	_event_panel.visible = not compact_layout and _active_drawer == ""
+	_event_panel.visible = not compact_layout
 	_cue_chip_panel.visible = not compact_layout
 	_resource_chip_panel.visible = true
 	_resource_chip_panel.custom_minimum_size.x = 0.0
@@ -631,8 +602,6 @@ func _apply_responsive_layout() -> void:
 	_army_label.visible = false
 	_heroes_label.visible = false
 	_army_management.set_compact_mode(true)
-	_action_title_label.visible = false
-	_frontier_indicator_label.visible = false
 	_system_panel.custom_minimum_size.x = 214.0 if narrow_layout else (248.0 if compact_layout else 300.0)
 	_primary_action_button.custom_minimum_size.x = 150.0 if compact_layout else (170.0 if large_scale_footer else 190.0)
 	_primary_action_button.clip_text = true
@@ -696,12 +665,6 @@ func _input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed("ui_cancel") and _pointer_order_tile != Vector2i(-999, -999):
 		_cancel_pointer_order()
-		get_viewport().set_input_as_handled()
-		return
-	if event.is_action_pressed("ui_cancel") and _active_drawer != "":
-		if _save_slot_picker != null and _save_slot_picker.get_popup().visible:
-			return
-		_on_close_drawers_pressed()
 		get_viewport().set_input_as_handled()
 		return
 	if _handle_controller_route_axis_input(event):
@@ -985,8 +948,6 @@ func _overworld_gameplay_movement_blocked_reason() -> String:
 		return "not_overworld"
 	if not _battle_approach.is_empty():
 		return "battle_approach"
-	if _active_drawer != "":
-		return "drawer_open"
 	if _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():
 		return "settings_open"
 	if _save_slot_picker != null and _save_slot_picker.get_popup().visible:
@@ -2142,23 +2103,6 @@ func _on_active_play_setting_changed(setting_id: String) -> void:
 func _on_primary_action_pressed() -> void:
 	_activate_primary_action()
 
-func _on_open_command_pressed() -> void:
-	_set_active_drawer("" if _active_drawer == "command" else "command")
-	_sync_context_drawers()
-	call_deferred("_configure_overworld_keyboard_focus", true)
-
-func _on_open_frontier_pressed() -> void:
-	_set_active_drawer("" if _active_drawer == "frontier" else "frontier")
-	if _active_drawer == "frontier":
-		_refresh_frontier_drawer()
-	_sync_context_drawers()
-	call_deferred("_configure_overworld_keyboard_focus", true)
-
-func _on_close_drawers_pressed() -> void:
-	_set_active_drawer("")
-	_sync_context_drawers()
-	call_deferred("_configure_overworld_keyboard_focus", true)
-
 func _on_context_action_pressed(action_id: String) -> void:
 	if action_id == "focus_hero":
 		_focus_active_hero_from_roster()
@@ -2242,6 +2186,7 @@ func _on_artifact_action_pressed(action_id: String) -> void:
 		return
 	_refresh()
 	_record_artifact_slot_presentation(result, action_id, before_artifacts)
+	_refresh_hero_sheet()
 
 func _on_specialty_action_pressed(action_id: String) -> void:
 	var result = {}
@@ -2261,6 +2206,7 @@ func _on_specialty_action_pressed(action_id: String) -> void:
 	if bool(resolution.get("handled", false)):
 		return
 	_refresh()
+	_refresh_hero_sheet()
 
 func _on_hero_action_pressed(action_id: String) -> void:
 	var result = {}
@@ -2302,6 +2248,7 @@ func _on_army_slot_operation_requested(
 	_last_turn_resolution_text = ""
 	_army_management.clear_selection()
 	_refresh()
+	_refresh_hero_sheet()
 
 func _refresh_army_management() -> void:
 	var active_hero_id := String(_session.overworld.get("active_hero_id", ""))
@@ -2330,9 +2277,8 @@ func _open_hero_exchange(partner_id: String = "", return_control: Control = null
 		_hero_exchange.order_requested.connect(_on_hero_exchange_order_requested)
 		_hero_exchange.partner_requested.connect(_on_hero_exchange_partner_requested)
 		_hero_exchange.closed.connect(_on_hero_exchange_closed)
-	if _active_drawer != "":
-		_set_active_drawer("")
-		_sync_context_drawers()
+	if is_instance_valid(_hero_sheet) and _hero_sheet.visible:
+		_hero_sheet.close_sheet()
 	_hero_exchange.open_exchange(state, return_control)
 	return true
 
@@ -2387,11 +2333,14 @@ func _on_spell_action_pressed(action_id: String) -> void:
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
+		if is_instance_valid(_hero_sheet) and _hero_sheet.visible:
+			_hero_sheet.close_sheet()
 	var resolution := _handle_session_resolution()
 	if bool(resolution.get("handled", false)):
 		return
 	_refresh()
 	_record_spell_cast_presentation(result, spell_id)
+	_refresh_hero_sheet()
 
 func _on_map_tile_pressed(tile: Vector2i) -> void:
 	if _overworld_order_input_blocked(): return
@@ -2415,6 +2364,10 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 	_debug_record_phase_usec("input_handler_entry", Time.get_ticks_usec() - handler_started_usec, {"handler": "map_tile_pressed"})
 	var route_tile := _selection_route_tile(tile)
 	_debug_set_path_command_target(route_tile)
+	if route_tile == OverworldRules.hero_position(_session) and _open_hero_sheet(String(_session.overworld.get("active_hero_id", ""))):
+		_debug_set_path_command_type("open_hero_sheet")
+		_debug_finish_path_command()
+		return
 	if (
 		not town_footprint_selection.is_empty()
 		and not bool(town_footprint_selection.get("is_entry_tile", false))
@@ -2435,7 +2388,6 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 		return
 
 	_set_selected_tile(route_tile)
-	_set_active_drawer("")
 	_debug_set_path_command_type("select_route")
 	_record_selected_object_focus_presentation("pointer")
 	_refresh_selected_route_preview("selected_route_changed")
@@ -2456,8 +2408,8 @@ func _on_map_tile_hovered(tile: Vector2i) -> void:
 	var profile_start := _profile_begin("hover")
 	_hovered_tile = tile
 	_update_map_tooltip()
-	if _active_drawer != "" or _validation_force_hover_drawer_sync:
-		_sync_context_drawers()
+	if _validation_force_hover_drawer_sync:
+		_sync_tile_context()
 	_profile_end("hover", profile_start, {"tile": {"x": tile.x, "y": tile.y}})
 
 func _visit_selected_town() -> bool:
@@ -2789,9 +2741,6 @@ func _refresh_with_request(request: Dictionary) -> void:
 		REFRESH_PHASE_ACTION_RAILS,
 		REFRESH_PHASE_HERO_ACTIONS,
 		REFRESH_PHASE_CONTEXT_ACTIONS,
-		REFRESH_PHASE_SPELL_RAILS,
-		REFRESH_PHASE_SPECIALTY_RAILS,
-		REFRESH_PHASE_ARTIFACT_RAILS,
 	]):
 		_refresh_action_rails(request)
 	elif _refresh_request_has_phase(request, REFRESH_PHASE_CONTEXT_ROUTE):
@@ -4603,24 +4552,11 @@ func _refresh_action_rails(request: Dictionary = {}) -> void:
 		var hero_actions_profile_start := _debug_refresh_profile_begin("refresh_hero_actions")
 		_rebuild_hero_actions()
 		_rebuild_town_actions()
-		_rebuild_rendezvous_actions()
 		_debug_refresh_profile_end("refresh_hero_actions", hero_actions_profile_start)
 	if full_action_rails or _refresh_request_has_phase(request, REFRESH_PHASE_CONTEXT_ACTIONS):
 		var context_actions_profile_start := _debug_refresh_profile_begin("refresh_context_actions")
 		_rebuild_context_actions()
 		_debug_refresh_profile_end("refresh_context_actions", context_actions_profile_start)
-	if full_action_rails or _refresh_request_has_phase(request, REFRESH_PHASE_SPELL_RAILS):
-		var spell_actions_profile_start := _debug_refresh_profile_begin("refresh_spell_actions")
-		_rebuild_spell_actions()
-		_debug_refresh_profile_end("refresh_spell_actions", spell_actions_profile_start)
-	if full_action_rails or _refresh_request_has_phase(request, REFRESH_PHASE_SPECIALTY_RAILS):
-		var specialty_actions_profile_start := _debug_refresh_profile_begin("refresh_specialty_actions")
-		_rebuild_specialty_actions()
-		_debug_refresh_profile_end("refresh_specialty_actions", specialty_actions_profile_start)
-	if full_action_rails or _refresh_request_has_phase(request, REFRESH_PHASE_ARTIFACT_RAILS):
-		var artifact_actions_profile_start := _debug_refresh_profile_begin("refresh_artifact_actions")
-		_rebuild_artifact_actions()
-		_debug_refresh_profile_end("refresh_artifact_actions", artifact_actions_profile_start)
 	_profile_end("refresh_actions", actions_profile_start)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_actions_done")
 
@@ -4708,37 +4644,6 @@ func _refresh_status_surfaces(generated_surface_start: int, preloaded_refresh_wa
 		1
 	)
 	_debug_refresh_profile_end("refresh_heroes_rail", heroes_rail_profile_start)
-	var specialty_rail_profile_start := _debug_refresh_profile_begin("refresh_specialty_rail")
-	var specialty_text := OverworldRules.describe_specialties(_session)
-	var specialty_check := _specialty_check_surface()
-	_set_rail_text(
-		_specialty_label,
-		_join_tooltip_sections([specialty_text, String(specialty_check.get("tooltip_text", ""))]),
-		String(specialty_check.get("visible_text", _rail_prefixed_summary("Spec", specialty_text))),
-		1
-	)
-	_debug_refresh_profile_end("refresh_specialty_rail", specialty_rail_profile_start)
-	var spell_rail_profile_start := _debug_refresh_profile_begin("refresh_spell_rail")
-	var spell_text := OverworldRules.describe_spellbook(_session, SpellRules.CONTEXT_OVERWORLD)
-	var spell_check := _spell_check_surface()
-	_set_rail_text(
-		_spell_label,
-		_join_tooltip_sections([spell_text, String(spell_check.get("tooltip_text", ""))]),
-		String(spell_check.get("visible_text", OverworldRules.describe_spellbook_rail(_session, SpellRules.CONTEXT_OVERWORLD))),
-		1
-	)
-	_debug_refresh_profile_end("refresh_spell_rail", spell_rail_profile_start)
-	var artifact_rail_profile_start := _debug_refresh_profile_begin("refresh_artifact_rail")
-	var artifact_text := OverworldRules.describe_artifacts(_session)
-	_set_rail_text(_artifact_label, artifact_text, _rail_prefixed_summary("Gear", artifact_text), 1)
-	_debug_refresh_profile_end("refresh_artifact_rail", artifact_rail_profile_start)
-	var frontier_profile_start := _debug_refresh_profile_begin("refresh_frontier_drawer")
-	var command_risk_surface := {}
-	if _active_drawer == "frontier":
-		command_risk_surface = _refresh_frontier_drawer(end_turn_forecast_surface)
-	else:
-		_set_collapsed_frontier_indicator(end_turn_forecast_surface)
-	_debug_refresh_profile_end("refresh_frontier_drawer", frontier_profile_start, {"drawer_open": _active_drawer == "frontier"})
 	_refresh_context_tile_surface()
 	var event_context_profile_start := _debug_refresh_profile_begin("refresh_event_action_context")
 	var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context, refresh_watch_context)
@@ -4761,7 +4666,7 @@ func _refresh_status_surfaces(generated_surface_start: int, preloaded_refresh_wa
 	_briefing_title_label.text = _briefing_title_text
 	_set_rail_label(_briefing_label, _command_briefing_text, 2, RAIL_LINE_CHARS, false)
 	_briefing_panel.visible = _command_briefing_text != ""
-	_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)
+	_refresh_tooltip_context_surfaces()
 	return false
 
 func _refresh_map_cue_surface() -> void:
@@ -4811,7 +4716,6 @@ func _refresh_selected_route_readiness_surfaces(end_turn_forecast_surface: Dicti
 	var end_turn_tooltip := String(end_turn_check.get("tooltip_text", "")).strip_edges()
 	if end_turn_tooltip != "":
 		_end_turn_button.tooltip_text = end_turn_tooltip
-	_refresh_drawer_handoff_cues(readiness_surface, end_turn_forecast_surface)
 
 func _set_objective_brief_text(full_text: String, full_tooltip: String) -> void:
 	_objective_brief_label.text = full_text
@@ -4826,16 +4730,10 @@ func _refresh_context_tile_surface() -> void:
 	_set_rail_text(_context_label, context_text, _rail_tile_text(), 2)
 	_debug_refresh_profile_end("refresh_context_tile_text", context_tile_profile_start)
 
-func _refresh_tooltip_context_drawer_surfaces(
-	field_readiness: Dictionary = {},
-	end_turn_forecast_surface: Dictionary = {},
-	objective_header_surfaces: Dictionary = {}
-) -> void:
+func _refresh_tooltip_context_surfaces() -> void:
 	var tooltip_context_profile_start := _debug_refresh_profile_begin("refresh_tooltip_context_drawers")
 	_update_map_tooltip()
-	if not field_readiness.is_empty():
-		_profile_add("drawer_handoff_preloaded_readiness_reuses", 1)
-	_sync_context_drawers(field_readiness, end_turn_forecast_surface, objective_header_surfaces)
+	_sync_tile_context()
 	_debug_refresh_profile_end("refresh_tooltip_context_drawers", tooltip_context_profile_start)
 
 func _refresh_commander_card(compact: bool) -> void:
@@ -4866,7 +4764,7 @@ func _refresh_generated_commander_status() -> void:
 		int(movement.get("max", movement.get("current", 0))),
 	]
 	_status_label.text = "Day %d\nPos %d,%d\n%s" % [_session.day, hero_pos.x, hero_pos.y, move_line]
-	_status_label.tooltip_text = "%s | %s. Detailed readiness is available from the command/frontier drawers." % [String(hero.get("name", "Commander")), _status_label.text]
+	_status_label.tooltip_text = "%s | %s. Detailed readiness is in the objective and End Turn tooltips." % [String(hero.get("name", "Commander")), _status_label.text]
 	_refresh_commander_card(true)
 
 func _refresh_live_route_status() -> Dictionary:
@@ -4909,7 +4807,7 @@ func _refresh_generated_opening_surfaces() -> void:
 	_header_label.text = "Generated Realm"
 	_header_label.tooltip_text = generated_name
 	_objective_brief_label.text = "Generated map opening" if opening_pending else "Generated map objective"
-	_objective_brief_label.tooltip_text = "Detailed objective and readiness surfaces are available from command/frontier drawers; routine generated-map movement keeps the live frame compact."
+	_objective_brief_label.tooltip_text = "Detailed objective and readiness surfaces appear once the generated map has opened; routine generated-map movement keeps the live frame compact."
 	_refresh_generated_commander_status()
 	_refresh_resource_stockpile()
 	_map_cue_label.text = "Opening generated map" if opening_pending else _map_cue_text()
@@ -4919,10 +4817,6 @@ func _refresh_generated_opening_surfaces() -> void:
 	_set_rail_text(_army_label, "Army ready", "Army ready", 1)
 	_refresh_army_management()
 	_set_rail_text(_heroes_label, "Command ready", "Command ready", 1)
-	_set_rail_text(_specialty_label, "Spec ready", "Spec ready", 1)
-	_set_rail_text(_spell_label, "Spellbook ready", "Spellbook ready", 1)
-	_set_rail_text(_artifact_label, "Gear ready", "Gear ready", 1)
-	_set_collapsed_generated_opening_frontier_indicator()
 	_set_rail_text(_context_label, "Select a visible destination for orders.", "Select a visible destination", 2)
 	_set_rail_text(_event_label, _last_message if _last_message != "" else "Generated map ready.", "Generated map ready", 1)
 	_end_turn_button.text = "End Turn"
@@ -4931,16 +4825,8 @@ func _refresh_generated_opening_surfaces() -> void:
 	_set_rail_label(_briefing_label, _command_briefing_text, 2, RAIL_LINE_CHARS, false)
 	_briefing_panel.visible = _command_briefing_text != ""
 	_update_map_tooltip()
-	_command_panel.visible = false
-	_frontier_panel.visible = false
 	_context_panel.visible = false
 	_command_spine.visible = false
-	_open_command_button.button_pressed = false
-	_open_frontier_button.button_pressed = false
-
-func _set_collapsed_generated_opening_frontier_indicator() -> void:
-	_frontier_indicator_label.text = "Frontier: opening"
-	_frontier_indicator_label.tooltip_text = "Detailed frontier forecast is deferred until generated-map opening completes."
 
 func _complete_deferred_generated_overworld_autosave() -> void:
 	if _session == null:
@@ -5247,11 +5133,7 @@ func _has_pending_town_return_handoff() -> bool:
 	return handoff is Dictionary and not handoff.is_empty()
 
 func _use_generated_compact_refresh() -> bool:
-	return (
-		_session != null
-		and bool(_session.flags.get("generated_random_map", false))
-		and _active_drawer == ""
-	)
+	return _session != null and bool(_session.flags.get("generated_random_map", false))
 
 func _use_generated_town_return_first_frame_refresh() -> bool:
 	return _compact_town_return_save_surface_pending and _use_generated_compact_refresh()
@@ -5337,39 +5219,6 @@ func _refresh_commitment_panel(refresh_watch_context: Dictionary = {}) -> void:
 	if not refresh_watch_context.is_empty():
 		_profile_add("refresh_watch_observation_context_reuses", 1)
 	_set_rail_text(_commitment_label, commitment_text, _rail_order_text(commitment_text), 2)
-
-func _refresh_frontier_drawer(end_turn_forecast_surface: Dictionary = {}) -> Dictionary:
-	var visibility_text := OverworldRules.describe_visibility_panel(_session)
-	_set_rail_text(_visibility_label, visibility_text, _rail_prefixed_summary("Sight", visibility_text), 1)
-	var objective_text := _cached_objective_text()
-	_set_rail_text(_objective_label, objective_text, _rail_prefixed_summary("Obj", objective_text), 1)
-	var threat_text := _cached_frontier_threats()
-	_set_rail_text(_threat_label, threat_text, _rail_prefixed_summary("Threat", threat_text), 1)
-	var command_risk_surface := _cached_command_risk_surface()
-	var forecast_text := ""
-	if end_turn_forecast_surface.is_empty():
-		forecast_text = OverworldRules.describe_end_turn_forecast(_session)
-	else:
-		_profile_add("end_turn_forecast_bundle_reuses", 1)
-		forecast_text = String(end_turn_forecast_surface.get("forecast", ""))
-	command_risk_surface["forecast"] = forecast_text
-	_set_rail_text(_forecast_label, forecast_text, _rail_prefixed_summary("Next", forecast_text), 1)
-	_frontier_indicator_label.text = _frontier_indicator_text(threat_text, forecast_text)
-	_frontier_indicator_label.tooltip_text = "%s\n\n%s" % [threat_text, forecast_text]
-	return command_risk_surface
-
-func _set_collapsed_frontier_indicator(end_turn_forecast_surface: Dictionary = {}) -> void:
-	var forecast_text := ""
-	var compact_forecast := ""
-	if end_turn_forecast_surface.is_empty():
-		forecast_text = OverworldRules.describe_end_turn_forecast(_session)
-		compact_forecast = OverworldRules.describe_end_turn_forecast_compact(_session)
-	else:
-		_profile_add("end_turn_forecast_bundle_reuses", 1)
-		forecast_text = String(end_turn_forecast_surface.get("forecast", ""))
-		compact_forecast = String(end_turn_forecast_surface.get("forecast_compact", ""))
-	_frontier_indicator_label.text = "Next: %s" % _short_text(compact_forecast, 34)
-	_frontier_indicator_label.tooltip_text = "%s\n\nOpen Frontier for objectives, threat watch, and next-day risk." % forecast_text
 
 func _rebuild_hero_actions() -> void:
 	var retained: Array = []
@@ -5489,6 +5338,9 @@ func _sync_hero_roster_readiness(button: Button, hero_id: String, action: Dictio
 	var movement_current := int(readiness.get("movement_current", 0))
 	var movement_max := int(readiness.get("movement_max", 0))
 	var ready_text := "Movement %d / %d; mana %d / %d" % [movement_current, movement_max, int(readiness.get("mana_current", 0)), int(readiness.get("mana_max", 0))]
+	var cast_today := OverworldRules.hero_cast_spell_today(_session, hero_id)
+	if cast_today:
+		ready_text += "; overworld spell already cast today"
 	var tooltip := ready_text + "\n" + _hero_roster_tooltip(action)
 	var signature := "%s|%s" % [ready_text, tooltip]
 	if String(button.get_meta("roster_readiness_signature", "")) == signature:
@@ -5497,6 +5349,7 @@ func _sync_hero_roster_readiness(button: Button, hero_id: String, action: Dictio
 	_profile_add("hero_roster_readiness_updates", 1)
 	_set_roster_movement_meter(button, movement_current, movement_max, hero_id == String(_session.overworld.get("active_hero_id", "")))
 	Readiness.meter(button, "Mana", int(readiness.get("mana_current", 0)), int(readiness.get("mana_max", 0)), Color("83b9e4"), 5)
+	Readiness.status_badge(button, "SpellCastToday", SPELL_CAST_TODAY_BADGE, cast_today, "Overworld spell already cast today")
 	button.tooltip_text = tooltip
 	button.accessibility_description = "%s. Click to select and center. Double-click, Enter or controller Confirm to inspect army, artifacts, stats and specializations." % ready_text
 	button.set_meta("roster_readiness_signature", signature)
@@ -5599,6 +5452,10 @@ func _rebuild_town_actions() -> void:
 		button.set_meta("level", level)
 		var defenders := int(HeroCommandRules.town_defense_force(_session, town).get("troops", 0))
 		Readiness.town_badge(button, defenders)
+		var built_today := OverworldRules.town_built_today(town, int(_session.day))
+		Readiness.status_badge(button, "BuiltToday", BUILT_TODAY_BADGE, built_today, "Already built here today")
+		if built_today:
+			button.tooltip_text += "\nAlready built here today."
 		button.accessibility_description += " %d actual defending troops%s." % [defenders, "; undefended" if defenders == 0 else ""]
 		retained.append(button)
 		displayed_town_count += 1
@@ -5656,16 +5513,54 @@ func _on_hero_roster_gui_input(event: InputEvent, hero_id: String) -> void:
 	if not double_click and not confirm: return
 	if _open_hero_sheet(hero_id): accept_event()
 
-func _open_hero_sheet(hero_id: String) -> bool:
+## Opens the hero sheet with live orders: the hero becomes the active hero, so
+## spells, artifacts, stacks and specialties apply to it.
+func _open_hero_sheet(hero_id: String, tab: String = "") -> bool:
 	if _overworld_gameplay_movement_blocked_reason() != "" or _overworld_order_input_blocked(): return false
+	if hero_id != String(_session.overworld.get("active_hero_id", "")):
+		if not bool(OverworldRules.switch_active_hero(_session, hero_id).get("ok", false)): return false
+		_select_hero_tile()
+		_refresh()
 	var snapshot := HeroCommandRules.hero_inspection_snapshot(_session, hero_id)
 	if snapshot.is_empty(): return false
+	_on_overworld_interaction_owner_opened()
 	if not is_instance_valid(_hero_sheet):
 		_hero_sheet = HeroSheetScript.new()
 		_hero_sheet.name = "HeroSheet"
 		add_child(_hero_sheet)
-	_hero_sheet.open_hero(snapshot, _existing_roster_button(_hero_actions, "hero_id", hero_id))
+		_hero_sheet.spell_cast_requested.connect(func(spell_id: String): _on_spell_action_pressed("cast_spell:%s" % spell_id))
+		_hero_sheet.artifact_action_requested.connect(_on_artifact_action_pressed)
+		_hero_sheet.specialty_requested.connect(_on_specialty_action_pressed)
+		_hero_sheet.army_operation_requested.connect(_on_army_slot_operation_requested)
+		_hero_sheet.meet_requested.connect(func(partner_id: String): _open_hero_exchange(partner_id))
+	_hero_sheet.open_hero(snapshot, _existing_roster_button(_hero_actions, "hero_id", hero_id), _hero_sheet_orders(), tab)
 	return true
+
+func _hero_sheet_orders() -> Dictionary:
+	var active_hero_id := String(_session.overworld.get("active_hero_id", ""))
+	var partners := []
+	for partner in HeroCommandRules.field_rendezvous_heroes(_session):
+		if partner is Dictionary: partners.append({"id": String(partner.get("id", "")), "name": String(partner.get("name", "Commander"))})
+	return {
+		"spell_actions": _cached_spell_actions(),
+		"artifact_actions": _cached_artifact_actions(),
+		"specialty_actions": _cached_specialty_actions(),
+		"army_holder": HeroCommandRules.army_slot_snapshot(_session, {}, active_hero_id),
+		"meet_partners": partners,
+	}
+
+func _refresh_hero_sheet() -> void:
+	if not is_instance_valid(_hero_sheet) or not _hero_sheet.visible: return
+	var hero_id := String(_session.overworld.get("active_hero_id", ""))
+	var snapshot := HeroCommandRules.hero_inspection_snapshot(_session, hero_id)
+	if snapshot.is_empty():
+		_hero_sheet.close_sheet()
+		return
+	_hero_sheet.refresh_hero(snapshot, _hero_sheet_orders())
+
+func validation_open_hero_sheet(tab: String = "") -> Control:
+	_open_hero_sheet(String(_session.overworld.get("active_hero_id", "")), tab)
+	return _hero_sheet if is_instance_valid(_hero_sheet) and _hero_sheet.visible else null
 
 func _on_hero_roster_pressed(hero_id: String) -> void:
 	if _overworld_gameplay_movement_blocked_reason() != "" or _overworld_order_input_blocked(): return
@@ -5715,49 +5610,6 @@ func _on_town_rail_pressed(x: int, y: int, level: int = -1) -> void:
 	_refresh_selected_route_preview("town_rail_selection")
 	_sync_minimap_viewport()
 	_sync_roster_pressed_states()
-
-func _rebuild_rendezvous_actions() -> void:
-	# One "Meet" button per commander sharing the active hero's tile; each opens
-	# the hero meeting screen (HeroExchangeScreen) instead of an order list.
-	var reserve_heroes := HeroCommandRules.field_rendezvous_heroes(_session)
-	var has_rendezvous := not reserve_heroes.is_empty()
-	_rendezvous_label.visible = has_rendezvous
-	_rendezvous_controls.visible = has_rendezvous
-	var partner_ids := []
-	for hero_value in reserve_heroes:
-		if hero_value is Dictionary:
-			partner_ids.append(String(hero_value.get("id", "")))
-	var existing_ids := []
-	for child in _rendezvous_controls.get_children():
-		existing_ids.append(String(child.get_meta("hero_id", "")))
-	if not has_rendezvous:
-		_rendezvous_label.text = "Rendezvous"
-		_rendezvous_label.tooltip_text = ""
-	else:
-		_rendezvous_label.text = "Rendezvous"
-		_rendezvous_label.tooltip_text = HeroCommandRules.describe_field_rendezvous(_session)
-	if existing_ids == partner_ids:
-		return
-	for child in _rendezvous_controls.get_children():
-		_rendezvous_controls.remove_child(child)
-		child.queue_free()
-	for hero_value in reserve_heroes:
-		if not (hero_value is Dictionary):
-			continue
-		var hero_id := String(hero_value.get("id", ""))
-		var hero_name := String(hero_value.get("name", "Commander"))
-		var button := Button.new()
-		button.name = "Meet_%s" % hero_id
-		button.text = "Meet %s" % hero_name.get_slice(" ", 0)
-		button.tooltip_text = "Meet %s to exchange troops, artifacts and spells." % hero_name
-		button.icon = _load_roster_icon(String(ContentService.get_hero_art(hero_id).get("portrait", "")))
-		button.expand_icon = true
-		button.add_theme_constant_override("icon_max_width", 26)
-		button.set_meta("hero_id", hero_id)
-		FrontierVisualKit.apply_button(button, "secondary", 120.0, 36.0, 14)
-		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.pressed.connect(func(): _open_hero_exchange(hero_id, button))
-		_rendezvous_controls.add_child(button)
 
 func _rebuild_context_actions() -> void:
 	var actions := _current_context_actions()
@@ -6327,7 +6179,7 @@ func _spell_check_surface() -> Dictionary:
 	if actions.is_empty():
 		return {
 			"visible_text": "Spell check: no field spell | %s" % mana_line,
-			"tooltip_text": "Spell Check\n- Spellbook: no known field spell.\n- Mana: %s\n- Movement: %s\n- Next practical action: use map orders; no field spell can be cast from this command drawer." % [
+			"tooltip_text": "Spell Check\n- Spellbook: no known field spell.\n- Mana: %s\n- Movement: %s\n- Next practical action: use map orders; no field spell can be cast from the hero sheet." % [
 				mana_line,
 				movement_line,
 			],
@@ -6608,11 +6460,6 @@ func _cached_frontier_threats() -> String:
 		_refresh_cache["frontier_threats"] = OverworldRules.describe_frontier_threats(_session)
 	return String(_refresh_cache["frontier_threats"])
 
-func _cached_command_risk_surface() -> Dictionary:
-	if not _refresh_cache.has("command_risk_surface"):
-		_refresh_cache["command_risk_surface"] = OverworldRules.describe_command_risk_surfaces(_session)
-	return _refresh_cache["command_risk_surface"]
-
 func _refresh_primary_action_button(action: Dictionary) -> void:
 	_apply_resource_action_icon(_primary_action_button, action)
 	if action.is_empty():
@@ -6701,7 +6548,7 @@ func _activate_primary_action() -> bool:
 func _overworld_order_input_blocked() -> bool:
 	# Drawers expose order buttons, and profiling may already own this command.
 	var reason := _overworld_gameplay_movement_blocked_reason()
-	return reason not in ["", "drawer_open", "debug_active"] or is_instance_valid(_turn_presenter) or (_session != null and _session.scenario_status != "in_progress") or (_artifact_acquired_input_blocker != null and _artifact_acquired_input_blocker.visible) or (_spell_cast_input_blocker != null and _spell_cast_input_blocker.visible)
+	return reason not in ["", "debug_active"] or is_instance_valid(_turn_presenter) or (_session != null and _session.scenario_status != "in_progress") or (_artifact_acquired_input_blocker != null and _artifact_acquired_input_blocker.visible) or (_spell_cast_input_blocker != null and _spell_cast_input_blocker.visible)
 
 func _primary_order_commit_check_surface(action: Dictionary = {}) -> Dictionary:
 	var primary_action := action
@@ -7937,7 +7784,7 @@ func _route_decision_next_practical_action(surface: Dictionary) -> String:
 	var destination := String(surface.get("destination", "the destination")).strip_edges()
 	match status:
 		"current":
-			return "Select a visible destination or open a command drawer."
+			return "Select a visible destination or open the hero sheet."
 		"blocked":
 			var reason := String(surface.get("blocked_reason", "")).strip_edges()
 			return reason if reason != "" else "Choose a different visible route."
@@ -8450,7 +8297,7 @@ func _map_cue_tooltip() -> String:
 		if bool(metrics.get("pan_supported", false)):
 			pan_hint = " Drag the map, use the mouse wheel, or hold Shift with an arrow or configured movement key to pan. Home returns to the active hero."
 	if feedback != "":
-		var next_hint := " Select another destination or press Enter/Space for the current primary order." if not action.is_empty() else " Select a destination or open a command drawer for the next order."
+		var next_hint := " Select another destination or press Enter/Space for the current primary order." if not action.is_empty() else " Select a destination or open the hero sheet for the next order."
 		return "%s.%s%s" % [feedback, next_hint, pan_hint]
 	if bool(action.get("compact_interaction_destination_fast_path", false)) or bool(action.get("simple_route_ui_fast_path", false)):
 		var compact_route_tooltip := _selected_route_simple_tooltip()
@@ -8471,200 +8318,6 @@ func _short_action_label(label: String, max_chars: int) -> String:
 	if trimmed.length() <= max_chars:
 		return trimmed
 	return "%s..." % trimmed.left(max(1, max_chars - 3))
-
-func _rebuild_artifact_actions() -> void:
-	for child in _artifact_actions.get_children():
-		child.queue_free()
-	_append_artifact_set_insignia_rows()
-
-	var actions = _cached_artifact_actions()
-	if actions.is_empty():
-		_artifact_actions.add_child(_make_placeholder_label("No loadout action"))
-		return
-
-	for action in actions:
-		if not (action is Dictionary):
-			continue
-		var button = Button.new()
-		button.text = String(action.get("label", action.get("id", "Action")))
-		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = String(action.get("summary", ""))
-		_style_rail_action_button(button)
-		_apply_artifact_action_icon(button, action)
-		button.pressed.connect(_on_artifact_action_pressed.bind(String(action.get("id", ""))))
-		_artifact_actions.add_child(button)
-
-func _apply_artifact_action_icon(button: Button, action: Dictionary) -> void:
-	var hero: Dictionary = _session.overworld.get("hero", {}) if _session != null else {}
-	var artifact_id := ArtifactRules.artifact_id_for_management_action(hero, String(action.get("id", "")))
-	var icon_path := ArtifactRules.artifact_icon_path(artifact_id)
-	if icon_path == "":
-		return
-	var texture := load(icon_path) as Texture2D
-	if texture == null:
-		return
-	button.icon = texture
-	button.expand_icon = true
-	button.add_theme_constant_override("icon_max_width", 24)
-
-func _append_artifact_set_insignia_rows() -> void:
-	if _session == null:
-		return
-	var hero: Dictionary = _session.overworld.get("hero", {})
-	for set_state_value in ArtifactRules.artifact_set_runtime_state(hero):
-		if not (set_state_value is Dictionary):
-			continue
-		var set_state: Dictionary = set_state_value
-		var insignia = set_state.get("insignia", {})
-		if not (insignia is Dictionary):
-			continue
-		var texture := _artifact_set_insignia_texture(insignia)
-		if texture == null:
-			continue
-		var row := HBoxContainer.new()
-		row.name = "ArtifactSetInsignia_%s" % String(set_state.get("set_id", "set"))
-		row.set_meta("artifact_set_id", String(set_state.get("set_id", "")))
-		row.set_meta("artifact_set_complete", bool(set_state.get("complete", false)))
-		row.tooltip_text = String(insignia.get("alt_text", ""))
-		var icon := TextureRect.new()
-		icon.name = "SetInsignia"
-		icon.custom_minimum_size = Vector2(28, 28)
-		icon.texture = texture
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		var label := Label.new()
-		label.name = "SetProgress"
-		label.text = "%s %d/%d" % [
-			String(set_state.get("name", "Artifact Set")),
-			int(set_state.get("equipped_piece_count", 0)),
-			int(set_state.get("piece_count", 0)),
-		]
-		label.tooltip_text = row.tooltip_text
-		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		row.add_child(icon)
-		row.add_child(label)
-		_artifact_actions.add_child(row)
-
-func _artifact_set_insignia_texture(insignia: Dictionary) -> Texture2D:
-	var atlas_path := String(insignia.get("atlas_path", "")).strip_edges()
-	var region_value = insignia.get("atlas_region", {})
-	if atlas_path == "" or not (region_value is Dictionary):
-		return null
-	var atlas := load(atlas_path) as Texture2D
-	if atlas == null:
-		return null
-	var region: Dictionary = region_value
-	var rect := Rect2(
-		float(region.get("x", -1)),
-		float(region.get("y", -1)),
-		float(region.get("width", 0)),
-		float(region.get("height", 0))
-	)
-	var atlas_size := atlas.get_size()
-	if rect.position.x < 0.0 or rect.position.y < 0.0 or rect.size.x <= 0.0 or rect.size.y <= 0.0 or rect.end.x > atlas_size.x or rect.end.y > atlas_size.y:
-		return null
-	var texture := AtlasTexture.new()
-	texture.atlas = atlas
-	texture.region = rect
-	return texture
-
-func validation_artifact_set_insignia_rows() -> Array:
-	var rows: Array = []
-	for child in _artifact_actions.get_children():
-		if not child.has_meta("artifact_set_id"):
-			continue
-		var icon := child.get_node_or_null("SetInsignia") as TextureRect
-		var label := child.get_node_or_null("SetProgress") as Label
-		var atlas_texture := icon.texture as AtlasTexture if icon != null else null
-		rows.append({
-			"set_id": String(child.get_meta("artifact_set_id", "")),
-			"complete": bool(child.get_meta("artifact_set_complete", false)),
-			"label": label.text if label != null else "",
-			"tooltip": child.tooltip_text,
-			"atlas_path": atlas_texture.atlas.resource_path if atlas_texture != null and atlas_texture.atlas != null else "",
-			"atlas_region": atlas_texture.region if atlas_texture != null else Rect2(),
-			"visible": child.is_visible_in_tree(),
-		})
-	return rows
-
-func _rebuild_specialty_actions() -> void:
-	for child in _specialty_actions.get_children():
-		child.queue_free()
-
-	var actions = _cached_specialty_actions()
-	if actions.is_empty():
-		var placeholder := _make_placeholder_label("Specialty check: none")
-		placeholder.tooltip_text = String(_specialty_check_surface().get("tooltip_text", "No specialty pick."))
-		_specialty_actions.add_child(placeholder)
-		return
-
-	for action in actions:
-		if not (action is Dictionary):
-			continue
-		var button = Button.new()
-		button.text = String(action.get("label", action.get("id", "Choose Specialty")))
-		button.disabled = bool(action.get("disabled", false))
-		var specialty_check := _specialty_action_check_surface(action)
-		button.tooltip_text = _join_tooltip_sections([
-			String(action.get("summary", "")),
-			HeroProgressionRules.specialty_insignia_description(
-				HeroProgressionRules.specialty_id_for_action(String(action.get("id", "")))
-			),
-			String(specialty_check.get("tooltip_text", "")),
-		])
-		_style_rail_action_button(button)
-		_apply_specialty_action_icon(button, action)
-		button.pressed.connect(_on_specialty_action_pressed.bind(String(action.get("id", ""))))
-		_specialty_actions.add_child(button)
-
-func _apply_specialty_action_icon(button: Button, action: Dictionary) -> void:
-	var specialty_id := HeroProgressionRules.specialty_id_for_action(String(action.get("id", "")))
-	var texture := HeroProgressionRules.specialty_insignia_texture(specialty_id)
-	if texture == null:
-		return
-	button.icon = texture
-	button.expand_icon = true
-	button.add_theme_constant_override("icon_max_width", 24)
-
-func _rebuild_spell_actions() -> void:
-	for child in _spell_actions.get_children():
-		child.queue_free()
-
-	var actions = _cached_spell_actions()
-	if actions.is_empty():
-		var placeholder := _make_placeholder_label("Spell check: none")
-		placeholder.tooltip_text = String(_spell_check_surface().get("tooltip_text", "No field spell."))
-		_spell_actions.add_child(placeholder)
-		return
-
-	for action in actions:
-		if not (action is Dictionary):
-			continue
-		var button = Button.new()
-		button.text = String(action.get("label", action.get("id", "Action")))
-		button.disabled = bool(action.get("disabled", false))
-		var spell_check := _spell_action_check_surface(action)
-		button.tooltip_text = _join_tooltip_sections([
-			String(action.get("summary", "")),
-			String(spell_check.get("tooltip_text", "")),
-		])
-		_style_rail_action_button(button)
-		_apply_spell_action_icon(button, action)
-		button.pressed.connect(_on_spell_action_pressed.bind(String(action.get("id", ""))))
-		_spell_actions.add_child(button)
-
-func _apply_spell_action_icon(button: Button, action: Dictionary) -> void:
-	var spell_id := SpellRules.spell_id_for_action(String(action.get("id", "")))
-	var icon_path := SpellRules.spell_icon_path(spell_id)
-	if icon_path == "":
-		return
-	var texture := load(icon_path) as Texture2D
-	if texture == null:
-		return
-	button.icon = texture
-	button.expand_icon = true
-	button.add_theme_constant_override("icon_max_width", 24)
 
 func _hero_card_text() -> String:
 	var hero = _session.overworld.get("hero", {})
@@ -9197,89 +8850,6 @@ func _end_turn_confirmation_surface(field_readiness: Dictionary = {}) -> Diction
 		"end_turn_forecast": forecast,
 	}
 
-func _refresh_drawer_handoff_cues(
-	field_readiness: Dictionary = {},
-	end_turn_forecast_surface: Dictionary = {},
-	objective_header_surfaces: Dictionary = {}
-) -> void:
-	var surfaces := _drawer_handoff_surfaces(field_readiness, end_turn_forecast_surface, objective_header_surfaces)
-	var command_surface: Dictionary = surfaces.get("command", {}) if surfaces.get("command", {}) is Dictionary else {}
-	var frontier_surface: Dictionary = surfaces.get("frontier", {}) if surfaces.get("frontier", {}) is Dictionary else {}
-	_open_command_button.text = String(command_surface.get("button_text", "Command"))
-	_open_command_button.tooltip_text = String(command_surface.get("tooltip_text", "Open command panels."))
-	_open_frontier_button.text = String(frontier_surface.get("button_text", "Frontier"))
-	_open_frontier_button.tooltip_text = String(frontier_surface.get("tooltip_text", "Open frontier panels."))
-	_close_command_button.tooltip_text = "Close Command drawer and return to the selected tile context."
-	_close_frontier_button.tooltip_text = "Close Frontier drawer and return to the selected tile context."
-
-func _drawer_handoff_surfaces(
-	field_readiness: Dictionary = {},
-	end_turn_forecast_surface: Dictionary = {},
-	objective_header_surfaces: Dictionary = {}
-) -> Dictionary:
-	var readiness := field_readiness
-	if readiness.is_empty():
-		readiness = _field_readiness_surface()
-	var primary_action := _current_primary_action()
-	var primary_label := String(primary_action.get("label", "")).strip_edges()
-	if primary_label == "":
-		primary_label = "select a destination"
-	var next_step := String(readiness.get("next_step", "")).strip_edges()
-	if next_step == "":
-		next_step = "Select the next destination or end the turn when field orders are spent."
-	var movement_line := String(readiness.get("movement_line", "")).strip_edges()
-	if movement_line == "":
-		var movement = _session.overworld.get("movement", {})
-		movement_line = "Move %d/%d" % [int(movement.get("current", 0)), int(movement.get("max", 0))]
-	var command_state := "Open" if _active_drawer == "command" else ("Ready" if not primary_action.is_empty() else "Select")
-	var frontier_state := "Open" if _active_drawer == "frontier" else "Next"
-	var command_tooltip := "Command Drawer Handoff\n- Opens: hero, army, spell, artifact, and selected-order panels.\n- Current order: %s.\n- Readiness: %s | %s.\n- Next: %s\n- State change: inspection only until an order button or Enter is committed." % [
-		primary_label,
-		String(readiness.get("visible_text", "Ready: field orders")).strip_edges(),
-		movement_line,
-		next_step,
-	]
-	var forecast := ""
-	if end_turn_forecast_surface.is_empty():
-		forecast = OverworldRules.describe_end_turn_forecast_compact(_session)
-	else:
-		_profile_add("end_turn_forecast_bundle_reuses", 1)
-		forecast = String(end_turn_forecast_surface.get("forecast_compact", ""))
-	var objective_line := ""
-	if objective_header_surfaces.has("progress_recap"):
-		_profile_add("drawer_handoff_preloaded_objective_recap_reuses", 1)
-		objective_line = _line_with_prefix(String(objective_header_surfaces.get("progress_recap", "")), "Next step:")
-	else:
-		objective_line = _line_with_prefix(_cached_objective_text(), "Next step:")
-	if objective_line == "":
-		objective_line = String(readiness.get("progress_line", "")).strip_edges()
-	var threat_line := _compact_rail_text(_cached_frontier_threats(), 1, 38, true)
-	if threat_line == "":
-		threat_line = "No immediate frontier warning."
-	var frontier_tooltip := "Frontier Drawer Handoff\n- Opens: objectives, scout net, threat watch, and end-turn forecast.\n- Objective: %s\n- Watch: %s\n- Forecast: %s\n- State change: inspection only; End Turn remains the commit." % [
-		objective_line if objective_line != "" else "review current objectives.",
-		threat_line,
-		forecast if forecast != "" else "next day forecast unavailable.",
-	]
-	return {
-		"command": {
-			"button_text": "Command %s" % command_state,
-			"tooltip_text": command_tooltip,
-			"state": command_state.to_lower(),
-			"current_order": primary_label,
-			"next_step": next_step,
-			"movement_line": movement_line,
-		},
-		"frontier": {
-			"button_text": "Frontier %s" % frontier_state,
-			"tooltip_text": frontier_tooltip,
-			"state": frontier_state.to_lower(),
-			"objective_line": objective_line,
-			"watch_line": threat_line,
-			"forecast": forecast,
-		},
-	}
-
 func _line_with_prefix(text: String, prefix: String) -> String:
 	for raw_line in text.split("\n", false):
 		var line := String(raw_line).strip_edges()
@@ -9506,35 +9076,15 @@ func _remembered_selected_tile_text(terrain: String) -> String:
 		]
 	return ""
 
-func _sync_context_drawers(
-	field_readiness: Dictionary = {},
-	end_turn_forecast_surface: Dictionary = {},
-	objective_header_surfaces: Dictionary = {}
-) -> void:
-	var show_command := _active_drawer == "command"
-	var show_frontier := _active_drawer == "frontier"
-	var show_tile := not show_command and not show_frontier and _should_show_tile_context()
-	_command_panel.visible = show_command
-	_frontier_panel.visible = show_frontier
+func _sync_tile_context() -> void:
+	var show_tile := _should_show_tile_context()
 	_context_panel.visible = show_tile
-	_command_spine.visible = show_command or show_frontier or show_tile
-	_minimap_panel.visible = not show_command and not show_frontier
-	_top_strip_panel.visible = not show_command and not show_frontier
-	_hero_panel.visible = not show_command and not show_frontier
+	_command_spine.visible = show_tile
 	var available_size := _responsive_available_size()
 	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
-	_event_panel.visible = not show_command and not show_frontier and not compact_layout
-	_action_panel.visible = not show_command and not show_frontier
+	_event_panel.visible = not compact_layout
 	_commitment_panel.visible = false
 	_briefing_panel.visible = false
-	_open_command_button.button_pressed = show_command
-	_open_frontier_button.button_pressed = show_frontier
-	_refresh_drawer_handoff_cues(field_readiness, end_turn_forecast_surface, objective_header_surfaces)
-
-func _set_active_drawer(drawer: String) -> void:
-	if drawer != "":
-		_on_overworld_interaction_owner_opened()
-	_active_drawer = drawer
 
 func _configure_overworld_keyboard_focus(force: bool = false) -> void:
 	if is_instance_valid(_hero_level_up_dialog) and _hero_level_up_dialog.visible: return
@@ -9557,15 +9107,7 @@ func _configure_overworld_keyboard_focus(force: bool = false) -> void:
 		_primary_action_button,
 		_minimap,
 		_context_actions,
-		_open_command_button,
-		_open_frontier_button,
-		_close_command_button,
-		_close_frontier_button,
 		_hero_actions,
-		_rendezvous_controls,
-		_spell_actions,
-		_specialty_actions,
-		_artifact_actions,
 		_end_turn_button,
 		_save_slot_picker,
 		_save_button,
@@ -9576,10 +9118,6 @@ func _configure_overworld_keyboard_focus(force: bool = false) -> void:
 	var preferred := _primary_action_button
 	if _briefing_consumption_autosave_failure_pending or _generated_opening_autosave_failure_pending:
 		preferred = _save_button
-	elif _active_drawer == "command":
-		preferred = _close_command_button
-	elif _active_drawer == "frontier":
-		preferred = _close_frontier_button
 	FrontierVisualKit.grab_keyboard_focus(self, preferred, controls, force)
 
 func _should_show_tile_context() -> bool:
@@ -9590,15 +9128,6 @@ func _should_show_tile_context() -> bool:
 	if _opening_route_suggested:
 		return false
 	return true
-
-func _frontier_indicator_text(threat_text: String, forecast_text: String) -> String:
-	var threat_line := _compact_rail_text(threat_text, 1, 26, true)
-	if threat_line == "":
-		threat_line = "steady"
-	var forecast_line := _compact_rail_text(forecast_text, 1, 26, true)
-	if forecast_line == "":
-		return "Frontier: %s" % _short_text(threat_line, 24)
-	return "Frontier: %s" % _short_text(_strip_repeated_rail_prefix(forecast_line), 24)
 
 func _describe_selected_tile() -> String:
 	if not _tile_in_bounds(_selected_tile):
@@ -11146,19 +10675,12 @@ func _debug_refresh_section_buckets(profile: Dictionary) -> Dictionary:
 		"refresh_actions",
 		"refresh_hero_actions",
 		"refresh_context_actions",
-		"refresh_spell_actions",
-		"refresh_specialty_actions",
-		"refresh_artifact_actions",
 		"refresh_generated_surfaces",
 		"refresh_header_objective_status_resources",
 		"refresh_commitment_rail",
 		"refresh_hero_rail",
 		"refresh_army_rail",
 		"refresh_heroes_rail",
-		"refresh_specialty_rail",
-		"refresh_spell_rail",
-		"refresh_artifact_rail",
-		"refresh_frontier_drawer",
 		"refresh_context_tile_text",
 		"refresh_event_action_context",
 		"refresh_end_turn_surface",
@@ -11742,7 +11264,6 @@ func validation_snapshot() -> Dictionary:
 	var end_turn_check := _end_turn_confirmation_surface(field_readiness)
 	var event_feed := _event_feed_surface()
 	var action_context := _action_context_surface(event_feed, field_readiness)
-	var drawer_handoff := _drawer_handoff_surfaces(field_readiness)
 	var status_forecast := _status_forecast_surface()
 	var command_check := _command_check_surface()
 	var specialty_check := _specialty_check_surface()
@@ -11820,21 +11341,15 @@ func validation_snapshot() -> Dictionary:
 		"army_tooltip_text": _army_label.tooltip_text,
 		"army_management": _army_management.validation_snapshot(),
 		"specialty_text": OverworldRules.describe_specialties(_session),
-		"specialty_visible_text": _specialty_label.text,
-		"specialty_tooltip_text": _specialty_label.tooltip_text,
 		"specialty_check": specialty_check,
 		"specialty_check_visible_text": String(specialty_check.get("visible_text", "")),
 		"specialty_check_tooltip_text": String(specialty_check.get("tooltip_text", "")),
 		"specialty_actions": _validation_specialty_action_payloads(),
-		"specialty_action_surfaces": _validation_control_surfaces(_specialty_actions),
 		"spellbook_text": OverworldRules.describe_spellbook(_session, SpellRules.CONTEXT_OVERWORLD),
-		"spellbook_visible_text": _spell_label.text,
-		"spellbook_tooltip_text": _spell_label.tooltip_text,
 		"spellbook_rail_text": OverworldRules.describe_spellbook_rail(_session, SpellRules.CONTEXT_OVERWORLD),
 		"spell_check": spell_check,
 		"spell_check_visible_text": String(spell_check.get("visible_text", "")),
 		"spell_check_tooltip_text": String(spell_check.get("tooltip_text", "")),
-		"spell_action_surfaces": _validation_control_surfaces(_spell_actions),
 		"event_visible_text": _event_label.text,
 		"event_tooltip_text": _event_label.tooltip_text,
 		"event_feed": event_feed,
@@ -11853,13 +11368,6 @@ func validation_snapshot() -> Dictionary:
 		"end_turn_button_text": _end_turn_button.text,
 		"end_turn_tooltip_text": _end_turn_button.tooltip_text,
 		"end_turn_confirmation": end_turn_check,
-		"drawer_handoff": drawer_handoff,
-		"command_drawer_button_text": _open_command_button.text,
-		"command_drawer_tooltip_text": _open_command_button.tooltip_text,
-		"frontier_drawer_button_text": _open_frontier_button.text,
-		"frontier_drawer_tooltip_text": _open_frontier_button.tooltip_text,
-		"close_command_tooltip_text": _close_command_button.tooltip_text,
-		"close_frontier_tooltip_text": _close_frontier_button.tooltip_text,
 		"action_feedback": _validation_action_feedback(),
 		"action_feedback_text": _action_feedback_text(),
 		"map_cue_text": _map_cue_label.text,
@@ -11892,8 +11400,7 @@ func validation_snapshot() -> Dictionary:
 		"context_action_ids": _validation_context_action_ids(),
 		"rendezvous": _validation_rendezvous_surface(),
 		"spell_actions": _validation_spell_action_payloads(),
-		"artifact_text": _artifact_label.text,
-		"artifact_tooltip_text": _artifact_label.tooltip_text,
+		"artifact_text": OverworldRules.describe_artifacts(_session),
 		"artifact_actions": _validation_artifact_action_payloads(),
 		"artifact_slot_presentation": validation_artifact_slot_presentation(),
 		"artifact_acquired_presentation": validation_artifact_acquired_presentation(),
@@ -12237,9 +11744,7 @@ func _validation_town_presentation_profiles() -> Array:
 
 func _validation_chrome_state() -> Dictionary:
 	return {
-		"active_drawer": _active_drawer,
-		"command_drawer_visible": _command_panel.visible,
-		"frontier_drawer_visible": _frontier_panel.visible,
+		"hero_sheet_visible": is_instance_valid(_hero_sheet) and _hero_sheet.visible,
 		"tile_context_visible": _context_panel.visible,
 		"order_panel_visible": _commitment_panel.visible,
 		"command_spine_visible": _command_spine.visible,
@@ -12253,11 +11758,6 @@ func _validation_chrome_state() -> Dictionary:
 		),
 		"map_cue_text": _map_cue_label.text,
 		"action_feedback": _validation_action_feedback(),
-		"frontier_indicator": _frontier_indicator_label.text,
-		"command_drawer_button_text": _open_command_button.text,
-		"command_drawer_tooltip_text": _open_command_button.tooltip_text,
-		"frontier_drawer_button_text": _open_frontier_button.text,
-		"frontier_drawer_tooltip_text": _open_frontier_button.tooltip_text,
 	}
 
 func _validation_action_feedback() -> Dictionary:
@@ -12310,22 +11810,14 @@ func _validation_control_surfaces(container: Node) -> Array:
 		surfaces.append(surface)
 	return surfaces
 
+## Meet orders live on the hero sheet's header.
 func _validation_rendezvous_surface() -> Dictionary:
 	var meet_hero_ids := []
-	var meet_focusable := true
-	for child in _rendezvous_controls.get_children():
-		if child is Button:
-			meet_hero_ids.append(String(child.get_meta("hero_id", "")))
-			meet_focusable = meet_focusable and child.focus_mode != Control.FOCUS_NONE and not child.disabled
+	for partner in _hero_sheet_orders().get("meet_partners", []):
+		meet_hero_ids.append(String(partner.get("id", "")))
 	var exchange_open := is_instance_valid(_hero_exchange) and _hero_exchange.visible
 	return {
-		"label_visible": _rendezvous_label.visible,
-		"label_visible_in_tree": _rendezvous_label.is_visible_in_tree(),
-		"label_text": _rendezvous_label.text,
-		"controls_visible": _rendezvous_controls.visible,
-		"controls_visible_in_tree": _rendezvous_controls.is_visible_in_tree(),
 		"meet_hero_ids": meet_hero_ids,
-		"meet_focusable": meet_focusable and not meet_hero_ids.is_empty(),
 		"exchange_open": exchange_open,
 		"exchange_partner_id": _hero_exchange_partner_id if exchange_open else "",
 		"exchange": _hero_exchange.validation_snapshot() if exchange_open else {},
@@ -12338,19 +11830,6 @@ func validation_open_hero_exchange(partner_id: String = "") -> Dictionary:
 func validation_hero_exchange() -> Control:
 	return _hero_exchange if is_instance_valid(_hero_exchange) else null
 
-func validation_open_command_drawer() -> Dictionary:
-	_set_active_drawer("command")
-	_sync_context_drawers()
-	_configure_overworld_keyboard_focus(true)
-	return _validation_chrome_state()
-
-func validation_open_frontier_drawer() -> Dictionary:
-	_set_active_drawer("frontier")
-	_refresh_frontier_drawer()
-	_sync_context_drawers()
-	_configure_overworld_keyboard_focus(true)
-	return _validation_chrome_state()
-
 func validation_select_tile(x: int, y: int) -> Dictionary:
 	var handler_started_usec := Time.get_ticks_usec()
 	var tile := Vector2i(x, y)
@@ -12360,7 +11839,6 @@ func validation_select_tile(x: int, y: int) -> Dictionary:
 	_debug_record_phase_usec("validation_select_entry", Time.get_ticks_usec() - handler_started_usec, {"handler": "validation_select_tile"})
 	_set_selected_tile(tile)
 	_debug_set_path_command_target(_selected_tile)
-	_set_active_drawer("")
 	_refresh_selected_route_preview("validation_selected_route_changed")
 	if debug_started:
 		_debug_finish_path_command()
@@ -12447,7 +11925,7 @@ func validation_gameplay_movement_input_snapshot() -> Dictionary:
 		"movement_current": int(movement.get("current", 0)),
 		"movement_max": int(movement.get("max", 0)),
 		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
-		"active_drawer": _active_drawer,
+		"hero_sheet_open": is_instance_valid(_hero_sheet) and _hero_sheet.visible,
 		"settings_open": _active_play_settings_dialog != null and _active_play_settings_dialog.is_open(),
 		"save_popup_open": _save_slot_picker != null and _save_slot_picker.get_popup().visible,
 		"manual_overwrite_open": _manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible,
@@ -12525,7 +12003,7 @@ func validation_controller_route_cursor_snapshot() -> Dictionary:
 		"repeat_timer_active": _controller_route_repeat_timer != null and not _controller_route_repeat_timer.is_stopped(),
 		"repeat_wait_seconds": _controller_route_repeat_timer.wait_time if _controller_route_repeat_timer != null else 0.0,
 		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
-		"active_drawer": _active_drawer,
+		"hero_sheet_open": is_instance_valid(_hero_sheet) and _hero_sheet.visible,
 		"settings_open": _active_play_settings_dialog != null and _active_play_settings_dialog.is_open(),
 		"save_popup_open": _save_slot_picker != null and _save_slot_picker.get_popup().visible,
 		"manual_overwrite_open": _manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible,
@@ -12911,8 +12389,7 @@ func validation_perform_specialty_action(action_id: String) -> Dictionary:
 		"before": before_state,
 		"after": after_state,
 		"message": _last_message,
-		"specialty_text": _specialty_label.text,
-		"specialty_tooltip_text": _specialty_label.tooltip_text,
+		"specialty_text": OverworldRules.describe_specialties(_session),
 		"specialty_actions": _validation_specialty_action_payloads(),
 		"action_feedback": _validation_action_feedback(),
 		"post_action_recap": _last_action_recap.duplicate(true),
@@ -12940,8 +12417,7 @@ func validation_perform_artifact_action(action_id: String) -> Dictionary:
 		"artifact_action_ids": action_ids,
 		"state_changed": before != after,
 		"message": _last_message,
-		"artifact_text": _artifact_label.text,
-		"artifact_tooltip_text": _artifact_label.tooltip_text,
+		"artifact_text": OverworldRules.describe_artifacts(_session),
 		"artifact_actions": _validation_artifact_action_payloads(),
 		"action_feedback": _validation_action_feedback(),
 		"post_action_recap": _last_action_recap.duplicate(true),
@@ -13944,9 +13420,6 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_map_frame_panel, "frame", 18)
 	FrontierVisualKit.apply_panel(_sidebar_shell_panel, "frame", 22)
 	FrontierVisualKit.apply_panel(_hero_panel, "banner", 18)
-	FrontierVisualKit.apply_panel(_action_panel, "ink", 18)
-	FrontierVisualKit.apply_panel(_command_panel, "ink", 18)
-	FrontierVisualKit.apply_panel(_frontier_panel, "teal", 18)
 	FrontierVisualKit.apply_panel(_context_panel, "gold", 18)
 	FrontierVisualKit.apply_panel(_command_band_panel, "earth", 22)
 	FrontierVisualKit.apply_panel(_orders_panel, "ink", 18)
@@ -13961,9 +13434,6 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_art_panel(_minimap_panel, UI_ART_OVERWORLD_MINIMAP_FRAME, "frame", 70, 8, Color(0.78, 0.76, 0.68, 1.0))
 	FrontierVisualKit.apply_art_panel(_sidebar_shell_panel, UI_ART_OVERWORLD_SIDEBAR_FRAME, "frame", 70, 12, Color(0.82, 0.82, 0.78, 1.0))
 	FrontierVisualKit.apply_art_panel(_hero_panel, UI_ART_OVERWORLD_HERO_FRAME, "banner", 58, 10, Color(0.72, 0.70, 0.64, 1.0))
-	FrontierVisualKit.apply_art_panel(_action_panel, UI_ART_OVERWORLD_WOOD_PANEL, "ink", 62, 10, Color(0.62, 0.60, 0.55, 1.0))
-	FrontierVisualKit.apply_art_panel(_command_panel, UI_ART_OVERWORLD_WOOD_PANEL, "ink", 62, 10, Color(0.58, 0.58, 0.54, 1.0))
-	FrontierVisualKit.apply_art_panel(_frontier_panel, UI_ART_OVERWORLD_PARCHMENT_PANEL, "teal", 54, 10, Color(0.44, 0.48, 0.46, 1.0))
 	FrontierVisualKit.apply_art_panel(_context_panel, UI_ART_OVERWORLD_PARCHMENT_PANEL, "gold", 54, 10, Color(0.46, 0.43, 0.38, 1.0))
 	FrontierVisualKit.apply_art_panel(_command_band_panel, UI_ART_OVERWORLD_RESOURCE_BAR, "earth", 44, 10, Color(0.70, 0.68, 0.62, 1.0))
 	FrontierVisualKit.apply_art_panel(_orders_panel, UI_ART_OVERWORLD_WOOD_PANEL, "ink", 62, 10, Color(0.58, 0.58, 0.54, 1.0))
@@ -13973,7 +13443,6 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_clear_panel(_top_strip_panel)
 	FrontierVisualKit.apply_clear_panel(_hero_panel)
 	FrontierVisualKit.apply_clear_panel(_event_panel)
-	FrontierVisualKit.apply_clear_panel(_action_panel)
 	# A tall rail must not stretch a decorative square frame's center ornaments
 	# behind the roster and army labels. Keep the original wood texture subdued;
 	# portraits and the minimap retain their smaller ornamental frames.
@@ -13981,10 +13450,6 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_clear_panel(_command_band_panel)
 	_command_spine.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
-	FrontierVisualKit.apply_button(_open_command_button, "secondary", 104.0, 30.0, 12)
-	FrontierVisualKit.apply_button(_open_frontier_button, "secondary", 104.0, 30.0, 12)
-	FrontierVisualKit.apply_button(_close_command_button, "secondary", 108.0, 30.0, 12)
-	FrontierVisualKit.apply_button(_close_frontier_button, "secondary", 108.0, 30.0, 12)
 	FrontierVisualKit.apply_button(_primary_action_button, "primary", 190.0, 32.0, 12)
 	FrontierVisualKit.apply_button(_end_turn_button, "primary", 96.0, 30.0, 12)
 	FrontierVisualKit.apply_button(_save_button, "secondary", 68.0, 28.0, 12)
@@ -14006,11 +13471,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_label(_hero_title_label, "gold", 13)
 	FrontierVisualKit.apply_label(_hero_roster_title_label, "muted", 11)
 	FrontierVisualKit.apply_label(_town_roster_title_label, "muted", 11)
-	FrontierVisualKit.apply_label(_action_title_label, "muted", 12)
-	FrontierVisualKit.apply_label(_frontier_indicator_label, "teal", 12)
-	FrontierVisualKit.apply_label(_command_title_label, "muted", 13)
 	FrontierVisualKit.apply_label(_context_title_label, "gold", 13)
-	FrontierVisualKit.apply_label(_frontier_title_label, "teal", 13)
 	FrontierVisualKit.apply_label(_orders_title_label, "gold", 13)
 	FrontierVisualKit.apply_label(_save_status_label, "muted", 12)
 	FrontierVisualKit.apply_labels([
@@ -14019,13 +13480,6 @@ func _apply_visual_theme() -> void:
 		_hero_label,
 		_army_label,
 		_heroes_label,
-		_specialty_label,
-		_spell_label,
-		_artifact_label,
-		_visibility_label,
-		_objective_label,
-		_threat_label,
-		_forecast_label,
 		_context_label,
 	], "body", 13)
 

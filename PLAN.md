@@ -117,6 +117,10 @@ Rules:
 
 `ux-town-construction-close-20261008` (completed, owner playtest fix): the construction board drops its header resource strip (the town's bottom resource bar shows the stockpile and the board ends above it), and Close replaces View in town beside the build button; V still views the building in town. See `docs/town-construction-board.md`.
 
+### Hero orders on the hero sheet
+
+`ux-overworld-hero-sheet-orders-20261009` (completed, owner request): the overworld Command and Frontier buttons and their drawers are retired. Every hero order is issued from the hero sheet (click the active hero, or its roster portrait): its spellbook opens on overworld spells and casts them, the Artifacts tab equips, stows and swaps artifacts and shows set insignia, the Army tab splits, merges and moves stacks, specialty choices and "Meet" for heroes in reach sit there too. New rule: a hero casts at most one overworld spell per day. Status badges mark towns that built today and heroes that cast today, on the map and in the sidebar roster.
+
 ### Generated object sprite placement
 
 `ux-generated-object-sprite-footprint-20261008` (completed, owner playtest fix): generated sites draw their sprite over their real footprint. Their x/y is the HoMM3 bottom-right tile (sometimes outside the body), so the sprite rect now comes from the body tiles: on the bottom row, centred on the interaction tile (the art's entrance is its bottom centre, as for mines). `tests/overworld_object_footprint_alignment_report.tscn` checks every site of a generated map. A full scan of the owner's map (every site, guard, artifact and town, one scenery piece per shape, and whole-map scenery coverage) is in `docs/generated-object-placement-scan.md`, with the open readability findings.

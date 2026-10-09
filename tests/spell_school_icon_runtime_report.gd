@@ -642,8 +642,10 @@ func _surface_case(viewport_size: Vector2i, surface: String, spell_id_override: 
 	await get_tree().process_frame
 	await get_tree().process_frame
 	await get_tree().process_frame
+	# Overworld spells are cast from the hero sheet's Spellbook tab.
+	var sheet: Control = null
 	if surface == "overworld":
-		shell.validation_open_command_drawer()
+		sheet = shell.validation_open_hero_sheet("Spellbook")
 	elif surface == "town":
 		var management_tabs := shell.get_node_or_null("%ManagementTabs") as TabContainer
 		if management_tabs == null:
@@ -654,18 +656,23 @@ func _surface_case(viewport_size: Vector2i, surface: String, spell_id_override: 
 	var live_session = shell.get("_session")
 	if live_session == null:
 		live_session = SessionState.ensure_active_session()
-	var container := shell.get_node_or_null(_surface_container_path(surface)) as Container
+	var container: Container = _sheet_spell_grid(sheet) if surface == "overworld" else shell.get_node_or_null(_surface_container_path(surface)) as Container
 	if container == null:
 		return await _finish_case(shell, {"ok": false, "failure": "container", "surface": surface})
+	var cast_button: Button = sheet.find_child("PrepareSpell", true, false) as Button if surface == "overworld" else null
+	if surface == "overworld":
+		var context_filter: OptionButton = sheet.find_child("SpellContext", true, false) as OptionButton
+		if sheet.current_tab() != "Spellbook" or context_filter == null or context_filter.selected != 2 or cast_button == null or cast_button.text != "Cast spell":
+			return await _finish_case(shell, {"ok": false, "failure": "spellbook_tab", "surface": surface, "tab": sheet.current_tab()})
 	var actions := _surface_actions(surface, live_session)
 	var buttons := _button_contract(shell, container, actions, surface, not (surface == "town" and not spell_ids_override.is_empty()))
 	var action_id := _surface_action_id(surface, spell_id)
 	var action := _action_for_id(actions, action_id)
 	var button := _button_for_action(shell, container, actions, surface, action_id)
-	if action.is_empty() or button == null or button.disabled:
+	if action.is_empty() or button == null or button.disabled or (surface == "overworld" and bool(action.get("disabled", false))):
 		return await _finish_case(shell, {"ok": false, "failure": "action_button", "surface": surface, "action_id": action_id, "actions": actions, "buttons": buttons})
 	var expected_icon_path := SpellRules.spell_icon_path(spell_id)
-	var selected_icon_exact := _icon_exact(button, expected_icon_path)
+	var selected_icon_exact := _icon_exact(button, expected_icon_path, _icon_width(surface))
 	var selected_specific := expected_icon_path.begins_with("res://art/magic/runtime/spells/")
 	var targeted_buttons_exact := true
 	for targeted_spell_id in spell_ids_override:
@@ -677,23 +684,30 @@ func _surface_case(viewport_size: Vector2i, surface: String, spell_id_override: 
 		targeted_buttons_exact = (
 			targeted_buttons_exact
 			and targeted_button != null
-			and _icon_exact(targeted_button, SpellRules.spell_icon_path(String(targeted_spell_id)))
+			and _icon_exact(targeted_button, SpellRules.spell_icon_path(String(targeted_spell_id)), _icon_width(surface))
 			and (surface != "town" or (get_viewport().gui_get_focus_owner() == targeted_button and get_viewport().get_visible_rect().encloses(targeted_button.get_global_rect())))
 		)
 	button.grab_focus()
 	await get_tree().process_frame
 	var focus_exact := get_viewport().gui_get_focus_owner() == button and get_viewport().get_visible_rect().encloses(button.get_global_rect())
-	var invalid_button := Button.new()
-	invalid_button.text = "Invalid spell control"
-	shell.call("_apply_spell_action_icon", invalid_button, {"id": _surface_action_id(surface, "spell_missing")})
-	var invalid_fail_closed := invalid_button.icon == null and invalid_button.text == "Invalid spell control"
-	invalid_button.free()
+	if surface == "overworld":
+		# Focusing a spell card selects it; the sheet's Cast button carries its availability.
+		focus_exact = focus_exact and cast_button.disabled == bool(action.get("disabled", false)) and cast_button.tooltip_text == _overworld_availability_message(action)
+	var invalid_fail_closed := false
+	if surface == "overworld":
+		invalid_fail_closed = SpellRules.spell_icon_path("spell_missing") == ""
+	else:
+		var invalid_button := Button.new()
+		invalid_button.text = "Invalid spell control"
+		shell.call("_apply_spell_action_icon", invalid_button, {"id": _surface_action_id(surface, "spell_missing")})
+		invalid_fail_closed = invalid_button.icon == null and invalid_button.text == "Invalid spell control"
+		invalid_button.free()
 	var live_before: Dictionary = live_session.to_dict()
 	var control = SessionDataScript.SessionData.new()
 	control.from_dict(live_before.duplicate(true))
 	var control_result := _apply_control_action(control, surface, action, spell_id)
 	var save_before := SaveService.latest_loadable_summary()
-	button.emit_signal("pressed")
+	(cast_button if surface == "overworld" else button).emit_signal("pressed")
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var save_after := SaveService.latest_loadable_summary()
@@ -883,6 +897,7 @@ func _surface_scene_path(surface: String) -> String:
 			return "res://scenes/overworld/OverworldShell.tscn"
 
 func _surface_container_path(surface: String) -> String:
+	# Battle only; overworld spells are on the hero sheet.
 	return "%StudyActions" if surface == "town" else "%SpellActions"
 
 func _surface_actions(surface: String, session) -> Array:
@@ -907,11 +922,11 @@ func _button_contract(shell: Node, container: Container, actions: Array, surface
 	var button_rows := []
 	var buttons := []
 	for child in container.get_children():
-		if child is Button:
+		if child is Button and (surface != "overworld" or child.visible):
 			buttons.append(child)
 	for index in range(actions.size()):
 		var action: Dictionary = actions[index] if actions[index] is Dictionary else {}
-		var button: Button = buttons[index] if index < buttons.size() else null
+		var button: Button = _button_for_action(shell, container, actions, surface, String(action.get("id", ""))) if surface == "overworld" else (buttons[index] if index < buttons.size() else null)
 		var spell_id := SpellRules.spell_id_for_action(String(action.get("id", "")))
 		var expected_path := SpellRules.spell_icon_path(spell_id)
 		var expected_text := _expected_button_text(shell, surface, action)
@@ -922,9 +937,10 @@ func _button_contract(shell: Node, container: Container, actions: Array, surface
 			"spell_id": spell_id,
 			"expected_path": expected_path,
 			"present": button != null,
-			"copy_exact": button != null and button.text == expected_text and button.tooltip_text == expected_tooltip,
-			"disabled_exact": button != null and button.disabled == bool(action.get("disabled", false)),
-			"icon_exact": button != null and _icon_exact(button, expected_path),
+			"copy_exact": button != null and (_overworld_card_copy_exact(button, spell_id) if surface == "overworld" else (button.text == expected_text and button.tooltip_text == expected_tooltip)),
+			# Overworld spell cards stay selectable; availability lives on the Cast button.
+			"disabled_exact": button != null and (not button.disabled if surface == "overworld" else button.disabled == bool(action.get("disabled", false))),
+			"icon_exact": button != null and _icon_exact(button, expected_path, _icon_width(surface)),
 			"focusable": button != null and button.focus_mode != Control.FOCUS_NONE,
 			"visible": button != null and button.is_visible_in_tree(),
 			"contained": button != null and get_viewport().get_visible_rect().encloses(rect),
@@ -946,6 +962,8 @@ func _button_for_action(shell: Node, container: Container, actions: Array, surfa
 			break
 	if expected_action_index < 0:
 		return null
+	if surface == "overworld":
+		return container.get_node_or_null(NodePath(SpellRules.spell_id_for_action(action_id))) as Button
 	var buttons := []
 	for child in container.get_children():
 		if child is Button:
@@ -953,17 +971,40 @@ func _button_for_action(shell: Node, container: Container, actions: Array, surfa
 	return buttons[expected_action_index] if expected_action_index < buttons.size() else null
 
 func _expected_button_text(shell: Node, surface: String, action: Dictionary) -> String:
+	if surface == "overworld":
+		return ""
 	if surface == "battle":
 		return String(shell.call("_battle_spell_action_button_text", action))
 	return String(action.get("label", action.get("id", "Action")))
 
 func _expected_button_tooltip(shell: Node, surface: String, action: Dictionary) -> String:
+	if surface == "overworld":
+		return ""
 	if surface == "battle":
 		return String(shell.call("_battle_spell_action_tooltip", action))
 	if surface == "town":
 		return String(shell.call("_town_action_button_tooltip", action, "study"))
-	var spell_check: Dictionary = shell.call("_spell_action_check_surface", action)
-	return String(shell.call("_join_tooltip_sections", [String(action.get("summary", "")), String(spell_check.get("tooltip_text", ""))]))
+	return ""
+
+## The hero sheet's spell grid: one card per known spell, named by spell id.
+func _sheet_spell_grid(sheet: Control) -> Container:
+	if sheet == null:
+		return null
+	var pages := sheet.find_child("SpellPages", true, false)
+	return pages.get_child(0) as Container if pages != null and pages.get_child_count() > 0 else null
+
+func _overworld_card_copy_exact(button: Button, spell_id: String) -> bool:
+	var spell := ContentService.get_spell(spell_id)
+	var spell_name := String(spell.get("name", ""))
+	return spell_name != "" and button.text.begins_with(spell_name + "\n") and button.text.contains(" mana") and button.tooltip_text.begins_with(spell_name + " — ") and button.focus_mode != Control.FOCUS_NONE
+
+## What the sheet's Cast button explains for the selected overworld spell.
+func _overworld_availability_message(action: Dictionary) -> String:
+	var reason := String(action.get("invalid_reason", ""))
+	return reason if reason != "" else String(action.get("readiness", ""))
+
+func _icon_width(surface: String) -> int:
+	return 48 if surface == "overworld" else 24
 
 func _apply_control_action(control, surface: String, action: Dictionary, spell_id: String) -> Dictionary:
 	var action_id := String(action.get("id", ""))
@@ -987,8 +1028,8 @@ func _apply_control_action(control, surface: String, action: Dictionary, spell_i
 		control.flags["last_battle_action_recap"] = recap.duplicate(true)
 	return result
 
-func _icon_exact(button: Button, expected_path: String) -> bool:
-	return expected_path != "" and button.icon != null and button.icon.resource_path == expected_path and button.expand_icon and button.get_theme_constant("icon_max_width") == 24
+func _icon_exact(button: Button, expected_path: String, icon_max_width: int = 24) -> bool:
+	return expected_path != "" and button.icon != null and button.icon.resource_path == expected_path and button.expand_icon and button.get_theme_constant("icon_max_width") == icon_max_width
 
 func _first_player_town(session) -> Dictionary:
 	for town_value in session.overworld.get("towns", []):

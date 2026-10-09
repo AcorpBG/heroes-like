@@ -38,7 +38,7 @@ func _run() -> void:
 		_fail("Incremental route selection recomputed broad selected context actions.", profile)
 		return
 	if int(profile.get("route_tooltip_context_drawers_skipped", 0)) != 1:
-		_fail("Incremental route selection did not skip tooltip/context drawer rebuild.", profile)
+		_fail("Incremental route selection did not skip the tooltip/context surface rebuild.", profile)
 		return
 	if int(profile.get("hero_actions_cache_misses", 0)) != 0:
 		_fail("Incremental route selection rebuilt hero actions despite no hero/roster dirty phase.", profile)
@@ -111,7 +111,7 @@ func _assert_incremental_route_request(profile: Dictionary, label: String) -> bo
 		if required_phase not in phases:
 			_fail("%s incremental request missed required phase %s." % [label, required_phase], request)
 			return false
-	for forbidden_phase in ["context_actions", "hero_actions", "spell_rails", "specialty_rails", "artifact_rails", "status_surfaces", "save_surface", "generated_surfaces"]:
+	for forbidden_phase in ["context_actions", "hero_actions", "status_surfaces", "save_surface", "generated_surfaces"]:
 		if forbidden_phase in phases:
 			_fail("%s incremental request included unrelated phase %s." % [label, forbidden_phase], request)
 			return false
@@ -132,18 +132,12 @@ func _assert_incremental_route_request(profile: Dictionary, label: String) -> bo
 	for skipped_counter in [
 		"refresh_phase_hero_actions_calls",
 		"refresh_phase_context_actions_calls",
-		"refresh_phase_spell_rails_calls",
-		"refresh_phase_specialty_rails_calls",
-		"refresh_phase_artifact_rails_calls",
 		"refresh_phase_status_surfaces_calls",
 		"refresh_phase_save_surface_calls",
 		"refresh_phase_generated_surfaces_calls",
 		"refresh_hero_actions_calls",
 		"refresh_context_actions_calls",
 		"refresh_tooltip_context_drawers_calls",
-		"refresh_spell_actions_calls",
-		"refresh_specialty_actions_calls",
-		"refresh_artifact_actions_calls",
 	]:
 		if int(profile.get(skipped_counter, 0)) != 0:
 			_fail("%s rebuilt an unrelated refresh phase: %s." % [label, skipped_counter], profile)
@@ -170,7 +164,6 @@ func _assert_current_readiness_surfaces(shell: Node, snapshot: Dictionary, label
 	var session = shell.get("_session")
 	var readiness: Dictionary = shell.call("_field_readiness_surface")
 	var end_turn: Dictionary = shell.call("_end_turn_confirmation_surface", readiness)
-	var drawer: Dictionary = shell.call("_drawer_handoff_surfaces", readiness)
 	var expected_objective_tooltip := String(shell.call("_join_tooltip_sections", [
 		OverworldRules.describe_objective_stakes_board(session),
 		String(readiness.get("tooltip_text", "")),
@@ -178,8 +171,6 @@ func _assert_current_readiness_surfaces(shell: Node, snapshot: Dictionary, label
 	var event_surface: Dictionary = _expected_route_event_surface(shell, readiness)
 	var action_context: Dictionary = shell.call("_action_context_surface", event_surface, readiness)
 	var expected_event_visible := String(shell.call("_trim_rail_visible_text", String(action_context.get("visible_text", "")), 1, 42))
-	var command: Dictionary = drawer.get("command", {}) if drawer.get("command", {}) is Dictionary else {}
-	var frontier: Dictionary = drawer.get("frontier", {}) if drawer.get("frontier", {}) is Dictionary else {}
 	var checks := {
 		"field_readiness_current": snapshot.get("field_readiness", {}) == readiness,
 		"objective_brief_tooltip_current": String(snapshot.get("objective_brief_tooltip_text", "")) == expected_objective_tooltip,
@@ -188,11 +179,6 @@ func _assert_current_readiness_surfaces(shell: Node, snapshot: Dictionary, label
 		"end_turn_payload_current": snapshot.get("end_turn_confirmation", {}) == end_turn,
 		"end_turn_button_current": String(snapshot.get("end_turn_button_text", "")) == String(end_turn.get("button_text", "")),
 		"end_turn_tooltip_current": String(snapshot.get("end_turn_tooltip_text", "")) == String(end_turn.get("tooltip_text", "")),
-		"drawer_payload_current": snapshot.get("drawer_handoff", {}) == drawer,
-		"command_button_current": String(snapshot.get("command_drawer_button_text", "")) == String(command.get("button_text", "")),
-		"command_tooltip_current": String(snapshot.get("command_drawer_tooltip_text", "")) == String(command.get("tooltip_text", "")),
-		"frontier_button_current": String(snapshot.get("frontier_drawer_button_text", "")) == String(frontier.get("button_text", "")),
-		"frontier_tooltip_current": String(snapshot.get("frontier_drawer_tooltip_text", "")) == String(frontier.get("tooltip_text", "")),
 	}
 	var rendered_text := "\n".join([
 		String(snapshot.get("objective_brief_tooltip_text", "")),
@@ -200,10 +186,6 @@ func _assert_current_readiness_surfaces(shell: Node, snapshot: Dictionary, label
 		String(snapshot.get("event_tooltip_text", "")),
 		String(snapshot.get("end_turn_button_text", "")),
 		String(snapshot.get("end_turn_tooltip_text", "")),
-		String(snapshot.get("command_drawer_button_text", "")),
-		String(snapshot.get("command_drawer_tooltip_text", "")),
-		String(snapshot.get("frontier_drawer_button_text", "")),
-		String(snapshot.get("frontier_drawer_tooltip_text", "")),
 	])
 	for stale_token_value in stale_tokens:
 		var stale_token := String(stale_token_value)
@@ -260,10 +242,6 @@ func _rendered_readiness_payload(snapshot: Dictionary) -> Dictionary:
 		"event_tooltip_text": String(snapshot.get("event_tooltip_text", "")),
 		"end_turn_button_text": String(snapshot.get("end_turn_button_text", "")),
 		"end_turn_tooltip_text": String(snapshot.get("end_turn_tooltip_text", "")),
-		"command_drawer_button_text": String(snapshot.get("command_drawer_button_text", "")),
-		"command_drawer_tooltip_text": String(snapshot.get("command_drawer_tooltip_text", "")),
-		"frontier_drawer_button_text": String(snapshot.get("frontier_drawer_button_text", "")),
-		"frontier_drawer_tooltip_text": String(snapshot.get("frontier_drawer_tooltip_text", "")),
 	}
 
 func _open_shell(session) -> Dictionary:

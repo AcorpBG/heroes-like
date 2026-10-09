@@ -6,8 +6,7 @@ const REPORT_ID := "OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION"
 const AUTOSAVE_PATH := "user://saves/autosave.json"
 const MANUAL_PATH := "user://saves/slot1.json"
 const OWNER_ROWS := [
-	{"id": "drawer", "reason": "drawer_open"},
-	{"id": "frontier_drawer", "reason": "drawer_open"},
+	{"id": "hero_sheet", "reason": "hero_sheet_open"},
 	{"id": "settings", "reason": "settings_open"},
 	{"id": "save_popup", "reason": "save_popup_open"},
 	{"id": "manual_overwrite", "reason": "save_confirmation_open"},
@@ -100,7 +99,7 @@ func _prove_owner(shell: Node, session, owner_id: String, expected_reason: Strin
 	shell.validation_controller_move_repeat()
 	var blocked_after: Dictionary = shell.validation_gameplay_movement_input_snapshot()
 	if _authority_signature(shell, session) != authority_before \
-			or _focus_signature(shell) != focus_after_keyboard \
+			or not _focus_kept_by_owner(shell, owner_id, focus_after_keyboard) \
 			or int(blocked_after.get("keyboard_blocked_count", -1)) < 0 \
 			or int(blocked_after.get("keyboard_blocked_count", 0)) > 1 \
 			or int(blocked_after.get("controller_blocked_count", 0)) != 1 \
@@ -136,9 +135,9 @@ func _prove_activation_race(shell: Node, session) -> Dictionary:
 	shell.validation_reset_gameplay_movement_input_state()
 	await _send_axis(int(axis.axis), float(axis.value))
 	var after_initial := OverworldRules.hero_position(session)
-	if not await _open_owner(shell, "drawer"):
-		return _fail_dictionary("Could not open drawer during armed-repeat race.")
-	await _close_owner(shell, "drawer")
+	if not await _open_owner(shell, "hero_sheet"):
+		return _fail_dictionary("Could not open the hero sheet during armed-repeat race.")
+	await _close_owner(shell, "hero_sheet")
 	shell.validation_controller_move_repeat()
 	await _settle(2)
 	var snapshot: Dictionary = shell.validation_gameplay_movement_input_snapshot()
@@ -253,10 +252,9 @@ func _prove_ordinary_focused_movement(shell: Node, session) -> Dictionary:
 
 func _open_owner(shell: Node, owner_id: String) -> bool:
 	match owner_id:
-		"drawer":
-			shell.validation_open_command_drawer()
-		"frontier_drawer":
-			shell.validation_open_frontier_drawer()
+		"hero_sheet":
+			if shell.validation_open_hero_sheet() == null:
+				return false
 		"settings":
 			shell.validation_open_active_play_settings()
 		"save_popup":
@@ -283,8 +281,10 @@ func _open_owner(shell: Node, owner_id: String) -> bool:
 
 func _close_owner(shell: Node, owner_id: String) -> void:
 	match owner_id:
-		"drawer", "frontier_drawer":
-			shell.call("_on_close_drawers_pressed")
+		"hero_sheet":
+			var sheet = shell.get("_hero_sheet")
+			if is_instance_valid(sheet) and sheet.visible:
+				sheet.close_sheet()
 		"settings":
 			var dialog = shell.validation_active_play_settings_dialog()
 			if dialog != null:
@@ -330,6 +330,16 @@ func _focus_signature(shell: Node) -> Dictionary:
 			var owner := dialog.get_cancel_button().get_viewport().gui_get_focus_owner()
 			result[path] = owner.get_instance_id() if owner != null else 0
 	return result
+
+
+# The hero sheet is a navigable modal: the left stick may move focus between its
+# own controls, but focus must never leave the sheet. Other owners keep focus exact.
+func _focus_kept_by_owner(shell: Node, owner_id: String, focus_before: Dictionary) -> bool:
+	if owner_id == "hero_sheet":
+		var sheet = shell.get("_hero_sheet")
+		var focus_owner := get_viewport().gui_get_focus_owner()
+		return is_instance_valid(sheet) and sheet.visible and focus_owner != null and sheet.is_ancestor_of(focus_owner)
+	return _focus_signature(shell) == focus_before
 
 
 func _focus_belongs_to_owner(shell: Node, owner_id: String) -> bool:

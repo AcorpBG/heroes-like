@@ -66,8 +66,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	var map_cue := shell.get_node_or_null("%MapCue") as Label
 	var artifact_blocker := shell.get_node_or_null("%ArtifactAcquiredInputBlocker") as Control
 	var menu := shell.get_node_or_null("%Menu") as Button
-	var open_command := shell.get_node_or_null("%OpenCommand") as Button
-	if primary_action == null or artifact_cue_row == null or artifact_cue_icon == null or artifact_cue == null or map_cue == null or artifact_blocker == null or menu == null or open_command == null:
+	if primary_action == null or artifact_cue_row == null or artifact_cue_icon == null or artifact_cue == null or map_cue == null or artifact_blocker == null or menu == null:
 		return await _finish_case(shell, {"ok": false, "failure": "live_surface_missing"})
 
 	var selected: Dictionary = shell.validation_snapshot()
@@ -178,10 +177,13 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 
 	var input_policy_exact := true
 	if reduced_motion:
-		open_command.emit_signal("pressed")
-		var active_after_command: Dictionary = _acquired_presentation(shell)
-		input_policy_exact = String(shell.get("_active_drawer")) == "command" and bool(active_after_command.get("active", false))
+		# The reduced-motion cue does not block orders: the hero sheet still opens.
+		var sheet = shell.validation_open_hero_sheet()
+		var active_after_sheet: Dictionary = _acquired_presentation(shell)
+		input_policy_exact = sheet != null and sheet.visible and bool(active_after_sheet.get("active", false))
 		await get_tree().process_frame
+		if sheet != null:
+			sheet.close_sheet()
 	else:
 		await _click_global_position(menu.get_global_rect().get_center())
 		input_policy_exact = (

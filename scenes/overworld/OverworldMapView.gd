@@ -322,6 +322,11 @@ const GARRISON_MEDALLION_RADIUS := 0.34
 const GARRISON_MEDALLION_RISE := 1.55
 const GARRISON_MEDALLION_SEGMENTS := 24
 const GARRISON_MEDALLION_GOLD := Color(0.88, 0.70, 0.32, 1.0)
+# Small status badges for the player's own towns and heroes.
+const BUILT_TODAY_BADGE := preload("res://art/ui/runtime/overworld/badge_built_today.png")
+const SPELL_CAST_TODAY_BADGE := preload("res://art/ui/runtime/overworld/badge_spell_cast_today.png")
+const STATUS_BADGE_EXTENT := 0.42
+const STATUS_BADGE_MIN_PX := 14.0
 const WORLD_SPRITE_SILHOUETTE_MODEL := "eight_direction_alpha_silhouette_outline"
 const TOWN_SPRITE_SILHOUETTE_WIDTH_FACTOR := 0.003
 const TOWN_SPRITE_SILHOUETTE_MIN_PX := 0.55
@@ -3874,10 +3879,22 @@ func _draw_tile_dynamic_icon(tile: Vector2i, rect: Rect2) -> void:
 	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
 	if visible and _has_hero_at(tile) and not (_hero_movement_active and tile == _hero_tile):
 		_draw_hero_marker(rect, tile)
+		if OverworldRulesScript.hero_cast_spell_today(_session, String(_hero_presentation_entry(tile).get("id", ""))):
+			_draw_status_badge(SPELL_CAST_TODAY_BADGE, rect.position + rect.size * Vector2(0.18, 0.16), rect)
 	elif _boats_by_tile.has(_tile_key(tile)):
 		_draw_free_boat(rect, not visible)
 	if visible and _garrison_heroes_by_tile.has(_tile_key(tile)):
 		_draw_garrison_medallion(rect, _garrison_heroes_by_tile[_tile_key(tile)])
+	if _has_town_at(tile):
+		var town := _town_at(tile)
+		if _controller_is_player(PlayerRules.town_controller_id(town)) and OverworldRulesScript.town_built_today(town, int(_session.day)):
+			var extent := minf(rect.size.x, rect.size.y)
+			_draw_status_badge(BUILT_TODAY_BADGE, rect.get_center() + Vector2(extent * 0.78, -extent * GARRISON_MEDALLION_RISE), rect)
+
+## A painted medallion centred on `center`, sized from the tile.
+func _draw_status_badge(texture: Texture2D, center: Vector2, tile_rect: Rect2) -> void:
+	var extent := maxf(STATUS_BADGE_MIN_PX, minf(tile_rect.size.x, tile_rect.size.y) * STATUS_BADGE_EXTENT)
+	_canvas_draw_texture_rect(texture, Rect2(center - Vector2.ONE * extent * 0.5, Vector2.ONE * extent), false)
 
 ## A hero in a town's garrison stays inside the walls: its portrait hangs on the
 ## town above the gate, marked "G" like its entry in the hero list.

@@ -1,0 +1,33 @@
+{
+  "generator": "Codex CLI built-in image generation (imggen skill), transparent background",
+  "created": "2026-10-09",
+  "use": "Adventure-map and roster status badges: town built today, hero cast an overworld spell today",
+  "items": [
+    {
+      "id": "badge_built_today",
+      "source": "art/ui/source/status_badges/badge_built_today.png",
+      "source_sha256": "197f6050cb1c031df244c109fc9539c40cee5af5cffac951b827de60f900d2a8",
+      "prompt": "art/ui/source/status_badges/badge_built_today.prompt.txt",
+      "style_reference": "art/magic/runtime/schools/beacon.png",
+      "runtime": "art/ui/runtime/overworld/badge_built_today.png",
+      "runtime_sha256": "fc597b5433de53e70efefc5a17d64010b85a71b17ccd65e5327392dda31980ea",
+      "runtime_size": [
+        128,
+        128
+      ]
+    },
+    {
+      "id": "badge_spell_cast_today",
+      "source": "art/ui/source/status_badges/badge_spell_cast_today.png",
+      "source_sha256": "752373c6509623ba497dfc24c4ca7e6ee0db45f9b9da27bb921b89801a9ca5ba",
+      "prompt": "art/ui/source/status_badges/badge_spell_cast_today.prompt.txt",
+      "style_reference": "art/magic/runtime/schools/beacon.png",
+      "runtime": "art/ui/runtime/overworld/badge_spell_cast_today.png",
+      "runtime_sha256": "9eb629904fd8c059f7922cfd469e3a867a4788ee6783fd8a603ac28ec822a2b6",
+      "runtime_size": [
+        128,
+        128
+      ]
+    }
+  ]
+}

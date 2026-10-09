@@ -114,26 +114,33 @@ func _run_overworld_case(viewport_size: Vector2i) -> Dictionary:
 	for unused in range(3):
 		await get_tree().process_frame
 	shell.call("_apply_responsive_layout")
-	var drawer_state: Dictionary = shell.call("validation_open_command_drawer")
+	# Specialty choices live on the hero sheet's Specializations tab. The pending
+	# offer also raises the level-up dialog; set it aside unresolved so the
+	# sheet can open over the same pending choice.
+	var level_up_dialog = shell.get("_hero_level_up_dialog")
+	if is_instance_valid(level_up_dialog) and level_up_dialog.visible:
+		level_up_dialog.hide()
+		await get_tree().process_frame
+	var sheet: Control = shell.call("validation_open_hero_sheet", "Specializations")
 	for unused in range(3):
 		await get_tree().process_frame
-	drawer_state = shell.call("validation_open_command_drawer")
-	await get_tree().process_frame
-	var container := shell.get_node_or_null("%SpecialtyActions") as Control
-	var presentation := _surface_contract(container, OFFER_IDS)
-	var invalid_button := Button.new()
-	shell.call("_apply_specialty_action_icon", invalid_button, {"id": "choose_specialty:not_real"})
-	var invalid_fail_closed := invalid_button.icon == null
-	invalid_button.free()
+	var sheet_state := {
+		"open": sheet != null and sheet.visible,
+		"tab": sheet.current_tab() if sheet != null else "",
+		"interactive": sheet != null and sheet.is_interactive(),
+	}
+	var container: Control = sheet.find_child("Specializations", true, false) as Control if sheet != null and sheet_state.tab == "Specializations" else null
+	var presentation: Dictionary = await _surface_contract(container, OFFER_IDS, 34, "Specialty_")
+	var invalid_fail_closed := HeroProgressionRules.specialty_insignia_texture(HeroProgressionRules.specialty_id_for_action("choose_specialty:not_real")) == null
 	var capture_path := "%s/overworld_%dx%d.png" % [CAPTURE_DIR, viewport_size.x, viewport_size.y]
-	var capture_ok := get_viewport().get_texture().get_image().save_png(ProjectSettings.globalize_path(capture_path)) == OK
+	var capture_ok := _capture(capture_path)
 	var authority_exact: bool = session.to_dict() == authority_before
 	var row := {
 		"ok": bool(presentation.get("ok", false)) and invalid_fail_closed and capture_ok and authority_exact,
 		"surface": "overworld",
 		"viewport": [viewport_size.x, viewport_size.y],
 		"presentation": presentation,
-		"drawer_state": drawer_state,
+		"sheet_state": sheet_state,
 		"invalid_fail_closed": invalid_fail_closed,
 		"capture_ok": capture_ok,
 		"capture_path": capture_path,
@@ -159,13 +166,13 @@ func _run_town_case(viewport_size: Vector2i) -> Dictionary:
 	shell.call("_rebuild_specialty_actions", TownRules.get_specialty_actions(session))
 	await get_tree().process_frame
 	var container := shell.get_node_or_null("%SpecialtyActions") as Control
-	var presentation := _surface_contract(container, OFFER_IDS)
+	var presentation: Dictionary = await _surface_contract(container, OFFER_IDS)
 	var invalid_button := Button.new()
 	shell.call("_apply_specialty_action_icon", invalid_button, {"id": "choose_specialty:not_real"})
 	var invalid_fail_closed := invalid_button.icon == null
 	invalid_button.free()
 	var capture_path := "%s/town_%dx%d.png" % [CAPTURE_DIR, viewport_size.x, viewport_size.y]
-	var capture_ok := get_viewport().get_texture().get_image().save_png(ProjectSettings.globalize_path(capture_path)) == OK
+	var capture_ok := _capture(capture_path)
 	var authority_exact: bool = session.to_dict() == authority_before
 	var row := {
 		"ok": bool(presentation.get("ok", false)) and invalid_fail_closed and capture_ok and authority_exact,
@@ -182,10 +189,12 @@ func _run_town_case(viewport_size: Vector2i) -> Dictionary:
 	SessionState.reset_session()
 	return row
 
-func _surface_contract(container: Control, expected_ids: Array) -> Dictionary:
+## `name_prefix` limits the buttons to those named with it (the hero sheet's
+## Specializations tab also holds other controls).
+func _surface_contract(container: Control, expected_ids: Array, icon_max_width: int = 24, name_prefix: String = "") -> Dictionary:
 	if container == null:
 		return {"ok": false, "failure": "container_missing"}
-	var buttons := _buttons_in(container)
+	var buttons := _buttons_in(container).filter(func(button): return name_prefix == "" or String(button.name).begins_with(name_prefix))
 	if buttons.size() != expected_ids.size():
 		return {"ok": false, "failure": "button_count", "actual": buttons.size(), "expected": expected_ids.size()}
 	var rows := []
@@ -204,10 +213,13 @@ func _surface_contract(container: Control, expected_ids: Array) -> Dictionary:
 			and texture.atlas != null
 			and texture.atlas.resource_path == HeroProgressionRules.SPECIALTY_INSIGNIA_ATLAS_PATH
 			and button.expand_icon
-			and button.get_theme_constant("icon_max_width") == 24
+			and button.get_theme_constant("icon_max_width") == icon_max_width
 			and button.text.find(String(HeroProgressionRules.specialty_definition(specialty_id).get("short_name", ""))) >= 0
 			and button.tooltip_text.find(description) >= 0
 		)
+		if container is ScrollContainer and container.is_visible_in_tree():
+			(container as ScrollContainer).ensure_control_visible(button)
+			await get_tree().process_frame
 		if container.is_visible_in_tree():
 			contained_when_visible = contained_when_visible and container.get_global_rect().encloses(button.get_global_rect())
 		exact = exact and row_exact
@@ -221,6 +233,13 @@ func _surface_contract(container: Control, expected_ids: Array) -> Dictionary:
 		"contained_when_visible": contained_when_visible,
 		"rows": rows,
 	}
+
+## Headless runs have no viewport image; the capture is skipped there.
+func _capture(capture_path: String) -> bool:
+	if DisplayServer.get_name() == "headless":
+		return true
+	var image := get_viewport().get_texture().get_image()
+	return image != null and image.save_png(ProjectSettings.globalize_path(capture_path)) == OK
 
 func _session_with_specialty_offer(at_town: bool):
 	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
