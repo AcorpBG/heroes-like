@@ -6,7 +6,11 @@ extends Node
 # auto-resolved fight goes into a battle log and every day into a ledger per
 # side; the full record is written as JSON for the battle report.
 #
-# HEROES_AI_MATCH_SEED     match seed (factions and map); "random" draws one.
+# It is an evaluation tool, not a test: it fails only when the match cannot be
+# set up or played.
+#
+# HEROES_AI_MATCH_SEED     match seed (factions and map); unset or "random"
+#                          draws one. The same seed replays the same match.
 # HEROES_AI_MATCH_MAX_DAYS day cap for an undecided match (default 160).
 # HEROES_AI_MATCH_OUT      where the JSON record goes (default user://).
 # HEROES_AI_MATCH_TRACE    1 prints each day's heroes, goals and towns.
@@ -20,16 +24,8 @@ const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
 const AiSeatRulesScript = preload("res://scripts/core/AiSeatRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 const REPORT_ID := "AI_VERSUS_AI_MATCH_REPORT"
-const DEFAULT_SEED := "ai-match-20261008"
 const DEFAULT_MAX_DAYS := 160
 const DEFAULT_OUT := "user://ai_versus_ai_match.json"
-## The regression run stops here; a full match is an evaluation, not a test.
-const TEST_DAYS := 40
-## In the regression run's 40 days (capitals 9 tiles apart) a town may fall to
-## the other player without a fight at most this often. Before towns were
-## defended 45 of 48 captures were; with defense and the 2026-10-08 battle
-## stat scaling the match is decided on day 17 with 9 of 11.
-const MAX_UNOPPOSED_CAPTURES := 12
 
 var _failed := false
 
@@ -39,14 +35,11 @@ func _ready() -> void:
 func _run() -> void:
 	ContentService.clear_generated_scenario_drafts()
 	var match_seed := OS.get_environment("HEROES_AI_MATCH_SEED").strip_edges()
-	var full_match := match_seed != ""
-	if match_seed == "random":
+	if match_seed in ["", "random"]:
 		var draw := RandomNumberGenerator.new()
 		draw.randomize()
 		match_seed = "ai-match-%d" % draw.randi()
-	elif match_seed == "":
-		match_seed = DEFAULT_SEED
-	var max_days := int(OS.get_environment("HEROES_AI_MATCH_MAX_DAYS")) if OS.get_environment("HEROES_AI_MATCH_MAX_DAYS") != "" else (DEFAULT_MAX_DAYS if full_match else TEST_DAYS)
+	var max_days := int(OS.get_environment("HEROES_AI_MATCH_MAX_DAYS")) if OS.get_environment("HEROES_AI_MATCH_MAX_DAYS") != "" else DEFAULT_MAX_DAYS
 	var swapped := OS.get_environment("HEROES_AI_MATCH_SWAP").strip_edges() not in ["", "0"]
 	var player_count := clampi(int(OS.get_environment("HEROES_AI_MATCH_PLAYERS")), 2, 8) if OS.get_environment("HEROES_AI_MATCH_PLAYERS") != "" else 2
 	var trace := OS.get_environment("HEROES_AI_MATCH_TRACE").strip_edges() not in ["", "0"]
@@ -156,23 +149,6 @@ func _run() -> void:
 		file.store_string(JSON.stringify(record, "  "))
 		file.close()
 
-	if battles.is_empty():
-		_fail("No fight was logged in %d days." % int(session.day))
-		return
-	if not full_match:
-		var unopposed := 0
-		for event in timeline:
-			if String(event.get("type", "")) == "town_captured" and String(event.get("from", "")) in seats and float(event.get("garrison_power", 0.0)) <= 0.0:
-				unopposed += 1
-		if unopposed > MAX_UNOPPOSED_CAPTURES:
-			_fail("%d towns fell to the other player without a fight in %d days." % [unopposed, int(session.day)])
-			return
-	var fought := {}
-	for battle in battles:
-		fought[String(battle.get("player_id", ""))] = true
-	if not full_match and fought.size() < 2:
-		_fail("Only %s fought in %d days." % [JSON.stringify(fought.keys()), int(session.day)])
-		return
 	var summary := {
 		"ok": true,
 		"match_seed": match_seed,
