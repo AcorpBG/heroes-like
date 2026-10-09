@@ -114775,7 +114775,7 @@
     {
       "id": "battle-rework-design-20261009",
       "title": "Battle screen and battle flow rework: plan and iterated mockup",
-      "status": "in_progress",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "documentation_design",
       "source": "PLAN.md",
@@ -114783,14 +114783,15 @@
         "PLAN.md",
         "docs/battle-rework.md"
       ],
-      "notes": "Owner request 2026-10-09 with eleven points (small battle window, spells cast by units, no hero on the field, turn order only for the current round, no wait, no choice of the melee end hex, no right-button details, no sword/arrow cursor with damage, shots and retaliations not shown, plain ground without obstacles, ranged vs melee not readable). Documentation and mockup only, no game code changed: docs/battle-rework.md (current code facts, design D1-D16, rule changes, slices, open owner decisions) and an interactive HTML mockup published as a private artifact, pass 1: https://claude.ai/artifact/Hy6UZnkYaLjXSwsAhqtsBF (playable battle on 11x9, 11x7 and 15x11 boards with the game's unit, hero, obstacle, spell and effect art). Stays in progress through the owner's iteration passes; the battle-rework-*-20261009 implementation slices stay pending until the owner signs off the mockup and the open decisions.",
+      "notes": "Owner request 2026-10-09 with eleven points (small battle window, spells cast by units, no hero on the field, turn order only for the current round, no wait, no choice of the melee end hex, no right-button details, no sword/arrow cursor with damage, shots and retaliations not shown, plain ground without obstacles, ranged vs melee not readable). Documentation and mockup only, no game code changed: docs/battle-rework.md (current code facts, design D1-D16, rule changes, slices, open owner decisions) and an interactive HTML mockup published as a private artifact, pass 1: https://claude.ai/artifact/Hy6UZnkYaLjXSwsAhqtsBF (playable battle on 11x9, 11x7 and 15x11 boards with the game's unit, hero, obstacle, spell and effect art). Stays in progress through the owner's iteration passes; the battle-rework-*-20261009 implementation slices stay pending until the owner signs off the mockup and the open decisions. Owner sign-off 2026-10-09: every recommended decision accepted (11x9 board, waiting stacks slowest first, obstacles block movement only, single-click orders, edge deployment, x0.6 shot next to an enemy with Ctrl to strike in melee, the current turn does not count for effects on the active stack, standing hero figures, Auto battle toggle with Quick Resolve kept); the right-hand hero is mirrored to face the battlefield (mockup pass 2). Documentation slice only; implementation continues in the battle-rework-*-20261009 slices.",
       "startedAt": "2026-10-09T15:35:00Z",
-      "updatedAt": "2026-10-09T15:35:00Z"
+      "updatedAt": "2026-10-09T17:10:00Z",
+      "completedAt": "2026-10-09T17:10:00Z"
     },
     {
       "id": "battle-rework-board-obstacles-20261009",
       "title": "Battle board: 11x9 hexes, edge deployment, blocking obstacles, no distance bands",
-      "status": "pending",
+      "status": "in_progress",
       "phase": "phase-6-production-alpha-layer",
       "classification": "gameplay_implementation_slice",
       "source": "PLAN.md",
@@ -114799,7 +114800,8 @@
         "docs/battle-rework.md"
       ],
       "notes": "Board rows 9 (owner decision: 11x9 recommended, 11x7 today, 15x11 option); edge deployment (player first column, 2-hex units the first two; enemy mirrored; rows spread over the height); blocking obstacles as battle-state cells (1-2 hexes, deterministic per battle seed and terrain, never on deployment columns, always a path between the armies) honoured by reachability, approach, placement and the AI; retire the legacy distance bands (the x0.6 shot penalty moves from band 0 to a shooter next to an enemy); save/load carries obstacles. Validation: focused report on a generated-map battle (blocked cells unreachable, paths route around, same layout per seed, save/load round trip), existing generated-map battle reports, AI benchmark before/after.",
-      "updatedAt": "2026-10-09T15:35:00Z"
+      "updatedAt": "2026-10-09T17:10:00Z",
+      "startedAt": "2026-10-09T17:10:00Z"
     },
     {
       "id": "battle-rework-wait-turn-order-20261009",
@@ -114923,9 +114925,9 @@
       "sourceDocs": [
         "docs/battle-spell-effects.md"
       ],
-      "notes": "Found while fixing bugfix-battle-stack-health-normalize-20261009: battle stacks hold base_count, unit_hp and total_health but no army count. SpellRules._health_ratio used max(1, count) * unit_hp as full health, so a stack with one whole creature left counted as unhurt and _wounded_bonus_applies almost never granted wounded_bonus_damage (9 battle spells, e.g. Cinder Burst +8); _alive_stacks_for_side skipped every battle stack, so _side_has_any_ability (spell hints) was always false. SpellRules now has _alive_count (ceil(total_health / unit_hp), as BattleRules) and measures health against base_count * unit_hp. BattleShell had the same fault in the Active/Target focus labels (x0), the initiative cue (no next living stack, labels without counts) and the target-cycle fallback (no enemy stacks); it now uses BattleRules._alive_count. Balance: spell damage against stacks at or below their threshold rises by the bonus, as the balance benchmark already assumed. New tests/battle_spell_wounded_target_report (18 checks, generated small map) passes and fails 8 on the old SpellRules. battle_spell_effects (105), hero_specialty_catalog (155), battle_stack_health_normalize (89), battle_stat_scaling (50), magic_battle_spell_behavior, magic_ai_valuation_casting_hooks and magic_spell_schema reports pass; BattleShell.gd loads. Not run: battle_controller_board_navigation_smoke (River Pass, authored, archived), which mirrors the old initiative label in a test helper.",
-      "updatedAt": "2026-10-09T15:55:00Z",
-      "validatedAt": "2026-10-09T15:55:00Z"
+      "notes": "Found while fixing bugfix-battle-stack-health-normalize-20261009: battle stacks hold base_count, unit_hp and total_health but no army count. SpellRules._health_ratio used max(1, count) * unit_hp as full health, so a stack with one whole creature left counted as unhurt and _wounded_bonus_applies almost never granted wounded_bonus_damage (9 battle spells, e.g. Cinder Burst +8); _alive_stacks_for_side skipped every battle stack, so _side_has_any_ability (spell hints) was always false. SpellRules now has _alive_count (ceil(total_health / unit_hp), as BattleRules) and measures health against base_count * unit_hp. BattleShell had the same fault in the Active/Target focus labels (x0), the initiative cue (no next living stack, labels without counts) and the target-cycle fallback (no enemy stacks); it now uses BattleRules._alive_count. Balance: spell damage against stacks at or below their threshold rises by the bonus, as the balance benchmark already assumed. New tests/battle_spell_wounded_target_report (18 checks, generated small map) passes and fails 8 on the old SpellRules. battle_spell_effects (105), hero_specialty_catalog (155), battle_stack_health_normalize (89), battle_stat_scaling (50), magic_battle_spell_behavior, magic_ai_valuation_casting_hooks and magic_spell_schema reports pass; BattleShell.gd loads. Not run: battle_controller_board_navigation_smoke (River Pass, authored, archived), which mirrors the old initiative label in a test helper. Follow-up: new tests/battle_shell_living_count_report (12 checks, generated small map) drives the BattleShell functions themselves (_battle_focus_visible_surface, _battle_initiative_handoff_surface, _living_enemy_target_ids, _battle_target_cycle_cue_surface); it passes and fails 9 on the old BattleShell.",
+      "updatedAt": "2026-10-09T16:35:00Z",
+      "validatedAt": "2026-10-09T16:35:00Z"
     }
   ],
   "project": "heroes-like",

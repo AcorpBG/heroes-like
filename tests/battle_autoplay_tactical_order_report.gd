@@ -408,7 +408,10 @@ func _validate_battle_ai_commander_payload_fallback() -> Dictionary:
 		return {}
 
 	var enemy_session := _engaged_enemy_melee_session()
-	var enemy_attacker := BattleRulesScript.get_active_stack(enemy_session.battle)
+	# Full-strength guard: the fixture's two living creatures deal 2 damage, so
+	# a +6 attack (0.85 -> 1.0 multiplier) is lost to rounding.
+	var enemy_attacker := BattleRulesScript.get_active_stack(enemy_session.battle).duplicate(true)
+	enemy_attacker["total_health"] = int(enemy_attacker.get("count", 0)) * int(enemy_attacker.get("unit_hp", 1))
 	var enemy_target := BattleRulesScript._get_stack_by_id(enemy_session.battle, "player_wall")
 	var enemy_base_estimate := BattleAiRules._estimate_damage(enemy_attacker, enemy_target, enemy_session.battle, false)
 	var enemy_fallback_battle := enemy_session.battle.duplicate(true)
