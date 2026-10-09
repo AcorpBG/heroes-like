@@ -114612,7 +114612,7 @@
     {
       "id": "native-rmg-owner-success-and-entry-occupant-20261009",
       "title": "Native RMG: owner success byte only from 0x4a95a4; 0x49aa93 entry-cell occupant check",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "native_rmg_implementation_slice",
       "source": "PLAN.md",
@@ -114620,8 +114620,9 @@
         "docs/h3maped-parity-basis-windows-wine.md",
         "docs/lessons-learned.md"
       ],
-      "notes": "Two source-backed defects with private-state proof (rmg-h3maped-parity-basis-windows-wine-20261009). A: drop the owner.byte_0x3c write from the 0x4a8db2 replay (H3MapEd writes owner +0x3c only at 0x4a95a4 in the 0x4a93a2 success path; constructor 0x49b4cd zeroes it). B: in source_relation_object_coordinate_eligibility_with_policy_0x49aa93 and mine_resource_coordinate_eligibility_0x49aa93, when the projection cell has bit 22 resolve the occupant through the cell's first object reference and require 0x598300 flag 2 of its type instead of using the candidate's allow_existing_bit22. Scratch validation (native_fix_candidates.patch in the evidence folder): semantic sweep 57/72 -> 60/72 exact (Small 137 by A; Small 211 and Medium compare 17 by B), no other reference changed exactness, cell count or object count. Landing needs rebuilt Windows and Linux GDExtension/selftest binaries and the maintained native checks.",
-      "updatedAt": "2026-10-09T11:30:00Z"
+      "notes": "Owner-approved 2026-10-09. Source-backed fixes with private-state proof (rmg-h3maped-parity-basis-windows-wine-20261009): the 0x4a8db2 replay no longer copies the shared type-98 pair success byte into owner.byte_0x3c (H3MapEd writes owner +0x3c only at 0x4a95a4 in the 0x4a93a2 success path; constructor 0x49b4cd zeroes it), and both 0x49aa93 ports call projection_cell_occupant_allows_entry_0x49aa93, which requires 0x598300 flag 2 of the entry cell's first-reference occupant when the cell has bit 22 (0x49ab87..0x49abac) instead of the candidate's allow_existing_bit22. Validation: semantic sweep over the 72 references 57 -> 60 exact (Small 137 by the owner fix; Small 211 and Medium compare 17 by the occupant check), no other reference changed exactness, cell count or object count; h3maped_rmg_core_selftest passes on Windows (MSVC 2022) and Linux (GCC 13.3, built on the server from the same tree); all 72 reference payloads byte-identical between Windows and Linux builds; Windows Godot 4.6.2 map_package_api_skeleton_report, native_random_map_homm3_re_object_table_proxy_report and native_rmg_end_to_end_runtime_boundary_report pass with an isolated profile; Linux Godot smokes not run. All eight bin/ native binaries rebuilt (Windows debug/release DLLs, Linux debug/release .so, selftest and batch export CLI for both).",
+      "updatedAt": "2026-10-09T12:00:00Z",
+      "validatedAt": "2026-10-09T12:00:00Z"
     },
     {
       "id": "rmg-h3maped-desktop-input-divergence-20261009",

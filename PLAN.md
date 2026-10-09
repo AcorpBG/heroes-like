@@ -70,10 +70,10 @@ Rules:
 
 `rmg-h3maped-parity-basis-windows-wine-20261009` (completed, recovery evidence only; no native change): driven by window messages (`tools/rmg_h3maped_win32_trace/h3trace.c`), Windows H3MapEd matches the Wine references, and native for map 8, for all eight seeds tried. So there is no platform split. Only the earlier desktop-controlled Windows runs differ, from the first `0x4aab7e` reward pick on. Seeds 137 and 211 are native defects with private-state proof. Owner decision: keep the Wine/controlled corpus as the parity target, or treat the desktop-session variant as H3MapEd behavior, which needs `rmg-h3maped-desktop-input-divergence-20261009` first. See `docs/h3maped-parity-basis-windows-wine.md`.
 
-- `native-rmg-owner-success-and-entry-occupant-20261009` (pending, native fix):
-  - Stop the `0x4a8db2` replay from copying the shared type-98 pair success into `owner.byte_0x3c`. H3MapEd writes `+0x3c` only at `0x4a95a4`.
-  - Make both `0x49aa93` ports test the entry-cell occupant's `0x598300` flag 2 at `0x49ab87..0x49abac`.
-  - Scratch validation: 57 to 60 of 72 references exact (Small 137 and 211, Medium compare 17), no other reference changed. Landing needs rebuilt Windows and Linux binaries.
+- `native-rmg-owner-success-and-entry-occupant-20261009` (completed, native fix):
+  - The `0x4a8db2` replay no longer copies the shared type-98 pair success into `owner.byte_0x3c`. H3MapEd writes `+0x3c` only at `0x4a95a4`.
+  - Both `0x49aa93` ports test the entry-cell occupant's `0x598300` flag 2, as H3MapEd does at `0x49ab87..0x49abac`.
+  - Validation: 60 of 72 references exact (was 57: Small 137 and 211, Medium compare 17 fixed, no other reference changed). The selftest passes on Windows and Linux, and the 72 payloads are byte-identical across platforms. The three native Godot smokes pass on Windows; Linux Godot smokes were not run. All `bin/` native binaries are rebuilt.
 - `rmg-h3maped-desktop-input-divergence-20261009` (blocked): named gap, the input by which a desktop-controlled H3MapEd session changes `0x4aab7e` reward selection. Needs one traced desktop-controlled replay.
 
 ### Raid director removal
