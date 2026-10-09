@@ -2371,10 +2371,9 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 	_debug_record_phase_usec("input_handler_entry", Time.get_ticks_usec() - handler_started_usec, {"handler": "map_tile_pressed"})
 	var route_tile := _selection_route_tile(tile)
 	_debug_set_path_command_target(route_tile)
-	if route_tile == OverworldRules.hero_position(_session) and _open_hero_sheet(String(_session.overworld.get("active_hero_id", ""))):
-		_debug_set_path_command_type("open_hero_sheet")
-		_debug_finish_path_command()
-		return
+	# Town body tiles route to the entrance, so test them before the hero's own
+	# tile: a hero standing on the entrance must not turn a town click into
+	# the hero sheet.
 	if (
 		not town_footprint_selection.is_empty()
 		and not bool(town_footprint_selection.get("is_entry_tile", false))
@@ -2384,6 +2383,10 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 		_set_selected_tile(route_tile)
 		_debug_set_path_command_type("open_town_from_footprint")
 		_visit_selected_town()
+		_debug_finish_path_command()
+		return
+	if route_tile == OverworldRules.hero_position(_session) and _open_hero_sheet(String(_session.overworld.get("active_hero_id", ""))):
+		_debug_set_path_command_type("open_hero_sheet")
 		_debug_finish_path_command()
 		return
 	if route_tile == _selected_tile and route_tile == _pointer_order_tile and _pointer_order_signature == _end_turn_session_state_signature():
