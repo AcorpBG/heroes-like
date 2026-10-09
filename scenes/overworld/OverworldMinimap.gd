@@ -7,6 +7,8 @@ signal recenter_requested(tile: Vector2i)
 
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
+const ControlFlag = preload("res://scenes/overworld/OverworldControlFlag.gd")
+const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 
 const TERRAIN_COLORS := {
 	"grass": Color("496b3e"),
@@ -25,6 +27,8 @@ const VIEWPORT_COLOR := Color("f2d276")
 const HERO_COLOR := Color("f6e29b")
 const TOWN_PLAYER_COLOR := Color("70b7dc")
 const TOWN_OTHER_COLOR := Color("d36c59")
+# Keeps town markers apart from terrain colours of any hue.
+const TOWN_OUTLINE_COLOR := Color("e8c95a")
 const KEYBOARD_CURSOR_COLOR := Color("fff4bd")
 
 var _level: int = 0
@@ -213,9 +217,19 @@ func _draw_towns(field: Rect2, cell: Vector2) -> void:
 		if not _tile_in_bounds(tile) or not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
 			continue
 		var rect := _marker_rect(field, cell, tile, 0.62)
-		var color := TOWN_PLAYER_COLOR if String(value.get("owner", "neutral")) == "player" else TOWN_OTHER_COLOR
-		draw_rect(rect, Color(0.03, 0.04, 0.04, 0.92), true)
-		draw_rect(rect.grow(-1.0), color, true)
+		draw_rect(rect, TOWN_OUTLINE_COLOR, true)
+		draw_rect(rect.grow(-1.0), _town_color(value), true)
+
+
+## Matches the map's ownership flags: the owner's slot colour, grey if neutral.
+func _town_color(town: Dictionary) -> Color:
+	var owner := String(town.get("owner", "neutral"))
+	if owner not in ["player", "enemy"]:
+		return ControlFlag.NEUTRAL
+	var slot := int(PlayerRules.player(_session, PlayerRules.town_controller_id(town)).get("slot", 0))
+	if slot > 0 and slot <= ControlFlag.SLOT_COLORS.size():
+		return ControlFlag.SLOT_COLORS[slot - 1]
+	return TOWN_PLAYER_COLOR if owner == "player" else TOWN_OTHER_COLOR
 
 
 func _draw_heroes(field: Rect2, cell: Vector2) -> void:
@@ -254,10 +268,11 @@ func _draw_viewport(field: Rect2, cell: Vector2) -> void:
 		draw_rect(viewport_rect.grow(-1.0), VIEWPORT_COLOR, false, 2.0)
 
 
+## Whole pixels, and at least 6 wide so the owner colour shows inside the outline.
 func _marker_rect(field: Rect2, cell: Vector2, tile: Vector2i, factor: float) -> Rect2:
 	var tile_rect := _tile_rect(field, cell, tile)
-	var extent := clampf(minf(cell.x, cell.y) * factor, 3.0, 9.0)
-	return Rect2(tile_rect.get_center() - Vector2(extent, extent) * 0.5, Vector2(extent, extent))
+	var extent := roundf(clampf(minf(cell.x, cell.y) * factor, 6.0, 9.0))
+	return Rect2((tile_rect.get_center() - Vector2(extent, extent) * 0.5).round(), Vector2(extent, extent))
 
 
 func _tile_rect(field: Rect2, cell: Vector2, tile: Vector2i) -> Rect2:
