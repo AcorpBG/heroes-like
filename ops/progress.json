@@ -114774,6 +114774,20 @@
       "validatedAt": "2026-10-09T18:30:00Z"
     },
     {
+      "id": "bugfix-quick-resolve-spell-check-20261009",
+      "title": "Quick Resolve checks a scored spell against the hero's real spellbook",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Follow-up found while fixing bugfix-rooted-tactical-order-20261009. BattleAutoResolveRules.player_autoplay_decision checked a scored spell with SpellRules.validate_battle_spell against battle.player_hero, the battle stat payload (attack, defense, mana_current...), which has no spellbook and no command, so ensure_hero_spellbook read its mana as the 8-point minimum and refused every spell costing more with \"Insufficient mana.\". The scorer (choose_stack_tactical_order merges battle.player_commander_state) and the cast (BattleRules._player_spell_resolution) both use the real commander state. 27 battle spells cost more than 8, among them the 9-12 mana damage spells (Bell Lance 77 base damage, Furnace Rivet Clause, Root Loam Thorn, Old Measure Tally, Mire Silt Rot, Veil Mourning Mark). So Quick Resolve and the attacking side of every computer player battle (AiHeroRules._simulate_battle, fight previews included) never cast them and fell back to the availability order, while defending heroes, cast through _cast_enemy_spell with the resolved enemy state, did. The check now uses BattleRules._player_commander_state(session). tests/battle_quick_resolve_focus_report (21 checks, generated small map): a hero with 28 mana and Bell Lance (12) gets it scored, checked, cast at the barely standing enemy, and pays 12 mana; the old check fails 3 of these checks (falls back to advance, no cast). Same seeds before and after: 77 hero-versus-guard battles on 3 generated small maps with the hero knowing Bell Lance and Cinder Burst (20 mana): 136 refused spell orders before, 0 after; 31 casts more; 2 defeats became victories and 1 a stalemate; more creatures survive in 20 battles, fewer in 2 (470 to 588 creatures left in all). 9 AI matches on current main: the 7 that never hit the fault are identical (four 3-player small, three Thornwake/Brasshollow/Mireclaw small); the two that did changed from the battle of the first corrected cast onwards: the Thornwake 3-player mirror (seed ai-match-rooted-7) has the same winner on day 49 instead of 57 (58 battles instead of 69); the 4-player medium (ai-match-rooted-6) was won by player_3 (Thornwake) on day 90 and is now won by player_1 (Brasshollow) on day 145. No fallback of any kind in any match after the fix. battle_spell_effects (105), battle_stack_health_normalize (89), battle_autoplay_tactical_order, battle_ai_withdrawal_decision, ai_player_rules and player_elimination_rules reports pass; the Quick Resolve runtime, post-battle and autosave route reports run on the archived River Pass scenario and were not used.",
+      "updatedAt": "2026-10-09T21:00:00Z",
+      "validatedAt": "2026-10-09T21:00:00Z"
+    },
+    {
       "id": "content-creature-bank-levels-20261009",
       "title": "HoMM3 creature banks keep their levels: the Crypt becomes a levelled Glassbound Eyrie with gold, a random artifact and a Crypt-strength guard",
       "status": "completed",

@@ -89,8 +89,12 @@ static func player_autoplay_decision(
 			session.battle,
 			target_id
 		)
+		# Check the spell against the commander state the cast spends mana from
+		# (BattleRules._player_spell_resolution). battle.player_hero is the
+		# battle stat payload: it carries no spellbook or command, so its mana
+		# reads as the 8-point minimum and refused every dearer spell.
 		var validation := SpellRulesScript.validate_battle_spell(
-			commander_payload,
+			BattleRulesScript._player_commander_state(session),
 			session.battle,
 			active_stack,
 			spell_target_stack,

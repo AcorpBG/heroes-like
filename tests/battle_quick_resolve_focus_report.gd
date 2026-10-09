@@ -11,11 +11,18 @@ extends Node
 ## make, so Quick Resolve fell back (bug found 2026-10-09). The tactical scoring
 ## now leaves advance out for a rooted stack, on either side, and scores an
 ## order the stack can carry out.
+##
+## Quick Resolve also checked a scored spell against battle.player_hero, the
+## battle stat payload with no spellbook, so mana read as 8 and every spell
+## dearer than that fell back (bug found 2026-10-09). It checks the commander
+## state the cast spends from.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const BattleAutoResolveRulesScript = preload("res://scripts/core/BattleAutoResolveRules.gd")
 const REPORT_ID := "BATTLE_QUICK_RESOLVE_FOCUS_REPORT"
 const SEED := "battle-quick-resolve-focus-20261009"
+## A battle damage spell that costs more than the 8-point mana minimum.
+const DEAR_SPELL_ID := "spell_beacon_bell_lance_25"
 
 var _checks := 0
 var _failures := []
@@ -37,6 +44,7 @@ func _run() -> void:
 		_check_fallback_focus(session, battle.duplicate(true))
 		_check_focus_rules(session, battle.duplicate(true))
 		_check_quick_resolve(session, battle.duplicate(true))
+		_check_dear_spell(session, battle.duplicate(true))
 	var report := {"ok": _failures.is_empty(), "checks": _checks, "failures": _failures}
 	print("%s %s" % [REPORT_ID, JSON.stringify(report)])
 	get_tree().quit(0 if _failures.is_empty() else 1)
@@ -177,3 +185,27 @@ func _check_quick_resolve(session, battle: Dictionary) -> void:
 	session.battle = battle
 	var result: Dictionary = BattleAutoResolveRulesScript.resolve_active_battle(session)
 	_check(bool(result.get("completed", false)) and int(result.get("invalid_orders", 0)) == 0, "Quick Resolve finishes the battle with no invalid order: %s" % JSON.stringify(result.get("action_counts", {})))
+
+## A hero with mana for a spell dearer than 8 points gets it scored, checked
+## and cast: the barely standing enemy dies to it while no melee stack is in
+## reach.
+func _check_dear_spell(session, battle: Dictionary) -> void:
+	session.battle = battle
+	_act_as(battle, _melee_player_stack(battle))
+	var weakest := _barely_standing(battle)
+	var commander: Dictionary = battle.get("player_commander_state", {})
+	var command: Dictionary = commander.get("command", {})
+	command["knowledge"] = maxi(5, int(command.get("knowledge", 0)))
+	commander["command"] = command
+	var max_mana := SpellRules.mana_max_from_hero(commander)
+	commander["spellbook"] = {"known_spell_ids": [DEAR_SPELL_ID], "mana": {"current": max_mana, "max": max_mana}}
+	var cost := SpellRules.adjusted_spell_mana_cost(commander, ContentService.get_spell(DEAR_SPELL_ID))
+	_check(cost > 8 and max_mana >= cost, "setup: the spell costs %d, more than 8, and the hero has %d mana" % [cost, max_mana])
+	var decision := BattleAutoResolveRulesScript.player_autoplay_decision(session, true)
+	_check(String(decision.get("action", "")) == "cast_spell" and String(decision.get("spell_id", "")) == DEAR_SPELL_ID, "Quick Resolve scores the dear spell: %s" % JSON.stringify(decision))
+	_check(String(decision.get("reason", "")) == "scored_tactical_spell_order", "the dear spell passes the check before casting: %s" % decision.get("spell_validation_message", decision.get("reason", "")))
+	_check(String(decision.get("target_battle_id", "")) == weakest, "the spell targets the barely standing enemy %s: %s" % [weakest, decision.get("target_battle_id", "")])
+	var result: Dictionary = BattleAutoResolveRulesScript._perform_player_order(session, decision, String(decision.get("action", "")))
+	_check(String(result.get("state", "")) != "invalid", "Quick Resolve casts it: %s" % result.get("message", ""))
+	var mana_left := int(session.battle.get("player_commander_state", {}).get("spellbook", {}).get("mana", {}).get("current", -1))
+	_check(mana_left == max_mana - cost, "the cast spends %d mana (left %d of %d)" % [cost, mana_left, max_mana])
