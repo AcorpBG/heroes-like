@@ -27,7 +27,7 @@ const VIEWPORT_COLOR := Color("f2d276")
 const HERO_COLOR := Color("f6e29b")
 const TOWN_PLAYER_COLOR := Color("70b7dc")
 const TOWN_OTHER_COLOR := Color("d36c59")
-# Keeps town markers apart from terrain colours of any hue.
+# Keeps town and mine markers apart from terrain colours of any hue.
 const TOWN_OUTLINE_COLOR := Color("e8c95a")
 const KEYBOARD_CURSOR_COLOR := Color("fff4bd")
 
@@ -51,7 +51,7 @@ func _ready() -> void:
 	clip_contents = true
 	tooltip_text = "World map. Click to recenter the view; arrow keys choose a tile and Enter recenters."
 	accessibility_name = "World minimap"
-	accessibility_description = "Shows explored terrain, heroes, towns, and the current map viewport. Activation recenters the view without moving a hero."
+	accessibility_description = "Shows explored terrain, heroes, towns, mines, and the current map viewport. Activation recenters the view without moving a hero."
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	queue_redraw()
 
@@ -86,6 +86,7 @@ func _draw() -> void:
 		for y in range(1, _map_size.y):
 			var line_y := field.position.y + y * cell.y
 			draw_line(Vector2(field.position.x, line_y), Vector2(field.end.x, line_y), GRID_COLOR, 1.0)
+	_draw_mines(field, cell)
 	_draw_towns(field, cell)
 	_draw_heroes(field, cell)
 	_draw_viewport(field, cell)
@@ -210,18 +211,32 @@ func _draw_towns(field: Rect2, cell: Vector2) -> void:
 	if _session == null:
 		return
 	for value in _session.overworld.get("towns", []):
+		if value is Dictionary and LevelRules.on_level(value, _level):
+			_draw_footprint(field, cell, OverworldRulesScript.town_footprint_tiles(value), _town_color(value))
+
+
+func _draw_mines(field: Rect2, cell: Vector2) -> void:
+	if _session == null:
+		return
+	for value in _session.overworld.get("resource_nodes", []):
 		if not (value is Dictionary) or not LevelRules.on_level(value, _level):
 			continue
-		var rects: Array[Rect2] = []
-		for tile in OverworldRulesScript.town_footprint_tiles(value):
-			if _tile_in_bounds(tile) and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
-				rects.append(_tile_rect(field, cell, tile))
-		# Outline the whole footprint first so inner tile edges stay filled.
-		for rect in rects:
-			draw_rect(rect.grow(1.0), TOWN_OUTLINE_COLOR, true)
-		var color := _town_color(value)
-		for rect in rects:
-			draw_rect(rect, color, true)
+		var tiles := OverworldRulesScript.mine_footprint_tiles(value)
+		if not tiles.is_empty():
+			_draw_footprint(field, cell, tiles, _mine_color(value))
+
+
+## Fills the explored tiles of a town or mine, outlined as one shape.
+func _draw_footprint(field: Rect2, cell: Vector2, tiles: Array, color: Color) -> void:
+	var rects: Array[Rect2] = []
+	for tile in tiles:
+		if _tile_in_bounds(tile) and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+			rects.append(_tile_rect(field, cell, tile))
+	# Outline the whole footprint first so inner tile edges stay filled.
+	for rect in rects:
+		draw_rect(rect.grow(1.0), TOWN_OUTLINE_COLOR, true)
+	for rect in rects:
+		draw_rect(rect, color, true)
 
 
 ## Matches the map's ownership flags: the owner's slot colour, grey if neutral.
@@ -229,10 +244,22 @@ func _town_color(town: Dictionary) -> Color:
 	var owner := String(town.get("owner", "neutral"))
 	if owner not in ["player", "enemy"]:
 		return ControlFlag.NEUTRAL
-	var slot := int(PlayerRules.player(_session, PlayerRules.town_controller_id(town)).get("slot", 0))
+	return _controller_color(PlayerRules.town_controller_id(town), TOWN_PLAYER_COLOR if owner == "player" else TOWN_OTHER_COLOR)
+
+
+## Matches the mine's control flag: the owner's slot colour, grey if unclaimed.
+func _mine_color(node: Dictionary) -> Color:
+	var controller := PlayerRules.resource_controller_id(node)
+	if controller.is_empty():
+		return ControlFlag.NEUTRAL
+	return _controller_color(controller, TOWN_OTHER_COLOR)
+
+
+func _controller_color(controller: String, fallback: Color) -> Color:
+	var slot := int(PlayerRules.player(_session, controller).get("slot", 0))
 	if slot > 0 and slot <= ControlFlag.SLOT_COLORS.size():
 		return ControlFlag.SLOT_COLORS[slot - 1]
-	return TOWN_PLAYER_COLOR if owner == "player" else TOWN_OTHER_COLOR
+	return fallback
 
 
 func _draw_heroes(field: Rect2, cell: Vector2) -> void:

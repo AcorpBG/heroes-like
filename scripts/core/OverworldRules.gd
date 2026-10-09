@@ -4111,6 +4111,22 @@ static func town_footprint_tiles(town: Dictionary) -> Array:
 		tiles.append(entrance_tile)
 	return tiles
 
+## Every tile a mine stands on: its body and its entrance. Empty if the node is not a mine.
+static func mine_footprint_tiles(node: Dictionary) -> Array:
+	if String(node.get("kind", "")) == "reward_reference":
+		return []
+	if not Mines.resource(node).is_empty():
+		return Mines.body_tiles(node)
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	if String(site.get("family", "")) != "mine" and String(node.get("kind", "")) != "mine":
+		return []
+	var map_object := _map_object_for_resource_node(node)
+	var tiles := _map_object_world_body_tiles(map_object, node)
+	for tile in _resource_node_world_interaction_tiles(map_object, node):
+		if tile not in tiles:
+			tiles.append(tile)
+	return tiles
+
 static func _generated_body_tiles_for_placement(placement: Dictionary, blocks_body: bool) -> Array:
 	if not blocks_body:
 		return []
