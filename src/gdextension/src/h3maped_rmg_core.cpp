@@ -26623,6 +26623,26 @@ static bool source_descriptor_contour_passes_0x49a09c(
 		bool require_bit27,
 		std::string *reject_reason);
 
+// 0x49ab87..0x49abac: when the 0x49aa93 projection (entry) cell carries
+// bit 22, H3MapEd follows the cell's first object reference ([cell+4] ->
+// reference -> object -> descriptor +0x1c) and accepts only if flag byte 2 of
+// that occupant's 0x598300 row is set. The candidate's own type flags (the
+// allow-existing-bit22 argument of the 0x49a09c contour call) do not apply.
+static bool projection_cell_occupant_allows_entry_0x49aa93(
+		const GeneratorObjectPrivateState &state,
+		const GeneratedCellRecord0x30 &projection) {
+	if ((projection.word_0x28 & CELL_ACTION_CONTROL_BIT_22) == 0U) {
+		return true;
+	}
+	if (projection.object_references_0x04_0x08.empty()) {
+		return false;
+	}
+	const ObjectRecordReference4a54a7 *occupant =
+			object_record_by_key_0xec4_ecc(state, projection.object_references_0x04_0x08.front());
+	return occupant != nullptr
+			&& object_metadata_flag_0x598300(occupant->source_record_copy.type_id_0x1c, 2);
+}
+
 static bool source_relation_object_coordinate_eligibility_with_policy_0x49aa93(
 		const GeneratorObjectPrivateState &state,
 		const SourceObjectDescriptorJoinResult4903e8 &join,
@@ -26713,7 +26733,7 @@ static bool source_relation_object_coordinate_eligibility_with_policy_0x49aa93(
 		}
 		return false;
 	}
-	if (!allow_existing_bit22 && (projection.word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U) {
+	if (!projection_cell_occupant_allows_entry_0x49aa93(state, projection)) {
 		if (reject_reason != nullptr) {
 			*reject_reason = "projection_bit22";
 		}
@@ -35036,7 +35056,7 @@ static bool mine_resource_coordinate_eligibility_0x49aa93(
 		}
 		return false;
 	}
-	if (!allow_existing_bit22 && (projection.word_0x28 & CELL_ACTION_CONTROL_BIT_22) != 0U) {
+	if (!projection_cell_occupant_allows_entry_0x49aa93(state, projection)) {
 		if (reject_reason != nullptr) {
 			*reject_reason = "projection_bit22";
 		}
@@ -38299,9 +38319,12 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 						scheduler.committed_call_count,
 						scheduler.blocked_reason.empty() ? "complete" : scheduler.blocked_reason.c_str());
 			}
+			// The scheduler's success byte belongs to the type-98 source pair.
+			// H3MapEd sets relation owner +0x3c only in the 0x4a93a2 success
+			// path (0x4a95a4, applied through the scheduler route below), so an
+			// owner whose own placement failed keeps 0 even when another owner
+			// sharing the pair succeeded; 0x4aadd2 counts only those owners.
 			if (scheduler.source_pair_success_byte_0x3c_known) {
-				owner.byte_0x3c_known = true;
-				owner.byte_0x3c = scheduler.source_pair_success_byte_0x3c_final != 0 ? 1U : 0U;
 				if (type98_pair != nullptr) {
 					type98_pair->source_pair_success_byte_0x3c_known = true;
 					type98_pair->source_pair_success_byte_0x3c = scheduler.source_pair_success_byte_0x3c_final;

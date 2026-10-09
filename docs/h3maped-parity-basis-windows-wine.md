@@ -58,8 +58,25 @@ Both seeds reproduce on Windows exactly as under Wine; native diverges.
   53's flag byte 2 in `0x598300` is 0. Both native ports of `0x49aa93` skip this
   check whenever the candidate's own type has flags 2 and 1.
 
-Fix candidates for both (scratch patch in the evidence folder) raise the semantic
-sweep from 57/72 to 60/72 references: Small 137, Small 211 and Medium compare
-seed 17. No other reference changes. They are recorded as pending slice
-`native-rmg-owner-success-and-entry-occupant-20261009`; landing requires rebuilt
-Windows and Linux native binaries.
+## Fix (landed 2026-10-09)
+
+`native-rmg-owner-success-and-entry-occupant-20261009` makes both changes in
+`src/gdextension/src/h3maped_rmg_core.cpp`. The `0x4a8db2` replay no longer
+writes `owner.byte_0x3c`; it still updates the shared pair, and the owner gets the
+byte only from the `0x4a93a2` success route. Both `0x49aa93` ports call
+`projection_cell_occupant_allows_entry_0x49aa93`, which checks the occupant's
+type.
+
+Validation:
+- The semantic sweep goes from 57/72 to 60/72 references exact: Small 137 (by
+  the owner fix), Small 211 and Medium compare seed 17 (by the occupant check).
+  No other reference changed exactness, cell count or object count.
+- `h3maped_rmg_core_selftest` passes on Windows (MSVC) and Linux (GCC 13.3).
+- All 72 reference payloads are byte-identical between the Windows and Linux
+  builds.
+- On Windows (Godot 4.6.2), `map_package_api_skeleton_report`,
+  `native_random_map_homm3_re_object_table_proxy_report` and
+  `native_rmg_end_to_end_runtime_boundary_report` pass. Linux Godot smokes
+  were not run.
+- All Windows and Linux native binaries in `bin/` are rebuilt from the same
+  source.
