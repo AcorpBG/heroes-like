@@ -484,6 +484,51 @@ static func should_wait_for_contact(battle: Dictionary, active_stack: Dictionary
 		return false
 	return not _can_make_melee_attack(active_stack, battle)
 
+## The best of cells (BattleRules.melee_approach_cells) to strike target from,
+## weighed as damage output: the target's creatures it kills, less its own lost
+## to the strike-back, plus a quarter of each enemy shooter it would stand next
+## to (that shooter fires at x0.6). Ties keep the earlier cell, which walks no
+## further. Returns {} when cells is empty.
+static func choose_melee_approach(battle: Dictionary, stack: Dictionary, target: Dictionary, cells: Array) -> Dictionary:
+	var best := {}
+	var best_score := 0.0
+	for cell in cells:
+		if not (cell is Dictionary):
+			continue
+		var score := _melee_approach_score(battle, stack, target, cell)
+		if best.is_empty() or score > best_score + 0.001:
+			best = cell.duplicate(true)
+			best_score = score
+	if not best.is_empty():
+		best["score"] = snappedf(best_score, 0.01)
+	return best
+
+static func _melee_approach_score(battle: Dictionary, stack: Dictionary, target: Dictionary, cell: Dictionary) -> float:
+	var projected := stack.duplicate()
+	projected["hex"] = {"q": int(cell.get("q", -1)), "r": int(cell.get("r", -1))}
+	var projected_battle := battle.duplicate()
+	var stacks: Array = []
+	for other in battle.get("stacks", []):
+		stacks.append(projected if other is Dictionary and String(other.get("battle_id", "")) == String(stack.get("battle_id", "")) else other)
+	projected_battle["stacks"] = stacks
+	var attack_distance := _attack_distance_for_action(projected, target, projected_battle, false)
+	var target_health := maxi(1, int(target.get("total_health", 0)))
+	var damage := mini(_estimate_damage(projected, target, projected_battle, false, false, attack_distance), target_health)
+	var score := float(damage) / float(maxi(1, int(target.get("unit_hp", 1)))) * _average_unit_damage(target)
+	if damage < target_health and int(target.get("retaliations_left", 1)) > 0 and _can_make_retaliation(target, attack_distance, projected_battle):
+		var survivor := target.duplicate()
+		survivor["total_health"] = target_health - damage
+		var strike_back := mini(_estimate_damage(survivor, projected, projected_battle, false, true, attack_distance), int(projected.get("total_health", 0)))
+		score -= float(strike_back) / float(maxi(1, int(projected.get("unit_hp", 1)))) * _average_unit_damage(projected)
+	for enemy in _alive_stacks_for_side(projected_battle, String(target.get("side", ""))):
+		if bool(enemy.get("ranged", false)) and int(enemy.get("shots_remaining", 0)) > 0 and _stack_hex_distance(projected, enemy) <= 1:
+			score += 0.25 * float(_alive_count(enemy)) * _average_unit_damage(enemy)
+	return score
+
+static func _average_unit_damage(stack: Dictionary) -> float:
+	var min_damage := int(stack.get("min_damage", 1))
+	return float(min_damage + maxi(min_damage, int(stack.get("max_damage", 1)))) * 0.5
+
 static func _battle_with_enemy_hero_payload(battle: Dictionary, enemy_hero: Dictionary) -> Dictionary:
 	return _battle_with_side_hero_payload(battle, "enemy", enemy_hero)
 

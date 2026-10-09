@@ -240,6 +240,17 @@ static func _perform_player_order(
 			session,
 			String(decision.get("spell_id", ""))
 		)
+	if action == "strike":
+		# The same approach choice as the enemy's (BattleRules.ai_melee_approach).
+		return BattleRulesScript.perform_player_action(
+			session,
+			action,
+			BattleRulesScript.ai_melee_approach(
+				session.battle,
+				BattleRulesScript.get_active_stack(session.battle),
+				BattleRulesScript.get_selected_target(session.battle)
+			)
+		)
 	return BattleRulesScript.perform_player_action(session, action)
 
 

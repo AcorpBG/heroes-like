@@ -2086,6 +2086,64 @@ static func melee_approach_destination(battle: Dictionary, stack: Dictionary, ta
 		_board_read_scope_cache[cache_key] = best.duplicate(true)
 	return best.duplicate(true)
 
+## Every hex the stack can strike target from this turn: the hex it stands on
+## when it can already strike from there (two hexes off counts with reach or a
+## hookline), then each hex next to the target it can reach this turn, in
+## walking order. A stack that walks always ends next to the target. A two-hex
+## body lists each placement by its head's hex; strike_q and strike_r give the
+## body cell nearest the target and strike_part says whether that is the head
+## or the tail. A rooted stack strikes only from where it stands.
+static func melee_approach_cells(battle: Dictionary, stack: Dictionary, target: Dictionary) -> Array:
+	if stack.is_empty() or target.is_empty() or _alive_count(stack) <= 0 or _alive_count(target) <= 0:
+		return []
+	if String(stack.get("side", "")) == String(target.get("side", "")):
+		return []
+	var cells := []
+	var start := _stack_hex(stack)
+	if not start.is_empty() and _can_make_melee_attack(stack, battle, target):
+		cells.append(_melee_approach_entry(stack, target, start, 0))
+	if _stack_is_rooted(stack, battle):
+		return cells
+	for cell in legal_destinations_for_stack(battle, String(stack.get("battle_id", ""))):
+		if Footprint.distance(stack, target, cell) == 1:
+			cells.append(_melee_approach_entry(stack, target, cell, int(cell.get("steps", 0))))
+	return cells
+
+static func _melee_approach_entry(stack: Dictionary, target: Dictionary, cell: Dictionary, steps: int) -> Dictionary:
+	var body := Footprint.cells(stack, cell)
+	var strike_cell: Dictionary = body[0] if not body.is_empty() else cell
+	var strike_part := "head"
+	var nearest := 999
+	for index in range(body.size()):
+		var distance := Footprint.distance({STACK_HEX_KEY: body[index]}, target)
+		if distance < nearest:
+			nearest = distance
+			strike_cell = body[index]
+			strike_part = "head" if index == 0 else "tail"
+	return {
+		"q": int(cell.get("q", -1)),
+		"r": int(cell.get("r", -1)),
+		"steps": steps,
+		"stands": steps == 0,
+		"strike_q": int(strike_cell.get("q", -1)),
+		"strike_r": int(strike_cell.get("r", -1)),
+		"strike_part": strike_part,
+		"hex_distance": nearest,
+	}
+
+## The legal approach the order names by its q and r, or {} when there is none.
+static func _matching_melee_approach(battle: Dictionary, stack: Dictionary, target: Dictionary, approach: Dictionary) -> Dictionary:
+	for cell in melee_approach_cells(battle, stack, target):
+		if int(cell.get("q", -1)) == int(approach.get("q", -2)) and int(cell.get("r", -1)) == int(approach.get("r", -2)):
+			return cell
+	return {}
+
+## The hex a computer-driven stack strikes target from: the legal approach the
+## AI scores best (BattleAiRules.choose_melee_approach), or {} when it cannot
+## strike target this turn.
+static func ai_melee_approach(battle: Dictionary, stack: Dictionary, target: Dictionary) -> Dictionary:
+	return BattleAiRulesScript.choose_melee_approach(battle, stack, target, melee_approach_cells(battle, stack, target))
+
 static func _can_melee_this_action(stack: Dictionary, battle: Dictionary, target: Dictionary) -> bool:
 	return _can_make_melee_attack(stack, battle, target) or not melee_approach_destination(battle, stack, target).is_empty()
 
@@ -6267,10 +6325,14 @@ static func perform_presented_action(session: SessionStateStoreScript.SessionDat
 	elif action.begins_with("cast_spell:"):
 		result = cast_player_spell(session, action.trim_prefix("cast_spell:"), String(destination.get("target_id", "")))
 	else:
-		result = perform_player_action(session, action)
+		# A strike can name the hex to strike from as its destination.
+		result = perform_player_action(session, action, destination if action == "strike" else {})
 	return ActionPlayback.finish(original_battle, result)
 
-static func perform_player_action(session: SessionStateStoreScript.SessionData, action: String) -> Dictionary:
+## approach names the hex a strike is made from (q, r): one of
+## melee_approach_cells. Without it the stack strikes from where it stands, or
+## walks to the nearest hex it can strike from (melee_approach_destination).
+static func perform_player_action(session: SessionStateStoreScript.SessionData, action: String, approach: Dictionary = {}) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {"ok": false, "message": "No battle is active.", "state": "invalid"}
 
@@ -6316,14 +6378,22 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 			return _complete_action(session, advance_message)
 		"strike":
 			var strike_target = get_selected_target(session.battle)
-			var approach := melee_approach_destination(session.battle, active_stack, strike_target)
-			if not _can_make_melee_attack(active_stack, session.battle, strike_target) and approach.is_empty():
-				return {"ok": false, "message": "This stack cannot reach the enemy line yet.", "state": "invalid"}
+			var strike_from := {}
+			if not approach.is_empty():
+				if strike_target.is_empty():
+					return {"ok": false, "message": "No target is selected.", "state": "invalid"}
+				strike_from = _matching_melee_approach(session.battle, active_stack, strike_target, approach)
+				if strike_from.is_empty():
+					return {"ok": false, "message": "%s cannot strike %s from %s." % [_stack_label(active_stack), _stack_label(strike_target), _hex_label(approach)], "state": "invalid"}
+			else:
+				strike_from = melee_approach_destination(session.battle, active_stack, strike_target)
+				if not _can_make_melee_attack(active_stack, session.battle, strike_target) and strike_from.is_empty():
+					return {"ok": false, "message": "This stack cannot reach the enemy line yet.", "state": "invalid"}
 			_clear_stack_animation_states(session.battle)
 			_clear_selected_target_continuity(session.battle)
 			_clear_selected_target_closing(session.battle)
-			if not approach.is_empty():
-				_apply_melee_approach(session.battle, active_stack, approach)
+			if int(strike_from.get("steps", 0)) > 0:
+				_apply_melee_approach(session.battle, active_stack, strike_from)
 				active_stack = _get_stack_by_id(session.battle, String(active_stack.get("battle_id", "")))
 			return _resolve_attack_action(session, active_stack, strike_target, false)
 		"shoot":
@@ -6812,17 +6882,19 @@ static func _run_enemy_stack_order(session: SessionStateStoreScript.SessionData,
 				true
 			)
 		"strike":
-			return _resolve_ai_attack(
-				session,
-				active_stack,
-				_get_stack_by_id(session.battle, String(action.get("target_battle_id", ""))),
-				false
-			)
+			# It may step to a better side first, such as one next to a
+			# shooter (ai_melee_approach).
+			var strike_target := _get_stack_by_id(session.battle, String(action.get("target_battle_id", "")))
+			var strike_from := ai_melee_approach(session.battle, active_stack, strike_target)
+			if int(strike_from.get("steps", 0)) > 0:
+				_apply_melee_approach(session.battle, active_stack, strike_from)
+				active_stack = _get_stack_by_id(session.battle, String(active_stack.get("battle_id", "")))
+			return _resolve_ai_attack(session, active_stack, strike_target, false)
 		"advance":
 			if _stack_is_rooted(active_stack, session.battle):
 				return _resolve_enemy_defend(session, active_stack)
 			var approach_target := _nearest_opposing_stack(session.battle, active_stack)
-			var approach := melee_approach_destination(session.battle, active_stack, approach_target)
+			var approach := {} if _can_make_melee_attack(active_stack, session.battle, approach_target) else ai_melee_approach(session.battle, active_stack, approach_target)
 			if not bool(active_stack.get("ranged", false)) and not approach.is_empty():
 				_apply_melee_approach(session.battle, active_stack, approach)
 				return _resolve_ai_attack(session, _get_stack_by_id(session.battle,String(active_stack.get("battle_id",""))), approach_target, false)
