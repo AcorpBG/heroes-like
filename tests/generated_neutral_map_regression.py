@@ -100,13 +100,22 @@ func run() -> void:
 		check(encounter.encounter_id==expected.encounter.encounter_id and encounter.enemy_army.stacks==expected.encounter.enemy_army.stacks,"normalization changed deterministic roster")
 		var count := 0
 		for stack in encounter.enemy_army.stacks: count+=int(stack.count)
-		check(count==int(encounter.native_guard_quantity),"native headcount differs after live normalization")
+		var profile: Dictionary=encounter.generated_neutral_profile
+		var budget := int(encounter.native_guard_quantity)*int(encounter.native_guard_ai_value)
+		var target := float(budget)*float(ContentService.load_json(Neutral.COMPANIES_PATH).power_per_native_value)
+		var ai_rules = load("res://scripts/core/AiHeroRules.gd")
+		var power := float(ai_rules.army_power(encounter.enemy_army.stacks))
+		# Whole creatures: within 5%, or one creature of each unit for small guards.
+		var one_of_each := 0.0
+		for stack in encounter.enemy_army.stacks: one_of_each+=float(ai_rules.army_power([{"unit_id":stack.unit_id,"count":1}]))
+		check(int(profile.native_budget)==budget and int(profile.source_quantity)==int(encounter.native_guard_quantity),"native budget provenance lost after live normalization")
+		check(absf(power-target)<=maxf(0.05*target,one_of_each),"guard power does not follow its native budget")
 		identities[encounter.encounter_id]=true
 		identity_counts[encounter.encounter_id]=int(identity_counts.get(encounter.encounter_id,0))+1
 		quantities[count]=true
 		stack_counts[encounter.enemy_army.stacks.size()]=true
 		compositions[JSON.stringify(encounter.enemy_army.stacks)]=true
-		rows.append({"placement_id":encounter.placement_id,"source_subtype":encounter.native_guard_creature_subtype,"source_level":encounter.native_guard_level,"quantity":count,"encounter_id":encounter.encounter_id,"army":encounter.enemy_army,"asset_id":encounter.generated_neutral_profile.asset_id})
+		rows.append({"placement_id":encounter.placement_id,"source_subtype":encounter.native_guard_creature_subtype,"source_level":encounter.native_guard_level,"native_budget":budget,"power":int(round(power)),"quantity":count,"encounter_id":encounter.encounter_id,"army":encounter.enemy_army,"asset_id":profile.asset_id})
 	check(guards.size()>=10,"real native guards not exercised")
 	check(identities.size()>=8,"generated map still has little encounter identity variety")
 	for count in identity_counts.values():
@@ -138,7 +147,12 @@ func run() -> void:
 		for encounter in rendered_guards:
 			var asset := String(encounter.generated_neutral_profile.asset_id)
 			check(view._encounter_identity_asset_id(encounter)==asset,"renderer selected another identity")
-			check(view._object_texture_for_asset(asset) is Texture2D,"renderer has no original raster")
+			var lead := String(encounter.generated_neutral_profile.get("primary_unit_id",""))
+			if asset!="":
+				check(view._object_texture_for_asset(asset) is Texture2D,"renderer has no original raster")
+			else:
+				# Companies without an actor painting use their lead unit's idle art.
+				check(view._encounter_idle_unit_id(encounter)==lead and view._creature_idle.still_frame(lead) is Texture2D,"renderer has no idle art for the company lead")
 		# Diagnostic scouting reveals art at real placements; no object is moved.
 		# Keep normal-fog opening evidence separately and do not save this state.
 		var explored := []

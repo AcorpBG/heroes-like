@@ -114430,6 +114430,19 @@
       "notes": "Owner playtest: generated maps were missing from Skirmish Fronts, and the Map Forge needed a monster strength toggle. ScenarioSelectRules.build_skirmish_browser_entries returned early for the archived authored catalog (c9d69e688) before appending the maps-folder packages; authored entries are now gated alone. Map Forge: GeneratedMonsterStrengthPicker (Weak/Normal/Strong, Normal default; RANDOM_MAP_MONSTER_STRENGTH_OPTIONS) feeds build_random_map_player_config's new monster_strength argument, and _random_map_public_h3maped_launch_config keeps a catalog-auto config's strength across its rebuild (other configs keep the previous normal). Native random is not offered: it maps to the same raw setup +0x48 = -1 as weak. Medium seed 10 2p land: weak 41 guards/1,461 creatures, normal 65/2,487, strong 88/3,673. Validation: maps_folder_package_browser_integration_report (now ignores the per-launch hero growth_seed like session_id), random_map_player_setup_retry_ux_report (strong reaches the launched native config), generated_map_setup_visual_smoke at 1280x720 and 1920x1080; validate_repo error set unchanged from HEAD."
     },
     {
+      "id": "content-generated-guard-companies-20261009",
+      "title": "Budget-sized generated guards and 790 guard companies",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "content_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/generated-neutral-encounter-variety.md"
+      ],
+      "notes": "Owner request: account for our unit strength differences (a 3.5k native guard budget gave a weak army) and expand the 51 generated neutral companies, mixing upgraded and base units. GeneratedNeutralEncounterRules.resolve now converts native budget (native_guard_quantity x native_guard_ai_value) to AiHeroRules.army_power at power_per_native_value 0.06 (anchors: equal native fighting value 0.046, equal gold 0.043, equal starting-army multiple 0.044 from crtraits/hotraits; owner Large Veilmourn days 18-25 beat guards at a median 0.2x hero army, so +1/3) and divides it by company slot shares. tools/build_generated_neutral_companies.py writes content/generated_neutral_companies.json: 790 companies in 160 families (51 authored kept; faction lines: levy, seasoned, cadre, elite, combined, warband; neutral pack, pair, host; free companies) plus 739 encounter definitions read by ContentService.get_encounter for encounter_company_* ids. Selection: native level -> tier, placement -> family -> company, leaning to elite/cadre/warband/host when native quantity >= 50 and levy/pack when <= 20. OverworldMapView animates the company's primary_unit_id from creature_idle.json (232 units) and draws the idle strip's resting frame outside the animated layer. Medium seed 10: same route guard about 200 (weak), 250-335 (normal), 530-590 (strong); actual power within 4% of target. Tests updated: generated_neutral_encounter_regression (power follows budget; 235 companies, 11 kinds, 198 upgrade mixes; one pre-existing failure: legacy day-97 fixture raid commanders re-rated by current unit stats), generated_neutral_map_regression Medium 557 and Large 1,678 checks pass, rmg_exploration_regression budget check, packaged export must carry the catalog; validate_repo checks the catalog and its error set equals HEAD."
+    },
+    {
       "id": "content-hero-specialty-catalog-20261008",
       "title": "35 hero specialties with four ranks, six per hero",
       "status": "completed",

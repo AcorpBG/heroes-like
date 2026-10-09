@@ -136,6 +136,10 @@ Rules:
 
 `ux-generated-skirmish-fronts-monster-strength-20261009` (completed, owner playtest fix): the Skirmish Fronts list shows the generated map packages in `maps/` again (the authored-catalog archive had stopped the list before adding them). The Map Forge has a monster strength picker (Weak, Normal, Strong; Normal by default) sent to the native generator as its `monster_strength` setup. Native random is not offered because it uses the same raw setup as weak. See `docs/rmg-exploration-and-guarded-routes.md`.
 
+### Generated guard companies
+
+`content-generated-guard-companies-20261009` (completed, owner request): generated guards field battle power for their native budget (headcount x creature value x `power_per_native_value`, 0.06), not the native headcount, so monster strength and big guards matter. They draw from 790 companies (was 51) built by `tools/build_generated_neutral_companies.py`: faction levies, seasoned companies with a few upgraded veterans, upgraded cadres and elites, combined-arms lines, warbands, neutral packs, pairs and hosts, and free companies. Each carries its own encounter definition, and the map animates its lead unit. See `docs/generated-neutral-encounter-variety.md`.
+
 ### Hero specialties
 
 `content-hero-specialty-catalog-20261008` (completed, owner request): 35 specialties with four ranks each (was 7 with two), at most six per hero. The catalog moved to `content/hero_specialties.json`: 9 adventure and economy, 12 command and battle, 14 magic (including a mastery per spell school); every new effect has a real hook in the map, economy, battle or spell rules. Level-up offers lead with an upgrade and a new specialty, lean to the hero's path and are seeded per hero; the computer picks by focus, path and rank. 28 new insignia were generated in the original style. See `docs/hero-specialties.md`.

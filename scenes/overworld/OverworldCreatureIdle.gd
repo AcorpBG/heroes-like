@@ -4,10 +4,30 @@ extends RefCounted
 const IdleShader = preload("res://scenes/overworld/OverworldCreatureIdle.gdshader")
 var units: Dictionary = {}
 var _textures: Dictionary = {}
+var _still_frames: Dictionary = {}
 
 func configure(manifest: Dictionary) -> void:
 	units = manifest.get("units", {}) if manifest.get("schema_id", "") == "overworld_creature_idle_v1" else {}
 	_textures.clear()
+	_still_frames.clear()
+
+## The strip's resting frame as its own texture, for drawing without the shader.
+func still_frame(unit_id: String) -> Texture2D:
+	if _still_frames.has(unit_id):
+		return _still_frames[unit_id]
+	var entry: Dictionary = units.get(unit_id, {})
+	var strip = load(String(entry.get("path", ""))) if not entry.is_empty() else null
+	if not strip is Texture2D:
+		return null
+	var image: Image = strip.get_image()
+	if image == null or image.is_empty():
+		return null
+	if image.is_compressed():
+		image.decompress()
+	var frame_size := Vector2i(int(entry.frame_size[0]), int(entry.frame_size[1]))
+	var frame := ImageTexture.create_from_image(image.get_region(Rect2i(Vector2i(int(entry.static_frame) * frame_size.x, 0), frame_size)))
+	_still_frames[unit_id] = frame
+	return frame
 
 func payload(unit_id: String, ground: Vector2, extent: float) -> Dictionary:
 	var entry: Dictionary = units.get(unit_id, {})

@@ -17,7 +17,7 @@ def main():
     parser.add_argument('--wine-prefix',type=packages.Path)
     args,_=parser.parse_known_args()
     payloads=members(args.pack)
-    for path in ('content/generated_neutral_encounter_profiles.json','art/overworld/manifest.json'):
+    for path in ('content/generated_neutral_encounter_profiles.json','content/generated_neutral_companies.json','art/overworld/manifest.json'):
         if json.loads(payloads[path])!=json.loads((neutral.ROOT/path).read_text()):
             parser.error('package must contain current '+path)
     for path in ('scripts/persistence/GeneratedNeutralEncounterRules.gdc','scripts/persistence/NativeRandomMapPackageSessionBridge.gdc','scenes/overworld/OverworldMapView.gdc'):
