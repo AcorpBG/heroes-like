@@ -113,6 +113,8 @@ Rules:
 
 `ux-town-garrison-rows-20261008` (completed, owner playtest fix): the Town screen has HoMM-style permanent rows: a 2x2 block of command squares, then the garrison row (garrison hero portrait + seven slots) and the visiting row, with click, drag and split troop orders and portrait clicks for the hero sheet and garrison swaps. The overworld resource bar sits along the bottom of every town view, an icon town list switches towns directly, and the Town Log, Command card and footer are retired. A hero can hold a town's garrison (its army is the garrison and defends the town) and shows on the overworld as a medallion with a G badge. See `docs/town-garrison-rows.md`.
 
+`ux-town-command-block-tavern-intel-20261009` (completed, owner request): the command block is 3x2 with Tavern (opens the Wayfarers Hall) and an Intelligence Report square that is not wired yet, and Close sits in the bottom right corner beside the resource bar instead of Return to Field in the banner.
+
 `ux-town-construction-close-20261008` (completed, owner playtest fix): the construction board drops its header resource strip (the town's bottom resource bar shows the stockpile and the board ends above it), and Close replaces View in town beside the build button; V still views the building in town. See `docs/town-construction-board.md`.
 
 ### Generated object sprite placement

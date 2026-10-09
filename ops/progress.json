@@ -114274,6 +114274,19 @@
       "notes": "Owner request with an approved mockup. Rules: a player town may hold a garrison hero (town.garrison_hero_id, both town heroes on the entrance tile); entering an unheld garrison merges the town's garrison troops into the hero's army (refused when they do not fit in seven slots), entering a held garrison swaps the heroes, stepping out needs a free gate, walking away ends garrison duty, the garrison hero defends and receives recruits; HeroCommandRules.set_town_garrison_hero, town_garrison_hero, town_visiting_hero, town_garrison_holder_id, merge_stacks_into_army; OverworldRules keeps garrison_hero_id through town normalization; old saves migrate once (overworld.town_garrison_heroes_version). Town screen: new scenes/town/TownArmyRows.gd (2x2 rounded command squares Build/Muster/Market/Mage Guild, garrison row and visiting row of 8 squares using HeroExchangeSlot cells; click-click/drag to move-merge-swap, Shift split slider, portrait click selects, second click or double-click opens the HeroSheet, clicking the other portrait moves or swaps heroes, Escape cancels split/selection first), the overworld resource bar along the bottom edge above popouts and the construction screen, an icon town list top right that switches towns directly, Return to Field in the banner; the Town Log command, Command card, footer and the stage's troop chips are retired. Overworld: garrison heroes draw as a portrait medallion with a G badge on their town and carry a G badge in the hero list. Validation: tests/town_garrison_rows_report.tscn (49 checks, generated small map), ai_player_rules_report, large_generated_map_runtime_profile_report, native_rmg_end_to_end_runtime_boundary_report and town_transition_fast_path_regression pass; validate_repo identical to baseline after five pin updates. Authored-scenario town tests were not used as verification. Follow-ups: remove the dead Town Log catalog code; AI towns do not use garrison heroes."
     },
     {
+      "id": "ux-town-command-block-tavern-intel-20261009",
+      "title": "Town command block: Tavern and Intelligence Report squares, Close in the bottom right corner",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/town-garrison-rows.md"
+      ],
+      "notes": "Owner request. The town command block is 3x2: Build, Muster, Tavern / Market, Mage Guild, Intelligence Report. Tavern opens the Wayfarers Hall popout (hero hires) and is dimmed with a hint until the hall stands. Intelligence Report is a placeholder square, deliberately not wired yet (owner direction). The leave-town button moved from the banner to the bottom right corner as Close, beside the shortened resource bar; the departure model's label stays Return to Field. New emblems art/towns/runtime/town_commands/{tavern,intelligence_report}.png with sources and prompts in art/towns/source/generated/town_commands/. Validation: tests/town_garrison_rows_report.tscn passes 63 checks on a generated map; validate_repo identical to baseline. Follow-up: wire the Intelligence Report."
+    },
+    {
       "id": "content-authored-scenarios-archived-20261008",
       "title": "Archive the authored scenarios and campaigns",
       "status": "completed",
