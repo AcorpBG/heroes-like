@@ -20,6 +20,8 @@ extends Node
 #                          of more ends when one player is left standing.
 # HEROES_AI_MATCH_FACTIONS comma-separated faction ids, one per seat, in
 #                          place of the seed's random draw.
+# HEROES_AI_MATCH_GUARDS   guard strength: weak, normal (default, as a new
+#                          game from the main menu) or strong.
 # HEROES_AI_MATCH_SIZE     map size class (default homm3_small; homm3_medium,
 #                          homm3_large, homm3_extra_large), one level.
 
@@ -46,6 +48,12 @@ func _run() -> void:
 	var max_days := int(OS.get_environment("HEROES_AI_MATCH_MAX_DAYS")) if OS.get_environment("HEROES_AI_MATCH_MAX_DAYS") != "" else DEFAULT_MAX_DAYS
 	var swapped := OS.get_environment("HEROES_AI_MATCH_SWAP").strip_edges() not in ["", "0"]
 	var player_count := clampi(int(OS.get_environment("HEROES_AI_MATCH_PLAYERS")), 2, 8) if OS.get_environment("HEROES_AI_MATCH_PLAYERS") != "" else 2
+	var guards := OS.get_environment("HEROES_AI_MATCH_GUARDS").strip_edges().to_lower()
+	if guards == "":
+		guards = "normal"
+	if guards not in ["weak", "normal", "strong"]:
+		_fail("HEROES_AI_MATCH_GUARDS must be weak, normal or strong, got %s." % guards)
+		return
 	var size_class := OS.get_environment("HEROES_AI_MATCH_SIZE").strip_edges()
 	if size_class == "":
 		size_class = "homm3_small"
@@ -74,7 +82,7 @@ func _run() -> void:
 	if player_count != 2:
 		map_seed = "%s-p%d" % [map_seed, player_count]
 
-	var session = _start_session(map_seed, drawn[0], player_count, size_class)
+	var session = _start_session(map_seed, drawn[0], player_count, size_class, guards)
 	if session == null:
 		return
 	var seats := []
@@ -106,6 +114,7 @@ func _run() -> void:
 		"swapped": swapped,
 		"scenario_id": String(session.scenario_id),
 		"map_size": session.overworld.get("map_size", {}),
+		"guards": guards,
 		"start_treasury": _live_resources(start_treasury),
 		"seats": [],
 	}
@@ -181,11 +190,11 @@ func _run() -> void:
 	_cleanup()
 	get_tree().quit(0)
 
-func _start_session(map_seed: String, faction_id: String, player_count: int = 2, size_class: String = "homm3_small"):
+func _start_session(map_seed: String, faction_id: String, player_count: int = 2, size_class: String = "homm3_small", guards: String = "normal"):
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
 		map_seed, "", "", player_count, "land", false, size_class,
 		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
-		faction_id, ""
+		faction_id, "", guards
 	)
 	var setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY)
 	if not bool(setup.get("ok", false)):

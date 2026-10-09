@@ -20,6 +20,7 @@ Take these from the request; use the defaults for anything not given. Do not ask
 | players | 3 | 2–8 computer players |
 | size | `homm3_medium` | `homm3_small`, `homm3_medium`, `homm3_large`, `homm3_extra_large` |
 | line-ups | different random factions per match, no faction twice in a match | `--mirrors` allows repeats; or exact line-ups from the owner |
+| guards | `normal` (as a new game from the main menu) | `weak`, `normal`, `strong` |
 | day cap | 160 | an undecided game stops here |
 | subagent model | `haiku`, effort `high` | only change if the owner asks |
 
@@ -47,11 +48,11 @@ You are running ONE headless AI-vs-AI game simulation for a Godot game and repor
 Do not edit any repository files. Only create files under OUT.
 
 REPO=<absolute repo path>   OUT=<output folder>   RUN=<run id, e.g. m1>
-PLAYERS=<n>   SIZE=<size class>   FACTIONS=<comma-separated line-up or random>   DAYS=<day cap>
+PLAYERS=<n>   SIZE=<size class>   FACTIONS=<comma-separated line-up or random>   DAYS=<day cap>   GUARDS=<weak|normal|strong>
 
 Step 1. With the Bash tool and run_in_background: true (the match takes minutes; never run it in
 the foreground), run:
-bash "$REPO/.claude/skills/ai-match-batch/scripts/run_match.sh" "$OUT" "$RUN" "$PLAYERS" "$SIZE" "$FACTIONS" "$DAYS"
+bash "$REPO/.claude/skills/ai-match-batch/scripts/run_match.sh" "$OUT" "$RUN" "$PLAYERS" "$SIZE" "$FACTIONS" "$DAYS" "$GUARDS"
 (write the literal values in place of the variables).
 
 Step 2. Wait until "$OUT/$RUN.done" exists. If you get a background-task completion notification,
@@ -76,9 +77,9 @@ Relay each finished match in one or two lines; do not wait silently.
 
 When all matches are in, give one table:
 
-| # | Factions | Towns on map | Winner | Day | Captures (no defender) | Winner's gold at end |
+| # | Setup | Factions | Towns on map | Winner | Day | Captures (no defender) | Winner's gold at end |
 
-(from each summary: `factions`, `towns_on_map`, `winner_faction`/`winner`, `final_day`,
+(from each summary: players/`map_size`/`guards`, `factions`, `towns_on_map`, `winner_faction`/`winner`, `final_day`,
 `town_captures`, `captures_without_defender`, `final_sides[winner].gold`), then a few bullets:
 
 - how many games were decided and the day range; any game that hit the cap;
@@ -102,6 +103,7 @@ Never run a match on the owner's real game profile; `run_match.sh` isolates it.
 ## Notes
 
 - The runner and its options are documented in `docs/ai-plays-by-player-rules.md` (AI against AI).
+- Before 2026-10-09 the runner passed no guard strength, so its matches had weak guards.
 - Matches with the same seed must not run at the same time (they share the map package file);
   random seeds make that practically impossible.
 - On Linux set `GODOT_BIN` if `godot` is not on the PATH.

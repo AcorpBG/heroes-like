@@ -19,6 +19,7 @@ out = {
     "match_seed": st["match_seed"],
     "map_seed": st["map_seed"],
     "map_size": "%dx%d" % (st["map_size"].get("x", 0), st["map_size"].get("y", 0)),
+    "guards": st.get("guards", "weak (runner had no option)"),
     "towns_on_map": len(r.get("town_weeks", [{"towns": []}])[0]["towns"]),
     "factions": {s["player_id"]: s["faction"] for s in st["seats"]},
     "winner": r["winner"] or "none (day cap)",
