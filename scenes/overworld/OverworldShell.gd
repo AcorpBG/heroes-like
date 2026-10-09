@@ -469,6 +469,7 @@ func _ready() -> void:
 	_map_view.tile_pressed.connect(_on_map_tile_pressed)
 	_map_view.tile_hovered.connect(_on_map_tile_hovered)
 	_map_view.tile_inspect_held.connect(_on_map_tile_inspect_held)
+	_map_view.edge_scroll_allowed = func() -> bool: return not _overworld_order_input_blocked()
 	# Mouse drags and wheel pans move the camera inside the map view; keep the
 	# minimap's viewport box on the same view.
 	_map_view.camera_changed.connect(_sync_minimap_viewport)
