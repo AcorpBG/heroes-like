@@ -133,6 +133,14 @@ func _check_adventure_effects() -> void:
 	var captain := _hero("hero_caelen", _ranked({"mustercaptain": 4}))
 	var bonuses := HeroProgressionRules.aggregate_bonuses(captain)
 	_check(is_equal_approx(float(bonuses.get("recruit_growth_multiplier", 0.0)), 0.4) and is_equal_approx(float(bonuses.get("recruit_cost_delta", 0.0)), -0.2), "Muster Captain IV: +40%% growth, -20%% cost")
+	# Tier 7 keeps the town's growth; tiers 1-6 scale.
+	var mustered := HeroProgressionRules.scale_recruit_growth(captain, {"unit_embercourt_charter_colossus_veteran": 2, "unit_embercourt_sluicefire_lindworms_veteran": 4})
+	_check(int(mustered.get("unit_embercourt_charter_colossus_veteran", 0)) == 2 and int(mustered.get("unit_embercourt_sluicefire_lindworms_veteran", 0)) == 6, "Muster Captain IV: T7 2 stays 2, T6 4 becomes 6: %s" % mustered)
+	# Discounts round up: a rank-one captain leaves a 2-resource price at 2.
+	var cadet := _hero("hero_caelen", _ranked({"mustercaptain": 1}))
+	var price := HeroProgressionRules.scale_recruit_cost(cadet, {"gold": 1891, "embergrain": 2})
+	_check(price == {"gold": 1797, "embergrain": 2}, "Muster Captain I: T7 price rounds up: %s" % price)
+	_check(HeroProgressionRules.scale_recruit_cost(captain, {"gold": 100, "embergrain": 2}) == {"gold": 80, "embergrain": 2}, "Muster Captain IV: exact discounts stay exact")
 
 func _caster(specialties: Array, power: int = 2) -> Dictionary:
 	var hero := _hero("hero_lyra", specialties)

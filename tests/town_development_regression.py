@@ -142,10 +142,10 @@ func run():
 		var troops:Array=[{"side":"player","defense":10},{"side":"enemy","defense":10}]
 		Dev.apply_defender_bonus(troops,t,"town_assault")
 		check(troops[0].defense==10 and troops[1].defense==12,"fortification buffs wrong side")
-		# Citadel adds half of every dwelling's week (rounded down); Great Ramparts doubles it.
+		# Citadel adds half of every dwelling's week (rounded up); Great Ramparts doubles it.
 		var walled:Dictionary=Dev.growth(t)
 		t=build(s,"building_dev_fort_2")
-		for uid in walled:check(int(Dev.growth(t)[uid])==int(walled[uid])*3/2,"Citadel growth")
+		for uid in walled:check(int(Dev.growth(t)[uid])==(int(walled[uid])*3+1)/2,"Citadel growth")
 		t=build(s,"building_dev_fort_3")
 		for uid in walled:check(int(Dev.growth(t)[uid])==int(walled[uid])*2,"Great Ramparts growth")
 		for id in ["building_dev_training_attack","building_dev_training_defense","building_dev_training_experience"]:t=build(s,id)

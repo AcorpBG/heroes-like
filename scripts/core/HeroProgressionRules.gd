@@ -5,6 +5,8 @@ const CHOICE_SIZE := 3
 const SPECIALTY_INSIGNIA_ATLAS_PATH := "res://art/heroes/runtime/specialties/hero_specialty_insignia_atlas.png"
 const SPECIALTY_INSIGNIA_CELL_SIZE := Vector2i(28, 28)
 const RANK_LABELS := ["I", "II", "III", "IV"]
+## Recruit-growth specialties raise dwellings up to this tier.
+const RECRUIT_GROWTH_MAX_TIER := 6
 ## The specialty catalog: content/hero_specialties.json (ids, names, per-rank
 ## text and bonuses, icon cells, group and command path).
 const SPECIALTIES_PATH := "res://content/hero_specialties.json"
@@ -449,6 +451,11 @@ static func scale_recruit_growth(hero_state: Dictionary, growth_payload: Variant
 		return scaled
 	for unit_id in growth_payload.keys():
 		var amount := int(max(0, int(growth_payload[unit_id])))
+		# Tier 7 keeps the town's own growth: one commander turning 2 a week
+		# into 3 was too much.
+		if int(ContentService.get_unit(String(unit_id)).get("tier", 0)) > RECRUIT_GROWTH_MAX_TIER:
+			scaled[String(unit_id)] = amount
+			continue
 		var adjusted := int(round(float(amount) * multiplier))
 		if amount > 0 and adjusted <= 0:
 			adjusted = 1
@@ -458,7 +465,15 @@ static func scale_recruit_growth(hero_state: Dictionary, growth_payload: Variant
 static func scale_recruit_cost(hero_state: Dictionary, cost_payload: Variant) -> Dictionary:
 	var bonuses := aggregate_bonuses(hero_state)
 	var multiplier := clampf(1.0 + float(bonuses.get("recruit_cost_delta", 0.0)), 0.5, 1.0)
-	return _scale_resource_payload(cost_payload, multiplier)
+	# Rounded up, so a small discount never halves a 2-resource T7 price.
+	var scaled := {}
+	if not (cost_payload is Dictionary):
+		return scaled
+	for key in cost_payload.keys():
+		var amount := int(cost_payload[key])
+		if amount > 0:
+			scaled[String(key)] = maxi(1, ceili(float(amount) * multiplier - 0.0001))
+	return scaled
 
 static func scale_raid_pillage(hero_state: Dictionary, losses: Variant) -> Dictionary:
 	var bonuses := aggregate_bonuses(hero_state)

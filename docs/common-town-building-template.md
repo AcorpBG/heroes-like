@@ -7,7 +7,7 @@ Implemented owner direction, 2026-09-21. All six factions use one town template,
 | Line | Stages and benefits |
 | --- | --- |
 | Town Hall | 500 / 1,000 / 2,000 / 4,000 gold daily. One active stage; per-town Capital Hall, no player-wide capital restriction. |
-| Fortifications | Three stages: +10 / +20 / +30 town readiness and +2 / +4 / +6 defense to defending creatures in town battles. Citadel adds 50% and Great Ramparts 100% to every dwelling's weekly growth (flat growth-building bonuses included, rounded down). Higher stages replace earlier benefits. |
+| Fortifications | Three stages: +10 / +20 / +30 town readiness and +2 / +4 / +6 defense to defending creatures in town battles. Citadel adds 50% and Great Ramparts 100% to every dwelling's weekly growth (flat growth-building bonuses included, rounded up, so a Citadel already brings a second T7). Higher stages replace earlier benefits. |
 | Magic Guild | Five stages, enabling faction spells through tiers 1–5. |
 | Marketplace | Buys, sells and converts every resource, rare ones included, within weekly limits; Trade Exchange improves every rate, raises the limits and enables bulk wood/ore orders (`docs/town-market.md`). No daily gold income. |
 | Tavern | Recruit additional heroes using the existing visiting-hero system. |
