@@ -48,6 +48,12 @@ Do not load all of `ops/progress.json` by default. It is an operations tracker, 
 - Use original placeholder content where needed.
 - No temporary git worktrees. Work directly in this repo.
 - Local commits are fine when they are coherent. Always push completed validated work to GitHub and merge it into the default branch when there are no conflicts, unless AcOrP explicitly says otherwise for that slice. If working directly on the default branch, push it without creating an unnecessary merge. If conflicts occur, report them rather than forcing the merge or overwriting remote changes.
+- The owner plays and tests from the main checkout (`D:\Games\godot\heroes-like` on Windows), not from agent worktrees. After pushing to the default branch from a worktree or another clone, bring that checkout up to date in the same run, so GitHub is never ahead of the build the owner plays:
+  - It must be on the default branch with no local-only commits (`git rev-list --count origin/main..HEAD` is 0).
+  - Incoming files must not overlap the owner's uncommitted changes in `git status --short`. Never stash, reset, checkout or discard the owner's local edits or deletions.
+  - Update with `git merge --ff-only origin/main`. If it cannot fast-forward, stop and report it instead of forcing.
+  - Copy the ignored `*.import` files for any new art from the worktree into the checkout, so Godot loads it without a re-import.
+  - Tell the owner to restart Godot or the running game.
 
 ## Screen composition hard rules
 - Do not cover the dominant screen surface with large text panels, stacked report boxes, or generic geometry just to expose existing data.
