@@ -114910,6 +114910,20 @@
       ],
       "notes": "AI for waiting, hero cast timing and targets, obstacles and approach choice; Auto battle plays the player's side through the same AI; quick resolve and auto-resolve follow the new rules. Validation: BattleAiRules benchmark before/after, AI-vs-AI generated-map matches, generated-map battle reports, owner playtest.",
       "updatedAt": "2026-10-09T15:35:00Z"
+    },
+    {
+      "id": "bugfix-spell-rules-battle-stack-count-20261009",
+      "title": "Spell rules and battle screen count living creatures from battle stack health",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/battle-spell-effects.md"
+      ],
+      "notes": "Found while fixing bugfix-battle-stack-health-normalize-20261009: battle stacks hold base_count, unit_hp and total_health but no army count. SpellRules._health_ratio used max(1, count) * unit_hp as full health, so a stack with one whole creature left counted as unhurt and _wounded_bonus_applies almost never granted wounded_bonus_damage (9 battle spells, e.g. Cinder Burst +8); _alive_stacks_for_side skipped every battle stack, so _side_has_any_ability (spell hints) was always false. SpellRules now has _alive_count (ceil(total_health / unit_hp), as BattleRules) and measures health against base_count * unit_hp. BattleShell had the same fault in the Active/Target focus labels (x0), the initiative cue (no next living stack, labels without counts) and the target-cycle fallback (no enemy stacks); it now uses BattleRules._alive_count. Balance: spell damage against stacks at or below their threshold rises by the bonus, as the balance benchmark already assumed. New tests/battle_spell_wounded_target_report (18 checks, generated small map) passes and fails 8 on the old SpellRules. battle_spell_effects (105), hero_specialty_catalog (155), battle_stack_health_normalize (89), battle_stat_scaling (50), magic_battle_spell_behavior, magic_ai_valuation_casting_hooks and magic_spell_schema reports pass; BattleShell.gd loads. Not run: battle_controller_board_navigation_smoke (River Pass, authored, archived), which mirrors the old initiative label in a test helper.",
+      "updatedAt": "2026-10-09T15:55:00Z",
+      "validatedAt": "2026-10-09T15:55:00Z"
     }
   ],
   "project": "heroes-like",

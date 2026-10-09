@@ -2249,10 +2249,16 @@ static func _alive_stacks_for_side(battle: Dictionary, side: String) -> Array:
 			continue
 		if String(stack.get("side", "")) != side:
 			continue
-		if int(stack.get("total_health", 0)) <= 0 or int(stack.get("count", 0)) <= 0:
+		if _alive_count(stack) <= 0:
 			continue
 		stacks.append(stack)
 	return stacks
+
+## Living creatures in a battle stack, as BattleRules._alive_count: battle
+## stacks keep base_count, unit_hp and total_health, not an army "count".
+static func _alive_count(stack: Dictionary) -> int:
+	var unit_hp: int = max(1, int(stack.get("unit_hp", 1)))
+	return int(ceil(float(max(0, int(stack.get("total_health", 0)))) / float(unit_hp)))
 
 static func _side_has_any_ability(battle: Dictionary, side: String, ability_ids: Array) -> bool:
 	for stack in _alive_stacks_for_side(battle, side):
@@ -2264,6 +2270,7 @@ static func _side_has_any_ability(battle: Dictionary, side: String, ability_ids:
 static func _health_ratio(stack: Dictionary) -> float:
 	if stack.is_empty():
 		return 0.0
-	var count := int(max(1, int(stack.get("count", 0))))
+	# Measured against the stack's starting size, as BattleRules._health_ratio.
+	var count: int = max(1, max(int(stack.get("base_count", 0)), _alive_count(stack)))
 	var max_health := int(max(1, int(stack.get("unit_hp", 1)) * count))
 	return clampf(float(int(stack.get("total_health", 0))) / float(max_health), 0.0, 1.0)

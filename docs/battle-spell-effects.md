@@ -46,8 +46,14 @@ Spell previews and the stack effect list say what an effect does and for how lon
 
 The battle AI's damage estimate knows Staggered stops retaliation; a rooted computer stack does not try to advance; spell scoring values Rooted on melee stacks and Staggered on stacks that can still strike back, and haste's speed on a melee stack that still has to close in. `tests/battle_faction_fast_balance_benchmark.py` mirrors turn-counted durations, the reordering, Rooted and Staggered (its distance model has no movement points, so haste speed is not modelled there).
 
+## Wounded targets
+
+Nine damage spells (Cinder Burst, Sunlance Arc and others) add `wounded_bonus_damage` to a stack at or below `wounded_threshold_ratio` of its starting health. `SpellRules` measures a stack the way `BattleRules` does: living creatures are `ceil(total_health / unit_hp)` and full health is `base_count * unit_hp`. Until 2026-10-09 it read an army `count` that battle stacks do not have, so a stack with one whole creature left counted as unhurt, the bonus almost never applied, and the living stacks behind spell hints were always none; the benchmark already applied the bonus. The battle screen's Active and Target labels, initiative cue and target-cycle fallback had the same fault and showed "x0" or no next stack.
+
 ## Validation
 
 `tests/battle_spell_effects_report.tscn` (105 checks): each family's stats and each status's name and numbers in content; turn counting (the casting turn, round changes, the stack's own turns); reordering; haste speed; Staggered without retaliation (rules and AI); Rooted without movement or approach and its advance; plain-language previews and effect lists; on a battle from a generated small map. The battle stat scaling, specialty catalog, magic behaviour, resistance, prism bastion, AI spell valuation (one fixture now uses the defense spell Bulwark Litany for a Linekeeper) and deterministic RNG reports pass.
+
+`tests/battle_spell_wounded_target_report.tscn` (18 checks, generated small map): spell and battle rules agree on a wounded stack's health; Cinder Burst adds its bonus at 40% health and not above its threshold, in damage and summary; a side's living stacks and abilities are found. The old rules failed 8.
 
 Faction benchmark before/after (curated lead heroes, 100 seeds, weeks 1-4): balance stays outside the 45-55% band as before (outliers 52 to 54; mean distance of a pair from 50% 26.1 to 25.1 points); battles are 0.2 rounds shorter early and 0.3 longer in week 4; casts moved from buffs to damage and control (attack buffs 14,309 to 9,242, control 682 to 1,280, damage 9,400 to 12,126; haste 7,801 to 514, since that model has no movement for speed to help). Largest faction shifts: week 1 Brasshollow 75% to 92%, Mireclaw 39% to 61%, Sunvault 66% to 41%; week 4 Thornwake 79% to 54%, Mireclaw 36% to 53%. Faction tuning remains its own open work.
