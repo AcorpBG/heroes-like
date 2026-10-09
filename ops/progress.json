@@ -114391,6 +114391,19 @@
       "notes": "Owner accepted the prototype shown as before/after sheets. overworld_ground_surface.gdshader: border_warp (three rotated value-noise octaves, warp 0.36 tile + detail) bends the corner-weight lookup, faded to zero within 0.3 tile of tile centres so each tile's middle keeps its own ground; candidate materials score merged corner weight + border_priority (ground_materials.json, by slot) + painted-detail height (luminance above the material average, x1.3) and blend within blend_depth 0.26; the beach band uses the bent corner weights; decals fade by each ground's final blend share. OverworldGroundSurface passes border_priority. Validation: owner-map and generated-map border captures (sand/grass, snow/grass, swamp/grass, snow/dirt, dirt/grass, rough/dirt) and a generated coast reviewed; overworld_sandy_shore_regression 53/53 (tile-centre identity restored by the centre fade), overworld_ground_materials_contract passes, validate_repo identical (828)."
     },
     {
+      "id": "ux-overworld-gain-floaters-20261009",
+      "title": "Floating gain text over the map",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/overworld-gain-floaters.md"
+      ],
+      "notes": "Owner request: floating text over the map when the hero picks up anything (dwellings, resources, artifacts), slowly fading out. scripts/core/OverworldGainFeed.gd: snapshot(session) of stockpile, active hero experience/command/artifacts/spells/mana/movement/army/battle boosts, player sites (collected_by_faction_id); gains(before, after, movement_walked) -> ordered lines {text, icon, tone}: claimed sites (persistent_control only), artifacts, resources gained, troops, command, spells, experience, mana, movement (walk cost added back), boosts, costs. OverworldShell: GainFeed snapshot before try_move, route execution, perform_context_action, choose_resource_reward, hire_from_dwelling, take_site_recruits_by_dismissing and cast_overworld_spell; _float_gains_since sends lines to OverworldMapView.show_gain_floaters (route moves only for plain routes, not battle/town/rendezvous). scenes/overworld/OverworldGainFloaters.gd: map layer between DynamicLayer and FrameLayer; waits for the hero walk (gain_floaters_should_wait), anchors above the tile (gain_anchor_for_tile), staggered 0.35 s lines with icon and outlined text, 0.25 s fade in, 44 px rise, 1.6 s fade out over 3.4 s; reduced motion fades without rising. Validation: new tests/overworld_gain_floaters_report (14 checks, incl. a live wood pickup on a generated small map through the real shell) passes; 1920x1080 windowed capture with a five-line sample reviewed; validate_repo identical."
+    },
+    {
       "id": "content-hero-specialty-catalog-20261008",
       "title": "35 hero specialties with four ranks, six per hero",
       "status": "completed",
