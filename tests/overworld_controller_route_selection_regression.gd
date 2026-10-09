@@ -203,16 +203,16 @@ func _validate_route_semantic_width(width: int) -> Dictionary:
 	shell.call("_refresh_selected_route_preview", "semantic_owner_fixture")
 	shell.call("_schedule_controller_route_semantic_after_refresh")
 	var owner_before: Dictionary = shell.validation_controller_route_cursor_snapshot()
-	shell.validation_open_command_drawer()
+	var owner_sheet: Control = shell.validation_open_hero_sheet()
 	var owner_after: Dictionary = shell.validation_controller_route_cursor_snapshot()
-	if bool(owner_after.get("active", true)) or live.text != "" \
+	if owner_sheet == null or bool(owner_after.get("active", true)) or live.text != "" \
 			or not (shell.get("_controller_route_semantic_pending") as Dictionary).is_empty() \
 			or owner_after.get("selected_tile", {}) != owner_before.get("selected_tile", {}) \
 			or owner_after.get("route_preview", {}) != owner_before.get("route_preview", {}):
-		_fail("%d owner-open route deactivation changed selection/visual route or retained semantics." % width, {"before": _compact_cursor(owner_before), "after": _compact_cursor(owner_after), "pending": shell.get("_controller_route_semantic_pending")})
+		_fail("%d owner-open route deactivation changed selection/visual route or retained semantics." % width, {"sheet_opened": owner_sheet != null, "before": _compact_cursor(owner_before), "after": _compact_cursor(owner_after), "live_text": live.text, "pending": shell.get("_controller_route_semantic_pending")})
 		await _discard_width_shell(host, shell)
 		return {}
-	shell.call("_on_close_drawers_pressed")
+	owner_sheet.close_sheet()
 	await _settle()
 	# A native modal owner follows the same fail-closed lifecycle while retaining
 	# the selected tile and already-rendered route preview.
@@ -710,12 +710,12 @@ func _validate_interaction_blockers() -> Dictionary:
 	var blockers := {}
 
 	shell.validation_reset_controller_route_cursor()
-	var drawer: Dictionary = shell.validation_open_command_drawer()
-	if String(drawer.get("active_drawer", "")) != "command" or not await _assert_right_input_blocked(shell, "drawer_open"):
+	var sheet: Control = shell.validation_open_hero_sheet()
+	if sheet == null or not await _assert_right_input_blocked(shell, "hero_sheet_open"):
 		await _discard_shell(shell)
 		return {}
-	blockers["drawer"] = true
-	shell.call("_on_close_drawers_pressed")
+	blockers["hero_sheet"] = true
+	sheet.close_sheet()
 	await _settle()
 
 	var settings: Dictionary = shell.validation_open_active_play_settings()

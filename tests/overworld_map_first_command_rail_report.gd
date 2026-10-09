@@ -60,7 +60,7 @@ func _run() -> void:
 		shell.queue_free()
 		await get_tree().process_frame
 	if session.to_dict() != authority_before:
-		return _fail("Responsive layout, drawers, or minimap changed generated session authority.")
+		return _fail("Responsive layout, hero sheet, or minimap changed generated session authority.")
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"seed": SEED,
@@ -103,19 +103,21 @@ func _validate_viewport(shell: Control, session, viewport: Vector2i) -> Dictiona
 		return _fail("Minimap recenter mutated authority at %s: %s" % [viewport, JSON.stringify(recenter)])
 	if bool(camera_after.get("pan_supported", false)) and camera_before.get("camera_focus_tile_precise", {}) == camera_after.get("camera_focus_tile_precise", {}):
 		return _fail("Minimap recenter did not update a pannable camera at %s." % viewport)
-	var command_state: Dictionary = shell.call("validation_open_command_drawer")
+	# Hero orders live on the hero sheet, a modal over the map; closing it
+	# must hand the map-first rail (minimap included) back unchanged.
+	var sheet: Control = shell.call("validation_open_hero_sheet")
 	await get_tree().process_frame
-	if not bool(command_state.get("command_drawer_visible", false)) or shell.get_node("%MinimapPanel").is_visible_in_tree():
-		return _fail("Command drawer did not replace base rail content at %s." % viewport)
-	shell.call("_on_close_drawers_pressed")
+	var sheet_chrome: Dictionary = shell.call("validation_snapshot").get("chrome", {})
+	if sheet == null or not sheet.is_visible_in_tree() or not bool(sheet_chrome.get("hero_sheet_visible", false)) or not sheet.call("is_interactive"):
+		return _fail("Hero sheet did not open with live orders at %s: %s." % [viewport, JSON.stringify(sheet_chrome)])
+	if not sheet.get_global_rect().encloses(map_rect):
+		return _fail("Hero sheet did not cover the map surface at %s: sheet=%s map=%s." % [viewport, sheet.get_global_rect(), map_rect])
+	sheet.call("close_sheet")
 	await get_tree().process_frame
-	var frontier_state: Dictionary = shell.call("validation_open_frontier_drawer")
-	await get_tree().process_frame
-	if not bool(frontier_state.get("frontier_drawer_visible", false)) or shell.get_node("%MinimapPanel").is_visible_in_tree():
-		return _fail("Frontier drawer did not replace base rail content at %s." % viewport)
-	shell.call("_on_close_drawers_pressed")
-	await get_tree().process_frame
-	var required_controls := ["%Resources", "%PrimaryAction", "%OpenCommand", "%OpenFrontier", "%EndTurn", "%SaveSlot", "%Save", "%Settings", "%Menu"]
+	var closed_chrome: Dictionary = shell.call("validation_snapshot").get("chrome", {})
+	if sheet.visible or bool(closed_chrome.get("hero_sheet_visible", true)) or not shell.get_node("%MinimapPanel").is_visible_in_tree():
+		return _fail("Closing the hero sheet did not restore the map-first rail at %s: %s." % [viewport, JSON.stringify(closed_chrome)])
+	var required_controls := ["%Resources", "%PrimaryAction", "%EndTurn", "%Save", "%Settings", "%Menu"]
 	for path in required_controls:
 		var control: Control = shell.get_node_or_null(path)
 		if control == null or not control.is_visible_in_tree() or control.focus_mode == Control.FOCUS_NONE or control.tooltip_text.strip_edges() == "":

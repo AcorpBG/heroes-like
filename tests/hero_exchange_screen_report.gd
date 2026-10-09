@@ -311,13 +311,14 @@ func _close_case() -> Dictionary:
 	var surface: Dictionary = _shell.call("validation_snapshot").get("rendezvous", {})
 	if bool(surface.get("exchange_open", true)) or String(_shell.call("_overworld_gameplay_movement_blocked_reason")) == "hero_exchange_open":
 		return _fail("Escape did not close the meeting screen.", surface)
-	if _reserve_id not in surface.get("meet_hero_ids", []) or not bool(surface.get("meet_focusable", false)):
-		return _fail("The Command drawer did not offer a Meet button for the partner.", surface)
-	_shell.call("validation_open_command_drawer")
+	var sheet: Control = _shell.call("validation_open_hero_sheet")
 	await get_tree().process_frame
 	await get_tree().process_frame
-	_capture("command_drawer_meet_1920x1080")
-	_shell.call("_on_close_drawers_pressed")
+	var meet_button: Button = sheet.find_child("Meet_%s" % _reserve_id, true, false) as Button if sheet != null else null
+	if _reserve_id not in surface.get("meet_hero_ids", []) or meet_button == null or not meet_button.is_visible_in_tree() or meet_button.disabled or meet_button.focus_mode != Control.FOCUS_ALL:
+		return _fail("The hero sheet did not offer a Meet button for the partner.", surface)
+	_capture("hero_sheet_meet_1920x1080")
+	sheet.close_sheet()
 	await get_tree().process_frame
 	_shell.call("_on_context_action_pressed", "open_rendezvous")
 	await get_tree().process_frame

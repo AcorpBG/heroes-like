@@ -12,6 +12,8 @@ const RARE_RESOURCE_IDS := ["aetherglass", "embergrain", "peatwax", "verdant_gra
 const SPELL_SCHOOL_IDS := ["beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"]
 const STATUS_EFFECT_IDS := ["status_harried", "status_staggered", "status_rooted", "status_overheated"]
 const MAX_SPELL_RESISTANCE_PCT := 75
+# Hero field: the day of the hero's last overworld spell.
+const OVERWORLD_SPELL_CAST_DAY_KEY := "overworld_spell_cast_day"
 const MAX_CONTROL_RESISTANCE_PCT := 80
 const POWER_PER_EXTRA_ROUND := 4
 const MAX_POWER_EXTRA_ROUNDS := 3
@@ -132,6 +134,10 @@ static func mana_max_from_command(command: Variant) -> int:
 	if not (command is Dictionary):
 		return 8
 	return max(8, 8 + (max(0, int(command.get("knowledge", 0))) * 4))
+
+## A hero casts at most one overworld spell per day.
+static func cast_overworld_spell_on_day(hero: Dictionary, day: int) -> bool:
+	return day > 0 and int(hero.get(OVERWORLD_SPELL_CAST_DAY_KEY, 0)) == day
 
 static func refresh_daily_mana(hero_state: Dictionary) -> Dictionary:
 	var hero: Dictionary = ensure_hero_spellbook(hero_state.duplicate(true))
@@ -946,11 +952,12 @@ static func _legacy_spellbook_summary(hero_state: Dictionary, context_filter: St
 		", ".join(names) if not names.is_empty() else "No known spells",
 	]
 
-static func get_overworld_actions(hero_state: Dictionary, movement_state: Dictionary) -> Array:
+## `today` > 0 applies the one-overworld-spell-per-day limit for that day.
+static func get_overworld_actions(hero_state: Dictionary, movement_state: Dictionary, today: int = 0) -> Array:
 	var actions := []
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	for spell in known_spells(hero, CONTEXT_OVERWORLD):
-		var validation := validate_overworld_spell(hero, movement_state, spell)
+		var validation := validate_overworld_spell(hero, movement_state, spell, today)
 		var mana_cost: int = adjusted_spell_mana_cost(hero, spell)
 		var summary := _overworld_spell_action_summary(hero, movement_state, spell, validation, mana_cost)
 		var category := spell_category_label(spell)
@@ -992,7 +999,7 @@ static func get_overworld_actions(hero_state: Dictionary, movement_state: Dictio
 		)
 	return actions
 
-static func cast_overworld_spell(hero_state: Dictionary, movement_state: Dictionary, spell_id: String) -> Dictionary:
+static func cast_overworld_spell(hero_state: Dictionary, movement_state: Dictionary, spell_id: String, today: int = 0) -> Dictionary:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	var movement := movement_state.duplicate(true)
 	if not _knows_spell(hero, spell_id):
@@ -1002,9 +1009,11 @@ static func cast_overworld_spell(hero_state: Dictionary, movement_state: Diction
 		return {"ok": false, "hero": hero, "movement": movement, "message": "That spell is not known."}
 	var mana_cost: int = adjusted_spell_mana_cost(hero, spell)
 
-	var validation := validate_overworld_spell(hero, movement, spell)
+	var validation := validate_overworld_spell(hero, movement, spell, today)
 	if not bool(validation.get("ok", false)):
 		return {"ok": false, "hero": hero, "movement": movement, "message": String(validation.get("message", "That spell cannot be cast now."))}
+	if today > 0:
+		hero[OVERWORLD_SPELL_CAST_DAY_KEY] = today
 
 	var effect = spell.get("effect", {})
 	match String(effect.get("type", "")):
@@ -1221,13 +1230,15 @@ static func _battle_spell_ally_target(active_stack: Dictionary, target_stack: Di
 		return target_stack
 	return active_stack
 
-static func validate_overworld_spell(hero_state: Dictionary, movement_state: Dictionary, spell: Variant) -> Dictionary:
+static func validate_overworld_spell(hero_state: Dictionary, movement_state: Dictionary, spell: Variant, today: int = 0) -> Dictionary:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	var spell_dict: Dictionary = spell if spell is Dictionary else ContentService.get_spell(String(spell))
 	if spell_dict.is_empty():
 		return {"ok": false, "message": "That spell is not known."}
 	if String(spell_dict.get("context", "")) != CONTEXT_OVERWORLD:
 		return {"ok": false, "message": "That spell cannot be used on the overworld."}
+	if cast_overworld_spell_on_day(hero, today):
+		return {"ok": false, "message": "%s has already cast an overworld spell today." % String(hero.get("name", "This hero"))}
 	var mana_cost: int = adjusted_spell_mana_cost(hero, spell_dict)
 	if not _has_mana(hero, mana_cost):
 		var current_mana := int(hero.get("spellbook", {}).get("mana", {}).get("current", 0))

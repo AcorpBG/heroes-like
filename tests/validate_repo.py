@@ -13814,18 +13814,18 @@ def validate_save_management(errors: list[str]) -> None:
             "town_save_slot_popup_cancel_unchanged",
             "town_settings_cancel_unchanged",
             "town_mouse_confirm_exact",
-            "overworld_command_drawer_joypad_cancel_exact",
-            "overworld_command_drawer_escape_cancel_exact",
-            "overworld_frontier_drawer_joypad_cancel_exact",
-            "overworld_frontier_drawer_escape_cancel_exact",
-            "overworld_drawer_fresh_back_closes_only_drawer",
-            "overworld_drawer_joypad_confirm_exact",
-            "overworld_drawer_enter_confirm_exact",
-            "overworld_drawer_route_camera_debug_authority_exact",
+            "overworld_hero_sheet_joypad_back_closes_only_sheet",
+            "overworld_hero_sheet_escape_back_closes_only_sheet",
+            "overworld_overwrite_joypad_cancel_exact",
+            "overworld_overwrite_escape_cancel_exact",
+            "overworld_fresh_back_after_cancel_exact",
+            "overworld_joypad_confirm_exact",
+            "overworld_enter_confirm_exact",
+            "overworld_route_camera_debug_authority_exact",
             "overworld_file_browser_cancel_unchanged",
             "overworld_settings_cancel_unchanged",
             "overworld_end_turn_cancel_unchanged",
-            "overworld_no_drawer_cancel_route_exact",
+            "overworld_no_owner_cancel_route_exact",
             "exclusive_parent_mouse_routes_exact",
             "exclusive_parent_mouse_widths_exact",
             "exclusive_parent_mouse_occupied_unreadable_exact",
@@ -13938,10 +13938,9 @@ def validate_save_management(errors: list[str]) -> None:
             "layout_host.size = Vector2(float(route_width), 720.0)",
             "shell.get_parent() == layout_host",
             "_summary_cache_contains_exact_summary",
-            "_exercise_overworld_drawer_cancel_ownership",
-            "_overworld_drawer_authority_signature",
-            "validation_open_command_drawer",
-            "validation_open_frontier_drawer",
+            "_exercise_overworld_cancel_ownership",
+            "_overworld_authority_signature",
+            "validation_open_hero_sheet",
             "validation_controller_route_cursor_snapshot",
             "validation_debug_overlay_snapshot",
             "validation_placement_debug_overlay_snapshot",
@@ -21926,32 +21925,6 @@ def validate_overworld_full_refresh_drawer_readiness_reuse(errors: list[str]) ->
         status_body = status_match.group(1)
         ensure("var readiness_context := _field_readiness_context(end_turn_forecast_surface, objective_header_surfaces)" in status_body, errors, "Overworld full status refresh must derive one current readiness context")
         ensure("var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)" in status_body, errors, "Overworld full status refresh must materialize one current readiness payload")
-        ensure("_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)" in status_body, errors, "Overworld full status refresh must pass current readiness into drawer synchronization")
-        ensure(status_body.index("var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)") < status_body.index("_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)"), errors, "Readiness must be derived before drawer synchronization reuses it")
-
-    tooltip_match = re.search(
-        r"func _refresh_tooltip_context_drawer_surfaces\((.*?)\n\) -> void:(.*?)(?=\n\nfunc _refresh_generated_opening_surfaces)",
-        shell_text,
-        flags=re.DOTALL,
-    )
-    ensure(tooltip_match is not None, errors, "Overworld tooltip/drawer synchronization could not be isolated")
-    if tooltip_match is not None:
-        tooltip_body = tooltip_match.group(2)
-        for token in (
-            'if not field_readiness.is_empty():',
-            '_profile_add("drawer_handoff_preloaded_readiness_reuses", 1)',
-            '_sync_context_drawers(field_readiness, end_turn_forecast_surface, objective_header_surfaces)',
-        ):
-            ensure(token in tooltip_body, errors, f"Overworld tooltip/drawer readiness reuse is missing token: {token}")
-
-    drawer_match = re.search(
-        r"func _sync_context_drawers\((.*?)\n\) -> void:(.*?)(?=\n\nfunc _set_active_drawer)",
-        shell_text,
-        flags=re.DOTALL,
-    )
-    ensure(drawer_match is not None, errors, "Overworld context-drawer synchronization could not be isolated")
-    if drawer_match is not None:
-        ensure("_refresh_drawer_handoff_cues(field_readiness, end_turn_forecast_surface, objective_header_surfaces)" in drawer_match.group(2), errors, "Context drawers must forward the current readiness payload unchanged")
 
     readiness_match = re.search(
         r"func _field_readiness_surface\((.*?)\n\) -> Dictionary:(.*?)(?=\n\nfunc _field_readiness_simple_route_surface)",
@@ -21973,8 +21946,6 @@ def validate_overworld_full_refresh_drawer_readiness_reuse(errors: list[str]) ->
 
     report_text = report_path.read_text(encoding="utf-8")
     for token in (
-        '_assert_drawer_readiness_preload_parity(shell, "current_tile")',
-        '_assert_drawer_readiness_preload_parity(shell, "selected_route")',
         'var refresh_session_before: Dictionary = session.to_dict()',
         'var refresh_authority_before: Dictionary = _refresh_authority(shell.call("validation_snapshot"))',
         'shell.set("_debug_command_in_progress", true)',
@@ -21982,24 +21953,11 @@ def validate_overworld_full_refresh_drawer_readiness_reuse(errors: list[str]) ->
         'shell.call("_refresh")',
         'int(full_refresh_profile.get("field_readiness_surface_calls", 0)) != 2',
         'int(full_refresh_profile.get("field_readiness_surface_base_event_calls", 0)) != 1',
-        'int(full_refresh_profile.get("drawer_handoff_preloaded_readiness_reuses", 0)) != 1',
         'session.to_dict() != refresh_session_before',
         'refresh_authority_after != refresh_authority_before',
         'shell.call("validation_reset_profile", false)',
-        'shell.call("_refresh_tooltip_context_drawer_surfaces")',
-        'int(legacy_drawer_profile.get("field_readiness_surface_calls", 0)) != 1',
-        'int(legacy_drawer_profile.get("field_readiness_surface_base_event_calls", 0)) != 0',
-        'int(legacy_drawer_profile.get("drawer_handoff_preloaded_readiness_reuses", 0)) != 0',
-        'legacy_drawer_extra_usec * 5 < full_refresh_usec',
-        'legacy_drawer_authority != refresh_authority_after',
-        'func _assert_drawer_readiness_preload_parity(shell: Node, label: String) -> bool:',
-        'var default_surface: Dictionary = shell.call("_drawer_handoff_surfaces")',
-        'var preloaded_surface: Dictionary = shell.call("_drawer_handoff_surfaces", readiness)',
-        'preloaded_surface != default_surface',
         'func _refresh_authority(snapshot: Dictionary) -> Dictionary:',
-        '"drawer_readiness_preload_parity": true',
         '"refresh_authority_exact": true',
-        '"legacy_drawer_authority_exact": true',
     ):
         ensure(token in report_text, errors, f"Overworld drawer-readiness focused owner is missing token: {token}")
     for forbidden in ("await get_tree().create_timer", "OS.delay", "set_process", 'erase("field_readiness', 'sort_custom'):
@@ -22084,7 +22042,7 @@ def validate_overworld_full_refresh_event_readiness_context_reuse(errors: list[s
             "var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)",
             "var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context, refresh_watch_context)",
             "var action_context_surface := _action_context_surface(event_surface, readiness_surface)",
-            "_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)",
+            "_refresh_tooltip_context_surfaces()",
         )
         ensure(all(token in status_body for token in ordered_tokens), errors, "Full status refresh is missing ordered readiness-context reuse")
         if all(token in status_body for token in ordered_tokens):
@@ -22861,13 +22819,10 @@ def validate_overworld_objective_stakes_surface_bundle_reuse(errors: list[str]) 
         ensure(forbidden not in report_text, errors, f"Overworld objective-stakes proof must remain passive and exact: {forbidden}")
 
 
-def validate_overworld_drawer_objective_recap_reuse(errors: list[str]) -> None:
+def validate_overworld_objective_header_recap_bundle(errors: list[str]) -> None:
     rules_path = ROOT / "scripts/core/OverworldRules.gd"
-    shell_path = ROOT / "scenes/overworld/OverworldShell.gd"
-    report_path = ROOT / "tests/overworld_hero_actions_refresh_cache_regression.gd"
-    for path in (rules_path, shell_path, report_path):
-        ensure(path.exists(), errors, f"Missing Overworld drawer-objective recap owner: {path.relative_to(ROOT)}")
-    if not all(path.exists() for path in (rules_path, shell_path, report_path)):
+    ensure(rules_path.exists(), errors, f"Missing Overworld objective recap owner: {rules_path.relative_to(ROOT)}")
+    if not rules_path.exists():
         return
 
     rules_text = rules_path.read_text(encoding="utf-8")
@@ -22892,98 +22847,6 @@ def validate_overworld_drawer_objective_recap_reuse(errors: list[str]) -> None:
             ensure([combined_body.index(token) for token in ordered_tokens] == sorted(combined_body.index(token) for token in ordered_tokens), errors, "Objective header progress-recap build/materialization order drifted")
         ensure(combined_body.count("describe_session_progress_recap_from_normalized_session(session, false, surface)") == 1, errors, "Objective header bundle must build exactly one surface-preloaded normalized-session progress recap")
         ensure("describe_session_progress_recap(session, false)" not in combined_body, errors, "Objective header bundle must not retain duplicate public normalization")
-
-    shell_text = shell_path.read_text(encoding="utf-8")
-    status_match = re.search(
-        r"func _refresh_status_surfaces\(generated_surface_start: int, preloaded_refresh_watch_context: Dictionary = \{\}\) -> bool:(.*?)(?=\n\nfunc _refresh_map_cue_surface)",
-        shell_text,
-        flags=re.DOTALL,
-    )
-    ensure(status_match is not None, errors, "Full refresh could not be isolated for drawer-objective recap reuse")
-    if status_match is not None:
-        status_body = status_match.group(1)
-        ordered_tokens = (
-            "var objective_header_surfaces := OverworldRules.describe_objective_header_surfaces(_session)",
-            '_profile_add("objective_progress_recap_builds", 1)',
-            "var readiness_context := _field_readiness_context(end_turn_forecast_surface, objective_header_surfaces)",
-            "var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)",
-            "_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)",
-        )
-        ensure(all(token in status_body for token in ordered_tokens), errors, "Full refresh is missing ordered objective recap propagation")
-        if all(token in status_body for token in ordered_tokens):
-            ensure([status_body.index(token) for token in ordered_tokens] == sorted(status_body.index(token) for token in ordered_tokens), errors, "Full refresh objective recap propagation order drifted")
-
-    handoff_match = re.search(
-        r"func _drawer_handoff_surfaces\((.*?)\n\) -> Dictionary:(.*?)(?=\n\nfunc _line_with_prefix)",
-        shell_text,
-        flags=re.DOTALL,
-    )
-    ensure(handoff_match is not None, errors, "Drawer handoff surface could not be isolated for objective recap reuse")
-    if handoff_match is not None:
-        handoff_signature = handoff_match.group(1)
-        handoff_body = handoff_match.group(2)
-        ensure("objective_header_surfaces: Dictionary = {}" in handoff_signature, errors, "Drawer handoff must retain a fresh-default optional objective header bundle")
-        ordered_tokens = (
-            'var objective_line := ""',
-            'if objective_header_surfaces.has("progress_recap"):',
-            '_profile_add("drawer_handoff_preloaded_objective_recap_reuses", 1)',
-            'objective_line = _line_with_prefix(String(objective_header_surfaces.get("progress_recap", "")), "Next step:")',
-            'else:\n\t\tobjective_line = _line_with_prefix(_cached_objective_text(), "Next step:")',
-            'if objective_line == "":',
-            'objective_line = String(readiness.get("progress_line", "")).strip_edges()',
-        )
-        ensure(all(token in handoff_body for token in ordered_tokens), errors, "Drawer handoff is missing exact preloaded/fresh objective-line behavior")
-        if all(token in handoff_body for token in ordered_tokens):
-            ensure([handoff_body.index(token) for token in ordered_tokens] == sorted(handoff_body.index(token) for token in ordered_tokens), errors, "Drawer handoff objective recap fallback order drifted")
-
-    propagation_tokens = (
-        "func _refresh_tooltip_context_drawer_surfaces(\n\tfield_readiness: Dictionary = {},\n\tend_turn_forecast_surface: Dictionary = {},\n\tobjective_header_surfaces: Dictionary = {}\n) -> void:",
-        "_sync_context_drawers(field_readiness, end_turn_forecast_surface, objective_header_surfaces)",
-        "func _sync_context_drawers(\n\tfield_readiness: Dictionary = {},\n\tend_turn_forecast_surface: Dictionary = {},\n\tobjective_header_surfaces: Dictionary = {}\n) -> void:",
-        "_refresh_drawer_handoff_cues(field_readiness, end_turn_forecast_surface, objective_header_surfaces)",
-        "func _refresh_drawer_handoff_cues(\n\tfield_readiness: Dictionary = {},\n\tend_turn_forecast_surface: Dictionary = {},\n\tobjective_header_surfaces: Dictionary = {}\n) -> void:",
-        "_drawer_handoff_surfaces(field_readiness, end_turn_forecast_surface, objective_header_surfaces)",
-    )
-    for token in propagation_tokens:
-        ensure(token in shell_text, errors, f"Objective recap propagation is missing exact shell token: {token}")
-    ensure("func _refresh_frontier_drawer(end_turn_forecast_surface: Dictionary = {}) -> Dictionary:" in shell_text, errors, "Open Frontier must retain its independent full Objective Board path")
-    frontier_match = re.search(r"func _refresh_frontier_drawer\(end_turn_forecast_surface: Dictionary = \{\}\) -> Dictionary:(.*?)(?=\n\nfunc _set_collapsed_frontier_indicator)", shell_text, flags=re.DOTALL)
-    ensure(frontier_match is not None and "var objective_text := _cached_objective_text()" in frontier_match.group(1), errors, "Open Frontier must keep the full cached Objective Board")
-    for forbidden in ('session.flags["objective_progress_recap', 'session.overworld["objective_progress_recap', '_refresh_cache["objective_progress_recap', "_objective_progress_recap_cache"):
-        ensure(forbidden not in shell_text, errors, f"Objective recap reuse must not persist across refreshes: {forbidden}")
-
-    report_text = report_path.read_text(encoding="utf-8")
-    for token in (
-        "func _assert_drawer_objective_recap_preload_parity(shell: Node, session, label: String) -> Dictionary:",
-        'var readiness: Dictionary = shell.call("_field_readiness_surface")',
-        "var objective_header_surfaces: Dictionary = OverworldRules.describe_objective_header_surfaces(session)",
-        'var legacy: Dictionary = shell.call("_drawer_handoff_surfaces", readiness, forecast)',
-        'int(legacy_profile.get("drawer_handoff_preloaded_objective_recap_reuses", 0)) != 0',
-        'var shared: Dictionary = shell.call("_drawer_handoff_surfaces", readiness, forecast, objective_header_surfaces)',
-        'int(shared_profile.get("drawer_handoff_preloaded_objective_recap_reuses", 0)) != 1',
-        "shared != legacy or session.to_dict() != authority_before",
-        "legacy_usec * 100 < shared_usec * 105",
-        "func _assert_all_authored_drawer_objective_recap_parity() -> int:",
-        "ContentService.get_content_ids(ContentService.SCENARIOS_PATH)",
-        "scenario_ids.sort()",
-        "for day_offset in [0, 1]:",
-        'var legacy_line: String = _objective_line_with_prefix(OverworldRules.describe_objectives(probe), "Next step:")',
-        "var recap := ScenarioRules.describe_session_progress_recap(probe, false)",
-        'var shared_line: String = _objective_line_with_prefix(recap, "Next step:")',
-        "legacy_line != shared_line or probe.to_dict() != authority_before",
-        "func _objective_line_with_prefix(text: String, prefix: String) -> String:",
-        'for raw_line in text.split("\\n", false):',
-        "var line := String(raw_line).strip_edges()",
-        "if line.begins_with(prefix):",
-        'int(full_refresh_profile.get("objective_progress_recap_builds", 0)) != 1',
-        'int(full_refresh_profile.get("drawer_handoff_preloaded_objective_recap_reuses", 0)) != 1',
-        '"drawer_objective_recap_parity": true',
-        '"legacy_drawer_objective_usec"',
-        '"shared_drawer_objective_usec"',
-    ):
-        ensure(token in report_text, errors, f"Overworld drawer-objective focused owner is missing token: {token}")
-    for forbidden in ("await get_tree().create_timer", "OS.delay", "set_process", "erase(\"objective", "sort_custom", "normalize_objective"):
-        ensure(forbidden not in report_text, errors, f"Overworld drawer-objective proof must remain passive and exact: {forbidden}")
 
 
 def validate_overworld_field_readiness_progress_recap_reuse(errors: list[str]) -> None:
@@ -23123,11 +22986,10 @@ def validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors: list[
             "var readiness_context := _field_readiness_context(end_turn_forecast_surface, objective_header_surfaces)",
             "var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)",
             "var status_forecast := _status_forecast_surface(end_turn_forecast_surface)",
-            "_set_collapsed_frontier_indicator(end_turn_forecast_surface)",
             "var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context, refresh_watch_context)",
             'var end_turn_tooltip := String(end_turn_check.get("tooltip_text", ""))',
             'end_turn_tooltip = String(end_turn_forecast_surface.get("forecast", ""))',
-            "_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)",
+            "_refresh_tooltip_context_surfaces()",
         )
         ensure(all(token in status_body for token in ordered_tokens), errors, "Full refresh is missing ordered forecast-bundle construction/reuse tokens")
         if all(token in status_body for token in ordered_tokens):
@@ -23136,12 +22998,9 @@ def validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors: list[
         ensure("OverworldRules.describe_end_turn_forecast_compact(_session)" not in status_body, errors, "Full refresh must not derive compact forecast outside the bundle")
 
     required_shell_tokens = (
-        "func _refresh_frontier_drawer(end_turn_forecast_surface: Dictionary = {}) -> Dictionary:",
-        "func _set_collapsed_frontier_indicator(end_turn_forecast_surface: Dictionary = {}) -> void:",
         "func _event_feed_surface(\n\tend_turn_forecast_surface: Dictionary = {},\n\treadiness_context: Dictionary = {},\n\trefresh_watch_context: Dictionary = {}\n) -> Dictionary:",
         "func _field_readiness_surface(\n\tbase_event_surface: Dictionary = {},\n\tend_turn_forecast_surface: Dictionary = {},\n\tpreloaded_context: Dictionary = {}\n) -> Dictionary:",
         "func _status_forecast_surface(end_turn_forecast_surface: Dictionary = {}) -> Dictionary:",
-        "func _drawer_handoff_surfaces(\n\tfield_readiness: Dictionary = {},\n\tend_turn_forecast_surface: Dictionary = {},\n\tobjective_header_surfaces: Dictionary = {}\n) -> Dictionary:",
         'if end_turn_forecast_surface.is_empty():',
         '_profile_add("end_turn_forecast_bundle_reuses", 1)',
     )
@@ -23156,7 +23015,7 @@ def validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors: list[
         '_assert_forecast_bundle_surface_parity(shell, session, "current_tile")',
         '_assert_forecast_bundle_surface_parity(shell, session, "selected_route")',
         'int(full_refresh_profile.get("end_turn_forecast_bundle_builds", 0)) != 1',
-        'int(full_refresh_profile.get("end_turn_forecast_bundle_reuses", 0)) != 4',
+        'int(full_refresh_profile.get("end_turn_forecast_bundle_reuses", 0)) != 2',
         "func _assert_forecast_bundle_core_parity(session) -> Dictionary:",
         '"id": "ordinary"',
         '"id": "pressured"',
@@ -23175,9 +23034,6 @@ def validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors: list[
         'shell.call("_field_readiness_surface", {}, bundle)',
         'shell.call("_status_forecast_surface", bundle)',
         'shell.call("_event_feed_surface", bundle)',
-        'shell.call("_drawer_handoff_surfaces", preloaded_readiness, bundle)',
-        'shell.call("_set_collapsed_frontier_indicator", bundle)',
-        'shell.call("_refresh_frontier_drawer", bundle)',
         "session.to_dict() != authority_before",
         '"forecast_bundle_core_parity": true',
         '"forecast_bundle_surface_parity": true',
@@ -26498,14 +26354,6 @@ def validate_hero_progression(errors: list[str]) -> None:
     for required_token in ("HeroProgressionRulesScript.brief_summary", "HeroCommandRulesScript.hero_profile_summary", "HeroCommandRulesScript.hero_identity_summary"):
         ensure(required_token in scenario_select_text, errors, f"ScenarioSelectRules.gd is missing authored-hero summary token: {required_token}")
 
-    overworld_scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
-    ensure_scene_nodes(
-        overworld_scene_text,
-        errors,
-        "OverworldShell.tscn",
-        [("Specialties", "Label"), ("SpecialtyActions", "VBoxContainer")],
-    )
-
     town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
     ensure_scene_nodes(
         town_scene_text,
@@ -26515,8 +26363,11 @@ def validate_hero_progression(errors: list[str]) -> None:
     )
 
     overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
-    for required_token in ("func _on_specialty_action_pressed", "func _rebuild_specialty_actions", "OverworldRules.describe_specialties", "OverworldRules.get_specialty_actions"):
+    for required_token in ("func _on_specialty_action_pressed", "_hero_sheet.specialty_requested.connect(_on_specialty_action_pressed)", "OverworldRules.describe_specialties", "OverworldRules.get_specialty_actions"):
         ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required hero progression token: {required_token}")
+    hero_sheet_text = (ROOT / "scenes/shared/HeroSheet.gd").read_text(encoding="utf-8")
+    for required_token in ("signal specialty_requested(action_id: String)", 'choose.name = "Specialty_%s"'):
+        ensure(required_token in hero_sheet_text, errors, f"HeroSheet.gd must offer specialty choices: {required_token}")
 
     town_script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in ("func _on_specialty_action_pressed", "func _rebuild_specialty_actions", "TownRules.describe_specialties", "TownRules.get_specialty_actions"):
@@ -26639,8 +26490,6 @@ def validate_hero_command(errors: list[str]) -> None:
         [
             ("Heroes", "Label"),
             ("HeroActions", "VBoxContainer"),
-            ("Rendezvous", "Label"),
-            ("RendezvousControls", "HBoxContainer"),
         ],
     )
 
@@ -26666,7 +26515,8 @@ def validate_hero_command(errors: list[str]) -> None:
         "OverworldRules.describe_heroes",
         "OverworldRules.get_hero_actions",
         "OverworldRules.switch_active_hero",
-        "func _rebuild_rendezvous_actions",
+        "_hero_sheet.meet_requested.connect(",
+        "HeroCommandRules.field_rendezvous_heroes(_session)",
         "func _on_hero_exchange_order_requested",
         "OverworldRules.perform_rendezvous_action",
         "HeroCommandRules.field_exchange_state",
@@ -33636,14 +33486,13 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
         event_context_index = route_readiness_body.find("var action_context_surface := _action_context_surface(event_surface, readiness_surface)", event_readiness_index)
         event_render_index = route_readiness_body.find("_set_rail_text(", event_context_index)
         end_turn_index = route_readiness_body.find("var end_turn_check := _end_turn_confirmation_surface(readiness_surface)", event_render_index)
-        drawer_index = route_readiness_body.find("_refresh_drawer_handoff_cues(readiness_surface, end_turn_forecast_surface)", end_turn_index)
         ensure(
             route_readiness_body.count("_field_readiness_surface({}, end_turn_forecast_surface)") == 1
             and -1 < generated_guard_index < generated_return_index < readiness_index < objective_index
             < event_gate_index < event_source_index < event_readiness_index < event_context_index < event_render_index
-            < end_turn_index < drawer_index,
+            < end_turn_index,
             errors,
-            "Selected-route readiness must return for generated policies, compute readiness once, refresh Objective/Event/EndTurn/drawer in exact order, and gate Event behind idle plus empty feedback",
+            "Selected-route readiness must return for generated policies, compute readiness once, refresh Objective/Event/EndTurn in exact order, and gate Event behind idle plus empty feedback",
         )
         for required_token in (
             "OverworldRules.describe_objective_stakes_board(_session)",
@@ -33663,7 +33512,7 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
             ensure(required_token in route_readiness_body, errors, f"Selected-route readiness helper is missing exact surface token: {required_token}")
         for forbidden_token in (
             "_refresh_status_surfaces(",
-            "_refresh_tooltip_context_drawer_surfaces(",
+            "_refresh_tooltip_context_surfaces(",
             "_refresh_action_rails(",
             "_refresh_save_surface(",
             "_selected_route_decision_surface(",
@@ -33723,7 +33572,7 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
             ensure("_refresh_context_tile_surface()" in route_cue_body, errors, "Route-only MapCue branch must retain the targeted context-tile refresh")
             for forbidden_token in (
                 "_refresh_status_surfaces(",
-                "_refresh_tooltip_context_drawer_surfaces(",
+                "_refresh_tooltip_context_surfaces(",
                 "_refresh_action_rails(",
                 "_refresh_save_surface(",
             ):
@@ -34429,7 +34278,6 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
         for oracle_token in (
             'var readiness: Dictionary = shell.call("_field_readiness_surface")',
             'var end_turn: Dictionary = shell.call("_end_turn_confirmation_surface", readiness)',
-            'var drawer: Dictionary = shell.call("_drawer_handoff_surfaces", readiness)',
             'OverworldRules.describe_objective_stakes_board(session)',
             'var event_surface: Dictionary = _expected_route_event_surface(shell, readiness)',
             'var action_context: Dictionary = shell.call("_action_context_surface", event_surface, readiness)',
@@ -34441,9 +34289,6 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
             '"end_turn_payload_current": snapshot.get("end_turn_confirmation", {}) == end_turn',
             '"end_turn_button_current": String(snapshot.get("end_turn_button_text", "")) == String(end_turn.get("button_text", ""))',
             '"end_turn_tooltip_current": String(snapshot.get("end_turn_tooltip_text", "")) == String(end_turn.get("tooltip_text", ""))',
-            '"drawer_payload_current": snapshot.get("drawer_handoff", {}) == drawer',
-            '"command_tooltip_current": String(snapshot.get("command_drawer_tooltip_text", "")) == String(command.get("tooltip_text", ""))',
-            '"frontier_tooltip_current": String(snapshot.get("frontier_drawer_tooltip_text", "")) == String(frontier.get("tooltip_text", ""))',
             'checks["stale_absent_%s" % stale_token]',
             'if not _checks_exact(checks):',
         ):
@@ -34815,7 +34660,6 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
         '"objective_brief_tooltip_current": String(snapshot.get("objective_brief_tooltip_text", "")) == expected_objective_tooltip',
         '"event_visible_current": String(snapshot.get("event_visible_text", "")) == expected_event_visible',
         '"end_turn_payload_current": snapshot.get("end_turn_confirmation", {}) == end_turn',
-        '"drawer_payload_current": snapshot.get("drawer_handoff", {}) == drawer',
         'checks["stale_absent_%s" % stale_token]',
     ):
         ensure(required_token in incremental_text, errors, f"Incremental route-preview regression is missing exact MapCue/profile token: {required_token}")
@@ -34841,7 +34685,6 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
         ensure(
             'var readiness: Dictionary = shell.call("_field_readiness_surface")' in incremental_readiness_body
             and 'var end_turn: Dictionary = shell.call("_end_turn_confirmation_surface", readiness)' in incremental_readiness_body
-            and 'var drawer: Dictionary = shell.call("_drawer_handoff_surfaces", readiness)' in incremental_readiness_body
             and 'var event_surface: Dictionary = _expected_route_event_surface(shell, readiness)' in incremental_readiness_body
             and 'var action_context: Dictionary = shell.call("_action_context_surface", event_surface, readiness)' in incremental_readiness_body
             and "erase(" not in incremental_readiness_body
@@ -37636,7 +37479,7 @@ def validate_overworld_rail_word_boundary_ellipsis(errors: list[str]) -> None:
             "fitting_rail_count < 1",
         ):
             ensure(required_token in focused_body, errors, f"Focused rail proof is missing exact budget/mid-token token: {required_token}")
-        for required_label in ("%Hero", "%Army", "%Heroes", "%Specialties", "%Spellbook", "%Artifacts", "%Event", "%Briefing", "%Commitment", "%Visibility", "%Objectives", "%Threats", "%Forecast", "%Context"):
+        for required_label in ("%Hero", "%Army", "%Heroes", "%Event", "%Briefing", "%Commitment", "%Context"):
             ensure(f'shell.get_node("{required_label}")' in focused_body, errors, f"Focused native rail proof is missing existing Label {required_label}")
         for forbidden_token in ('shell.call("_short_rail', 'shell.call("_compact_rail', 'shell.call("_trim_rail', 'shell.call("_refresh', "sort(", "erase(", ".text =", "queue_redraw", "set_text_overrun_behavior"):
             ensure(forbidden_token not in focused_body, errors, f"Focused rail proof must remain public, independent, and observation-only; forbidden {forbidden_token}")
@@ -37709,27 +37552,12 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             ("BriefingPanel", "PanelContainer"),
             ("MapPanel", "PanelContainer"),
             ("CommandBand", "PanelContainer"),
-            ("ActionPanel", "PanelContainer"),
-            ("OpenCommand", "Button"),
-            ("OpenFrontier", "Button"),
-            ("FrontierIndicator", "Label"),
             ("CommandSpine", "VBoxContainer"),
             ("ContextPanel", "PanelContainer"),
-            ("CommandPanel", "PanelContainer"),
-            ("FrontierPanel", "PanelContainer"),
-            ("CloseCommand", "Button"),
-            ("CloseFrontier", "Button"),
             ("HeroActions", "VBoxContainer"),
             ("ContextActions", "VBoxContainer"),
-            ("SpecialtyActions", "VBoxContainer"),
-            ("SpellActions", "VBoxContainer"),
-            ("ArtifactActions", "VBoxContainer"),
             ("BriefingTitle", "Label"),
             ("Briefing", "Label"),
-            ("Visibility", "Label"),
-            ("Objectives", "Label"),
-            ("Threats", "Label"),
-            ("Forecast", "Label"),
             ("Event", "Label"),
             ("SaveSlot", "OptionButton"),
         ],
@@ -37759,8 +37587,6 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         ("CommitmentPanel", "PanelContainer"),
         ("CommandSpine", "VBoxContainer"),
         ("ContextPanel", "PanelContainer"),
-        ("CommandPanel", "PanelContainer"),
-        ("FrontierPanel", "PanelContainer"),
     ):
         ensure(
             "visible = false" in scene_node_block(overworld_scene_text, hidden_node, hidden_type),
@@ -37837,18 +37663,24 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         "OverworldShell.tscn must keep the overworld command footer slim",
     )
     sidebar_prefix = "ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/"
-    for node_name in ("TopStrip", "EventPanel", "CommitmentPanel", "BriefingPanel", "HeroPanel", "ActionPanel", "CommandSpine"):
+    for node_name in ("TopStrip", "EventPanel", "CommitmentPanel", "BriefingPanel", "HeroPanel", "CommandSpine"):
         ensure(
             scene_node_parent(overworld_scene_text, node_name, "PanelContainer" if node_name != "CommandSpine" else "VBoxContainer").startswith(sidebar_prefix),
             errors,
             f"OverworldShell.tscn must keep {node_name} inside the light right-side status shell",
         )
     command_spine_prefix = "ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine"
-    for node_name in ("ContextPanel", "CommandPanel", "FrontierPanel"):
+    ensure(
+        scene_node_parent(overworld_scene_text, "ContextPanel", "PanelContainer").startswith(command_spine_prefix),
+        errors,
+        "OverworldShell.tscn must keep ContextPanel as a hidden section opened by explicit tile context",
+    )
+    # Hero orders live on the hero sheet; the Command/Frontier drawers are retired.
+    for retired_node in ("ActionPanel", "OpenCommand", "OpenFrontier", "FrontierIndicator", "CommandPanel", "FrontierPanel", "SpellActions", "ArtifactActions", "SpecialtyActions"):
         ensure(
-            scene_node_parent(overworld_scene_text, node_name, "PanelContainer").startswith(command_spine_prefix),
+            f'[node name="{retired_node}"' not in overworld_scene_text,
             errors,
-            f"OverworldShell.tscn must keep {node_name} as a hidden drawer section opened by explicit context/buttons",
+            f"OverworldShell.tscn must not reintroduce the retired drawer node {retired_node}",
         )
     footer_prefix = "ShellMargin/Shell/ShellPad/Content/CommandBand/"
     ensure(
@@ -37912,10 +37744,7 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         "_command_briefing_text",
         "OverworldRules.consume_command_briefing",
         "OverworldRules.consume_command_risk_forecast",
-        "_visibility_label",
-        "_forecast_label",
         "OverworldRules.describe_status",
-        "OverworldRules.describe_visibility_panel",
         "OverworldRules.describe_command_risk",
         "OverworldRules.describe_dispatch",
         "OverworldRules.describe_enemy_threats",
@@ -37927,13 +37756,11 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         "_rail_log_text",
         "_rail_order_text",
         "_rail_tile_text",
-        "_active_drawer",
-        "_sync_context_drawers",
+        "_sync_tile_context",
         "_should_show_tile_context",
-        "_frontier_indicator_text",
         "_update_map_tooltip",
-        "validation_open_command_drawer",
-        "validation_open_frontier_drawer",
+        "func _open_hero_sheet(hero_id: String, tab: String = \"\") -> bool:",
+        "validation_open_hero_sheet",
         "_validation_chrome_state",
         "TextServer.AUTOWRAP_OFF",
         "label.clip_text = true",
@@ -38062,7 +37889,7 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             "End Turn root fallback must defer physical key/joypad input and never forward mouse/action input synchronously",
         )
     active_play_end_turn_text = (ROOT / "tests" / "active_play_keyboard_focus_smoke.gd").read_text(encoding="utf-8")
-    end_turn_surface_body = overworld_script_text.split("func _end_turn_confirmation_surface(field_readiness: Dictionary = {}) -> Dictionary:", 1)[1].split("\nfunc _refresh_drawer_handoff_cues", 1)[0]
+    end_turn_surface_body = overworld_script_text.split("func _end_turn_confirmation_surface(field_readiness: Dictionary = {}) -> Dictionary:", 1)[1].split("\nfunc _line_with_prefix", 1)[0]
     ensure(
         end_turn_surface_body.count('button_text = "End Turn?"') == 5
         and 'var warning_hint := false' in end_turn_surface_body
@@ -38152,7 +37979,7 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             "JOY_AXIS_LEFT_X",
             "JOY_BUTTON_A",
             "JOY_BUTTON_B",
-            '"drawer_open"',
+            '"hero_sheet_open"',
             '"settings_open"',
             '"save_popup_open"',
             '"save_confirmation_open"',
@@ -38185,7 +38012,7 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             'String(shell.call("_route_decision_status_label", first_decision))',
             'shell.get("_controller_route_semantic_generation")',
             'bounded no-op replaced a valid route announcement',
-            'shell.validation_open_command_drawer()',
+            'shell.validation_open_hero_sheet()',
             'owner-open route deactivation changed selection/visual route or retained semantics',
             'shell.validation_open_active_play_settings()',
             'modal owner did not stop semantics while preserving selection/visual route',
@@ -38505,7 +38332,7 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
                 'live.text == ""',
                 'shell.get("_controller_route_semantic_pending")',
                 'shell.validation_controller_route_axis(JOY_AXIS_RIGHT_X, 1.0)',
-                'shell.validation_open_command_drawer()',
+                'shell.validation_open_hero_sheet()',
                 'shell.validation_open_active_play_settings()',
                 'shell.validation_click_tile(mouse_target.x, mouse_target.y)',
                 'shell.call("_exit_tree")',
@@ -38847,8 +38674,8 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         movement_input_text = OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
         for required_token in (
             "OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION",
-            '"frontier_drawer"',
-            '"drawer_open"',
+            '"hero_sheet"',
+            '"hero_sheet_open"',
             '"settings_open"',
             '"save_popup_open"',
             '"save_confirmation_open"',
@@ -38865,8 +38692,7 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             "InputEventKey.new()",
             "InputEventJoypadMotion.new()",
             "get_tree().create_timer(0.40).timeout",
-            "validation_open_command_drawer",
-            "validation_open_frontier_drawer",
+            "validation_open_hero_sheet",
             "validation_request_manual_save",
             "validation_request_end_turn",
             "validation_controller_route_cursor_snapshot",
@@ -44217,7 +44043,7 @@ def validate_overworld_field_spell_cast_cue_playback(errors: list[str]) -> None:
         "var control_result: Dictionary = OverworldRules.cast_overworld_spell(control, spell_id)",
         'String(control_recap.get("kind", "")) != "spell"',
         'control.flags["last_overworld_action_recap"] = control_recap.duplicate(true)',
-        'open_command.emit_signal("pressed")',
+        'shell.validation_open_hero_sheet(',
         'spell_button.emit_signal("pressed")',
         'String(active.get("event_id", "")) == "spell_cast_overworld"',
         'String(active.get("cue_id", "")) == "cue_spell_cast_overworld"',
@@ -44658,7 +44484,32 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
     ):
         ensure(token in set_insignia_block, errors, f"Artifact set insignia resolver is missing fail-closed ownership token: {token}")
 
-    for shell_path in (OVERWORLD_SCRIPT_PATH, TOWN_SCRIPT_PATH):
+    hero_sheet_text = (ROOT / "scenes/shared/HeroSheet.gd").read_text(encoding="utf-8")
+    hero_sheet_row_block = function_block(hero_sheet_text, "_artifact_row")
+    for token in (
+        "button.icon = _texture(Artifacts.artifact_icon_path(artifact_id))",
+        'order_button.name = "ArtifactOrder_%s" % order_id.replace(":", "_")',
+        "order_button.pressed.connect(func(): artifact_action_requested.emit(order_id))",
+    ):
+        ensure(token in hero_sheet_row_block, errors, f"HeroSheet.gd artifact row is missing live icon/order token: {token}")
+    ensure("_build_artifact_sets(box)" in function_block(hero_sheet_text, "_build_artifacts"), errors, "HeroSheet.gd must append live set progress to the artifact tab")
+    hero_sheet_sets_block = function_block(hero_sheet_text, "_build_artifact_sets")
+    for token in (
+        "Artifacts.artifact_set_runtime_state(hero)",
+        "_insignia_texture(set_state.insignia)",
+        'icon.name = "SetInsignia"',
+        'label.name = "SetProgress"',
+    ):
+        ensure(token in hero_sheet_sets_block, errors, f"HeroSheet.gd faction-set row is missing live presentation token: {token}")
+    hero_sheet_texture_block = function_block(hero_sheet_text, "_insignia_texture")
+    for token in (
+        "Rect2(Vector2.ZERO, atlas.get_size()).encloses(rect)",
+        "var texture := AtlasTexture.new()",
+        "texture.region = rect",
+    ):
+        ensure(token in hero_sheet_texture_block, errors, f"HeroSheet.gd faction-set atlas resolver is missing fail-closed token: {token}")
+
+    for shell_path in (TOWN_SCRIPT_PATH,):
         shell_text = shell_path.read_text(encoding="utf-8")
         rebuild_block = function_block(shell_text, "_rebuild_artifact_actions")
         helper_block = function_block(shell_text, "_apply_artifact_action_icon")
@@ -44712,17 +44563,16 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
         'row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0)',
         'ArtifactRules.artifact_icon_path("artifact_missing") == ""',
         'ArtifactRules.artifact_id_for_management_action({}, "equip_artifact:artifact_missing") == ""',
-        'shell.get_node_or_null("%ArtifactActions")',
+        'shell.validation_open_hero_sheet("Artifacts")',
         'shell.get_node_or_null("%ManagementTabs") as TabContainer',
         "management_tabs.current_tab = 4",
-        "shell.validation_open_command_drawer()",
+        'shell.validation_open_hero_sheet("Artifacts")',
         "TownRules.get_artifact_actions(live_session)",
         "OverworldRules.get_artifact_actions(live_session)",
         "OverworldRules.perform_artifact_action(control, action_id)",
         'equip_button.emit_signal("pressed")',
         'stow_button.emit_signal("pressed")',
         "live_session.to_dict() == control.to_dict()",
-        "button.text == String(action.get(\"label\", \"\"))",
         "button.tooltip_text.contains(String(action.get(\"summary\", \"\")))",
         'button.expand_icon and button.get_theme_constant("icon_max_width") == 24',
         "get_viewport().get_visible_rect().encloses(button_rect)",
@@ -45265,8 +45115,9 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
     ensure(signature_resolver_block.find("get_spell_icon") < signature_resolver_block.find("begins_with") < signature_resolver_block.find("ResourceLoader.exists") < signature_resolver_block.find("return icon_path") < signature_resolver_block.find("return spell_school_icon_path"), errors, "Signature spell resolver must validate specific art before exact school fallback")
     ensure("load(" not in signature_resolver_block and "preload(" not in signature_resolver_block, errors, "Signature spell resolver must not load presentation textures")
 
+    overworld_spell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure('_hero_sheet.spell_cast_requested.connect(func(spell_id: String): _on_spell_action_pressed("cast_spell:%s" % spell_id))' in overworld_spell_text, errors, "Overworld spells must be cast from the shared spellbook on the hero sheet")
     for shell_path, rebuild_name in (
-        (OVERWORLD_SCRIPT_PATH, "_rebuild_spell_actions"),
         (TOWN_SCRIPT_PATH, "_rebuild_study_actions"),
         (BATTLE_SCRIPT_PATH, "_rebuild_spell_actions"),
     ):
@@ -45463,7 +45314,7 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         'row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0)',
         'SpellRules.spell_school_icon_path("spell_missing") == ""',
         "management_tabs.current_tab = 2",
-        "shell.validation_open_command_drawer()",
+        'shell.validation_open_hero_sheet("Spellbook")',
         'shell.get_node_or_null(_surface_container_path(surface)) as Container',
         'var buttons := _button_contract(shell, container, actions, surface, not (surface == "town" and not spell_ids_override.is_empty()))',
         'func _button_contract(shell: Node, container: Container, actions: Array, surface: String, require_all_contained: bool = true) -> Dictionary:',
@@ -45473,12 +45324,10 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         'shell.call("_apply_spell_action_icon", invalid_button',
         "invalid_button.icon == null",
         "invalid_button.free()",
-        'button.emit_signal("pressed")',
         "live_after == control.to_dict()",
         "save_after == save_before",
         "get_viewport().get_visible_rect().encloses(rect)",
         "get_viewport().gui_get_focus_owner() == button",
-        'button.expand_icon and button.get_theme_constant("icon_max_width") == 24',
         'OverworldRules.cast_overworld_spell(control, spell_id)',
         'TownRules.learn_spell_at_active_town(control, spell_id)',
         'BattleRules.cast_player_spell(control, spell_id)',
@@ -45524,7 +45373,6 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         '"spell_old_measure_unbroken_meridian"',
         'SpellRules.spell_icon_path(spell_id)',
         'load("res://scenes/town/TownShell.tscn").instantiate()',
-        'button.emit_signal("pressed")',
         'BattleRules.create_town_assault_payload',
         'BattleRules.cast_player_spell(live_session, spell_id)',
         'BattleBoardViewScript.new()',
@@ -50752,7 +50600,15 @@ def validate_hero_specialty_insignia(errors: list[str]) -> None:
     descriptions = [str(item.get("icon_description", "")) for item in catalog_items]
     ensure(len(descriptions) == 35 and len(set(descriptions)) == 35 and all(len(value) >= 24 for value in descriptions), errors, "Hero specialty insignia non-color descriptions must remain complete and distinct")
 
-    for shell_path in (overworld_path, town_path):
+    hero_sheet_specialty_block = gd_function_block((ROOT / "scenes/shared/HeroSheet.gd").read_text(encoding="utf-8"), "_build_specializations")
+    for token in (
+        "Progression.specialty_id_for_action(action_id)",
+        "Progression.specialty_insignia_texture(specialty_id)",
+        "Progression.specialty_insignia_description(specialty_id)",
+        "specialty_requested.emit(action_id)",
+    ):
+        ensure(token in hero_sheet_specialty_block, errors, f"HeroSheet.gd specialty choices are missing live insignia token: {token}")
+    for shell_path in (town_path,):
         shell_text = shell_path.read_text(encoding="utf-8")
         helper_block = gd_function_block(shell_text, "_apply_specialty_action_icon")
         rebuild_block = gd_function_block(shell_text, "_rebuild_specialty_actions")
@@ -51994,7 +51850,7 @@ def validate_overworld_artifact_slot_cue_playback(errors: list[str]) -> None:
         '{"id": "reduced_motion", "reduced_motion": true}',
         'const ARTIFACT_ID := "artifact_trailsinger_boots"',
         'ArtifactRules.normalize_hero_artifacts({"equipped": {}, "inventory": [ARTIFACT_ID]})',
-        'shell.get_node_or_null("%ArtifactActions")',
+        'shell.validation_open_hero_sheet("Artifacts")',
         'shell.get_node_or_null("%ArtifactActionCueRow")',
         'shell.get_node_or_null("%ArtifactActionCueIcon")',
         'shell.get_node_or_null("%ArtifactActionCue")',
@@ -52204,9 +52060,7 @@ def validate_overworld_artifact_acquired_cue_playback(errors: list[str]) -> None
         'String(object_resolution.get("event_id", "")) == "overworld_object_depleted"',
         'live_after == control.to_dict()',
         'await _click_global_position(menu.get_global_rect().get_center())',
-        'open_command.emit_signal("pressed")',
-        'var active_after_command: Dictionary = _acquired_presentation(shell)',
-        'bool(active_after_command.get("active", false))',
+        'shell.validation_open_hero_sheet(',
         'shell.call("_refresh")',
         'await _press_action("ui_cancel")',
         'while bool(_acquired_presentation(shell).get("active", false)) and settle_frames < 90:',
@@ -52223,8 +52077,8 @@ def validate_overworld_artifact_acquired_cue_playback(errors: list[str]) -> None
     active_capture_index = report_text.find("var active := _acquired_presentation(shell)", button_index)
     first_frame_after_button_index = report_text.find("await get_tree().process_frame", button_index)
     ensure(0 <= button_index < active_capture_index < first_frame_after_button_index, errors, "Artifact-acquired report must capture the synchronous presentation before reduced-motion playback can settle on a process frame")
-    command_index = report_text.find('open_command.emit_signal("pressed")', active_capture_index)
-    active_after_command_index = report_text.find("var active_after_command: Dictionary = _acquired_presentation(shell)", command_index)
+    command_index = report_text.find("var sheet = shell.validation_open_hero_sheet()", active_capture_index)
+    active_after_command_index = report_text.find("var active_after_sheet: Dictionary = _acquired_presentation(shell)", command_index)
     command_frame_index = report_text.find("await get_tree().process_frame", command_index)
     ensure(0 <= command_index < active_after_command_index < command_frame_index, errors, "Reduced-motion command authority must be observed while the synchronous nonblocking cue is still active")
     for forbidden in (
@@ -52444,7 +52298,7 @@ def validate_overworld_resource_delta_cue_playback(errors: list[str]) -> None:
         'active.get("deltas", []) == expected_deltas',
         'String(object_resolution.get("event_id", "")) == "overworld_object_captured"',
         'shell.call("_refresh")',
-        'open_command.emit_signal("pressed")',
+        'shell.validation_open_hero_sheet(',
         'shell.validation_perform_context_action("collect_resource")',
         'while bool(_presentation(shell).get("active", false)) and settle_frames < 120:',
     ):
@@ -80431,7 +80285,7 @@ def validate_overworld_map_first_command_rail(errors: list[str]) -> None:
         'shell.call("validation_minimap_recenter", target.x, target.y)',
         'not bool(recenter.get("authority_exact", false))',
         'not bool(recenter.get("movement_exact", false))',
-        'var required_controls := ["%Resources", "%PrimaryAction", "%OpenCommand", "%OpenFrontier", "%EndTurn", "%SaveSlot", "%Save", "%Settings", "%Menu"]',
+        'var required_controls := ["%Resources", "%PrimaryAction", "%EndTurn", "%Save", "%Settings", "%Menu"]',
         'shell.call("validation_army_management_snapshot")',
         'not army_rect.encloses(button_rect)',
         'shell.get_node_or_null("%TownActions")',
@@ -80839,7 +80693,7 @@ def main() -> int:
     validate_overworld_event_dispatch_observation_context_reuse(errors)
     validate_overworld_refresh_watch_context_reuse(errors)
     validate_overworld_objective_stakes_surface_bundle_reuse(errors)
-    validate_overworld_drawer_objective_recap_reuse(errors)
+    validate_overworld_objective_header_recap_bundle(errors)
     validate_overworld_field_readiness_progress_recap_reuse(errors)
     validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors)
     validate_overworld_objective_brief_native_pixel_ellipsis(errors)

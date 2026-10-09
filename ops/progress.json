@@ -114287,6 +114287,18 @@
       "notes": "Owner request. The town command block is 3x2: Build, Muster, Tavern / Market, Mage Guild, Intelligence Report. Tavern opens the Wayfarers Hall popout (hero hires) and is dimmed with a hint until the hall stands. Intelligence Report is a placeholder square, deliberately not wired yet (owner direction). The leave-town button moved from the banner to the bottom right corner as Close, beside the shortened resource bar; the departure model's label stays Return to Field. New emblems art/towns/runtime/town_commands/{tavern,intelligence_report}.png with sources and prompts in art/towns/source/generated/town_commands/. Validation: tests/town_garrison_rows_report.tscn passes 63 checks on a generated map; validate_repo identical to baseline. Follow-up: wire the Intelligence Report."
     },
     {
+      "id": "ux-overworld-hero-sheet-orders-20261009",
+      "title": "Retire the overworld Command/Frontier drawers; hero orders on the hero sheet; one overworld spell per day; built/cast-today badges",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md"
+      ],
+      "notes": "Owner request. Removed the overworld OpenCommand/OpenFrontier buttons, the Command and Frontier drawers and their rails. The hero sheet (scenes/shared/HeroSheet.gd) is interactive on the adventure map: Spellbook tab opens on overworld spells and casts, Artifacts tab equips/stows/swaps and shows artifact-set insignia, Army tab splits/merges/moves stacks through HeroCommandRules.manage_army_slots, specialty choices and Meet buttons for heroes in reach. Clicking the active hero opens it. New rule SpellRules.cast_overworld_spell_on_day: one overworld spell per hero per day. Badges art/ui/runtime/overworld/badge_built_today.png and badge_spell_cast_today.png (sources and provenance in art/ui/source/status_badges/) mark towns that built today and heroes that cast today on the map and in the sidebar roster. Validation: tests/overworld_hero_sheet_orders_regression.tscn passes on a generated small map (retired nodes gone, spellbook opens on overworld spells, cast spends mana and records the day, second cast refused, equip/stow, half split, both badges, next-day reset); town_garrison_rows_report passes 63 checks; overworld_gameplay_movement_input_ownership_regression, overworld_map_first_command_rail_report, overworld_incremental_route_preview_refresh_regression, hero_field_rendezvous_army_transfer_report, hero_exchange_screen_report and hero_specialty_insignia_runtime_report pass after moving them to the hero sheet; validate_repo has no new errors against the HEAD baseline. Other drawer tests were moved to the hero sheet and pass their hero-sheet steps but still fail on older drift (production audio bank paths, named save dialog, town spell learning, authored river-pass content, save recap cache keys); large_generated_map_runtime_profile fails only its pinned materialized signature after today's native RMG commit 1999fe83e. Follow-up: refresh those stale expectations."
+    },
+    {
       "id": "content-authored-scenarios-archived-20261008",
       "title": "Archive the authored scenarios and campaigns",
       "status": "completed",

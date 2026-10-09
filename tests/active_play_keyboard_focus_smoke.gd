@@ -157,12 +157,12 @@ func _check_overworld_controller_movement() -> bool:
 	await _press_joypad_button(JOY_BUTTON_LEFT_SHOULDER)
 	if get_viewport().gui_get_focus_owner() != focus_after_dpad:
 		return _fail("Overworld left shoulder did not reverse the command focus cycle: expected=%s got=%s." % [focus_after_dpad, get_viewport().gui_get_focus_owner()])
-	var drawer_snapshot: Dictionary = shell.call("validation_open_command_drawer")
-	if String(drawer_snapshot.get("active_drawer", "")) != "command":
-		return _fail("Overworld controller-back fixture could not open the Command drawer: %s." % drawer_snapshot)
+	var hero_sheet: Control = shell.call("validation_open_hero_sheet")
+	if hero_sheet == null or not hero_sheet.visible:
+		return _fail("Overworld controller-back fixture could not open the hero sheet.")
 	await _press_joypad_button(JOY_BUTTON_B)
-	if shell.get_node("%CommandPanel").visible or shell.get_node("%FrontierPanel").visible:
-		return _fail("Overworld controller B did not close the open Command drawer.")
+	if hero_sheet.visible:
+		return _fail("Overworld controller B did not close the open hero sheet.")
 	var move := _legal_cardinal_move(session, 2)
 	if move.is_empty():
 		return _fail("Overworld fixture has no two-step legal cardinal route for controller repeat validation.")

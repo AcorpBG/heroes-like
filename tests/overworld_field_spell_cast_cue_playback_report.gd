@@ -62,10 +62,8 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		return await _finish_case(shell, {"ok": false, "failure": "live_session_not_active"})
 	var map_view = shell.get_node_or_null("%Map")
 	var blocker := shell.get_node_or_null("%SpellCastInputBlocker") as Control
-	var open_command := shell.get_node_or_null("%OpenCommand") as Button
 	var menu := shell.get_node_or_null("%Menu") as Button
-	var spell_actions := shell.get_node_or_null("%SpellActions") as Container
-	if map_view == null or blocker == null or open_command == null or menu == null or spell_actions == null:
+	if map_view == null or blocker == null or menu == null:
 		return await _finish_case(shell, {"ok": false, "failure": "live_surface_missing"})
 
 	var malformed_before: Dictionary = map_view.validation_spell_cast_presentation()
@@ -77,10 +75,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	})
 	var malformed_fail_closed := malformed_after == malformed_before and not blocker.visible and PresentationAudio.validation_records().is_empty()
 
-	open_command.emit_signal("pressed")
-	await get_tree().process_frame
-	await get_tree().process_frame
-	var spell_button := _enabled_spell_button(spell_actions, live_session, spell_id)
+	var spell_button := await _enabled_spell_button(shell, live_session, spell_id)
 	if spell_button == null:
 		return await _finish_case(shell, {"ok": false, "failure": "enabled_spell_button_missing", "spell_id": spell_id})
 
@@ -271,18 +266,35 @@ func _field_spell_session(spell_id: String):
 	OverworldRules.refresh_fog_of_war(session)
 	return session
 
-func _enabled_spell_button(container: Container, session, spell_id: String) -> Button:
-	var expected_label := ""
+# Opens the hero sheet on its Spellbook tab, selects the spell card and returns
+# the enabled "Cast spell" button.
+func _enabled_spell_button(shell: Node, session, spell_id: String) -> Button:
+	var offered := false
 	for action_value in OverworldRules.get_spell_actions(session):
 		if action_value is Dictionary and String(action_value.get("id", "")) == "cast_spell:%s" % spell_id:
 			if bool(action_value.get("disabled", true)):
 				return null
-			expected_label = String(action_value.get("label", ""))
+			offered = true
 			break
-	for child in container.get_children():
-		if child is Button and not child.disabled and child.text == expected_label:
-			return child
-	return null
+	if not offered:
+		return null
+	var sheet = shell.validation_open_hero_sheet("Spellbook")
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if sheet == null or not sheet.is_interactive() or sheet.current_tab() != "Spellbook":
+		return null
+	var spellbook: Control = sheet.find_child("Spellbook", true, false)
+	if spellbook == null:
+		return null
+	var card := spellbook.find_child(spell_id, true, false) as Button
+	var cast_button := spellbook.find_child("PrepareSpell", true, false) as Button
+	if card == null or not card.visible or cast_button == null:
+		return null
+	card.emit_signal("pressed")
+	await get_tree().process_frame
+	if not cast_button.visible or cast_button.disabled or cast_button.text != "Cast spell":
+		return null
+	return cast_button
 
 func _spell_presentation(shell: Node) -> Dictionary:
 	var snapshot: Dictionary = shell.validation_snapshot()

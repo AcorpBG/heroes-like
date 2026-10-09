@@ -34,11 +34,6 @@ func _run() -> void:
 		return
 	if not _assert_forecast_bundle_surface_parity(shell, session, "current_tile"):
 		return
-	if not _assert_drawer_readiness_preload_parity(shell, "current_tile"):
-		return
-	var drawer_objective_control := _assert_drawer_objective_recap_preload_parity(shell, session, "current_tile")
-	if drawer_objective_control.is_empty():
-		return
 	var refresh_session_before: Dictionary = session.to_dict()
 	var refresh_authority_before: Dictionary = _refresh_authority(shell.call("validation_snapshot"))
 	shell.set("_debug_command_in_progress", true)
@@ -61,20 +56,16 @@ func _run() -> void:
 			or int(full_refresh_profile.get("field_readiness_context_materializations", 0)) != 2:
 		_fail("Full refresh did not build one readiness context and reuse it for both exact surfaces.", full_refresh_profile)
 		return
-	if int(full_refresh_profile.get("drawer_handoff_preloaded_readiness_reuses", 0)) != 1:
-		_fail("Full refresh did not reuse the current readiness payload for drawer handoff synchronization.", full_refresh_profile)
-		return
-	if int(full_refresh_profile.get("end_turn_forecast_bundle_builds", 0)) != 1 or int(full_refresh_profile.get("end_turn_forecast_bundle_reuses", 0)) != 4:
-		_fail("Full refresh did not build one end-turn forecast bundle and reuse it across the four remaining consumers.", full_refresh_profile)
+	if int(full_refresh_profile.get("end_turn_forecast_bundle_builds", 0)) != 1 or int(full_refresh_profile.get("end_turn_forecast_bundle_reuses", 0)) != 2:
+		_fail("Full refresh did not build one end-turn forecast bundle and reuse it across the two remaining consumers.", full_refresh_profile)
 		return
 	if int(full_refresh_profile.get("objective_stakes_surface_builds", 0)) != 1 \
 			or int(full_refresh_profile.get("objective_stakes_surface_reuses", 0)) != 2 \
 			or int(full_refresh_profile.get("objective_stakes_surface_materializations", 0)) != 2:
 		_fail("Full refresh did not build one objective-stakes surface and reuse it for both exact header outputs.", full_refresh_profile)
 		return
-	if int(full_refresh_profile.get("objective_progress_recap_builds", 0)) != 1 \
-			or int(full_refresh_profile.get("drawer_handoff_preloaded_objective_recap_reuses", 0)) != 1:
-		_fail("Full refresh did not reuse its single objective progress recap for the drawer handoff.", full_refresh_profile)
+	if int(full_refresh_profile.get("objective_progress_recap_builds", 0)) != 1:
+		_fail("Full refresh did not build exactly one objective progress recap.", full_refresh_profile)
 		return
 	if int(full_refresh_profile.get("field_readiness_preloaded_progress_recap_reuses", 0)) != 1:
 		_fail("Full refresh did not reuse the objective progress recap in Field Readiness context construction.", full_refresh_profile)
@@ -102,31 +93,6 @@ func _run() -> void:
 	var event_context_control := _assert_event_readiness_context_parity(shell, session, "full_refresh")
 	if event_context_control.is_empty():
 		return
-	shell.call("validation_reset_profile", false)
-	var legacy_drawer_started := Time.get_ticks_usec()
-	shell.call("_refresh_tooltip_context_drawer_surfaces")
-	var legacy_drawer_extra_usec := Time.get_ticks_usec() - legacy_drawer_started
-	var legacy_drawer_profile: Dictionary = shell.call("validation_profile_snapshot")
-	var legacy_drawer_authority: Dictionary = _refresh_authority(shell.call("validation_snapshot"))
-	if int(legacy_drawer_profile.get("field_readiness_surface_calls", 0)) != 1 or int(legacy_drawer_profile.get("field_readiness_surface_base_event_calls", 0)) != 0:
-		_fail("Legacy default drawer control did not perform exactly one no-base readiness derivation.", legacy_drawer_profile)
-		return
-	if int(legacy_drawer_profile.get("drawer_handoff_preloaded_readiness_reuses", 0)) != 0:
-		_fail("Legacy default drawer control unexpectedly used the preloaded readiness path.", legacy_drawer_profile)
-		return
-	if legacy_drawer_extra_usec * 5 < full_refresh_usec:
-		_fail("Removed drawer readiness work was not at least 20 percent of the optimized full refresh.", {
-			"legacy_drawer_extra_usec": legacy_drawer_extra_usec,
-			"full_refresh_usec": full_refresh_usec,
-		})
-		return
-	if session.to_dict() != refresh_session_before or legacy_drawer_authority != refresh_authority_after:
-		_fail("Legacy default drawer control changed session or refresh surface authority.", {
-			"candidate": refresh_authority_after,
-			"legacy": legacy_drawer_authority,
-		})
-		return
-
 	var initial_snapshot: Dictionary = shell.call("validation_snapshot")
 	if _hero_action_count(initial_snapshot) < 2:
 		_fail("Hero action setup did not expose an active and reserve commander.", initial_snapshot)
@@ -144,8 +110,6 @@ func _run() -> void:
 		return
 	if int(selection_profile.get("hero_actions_cache_hits", 0)) <= 0:
 		_fail("Route-selection refresh did not reuse cached hero actions.", selection_profile)
-		return
-	if not _assert_drawer_readiness_preload_parity(shell, "selected_route"):
 		return
 	if not _assert_forecast_bundle_surface_parity(shell, session, "selected_route"):
 		return
@@ -190,6 +154,10 @@ func _run() -> void:
 	if not _action_present(specialty_snapshot.get("specialty_actions", []), "choose_specialty:spellwright"):
 		_fail("Nested pending specialty choices did not reach the live specialty action surface.", specialty_snapshot)
 		return
+	var sheet_orders: Dictionary = shell.call("_hero_sheet_orders")
+	if not _action_present(sheet_orders.get("specialty_actions", []), "choose_specialty:spellwright"):
+		_fail("Nested pending specialty choices did not reach the hero sheet specialty orders.", sheet_orders)
+		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
@@ -200,21 +168,17 @@ func _run() -> void:
 		"nested_specialty_cache_misses": int(specialty_profile.get("hero_actions_cache_misses", 0)),
 		"hero_action_count_after_roster": _hero_action_count(roster_snapshot),
 		"full_refresh_usec": full_refresh_usec,
-		"legacy_drawer_extra_usec": legacy_drawer_extra_usec,
-		"legacy_extra_to_full_refresh_ratio": float(legacy_drawer_extra_usec) / float(maxi(full_refresh_usec, 1)),
 		"field_readiness_surface_calls": int(full_refresh_profile.get("field_readiness_surface_calls", 0)),
 		"field_readiness_surface_base_event_calls": int(full_refresh_profile.get("field_readiness_surface_base_event_calls", 0)),
 		"field_readiness_context_builds": int(full_refresh_profile.get("field_readiness_context_builds", 0)),
 		"field_readiness_context_reuses": int(full_refresh_profile.get("field_readiness_context_reuses", 0)),
 		"field_readiness_context_materializations": int(full_refresh_profile.get("field_readiness_context_materializations", 0)),
-		"drawer_handoff_preloaded_readiness_reuses": int(full_refresh_profile.get("drawer_handoff_preloaded_readiness_reuses", 0)),
 		"end_turn_forecast_bundle_builds": int(full_refresh_profile.get("end_turn_forecast_bundle_builds", 0)),
 		"end_turn_forecast_bundle_reuses": int(full_refresh_profile.get("end_turn_forecast_bundle_reuses", 0)),
 		"objective_stakes_surface_builds": int(full_refresh_profile.get("objective_stakes_surface_builds", 0)),
 		"objective_stakes_surface_reuses": int(full_refresh_profile.get("objective_stakes_surface_reuses", 0)),
 		"objective_stakes_surface_materializations": int(full_refresh_profile.get("objective_stakes_surface_materializations", 0)),
 		"objective_progress_recap_builds": int(full_refresh_profile.get("objective_progress_recap_builds", 0)),
-		"drawer_handoff_preloaded_objective_recap_reuses": int(full_refresh_profile.get("drawer_handoff_preloaded_objective_recap_reuses", 0)),
 		"field_readiness_preloaded_progress_recap_reuses": int(full_refresh_profile.get("field_readiness_preloaded_progress_recap_reuses", 0)),
 		"objective_header_bundle_usec": int(objective_header_control.get("bundle_usec", 0)),
 		"legacy_objective_header_usec": int(objective_header_control.get("legacy_usec", 0)),
@@ -224,19 +188,14 @@ func _run() -> void:
 		"objective_progress_surface_reuse": true,
 		"full_refresh_header_objective_status_resources_usec": int(full_refresh_profile.get("refresh_header_objective_status_resources_usec", 0)),
 		"objective_header_surface_parity": true,
-		"drawer_objective_recap_parity": true,
 		"field_readiness_progress_recap_parity": true,
 		"direct_readiness_progress_usec": int(readiness_progress_control.get("direct_usec", 0)),
 		"preloaded_readiness_progress_usec": int(readiness_progress_control.get("preloaded_usec", 0)),
-		"drawer_objective_authored_scenario_count": int(drawer_objective_control.get("scenario_count", 0)),
-		"legacy_drawer_objective_usec": int(drawer_objective_control.get("legacy_usec", 0)),
-		"shared_drawer_objective_usec": int(drawer_objective_control.get("shared_usec", 0)),
 		"forecast_bundle_usec": int(forecast_control.get("bundle_usec", 0)),
 		"legacy_forecast_usec": int(forecast_control.get("legacy_usec", 0)),
 		"legacy_to_bundle_ratio": float(forecast_control.get("legacy_usec", 0)) / float(maxi(int(forecast_control.get("bundle_usec", 0)), 1)),
 		"forecast_bundle_core_parity": true,
 		"forecast_bundle_surface_parity": true,
-		"drawer_readiness_preload_parity": true,
 		"event_readiness_context_parity": true,
 		"legacy_event_readiness_usec": int(event_context_control.get("legacy_usec", 0)),
 		"shared_event_readiness_usec": int(event_context_control.get("shared_usec", 0)),
@@ -263,7 +222,6 @@ func _run() -> void:
 		"refresh_watch_whole_output_parity": true,
 		"refresh_watch_detached_rebuild_exact": true,
 		"refresh_authority_exact": true,
-		"legacy_drawer_authority_exact": true,
 	})])
 	shell.queue_free()
 	get_tree().quit(0)
@@ -1287,77 +1245,6 @@ func _assert_field_readiness_progress_recap_parity(shell: Node, session, label: 
 		return {}
 	return {"direct_usec": direct_usec, "preloaded_usec": preloaded_usec}
 
-func _assert_drawer_objective_recap_preload_parity(shell: Node, session, label: String) -> Dictionary:
-	var authority_before: Dictionary = session.to_dict()
-	var readiness: Dictionary = shell.call("_field_readiness_surface")
-	var forecast: Dictionary = OverworldRules.describe_end_turn_forecast_surfaces(session)
-	var objective_header_surfaces: Dictionary = OverworldRules.describe_objective_header_surfaces(session)
-	shell.call("validation_reset_profile", true)
-	var legacy_started := Time.get_ticks_usec()
-	var legacy: Dictionary = shell.call("_drawer_handoff_surfaces", readiness, forecast)
-	var legacy_usec := Time.get_ticks_usec() - legacy_started
-	var legacy_profile: Dictionary = shell.call("validation_profile_snapshot")
-	if int(legacy_profile.get("drawer_handoff_preloaded_objective_recap_reuses", 0)) != 0:
-		_fail("Default drawer handoff unexpectedly reused a preloaded objective recap for %s." % label, legacy_profile)
-		return {}
-	shell.call("validation_reset_profile", true)
-	var shared_started := Time.get_ticks_usec()
-	var shared: Dictionary = shell.call("_drawer_handoff_surfaces", readiness, forecast, objective_header_surfaces)
-	var shared_usec := Time.get_ticks_usec() - shared_started
-	var shared_profile: Dictionary = shell.call("validation_profile_snapshot")
-	if int(shared_profile.get("drawer_handoff_preloaded_objective_recap_reuses", 0)) != 1:
-		_fail("Preloaded drawer handoff did not reuse exactly one objective recap for %s." % label, shared_profile)
-		return {}
-	if shared != legacy or session.to_dict() != authority_before:
-		_fail("Preloaded objective recap changed drawer handoff or session authority for %s." % label, {
-			"legacy": legacy,
-			"shared": shared,
-		})
-		return {}
-	if legacy_usec * 100 < shared_usec * 105:
-		_fail("Preloaded objective recap did not remove at least five percent of the default full-board handoff work for %s." % label, {
-			"legacy_usec": legacy_usec,
-			"shared_usec": shared_usec,
-		})
-		return {}
-	var scenario_count := _assert_all_authored_drawer_objective_recap_parity()
-	if scenario_count <= 0:
-		return {}
-	return {"legacy_usec": legacy_usec, "shared_usec": shared_usec, "scenario_count": scenario_count}
-
-func _assert_all_authored_drawer_objective_recap_parity() -> int:
-	var scenario_ids := ContentService.get_content_ids(ContentService.SCENARIOS_PATH)
-	scenario_ids.sort()
-	var checked := 0
-	for scenario_id_value in scenario_ids:
-		var scenario_id := String(scenario_id_value)
-		var probe = ScenarioFactory.create_session(scenario_id, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
-		if probe == null or probe.scenario_id == "":
-			continue
-		OverworldRules.normalize_overworld_state(probe)
-		for day_offset in [0, 1]:
-			probe.day += day_offset
-			OverworldRules.normalize_overworld_state(probe)
-			var authority_before: Dictionary = probe.to_dict()
-			var legacy_line: String = _objective_line_with_prefix(OverworldRules.describe_objectives(probe), "Next step:")
-			var recap := ScenarioRules.describe_session_progress_recap(probe, false)
-			var shared_line: String = _objective_line_with_prefix(recap, "Next step:")
-			if legacy_line != shared_line or probe.to_dict() != authority_before:
-				_fail("Authored drawer objective recap diverged for %s/day%d." % [scenario_id, probe.day], {
-					"legacy_line": legacy_line,
-					"shared_line": shared_line,
-				})
-				return 0
-		checked += 1
-	return checked
-
-func _objective_line_with_prefix(text: String, prefix: String) -> String:
-	for raw_line in text.split("\n", false):
-		var line := String(raw_line).strip_edges()
-		if line.begins_with(prefix):
-			return line
-	return ""
-
 func _assert_forecast_bundle_surface_parity(shell: Node, session, label: String) -> bool:
 	var authority_before: Dictionary = session.to_dict()
 	var bundle: Dictionary = OverworldRules.describe_end_turn_forecast_surfaces(session)
@@ -1391,35 +1278,9 @@ func _assert_forecast_bundle_surface_parity(shell: Node, session, label: String)
 			"preloaded_end_turn": preloaded_end_turn,
 		})
 		return false
-	var original_drawer := String(shell.get("_active_drawer"))
-	for drawer in ["", "command", "frontier"]:
-		shell.set("_active_drawer", drawer)
-		var default_drawer: Dictionary = shell.call("_drawer_handoff_surfaces", default_readiness)
-		var preloaded_drawer: Dictionary = shell.call("_drawer_handoff_surfaces", preloaded_readiness, bundle)
-		if default_drawer != preloaded_drawer:
-			shell.set("_active_drawer", original_drawer)
-			_fail("Preloaded forecast changed drawer handoff surfaces for %s/%s." % [label, drawer], {
-				"default": default_drawer,
-				"preloaded": preloaded_drawer,
-			})
-			return false
-	shell.call("_set_collapsed_frontier_indicator")
-	var default_collapsed := _frontier_ui_authority(shell)
-	shell.call("_set_collapsed_frontier_indicator", bundle)
-	var preloaded_collapsed := _frontier_ui_authority(shell)
-	shell.call("_refresh_frontier_drawer")
-	var default_frontier := _frontier_ui_authority(shell)
-	shell.call("_refresh_frontier_drawer", bundle)
-	var preloaded_frontier := _frontier_ui_authority(shell)
-	shell.set("_active_drawer", original_drawer)
 	shell.call("_refresh")
-	if default_collapsed != preloaded_collapsed or default_frontier != preloaded_frontier or session.to_dict() != authority_before:
-		_fail("Preloaded forecast changed collapsed/open Frontier or session authority for %s." % label, {
-			"default_collapsed": default_collapsed,
-			"preloaded_collapsed": preloaded_collapsed,
-			"default_frontier": default_frontier,
-			"preloaded_frontier": preloaded_frontier,
-		})
+	if session.to_dict() != authority_before:
+		_fail("Preloaded forecast surfaces changed session authority for %s." % label, {})
 		return false
 	return true
 
@@ -1487,31 +1348,6 @@ func _assert_event_readiness_context_parity(shell: Node, session, label: String)
 		"nested_detach_count": nested_mutation_count,
 	}
 
-func _frontier_ui_authority(shell: Node) -> Dictionary:
-	var names := ["FrontierIndicator", "Visibility", "Objectives", "Threats", "Forecast"]
-	var authority := {}
-	for node_name in names:
-		var label: Label = shell.get_node("%%%s" % node_name) as Label
-		authority[node_name] = {"text": label.text, "tooltip_text": label.tooltip_text}
-	return authority
-
-func _assert_drawer_readiness_preload_parity(shell: Node, label: String) -> bool:
-	var original_drawer := String(shell.get("_active_drawer"))
-	for drawer in ["", "command", "frontier"]:
-		shell.set("_active_drawer", drawer)
-		var readiness: Dictionary = shell.call("_field_readiness_surface")
-		var default_surface: Dictionary = shell.call("_drawer_handoff_surfaces")
-		var preloaded_surface: Dictionary = shell.call("_drawer_handoff_surfaces", readiness)
-		if preloaded_surface != default_surface:
-			shell.set("_active_drawer", original_drawer)
-			_fail("Preloaded drawer readiness diverged from the fresh default for %s/%s." % [label, drawer], {
-				"default": default_surface,
-				"preloaded": preloaded_surface,
-			})
-			return false
-	shell.set("_active_drawer", original_drawer)
-	return true
-
 func _refresh_authority(snapshot: Dictionary) -> Dictionary:
 	var keys := [
 		"status_visible_text",
@@ -1520,8 +1356,6 @@ func _refresh_authority(snapshot: Dictionary) -> Dictionary:
 		"context_summary",
 		"context_visible_text",
 		"hero_action_surfaces",
-		"specialty_action_surfaces",
-		"spell_action_surfaces",
 		"event_visible_text",
 		"event_tooltip_text",
 		"event_feed",
@@ -1532,11 +1366,6 @@ func _refresh_authority(snapshot: Dictionary) -> Dictionary:
 		"end_turn_button_text",
 		"end_turn_tooltip_text",
 		"end_turn_confirmation",
-		"drawer_handoff",
-		"command_drawer_button_text",
-		"command_drawer_tooltip_text",
-		"frontier_drawer_button_text",
-		"frontier_drawer_tooltip_text",
 		"map_cue_text",
 		"map_cue_tooltip_text",
 		"selected_route_decision",

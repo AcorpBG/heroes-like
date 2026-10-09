@@ -197,7 +197,7 @@ func _run() -> void:
 		await get_tree().process_frame
 		get_tree().quit(0)
 		return
-	if not _assert_drawer_handoff_cue_contract(shell):
+	if not _assert_hero_sheet_handoff_contract(shell):
 		return
 	if not _assert_small_map_fit(shell):
 		return
@@ -845,6 +845,20 @@ func _label_text_fits_width(label: Label) -> bool:
 func _label_text_fits_width_if_visible(label: Label) -> bool:
 	return not label.is_visible_in_tree() or _label_text_fits_width(label)
 
+# Hero orders live on the hero sheet: open it on `tab`, read every order
+# button's text and tooltip, then close it again.
+func _hero_sheet_order_surfaces(shell: Node, tab: String) -> Array:
+	var surfaces := []
+	var sheet = shell.call("validation_open_hero_sheet", tab)
+	if sheet == null:
+		return surfaces
+	var page: Node = sheet.find_child(tab, true, false)
+	if page != null:
+		for button in page.find_children("*", "Button", true, false):
+			surfaces.append({"text": String(button.text), "tooltip": String(button.tooltip_text), "disabled": bool(button.disabled)})
+	sheet.call("close_sheet")
+	return surfaces
+
 func _assert_overworld_specialty_check_cue_contract(shell: Node) -> bool:
 	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_perform_specialty_action"):
 		push_error("Overworld smoke: shell is missing specialty-check validation hooks.")
@@ -859,8 +873,7 @@ func _assert_overworld_specialty_check_cue_contract(shell: Node) -> bool:
 	var idle_text := "\n".join([
 		String(idle_snapshot.get("specialty_check_visible_text", "")),
 		String(idle_snapshot.get("specialty_check_tooltip_text", "")),
-		String(idle_snapshot.get("specialty_visible_text", "")),
-		String(idle_snapshot.get("specialty_tooltip_text", "")),
+		String(idle_snapshot.get("specialty_text", "")),
 	])
 	if not _assert_text_contains_all(
 		"overworld idle specialty check cue",
@@ -886,15 +899,14 @@ func _assert_overworld_specialty_check_cue_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: pending specialty choice did not expose Spellwright action. snapshot=%s" % ready_snapshot)
 		get_tree().quit(1)
 		return false
+	# Specialty picks are offered on the hero sheet's Specializations tab.
 	var action_surfaces := []
-	for surface in (ready_snapshot.get("specialty_action_surfaces", []) if ready_snapshot.get("specialty_action_surfaces", []) is Array else []):
-		if surface is Dictionary:
-			action_surfaces.append("%s\n%s" % [String(surface.get("text", "")), String(surface.get("tooltip", ""))])
+	for surface in _hero_sheet_order_surfaces(shell, "Specializations"):
+		action_surfaces.append("%s\n%s" % [String(surface.get("text", "")), String(surface.get("tooltip", ""))])
 	var ready_text := "\n".join([
 		String(ready_snapshot.get("specialty_check_visible_text", "")),
 		String(ready_snapshot.get("specialty_check_tooltip_text", "")),
-		String(ready_snapshot.get("specialty_visible_text", "")),
-		String(ready_snapshot.get("specialty_tooltip_text", "")),
+		String(ready_snapshot.get("specialty_text", "")),
 		String(spellwright_action.get("label", "")),
 		String(spellwright_action.get("summary", "")),
 		String(spellwright_action.get("specialty_check_tooltip_text", "")),
@@ -914,9 +926,10 @@ func _assert_overworld_specialty_check_cue_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: live specialty choice did not update the commander build. result=%s" % choose_result)
 		get_tree().quit(1)
 		return false
+	var chosen_snapshot: Dictionary = shell.call("validation_snapshot")
 	if not _assert_text_contains_all(
 		"overworld specialty choice feedback",
-		[String(choose_result.get("message", "")), String(choose_result.get("specialty_tooltip_text", ""))],
+		[String(choose_result.get("message", "")), String(choose_result.get("specialty_text", "")), String(chosen_snapshot.get("specialty_check_tooltip_text", ""))],
 		["adopts Spellwright", "Spellwright", "Current build", "no pending specialty pick"]
 	):
 		return false
@@ -1217,16 +1230,9 @@ func _assert_rail_word_boundary_ellipsis_contract(shell: Control) -> bool:
 		shell.get_node("%Hero"),
 		army,
 		shell.get_node("%Heroes"),
-		shell.get_node("%Specialties"),
-		shell.get_node("%Spellbook"),
-		shell.get_node("%Artifacts"),
 		shell.get_node("%Event"),
 		briefing,
 		shell.get_node("%Commitment"),
-		shell.get_node("%Visibility"),
-		shell.get_node("%Objectives"),
-		shell.get_node("%Threats"),
-		shell.get_node("%Forecast"),
 		shell.get_node("%Context"),
 	]
 	var briefing_state: Dictionary = shell.call("validation_briefing_consumption_autosave_snapshot")
@@ -1353,7 +1359,7 @@ func _fail_overworld_objective_brief(message: String) -> bool:
 	return false
 
 func _assert_objective_stakes_ui_contract(shell: Node) -> bool:
-	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_open_frontier_drawer"):
+	if not shell.has_method("validation_snapshot"):
 		push_error("Overworld smoke: shell is missing objective/stakes validation hooks.")
 		get_tree().quit(1)
 		return false
@@ -1379,15 +1385,14 @@ func _assert_objective_stakes_ui_contract(shell: Node) -> bool:
 		]
 	):
 		return false
-	shell.call("validation_open_frontier_drawer")
-	var frontier_snapshot: Dictionary = shell.call("validation_snapshot")
+	# The full objective board no longer has a Frontier drawer; it is exposed
+	# through the shell's objective summary.
 	if not _assert_text_contains_all(
-		"River Pass objective drawer",
-		[String(frontier_snapshot.get("objective_summary", ""))],
+		"River Pass objective summary",
+		[String(snapshot.get("objective_summary", ""))],
 		["Objective Board", "Victory 0/5", "Defeat risks 0/4 triggered", "Claim Duskfen Bastion", "Avoid Defeat", "Current progress:", "Next step:"]
 	):
 		return false
-	shell.call("_on_close_drawers_pressed")
 
 	var original_session = SessionState.ensure_active_session()
 	var campaign_session = CampaignRules.build_session(
@@ -1687,72 +1692,44 @@ func _assert_status_forecast_cue_contract(shell: Node) -> bool:
 		return false
 	return true
 
-func _assert_drawer_handoff_cue_contract(shell: Node) -> bool:
-	if (
-		not shell.has_method("validation_snapshot")
-		or not shell.has_method("validation_open_command_drawer")
-		or not shell.has_method("validation_open_frontier_drawer")
-	):
-		push_error("Overworld smoke: shell is missing drawer handoff validation hooks.")
+# The Command/Frontier drawers are retired: hero orders are handed off to the
+# hero sheet, which opens over the map without changing the session.
+func _assert_hero_sheet_handoff_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_open_hero_sheet"):
+		push_error("Overworld smoke: shell is missing hero sheet handoff validation hooks.")
 		get_tree().quit(1)
 		return false
-	var snapshot: Dictionary = shell.call("validation_snapshot")
-	var drawer_handoff: Dictionary = snapshot.get("drawer_handoff", {}) if snapshot.get("drawer_handoff", {}) is Dictionary else {}
-	var command: Dictionary = drawer_handoff.get("command", {}) if drawer_handoff.get("command", {}) is Dictionary else {}
-	var frontier: Dictionary = drawer_handoff.get("frontier", {}) if drawer_handoff.get("frontier", {}) is Dictionary else {}
-	var joined := "\n".join([
-		String(snapshot.get("command_drawer_button_text", "")),
-		String(snapshot.get("command_drawer_tooltip_text", "")),
-		String(command.get("button_text", "")),
-		String(command.get("tooltip_text", "")),
-		String(snapshot.get("frontier_drawer_button_text", "")),
-		String(snapshot.get("frontier_drawer_tooltip_text", "")),
-		String(frontier.get("button_text", "")),
-		String(frontier.get("tooltip_text", "")),
-		String(snapshot.get("close_command_tooltip_text", "")),
-		String(snapshot.get("close_frontier_tooltip_text", "")),
-	])
-	if not _assert_text_contains_all(
-		"overworld drawer handoff cues",
-		[joined],
-		[
-			"Command",
-			"Command Drawer Handoff",
-			"hero, army, spell, artifact, and selected-order panels",
-			"Current order:",
-			"Readiness:",
-			"State change: inspection only",
-			"Frontier",
-			"Frontier Drawer Handoff",
-			"objectives, scout net, threat watch, and end-turn forecast",
-			"End Turn remains the commit",
-			"Close Command drawer",
-			"Close Frontier drawer",
-		]
-	):
+	var session = SessionState.ensure_active_session()
+	var authority_before := JSON.stringify(session.to_dict())
+	var closed_chrome: Dictionary = shell.call("validation_snapshot").get("chrome", {})
+	if bool(closed_chrome.get("hero_sheet_visible", true)):
+		push_error("Overworld smoke: the hero sheet was open before the handoff. chrome=%s" % closed_chrome)
+		get_tree().quit(1)
 		return false
-	if not _assert_no_ai_score_leak("overworld drawer handoff cues", joined):
+	var sheet = shell.call("validation_open_hero_sheet", "Army")
+	if sheet == null or not sheet.call("is_interactive"):
+		push_error("Overworld smoke: the hero sheet did not open with live hero orders.")
+		get_tree().quit(1)
 		return false
-
-	shell.call("validation_open_command_drawer")
-	var command_snapshot: Dictionary = shell.call("validation_snapshot")
-	if not _assert_text_contains_all(
-		"overworld command drawer open cue",
-		[String(command_snapshot.get("command_drawer_button_text", "")), String(command_snapshot.get("command_drawer_tooltip_text", ""))],
-		["Command Open", "Command Drawer Handoff"]
-	):
+	var open_chrome: Dictionary = shell.call("validation_snapshot").get("chrome", {})
+	if not bool(open_chrome.get("hero_sheet_visible", false)) or String(sheet.call("current_tab")) != "Army":
+		push_error("Overworld smoke: the hero sheet handoff did not show the requested tab. chrome=%s tab=%s" % [open_chrome, sheet.call("current_tab")])
+		get_tree().quit(1)
 		return false
-	shell.call("_on_close_drawers_pressed")
-
-	shell.call("validation_open_frontier_drawer")
-	var frontier_snapshot: Dictionary = shell.call("validation_snapshot")
-	if not _assert_text_contains_all(
-		"overworld frontier drawer open cue",
-		[String(frontier_snapshot.get("frontier_drawer_button_text", "")), String(frontier_snapshot.get("frontier_drawer_tooltip_text", ""))],
-		["Frontier Open", "Frontier Drawer Handoff"]
-	):
+	for tab in ["Army", "Artifacts", "Specializations", "Spellbook"]:
+		if sheet.find_child(tab, true, false) == null:
+			push_error("Overworld smoke: the hero sheet is missing its %s tab." % tab)
+			get_tree().quit(1)
+			return false
+	sheet.call("close_sheet")
+	if bool(shell.call("validation_snapshot").get("chrome", {}).get("hero_sheet_visible", true)):
+		push_error("Overworld smoke: the hero sheet stayed visible after closing.")
+		get_tree().quit(1)
 		return false
-	shell.call("_on_close_drawers_pressed")
+	if JSON.stringify(session.to_dict()) != authority_before:
+		push_error("Overworld smoke: opening and closing the hero sheet changed the session.")
+		get_tree().quit(1)
+		return false
 	return true
 
 func _assert_diagonal_movement_contract(shell: Node, map_node: Node) -> bool:
@@ -1928,14 +1905,8 @@ func _assert_wireframe_contract(shell: Node) -> bool:
 	var event_panel: Control = shell.get_node_or_null("%EventPanel")
 	var commitment_panel: Control = shell.get_node_or_null("%CommitmentPanel")
 	var briefing_panel: Control = shell.get_node_or_null("%BriefingPanel")
-	var action_panel: Control = shell.get_node_or_null("%ActionPanel")
-	var open_command: Button = shell.get_node_or_null("%OpenCommand")
-	var open_frontier: Button = shell.get_node_or_null("%OpenFrontier")
 	var hero_actions: Control = shell.get_node_or_null("%HeroActions")
 	var context_actions: Control = shell.get_node_or_null("%ContextActions")
-	var specialty_actions: Control = shell.get_node_or_null("%SpecialtyActions")
-	var spell_actions: Control = shell.get_node_or_null("%SpellActions")
-	var artifact_actions: Control = shell.get_node_or_null("%ArtifactActions")
 	var resource_chip: Control = shell.get_node_or_null("%ResourceChip")
 	var status_chip: Control = shell.get_node_or_null("%StatusChip")
 	var cue_chip: Control = shell.get_node_or_null("%CueChip")
@@ -1949,14 +1920,8 @@ func _assert_wireframe_contract(shell: Node) -> bool:
 		event_panel,
 		commitment_panel,
 		briefing_panel,
-		action_panel,
-		open_command,
-		open_frontier,
 		hero_actions,
 		context_actions,
-		specialty_actions,
-		spell_actions,
-		artifact_actions,
 		resource_chip,
 		status_chip,
 		cue_chip,
@@ -1998,7 +1963,7 @@ func _assert_wireframe_contract(shell: Node) -> bool:
 			push_error("Overworld smoke: light status panels must live inside the carved right shell.")
 			get_tree().quit(1)
 			return false
-	if not _assert_decluttered_right_shell(shell, sidebar_shell, command_spine, action_panel, [context_actions, specialty_actions, spell_actions, artifact_actions]):
+	if not _assert_decluttered_right_shell(shell, sidebar_shell, command_spine, [context_actions]):
 		return false
 	for chip in [status_chip, cue_chip]:
 		if not _is_descendant_of(chip, command_band):
@@ -2766,12 +2731,9 @@ func _assert_artifact_loadout_decision_contract(shell: Node) -> bool:
 	shell.call("_refresh")
 
 	var snapshot: Dictionary = shell.call("validation_snapshot")
-	var gear_text := "%s\n%s" % [
-		String(snapshot.get("artifact_text", "")),
-		String(snapshot.get("artifact_tooltip_text", "")),
-	]
+	var gear_text := String(snapshot.get("artifact_text", ""))
 	if not _assert_text_contains_all(
-		"Overworld artifact loadout rail",
+		"Overworld artifact loadout",
 		[gear_text],
 		[
 			"Boots: Trailsinger Boots",
@@ -2807,7 +2769,7 @@ func _assert_artifact_loadout_decision_contract(shell: Node) -> bool:
 		"Overworld artifact equip result",
 		[
 			String(equip_result.get("message", "")),
-			String(equip_result.get("artifact_tooltip_text", "")),
+			String(equip_result.get("artifact_text", "")),
 		],
 		["Equipped Warcrest Pennon from pack into Banner", "Banner: Warcrest Pennon", "Equipped", "Gear impact", "Command Attack +1", "+1 attack"]
 	):
@@ -2833,7 +2795,7 @@ func _assert_artifact_loadout_decision_contract(shell: Node) -> bool:
 		return false
 	if not _assert_text_contains_all(
 		"Overworld artifact stow result",
-		[String(stow_result.get("message", "")), String(stow_result.get("artifact_tooltip_text", ""))],
+		[String(stow_result.get("message", "")), String(stow_result.get("artifact_text", ""))],
 		["Stowed Warcrest Pennon from Banner into pack", "Removed: +1 attack", "Warcrest Pennon", "Can equip to empty Banner"]
 	):
 		return false
@@ -2858,7 +2820,7 @@ func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
 	var full_snapshot: Dictionary = shell.call("validation_snapshot")
 	var full_spell_action := _validation_action_by_id(full_snapshot.get("spell_actions", []), "cast_spell:spell_waystride")
 	if full_spell_action.is_empty():
-		push_error("Overworld smoke: Waystride field spell action was not exposed in the live command drawer. actions=%s" % full_snapshot.get("spell_actions", []))
+		push_error("Overworld smoke: Waystride field spell action was not exposed in the live hero orders. actions=%s" % full_snapshot.get("spell_actions", []))
 		get_tree().quit(1)
 		return false
 	if not bool(full_spell_action.get("disabled", false)):
@@ -2868,8 +2830,9 @@ func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
 	if not _assert_text_contains_all(
 		"Overworld field spell unavailable affordance",
 		[
-			String(full_snapshot.get("spellbook_tooltip_text", "")),
-			String(full_snapshot.get("spellbook_visible_text", "")),
+			String(full_snapshot.get("spellbook_text", "")),
+			String(full_snapshot.get("spell_check_tooltip_text", "")),
+			String(full_snapshot.get("spell_check_visible_text", "")),
 			String(full_snapshot.get("spellbook_rail_text", "")),
 			String(full_spell_action.get("summary", "")),
 			String(full_spell_action.get("invalid_reason", "")),
@@ -2917,8 +2880,9 @@ func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
 	if not _assert_text_contains_all(
 		"Overworld field spell ready affordance",
 		[
-			String(ready_snapshot.get("spellbook_tooltip_text", "")),
-			String(ready_snapshot.get("spellbook_visible_text", "")),
+			String(ready_snapshot.get("spellbook_text", "")),
+			String(ready_snapshot.get("spell_check_tooltip_text", "")),
+			String(ready_snapshot.get("spell_check_visible_text", "")),
 			String(ready_snapshot.get("spellbook_rail_text", "")),
 			String(ready_spell_action.get("label", "")),
 			String(ready_spell_action.get("summary", "")),
@@ -2976,15 +2940,10 @@ func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
 	return true
 
 func _spell_surface_text(snapshot: Dictionary, spell_action: Dictionary) -> String:
-	var action_surfaces := []
-	for surface in (snapshot.get("spell_action_surfaces", []) if snapshot.get("spell_action_surfaces", []) is Array else []):
-		if surface is Dictionary:
-			action_surfaces.append("%s\n%s" % [String(surface.get("text", "")), String(surface.get("tooltip", ""))])
 	return "\n".join([
 		String(snapshot.get("spell_check_visible_text", "")),
 		String(snapshot.get("spell_check_tooltip_text", "")),
 		String(spell_action.get("spell_check_tooltip_text", "")),
-		"\n".join(action_surfaces),
 	])
 
 func _assert_enemy_activity_feed_contract(shell: Node) -> bool:
@@ -2995,10 +2954,9 @@ func _assert_enemy_activity_feed_contract(shell: Node) -> bool:
 	var before_snapshot: Dictionary = shell.call("validation_snapshot")
 	var forecast_text := String(before_snapshot.get("end_turn_forecast", ""))
 	var forecast_compact := String(before_snapshot.get("end_turn_forecast_compact", ""))
-	var frontier_indicator := String(before_snapshot.get("chrome", {}).get("frontier_indicator", ""))
 	if not _assert_text_contains_all(
 		"Overworld end-turn forecast UI",
-		[forecast_text, forecast_compact, frontier_indicator, String(before_snapshot.get("map_cue_tooltip_text", ""))],
+		[forecast_text, forecast_compact, String(before_snapshot.get("map_cue_tooltip_text", ""))],
 		["Next day:", "income", "move resets", "Next:"]
 	):
 		return false
@@ -4924,7 +4882,7 @@ func _assert_sidebar_ornament_contract(shell: Control, session) -> bool:
 		await get_tree().process_frame
 		await get_tree().process_frame
 		var card_rects_before := {}
-		for node_name in ["TopStrip", "HeroPanel", "EventPanel", "BriefingPanel", "ActionPanel"]:
+		for node_name in ["TopStrip", "HeroPanel", "EventPanel", "BriefingPanel", "CommitmentPanel"]:
 			var card: Control = shell.get_node_or_null("%%%s" % node_name)
 			if card != null:
 				card_rects_before[node_name] = {"rect": Rect2(card.global_position, card.size), "visible": card.visible}
@@ -5659,7 +5617,7 @@ func _first_visible_encounter_tile(session) -> Vector2i:
 			return tile
 	return Vector2i(-1, -1)
 
-func _assert_decluttered_right_shell(shell: Node, sidebar_shell: Control, command_spine: Control, action_panel: Control, action_containers: Array) -> bool:
+func _assert_decluttered_right_shell(shell: Node, sidebar_shell: Control, command_spine: Control, action_containers: Array) -> bool:
 	if command_spine == null or not (command_spine is VBoxContainer):
 		push_error("Overworld smoke: contextual drawers must use a stacked command container, not a tab strip.")
 		get_tree().quit(1)
@@ -5669,13 +5627,15 @@ func _assert_decluttered_right_shell(shell: Node, sidebar_shell: Control, comman
 		get_tree().quit(1)
 		return false
 	if command_spine.is_visible_in_tree():
-		push_error("Overworld smoke: Command/Frontier/Tile drawers must not be permanently visible at startup.")
+		push_error("Overworld smoke: the Tile context drawer must not be permanently visible at startup.")
 		get_tree().quit(1)
 		return false
-	if action_panel == null or not action_panel.is_visible_in_tree():
-		push_error("Overworld smoke: Command and Frontier must remain accessible through compact drawer buttons.")
-		get_tree().quit(1)
-		return false
+	# Hero orders moved to the hero sheet; the Command/Frontier drawers must not return.
+	for retired_node in ["ActionPanel", "OpenCommand", "OpenFrontier", "CommandPanel", "FrontierPanel", "SpellActions", "ArtifactActions", "SpecialtyActions"]:
+		if shell.get_node_or_null("%" + retired_node) != null:
+			push_error("Overworld smoke: retired overworld drawer node %s returned." % retired_node)
+			get_tree().quit(1)
+			return false
 	if shell.get_node_or_null("%MarchPanel") != null or shell.get_node_or_null("%MapHint") != null:
 		push_error("Overworld smoke: old permanent movement hint or march-control footer returned.")
 		get_tree().quit(1)
@@ -5692,10 +5652,6 @@ func _assert_decluttered_right_shell(shell: Node, sidebar_shell: Control, comman
 			push_error("Overworld smoke: footer cue regressed into permanent movement-hint text: %s" % cue_text)
 			get_tree().quit(1)
 			return false
-	if not _assert_drawer_toggle(shell, "command"):
-		return false
-	if not _assert_drawer_toggle(shell, "frontier"):
-		return false
 	for container in action_containers:
 		if container == null or not (container is VBoxContainer):
 			push_error("Overworld smoke: drawer actions must be full-width vertical command rows.")
@@ -5718,45 +5674,6 @@ func _assert_decluttered_right_shell(shell: Node, sidebar_shell: Control, comman
 		return false
 	return true
 
-func _assert_drawer_toggle(shell: Node, drawer: String) -> bool:
-	var state: Dictionary = {}
-	match drawer:
-		"command":
-			state = shell.validation_open_command_drawer()
-			if not bool(state.get("command_drawer_visible", false)):
-				push_error("Overworld smoke: Command button did not open the command drawer.")
-				get_tree().quit(1)
-				return false
-			if bool(state.get("frontier_drawer_visible", false)):
-				push_error("Overworld smoke: Command drawer opened on top of the Frontier drawer.")
-				get_tree().quit(1)
-				return false
-		"frontier":
-			state = shell.validation_open_frontier_drawer()
-			if not bool(state.get("frontier_drawer_visible", false)):
-				push_error("Overworld smoke: Frontier button did not open the frontier drawer.")
-				get_tree().quit(1)
-				return false
-			if bool(state.get("command_drawer_visible", false)):
-				push_error("Overworld smoke: Frontier drawer opened on top of the Command drawer.")
-				get_tree().quit(1)
-				return false
-		_:
-			push_error("Overworld smoke: unknown drawer assertion %s." % drawer)
-			get_tree().quit(1)
-			return false
-	if bool(state.get("order_panel_visible", false)):
-		push_error("Overworld smoke: hidden Order panel became permanent while opening %s." % drawer)
-		get_tree().quit(1)
-		return false
-	shell._on_close_drawers_pressed()
-	var closed_state: Dictionary = shell._validation_chrome_state()
-	if bool(closed_state.get("command_spine_visible", false)):
-		push_error("Overworld smoke: drawer spine stayed visible after closing %s." % drawer)
-		get_tree().quit(1)
-		return false
-	return true
-
 func _assert_compact_rail_text(shell: Node) -> bool:
 	var label_budgets := {
 		"Event": 1,
@@ -5766,13 +5683,6 @@ func _assert_compact_rail_text(shell: Node) -> bool:
 		"Army": 1,
 		"Heroes": 1,
 		"Context": 2,
-		"Specialties": 1,
-		"Spellbook": 1,
-		"Artifacts": 1,
-		"Visibility": 1,
-		"Objectives": 1,
-		"Threats": 1,
-		"Forecast": 1,
 	}
 	for label_name in label_budgets.keys():
 		var label_node = shell.get_node_or_null("%" + String(label_name))

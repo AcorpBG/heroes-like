@@ -62,17 +62,24 @@ func _direct_transfer_save_case() -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	session = shell.get("_session")
-	shell.call("validation_open_command_drawer")
+	var sheet: Control = shell.call("validation_open_hero_sheet")
 	await get_tree().process_frame
 	var shell_snapshot: Dictionary = shell.call("validation_snapshot")
 	var rendezvous: Dictionary = shell_snapshot.get("rendezvous", {}) if shell_snapshot.get("rendezvous", {}) is Dictionary else {}
-	if not bool(rendezvous.get("label_visible_in_tree", false)) \
-		or not bool(rendezvous.get("controls_visible_in_tree", false)) \
-		or not bool(rendezvous.get("meet_focusable", false)) \
+	var meet_button: Button = sheet.find_child("Meet_%s" % reserve_id, true, false) as Button if sheet != null else null
+	if meet_button == null \
+		or not meet_button.is_visible_in_tree() \
+		or meet_button.disabled \
+		or meet_button.focus_mode != Control.FOCUS_ALL \
 		or reserve_id not in rendezvous.get("meet_hero_ids", []):
 		shell.queue_free()
-		return _fail("The Command drawer did not offer a focusable Meet button for the reserve.", rendezvous)
-	rendezvous = shell.call("validation_open_hero_exchange", reserve_id)
+		return _fail("The hero sheet did not offer a focusable Meet button for the reserve.", rendezvous)
+	meet_button.pressed.emit()
+	await get_tree().process_frame
+	rendezvous = shell.call("validation_snapshot").get("rendezvous", {})
+	if sheet.visible:
+		shell.queue_free()
+		return _fail("Meeting from the hero sheet did not close the sheet.", rendezvous)
 	var exchange: Dictionary = rendezvous.get("exchange", {}) if rendezvous.get("exchange", {}) is Dictionary else {}
 	var exchange_sides: Dictionary = exchange.get("sides", {}) if exchange.get("sides", {}) is Dictionary else {}
 	if not bool(rendezvous.get("exchange_open", false)) \

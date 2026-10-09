@@ -413,55 +413,6 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Opening priorities will surface here."
 
-[node name="ActionPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 76)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ActionPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/ActionPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 6
-
-[node name="ActionBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/ActionPanel/ActionPad"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 5
-
-[node name="ActionTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/ActionPanel/ActionPad/ActionBox"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-text = "Panels"
-
-[node name="ActionButtons" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/ActionPanel/ActionPad/ActionBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 6
-
-[node name="OpenCommand" type="Button" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/ActionPanel/ActionPad/ActionBox/ActionButtons"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-text = "Command"
-
-[node name="OpenFrontier" type="Button" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/ActionPanel/ActionPad/ActionBox/ActionButtons"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-text = "Frontier"
-
-[node name="FrontierIndicator" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/ActionPanel/ActionPad/ActionBox"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-text = "Frontier: steady"
-
 [node name="CommandSpine" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
 visible = false
@@ -506,138 +457,6 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 5
-
-[node name="CommandPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="CommandPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="CommandBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 2
-
-[node name="CommandTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Command"
-
-[node name="CloseCommand" type="Button" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Close"
-
-[node name="Specialties" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Specialties"
-
-[node name="SpecialtyActions" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 4
-
-[node name="Spellbook" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Spellbook"
-
-[node name="SpellActions" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 4
-
-[node name="Artifacts" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Artifacts"
-
-[node name="ArtifactActions" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 4
-
-[node name="Rendezvous" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-text = "Rendezvous"
-
-[node name="RendezvousControls" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(0, 36)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 5
-
-[node name="FrontierPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="FrontierPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="FrontierBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel/FrontierPad"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="FrontierTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel/FrontierPad/FrontierBox"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Frontier"
-
-[node name="CloseFrontier" type="Button" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel/FrontierPad/FrontierBox"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Close"
-
-[node name="Visibility" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel/FrontierPad/FrontierBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Visibility"
-
-[node name="Objectives" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel/FrontierPad/FrontierBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Objectives"
-
-[node name="Threats" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel/FrontierPad/FrontierBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Threats"
-
-[node name="Forecast" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel/FrontierPad/FrontierBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Forecast"
 
 [node name="ResourceStrip" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content"]
 layout_mode = 2
@@ -894,10 +713,6 @@ dialog_text = "End the current day?"
 
 [node name="ActivePlaySettingsDialog" parent="." instance=ExtResource("5_active_settings")]
 
-[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/ActionPanel/ActionPad/ActionBox/ActionButtons/OpenCommand" to="." method="_on_open_command_pressed"]
-[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/ActionPanel/ActionPad/ActionBox/ActionButtons/OpenFrontier" to="." method="_on_open_frontier_pressed"]
-[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox/CloseCommand" to="." method="_on_close_drawers_pressed"]
-[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel/FrontierPad/FrontierBox/CloseFrontier" to="." method="_on_close_drawers_pressed"]
 [connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/OrdersPanel/OrdersPad/OrdersBox/PrimaryAction" to="." method="_on_primary_action_pressed"]
 [connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/EndTurn" to="." method="_on_end_turn_pressed"]
 [connection signal="item_selected" from="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/SaveSlot" to="." method="_on_save_slot_selected"]
