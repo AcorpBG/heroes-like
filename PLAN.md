@@ -68,13 +68,18 @@ Rules:
 
 ### H3MapEd parity basis: Windows vs Wine
 
-`rmg-h3maped-parity-basis-windows-wine-20261009` (completed, recovery evidence only; no native change): driven by window messages (`tools/rmg_h3maped_win32_trace/h3trace.c`), Windows H3MapEd matches the Wine references, and native for map 8, for all eight seeds tried. So there is no platform split. Only the earlier desktop-controlled Windows runs differ, from the first `0x4aab7e` reward pick on. Seeds 137 and 211 are native defects with private-state proof. Owner decision: keep the Wine/controlled corpus as the parity target, or treat the desktop-session variant as H3MapEd behavior, which needs `rmg-h3maped-desktop-input-divergence-20261009` first. See `docs/h3maped-parity-basis-windows-wine.md`.
+`rmg-h3maped-parity-basis-windows-wine-20261009` (completed, recovery evidence only; no native change): driven by window messages (`tools/rmg_h3maped_win32_trace/h3trace.c`), Windows H3MapEd matches the Wine references, and native for map 8, for all eight seeds tried. So there is no platform split. Only the earlier desktop-controlled Windows runs differ, from the first `0x4aab7e` reward pick on; the cause is recovered below. Seeds 137 and 211 are native defects with private-state proof. See `docs/h3maped-parity-basis-windows-wine.md`.
 
 - `native-rmg-owner-success-and-entry-occupant-20261009` (completed, native fix):
   - The `0x4a8db2` replay no longer copies the shared type-98 pair success into `owner.byte_0x3c`. H3MapEd writes `+0x3c` only at `0x4a95a4`.
   - Both `0x49aa93` ports test the entry-cell occupant's `0x598300` flag 2, as H3MapEd does at `0x49ab87..0x49abac`.
   - Validation: 60 of 72 references exact (was 57: Small 137 and 211, Medium compare 17 fixed, no other reference changed). The selftest passes on Windows and Linux, and the 72 payloads are byte-identical across platforms. The three native Godot smokes pass on Windows; Linux Godot smokes were not run. All `bin/` native binaries are rebuilt.
-- `rmg-h3maped-desktop-input-divergence-20261009` (blocked): named gap, the input by which a desktop-controlled H3MapEd session changes `0x4aab7e` reward selection. Needs one traced desktop-controlled replay.
+- `rmg-h3maped-desktop-input-divergence-20261009` (completed, recovery evidence only; no native change):
+  - Cause: generator field `+0xf5c` is never initialized. The generator object is a stack local and setup writes `+0xf58` only, so `+0xf5c` holds leftover stack bytes that depend on how File > New was opened.
+  - Ctrl+N leaves 0. The File menu, the toolbar button, posted commands and Wine leave values outside 0..7.
+  - The Keymaster's Tent value at `0x49cd9b` requires `+0xf5c` to equal the tent's colour, so with 0 the colour-0 tents enter the reward candidate sets.
+  - Proof: forcing `+0xf5c` = 0 at generator entry reproduces all six desktop maps. The File-menu and toolbar runs match Wine.
+  - Owner decision: keep the current behaviour (no Keymaster's Tents; native as is), or model Ctrl+N. Modelling it needs the unported tent projection branch `0x540b00`/`0x49c019`/`0x4adb72`/`0x4adef7` and its writeout. With `+0xf5c` = 0 alone, native reproduces five of the six desktop maps and stops on seed 2, where a tent is placed.
 
 ### Raid director removal
 

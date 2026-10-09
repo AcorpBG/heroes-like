@@ -31,6 +31,9 @@
  *   --okmode 0..3                  OK by WM_COMMAND, posted click, BM_CLICK, posted Enter
  *   --clicks                       set the dialog with posted clicks/keys instead of control messages
  *   --manual                       do not drive the dialog; save after the generator returns (0x4ae082)
+ *   --pid PID                      attach to a running editor instead of launching <exe>
+ *   --set ADDR:REG:OFF:VALUE       write a dword at REG+OFF when ADDR is hit
+ *   --detach ADDR:HIT              at that marker hit restore all breakpoints and detach (editor runs on)
  *   --size 36|72|108|144  --levels 1|2
  */
 #define WIN32_LEAN_AND_MEAN
@@ -60,6 +63,9 @@ static DWORD seqno;
 static HANDLE evReady;
 static volatile LONG uiDone;
 static int optNoDebug = 0, optRepeat = 1, optOkMode = 0, optManual = 0, optClicks = 0;
+static DWORD optPid = 0;
+typedef struct { DWORD addr; char reg[4]; DWORD off, value; } SetD; static SetD sets[8]; static int nset;
+static DWORD detachAddr = 0, detachHit = 0; static int detachNow = 0; static HANDLE uiThreadHandle;
 static DWORD doneAddr = 0x4ae082; static HANDLE evGenDone;
 typedef struct { DWORD addr, size; int pat; } Fill; static Fill fills[8]; static int nfill;
 typedef struct { DWORD addr, hit; int k; } Skip; static Skip skips[16]; static int nskip; static DWORD ptdMain;
@@ -191,6 +197,12 @@ static DWORD handle_bp(DEBUG_EVENT *ev, Bp *b) {
 		do_dumps(b->addr, b->hits, &c);
 		do_mlogs(b->addr, &c);
 		do_vlogs(b->addr, &c);
+		for (int i = 0; i < nset; ++i) {
+			if (sets[i].addr != b->addr) continue;
+			DWORD a = regval(&c, sets[i].reg) + sets[i].off, o = 0; rd(a, &o, 4);
+			int ok = wr(a, &sets[i].value, 4);
+			logln("T %u %08x set [%s+%x]=%08x (was %08x) ok=%d\n", seqno++, b->addr, sets[i].reg, sets[i].off, sets[i].value, o, ok);
+		}
 		{
 			int any = 0;
 			for (int i = 0; i < nwatch; ++i) {
@@ -240,8 +252,17 @@ static DWORD handle_bp(DEBUG_EVENT *ev, Bp *b) {
 			free(buf);
 		}
 		wr(b->addr, &b->orig, 1);
-		c.Eip = b->addr; c.EFlags |= 0x100;
-		Th *t = thread_rec(ev->dwThreadId); if (t) t->rearm = b->addr;
+		c.Eip = b->addr;
+		if (detachAddr && b->addr == detachAddr && b->hits == detachHit) {
+			/* restore every breakpoint byte and let the thread run on without a single-step */
+			for (int i = 0; i < nbp; ++i) if (bps[i].armed) { wr(bps[i].addr, &bps[i].orig, 1); bps[i].armed = 0; }
+			detachNow = 1;
+			logln("I detach at %08x hit=%u\n", b->addr, b->hits);
+			if (evGenDone) SetEvent(evGenDone);
+		} else {
+			c.EFlags |= 0x100;
+			Th *t = thread_rec(ev->dwThreadId); if (t) t->rearm = b->addr;
+		}
 	}
 	if (!SetThreadContext(ht, &c)) logln("E setctx %lu\n", GetLastError());
 	return DBG_CONTINUE;
@@ -408,6 +429,17 @@ int main(int argc, char **argv) {
 		else if (!strcmp(argv[i], "--norand")) optRand = 0;
 		else if (!strcmp(argv[i], "--nodebug")) optNoDebug = 1;
 		else if (!strcmp(argv[i], "--manual")) optManual = 1;
+		else if (!strcmp(argv[i], "--set") && i + 1 < argc && nset < 8) {
+			char buf[96]; strncpy(buf, argv[++i], 95); buf[95] = 0;
+			char *a = strtok(buf, ":"), *r = strtok(NULL, ":"), *o = strtok(NULL, ":"), *v = strtok(NULL, ":");
+			if (a && r && o && v) { sets[nset].addr = parse_hex(a); strncpy(sets[nset].reg, r, 3); sets[nset].reg[3] = 0; sets[nset].off = parse_hex(o); sets[nset].value = parse_hex(v); add_bp(sets[nset].addr, 3); ++nset; }
+		}
+		else if (!strcmp(argv[i], "--detach") && i + 1 < argc) {
+			char buf[64]; strncpy(buf, argv[++i], 63); buf[63] = 0;
+			char *a = strtok(buf, ":"), *h = strtok(NULL, ":");
+			if (a && h) { detachAddr = parse_hex(a); detachHit = parse_hex(h); add_bp(detachAddr, 3); }
+		}
+		else if (!strcmp(argv[i], "--pid") && i + 1 < argc) optPid = (DWORD)strtoul(argv[++i], NULL, 0);
 		else if (!strcmp(argv[i], "--clicks")) optClicks = 1;
 		else if (!strcmp(argv[i], "--watch") && i + 1 < argc && nwatch < 4) {
 			char buf[128]; strncpy(buf, argv[++i], 127); buf[127] = 0;
@@ -461,11 +493,17 @@ int main(int argc, char **argv) {
 	setvbuf(logf, NULL, _IOFBF, 1 << 20);
 	DeleteFileA(savePath);
 
-	STARTUPINFOA si; PROCESS_INFORMATION pi; memset(&si, 0, sizeof si); si.cb = sizeof si;
-	char cmd[MAX_PATH + 8]; snprintf(cmd, sizeof cmd, "\"%s\"", exe);
-	if (!CreateProcessA(exe, cmd, NULL, NULL, FALSE, 0, NULL, cwd, &si, &pi)) { fprintf(stderr, "CreateProcess %lu\n", GetLastError()); return 3; }
-	pid = pi.dwProcessId;
-	fprintf(stderr, "launched pid=%lu\n", pid);
+	STARTUPINFOA si; PROCESS_INFORMATION pi; memset(&si, 0, sizeof si); si.cb = sizeof si; memset(&pi, 0, sizeof pi);
+	if (optPid) {
+		/* attach to an editor someone else started (e.g. from the desktop) */
+		pid = optPid;
+		fprintf(stderr, "attaching to pid=%lu\n", pid);
+	} else {
+		char cmd[MAX_PATH + 8]; snprintf(cmd, sizeof cmd, "\"%s\"", exe);
+		if (!CreateProcessA(exe, cmd, NULL, NULL, FALSE, 0, NULL, cwd, &si, &pi)) { fprintf(stderr, "CreateProcess %lu\n", GetLastError()); return 3; }
+		pid = pi.dwProcessId;
+		fprintf(stderr, "launched pid=%lu\n", pid);
+	}
 	for (int t = 0; t < 60000; t += 100) { if (find_top("Map Editor", 1)) break; Sleep(100); }
 	Sleep(2000);
 	if (optNoDebug) {
@@ -484,7 +522,7 @@ int main(int argc, char **argv) {
 	evReady = CreateEventA(NULL, TRUE, FALSE, NULL);
 	evGenDone = CreateEventA(NULL, TRUE, FALSE, NULL);
 	add_bp(doneAddr, 3);
-	CreateThread(NULL, 0, ui_thread, NULL, 0, NULL);
+	uiThreadHandle = CreateThread(NULL, 0, ui_thread, NULL, 0, NULL);
 	logln("I pid=%lu\n", pid);
 
 	DEBUG_EVENT ev;
@@ -539,7 +577,13 @@ int main(int argc, char **argv) {
 		default: break;
 		}
 		ContinueDebugEvent(ev.dwProcessId, ev.dwThreadId, cont);
+		if (detachNow) {
+			DebugActiveProcessStop(pid);
+			hProc = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+			running = 0;
+		}
 	}
+	if (detachNow) WaitForSingleObject(uiThreadHandle, INFINITE);
 	logln("I end ui=%ld events=%u\n", uiDone, seqno);
 	for (int i = 0; i < nbp; ++i) logln("B %08x kind=%d hits=%u\n", bps[i].addr, bps[i].kind, bps[i].hits);
 	fclose(logf);
