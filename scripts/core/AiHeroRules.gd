@@ -138,6 +138,15 @@ const MEET_VALUE_CAP := 600.0
 const GOAL_CONTINUITY_BONUS := 1.25
 const TOWN_SIGHT_RADIUS := 8
 const EXPLORE_VALUE := 220.0
+## While a rival still holds a town this player has never seen, the unexplored
+## frontier is worth up to this much more, rising from HUNT_START_DAY to
+## HUNT_FULL_DAY: early on heroes expand, later they go and find the enemy.
+## Heroes only target towns they have seen; in a four-player medium game the
+## leading player (32,000 strength) never scouted the corners where its two
+## rivals held one weakly guarded town each, and the game ran to its day cap.
+const HUNT_EXPLORE_VALUE := 6000.0
+const HUNT_START_DAY := 21
+const HUNT_FULL_DAY := 56
 ## Ground behind a guard that the hero cannot reach today: a base value for
 ## opening the way, plus each unexplored tile there, up to a cap (sites the
 ## player has already seen there count on top, at half their value).
@@ -2490,7 +2499,7 @@ static func _exploration_candidate(session: SessionStateStoreScript.SessionData,
 			if nx < 0 or ny < 0 or nx >= size.x or ny >= size.y:
 				continue
 			if known[ny * size.x + nx] == 0:
-				return {"kind": "explore", "id": "explore:%d" % tile_index, "index": tile_index, "value": EXPLORE_VALUE, "tile_index": tile_index, "distance": int(search.dist[tile_index])}
+				return {"kind": "explore", "id": "explore:%d" % tile_index, "index": tile_index, "value": _explore_value(session, context), "tile_index": tile_index, "distance": int(search.dist[tile_index])}
 	return {}
 
 static func _candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, ref: Dictionary, power: float, needs: Dictionary, search: Dictionary = {}) -> Dictionary:
@@ -2912,6 +2921,13 @@ static func _war_paths(session: SessionStateStoreScript.SessionData, context: Di
 			queue[tail] = next
 			tail += 1
 	return result
+
+## What scouting the nearest unexplored ground is worth (see HUNT_EXPLORE_VALUE).
+static func _explore_value(session: SessionStateStoreScript.SessionData, context: Dictionary) -> float:
+	var ramp := clampf(float(int(session.day) - HUNT_START_DAY) / float(HUNT_FULL_DAY - HUNT_START_DAY), 0.0, 1.0)
+	if ramp <= 0.0 or not _rival_towns_unknown(session, context):
+		return EXPLORE_VALUE
+	return EXPLORE_VALUE + HUNT_EXPLORE_VALUE * ramp
 
 ## Whether some rival still holds a town this player has never seen.
 static func _rival_towns_unknown(session: SessionStateStoreScript.SessionData, context: Dictionary) -> bool:
