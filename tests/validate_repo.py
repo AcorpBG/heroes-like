@@ -64054,9 +64054,9 @@ def validate_native_rmg_authored_object_pool_eligibility(errors: list[str]) -> N
             decisions.append(f"excluded:{exclusion_id}")
             excluded_decisions[object_id] = exclusion_id
         ensure(len(decisions) == 1, errors, f"Authored map object {object_id} must have exactly one native-RMG eligibility decision, got {decisions}")
-    ensure(len(authored) == 467, errors, "Native RMG eligibility baseline must cover all 467 authored map objects")
+    ensure(len(authored) == 469, errors, "Native RMG eligibility baseline must cover all 469 authored map objects")
     ensure(len(eligible_decisions) == 396, errors, "Native RMG eligibility must expose all 396 compatible authored map objects, including guarded sites and rare pickups")
-    ensure(len(excluded_decisions) == 71, errors, "Native RMG eligibility must retain 71 explicit safety/scenario/water-travel/portal-network exclusions")
+    ensure(len(excluded_decisions) == 73, errors, "Native RMG eligibility must retain 73 explicit safety/scenario/water-travel/portal-network/HoMM3-translation exclusions")
     ensure(len(candidate_ids_by_pool.get("guarded_reward", set())) == 32, errors, "All 32 executable guarded sites must be eligible; stale object summaries cannot exclude them")
     source_type_pools = registry.get("source_type_pools", {})
     for type_id, pool_id in source_type_pools.items():
@@ -65335,10 +65335,15 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'and guard.get("package_guard_engagement_tiles", []) == expected_engagement',
             'and guard.get("package_block_tiles", [{}]) == []',
             'and not bool(guard.get("blocking_body", true))',
-            'int(resources_after.get("gold", 0)) == int(resources_before.get("gold", 0)) + 520',
-            'int(resources_after.get("wood", 0)) == int(resources_before.get("wood", 0)) + 2',
-            'int(resources_after.get("ore", 0)) == int(resources_before.get("ore", 0)) + 2',
-            'artifact_ids_after.size() == artifact_ids_before.size() + 1',
+            # The Medusa Stores pays its rolled level's HoMM3 gold and rare and
+            # fields that level's guard (docs/creature-banks.md).
+            '"army_neutral_tidepool_skiffyard_watch_bank_level_%d" % bank_level',
+            'guard.get("enemy_army", {}).get("stacks", []) == GeneratedRewards.bank_guard_stacks(node)',
+            'var level_row: Dictionary = GeneratedRewards.CREATURE_BANKS["16:4"].levels[clampi(bank_level, 1, 4) - 1]',
+            'and int(level_rewards.get("gold", 0)) == int(level_row.rewards.gold)',
+            'and level_rare == int(level_row.rares[1])',
+            'and resource_gain == expected_rewards',
+            'artifact_ids_after.size() == artifact_ids_before.size()',
             'and unrelated_nodes_exact',
             'and package_authority_after == package_authority_before',
             'restored.save_version == SessionStateStoreScript.SAVE_VERSION',
@@ -77275,10 +77280,10 @@ def validate_eight_foundation_map_object_identities(errors: list[str]) -> None:
     object_assets = art_manifest.get("object_assets", {})
     site_sprites = art_manifest.get("resource_site_sprites", {})
     nondecorative_ids = {object_id for object_id, row in map_objects.items() if row.get("family") not in {"blocker", "decoration"}}
-    ensure(len(nondecorative_ids) == 267 and set(mappings) == nondecorative_ids and len(asset_ids) == 267 and len(set(asset_ids)) == 267, errors, "All 267 authored non-decorative map objects must retain one exact distinct sprite mapping")
+    ensure(len(nondecorative_ids) == 269 and set(mappings) == nondecorative_ids and len(asset_ids) == 269 and len(set(asset_ids)) == 269, errors, "All 269 authored non-decorative map objects must retain one exact distinct sprite mapping")
     ensure(sprite_manifest.get("source", {}).get("new_generated_sprite_count") == 222 and sprite_manifest.get("source", {}).get("generated_batch_count") == 20, errors, "Foundation identity coverage must retain the expanded 222-object, 20-batch mapping provenance")
     coverage = sprite_manifest.get("coverage", {})
-    ensure(coverage.get("preexisting_unique_non_decorative_count") == 0 and coverage.get("new_distinct_non_decorative_asset_count") == 267 and coverage.get("total_distinct_authored_map_object_count_after_pass") == 467, errors, "Foundation identity coverage totals changed")
+    ensure(coverage.get("preexisting_unique_non_decorative_count") == 0 and coverage.get("new_distinct_non_decorative_asset_count") == 269 and coverage.get("total_distinct_authored_map_object_count_after_pass") == 469, errors, "Foundation identity coverage totals changed")
     ensure(source_manifest.get("schema") == "foundation_map_object_identities_source_manifest_v1" and source_manifest.get("content_slice_id") == "content-eight-foundation-map-object-identities-10184" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("background_extraction_mode") == "built_in_image_gen_background_extraction" and len(str(source_manifest.get("prompt_set_summary", ""))) >= 500, errors, "Foundation object source provenance changed")
     source_rows = {str(row.get("object_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     ensure(set(source_rows) == set(expected), errors, "Foundation object source manifest must own exactly the eight completed identities")

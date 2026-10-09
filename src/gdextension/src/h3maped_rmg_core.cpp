@@ -43162,6 +43162,69 @@ static RuntimeMapPayloadProjection project_runtime_map_from_owned_final_payload(
 				}
 			}
 		}
+		if (object.type_id == 6 && record.serializer_slot_0x0c == 0x0049be93U) {
+			// 0x49be93 writes base(12), a zero byte, field 0x1c (le32), a
+			// zero le32 and two zero bytes, the seven le32 fields 0x20-0x38,
+			// a zero le32 and two zero bytes, the spell count and spell bytes,
+			// the creature count and per creature its id (le16 from pass 1,
+			// u8 before) and quantity (le16), then two zero le32. In the H3M
+			// Pandora's Box record those are experience, mana, morale, luck,
+			// the seven resources (gold last), primary skills, secondary
+			// skills, artifacts, spells and creatures.
+			const size_t end = offset + size_t(record.payload_byte_count);
+			const size_t spell_count_offset = offset + 57U;
+			if (spell_count_offset + 1U > end) {
+				projection.blocked_reason = "runtime_projection_pandora_payload_truncated";
+				return projection;
+			}
+			object.pandora_experience = int32_t(read_le32(offset + 13U));
+			for (size_t resource = 0; resource < object.pandora_resources.size(); ++resource) {
+				object.pandora_resources[resource] = int32_t(read_le32(offset + 23U + 4U * resource));
+			}
+			const size_t spell_count = objects.object_payload_bytes[spell_count_offset];
+			const size_t creature_count_offset = spell_count_offset + 1U + spell_count;
+			if (creature_count_offset + 1U > end) {
+				projection.blocked_reason = "runtime_projection_pandora_payload_truncated";
+				return projection;
+			}
+			for (size_t spell = 0; spell < spell_count; ++spell) {
+				const int32_t spell_id = objects.object_payload_bytes[spell_count_offset + 1U + spell];
+				object.pandora_spell_ids.push_back(spell_id);
+				object.pandora_spell_levels.push_back(
+						spell_id < int32_t(REWARD_GUARD_SPELL_TRAITS_0X592520.size())
+						? REWARD_GUARD_SPELL_TRAITS_0X592520[size_t(spell_id)].level_0x18
+						: -1);
+				object.pandora_spell_school_masks.push_back(
+						spell_id < int32_t(REWARD_GUARD_SPELL_TRAITS_0X592520.size())
+						? int32_t(REWARD_GUARD_SPELL_TRAITS_0X592520[size_t(spell_id)].school_mask_0x1c)
+						: 0);
+			}
+			const size_t creature_count = objects.object_payload_bytes[creature_count_offset];
+			const size_t id_width = record.serialization_pass >= 1 ? 2U : 1U;
+			size_t cursor = creature_count_offset + 1U;
+			for (size_t index = 0; index < creature_count; ++index) {
+				if (cursor + id_width + 2U > end) {
+					projection.blocked_reason = "runtime_projection_pandora_payload_truncated";
+					return projection;
+				}
+				RuntimeMapPandoraCreature creature;
+				creature.creature_id = int32_t(objects.object_payload_bytes[cursor])
+						| (id_width == 2U ? int32_t(objects.object_payload_bytes[cursor + 1U]) << 8 : 0);
+				cursor += id_width;
+				creature.quantity = int32_t(objects.object_payload_bytes[cursor])
+						| (int32_t(objects.object_payload_bytes[cursor + 1U]) << 8);
+				cursor += 2U;
+				for (const auto &row : monster_table_rows_57cea0_4a5c07()) {
+					if (row.creature_id == creature.creature_id) {
+						creature.level = row.level_field_0x04;
+						creature.ai_value = row.ai_value_0x40;
+						break;
+					}
+				}
+				object.pandora_creatures.push_back(creature);
+			}
+			object.pandora_contents_known = true;
+		}
 		object.def_name = definition.def_name;
 		object.passability_mask_bytes = definition.passability_mask_bytes;
 		object.action_mask_bytes = definition.action_mask_bytes;

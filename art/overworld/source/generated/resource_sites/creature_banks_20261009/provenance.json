@@ -1,0 +1,29 @@
+{
+  "generator": "built_in_image_gen",
+  "generated_date": "2026-10-09",
+  "purpose": "Original sprites for two HoMM3 objects that random maps translate into new sites (docs/creature-banks.md): the Wyrmcrown Hoard stands for the Dragon Utopia and the Hushlock Casket for Pandora's Box. Two variants were generated per prompt; the one that reads best at map scale was kept.",
+  "images": [
+    {
+      "site_id": "site_wyrmcrown_hoard",
+      "prompt": "A single large guarded treasure site for a fantasy strategy game's adventure map: the \"Wyrmcrown Hoard\" - a great wyrm's lair built into a ring of jagged dark basalt crags, crowned at the back by the enormous weathered skull of an ancient horned wyrm half sunk into the rock, its curved horns forming an arch. Inside the ring lies a heaped hoard of warm gold coins, gilded goblets, a jewelled crown, scattered red and green gemstones and a few ornate weapons, spilling down a short slope at the front. Deep claw scratches score the rocks, a faint wisp of smoke rises from a scorched crack, and dark scales lie among the coins.\n\nMatch the style of the reference images exactly: painterly hand-painted fantasy game sprite, rich saturated colours, soft warm key light from the upper left, crisp dark outlines softened by painting, small soft contact shadow under the object. Same 3/4 top-down isometric camera angle as the references, a compact roughly square footprint like the reference guarded sites, the whole site centred and filling roughly 60% of the frame with empty margin around it.\n\nOne object only, no living creatures, no ground tile beyond the site's own rocky base, no surrounding scenery, no text, no letters, no frame. Plain transparent background.",
+      "references": [
+        "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_glassbound_eyrie.png",
+        "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_basalt_oath_tomb.png"
+      ],
+      "file": "wyrmcrown_hoard-source.png",
+      "source_sha256": "54ed189735ef80b6ce268f0c903b629e04a63b4116b54eb6fcb514a76da14e40",
+      "runtime": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wyrmcrown_hoard.png"
+    },
+    {
+      "site_id": "site_hushlock_casket",
+      "prompt": "A single small treasure pickup object for a fantasy strategy game's adventure map: the \"Hushlock Casket\" - an ornate sealed casket of dark polished wood bound with tarnished bronze bands and corner fittings, its domed lid held shut by three heavy bronze locks and a crossed loop of fine chain, sealed with two deep purple wax seals bearing a closed-eye sigil. Faint pale violet light glows from the thin seam under the lid and from the keyholes, hinting at unknown contents. It rests on a low weathered stone slab with a few fallen autumn leaves.\n\nMatch the style of the reference image exactly: painterly hand-painted fantasy game sprite, rich saturated colours, soft warm key light from the upper left, crisp dark outlines softened by painting, small soft contact shadow under the object. Same 3/4 top-down isometric camera angle as the reference chest, object centred and standing upright, filling roughly 50% of the frame with generous empty margin around it.\n\nOne object only, no ground tile beyond the small slab, no scenery, no text, no letters, no frame. Plain transparent background.",
+      "references": [
+        "res://art/overworld/runtime/objects/pickups/waystone_chest.png"
+      ],
+      "file": "hushlock_casket-source.png",
+      "source_sha256": "30e8dc377793b40c47a2d9e6fdce9007b7ce7c581151e82b7ef921ad08846f90",
+      "runtime": "res://art/overworld/runtime/objects/pickups/hushlock_casket.png"
+    }
+  ],
+  "processing": "tools/pack_bank_reward_sprites.py crops transparent margins and resizes uniformly onto the shared 512px RGBA canvas, centred and bottom-aligned with the guarded reward sites (largest extent 300px) and the one-time chests (360px); no repainting."
+}

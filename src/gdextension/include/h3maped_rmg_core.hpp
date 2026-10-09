@@ -4113,12 +4113,29 @@ struct RuntimeMapTilePoint {
 	int32_t level = 0;
 };
 
+struct RuntimeMapPandoraCreature {
+	int32_t creature_id = -1;
+	int32_t quantity = 0;
+	int32_t level = -1;
+	int32_t ai_value = -1;
+};
+
 struct RuntimeMapObjectProjection {
 	// Runtime adoption metadata decoded from the existing 0x49bb92 payload.
 	// Does not change generator state or native serialization.
 	int32_t guard_quantity = -1;
 	int32_t guard_level = -1;
 	int32_t guard_ai_value = -1;
+	// A Pandora's Box's contents decoded from its 0x49be93 payload, the same
+	// way. Spell levels come from the 0x592520 spell traits and creature
+	// levels and AI values from the 0x57cea0 monster table.
+	bool pandora_contents_known = false;
+	int32_t pandora_experience = 0;
+	std::array<int32_t, 7> pandora_resources {};
+	std::vector<int32_t> pandora_spell_ids;
+	std::vector<int32_t> pandora_spell_levels;
+	std::vector<int32_t> pandora_spell_school_masks;
+	std::vector<RuntimeMapPandoraCreature> pandora_creatures;
 	int32_t serialized_index = -1;
 	int32_t source_vector_index = -1;
 	int32_t definition_index = -1;

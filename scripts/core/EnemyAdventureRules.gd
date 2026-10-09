@@ -3136,6 +3136,13 @@ static func _secure_resource_target(
 		site
 	)
 	updated_raid = spell_reward.get("raid", updated_raid)
+	# Experience in the claim (a Pandora's Box) goes to the hero, as the
+	# human's hero gets it.
+	var claim_experience := maxi(0, int(_resource_site_claim_rewards(site).get("experience", 0)))
+	var claim_commander = updated_raid.get("enemy_commander_state", {})
+	var experience_gained: bool = claim_experience > 0 and claim_commander is Dictionary and not claim_commander.is_empty()
+	if experience_gained:
+		updated_raid["enemy_commander_state"] = _normalize_enemy_progression(HeroProgressionRulesScript.add_experience(claim_commander, claim_experience).get("hero", claim_commander))
 	var artifact_reward := _apply_resource_site_artifact_reward_to_raid(
 		session,
 		faction_id,
@@ -3147,10 +3154,12 @@ static func _secure_resource_target(
 	if bool(artifact_reward.get("applied", false)):
 		var artifact_id := String(artifact_reward.get("artifact_id", ""))
 		var captured_artifacts := _normalize_string_array(state.get("captured_artifact_ids", []))
-		if artifact_id not in captured_artifacts:
-			captured_artifacts.append(artifact_id)
+		for captured_id in artifact_reward.get("artifact_ids", [artifact_id]):
+			if String(captured_id) not in captured_artifacts:
+				captured_artifacts.append(String(captured_id))
 		state["captured_artifact_ids"] = captured_artifacts
 		node["artifact_reward_id"] = artifact_id
+		node["artifact_reward_ids"] = artifact_reward.get("artifact_ids", [artifact_id]).duplicate()
 		node["artifact_reward_table_id"] = String(artifact_reward.get("table_id", ""))
 		node["artifact_reward_source_key"] = String(artifact_reward.get("source_key", ""))
 		node["artifact_reward_claimed_by_faction_id"] = PlayerRules.faction_id(session, faction_id)
@@ -3190,11 +3199,16 @@ static func _secure_resource_target(
 			raid_commander_display_name(updated_raid),
 			_describe_recruit_set(recruit_reward.get("recruits", {})),
 		]
+	if experience_gained:
+		message = "%s %s gains %d experience." % [message, raid_commander_display_name(updated_raid), claim_experience]
 	if bool(artifact_reward.get("applied", false)):
+		var artifact_names := []
+		for artifact_id in artifact_reward.get("artifact_ids", [artifact_reward.get("artifact_id", "")]):
+			artifact_names.append(ArtifactRulesScript.describe_artifact(String(artifact_id)))
 		message = "%s %s secures and equips %s." % [
 			message,
 			raid_commander_display_name(updated_raid),
-			ArtifactRulesScript.describe_artifact(String(artifact_reward.get("artifact_id", ""))),
+			", ".join(artifact_names),
 		]
 	var disruption_message: String = OverworldRulesScript.apply_resource_site_disruption(
 		session,
@@ -3248,7 +3262,7 @@ static func _secure_resource_target(
 	)
 	_ai_hero_task_finish_live_assignment(session, faction_id, updated_raid, "completed", "valid")
 	# The hero picks its next errand itself (AiHeroRules).
-	if bool(spell_reward.get("learned", false)) or bool(artifact_reward.get("applied", false)):
+	if bool(spell_reward.get("learned", false)) or bool(artifact_reward.get("applied", false)) or experience_gained:
 		var final_commander = updated_raid.get("enemy_commander_state", {})
 		if final_commander is Dictionary and not final_commander.is_empty():
 			sync_commander_state_to_roster(
@@ -3495,31 +3509,41 @@ static func _apply_resource_site_artifact_reward_to_raid(
 		String(node.get("placement_id", "")),
 		String(node.get("site_id", "")),
 	]
-	var selection := ArtifactRulesScript.select_live_source_reward(
+	var selections := ArtifactRulesScript.select_live_source_rewards(
 		source_tag,
 		site,
 		source_key,
 		PlayerRules.faction_id(session, faction_id),
 		ArtifactRulesScript.owned_artifact_ids(commander_state)
 	)
-	if not bool(selection.get("ok", false)):
-		selection["raid"] = raid
-		selection["applied"] = false
-		return selection
-	var artifact_id := String(selection.get("artifact_id", ""))
-	var claim := ArtifactRulesScript.claim_artifact(
-		commander_state,
-		artifact_id,
-		"%s grants" % String(site.get("name", "The shrine")) if source_tag == "shrine" else "Secured from %s" % String(site.get("name", "the reward site")),
-		true
-	)
+	if selections.is_empty():
+		var failed := ArtifactRulesScript.select_live_source_reward(source_tag, site, source_key, PlayerRules.faction_id(session, faction_id), ArtifactRulesScript.owned_artifact_ids(commander_state))
+		failed["raid"] = raid
+		failed["applied"] = false
+		return failed
+	var result: Dictionary = selections[0].duplicate(true)
 	var updated_raid := raid.duplicate(true)
-	if bool(claim.get("ok", false)):
-		updated_raid["enemy_commander_state"] = claim.get("hero", commander_state)
-	selection["raid"] = updated_raid
-	selection["claim"] = claim
-	selection["applied"] = bool(claim.get("ok", false)) and not bool(claim.get("duplicate", false))
-	return selection
+	var artifact_ids := []
+	for selection in selections:
+		var claim := ArtifactRulesScript.claim_artifact(
+			commander_state,
+			String(selection.get("artifact_id", "")),
+			"%s grants" % String(site.get("name", "The shrine")) if source_tag == "shrine" else "Secured from %s" % String(site.get("name", "the reward site")),
+			true
+		)
+		if bool(claim.get("ok", false)):
+			commander_state = claim.get("hero", commander_state)
+			if not bool(claim.get("duplicate", false)):
+				artifact_ids.append(String(selection.get("artifact_id", "")))
+		if not result.has("claim"):
+			result["claim"] = claim
+	updated_raid["enemy_commander_state"] = commander_state
+	result["raid"] = updated_raid
+	result["applied"] = not artifact_ids.is_empty()
+	if not artifact_ids.is_empty():
+		result["artifact_id"] = String(artifact_ids[0])
+	result["artifact_ids"] = artifact_ids
+	return result
 
 static func _apply_resource_site_claim_recruits_to_raid(
 	session: SessionStateStoreScript.SessionData,
@@ -3584,55 +3608,51 @@ static func _apply_resource_site_spell_reward_to_commander(
 	raid: Dictionary,
 	site: Dictionary
 ) -> Dictionary:
-	var spell_id := String(site.get("learn_spell_id", ""))
-	var spell_ids = site.get("learn_spell_ids", [])
-	if spell_id == "" and spell_ids is Array and not spell_ids.is_empty():
-		spell_id = String(spell_ids[0])
-	if session == null or faction_id == "" or raid.is_empty() or spell_id == "":
-		return {"raid": raid, "learned": false, "spell_id": spell_id, "spell_name": ""}
-	var spell := ContentService.get_spell(spell_id)
-	if spell.is_empty():
-		return {"raid": raid, "learned": false, "spell_id": spell_id, "spell_name": ""}
+	# Every spell the site teaches, as the human's hero learns them all.
+	var spell_ids := []
+	if String(site.get("learn_spell_id", "")) != "":
+		spell_ids.append(String(site.get("learn_spell_id", "")))
+	for spell_id_value in site.get("learn_spell_ids", []) if site.get("learn_spell_ids", []) is Array else []:
+		if String(spell_id_value) != "" and String(spell_id_value) not in spell_ids:
+			spell_ids.append(String(spell_id_value))
+	var first_id := String(spell_ids[0]) if not spell_ids.is_empty() else ""
+	var first_name := String(ContentService.get_spell(first_id).get("name", first_id)) if first_id != "" else ""
+	if session == null or faction_id == "" or raid.is_empty() or spell_ids.is_empty():
+		return {"raid": raid, "learned": false, "spell_id": first_id, "spell_name": ""}
 	var commander_state = raid.get("enemy_commander_state", {})
 	if not (commander_state is Dictionary) or commander_state.is_empty():
-		return {"raid": raid, "learned": false, "spell_id": spell_id, "spell_name": String(spell.get("name", spell_id))}
-	var normalized_commander := SpellRulesScript.ensure_hero_spellbook(commander_state.duplicate(true))
-	if SpellRulesScript.knows_spell(normalized_commander, spell_id):
-		var already_known_raid := raid.duplicate(true)
-		already_known_raid["enemy_commander_state"] = normalized_commander
-		return {
-			"raid": already_known_raid,
-			"learned": false,
-			"spell_id": spell_id,
-			"spell_name": String(spell.get("name", spell_id)),
-		}
-	var learn_result := SpellRulesScript.learn_spell(normalized_commander, spell_id)
-	if not bool(learn_result.get("ok", false)):
-		var failed_raid := raid.duplicate(true)
-		failed_raid["enemy_commander_state"] = normalized_commander
-		return {
-			"raid": failed_raid,
-			"learned": false,
-			"spell_id": spell_id,
-			"spell_name": String(spell.get("name", spell_id)),
-		}
+		return {"raid": raid, "learned": false, "spell_id": first_id, "spell_name": first_name}
+	var commander := SpellRulesScript.ensure_hero_spellbook(commander_state.duplicate(true))
+	var learned_ids := []
+	var learned_names := []
+	for spell_id in spell_ids:
+		var spell := ContentService.get_spell(String(spell_id))
+		if spell.is_empty() or SpellRulesScript.knows_spell(commander, String(spell_id)):
+			continue
+		var learn_result := SpellRulesScript.learn_spell(commander, String(spell_id))
+		if bool(learn_result.get("ok", false)):
+			commander = learn_result.get("hero", commander)
+			learned_ids.append(String(spell_id))
+			learned_names.append(String(spell.get("name", spell_id)))
 	var updated_raid := raid.duplicate(true)
-	var updated_commander: Dictionary = learn_result.get("hero", normalized_commander)
-	updated_raid["enemy_commander_state"] = updated_commander
+	updated_raid["enemy_commander_state"] = commander
+	if learned_ids.is_empty():
+		return {"raid": updated_raid, "learned": false, "spell_id": first_id, "spell_name": first_name}
 	sync_commander_state_to_roster(
 		session,
 		faction_id,
-		updated_commander,
+		commander,
 		COMMANDER_STATUS_ACTIVE,
 		String(updated_raid.get("placement_id", "")),
 		-1,
-		String(updated_commander.get("last_outcome", COMMANDER_OUTCOME_RESOURCE_SECURED))
+		String(commander.get("last_outcome", COMMANDER_OUTCOME_RESOURCE_SECURED))
 	)
 	return {
 		"raid": updated_raid,
 		"learned": true,
-		"spell_id": spell_id,
-		"spell_name": String(spell.get("name", spell_id)),
+		"spell_id": String(learned_ids[0]),
+		"spell_ids": learned_ids,
+		"spell_name": ", ".join(learned_names) if learned_names.size() <= 3 else "%d spells" % learned_names.size(),
 	}
 
 static func _clear_regroup_target(raid: Dictionary) -> Dictionary:

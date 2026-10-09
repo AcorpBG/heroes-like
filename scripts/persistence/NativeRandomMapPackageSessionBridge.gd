@@ -546,6 +546,10 @@ static func _ensure_generated_guarded_reward_site_guards(resource_nodes: Array, 
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		if not _generated_guarded_reward_site_contract_is_live(site):
 			continue
+		# A Warrior's Tomb fights no guard of its own; the native one beside it
+		# already holds it.
+		if bool(node.get(GeneratedRewards.UNGUARDED, false)):
+			continue
 		if _resource_node_has_linked_guard(result, node):
 			continue
 		var guard := _supplemental_guarded_reward_site_guard(node, site, map_size)
@@ -645,6 +649,7 @@ static func _supplemental_guarded_reward_site_guard(node: Dictionary, site: Dict
 		army["stacks"] = bank_stacks
 		guard["enemy_army"] = army
 		guard[GeneratedRewards.BANK_LEVEL] = bank_level
+		guard = GeneratedNeutralRules.with_lead_unit_art(guard, "creature_bank_level_v1")
 	return guard
 
 static func _generated_guarded_reward_engagement_tiles(visit_tile: Dictionary, map_size: Variant) -> Array:

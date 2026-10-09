@@ -163,21 +163,48 @@ static func _company_art_ready(asset_id: String, unit_id: String) -> bool:
 
 ## Original stacks with the battle power of native ones: each native stack,
 ## [creature value, headcount], becomes its paired unit with value x headcount
-## x power_per_native_value of power, at least one creature. Empty when a unit
-## or the rate is missing.
+## x power_per_native_value of power. Stacks of one unit pool their power before
+## it becomes whole creatures (at least one), then share them by budget, so a
+## guard split in five small stacks keeps its strength. Empty when a unit or the
+## rate is missing.
 static func stacks_for_native_budget(native_stacks: Array, unit_ids: Array) -> Array:
 	var rate := float(ContentService.load_json(COMPANIES_PATH).get("power_per_native_value", 0.0))
 	if rate <= 0.0 or native_stacks.size() > unit_ids.size():
 		return []
-	var stacks := []
+	var budgets := []
+	var pooled := {}
 	for index in range(native_stacks.size()):
 		var unit_id := String(unit_ids[index])
-		var unit_power := _unit_power(unit_id)
-		if unit_power <= 0.0:
+		if _unit_power(unit_id) <= 0.0:
 			return []
 		var native: Array = native_stacks[index]
-		var power := float(native[0]) * float(native[1]) * rate
-		stacks.append({"unit_id": unit_id, "count": maxi(1, int(round(power / unit_power)))})
+		var budget := maxf(0.0, float(native[0]) * float(native[1]) * rate)
+		budgets.append(budget)
+		pooled[unit_id] = float(pooled.get(unit_id, 0.0)) + budget
+	var counts := []
+	counts.resize(native_stacks.size())
+	counts.fill(0)
+	for unit_id in pooled.keys():
+		var total := maxi(1, int(round(float(pooled[unit_id]) / _unit_power(String(unit_id)))))
+		var shares := []
+		var given := 0
+		for index in range(native_stacks.size()):
+			if String(unit_ids[index]) != String(unit_id):
+				continue
+			var exact := float(total) * float(budgets[index]) / float(pooled[unit_id]) if float(pooled[unit_id]) > 0.0 else float(total)
+			counts[index] = int(floor(exact))
+			given += int(counts[index])
+			shares.append([exact - floor(exact), index])
+			if float(pooled[unit_id]) <= 0.0:
+				break
+		# The creatures left over go to the stacks with the largest remainders.
+		shares.sort_custom(func(a, b): return a[0] > b[0] or (a[0] == b[0] and a[1] < b[1]))
+		for share_index in range(mini(total - given, shares.size())):
+			counts[int(shares[share_index][1])] += 1
+	var stacks := []
+	for index in range(native_stacks.size()):
+		if int(counts[index]) > 0:
+			stacks.append({"unit_id": String(unit_ids[index]), "count": int(counts[index])})
 	return stacks
 
 static func _unit_power(unit_id: String) -> float:
@@ -238,6 +265,41 @@ static func with_authored_guard_art(placement: Dictionary) -> Dictionary:
 			"quantity_policy": "authored_guard_contract_unchanged",
 		}
 		break
+	return result
+
+## A guard that fields its own army shows its strongest stack's unit, in that
+## unit's overworld idle pose, as a generated company without a painting of
+## its own does. Unchanged when the unit has no idle art.
+static func with_lead_unit_art(placement: Dictionary, quantity_policy: String) -> Dictionary:
+	var result := placement.duplicate(true)
+	var stacks: Array = result.get("enemy_army", {}).get("stacks", []) if result.get("enemy_army", {}) is Dictionary else []
+	var lead := ""
+	var lead_power := -1.0
+	var total := 0
+	var unit_ids := []
+	for stack in stacks:
+		if not (stack is Dictionary):
+			continue
+		var power := _army_power([stack])
+		total += int(stack.get("count", 0))
+		if String(stack.get("unit_id", "")) not in unit_ids:
+			unit_ids.append(String(stack.get("unit_id", "")))
+		if power > lead_power:
+			lead_power = power
+			lead = String(stack.get("unit_id", ""))
+	if lead == "" or not _company_art_ready("", lead):
+		return result
+	result["prefer_identity_landmark"] = true
+	result["generated_neutral_profile"] = {
+		"version": 2,
+		"encounter_id": String(result.get("encounter_id", "")),
+		"asset_id": "",
+		"primary_unit_id": lead,
+		"quantity_policy": quantity_policy,
+		"power": int(round(_army_power(stacks))),
+		"total_quantity": total,
+		"formation": "pure" if unit_ids.size() == 1 else "mixed",
+	}
 	return result
 
 static func _unit_strength(unit_id: String) -> int:

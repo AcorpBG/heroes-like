@@ -1611,6 +1611,19 @@ static func _resource_site_reward_choices(site: Dictionary) -> Array:
 	var choices = site.get("reward_choices", [])
 	return choices if choices is Array else []
 
+## The artifacts a generated bank, tomb or casket holds, by HoMM3 class.
+static func _resource_site_artifact_summary(site: Dictionary) -> String:
+	var classes = site.get(NodePayload.CLAIM_ARTIFACT_CLASSES, [])
+	if not (classes is Array) or classes.is_empty():
+		return ""
+	if classes.size() == 1:
+		return "a %s artifact" % String(classes[0])
+	return "%d artifacts (%s)" % [classes.size(), ", ".join(classes)]
+
+## Up to three spell names, or how many spells there are.
+static func _spell_list_text(names: Array) -> String:
+	return ", ".join(names) if names.size() <= 3 else "%d spells" % names.size()
+
 static func _resource_site_reward_summary(site: Dictionary) -> String:
 	var choices := _resource_site_reward_choices(site)
 	if choices.is_empty():
@@ -1815,8 +1828,13 @@ static func _collect_resource_node_result(
 	var claim_flags := _resource_site_claim_flags(site)
 	for flag_key in claim_flags.keys():
 		session.flags[String(flag_key)] = claim_flags[flag_key]
-	for spell_message in _learn_site_spells(session, _resource_site_spell_ids(site)):
-		messages.append(String(spell_message))
+	var spell_messages := _learn_site_spells(session, _resource_site_spell_ids(site))
+	if spell_messages.size() > 3:
+		# A Pandora's Box can teach a whole school at once.
+		messages.append("Learns %d spells." % spell_messages.size())
+	else:
+		for spell_message in spell_messages:
+			messages.append(String(spell_message))
 	var site_vision_radius: int = max(0, int(site.get("vision_radius", 0)))
 	var site_reveal_tiles: int = _reveal_resource_site_claim_fog(session, node, site_vision_radius)
 	if site_reveal_tiles > 0:
@@ -1834,6 +1852,7 @@ static func _collect_resource_node_result(
 	if bool(artifact_reward.get("applied", false)):
 		messages.append(String(artifact_reward.get("message", "")))
 		node["artifact_reward_id"] = String(artifact_reward.get("artifact_id", ""))
+		node["artifact_reward_ids"] = artifact_reward.get("artifact_ids", [node["artifact_reward_id"]]).duplicate()
 		node["artifact_reward_table_id"] = String(artifact_reward.get("table_id", ""))
 		node["artifact_reward_source_key"] = String(artifact_reward.get("source_key", ""))
 		node["artifact_reward_claimed_by_faction_id"] = "player"
@@ -1846,7 +1865,7 @@ static func _collect_resource_node_result(
 	if site_reveal_tiles > 0:
 		mutation_facts["fog_exploration_changed"] = true
 	if bool(artifact_reward.get("applied", false)):
-		mutation_facts["artifact_ids"] = [String(artifact_reward.get("artifact_id", ""))]
+		mutation_facts["artifact_ids"] = artifact_reward.get("artifact_ids", [String(artifact_reward.get("artifact_id", ""))]).duplicate()
 		mutation_facts["artifact_reward_table_id"] = String(artifact_reward.get("table_id", ""))
 	if not claim_flags.is_empty():
 		mutation_facts["flags"] = Array(claim_flags.keys(), TYPE_STRING, "", null)
@@ -7584,6 +7603,7 @@ static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictiona
 		"source_support_faction_id",
 		"source_support_missing_resource_ids",
 		"artifact_reward_id",
+		"artifact_reward_ids",
 		"artifact_reward_table_id",
 		"artifact_reward_source_key",
 		"artifact_reward_claimed_by_faction_id",
@@ -7596,8 +7616,10 @@ static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictiona
 		NodePayload.PAYLOAD_VISIT,
 		NodePayload.PAYLOAD_RECRUITS,
 		NodePayload.PAYLOAD_VISION_RADIUS,
+		NodePayload.PAYLOAD_ARTIFACT_CLASSES,
 		NodePayload.PAYLOAD_ARTIFACT_RARITY,
 		"generated_bank_level",
+		"generated_reward_unguarded",
 		VisitBuildings.HERO_VISITS,
 		VisitBuildings.SIDE_VISITS,
 		CreatureDwellings.POPULATION,
@@ -8442,6 +8464,11 @@ static func _resource_site_yield_line(
 		var reward_summary := _resource_site_reward_summary(site)
 		if reward_summary != "":
 			parts.append("one-time %s" % reward_summary)
+		if claim_recruits != "":
+			parts.append("troops join %s" % claim_recruits)
+	var artifact_summary := _resource_site_artifact_summary(site)
+	if artifact_summary != "":
+		parts.append(artifact_summary)
 	if _resource_site_is_repeatable(site):
 		var cost_summary := _describe_resource_delta(_resource_site_visit_cost(site))
 		if cost_summary != "":
@@ -8452,7 +8479,7 @@ static func _resource_site_yield_line(
 			parts.append("next service day %d" % _resource_site_next_visit_day(node, site))
 	var lesson_names := _resource_site_spell_names(site)
 	if not lesson_names.is_empty():
-		parts.append("teaches %s" % ", ".join(lesson_names))
+		parts.append("teaches %s" % _spell_list_text(lesson_names))
 	return ", ".join(_non_empty_strings(parts))
 
 static func _resource_site_route_line(
@@ -10023,6 +10050,9 @@ static func _resource_site_context_summary(session: SessionStateStoreScript.Sess
 	var reward_summary := _resource_site_reward_summary(site)
 	if reward_summary != "":
 		parts.append("Reward %s" % reward_summary)
+	var artifact_summary := _resource_site_artifact_summary(site)
+	if artifact_summary != "":
+		parts.append("Holds %s" % artifact_summary)
 	var vision_radius = max(0, int(site.get("vision_radius", 0)))
 	if vision_radius > 0:
 		parts.append("Scout ring %d" % vision_radius)
@@ -10045,7 +10075,7 @@ static func _resource_site_context_summary(session: SessionStateStoreScript.Sess
 		parts.append("Town support %s" % ", ".join(support_parts))
 	var lesson_names := _resource_site_spell_names(site)
 	if not lesson_names.is_empty():
-		parts.append("Teaches %s" % ", ".join(lesson_names))
+		parts.append("Teaches %s" % _spell_list_text(lesson_names))
 	if _resource_site_is_repeatable(site):
 		var service_summary := String(site.get("service_summary", ""))
 		if service_summary != "":
@@ -14069,26 +14099,37 @@ static func _grant_resource_site_artifact_reward(
 		String(node.get("placement_id", "")),
 		String(node.get("site_id", "")),
 	]
-	var selection := ArtifactRulesScript.select_live_source_reward(
+	# A generated bank or tomb can hold several artifacts, one per HoMM3 class.
+	var selections := ArtifactRulesScript.select_live_source_rewards(
 		source_tag,
 		site,
 		source_key,
 		faction_id,
 		ArtifactRulesScript.owned_artifact_ids(session.overworld.get("hero", {}))
 	)
-	if not bool(selection.get("ok", false)):
-		return selection
-	var artifact_id := String(selection.get("artifact_id", ""))
-	var claim := _apply_artifact_claim(
-		session,
-		artifact_id,
-		"%s grants" % String(site.get("name", "The shrine")) if source_tag == "shrine" else "Recovered from %s" % String(site.get("name", "the reward site")),
-		true
-	)
-	selection["claim"] = claim
-	selection["applied"] = bool(claim.get("ok", false)) and not bool(claim.get("duplicate", false))
-	selection["message"] = String(claim.get("message", ""))
-	return selection
+	if selections.is_empty():
+		return ArtifactRulesScript.select_live_source_reward(source_tag, site, source_key, faction_id, ArtifactRulesScript.owned_artifact_ids(session.overworld.get("hero", {})))
+	var result: Dictionary = selections[0].duplicate(true)
+	var artifact_ids := []
+	var messages := []
+	for selection in selections:
+		var claim := _apply_artifact_claim(
+			session,
+			String(selection.get("artifact_id", "")),
+			"%s grants" % String(site.get("name", "The shrine")) if source_tag == "shrine" else "Recovered from %s" % String(site.get("name", "the reward site")),
+			true
+		)
+		if bool(claim.get("ok", false)) and not bool(claim.get("duplicate", false)):
+			artifact_ids.append(String(selection.get("artifact_id", "")))
+			messages.append(String(claim.get("message", "")))
+		if not result.has("claim"):
+			result["claim"] = claim
+	result["applied"] = not artifact_ids.is_empty()
+	if not artifact_ids.is_empty():
+		result["artifact_id"] = String(artifact_ids[0])
+	result["artifact_ids"] = artifact_ids
+	result["message"] = " ".join(messages)
+	return result
 
 static func _begin_town_assault(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	var town_name := _town_name(town)

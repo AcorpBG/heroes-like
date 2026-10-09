@@ -10,6 +10,7 @@ extends RefCounted
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
 const GeneratedNeutral = preload("res://scripts/persistence/GeneratedNeutralEncounterRules.gd")
+const HeroProgression = preload("res://scripts/core/HeroProgressionRules.gd")
 
 const RARE_RESOURCES := ["aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]
 const COLLECTIBLE_RESOURCES := ["wood", "ore", "aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]
@@ -68,32 +69,189 @@ const TREASURE_CHEST_TIERS := [[1000, 500], [1500, 1000], [2000, 1500]]
 # Scroll spells lean to the lower tiers; tier 5 is never found on the map.
 const SCROLL_TIER_WEIGHTS := {1: 40, 2: 30, 3: 20, 4: 10}
 
-# HoMM3 creature banks keep their levels (docs/creature-banks.md). A bank rolls
-# one level per placement and pays that level's gold, plus one random artifact
-# of the HoMM3 class where the level holds one; its guard fights as the site's
-# own units with the battle power of the native guard's budget, as generated
-# neutral guards do. The Crypt (CRBANKS.TXT) becomes the Glassbound Eyrie.
-# Guard stacks are [creature AI value, headcount]: Skeletons 60, Walking Dead
-# 98, Wights 252, Vampires 555.
+# HoMM3 creature banks keep their levels (docs/creature-banks.md; numbers from
+# CRBANKS.TXT). A bank rolls one level per placement and pays that level's
+# resources, troops, spell and artifacts; its guard fights as original units
+# with the battle power of the native guard's budget, as generated neutral
+# guards do. Guard and troop stacks are [HoMM3 creature AI value, headcount],
+# and "units" names the original unit standing for each creature. Our units are
+# weaker than HoMM3's, so troops and guards convert by battle power, not by
+# headcount. A single-creature guard stands in five stacks; where the creature
+# has an upgrade, half the placements field one of the five upgraded. "rares"
+# are the HoMM3 mercury, sulfur, crystal and gems amounts, paid as four of our
+# six rares shuffled per placement. Artifacts are HoMM3 classes
+# (ArtifactRules.H3M_ARTIFACT_CLASS_RARITIES). Keys are "type:subtype" or "type".
+const TYPE_PANDORA := 6
+const TYPE_CREATURE_BANK := 16
+const TYPE_DERELICT_SHIP := 24
+const TYPE_DRAGON_UTOPIA := 25
+const TYPE_PYRAMID := 63
 const TYPE_CRYPT := 84
-const TYPE_RANDOM_TREASURE_ARTIFACT := 66
+const TYPE_SHIPWRECK := 85
+const TYPE_WARRIORS_TOMB := 108
 const BANK_LEVEL := "generated_bank_level"
-const RANDOM_MAP_ELIGIBILITY_PATH := "res://content/random_map_object_eligibility.json"
+# A translated site that fights no guard of its own (Pandora's Box, Warrior's
+# Tomb): the native generator already set a guard beside it.
+const UNGUARDED := "generated_reward_unguarded"
+const GUARD_STACK_COUNT := 5
+const UPGRADE_CHANCE_PCT := 50
 const CREATURE_BANKS := {
-	TYPE_CRYPT: {
-		"site_id": "site_glassbound_eyrie",
-		# Skeletons, Walking Dead, Wights and Vampires stand as the Eyrie's
-		# runners, pike wardens, slingers and Windcrest striders.
-		"guard_unit_ids": ["unit_neutral_kitehook_runners", "unit_neutral_cliffhawk_wardens", "unit_neutral_windglass_slingers", "unit_neutral_galehorn_striders"],
-		"artifact_source_type": TYPE_RANDOM_TREASURE_ARTIFACT,
+	# Cyclops Stockpile: Cyclopes (Kings) as Gaugecoil Orewyrms.
+	"16:0": {
+		"site_id": "site_brasswake_depot",
+		"units": {1266: "unit_neutral_gaugecoil_orewyrms", 1443: "unit_neutral_gaugecoil_orewyrms"},
+		"upgrade": [1266, 1443],
 		"levels": [
-			{"chance": 30, "gold": 1500, "artifact": false, "guard": [[60, 30], [98, 20]]},
-			{"chance": 30, "gold": 2000, "artifact": false, "guard": [[60, 25], [98, 20], [252, 5]]},
-			{"chance": 30, "gold": 2500, "artifact": true, "guard": [[60, 20], [98, 20], [252, 10], [555, 5]]},
-			{"chance": 10, "gold": 5000, "artifact": true, "guard": [[60, 20], [98, 20], [252, 10], [555, 10]]},
+			{"chance": 30, "guard": [[1266, 20]], "rewards": {"wood": 4, "ore": 4}, "rares": [4, 4, 4, 4]},
+			{"chance": 30, "guard": [[1266, 30]], "rewards": {"wood": 6, "ore": 6}, "rares": [6, 6, 6, 6]},
+			{"chance": 30, "guard": [[1266, 40]], "rewards": {"wood": 8, "ore": 8}, "rares": [8, 8, 8, 8]},
+			{"chance": 10, "guard": [[1266, 50]], "rewards": {"wood": 10, "ore": 10}, "rares": [10, 10, 10, 10]},
+		],
+	},
+	# Dwarven Treasury: Dwarves (Battle Dwarves) as Kilnward Mallets, in the
+	# Barrow Vault, a one-time site as every bank is.
+	"16:1": {
+		"site_id": "site_barrow_vault",
+		"units": {138: "unit_neutral_kilnward_mallets", 209: "unit_neutral_kilnward_mallets"},
+		"upgrade": [138, 209],
+		"levels": [
+			{"chance": 30, "guard": [[138, 50]], "rewards": {"gold": 2500}, "rares": [0, 0, 2, 0]},
+			{"chance": 30, "guard": [[138, 75]], "rewards": {"gold": 4000}, "rares": [0, 0, 3, 0]},
+			{"chance": 30, "guard": [[138, 100]], "rewards": {"gold": 5000}, "rares": [0, 0, 5, 0]},
+			{"chance": 10, "guard": [[138, 150]], "rewards": {"gold": 7500}, "rares": [0, 0, 10, 0]},
+		],
+	},
+	# Griffin Conservatory: Griffins (Royal) as Cliffhawk Wardens; its
+	# Angels join as Noonshard Prism Kites.
+	"16:2": {
+		"site_id": "site_glassbound_eyrie",
+		"units": {351: "unit_neutral_cliffhawk_wardens", 448: "unit_neutral_cliffhawk_wardens", 5019: "unit_neutral_noonshard_prism_kites"},
+		"upgrade": [351, 448],
+		"levels": [
+			{"chance": 30, "guard": [[351, 50]], "troops": [[5019, 1]]},
+			{"chance": 30, "guard": [[351, 100]], "troops": [[5019, 2]]},
+			{"chance": 30, "guard": [[351, 150]], "troops": [[5019, 3]]},
+			{"chance": 10, "guard": [[351, 200]], "troops": [[5019, 4]]},
+		],
+	},
+	# Imp Cache: Imps (Familiars) as Charcoal Mauls.
+	"16:3": {
+		"site_id": "site_furnace_vault",
+		"units": {50: "unit_neutral_charcoal_mauls", 60: "unit_neutral_charcoal_mauls"},
+		"upgrade": [50, 60],
+		"levels": [
+			{"chance": 30, "guard": [[50, 100]], "rewards": {"gold": 1000}, "rares": [2, 0, 0, 0]},
+			{"chance": 30, "guard": [[50, 150]], "rewards": {"gold": 1500}, "rares": [3, 0, 0, 0]},
+			{"chance": 30, "guard": [[50, 200]], "rewards": {"gold": 2000}, "rares": [4, 0, 0, 0]},
+			{"chance": 10, "guard": [[50, 300]], "rewards": {"gold": 3000}, "rares": [6, 0, 0, 0]},
+		],
+	},
+	# Medusa Stores: Medusas (Queens) as Mireglass Belltoads.
+	"16:4": {
+		"site_id": "site_drowned_reliquary",
+		"units": {517: "unit_neutral_mireglass_belltoads", 577: "unit_neutral_mireglass_belltoads"},
+		"upgrade": [517, 577],
+		"levels": [
+			{"chance": 30, "guard": [[517, 20]], "rewards": {"gold": 2000}, "rares": [0, 5, 0, 0]},
+			{"chance": 30, "guard": [[517, 30]], "rewards": {"gold": 3000}, "rares": [0, 6, 0, 0]},
+			{"chance": 30, "guard": [[517, 40]], "rewards": {"gold": 4000}, "rares": [0, 8, 0, 0]},
+			{"chance": 10, "guard": [[517, 50]], "rewards": {"gold": 5000}, "rares": [0, 10, 0, 0]},
+		],
+	},
+	# Naga Bank: Nagas (Queens) as Fenmirror Gallowshells, in the Amber
+	# Reliquary.
+	"16:5": {
+		"site_id": "site_amber_reliquary",
+		"units": {2016: "unit_neutral_fenmirror_gallowshells", 2840: "unit_neutral_fenmirror_gallowshells"},
+		"upgrade": [2016, 2840],
+		"levels": [
+			{"chance": 30, "guard": [[2016, 10]], "rewards": {"gold": 4000}, "rares": [0, 8, 0, 0]},
+			{"chance": 30, "guard": [[2016, 15]], "rewards": {"gold": 6000}, "rares": [0, 12, 0, 0]},
+			{"chance": 30, "guard": [[2016, 20]], "rewards": {"gold": 8000}, "rares": [0, 16, 0, 0]},
+			{"chance": 10, "guard": [[2016, 30]], "rewards": {"gold": 12000}, "rares": [0, 24, 0, 0]},
+		],
+	},
+	# Dragon Fly Hive: Dragon Flies as Bogbell Mauls; its Wyverns join as
+	# Miremoon Crownmaws. Dragon Flies are already upgraded.
+	"16:6": {
+		"site_id": "site_hive_of_reeds",
+		"units": {312: "unit_neutral_bogbell_mauls", 1350: "unit_neutral_miremoon_crownmaws"},
+		"levels": [
+			{"chance": 30, "guard": [[312, 30]], "troops": [[1350, 4]]},
+			{"chance": 30, "guard": [[312, 45]], "troops": [[1350, 6]]},
+			{"chance": 30, "guard": [[312, 60]], "troops": [[1350, 8]]},
+			{"chance": 10, "guard": [[312, 90]], "troops": [[1350, 12]]},
+		],
+	},
+	# Derelict Ship: Water Elementals as Tideglass Skyrays.
+	"24": {
+		"site_id": "site_storm_bell_wreck",
+		"units": {315: "unit_neutral_tideglass_skyrays"},
+		"levels": [
+			{"chance": 30, "guard": [[315, 20]], "rewards": {"gold": 3000}},
+			{"chance": 30, "guard": [[315, 30]], "rewards": {"gold": 3000}, "artifacts": ["treasure"]},
+			{"chance": 30, "guard": [[315, 40]], "rewards": {"gold": 4000}, "artifacts": ["treasure"]},
+			{"chance": 10, "guard": [[315, 60]], "rewards": {"gold": 6000}, "artifacts": ["minor"]},
+		],
+	},
+	# Dragon Utopia: Green, Red, Gold and Black Dragons as Rootvault
+	# Barkhulks, Deepforge Vaultwyrms, Quenchbell Ironbacks and Gloambell
+	# Wake-Mantas.
+	"25": {
+		"site_id": "site_wyrmcrown_hoard",
+		"units": {4872: "unit_neutral_rootvault_barkhulks", 4702: "unit_neutral_deepforge_vaultwyrms", 8613: "unit_neutral_quenchbell_ironbacks", 8721: "unit_neutral_gloambell_wake_mantas"},
+		"levels": [
+			{"chance": 30, "guard": [[4872, 8], [4702, 5], [8613, 2], [8721, 1]], "rewards": {"gold": 20000}, "artifacts": ["treasure", "minor", "major", "relic"]},
+			{"chance": 30, "guard": [[4872, 8], [4702, 6], [8613, 3], [8721, 2]], "rewards": {"gold": 30000}, "artifacts": ["minor", "major", "relic", "relic"]},
+			{"chance": 30, "guard": [[4872, 8], [4702, 6], [8613, 4], [8721, 3]], "rewards": {"gold": 40000}, "artifacts": ["major", "relic", "relic", "relic"]},
+			{"chance": 10, "guard": [[4872, 8], [4702, 7], [8613, 6], [8721, 5]], "rewards": {"gold": 50000}, "artifacts": ["relic", "relic", "relic", "relic"]},
+		],
+	},
+	# Pyramid: 40 Gold Golems and 20 Diamond Golems as Basalt Wardens and
+	# Sumpstone Guards, guarding one spell of the highest tier.
+	"63": {
+		"site_id": "site_mirror_archive",
+		"units": {600: "unit_neutral_basalt_wardens", 775: "unit_neutral_sumpstone_guards"},
+		"levels": [
+			{"chance": 100, "guard": [[600, 14], [600, 13], [600, 13], [775, 10], [775, 10]], "spell_tier": 5},
+		],
+	},
+	# Crypt: Skeletons, Walking Dead, Wights and Vampires as Veilmourn's
+	# Knellwake Wardens, Gravetide Anchors, Lastlight Keepers and Duskpass
+	# Revenants.
+	"84": {
+		"site_id": "site_prism_ossuary",
+		"units": {60: "unit_veilmourn_bellwake_oars_veteran", 98: "unit_veilmourn_wakechain_boarders_veteran", 252: "unit_veilmourn_mourning_lanterns_veteran", 555: "unit_veilmourn_mirrorkeel_reavers_veteran"},
+		"levels": [
+			{"chance": 30, "guard": [[60, 30], [98, 20]], "rewards": {"gold": 1500}},
+			{"chance": 30, "guard": [[60, 25], [98, 20], [252, 5]], "rewards": {"gold": 2000}},
+			{"chance": 30, "guard": [[60, 20], [98, 20], [252, 10], [555, 5]], "rewards": {"gold": 2500}, "artifacts": ["treasure"]},
+			{"chance": 10, "guard": [[60, 20], [98, 20], [252, 10], [555, 10]], "rewards": {"gold": 5000}, "artifacts": ["treasure"]},
+		],
+	},
+	# Shipwreck: Wights as Tidepool Cutters.
+	"85": {
+		"site_id": "site_wreck_locker",
+		"units": {252: "unit_neutral_tidepool_cutters"},
+		"levels": [
+			{"chance": 30, "guard": [[252, 10]], "rewards": {"gold": 2000}},
+			{"chance": 30, "guard": [[252, 15]], "rewards": {"gold": 3000}},
+			{"chance": 30, "guard": [[252, 25]], "rewards": {"gold": 4000}, "artifacts": ["treasure"]},
+			{"chance": 10, "guard": [[252, 50]], "rewards": {"gold": 5000}, "artifacts": ["minor"]},
 		],
 	},
 }
+# Warrior's Tomb: one artifact of a class rolled 30/50/15/5 and no guard of its
+# own. HoMM3's morale penalty for robbing it is not carried over.
+const WARRIORS_TOMB_SITE := "site_basalt_oath_tomb"
+const WARRIORS_TOMB_CLASS_WEIGHTS := {"treasure": 30, "minor": 50, "major": 15, "relic": 5}
+# Pandora's Box becomes a one-time casket with the box's own contents: gold,
+# experience worth the same hero level, every spell of its levels (one of our
+# schools when the box held one HoMM3 school) or troops of the same tier.
+const PANDORA_SITE := "site_hushlock_casket"
+# HoMM3 experience for hero levels 1 to 15.
+const H3M_LEVEL_EXPERIENCE := [0, 1000, 2000, 3200, 4600, 6200, 8000, 10000, 12200, 14700, 17500, 20600, 24320, 28784, 34140]
+const H3M_SINGLE_SCHOOL_MASKS := [1, 2, 4, 8]
 
 # HoMM3 visit buildings become the original building with the same role
 # (docs/visit-buildings.md).
@@ -216,8 +374,13 @@ static func resolve(object: Dictionary, towns: Array = [], terrain_rows: Array =
 		return _node(object, _gate_site(object, key, terrain_rows), "resource_site", {})
 	if type_id in PORTAL_TYPES:
 		return _node(object, String(PORTAL_SITES[type_id]), String(object.get("kind", "resource_site")), {})
-	if CREATURE_BANKS.has(type_id):
-		return _creature_bank(object, key, type_id)
+	var bank_id := bank_key(type_id, subtype)
+	if bank_id != "":
+		return _creature_bank(object, key, bank_id)
+	if type_id == TYPE_PANDORA:
+		return _pandora(object, key)
+	if type_id == TYPE_WARRIORS_TOMB:
+		return _warriors_tomb(object, key)
 	match type_id:
 		TYPE_SHIPYARD:
 			return _node(object, SHIPYARD_SITE, "resource_site", {})
@@ -431,25 +594,45 @@ static func treasure_chest_choices(gold: int, experience: int) -> Array:
 		{"id": "experience", "label": "Gain %s experience" % _thousands(experience), "rewards": {"experience": experience}},
 	]
 
-## A creature bank at its rolled level: that level's gold and, where the level
-## holds one, an artifact of the bank's HoMM3 class. The site's own recruits,
-## scouting, resources and reward table stay out.
-static func _creature_bank(object: Dictionary, key: String, type_id: int) -> Dictionary:
-	var bank: Dictionary = CREATURE_BANKS[type_id]
-	var level := bank_level_roll(key, type_id)
+## The CREATURE_BANKS key of a HoMM3 object, or "" when it is no bank.
+static func bank_key(type_id: int, subtype: int) -> String:
+	var by_subtype := "%d:%d" % [type_id, subtype]
+	if CREATURE_BANKS.has(by_subtype):
+		return by_subtype
+	return str(type_id) if CREATURE_BANKS.has(str(type_id)) else ""
+
+## A creature bank at its rolled level: that level's resources, troops, spell
+## and artifacts. The site's own rewards, recruits, spells, scouting and
+## reward table stay out.
+static func _creature_bank(object: Dictionary, key: String, bank_id: String) -> Dictionary:
+	var bank: Dictionary = CREATURE_BANKS[bank_id]
+	var level := bank_level_roll(key, bank_id)
 	var row: Dictionary = bank.levels[level - 1]
+	var rewards: Dictionary = row.get("rewards", {}).duplicate()
+	var rares: Array = row.get("rares", [])
+	var rare_order := _rare_order(key)
+	for index in range(rares.size()):
+		if int(rares[index]) > 0:
+			var resource_id := String(rare_order[index])
+			rewards[resource_id] = int(rewards.get(resource_id, 0)) + int(rares[index])
+	var spell_ids := []
+	if int(row.get("spell_tier", 0)) > 0:
+		var spell_id := _tier_spell_id(key, int(row.spell_tier))
+		if spell_id != "":
+			spell_ids.append(spell_id)
 	var node := _node(object, String(bank.site_id), "resource_site", {
-		NodePayload.PAYLOAD_REWARDS: {"gold": int(row.gold)},
-		NodePayload.PAYLOAD_RECRUITS: {},
+		NodePayload.PAYLOAD_REWARDS: rewards,
+		NodePayload.PAYLOAD_RECRUITS: _troops_for_native(row.get("troops", []), bank.units),
+		NodePayload.PAYLOAD_SPELL_IDS: spell_ids,
 		NodePayload.PAYLOAD_VISION_RADIUS: 0,
-		NodePayload.PAYLOAD_ARTIFACT_RARITY: _artifact_rarity(int(bank.artifact_source_type)) if bool(row.artifact) else "",
+		NodePayload.PAYLOAD_ARTIFACT_CLASSES: row.get("artifacts", []).duplicate(),
 	})
 	node[BANK_LEVEL] = level
 	return node
 
-## The level, 1 to 4, a bank of this HoMM3 type rolls at this placement.
-static func bank_level_roll(key: String, type_id: int) -> int:
-	var levels: Array = CREATURE_BANKS[type_id].levels
+## The level, 1 to 4, a bank rolls at this placement.
+static func bank_level_roll(key: String, bank_id: String) -> int:
+	var levels: Array = CREATURE_BANKS[bank_id].levels
 	var total := 0
 	for row in levels:
 		total += int(row.chance)
@@ -460,20 +643,163 @@ static func bank_level_roll(key: String, type_id: int) -> int:
 			return index + 1
 	return levels.size()
 
+## The native guard a bank fields at this placement and level, as [creature AI
+## value, headcount] stacks: a single creature stands in five stacks, one of
+## them upgraded on half the placements where the creature has an upgrade.
+static func native_guard_stacks(key: String, bank_id: String, level: int) -> Array:
+	var bank: Dictionary = CREATURE_BANKS[bank_id]
+	var guard: Array = bank.levels[level - 1].guard
+	if guard.size() != 1:
+		return guard.duplicate(true)
+	var upgrade: Array = bank.get("upgrade", [])
+	var upgraded := -1
+	if not upgrade.is_empty() and _roll(key, "bank_upgrade", 100) < UPGRADE_CHANCE_PCT:
+		upgraded = _roll(key, "bank_upgrade_stack", GUARD_STACK_COUNT)
+	var total := int(guard[0][1])
+	var stacks := []
+	for index in range(GUARD_STACK_COUNT):
+		var count := total / GUARD_STACK_COUNT + (1 if index < total % GUARD_STACK_COUNT else 0)
+		if count > 0:
+			stacks.append([int(upgrade[1]) if index == upgraded else int(guard[0][0]), count])
+	return stacks
+
 ## The guard a translated creature bank fields at its level, or [] for any
 ## other node, whose site keeps its own guard army.
 static func bank_guard_stacks(node: Dictionary) -> Array:
-	var type_id := int(node.get("h3m_type_id", -1))
+	var bank_id := bank_key(int(node.get("h3m_type_id", -1)), int(node.get("h3m_subtype", -1)))
 	var level := int(node.get(BANK_LEVEL, 0))
-	if not CREATURE_BANKS.has(type_id) or level < 1 or level > CREATURE_BANKS[type_id].levels.size():
+	if bank_id == "" or level < 1 or level > CREATURE_BANKS[bank_id].levels.size():
 		return []
-	var bank: Dictionary = CREATURE_BANKS[type_id]
-	return GeneratedNeutral.stacks_for_native_budget(bank.levels[level - 1].guard, bank.guard_unit_ids)
+	var native := native_guard_stacks(String(node.get("placement_id", "")), bank_id, level)
+	var unit_ids := []
+	for stack in native:
+		unit_ids.append(String(CREATURE_BANKS[bank_id].units.get(int(stack[0]), "")))
+	return GeneratedNeutral.stacks_for_native_budget(native, unit_ids)
 
-## The rarity the random map gives a HoMM3 random artifact of this type.
-static func _artifact_rarity(source_type: int) -> String:
-	var rarities: Dictionary = ContentService.load_json(RANDOM_MAP_ELIGIBILITY_PATH).get("artifact_rarities_by_source_type", {})
-	return String(rarities.get(str(source_type), ""))
+## Troops with the battle power of native ones, as {unit_id: count}.
+static func _troops_for_native(native_stacks: Array, units: Dictionary) -> Dictionary:
+	var unit_ids := []
+	for stack in native_stacks:
+		unit_ids.append(String(units.get(int(stack[0]), "")))
+	var troops := {}
+	for stack in GeneratedNeutral.stacks_for_native_budget(native_stacks, unit_ids):
+		troops[String(stack.unit_id)] = int(troops.get(String(stack.unit_id), 0)) + int(stack.count)
+	return troops
+
+## Our six rares in this placement's order; HoMM3's mercury, sulfur, crystal
+## and gems take the first four.
+static func _rare_order(key: String) -> Array:
+	var order: Array = RARE_RESOURCES.duplicate()
+	order.sort_custom(func(a, b): return _hash32("%s|bank_rare|%s" % [key, a]) < _hash32("%s|bank_rare|%s" % [key, b]))
+	return order
+
+## A Warrior's Tomb: one artifact of a rolled class and no guard of its own.
+static func _warriors_tomb(object: Dictionary, key: String) -> Dictionary:
+	var total := 0
+	for weight in WARRIORS_TOMB_CLASS_WEIGHTS.values():
+		total += int(weight)
+	var roll := _roll(key, "tomb_class", total)
+	var artifact_class := "treasure"
+	for candidate in ["treasure", "minor", "major", "relic"]:
+		roll -= int(WARRIORS_TOMB_CLASS_WEIGHTS[candidate])
+		if roll < 0:
+			artifact_class = candidate
+			break
+	var node := _node(object, WARRIORS_TOMB_SITE, "resource_site", {
+		NodePayload.PAYLOAD_REWARDS: {},
+		NodePayload.PAYLOAD_RECRUITS: {},
+		NodePayload.PAYLOAD_SPELL_IDS: [],
+		NodePayload.PAYLOAD_VISION_RADIUS: 0,
+		NodePayload.PAYLOAD_ARTIFACT_CLASSES: [artifact_class],
+	})
+	node[UNGUARDED] = true
+	return node
+
+## A Pandora's Box: a one-time casket with the box's native contents.
+static func _pandora(object: Dictionary, key: String) -> Dictionary:
+	var contents: Dictionary = object.get("h3m_pandora_contents", {}) if object.get("h3m_pandora_contents", {}) is Dictionary else {}
+	var rewards := {}
+	var experience := int(contents.get("experience", 0))
+	if experience > 0:
+		rewards["experience"] = experience_for_h3m(experience)
+	var resources: Array = contents.get("resources", []) if contents.get("resources", []) is Array else []
+	var rare_order := _rare_order(key)
+	for subtype in range(mini(resources.size(), 7)):
+		var amount := int(resources[subtype])
+		if amount <= 0:
+			continue
+		var resource_id := String(H3M_COMMON_RESOURCE_BY_SUBTYPE.get(subtype, ""))
+		if resource_id == "":
+			resource_id = String(rare_order[H3M_RARE_SUBTYPES.find(subtype)])
+		rewards[resource_id] = int(rewards.get(resource_id, 0)) + amount
+	var creatures: Array = contents.get("creatures", []) if contents.get("creatures", []) is Array else []
+	var troops := {}
+	for index in range(creatures.size()):
+		var creature: Dictionary = creatures[index] if creatures[index] is Dictionary else {}
+		var unit_id := _neutral_unit_for_tier(key, clampi(int(creature.get("level", 0)) + 1, 1, 7), index)
+		for stack in GeneratedNeutral.stacks_for_native_budget([[int(creature.get("ai_value", 0)), int(creature.get("quantity", 0))]], [unit_id]):
+			troops[String(stack.unit_id)] = int(troops.get(String(stack.unit_id), 0)) + int(stack.count)
+	if contents.is_empty():
+		# A package from before the box contents were exported: HoMM3's
+		# smallest gold box.
+		rewards["gold"] = 5000
+	var node := _node(object, PANDORA_SITE, "reward_reference", {
+		NodePayload.PAYLOAD_REWARDS: rewards,
+		NodePayload.PAYLOAD_RECRUITS: troops,
+		NodePayload.PAYLOAD_SPELL_IDS: _pandora_spell_ids(contents, key),
+	})
+	node[UNGUARDED] = true
+	return node
+
+## Experience worth the same hero level as a HoMM3 amount, counted from level
+## 1, to the nearest 50.
+static func experience_for_h3m(amount: int) -> int:
+	var table := H3M_LEVEL_EXPERIENCE
+	var index := 0
+	while index + 2 < table.size() and amount >= int(table[index + 1]):
+		index += 1
+	var fraction := clampf(float(amount - int(table[index])) / float(int(table[index + 1]) - int(table[index])), 0.0, 1.0)
+	var level := index + 1
+	var low := float(HeroProgression.experience_for_level(level))
+	var high := float(HeroProgression.experience_for_level(level + 1))
+	return int(round((low + (high - low) * fraction) / 50.0)) * 50
+
+## Every spell of the box's levels: of all schools, or of one of our schools
+## rolled per placement when the box held a single HoMM3 school.
+static func _pandora_spell_ids(contents: Dictionary, key: String) -> Array:
+	var levels: Array = contents.get("spell_levels", []) if contents.get("spell_levels", []) is Array else []
+	if levels.is_empty():
+		return []
+	var masks: Array = contents.get("spell_school_masks", []) if contents.get("spell_school_masks", []) is Array else []
+	var common_school := 15
+	for mask in masks:
+		common_school &= int(mask)
+	var spells: Array = ContentService.load_json("res://content/spells.json").get("items", [])
+	var school_id := ""
+	if common_school in H3M_SINGLE_SCHOOL_MASKS:
+		var schools := []
+		for spell in spells:
+			if spell is Dictionary and String(spell.get("school_id", "")) != "" and String(spell.get("school_id", "")) not in schools:
+				schools.append(String(spell.get("school_id", "")))
+		schools.sort()
+		school_id = _pick(schools, key, "pandora_school")
+	var spell_ids := []
+	for spell in spells:
+		if not (spell is Dictionary) or String(spell.get("id", "")) == "":
+			continue
+		if int(spell.get("tier", 0)) in levels and (school_id == "" or String(spell.get("school_id", "")) == school_id):
+			spell_ids.append(String(spell.get("id", "")))
+	spell_ids.sort()
+	return spell_ids
+
+## A neutral unit of this tier for a Pandora's Box creature, by placement.
+static func _neutral_unit_for_tier(key: String, tier: int, index: int) -> String:
+	var candidates := []
+	for unit in ContentService.load_json("res://content/units.json").get("items", []):
+		if unit is Dictionary and String(unit.get("faction_id", "")) == "" and int(unit.get("tier", 0)) == tier:
+			candidates.append(String(unit.get("id", "")))
+	candidates.sort()
+	return _pick(candidates, key, "pandora_unit_%d" % index)
 
 static func _pile(object: Dictionary, key: String, resource_id: String) -> Dictionary:
 	var amount := 0

@@ -42235,6 +42235,32 @@
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "presentation_role": "portal_network_beam_core_light_layer",
       "tinted_by": "native portal network colour (NativeTransitRules.NETWORK_COLOURS), animated by OverworldPortalFx.gd"
+    },
+    "mapobj_wyrmcrown_hoard": {
+      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wyrmcrown_hoard.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_banks_20261009/wyrmcrown_hoard-source.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_banks_20261009/provenance.json",
+      "source_model": "built_in_image_gen_transparent",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_wyrmcrown_hoard",
+      "assigned_map_object_family": "guarded_reward_site",
+      "presentation_role": "dragon_hoard_guarded_reward_site",
+      "accessible_description": "A ring of jagged basalt crags under a great horned wyrm skull holds a heaped hoard of gold, gems, goblets and a crown.",
+      "runtime_sha256": "c1af1793cfbd1c53051e983164ca88e1317227ce74b83044e2ecc76ba0903bef"
+    },
+    "mapobj_hushlock_casket": {
+      "path": "res://art/overworld/runtime/objects/pickups/hushlock_casket.png",
+      "source_generated": "res://art/overworld/source/generated/resource_sites/creature_banks_20261009/hushlock_casket-source.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/resource_sites/creature_banks_20261009/provenance.json",
+      "source_model": "built_in_image_gen_transparent",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "distinct_sprite_assignment": true,
+      "assigned_map_object_id": "object_hushlock_casket",
+      "assigned_map_object_family": "pickup",
+      "presentation_role": "sealed_mystery_casket_pickup",
+      "accessible_description": "A domed casket of dark wood and bronze, chained and sealed with three locks and purple wax, glows violet at its seams.",
+      "runtime_sha256": "5899c673e89f1e7d51f096434d13772b25ec3b41f3d385aba0031f1752db9dbf"
     }
   },
   "resource_site_sprites": {
@@ -44106,6 +44132,14 @@
     "site_whirlpool": {
       "asset_id": "mapobj_whirlpool",
       "fit": "Whirlpool sea link sprite."
+    },
+    "site_wyrmcrown_hoard": {
+      "asset_id": "mapobj_wyrmcrown_hoard",
+      "fit": "Guarded wyrm hoard: gold and four artifacts behind a dragon guard."
+    },
+    "site_hushlock_casket": {
+      "asset_id": "mapobj_hushlock_casket",
+      "fit": "One-time sealed casket holding experience, gold, spells or troops."
     }
   },
   "artifact_default_sprite": {

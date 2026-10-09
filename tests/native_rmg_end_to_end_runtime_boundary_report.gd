@@ -9,6 +9,9 @@ const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const CreatureDwellings = preload("res://scripts/core/CreatureDwellingRules.gd")
 const GeneratedRewards = preload("res://scripts/persistence/GeneratedRewardRules.gd")
+const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
+const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
+const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const REPORT_ID := "NATIVE_RMG_END_TO_END_RUNTIME_BOUNDARY_REPORT"
 const CREATURE_GENERATOR_ROWS := {
 	59: {
@@ -947,9 +950,14 @@ func _validate_creature_bank_interaction(adoption: Dictionary, placement_id: Str
 		"generated_validation": session.overworld.get("generated_random_map_validation", {}).duplicate(true),
 	}
 	session.battle = BattleRulesScript.create_battle_payload(session, guard)
+	# The Medusa Stores (16:4) guard fields its rolled level's army
+	# (docs/creature-banks.md).
+	var bank_level := int(node.get(GeneratedRewards.BANK_LEVEL, 0))
 	var battle_payload_exact: bool = not session.battle.is_empty() \
+			and bank_level >= 1 \
 			and String(session.battle.get("encounter_id", "")) == "encounter_tidepool_skiffyard_watch" \
-			and String(session.battle.get("enemy_army_id", "")) == "army_neutral_tidepool_skiffyard_watch" \
+			and String(session.battle.get("enemy_army_id", "")) == "army_neutral_tidepool_skiffyard_watch_bank_level_%d" % bank_level \
+			and guard.get("enemy_army", {}).get("stacks", []) == GeneratedRewards.bank_guard_stacks(node) \
 			and String(session.battle.get("resolved_key", "")) == String(guard.get("placement_id", ""))
 	var victory := _force_player_guard_victory(session)
 	var guard_resolved: bool = bool(victory.get("ok", false)) \
@@ -958,6 +966,20 @@ func _validate_creature_bank_interaction(adoption: Dictionary, placement_id: Str
 	var resources_before: Dictionary = session.overworld.get("resources", {}).duplicate(true)
 	var army_before: Dictionary = session.overworld.get("army", {}).duplicate(true)
 	var artifact_ids_before: Array = ArtifactRulesScript.owned_artifact_ids(session.overworld.get("hero", {}))
+	# The level's HoMM3 gold and sulfur, paid as one of our rares, and no artifact.
+	var level_rewards: Dictionary = NodePayload.site_for_node(node).get("claim_rewards", {})
+	var expected_rewards: Dictionary = OverworldRulesScript.apply_reward_bonus(
+		DifficultyRulesScript.scale_reward_resources(session, level_rewards),
+		int(HeroProgressionRulesScript.aggregate_bonuses(session.overworld.get("hero", {})).get("reward_bonus_pct", 0))
+	)
+	var level_row: Dictionary = GeneratedRewards.CREATURE_BANKS["16:4"].levels[clampi(bank_level, 1, 4) - 1]
+	var level_rare := 0
+	for resource_id in level_rewards.keys():
+		if String(resource_id) in GeneratedRewards.RARE_RESOURCES:
+			level_rare = int(level_rewards[resource_id])
+	var level_rewards_exact: bool = level_rewards.size() == 2 \
+			and int(level_rewards.get("gold", 0)) == int(level_row.rewards.gold) \
+			and level_rare == int(level_row.rares[1])
 	var resource_nodes_before: Array = session.overworld.get("resource_nodes", []).duplicate(true) if session.overworld.get("resource_nodes", []) is Array else []
 	var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, _resource_node_result(session, placement_id), false)
 	var claimed_node: Dictionary = _resource_node_result(session, placement_id).get("node", {})
@@ -981,14 +1003,16 @@ func _validate_creature_bank_interaction(adoption: Dictionary, placement_id: Str
 		"generated_identity": session.overworld.get("generated_random_map_identity", {}).duplicate(true),
 		"generated_validation": session.overworld.get("generated_random_map_validation", {}).duplicate(true),
 	}
+	var resource_gain := {}
+	for resource_id in resources_after.keys():
+		if int(resources_after.get(resource_id, 0)) != int(resources_before.get(resource_id, 0)):
+			resource_gain[String(resource_id)] = int(resources_after.get(resource_id, 0)) - int(resources_before.get(resource_id, 0))
 	var reward_exact: bool = bool(claim.get("ok", false)) \
 			and bool(claimed_node.get("collected", false)) \
-			and int(resources_after.get("gold", 0)) == int(resources_before.get("gold", 0)) + 520 \
-			and int(resources_after.get("wood", 0)) == int(resources_before.get("wood", 0)) + 2 \
-			and int(resources_after.get("ore", 0)) == int(resources_before.get("ore", 0)) + 2 \
-			and artifact_ids_after.size() == artifact_ids_before.size() + 1 \
-			and String(claimed_node.get("artifact_reward_id", "")) in artifact_ids_after \
-			and String(claimed_node.get("artifact_reward_claimed_by_faction_id", "")) == "player" \
+			and level_rewards_exact \
+			and resource_gain == expected_rewards \
+			and artifact_ids_after.size() == artifact_ids_before.size() \
+			and String(claimed_node.get("artifact_reward_id", "")) == "" \
 			and session.overworld.get("army", {}) == army_before \
 			and unrelated_nodes_exact \
 			and package_authority_after == package_authority_before
@@ -1016,14 +1040,10 @@ func _validate_creature_bank_interaction(adoption: Dictionary, placement_id: Str
 		"reward_exact": reward_exact,
 		"claim_ok": bool(claim.get("ok", false)),
 		"collected": bool(claimed_node.get("collected", false)),
-		"resource_deltas": {
-			"gold": int(resources_after.get("gold", 0)) - int(resources_before.get("gold", 0)),
-			"wood": int(resources_after.get("wood", 0)) - int(resources_before.get("wood", 0)),
-			"ore": int(resources_after.get("ore", 0)) - int(resources_before.get("ore", 0)),
-		},
+		"bank_level": bank_level,
+		"resource_deltas": resource_gain,
+		"expected_rewards": expected_rewards,
 		"artifact_count_delta": artifact_ids_after.size() - artifact_ids_before.size(),
-		"artifact_provenance_exact": String(claimed_node.get("artifact_reward_id", "")) in artifact_ids_after \
-				and String(claimed_node.get("artifact_reward_claimed_by_faction_id", "")) == "player",
 		"army_exact": session.overworld.get("army", {}) == army_before,
 		"artifact_id": String(claimed_node.get("artifact_reward_id", "")),
 		"repeat_rejected": not bool(repeat.get("ok", false)),

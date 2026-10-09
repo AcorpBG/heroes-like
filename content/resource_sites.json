@@ -17247,6 +17247,91 @@
         "metadata_only": false,
         "runtime_route_effect_adopted": false
       }
+    },
+    {
+      "id": "site_wyrmcrown_hoard",
+      "name": "Wyrmcrown Hoard",
+      "family": "guarded_reward_site",
+      "guarded": true,
+      "rewards": {
+        "gold": 20000
+      },
+      "vision_radius": 0,
+      "batch006_role": "creature_bank_like",
+      "guard_profile": {
+        "tier": "elite",
+        "risk_tier": "elite",
+        "guard_army_group_id": "army_neutral_deepforge_seventh_seal_watch",
+        "guard_encounter_id": "encounter_deepforge_seventh_seal_watch",
+        "encounter_palette_tags": [
+          "fortified_line",
+          "reserve_wave"
+        ],
+        "visible_cue": "visible guard camp and blocked approach metadata must be readable before visit",
+        "clear_required_for_reward": true,
+        "blocks_approach": true,
+        "metadata_only": false,
+        "runtime_guard_resolution_adopted": true
+      },
+      "guarded_reward_contract": {
+        "contract_id": "guarded_reward_contract_wyrmcrown_hoard",
+        "resource_site_id": "site_wyrmcrown_hoard",
+        "reward_site_role": "creature_bank_like",
+        "reward_categories": [
+          "resource",
+          "artifact"
+        ],
+        "reward_tier": "elite",
+        "guard_army_group_id": "army_neutral_deepforge_seventh_seal_watch",
+        "guard_encounter_id": "encounter_deepforge_seventh_seal_watch",
+        "clear_required_for_reward": true,
+        "visible_guard_cue_required": true,
+        "one_time_reward": true,
+        "route_hybrid": false,
+        "metadata_only_guard_contract": false,
+        "runtime_guard_resolution_adopted": true,
+        "broad_reward_runtime_migration": false,
+        "artifact_reward_table_id": "artifact_source_guarded_sites_faction_relics"
+      },
+      "reward_preview": {
+        "reward_categories": [
+          "resource",
+          "artifact"
+        ],
+        "live_resource_reward_keys": [
+          "gold"
+        ],
+        "spell_recruit_route_rewards_are_metadata_only": false,
+        "no_rare_resource_activation": false,
+        "artifact_reward_execution": true
+      },
+      "runtime_boundary": {
+        "status": "resource_and_artifact_live",
+        "live_reward_grants": true,
+        "guarded_reward_site_runtime_supported": true,
+        "broad_reward_runtime_migration": false,
+        "guard_resolution_runtime_adopted": true,
+        "neutral_encounter_migration": false,
+        "save_payload_required": true,
+        "renderer_sprite_required": true,
+        "pathing_runtime_adopted": false,
+        "route_effect_runtime_adopted": false,
+        "rare_resource_activation": true,
+        "market_changes": false,
+        "scenario_placement_migration": true,
+        "artifact_reward_execution": true
+      },
+      "content_batch_id": "random-map-creature-banks-20261009",
+      "action_label": "Plunder Hoard"
+    },
+    {
+      "id": "site_hushlock_casket",
+      "name": "Hushlock Casket",
+      "action_label": "Open Casket",
+      "overworld_sprite_asset_id": "mapobj_hushlock_casket",
+      "rewards": {
+        "gold": 5000
+      }
     }
   ]
 }

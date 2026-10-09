@@ -243,6 +243,18 @@ Rules:
 
 `content-creature-bank-levels-20261009` (completed, owner request after comparing the Glassbound Eyrie with the HoMM3 Crypt): on random maps a Crypt becomes a Glassbound Eyrie that rolls one of the Crypt's four levels (30/30/30/10%) and pays its gold (1,500, 2,000, 2,500 or 5,000), plus one random common artifact the hero lacks on levels 3 and 4. It pays no ore, experience, troops, relic or survey. Its guard is the Eyrie's runners, wardens, slingers and Galehorn Striders, sized to the Crypt's undead budget at the generated-guard rate: power 225, 287, 508 or 672, against 80 before. Other HoMM3 banks still take a random guarded site's authored payload and need their own rows. See `docs/creature-banks.md`.
 
+`content-homm3-guarded-objects-20261009` (completed, owner request after the guarded-site audit): every other HoMM3 guarded object on a random map now keeps its HoMM3 levels and reward. That covers the seven Creature Bank kinds, Derelict Ship, Dragon Utopia, Pyramid, Crypt and Shipwreck; Pandora's Box and Warrior's Tomb follow below.
+- **Sites.** Each object becomes one fixed one-time site. The Crypt moves to the Prism Ossuary and the Glassbound Eyrie stands for the Griffin Conservatory. The Dragon Utopia becomes the new Wyrmcrown Hoard.
+- **Rewards.** HoMM3 rares become distinct rares of our six, shuffled per placement. Creatures join as our units with the same battle power. Artifacts are drawn per HoMM3 class.
+- **Guards.** Guards are sized by battle power, which suits our weaker units. A single-creature guard stands in five stacks, with one upgraded on half the placements. Guard power ranges from 153 (Shipwreck, level 1) to 10,066 (Dragon Utopia, level 4).
+- **Pandora's Box.** It becomes a new Hushlock Casket pickup. It pays the contents the native generator rolled, which a native change now exports for both platforms. Experience converts by equivalent hero level. Spells are every spell of the box's levels, from one school or from all. Creatures become neutral troops.
+- **Warrior's Tomb.** It holds one artifact of a rolled class.
+- **Guards of their own.** Neither the casket nor the tomb fights one. The native guard beside each stays.
+- **Computer heroes.** They take every artifact, spell and the experience of a claim, and value troops and artifacts. A lesser hero too weak for a threat no longer walks home to the threatened town each morning.
+- **Random stand-ins.** The two new sites stand only for their HoMM3 objects; the random pools exclude them.
+
+See `docs/creature-banks.md`. Open: the Altar of Sacrifice.
+
 ### Full-screen Town construction board
 
 `ux-town-construction-board-20261005` (completed, owner-directed UI): the Construction Ledger popout is replaced by one full-screen 23-slot board shared by every faction town (rows Town, Army, Growth/Hero training, faction signature), opened from the main building or Build command. Tiles show stage art, stage and status; tiers I–V compare both exclusive branches before a confirmed build; the detail panel shows stage strips, unit upgrades, cost need/have, requirement jumps, Trade and View in town. Rules, costs, daily limit, saves and AI are unchanged. See `docs/town-construction-board.md`.

@@ -172,18 +172,18 @@
     ]
   },
   "coverage": {
-    "authored_map_object_count": 467,
+    "authored_map_object_count": 469,
     "foundation_decorative_or_blocker_distinct_count": 200,
     "preexisting_unique_non_decorative_count": 0,
-    "new_distinct_non_decorative_asset_count": 267,
-    "total_distinct_authored_map_object_count_after_pass": 467,
+    "new_distinct_non_decorative_asset_count": 269,
+    "total_distinct_authored_map_object_count_after_pass": 469,
     "by_family": {
       "faction_landmark": 9,
-      "guarded_reward_site": 32,
+      "guarded_reward_site": 33,
       "mine": 10,
       "neutral_dwelling": 94,
       "neutral_encounter": 6,
-      "pickup": 12,
+      "pickup": 13,
       "repeatable_service": 9,
       "scenario_objective": 14,
       "scouting_structure": 6,
@@ -461,7 +461,9 @@
     "mapobj_whirlpool",
     "mapobj_wayring",
     "mapobj_waygate",
-    "mapobj_wayfall"
+    "mapobj_wayfall",
+    "mapobj_wyrmcrown_hoard",
+    "mapobj_hushlock_casket"
   ],
   "object_sprite_mappings": {
     "object_roadward_lodge": {
@@ -2275,6 +2277,20 @@
       "fit": "Wayfall: one way exit stonework; its magic is drawn as particles in the network colour.",
       "assignment_source": "portal_networks_20261008",
       "family": "transit_object"
+    },
+    "object_wyrmcrown_hoard": {
+      "asset_id": "mapobj_wyrmcrown_hoard",
+      "fit": "Distinct original wyrm's hoard assigned to the Wyrmcrown Hoard, which stands for HoMM3's Dragon Utopia on random maps.",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "guarded_reward_site",
+      "source_batch": "creature_banks_20261009"
+    },
+    "object_hushlock_casket": {
+      "asset_id": "mapobj_hushlock_casket",
+      "fit": "Distinct original sealed casket assigned to the Hushlock Casket pickup, which stands for HoMM3's Pandora's Box on random maps.",
+      "assignment_source": "new_distinct_map_object_sprite",
+      "family": "pickup",
+      "source_batch": "creature_banks_20261009"
     }
   }
 }

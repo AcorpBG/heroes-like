@@ -1716,6 +1716,16 @@ static func _holds_gate(session: SessionStateStoreScript.SessionData, context: D
 		return false
 	return not _leave_guard(session, context, entry, town, float(threat.power) * THREAT_RATIO)
 
+## Whether a threatened town of ours is worth this hero's coming home to: the
+## hero can beat the threat, or it is the main or a field army that holds the
+## gate against it (_holds_gate). A lesser hero too weak for the threat would
+## only walk in, go on and come back each morning.
+static func _would_hold_gate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, town: Dictionary, is_main: bool) -> bool:
+	var threat := _strongest_threat(session, context, town)
+	if threat.is_empty() or float(threat.power) * HERO_ATTACK_RATIO <= hero_power(entry):
+		return true
+	return is_main and float(threat.power) < (hero_power(entry) + army_power(town.get("garrison", []))) * TOWN_ATTACK_RATIO
+
 ## Moves the fewest creatures of one kind that together beat `needed` from the
 ## hero into the town's garrison. False when that would cost the hero more
 ## than GUARD_SHARE_MAX of its strength or leave it without troops.
@@ -2806,7 +2816,7 @@ static func _resource_candidate(session: SessionStateStoreScript.SessionData, co
 		value = 250.0 + float(VisitBuildings.ai_value(site))
 	else:
 		value = _payload_value(AdventureRules._resource_site_claim_rewards(site), needs)
-		value += _recruit_set_value(_recruit_dict(site.get("claim_recruits", {})))
+		value += _recruit_set_value(_recruit_dict(site.get("claim_recruits", {}))) + _site_artifact_value(site)
 		if bool(site.get("persistent_control", false)):
 			value += _payload_value(site.get("control_income", {}), needs) * 12.0 + 250.0
 			# A site that musters troops every week is worth a week of them.
@@ -2927,11 +2937,18 @@ static func _guarded_node_value(session: SessionStateStoreScript.SessionData, no
 	if controller != "" and not AdventureRules._resource_node_contestable_by_faction(node, site, controller, session):
 		return 0.0
 	var value := _payload_value(AdventureRules._resource_site_claim_rewards(site), needs)
+	# A creature bank can pay in troops and artifacts alone.
+	value += _recruit_set_value(_recruit_dict(site.get("claim_recruits", {}))) + _site_artifact_value(site)
 	if bool(site.get("persistent_control", false)):
 		value += _payload_value(site.get("control_income", {}), needs) * 12.0 + 250.0
 	if CreatureDwellings.is_dwelling(site):
 		value += 500.0
 	return value * 0.8
+
+## The artifacts a generated bank or tomb holds, each worth a loose artifact.
+static func _site_artifact_value(site: Dictionary) -> float:
+	var classes = site.get(NodePayload.CLAIM_ARTIFACT_CLASSES, [])
+	return 900.0 * float(classes.size()) if classes is Array else 0.0
 
 ## What beating a guard opens: ground beyond its zone that the hero cannot
 ## reach today. A human clears a road guard to get at the map behind it; the
@@ -3156,7 +3173,7 @@ static func _town_candidate(session: SessionStateStoreScript.SessionData, contex
 			var stacks: Array = entry.get("enemy_army", {}).get("stacks", [])
 			if stacks.size() > 1:
 				value = (army_power(stacks) - army_power([stacks[_weakest_stack_index(stacks)]])) * TROOP_VALUE_PER_POWER * 0.3
-		if _town_threatened(session, context, town):
+		if _town_threatened(session, context, town) and _would_hold_gate(session, context, entry, town, main_id == String(entry.get("placement_id", "")) or _decision_field_ids(session, context).has(String(entry.get("placement_id", "")))):
 			value += maxf(TOWN_BASE_VALUE, _town_worth(session, context, town) * THREAT_KILL_SHARE)
 		if value <= 50.0:
 			return {}

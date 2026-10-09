@@ -8,6 +8,14 @@ const ARTIFACT_SOURCE_REWARD_SCHEMA_ID := "artifact_source_reward_v1"
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 const ARTIFACT_CLASSES := ["common", "crafted", "faction", "accord", "relic", "cursed", "set_piece", "old_measure", "scenario"]
 const ARTIFACT_RARITIES := ["common", "uncommon", "rare", "epic", "legendary", "scenario"]
+# The rarities each HoMM3 artifact class draws from on generated maps, in order:
+# a relic falls back to a rare artifact once the hero holds every epic one.
+const H3M_ARTIFACT_CLASS_RARITIES := {
+	"treasure": [["common", "uncommon"]],
+	"minor": [["uncommon"]],
+	"major": [["rare"]],
+	"relic": [["epic"], ["rare"]],
+}
 const ARTIFACT_REWARD_GUARD_TIERS := ["unguarded", "light", "standard", "heavy", "elite", "sovereign", "apex", "ambush"]
 const ARTIFACT_ROLES := [
 	"economy",
@@ -746,6 +754,31 @@ static func artifact_source_reward_report(
 	)
 	return report
 
+## Every artifact a claim of this source grants, as successful selections: one
+## per HoMM3 artifact class a generated placement holds, each skipping the
+## artifacts already held or drawn, or the single draw of
+## select_live_source_reward.
+static func select_live_source_rewards(
+	source_tag: String,
+	source_record: Dictionary,
+	source_key: String,
+	faction_id: String = "",
+	excluded_artifact_ids: Array = []
+) -> Array:
+	if not source_record.has(NodePayload.CLAIM_ARTIFACT_CLASSES):
+		var single := select_live_source_reward(source_tag, source_record, source_key, faction_id, excluded_artifact_ids)
+		return [single] if bool(single.get("ok", false)) else []
+	var selections := []
+	var held: Array = excluded_artifact_ids.duplicate()
+	var classes = source_record.get(NodePayload.CLAIM_ARTIFACT_CLASSES, [])
+	for index in range(classes.size() if classes is Array else 0):
+		var key := source_key if index == 0 else "%s:%d" % [source_key, index]
+		var selection := _select_class_source_reward(source_tag, String(classes[index]), key, held)
+		if bool(selection.get("ok", false)):
+			held.append(String(selection.get("artifact_id", "")))
+			selections.append(selection)
+	return selections
+
 static func select_live_source_reward(
 	source_tag: String,
 	source_record: Dictionary,
@@ -753,8 +786,16 @@ static func select_live_source_reward(
 	faction_id: String = "",
 	excluded_artifact_ids: Array = []
 ) -> Dictionary:
-	# A generated placement draws one artifact of its own rarity instead of
-	# the site's reward table (ResourceNodePayloadRules.PAYLOAD_ARTIFACT_RARITY).
+	# A generated placement draws its artifacts by HoMM3 class instead of the
+	# site's reward table (ResourceNodePayloadRules.PAYLOAD_ARTIFACT_CLASSES);
+	# this single draw is the first of them.
+	if source_record.has(NodePayload.CLAIM_ARTIFACT_CLASSES):
+		var classes = source_record.get(NodePayload.CLAIM_ARTIFACT_CLASSES, [])
+		if not (classes is Array) or classes.is_empty():
+			return {"ok": false, "reason": "placement_holds_no_artifact", "source_tag": source_tag, "source_key": source_key}
+		return _select_class_source_reward(source_tag, String(classes[0]), source_key, excluded_artifact_ids)
+	# Saved creature banks from before the classes hold one rarity instead
+	# (ResourceNodePayloadRules.PAYLOAD_ARTIFACT_RARITY).
 	if source_record.has(NodePayload.CLAIM_ARTIFACT_RARITY):
 		return _select_rarity_source_reward(source_tag, String(source_record.get(NodePayload.CLAIM_ARTIFACT_RARITY, "")), source_key, excluded_artifact_ids)
 	var contract := _artifact_source_contract(source_record)
@@ -835,27 +876,48 @@ static func _select_rarity_source_reward(
 	var table_id := "placement_rarity:%s" % rarity
 	if rarity == "":
 		return {"ok": false, "reason": "placement_holds_no_artifact", "source_tag": source_tag, "source_key": source_key}
+	return _draw_from_rarities(source_tag, [[rarity]], table_id, source_key, excluded_artifact_ids)
+
+static func _select_class_source_reward(
+	source_tag: String,
+	artifact_class: String,
+	source_key: String,
+	excluded_artifact_ids: Array
+) -> Dictionary:
+	var tiers: Array = H3M_ARTIFACT_CLASS_RARITIES.get(artifact_class, [])
+	if tiers.is_empty():
+		return {"ok": false, "reason": "placement_holds_no_artifact", "source_tag": source_tag, "source_key": source_key}
+	var selection := _draw_from_rarities(source_tag, tiers, "placement_class:%s" % artifact_class, source_key, excluded_artifact_ids)
+	selection["artifact_class"] = artifact_class
+	return selection
+
+## One artifact the hero lacks from the first group of rarities that still has
+## one, stable for the source key.
+static func _draw_from_rarities(source_tag: String, tiers: Array, table_id: String, source_key: String, excluded_artifact_ids: Array) -> Dictionary:
 	var excluded := {}
 	for artifact_id_value in excluded_artifact_ids:
 		excluded[String(artifact_id_value)] = true
-	var candidates := []
-	for artifact_value in ContentService.load_json(ContentService.ARTIFACTS_PATH).get("items", []):
-		if not (artifact_value is Dictionary) or String(artifact_value.get("rarity", "")) != rarity:
+	var items: Array = ContentService.load_json(ContentService.ARTIFACTS_PATH).get("items", [])
+	for rarities in tiers:
+		var candidates := []
+		for artifact_value in items:
+			if not (artifact_value is Dictionary) or String(artifact_value.get("rarity", "")) not in rarities:
+				continue
+			var artifact_id := String(artifact_value.get("id", "")).strip_edges()
+			if artifact_id != "" and not excluded.has(artifact_id):
+				candidates.append(artifact_id)
+		if candidates.is_empty():
 			continue
-		var artifact_id := String(artifact_value.get("id", "")).strip_edges()
-		if artifact_id != "" and not excluded.has(artifact_id):
-			candidates.append(artifact_id)
-	if candidates.is_empty():
-		return {"ok": false, "reason": "source_table_exhausted", "exhausted": true, "table_id": table_id, "source_tag": source_tag, "source_key": source_key}
-	candidates.sort()
-	return {
-		"ok": true,
-		"artifact_id": String(candidates[_stable_source_reward_index(source_key, candidates.size())]),
-		"candidate_count": candidates.size(),
-		"table_id": table_id,
-		"source_tag": source_tag,
-		"source_key": source_key,
-	}
+		candidates.sort()
+		return {
+			"ok": true,
+			"artifact_id": String(candidates[_stable_source_reward_index(source_key, candidates.size())]),
+			"candidate_count": candidates.size(),
+			"table_id": table_id,
+			"source_tag": source_tag,
+			"source_key": source_key,
+		}
+	return {"ok": false, "reason": "source_table_exhausted", "exhausted": true, "table_id": table_id, "source_tag": source_tag, "source_key": source_key}
 
 static func live_source_reward_tag(source_record: Dictionary) -> String:
 	var contract := _artifact_source_contract(source_record)

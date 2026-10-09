@@ -1281,6 +1281,39 @@ Dictionary runtime_objects(
 		object["h3m_serialization_pass"] = source.serialization_pass;
 		object["h3m_payload_offset"] = source.payload_offset;
 		object["h3m_payload_byte_count"] = source.payload_byte_count;
+		if (source.pandora_contents_known) {
+			// H3M resource order: wood, mercury, ore, sulfur, crystal, gems, gold.
+			Dictionary contents;
+			contents["experience"] = source.pandora_experience;
+			Array resources;
+			for (const int32_t amount : source.pandora_resources) {
+				resources.append(amount);
+			}
+			contents["resources"] = resources;
+			Array spell_ids;
+			Array spell_levels;
+			// Bits of the four HoMM3 schools: 1 air, 2 fire, 4 water, 8 earth.
+			Array spell_school_masks;
+			for (size_t index = 0; index < source.pandora_spell_ids.size(); ++index) {
+				spell_ids.append(source.pandora_spell_ids[index]);
+				spell_levels.append(source.pandora_spell_levels[index]);
+				spell_school_masks.append(source.pandora_spell_school_masks[index]);
+			}
+			contents["spell_ids"] = spell_ids;
+			contents["spell_levels"] = spell_levels;
+			contents["spell_school_masks"] = spell_school_masks;
+			Array creatures;
+			for (const auto &creature : source.pandora_creatures) {
+				Dictionary entry;
+				entry["creature_id"] = creature.creature_id;
+				entry["quantity"] = creature.quantity;
+				entry["level"] = creature.level;
+				entry["ai_value"] = creature.ai_value;
+				creatures.append(entry);
+			}
+			contents["creatures"] = creatures;
+			object["h3m_pandora_contents"] = contents;
+		}
 		object["h3m_anchor_x"] = source.x;
 		object["h3m_anchor_y"] = source.y;
 		object["h3m_anchor_level"] = source.level;
