@@ -27,11 +27,12 @@ const TAVERN_LEVEL_TWO_PERCENT := 10
 const TAVERN_LEVEL_THREE_PERCENT := 3
 # HoMM3-like starting army: a tier-1 company always, often a second company
 # (usually tier 2, sometimes the other tier-1 creature). Sizes are shares of
-# the creature's weekly growth.
+# the creature's weekly growth. The shares were cut when growth was rebalanced
+# to equal weekly power per tier, so starting armies kept their strength.
 const STARTING_SECOND_COMPANY_PERCENT := 75
 const STARTING_SECOND_COMPANY_TIER_TWO_PERCENT := 70
-const STARTING_FIRST_COMPANY_GROWTH_SHARE := [0.75, 1.5]
-const STARTING_SECOND_COMPANY_GROWTH_SHARE := [0.5, 1.0]
+const STARTING_FIRST_COMPANY_GROWTH_SHARE := [0.55, 1.1]
+const STARTING_SECOND_COMPANY_GROWTH_SHARE := [0.33, 0.65]
 
 static func normalize_session(
 	session: SessionStateStoreScript.SessionData,

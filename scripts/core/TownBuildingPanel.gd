@@ -120,6 +120,8 @@ static func effect_lines(building: Dictionary, town: Dictionary, session = null)
 		var tier := int(building.get("growth_tier", 0))
 		var target := _built_dwelling_unit_name(town, tier)
 		lines.append("+%d %s per week" % [int(building.get("growth_amount", 0)), target if target != "" else "tier-%s recruits" % Board.roman(tier)])
+	if int(building.get("growth_percent", 0)) > 0:
+		lines.append("Creature growth +%d%%" % int(building.get("growth_percent", 0)))
 	var visit_reward: Dictionary = building.get("hero_visit_reward", {}) if building.get("hero_visit_reward", {}) is Dictionary else {}
 	if not visit_reward.is_empty():
 		lines.append("Visiting hero %s, once" % _reward_text(visit_reward))

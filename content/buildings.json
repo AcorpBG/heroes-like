@@ -4308,8 +4308,9 @@
       "stage": 2,
       "readiness_bonus": 20,
       "upgrade_from": "building_dev_fort_1",
-      "description": "Town battle readiness +20; strengthens the defending force. Replaces the previous fortification stage. Defending creatures gain +4 defense during town battles.",
-      "defender_defense_bonus": 4
+      "description": "Town battle readiness +20; strengthens the defending force. Creature growth +50% in every dwelling. Replaces the previous fortification stage. Defending creatures gain +4 defense during town battles.",
+      "defender_defense_bonus": 4,
+      "growth_percent": 50
     },
     {
       "id": "building_dev_fort_3",
@@ -4328,8 +4329,9 @@
       "stage": 3,
       "readiness_bonus": 30,
       "upgrade_from": "building_dev_fort_2",
-      "description": "Town battle readiness +30; strengthens the defending force. Replaces the previous fortification stage. Defending creatures gain +6 defense during town battles.",
-      "defender_defense_bonus": 6
+      "description": "Town battle readiness +30; strengthens the defending force. Creature growth doubled in every dwelling. Replaces the previous fortification stage. Defending creatures gain +6 defense during town battles.",
+      "defender_defense_bonus": 6,
+      "growth_percent": 100
     },
     {
       "id": "building_dev_guild_1",
