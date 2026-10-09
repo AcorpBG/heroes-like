@@ -2,6 +2,9 @@ extends Control
 
 signal tile_pressed(tile: Vector2i)
 signal tile_hovered(tile: Vector2i)
+## Right mouse button pressed over a tile: show its inspection for as long as
+## the button stays held. Releasing the button closes it (HoMM-style).
+signal tile_inspect_held(tile: Vector2i)
 signal spell_cast_presentation_blocking_changed(blocking: bool)
 ## Emitted whenever the camera centre moves (drag, wheel, keyboard or focus),
 ## so the minimap viewport box can follow every pan, not only shell pans.
@@ -1901,6 +1904,13 @@ func _gui_input(event: InputEvent) -> void:
 			if tile.x >= 0:
 				tile_pressed.emit(tile)
 				accept_event()
+			return
+		if event.button_index == MOUSE_BUTTON_RIGHT:
+			if event.pressed:
+				var held_tile = _tile_from_local(event.position)
+				if held_tile.x >= 0:
+					tile_inspect_held.emit(held_tile)
+			accept_event()
 			return
 		if event.pressed and _can_pan_camera():
 			match event.button_index:

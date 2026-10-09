@@ -2171,7 +2171,7 @@ func _battle_focus_visible_surface(prefix: String, stack: Dictionary, cue: Dicti
 		prefix,
 		_short_text(name, BATTLE_FOCUS_VISIBLE_NAME_CHAR_LIMIT),
 		side,
-		max(0, int(stack.get("count", 0))),
+		BattleRules._alive_count(stack),
 		max(0, int(stack.get("total_health", 0))),
 		state_line,
 	]
@@ -3282,7 +3282,7 @@ func _battle_initiative_handoff_surface() -> Dictionary:
 func _battle_next_living_stack(turn_order: Array, start_index: int) -> Dictionary:
 	for index in range(max(0, start_index), turn_order.size()):
 		var stack := _stack_by_battle_id(String(turn_order[index]))
-		if not stack.is_empty() and int(stack.get("count", 0)) > 0 and int(stack.get("total_health", 0)) > 0:
+		if not stack.is_empty() and BattleRules._alive_count(stack) > 0:
 			return stack
 	return {}
 
@@ -3292,7 +3292,7 @@ func _battle_initiative_stack_label(stack: Dictionary) -> String:
 	var name := String(stack.get("name", "")).strip_edges()
 	if name == "":
 		name = String(stack.get("battle_id", "stack")).strip_edges()
-	var count := int(stack.get("count", 0))
+	var count := BattleRules._alive_count(stack)
 	var hp := int(stack.get("total_health", 0))
 	if count > 0 and hp > 0:
 		return "%s x%d, %d HP" % [name, count, hp]
@@ -3316,7 +3316,7 @@ func _living_enemy_target_ids() -> Array:
 		var stack: Dictionary = stack_value
 		if String(stack.get("side", "")) != "enemy":
 			continue
-		if int(stack.get("count", 0)) <= 0 or int(stack.get("total_health", 0)) <= 0:
+		if BattleRules._alive_count(stack) <= 0:
 			continue
 		var battle_id := String(stack.get("battle_id", "")).strip_edges()
 		if battle_id != "":
