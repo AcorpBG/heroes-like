@@ -635,7 +635,17 @@ static func _supplemental_guarded_reward_site_guard(node: Dictionary, site: Dict
 		"package_guard_engagement_tiles": engagement_tiles,
 		"package_guard_engagement_tile_count": engagement_tiles.size(),
 	}
-	return GeneratedNeutralRules.with_authored_guard_art(guard)
+	guard = GeneratedNeutralRules.with_authored_guard_art(guard)
+	# A translated creature bank fields the guard of its rolled level.
+	var bank_stacks := GeneratedRewards.bank_guard_stacks(node)
+	if not bank_stacks.is_empty():
+		var bank_level := int(node.get(GeneratedRewards.BANK_LEVEL, 0))
+		var army := ContentService.get_army_group(army_group_id).duplicate(true)
+		army["id"] = "%s_bank_level_%d" % [army_group_id, bank_level]
+		army["stacks"] = bank_stacks
+		guard["enemy_army"] = army
+		guard[GeneratedRewards.BANK_LEVEL] = bank_level
+	return guard
 
 static func _generated_guarded_reward_engagement_tiles(visit_tile: Dictionary, map_size: Variant) -> Array:
 	var center := Vector2i(int(visit_tile.get("x", -1)), int(visit_tile.get("y", -1)))

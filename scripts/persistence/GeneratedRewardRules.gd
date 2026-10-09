@@ -9,6 +9,7 @@ extends RefCounted
 
 const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
+const GeneratedNeutral = preload("res://scripts/persistence/GeneratedNeutralEncounterRules.gd")
 
 const RARE_RESOURCES := ["aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]
 const COLLECTIBLE_RESOURCES := ["wood", "ore", "aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]
@@ -66,6 +67,33 @@ const WIND_PRESS_SITE := "site_wind_press"
 const TREASURE_CHEST_TIERS := [[1000, 500], [1500, 1000], [2000, 1500]]
 # Scroll spells lean to the lower tiers; tier 5 is never found on the map.
 const SCROLL_TIER_WEIGHTS := {1: 40, 2: 30, 3: 20, 4: 10}
+
+# HoMM3 creature banks keep their levels (docs/creature-banks.md). A bank rolls
+# one level per placement and pays that level's gold, plus one random artifact
+# of the HoMM3 class where the level holds one; its guard fights as the site's
+# own units with the battle power of the native guard's budget, as generated
+# neutral guards do. The Crypt (CRBANKS.TXT) becomes the Glassbound Eyrie.
+# Guard stacks are [creature AI value, headcount]: Skeletons 60, Walking Dead
+# 98, Wights 252, Vampires 555.
+const TYPE_CRYPT := 84
+const TYPE_RANDOM_TREASURE_ARTIFACT := 66
+const BANK_LEVEL := "generated_bank_level"
+const RANDOM_MAP_ELIGIBILITY_PATH := "res://content/random_map_object_eligibility.json"
+const CREATURE_BANKS := {
+	TYPE_CRYPT: {
+		"site_id": "site_glassbound_eyrie",
+		# Skeletons, Walking Dead, Wights and Vampires stand as the Eyrie's
+		# runners, pike wardens, slingers and Windcrest striders.
+		"guard_unit_ids": ["unit_neutral_kitehook_runners", "unit_neutral_cliffhawk_wardens", "unit_neutral_windglass_slingers", "unit_neutral_galehorn_striders"],
+		"artifact_source_type": TYPE_RANDOM_TREASURE_ARTIFACT,
+		"levels": [
+			{"chance": 30, "gold": 1500, "artifact": false, "guard": [[60, 30], [98, 20]]},
+			{"chance": 30, "gold": 2000, "artifact": false, "guard": [[60, 25], [98, 20], [252, 5]]},
+			{"chance": 30, "gold": 2500, "artifact": true, "guard": [[60, 20], [98, 20], [252, 10], [555, 5]]},
+			{"chance": 10, "gold": 5000, "artifact": true, "guard": [[60, 20], [98, 20], [252, 10], [555, 10]]},
+		],
+	},
+}
 
 # HoMM3 visit buildings become the original building with the same role
 # (docs/visit-buildings.md).
@@ -188,6 +216,8 @@ static func resolve(object: Dictionary, towns: Array = [], terrain_rows: Array =
 		return _node(object, _gate_site(object, key, terrain_rows), "resource_site", {})
 	if type_id in PORTAL_TYPES:
 		return _node(object, String(PORTAL_SITES[type_id]), String(object.get("kind", "resource_site")), {})
+	if CREATURE_BANKS.has(type_id):
+		return _creature_bank(object, key, type_id)
 	match type_id:
 		TYPE_SHIPYARD:
 			return _node(object, SHIPYARD_SITE, "resource_site", {})
@@ -400,6 +430,50 @@ static func treasure_chest_choices(gold: int, experience: int) -> Array:
 		{"id": "gold", "label": "Take %s gold" % _thousands(gold), "rewards": {"gold": gold}},
 		{"id": "experience", "label": "Gain %s experience" % _thousands(experience), "rewards": {"experience": experience}},
 	]
+
+## A creature bank at its rolled level: that level's gold and, where the level
+## holds one, an artifact of the bank's HoMM3 class. The site's own recruits,
+## scouting, resources and reward table stay out.
+static func _creature_bank(object: Dictionary, key: String, type_id: int) -> Dictionary:
+	var bank: Dictionary = CREATURE_BANKS[type_id]
+	var level := bank_level_roll(key, type_id)
+	var row: Dictionary = bank.levels[level - 1]
+	var node := _node(object, String(bank.site_id), "resource_site", {
+		NodePayload.PAYLOAD_REWARDS: {"gold": int(row.gold)},
+		NodePayload.PAYLOAD_RECRUITS: {},
+		NodePayload.PAYLOAD_VISION_RADIUS: 0,
+		NodePayload.PAYLOAD_ARTIFACT_RARITY: _artifact_rarity(int(bank.artifact_source_type)) if bool(row.artifact) else "",
+	})
+	node[BANK_LEVEL] = level
+	return node
+
+## The level, 1 to 4, a bank of this HoMM3 type rolls at this placement.
+static func bank_level_roll(key: String, type_id: int) -> int:
+	var levels: Array = CREATURE_BANKS[type_id].levels
+	var total := 0
+	for row in levels:
+		total += int(row.chance)
+	var roll := _roll(key, "bank_level", total)
+	for index in range(levels.size()):
+		roll -= int(levels[index].chance)
+		if roll < 0:
+			return index + 1
+	return levels.size()
+
+## The guard a translated creature bank fields at its level, or [] for any
+## other node, whose site keeps its own guard army.
+static func bank_guard_stacks(node: Dictionary) -> Array:
+	var type_id := int(node.get("h3m_type_id", -1))
+	var level := int(node.get(BANK_LEVEL, 0))
+	if not CREATURE_BANKS.has(type_id) or level < 1 or level > CREATURE_BANKS[type_id].levels.size():
+		return []
+	var bank: Dictionary = CREATURE_BANKS[type_id]
+	return GeneratedNeutral.stacks_for_native_budget(bank.levels[level - 1].guard, bank.guard_unit_ids)
+
+## The rarity the random map gives a HoMM3 random artifact of this type.
+static func _artifact_rarity(source_type: int) -> String:
+	var rarities: Dictionary = ContentService.load_json(RANDOM_MAP_ELIGIBILITY_PATH).get("artifact_rarities_by_source_type", {})
+	return String(rarities.get(str(source_type), ""))
 
 static func _pile(object: Dictionary, key: String, resource_id: String) -> Dictionary:
 	var amount := 0

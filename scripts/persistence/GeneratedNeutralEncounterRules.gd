@@ -161,6 +161,25 @@ static func _company_art_ready(asset_id: String, unit_id: String) -> bool:
 	var idle: Dictionary = ContentService.load_json(CREATURE_IDLE_PATH).get("units", {}).get(unit_id, {})
 	return not idle.is_empty() and ResourceLoader.exists(String(idle.get("path", "")))
 
+## Original stacks with the battle power of native ones: each native stack,
+## [creature value, headcount], becomes its paired unit with value x headcount
+## x power_per_native_value of power, at least one creature. Empty when a unit
+## or the rate is missing.
+static func stacks_for_native_budget(native_stacks: Array, unit_ids: Array) -> Array:
+	var rate := float(ContentService.load_json(COMPANIES_PATH).get("power_per_native_value", 0.0))
+	if rate <= 0.0 or native_stacks.size() > unit_ids.size():
+		return []
+	var stacks := []
+	for index in range(native_stacks.size()):
+		var unit_id := String(unit_ids[index])
+		var unit_power := _unit_power(unit_id)
+		if unit_power <= 0.0:
+			return []
+		var native: Array = native_stacks[index]
+		var power := float(native[0]) * float(native[1]) * rate
+		stacks.append({"unit_id": unit_id, "count": maxi(1, int(round(power / unit_power)))})
+	return stacks
+
 static func _unit_power(unit_id: String) -> float:
 	return _army_power([{"unit_id": unit_id, "count": 1}])
 

@@ -1,15 +1,31 @@
 extends RefCounted
 ## A placed resource site can carry its own payload. Generated maps roll
-## HoMM-style amounts, chest tiers and scroll spells per placement; authored
-## placements use the site definition unchanged. A site that stays on the map
-## after its claim pays that claim payload once per placement: recapturing it
-## grants ownership only, never the payload again.
+## HoMM-style amounts, chest tiers, scroll spells and creature-bank levels per
+## placement; authored placements use the site definition unchanged. A site
+## that stays on the map after its claim pays that claim payload once per
+## placement: recapturing it grants ownership only, never the payload again.
 
 const PAYLOAD_REWARDS := "payload_rewards"
 const PAYLOAD_REWARD_CHOICES := "payload_reward_choices"
 const PAYLOAD_SPELL_IDS := "payload_spell_ids"
 const PAYLOAD_VISIT := "payload_visit"
+# Troops that join on the claim; empty means none.
+const PAYLOAD_RECRUITS := "payload_recruits"
+const PAYLOAD_VISION_RADIUS := "payload_vision_radius"
+# The rarity of the one artifact the claim draws instead of the site's own
+# reward table; empty means no artifact.
+const PAYLOAD_ARTIFACT_RARITY := "payload_artifact_rarity"
+const CLAIM_ARTIFACT_RARITY := "claim_artifact_rarity"
 const CLAIM_PAYLOAD_SPENT := "claim_payload_spent"
+const PAYLOAD_KEYS := [
+	PAYLOAD_REWARDS,
+	PAYLOAD_REWARD_CHOICES,
+	PAYLOAD_SPELL_IDS,
+	PAYLOAD_VISIT,
+	PAYLOAD_RECRUITS,
+	PAYLOAD_VISION_RADIUS,
+	PAYLOAD_ARTIFACT_RARITY,
+]
 
 static func site_for_node(node: Dictionary, site: Dictionary = {}) -> Dictionary:
 	if site.is_empty():
@@ -34,14 +50,28 @@ static func site_for_node(node: Dictionary, site: Dictionary = {}) -> Dictionary
 		for key in visit_override.keys():
 			visit[key] = visit_override[key].duplicate(true) if visit_override[key] is Dictionary or visit_override[key] is Array else visit_override[key]
 		effective["visit"] = visit
+	var recruits = node.get(PAYLOAD_RECRUITS, null)
+	if recruits is Dictionary:
+		_erase_claim_recruits(effective)
+		if not recruits.is_empty():
+			effective["claim_recruits"] = recruits.duplicate(true)
+	if node.has(PAYLOAD_VISION_RADIUS):
+		effective["vision_radius"] = maxi(0, int(node.get(PAYLOAD_VISION_RADIUS, 0)))
+	var artifact_rarity = node.get(PAYLOAD_ARTIFACT_RARITY, null)
+	if artifact_rarity is String:
+		effective[CLAIM_ARTIFACT_RARITY] = artifact_rarity
 	if claim_payload_spent(node, site):
-		for key in ["claim_rewards", "rewards", "reward_choices", "claim_recruits", "learn_spell_id", "learn_spell_ids"]:
+		for key in ["claim_rewards", "rewards", "reward_choices", "learn_spell_id", "learn_spell_ids"]:
 			effective.erase(key)
-		var roster = effective.get("neutral_roster", {})
-		if roster is Dictionary and roster.has("claim_recruits"):
-			roster.erase("claim_recruits")
-			effective["neutral_roster"] = roster
+		_erase_claim_recruits(effective)
 	return effective
+
+static func _erase_claim_recruits(effective: Dictionary) -> void:
+	effective.erase("claim_recruits")
+	var roster = effective.get("neutral_roster", {})
+	if roster is Dictionary and roster.has("claim_recruits"):
+		roster.erase("claim_recruits")
+		effective["neutral_roster"] = roster
 
 static func claim_payload_spent(node: Dictionary, site: Dictionary) -> bool:
 	return bool(site.get("persistent_control", false)) and bool(node.get(CLAIM_PAYLOAD_SPENT, false))
@@ -51,10 +81,7 @@ static func mark_claimed(node: Dictionary, site: Dictionary) -> void:
 		node[CLAIM_PAYLOAD_SPENT] = true
 
 static func _has_node_payload(node: Dictionary, site: Dictionary) -> bool:
-	return (
-		node.has(PAYLOAD_REWARDS)
-		or node.has(PAYLOAD_REWARD_CHOICES)
-		or node.has(PAYLOAD_SPELL_IDS)
-		or node.has(PAYLOAD_VISIT)
-		or claim_payload_spent(node, site)
-	)
+	for key in PAYLOAD_KEYS:
+		if node.has(key):
+			return true
+	return claim_payload_spent(node, site)

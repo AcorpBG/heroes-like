@@ -235,6 +235,10 @@ Rules:
 
 `content-homm-pickups-income-20261006` (completed, owner-directed economy and random-map content): only mines pay daily income and no site pays a capture or recapture bonus; dwellings, landmarks, watchtowers and outposts keep only their non-resource roles. The six small producers are weekly visit sites, Wood Wagon and Ore Crates are one-time pickups kept off random maps, and generated maps translate HoMM3 reward types into original sites with per-placement HoMM payloads (pile sizes, chest tiers, campfire hauls, scroll spells, six-way rare spread) through `scripts/persistence/GeneratedRewardRules.gd`. Two new rare piles (Verdant Graft Bundle, Brass Scrip Case) carry original sprites. See `docs/pickups-and-income-sites.md`.
 
+### Creature banks keep their levels
+
+`content-creature-bank-levels-20261009` (completed, owner request after comparing the Glassbound Eyrie with the HoMM3 Crypt): on random maps a Crypt becomes a Glassbound Eyrie that rolls one of the Crypt's four levels (30/30/30/10%) and pays its gold (1,500, 2,000, 2,500 or 5,000), plus one random common artifact the hero lacks on levels 3 and 4. It pays no ore, experience, troops, relic or survey. Its guard is the Eyrie's runners, wardens, slingers and Galehorn Striders, sized to the Crypt's undead budget at the generated-guard rate: power 225, 287, 508 or 672, against 80 before. Other HoMM3 banks still take a random guarded site's authored payload and need their own rows. See `docs/creature-banks.md`.
+
 ### Full-screen Town construction board
 
 `ux-town-construction-board-20261005` (completed, owner-directed UI): the Construction Ledger popout is replaced by one full-screen 23-slot board shared by every faction town (rows Town, Army, Growth/Hero training, faction signature), opened from the main building or Build command. Tiles show stage art, stage and status; tiers I–V compare both exclusive branches before a confirmed build; the detail panel shows stage strips, unit upgrades, cost need/have, requirement jumps, Trade and View in town. Rules, costs, daily limit, saves and AI are unchanged. See `docs/town-construction-board.md`.

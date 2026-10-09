@@ -5,6 +5,7 @@ const ARTIFACT_SLOTS := ["boots", "banner", "armor", "trinket"]
 const EQUIPMENT_SLOTS := ["boots", "banner", "armor", "trinket", "trinket_2"]
 const ARTIFACT_SCHEMA_ID := "artifact_taxonomy_v1"
 const ARTIFACT_SOURCE_REWARD_SCHEMA_ID := "artifact_source_reward_v1"
+const NodePayload = preload("res://scripts/core/ResourceNodePayloadRules.gd")
 const ARTIFACT_CLASSES := ["common", "crafted", "faction", "accord", "relic", "cursed", "set_piece", "old_measure", "scenario"]
 const ARTIFACT_RARITIES := ["common", "uncommon", "rare", "epic", "legendary", "scenario"]
 const ARTIFACT_REWARD_GUARD_TIERS := ["unguarded", "light", "standard", "heavy", "elite", "sovereign", "apex", "ambush"]
@@ -752,6 +753,10 @@ static func select_live_source_reward(
 	faction_id: String = "",
 	excluded_artifact_ids: Array = []
 ) -> Dictionary:
+	# A generated placement draws one artifact of its own rarity instead of
+	# the site's reward table (ResourceNodePayloadRules.PAYLOAD_ARTIFACT_RARITY).
+	if source_record.has(NodePayload.CLAIM_ARTIFACT_RARITY):
+		return _select_rarity_source_reward(source_tag, String(source_record.get(NodePayload.CLAIM_ARTIFACT_RARITY, "")), source_key, excluded_artifact_ids)
 	var contract := _artifact_source_contract(source_record)
 	var runtime_boundary = source_record.get("runtime_boundary", {})
 	if not (contract is Dictionary) or not (runtime_boundary is Dictionary):
@@ -812,6 +817,40 @@ static func select_live_source_reward(
 	return {
 		"ok": true,
 		"artifact_id": String(candidates[index]),
+		"candidate_count": candidates.size(),
+		"table_id": table_id,
+		"source_tag": source_tag,
+		"source_key": source_key,
+	}
+
+## Any artifact of the rarity the owner does not hold, as the random map's
+## random artifacts of that class are, chosen stably by the source key. An
+## empty rarity holds no artifact.
+static func _select_rarity_source_reward(
+	source_tag: String,
+	rarity: String,
+	source_key: String,
+	excluded_artifact_ids: Array
+) -> Dictionary:
+	var table_id := "placement_rarity:%s" % rarity
+	if rarity == "":
+		return {"ok": false, "reason": "placement_holds_no_artifact", "source_tag": source_tag, "source_key": source_key}
+	var excluded := {}
+	for artifact_id_value in excluded_artifact_ids:
+		excluded[String(artifact_id_value)] = true
+	var candidates := []
+	for artifact_value in ContentService.load_json(ContentService.ARTIFACTS_PATH).get("items", []):
+		if not (artifact_value is Dictionary) or String(artifact_value.get("rarity", "")) != rarity:
+			continue
+		var artifact_id := String(artifact_value.get("id", "")).strip_edges()
+		if artifact_id != "" and not excluded.has(artifact_id):
+			candidates.append(artifact_id)
+	if candidates.is_empty():
+		return {"ok": false, "reason": "source_table_exhausted", "exhausted": true, "table_id": table_id, "source_tag": source_tag, "source_key": source_key}
+	candidates.sort()
+	return {
+		"ok": true,
+		"artifact_id": String(candidates[_stable_source_reward_index(source_key, candidates.size())]),
 		"candidate_count": candidates.size(),
 		"table_id": table_id,
 		"source_tag": source_tag,
