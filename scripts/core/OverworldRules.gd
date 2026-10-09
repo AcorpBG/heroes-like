@@ -4102,6 +4102,15 @@ static func _append_generated_body_tiles_to_blocked_index(index: Dictionary, pla
 	for body_tile in _generated_body_tiles_for_placement(placement, blocks_body):
 		index[_tile_key(body_tile)] = true
 
+## Every tile a town stands on: its blocking body and its entrance.
+static func town_footprint_tiles(town: Dictionary) -> Array:
+	var tiles := _generated_body_tiles_for_placement(town, true)
+	var entrance := OverworldLevelRulesScript.town_entrance(town)
+	var entrance_tile := Vector2i(int(entrance.get("x", -1)), int(entrance.get("y", -1)))
+	if entrance_tile.x >= 0 and entrance_tile.y >= 0 and entrance_tile not in tiles:
+		tiles.append(entrance_tile)
+	return tiles
+
 static func _generated_body_tiles_for_placement(placement: Dictionary, blocks_body: bool) -> Array:
 	if not blocks_body:
 		return []
