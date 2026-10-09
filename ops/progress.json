@@ -114701,6 +114701,20 @@
         "docs/ai-plays-by-player-rules.md"
       ],
       "notes": "Owner decisions 2026-10-09. Main and field armies search 12 days of movement for towns, hostile heroes, war-path guards and unexplored ground (_strategic_candidate). Heroes use random-exit portal networks with the human's exit roll, planning with exits they have seen; portals with unseen exits are explored. PlayerEliminationRules: generated maps eliminate a player with no town and no hero, or with no town for 7 days (human: countdown then defeat; AI: heroes leave); losing the starting hero no longer ends the game (HeroCommandRules.hand_over_primary, fallen heroes not rebuilt). Match runner always records each hero decision with its top alternatives and turn time by phase. Tests: player_elimination_rules_report (5 cases), ai_player_rules, ai_known_world_memory, ai_hero_task_live_turn_execution pass. Replays of the 4 stalled large-map seeds still run to day 160: armies plan town attacks 600-840 times per game but stay fragmented across field heroes (no decisive force), towns trade at parity, and a lone strong hero holding its last town survives. Open: army concentration on large maps."
+    },
+    {
+      "id": "heroes-guard-adjacent-tiles-20261009",
+      "title": "Heroes guard their adjacent tiles: stepping next to a hostile hero starts the battle",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "gameplay_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Owner report 2026-10-09: an enemy hero walked right past the main hero and no battle started; a hero blocked only its own tile. OverworldRules.hero_guard_zone_tiles gives a hero's zone (eight neighbours, same land/water side, none in a town doorway). Human side: hostile AI heroes join guard_engagement_by_tile, so routes end on and never cross the zone, selecting the hero walks to the nearest zone tile and arriving (also through a portal) starts the battle; portal endpoint safety ignores hero zones. AI side: AiHeroRules._search marks the human's and rival players' hero zones as route ends (hero_zone, portal exits too); a zone tile offers only the hero fight; parking and portal scouting skip zones; _follow_plan stops and fights when a step lands in a zone. Tests: new hero_guard_zone_report (medium generated map, 6 checks) passes; ai_player_rules_report and player_elimination_rules_report pass; two 3-player AI matches (small, medium) end with winners on days 52 and 56, no script errors; the same seeds on the old rules: days 49 and 46, hero battles 21/19 against 25/18 now. validate_repo: 883 known failures plus the worktree's missing godot-cpp submodule, none from this change.",
+      "updatedAt": "2026-10-09T16:00:00Z",
+      "validatedAt": "2026-10-09T16:00:00Z"
     }
   ],
   "project": "heroes-like",

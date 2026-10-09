@@ -840,7 +840,9 @@ static func _native_passage_endpoint_safety(session: SessionStateStoreScript.Ses
 			blocked = _build_blocked_tile_index(session, tile.z, actor_id).get(_tile_key(local), false)
 	if not (blocked is bool and not blocked) and not (blocked is String and blocked == id):
 		return {"ok": false, "message": "Another object blocks the passage entrance."}
-	var guard := _find_guard_engagement_at_tile(session, tile.x, tile.y, tile.z)
+	# A hero's zone does not close a passage: whoever comes out next to a
+	# hostile hero fights it there (the human's arrival, the AI's own step).
+	var guard := _find_guard_engagement_at_tile(session, tile.x, tile.y, tile.z, false)
 	if not combat_arrival and int(guard.get("index", -1)) >= 0 and String(guard.get("encounter", {}).get("placement_id", "")) != actor_id:
 		return {"ok": false, "message": "Clear the guard before using this passage."}
 	for encounter in session.overworld.get("encounters", []):
@@ -3222,7 +3224,10 @@ static func guard_engagement_approach_route(session: SessionStateStoreScript.Ses
 	var anchor := Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1)))
 	var targets := {}
 	var identity := encounter_key(encounter)
-	for tile in _guard_engagement_world_tiles(encounter):
+	var engagement := _guard_engagement_world_tiles(encounter)
+	if engagement.is_empty() and _ai_hero_guards_against_player(session, encounter):
+		engagement = hero_guard_zone_tiles(session, anchor, level)
+	for tile in engagement:
 		if tile_is_blocked(session, tile.x, tile.y, level) and tile != anchor:
 			continue
 		var owner := guard_engagement_encounter_at_tile(session, tile.x, tile.y, level)
@@ -3982,6 +3987,9 @@ static func _build_spatial_lookup_index(session: SessionStateStoreScript.Session
 								_tile_key(engagement_tile),
 								encounter_index
 							)
+				elif _ai_hero_guards_against_player(session, encounter):
+					for zone_tile in hero_guard_zone_tiles(session, Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1))), level):
+						_append_spatial_lookup_entry(index["guard_engagement_by_tile"], _tile_key(zone_tile), encounter_index)
 	return index
 
 static func _append_spatial_lookup_entry(index_value: Variant, key: String, entry_index: int) -> void:
@@ -3992,7 +4000,7 @@ static func _append_spatial_lookup_entry(index_value: Variant, key: String, entr
 	entries.append(entry_index)
 	index[key] = entries
 
-static func _find_guard_engagement_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
+static func _find_guard_engagement_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1, include_heroes: bool = true) -> Dictionary:
 	if session == null:
 		return {"index": -1, "encounter": {}}
 	var encounters = session.overworld.get("encounters", [])
@@ -4000,6 +4008,8 @@ static func _find_guard_engagement_at_tile(session: SessionStateStoreScript.Sess
 	for encounter_index in _spatial_lookup_entries(lookup_index, "guard_engagement_by_tile", Vector2i(x, y)):
 		var index := int(encounter_index)
 		var encounter = encounters[index] if encounters is Array and index >= 0 and index < encounters.size() else {}
+		if not include_heroes and encounter is Dictionary and encounter.get("ai_hero", null) is Dictionary:
+			continue
 		if encounter is Dictionary and not is_encounter_resolved(session, encounter):
 			return {"index": index, "encounter": encounter}
 	return {"index": -1, "encounter": {}}
@@ -4017,6 +4027,44 @@ static func _encounter_has_guard_engagement_surface(encounter: Dictionary) -> bo
 	if encounter.get("package_guard_control_zone_tiles", null) is Array:
 		return true
 	return String(encounter.get("guard_kind", "")).strip_edges() != ""
+
+## Heroes guard the tiles around them, as neutral armies do: a hero that steps
+## next to a hostile hero fights it there, so no army walks past another one.
+## A hero inside a town (on its doorway) leaves its defence to the town, and a
+## hero on land does not reach a boat at sea or the other way round. Before
+## 2026-10-09 a hero blocked only its own tile and rival heroes walked right
+## past the player's main hero.
+static func hero_guard_zone_tiles(session: SessionStateStoreScript.SessionData, tile: Vector2i, level: int) -> Array:
+	if session == null or _town_entrance_at(session, tile, level):
+		return []
+	var size := derive_map_size(session)
+	var on_water := WaterTravel.is_water(session, tile.x, tile.y, level)
+	var tiles := []
+	for offset in WaterTravel.NEIGHBORS:
+		var next: Vector2i = tile + offset
+		if next.x < 0 or next.y < 0 or next.x >= size.x or next.y >= size.y:
+			continue
+		if WaterTravel.is_water(session, next.x, next.y, level) != on_water:
+			continue
+		tiles.append(next)
+	return tiles
+
+## Whether a hero standing on this tile guards it against the human: a computer
+## player's hero that is not the human's ally.
+static func _ai_hero_guards_against_player(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> bool:
+	if not (encounter.get("ai_hero", null) is Dictionary):
+		return false
+	var controller := PlayerRules.raid_controller_id(encounter)
+	return controller != "" and not PlayerRules.allied(session, controller, "player")
+
+static func _town_entrance_at(session: SessionStateStoreScript.SessionData, tile: Vector2i, level: int) -> bool:
+	for town in session.overworld.get("towns", []):
+		if not (town is Dictionary):
+			continue
+		var entrance := OverworldLevelRulesScript.town_entrance(town)
+		if OverworldLevelRulesScript.level_of(entrance) == level and int(entrance.get("x", -1)) == tile.x and int(entrance.get("y", -1)) == tile.y:
+			return true
+	return false
 
 static func _guard_engagement_world_tiles(encounter: Dictionary) -> Array:
 	for key in ["package_guard_engagement_tiles", "package_guard_control_zone_tiles", "guard_control_zone_tiles"]:

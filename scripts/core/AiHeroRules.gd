@@ -2079,7 +2079,11 @@ static func _strategic_candidate(session: SessionStateStoreScript.SessionData, c
 		var distance := int(search.dist[int(tile_index)])
 		if distance <= local_radius:
 			continue
+		# A town beside a hostile hero is reached through that hero.
+		var hero_guarded := _in_hero_zone(search, int(tile_index))
 		for ref in stops[tile_index]:
+			if hero_guarded and not bool(ref.get("zone", false)):
+				continue
 			match int(ref.kind):
 				STOP_TOWN:
 					if known[int(tile_index)] == 0:
@@ -2387,7 +2391,7 @@ static func _wait_by_home(session: SessionStateStoreScript.SessionData, context:
 			if here_index == door_index:
 				_park(session, placement_id, town_id)
 				return {}
-			if int(search.dist[door_index]) >= 0:
+			if int(search.dist[door_index]) >= 0 and not _in_hero_zone(search, door_index):
 				return {"kind": "park", "id": town_id, "index": door_index, "value": 0.0, "tile_index": door_index, "distance": int(search.dist[door_index])}
 	if doors.has(here_index) and not keep_clear.has(here_index):
 		return {}
@@ -2534,14 +2538,12 @@ static func _best_candidate(session: SessionStateStoreScript.SessionData, contex
 		# A much stronger hostile hero could reach it: the hero keeps away,
 		# except to hold its own town where that stops the attack.
 		var in_danger := not dangers.is_empty() and _in_danger(dangers, int(tile_index) % size.x, int(tile_index) / size.x, LevelRules.level_of(entry))
-		# Stepping into a guard's zone means fighting it first, as it does for
-		# the human: whatever else lies there is reached through that fight.
-		var guarded := false
+		# Stepping into a guard's or a hostile hero's zone means fighting it
+		# first, as it does for the human: whatever else lies there is reached
+		# through that fight.
+		var guarded := _zone_guarded(stops[tile_index])
 		for ref in stops[tile_index]:
-			if int(ref.kind) == STOP_ENCOUNTER:
-				guarded = true
-		for ref in stops[tile_index]:
-			if guarded and int(ref.kind) != STOP_ENCOUNTER:
+			if guarded and not _guards_tile(ref):
 				continue
 			# Map objects count once explored; armies and heroes once in sight.
 			if int(ref.kind) not in [STOP_HERO, STOP_AI_HERO] and known[int(tile_index)] == 0:
@@ -2583,6 +2585,20 @@ static func _best_candidate(session: SessionStateStoreScript.SessionData, contex
 			best = explore
 	return best
 
+## Whether a guard's or a hostile hero's zone covers the tile these stops share.
+static func _zone_guarded(refs: Array) -> bool:
+	for ref in refs:
+		if _guards_tile(ref):
+			return true
+	return false
+
+static func _guards_tile(ref: Dictionary) -> bool:
+	return int(ref.kind) == STOP_ENCOUNTER or bool(ref.get("zone", false))
+
+static func _in_hero_zone(search: Dictionary, tile_index: int) -> bool:
+	var zone: PackedByteArray = search.get("hero_zone", PackedByteArray())
+	return tile_index >= 0 and tile_index < zone.size() and zone[tile_index] != 0
+
 ## The nearest reachable tile at the edge of what this player has seen: a
 ## human sends idle heroes to scout, so does the AI.
 static func _exploration_candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, search: Dictionary) -> Dictionary:
@@ -2593,7 +2609,7 @@ static func _exploration_candidate(session: SessionStateStoreScript.SessionData,
 	var portal_frontier := -1
 	for portal_tile in portals.keys():
 		var portal_distance := int(search.dist[int(portal_tile)]) if int(portal_tile) < search.dist.size() else -1
-		if portal_distance > 0 and _portal_leads_unseen(portals[portal_tile], known) and (portal_frontier < 0 or portal_distance < int(search.dist[portal_frontier])):
+		if portal_distance > 0 and not _in_hero_zone(search, int(portal_tile)) and _portal_leads_unseen(portals[portal_tile], known) and (portal_frontier < 0 or portal_distance < int(search.dist[portal_frontier])):
 			portal_frontier = int(portal_tile)
 	for position in range(1, int(search.get("order_count", 0))):
 		var tile_index := order[position]
@@ -3265,6 +3281,14 @@ static func _follow_plan(session: SessionStateStoreScript.SessionData, context: 
 		entry["y"] = landed.y
 		TurnPlayback.move(session, entry, before)
 		_reveal(session, context, LevelRules.position(entry), _sight_radius(entry))
+		# Next to a hostile hero the walk ends in a fight with it, whatever the
+		# hero set out to do (a portal can put it there unplanned).
+		var beside := _hostile_hero_beside(session, context, landed, level)
+		if not beside.is_empty():
+			if String(beside.kind) != String(plan.get("kind", "")) or int(beside.index) != int(plan.get("index", -1)):
+				plan = beside
+			arrived = true
+			break
 		if landed != tile:
 			# A random portal sent the hero elsewhere: it plans again from there.
 			rerouted = true
@@ -3283,6 +3307,11 @@ static func _follow_plan(session: SessionStateStoreScript.SessionData, context: 
 			_reveal(session, context, LevelRules.position(entry), _sight_radius(entry))
 			rerouted = true
 			arrived = false
+			var ambushed := _hostile_hero_beside(session, context, scouted.exit, level)
+			if not ambushed.is_empty():
+				plan = ambushed
+				rerouted = false
+				arrived = true
 	block["movement"] = movement
 	entry[AI_HERO_KEY] = block
 	_store_entry(session, index, entry)
@@ -3341,6 +3370,50 @@ static func _tile_blocked_for_standing(session: SessionStateStoreScript.SessionD
 		if LevelRules.level_of(position) == level and int(position.get("x", -1)) == tile.x and int(position.get("y", -1)) == tile.y:
 			return true
 	return false
+
+## Every hero standing on this level, the human's and the computer players',
+## and whether it is hostile to the player whose turn it is.
+static func _hero_guards(session: SessionStateStoreScript.SessionData, context: Dictionary, level: int) -> Array:
+	var controller := String(context.controller)
+	var guards := []
+	var human_hostile := not PlayerRules.allied(session, controller, "player")
+	var heroes: Array = session.overworld.get("player_heroes", [])
+	for index in range(heroes.size()):
+		var hero = heroes[index]
+		var position: Dictionary = hero.get("position", {}) if hero is Dictionary and hero.get("position", {}) is Dictionary else {}
+		if position.is_empty() or LevelRules.level_of(position) != level:
+			continue
+		guards.append({"tile": Vector2i(int(position.get("x", -1)), int(position.get("y", -1))), "ref_kind": "hero", "index": index, "id": String(hero.get("id", "")), "hostile": human_hostile})
+	var encounters: Array = session.overworld.get("encounters", [])
+	var resolved := _resolved_lookup(session)
+	for index in range(encounters.size()):
+		var other = encounters[index]
+		if not is_ai_hero(other) or LevelRules.level_of(other) != level or resolved.has(String(other.get("placement_id", ""))):
+			continue
+		var other_controller := PlayerRules.raid_controller_id(other)
+		var hostile := other_controller != controller and not PlayerRules.allied(session, controller, other_controller)
+		guards.append({"tile": Vector2i(int(other.get("x", -1)), int(other.get("y", -1))), "ref_kind": "ai_hero", "index": index, "id": String(other.get("placement_id", "")), "hostile": hostile})
+	return guards
+
+## The tiles a hero standing here guards; terrain and towns do not change
+## during a turn, so each answer is kept for the turn.
+static func _hero_zone_tiles(session: SessionStateStoreScript.SessionData, context: Dictionary, tile: Vector2i, level: int) -> Array:
+	var cache: Dictionary = context.get("hero_zone_tiles", {})
+	var key := "%d:%d,%d" % [level, tile.x, tile.y]
+	if not cache.has(key):
+		cache[key] = _overworld_rules().hero_guard_zone_tiles(session, tile, level)
+		context["hero_zone_tiles"] = cache
+	return cache[key]
+
+## The hostile hero whose zone this tile lies in, as a plan to fight it: a hero
+## that steps next to one fights it there, as the human does.
+static func _hostile_hero_beside(session: SessionStateStoreScript.SessionData, context: Dictionary, tile: Vector2i, level: int) -> Dictionary:
+	for guard in _hero_guards(session, context, level):
+		if not bool(guard.hostile) or maxi(absi(guard.tile.x - tile.x), absi(guard.tile.y - tile.y)) != 1:
+			continue
+		if _hero_zone_tiles(session, context, guard.tile, level).has(tile):
+			return {"kind": String(guard.ref_kind), "id": String(guard.id), "index": int(guard.index)}
+	return {}
 
 ## Static blocking for one level, built once per enemy turn: impassable terrain
 ## (rock, water) and every body the human's movement treats as solid, except
@@ -3609,6 +3682,26 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 		else:
 			stop_mask[hero_index] = 1
 			_add_stop_index(dynamic_stops, hero_index, {"kind": STOP_HERO, "index": index})
+	# Heroes guard the tiles around them (OverworldRules.hero_guard_zone_tiles):
+	# stepping next to a hostile hero means fighting it, so its zone ends a
+	# route like a neutral army's and is never walked through.
+	var hero_zone := PackedByteArray()
+	hero_zone.resize(count)
+	var guards := _hero_guards(session, context, level)
+	var hero_tiles := {}
+	for guard in guards:
+		hero_tiles[guard.tile.y * width + guard.tile.x] = true
+	for guard in guards:
+		if not bool(guard.hostile):
+			continue
+		var ref := {"kind": STOP_HERO if String(guard.ref_kind) == "hero" else STOP_AI_HERO, "index": int(guard.index), "zone": true}
+		for tile in _hero_zone_tiles(session, context, guard.tile, level):
+			var zone_index: int = tile.y * width + tile.x
+			if hero_tiles.has(zone_index) or army_tiles.has(zone_index) or (surface.blocked[zone_index] != 0 and not static_stops.has(zone_index)):
+				continue
+			hero_zone[zone_index] = 1
+			stop_mask[zone_index] = 1
+			_add_stop_index(dynamic_stops, zone_index, ref)
 	var pass_mask := PackedByteArray()
 	pass_mask.resize(count)
 	for site in surface.get("site_stops", []):
@@ -3642,14 +3735,18 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 	var portals: Dictionary = surface.get("portals", {})
 	var seen_map := _explored(session, context, level) if not portals.is_empty() else PackedByteArray()
 	# A hero that stopped on a portal goes through it first thing.
+	var reached := []
 	if portals.has(start_index):
 		for start_exit in _portal_exits(portals[start_index], seen_map):
 			if dist[start_exit] < 0:
 				dist[start_exit] = 1
 				parent[start_exit] = start_index
+				# An exit beside a hostile hero is as far as the hero gets.
+				if hero_zone[start_exit] != 0:
+					reached.append(start_exit)
+					continue
 				queue[tail] = start_exit
 				tail += 1
-	var reached := []
 	# Whether the radius cut the search short: if not, it reached every tile the
 	# hero can walk to.
 	var capped := false
@@ -3681,7 +3778,7 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 				if pass_mask[next] != 0:
 					queue[tail] = next
 					tail += 1
-				elif portals.has(next):
+				elif portals.has(next) and hero_zone[next] == 0:
 					# Through the portal: the hero comes out standing on an exit
 					# (usually another portal of the network) and the route goes
 					# on from there.
@@ -3689,6 +3786,9 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 						if dist[exit] < 0:
 							dist[exit] = next_distance + 1
 							parent[exit] = next
+							if hero_zone[exit] != 0:
+								reached.append(exit)
+								continue
 							queue[tail] = exit
 							tail += 1
 				continue
@@ -3725,6 +3825,7 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 		"native_corners": native_corners,
 		"guard_mask": guard_mask,
 		"guard_zones": guard_zones,
+		"hero_zone": hero_zone,
 		"static_stops": static_stops,
 	}
 

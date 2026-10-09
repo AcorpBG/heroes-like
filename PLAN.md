@@ -66,6 +66,10 @@ Rules:
 
 `ai-long-range-portals-elimination-20261009` (completed, owner decisions): main and field armies look twelve days out for towns and rival heroes; heroes travel random-exit portal networks as a human does; on generated maps a player with no town for seven days is out and losing the starting hero no longer ends the game; AI match runs always record every hero decision and turn time by phase. Open: armies stay split across field heroes on large maps, so four of four previously stalled large-map seeds still reach day 160. See `docs/ai-plays-by-player-rules.md`.
 
+### Heroes guard adjacent tiles
+
+`heroes-guard-adjacent-tiles-20261009` (completed, owner report: an enemy hero walked right past the main hero without a battle): every hero guards its eight neighbouring tiles like a neutral guard, except in a town doorway and across the shore. Stepping next to a hostile hero starts the battle with it, for the human and for computer players (also against each other); routes end on such a tile and never cross it. See `docs/ai-plays-by-player-rules.md`.
+
 ### AI field armies, town and elimination value
 
 `ai-field-armies-town-value-20261009` (completed, owner request after the medium-map AI match): lesser heroes keep field armies (one per town beyond the first, up to two) that take garrisons along, defend and capture instead of feeding the main hero; towns are worth 10,000 plus four weeks of income and troops; eliminating a player adds 20,000 shared over its last towns or heroes; a defending hero's one-cast spell burst discounts attacks and forces a preview. See `docs/ai-plays-by-player-rules.md`.
