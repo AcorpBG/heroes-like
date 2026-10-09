@@ -1,8 +1,8 @@
 # Battle screen and battle flow rework
 
-Slice: `battle-rework-design-20261009` (owner request, 2026-10-09: "We need to completely rework the BattleScreen and how battles play."). This is the plan and the mockup only; no game code has changed. The implementation slices at the end stay pending until the owner signs off the mockup and the open decisions.
+Slice: `battle-rework-design-20261009` (owner request, 2026-10-09: "We need to completely rework the BattleScreen and how battles play."). The owner signed off the mockup on 2026-10-09, accepted every recommended decision and asked for the right-hand hero to face the battlefield; the implementation slices below are being built in order.
 
-Mockup, pass 1: https://claude.ai/artifact/Hy6UZnkYaLjXSwsAhqtsBF
+Mockup (pass 2, signed off): https://claude.ai/artifact/Hy6UZnkYaLjXSwsAhqtsBF
 
 ## The owner's points
 
@@ -103,7 +103,7 @@ Rules stay in `BattleRules` and `BattleAiRules`; the screen only asks and shows.
 
 ## Implementation slices
 
-All pending until the owner signs off the mockup and the open decisions. Validation uses battles from generated maps (authored scenarios are archived) and runs on Windows and Linux.
+Built in this order after the owner's sign-off (2026-10-09). Validation uses battles from generated maps (authored scenarios are archived) and runs on Windows and Linux.
 
 | Order | Slice | Scope | Validation |
 |---|---|---|---|
@@ -121,9 +121,11 @@ Slices 1-4 change rules and can land one by one under today's screen, keeping th
 
 The sword cursor turns toward the struck side and a system cursor cannot rotate, so the battle view draws its own cursor and badge over the field and hides the system cursor there. The rework is GDScript and art only, with no native code, so Windows and Linux behave the same.
 
-## Open owner decisions
+## Owner decisions
 
-| Decision | Recommendation | In the mockup |
+Decided 2026-10-09: every recommendation accepted.
+
+| Decision | Decided | In the mockup |
 |---|---|---|
 | Board size | 11x9: room to move around obstacles while units stay large; 15x11 makes units small | Board button |
 | Waiting order | slowest first, as in HoMM3 | W |
@@ -132,9 +134,9 @@ The sword cursor turns toward the struck side and a system cursor cannot rotate,
 | Deployment | army edges instead of today's spread columns | the start |
 | Shooter next to an enemy | keep today's x0.6 shot; Ctrl strikes in melee instead | Ember Archer next to an enemy |
 | Effects on the active stack | the current turn does not count | cast a buff, then hold the right button on the stack |
-| Hero figures | standing figures as in the mockup; mounted ones could come later | the heroes |
+| Hero figures | standing figures facing the battlefield (the right-hand hero mirrored); mounted ones could come later | the heroes |
 | Auto | an Auto battle toggle on the command bar; Quick Resolve stays before the battle | A |
 
 ## Mockup
 
-https://claude.ai/artifact/Hy6UZnkYaLjXSwsAhqtsBF (private to the owner). A playable HTML page, not game code: the game's unit sheets, hero figures, obstacles, spell icons and effects on a painted meadow, a simplified damage model (count, damage range and the attack/defense curve), a simple AI, and creature abilities listed but not simulated. The heroes get extra mana so the magic shows. N shows numbered notes for the eleven points; Board switches between 11x9, 11x7 and 15x11; Options (Esc) sets the speed and the grid.
+https://claude.ai/artifact/Hy6UZnkYaLjXSwsAhqtsBF (private to the owner; pass 2 mirrors the right-hand hero). A playable HTML page, not game code: the game's unit sheets, hero figures, obstacles, spell icons and effects on a painted meadow, a simplified damage model (count, damage range and the attack/defense curve), a simple AI, and creature abilities listed but not simulated. The heroes get extra mana so the magic shows. N shows numbered notes for the eleven points; Board switches between 11x9, 11x7 and 15x11; Options (Esc) sets the speed and the grid.
