@@ -47,6 +47,16 @@ const FIELD_OBJECTIVES_KEY := "field_objectives"
 const HEX_BOARD_KEY := "hex_board"
 const OCCUPIED_HEXES_KEY := "occupied_hexes"
 const STACK_HEX_KEY := "hex"
+# Obstacles block standing and movement, never shots. A record is
+# {id, kind, size, variant, cells}: the cells are the rule, kind and variant pick the art.
+const OBSTACLES_KEY := "obstacles"
+const OBSTACLE_BLOCKER_PREFIX := "obstacle:"
+const OBSTACLE_KINDS := ["rock", "deadwood"]
+const OBSTACLE_VARIANT_COUNT := 25
+const OBSTACLE_MIN_COUNT := 2
+const OBSTACLE_MAX_COUNT := 4
+# Each army's two edge columns stay clear for deployment.
+const OBSTACLE_EDGE_CLEAR_COLUMNS := 2
 const STACK_ANIMATION_STATES_KEY := "stack_animation_states"
 const ANIMATION_EVENT_SERIAL_KEY := "animation_event_serial"
 const ANIMATION_EVENT_QUEUE_KEY := "battle_animation_events"
@@ -76,7 +86,7 @@ const SELECTED_TARGET_CLOSING_KEY := "selected_target_closing_context"
 # Stacks that waited this round, in the order they waited; cleared each round.
 const WAITED_STACK_IDS_KEY := "waited_stack_ids"
 const BATTLE_HEX_COLUMNS := 11
-const BATTLE_HEX_ROWS := 7
+const BATTLE_HEX_ROWS := 9
 const COHESION_MIN := 0
 const COHESION_MAX := 10
 const MOMENTUM_MAX := 4
@@ -277,7 +287,6 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 		"combat_seed": _new_battle_combat_seed(session, encounter_placement, encounter_id),
 		"round": 1,
 		"max_rounds": max(1, int(encounter.get("max_rounds", 12))),
-		"distance": _starting_distance_for_encounter(encounter, battle_context),
 		"context": battle_context,
 		"enemy_army_id": String(enemy_army.get("id", "")),
 		"enemy_army_name": _battle_enemy_army_name(enemy_army, battle_context, session),
@@ -364,7 +373,10 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 		var defending_town: Dictionary = _find_town_by_placement(session, String(battle_context.get("town_placement_id", ""))).get("town", {})
 		OverworldRulesScript.TownDevelopment.apply_defender_bonus(stacks, defending_town, town_context_type)
 		TownBattle.prepare(battle, OverworldRulesScript.TownDevelopment.active_buildings(defending_town), "player" if town_context_type == "town_defense" else "enemy")
+	_generate_battle_obstacles(battle)
 	_ensure_battle_hex_state(battle)
+	# The band is derived from where the armies deployed, never set up.
+	_sync_distance_from_hexes(battle)
 	_initialize_damage_rng_state(session, battle)
 	_prepare_round(battle, 1)
 	buckets["stacks_and_round"] = ProfileLogScript.elapsed_ms(phase_started)
@@ -1400,11 +1412,10 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 		scenario,
 		session.battle.get("context", {})
 	)
-	session.battle["distance"] = clamp(
-		int(session.battle.get("distance", _starting_distance_for_encounter(encounter, session.battle.get("context", {})))),
-		0,
-		2
-	)
+	# The band is derived from the stack hexes: set at creation, after every move and kill, and each round.
+	session.battle["distance"] = clampi(int(session.battle.get("distance", 2)), 0, 2)
+	# Saves from before obstacles load with an open field.
+	session.battle[OBSTACLES_KEY] = _normalize_battle_obstacles(session.battle.get(OBSTACLES_KEY, []))
 	session.battle[HEX_BOARD_KEY] = _hex_board_descriptor()
 	_ensure_battle_hex_state(session.battle)
 	session.battle["player_commander_state"] = _normalize_player_commander_state(
@@ -1515,7 +1526,7 @@ static func legal_destinations_for_stack(battle: Dictionary, battle_id: String) 
 	var stack = _get_stack_by_id(battle, battle_id)
 	if stack.is_empty() or _alive_count(stack) <= 0:
 		destinations = []
-	elif _advance_distance_delta(stack, battle) <= 0 and int(battle.get("distance", 1)) > 0:
+	elif _advance_stalled_by_obstruction(stack, battle):
 		destinations = []
 	else:
 		destinations = _reachable_empty_hexes(battle, stack, _stack_movement_points(stack, battle))
@@ -2619,7 +2630,7 @@ static func advance_consequence_preview(battle: Dictionary) -> Dictionary:
 	var copy := battle.duplicate(true)
 	copy.erase(ActionPlayback.CAPTURE_KEY)
 	var actor := get_active_stack(copy)
-	_apply_auto_advance_movement(copy, actor, int(copy.get("distance", 1)))
+	_apply_auto_advance_movement(copy, actor)
 	var destination := _stack_hex(actor).duplicate(true)
 	return {"ok": true, "action": "move", "destination": destination,
 		"message": "Advance → %s\nMovement only — no attack. Enemy choices are not predicted." % _hex_label(destination)}
@@ -4140,29 +4151,31 @@ static func _target_legality_line(active_stack: Dictionary, target: Dictionary, 
 	return ""
 
 static func _advance_action_summary(battle: Dictionary, stack: Dictionary) -> String:
-	var distance = int(battle.get("distance", 1))
-	if distance <= 0:
-		return "Reposition on the engaged line; move hex clicks choose the exact Move destination."
-	var distance_delta = _advance_distance_delta(stack, battle)
-	var next_distance = max(0, distance - distance_delta)
 	var clauses = []
-	if not legal_destinations_for_stack(battle, String(stack.get("battle_id", ""))).is_empty():
-		clauses.append("move hex clicks choose exact movement")
-	if distance_delta > 0:
-		clauses.append("Close from %s to %s" % [_distance_label(distance), _distance_label(next_distance)])
+	var stalled := _advance_stalled_by_obstruction(stack, battle)
+	var destination := {}
+	if stalled:
+		clauses.append("Press into the obstruction line without moving")
 	else:
-		clauses.append("Press into the obstruction but stay at %s" % _distance_label(distance).to_lower())
+		var nearest := _nearest_opposing_stack(battle, stack)
+		destination = _best_advance_destination(battle, stack, nearest, _advance_desired_gap(stack, battle))
+		if destination.is_empty():
+			clauses.append("No open hex to move into")
+		else:
+			var steps := int(destination.get("steps", 1))
+			clauses.append("Move %d hex%s toward %s" % [steps, "" if steps == 1 else "es", _stack_label(nearest)])
+			clauses.append("move hex clicks choose exact movement")
 	var momentum_gain = _preview_advance_momentum_gain(stack, battle)
 	if momentum_gain > 0:
 		clauses.append("momentum +%d" % momentum_gain)
 	if _side_controls_field_objective_type(battle, _opposing_side(String(stack.get("side", ""))), "obstruction_line"):
-		if distance_delta > 0:
+		if not stalled:
 			clauses.append("enemy obstruction will still tax the push")
 		else:
 			clauses.append("enemy obstruction can still hold the lane")
 	elif _side_controls_field_objective_type(battle, _opposing_side(String(stack.get("side", ""))), "cover_line"):
 		clauses.append("closing also strips hostile cover")
-	if not bool(stack.get("ranged", false)) and next_distance <= 0:
+	if not bool(stack.get("ranged", false)) and not destination.is_empty() and _projected_min_opposing_hex_distance(battle, stack, destination) <= 1:
 		clauses.append("melee contact opens immediately")
 	var objective_preview = _field_objective_action_preview(
 		battle,
@@ -6259,14 +6272,14 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 		"advance":
 			if _stack_is_rooted(active_stack, session.battle):
 				return {"ok": false, "message": "%s is rooted and cannot move." % _stack_label(active_stack), "state": "invalid"}
-			if int(session.battle.get("distance", 1)) <= 0 and legal_destinations_for_active_stack(session.battle).is_empty():
-				return {"ok": false, "message": "The lines are already engaged.", "state": "invalid"}
+			if not _advance_stalled_by_obstruction(active_stack, session.battle) and legal_destinations_for_active_stack(session.battle).is_empty():
+				return {"ok": false, "message": "%s has no open hex to move into." % _stack_label(active_stack), "state": "invalid"}
 			_clear_stack_animation_states(session.battle)
 			_clear_selected_target_continuity(session.battle)
 			_clear_selected_target_closing(session.battle)
 			_mark_stack_animation_event(session.battle, String(active_stack.get("battle_id", "")), "battle_unit_move")
-			var start_distance := int(session.battle.get("distance", 1))
-			var distance_delta := _apply_auto_advance_movement(session.battle, active_stack, start_distance)
+			var stalled := _advance_stalled_by_obstruction(active_stack, session.battle)
+			_apply_auto_advance_movement(session.battle, active_stack)
 			_append_presentation_event(
 				session.battle,
 				"move",
@@ -6278,11 +6291,8 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 			if advance_pressure != "":
 				advance_message += " %s" % advance_pressure
 				_append_text_presentation_event(session.battle, "momentum", [advance_pressure], active_stack, {}, "advance")
-			if distance_delta <= 0 and _side_controls_field_objective_type(session.battle, "enemy", "obstruction_line"):
-				advance_message = _join_messages([
-					advance_message,
-					"The obstruction line holds the push at %s." % _distance_label(start_distance).to_lower(),
-				])
+			if stalled:
+				advance_message = _join_messages([advance_message, "The obstruction line holds the push."])
 			var advance_objective_messages = _apply_field_objective_action_pressure(
 				session.battle,
 				{
@@ -6395,7 +6405,7 @@ static func action_availability(battle: Dictionary) -> Dictionary:
 		}
 
 	return {
-		"advance": not _stack_is_rooted(active_stack, battle) and (int(battle.get("distance", 1)) > 0 or not legal_destinations_for_active_stack(battle).is_empty()),
+		"advance": not _stack_is_rooted(active_stack, battle) and (_advance_stalled_by_obstruction(active_stack, battle) or not legal_destinations_for_active_stack(battle).is_empty()),
 		"strike": not selected_target.is_empty() and _can_melee_this_action(active_stack, battle, selected_target),
 		"shoot": (
 			not selected_target.is_empty()
@@ -6787,8 +6797,8 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 				return _resolve_ai_attack(session, _get_stack_by_id(session.battle,String(active_stack.get("battle_id",""))), approach_target, false)
 			if BattleAiRulesScript.should_wait_for_contact(session.battle, active_stack, can_wait(session.battle), _opposing_stacks_still_to_act(session.battle, active_stack)):
 				return _resolve_enemy_wait(session, active_stack)
-			var start_distance := int(session.battle.get("distance", 1))
-			var distance_delta := _apply_auto_advance_movement(session.battle, active_stack, start_distance)
+			var stalled := _advance_stalled_by_obstruction(active_stack, session.battle)
+			_apply_auto_advance_movement(session.battle, active_stack)
 			_append_presentation_event(
 				session.battle,
 				"move",
@@ -6800,11 +6810,8 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 			if advance_pressure != "":
 				advance_message += " %s" % advance_pressure
 				_append_text_presentation_event(session.battle, "momentum", [advance_pressure], active_stack, {}, "advance")
-			if distance_delta <= 0 and _side_controls_field_objective_type(session.battle, "player", "obstruction_line"):
-				advance_message = _join_messages([
-					advance_message,
-					"The obstruction line holds the push at %s." % _distance_label(start_distance).to_lower(),
-				])
+			if stalled:
+				advance_message = _join_messages([advance_message, "The obstruction line holds the push."])
 			var advance_objective_messages = _apply_field_objective_action_pressure(
 				session.battle,
 				{
@@ -6826,8 +6833,8 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 			if bool(active_stack.get("ranged", false)) and int(active_stack.get("shots_remaining", 0)) > 0:
 				return _resolve_ai_attack(session, active_stack, fallback, true)
 			if int(session.battle.get("distance", 1)) > 0 and not _stack_is_rooted(active_stack, session.battle):
-				var fallback_start_distance := int(session.battle.get("distance", 1))
-				var fallback_distance_delta := _apply_auto_advance_movement(session.battle, active_stack, fallback_start_distance)
+				var fallback_stalled := _advance_stalled_by_obstruction(active_stack, session.battle)
+				_apply_auto_advance_movement(session.battle, active_stack)
 				_append_presentation_event(
 					session.battle,
 					"move",
@@ -6839,11 +6846,8 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 				if fallback_advance_pressure != "":
 					fallback_advance_message += " %s" % fallback_advance_pressure
 					_append_text_presentation_event(session.battle, "momentum", [fallback_advance_pressure], active_stack, {}, "advance")
-				if fallback_distance_delta <= 0 and _side_controls_field_objective_type(session.battle, "player", "obstruction_line"):
-					fallback_advance_message = _join_messages([
-						fallback_advance_message,
-						"The obstruction line holds the push at %s." % _distance_label(fallback_start_distance).to_lower(),
-					])
+				if fallback_stalled:
+					fallback_advance_message = _join_messages([fallback_advance_message, "The obstruction line holds the push."])
 				var fallback_objective_messages = _apply_field_objective_action_pressure(
 					session.battle,
 					{
@@ -8716,7 +8720,8 @@ static func _ensure_battle_hex_state(battle: Dictionary) -> void:
 		battle["stacks"] = []
 		battle[OCCUPIED_HEXES_KEY] = {}
 		return
-	var used := {}
+	# Obstacle cells are taken before any stack is placed.
+	var used := _obstacle_cell_map(battle)
 	var side_indices := {"player": 0, "enemy": 0}
 	var side_counts := {
 		"player": _alive_stack_count_for_side(battle, "player"),
@@ -8727,15 +8732,16 @@ static func _ensure_battle_hex_state(battle: Dictionary) -> void:
 		if not (stack is Dictionary):
 			continue
 		var side := String(stack.get("side", "player"))
-		var side_index := int(side_indices.get(side, 0))
-		side_indices[side] = side_index + 1
 		if _alive_count(stack) <= 0:
 			stack[STACK_HEX_KEY] = _normalize_hex_cell(stack.get(STACK_HEX_KEY, {}))
 			stacks[index] = stack
 			continue
+		# Living stacks only, matching side_counts.
+		var side_index := int(side_indices.get(side, 0))
+		side_indices[side] = side_index + 1
 		var cell := _normalize_hex_cell(stack.get(STACK_HEX_KEY, {}))
 		if cell.is_empty() or not Footprint.fits(stack, cell, used, BATTLE_HEX_COLUMNS, BATTLE_HEX_ROWS):
-			cell = _default_stack_hex(side, side_index, int(side_counts.get(side, 1)), stack, int(battle.get("distance", 1)))
+			cell = _default_stack_hex(side, side_index, int(side_counts.get(side, 1)), stack)
 			cell = _first_open_body_near(stack, cell, used)
 		stack[STACK_HEX_KEY] = cell
 		for body_cell in Footprint.cells(stack):
@@ -8751,38 +8757,174 @@ static func _alive_stack_count_for_side(battle: Dictionary, side: String) -> int
 			total += 1
 	return total
 
-static func _default_stack_hex(side: String, index: int, stack_count: int, stack: Dictionary, distance: int) -> Dictionary:
+## The cell a stack deploys on; the board draws a stack without a saved hex there.
+static func default_deployment_hex(side: String, index: int, stack_count: int, stack: Dictionary) -> Dictionary:
+	return _default_stack_hex(side, index, stack_count, stack)
+
+static func _default_stack_hex(side: String, index: int, stack_count: int, stack: Dictionary) -> Dictionary:
 	var rows := _formation_rows(stack_count)
 	var row: int = int(rows[index]) if index >= 0 and index < rows.size() else int(clamp(index, 0, BATTLE_HEX_ROWS - 1))
-	var column: int = _deployment_column(side, int(clamp(distance, 0, 2)))
-	if bool(stack.get("ranged", false)):
-		column += -1 if side == "player" else 1
-	return _hex_cell(clamp(column, 0, BATTLE_HEX_COLUMNS - 1), row)
+	return _hex_cell(_deployment_column(side, stack), row)
 
-static func _deployment_column(side: String, distance: int) -> int:
-	var normalized: int = int(clamp(distance, 0, 2))
-	if side == "player":
-		return [4, 3, 1][normalized]
-	return [5, 7, 9][normalized]
+## Each army stands on its own edge; a two-hex body puts its head one column in,
+## so its tail stands on the edge column.
+static func _deployment_column(side: String, stack: Dictionary) -> int:
+	var inset := Footprint.width(stack) - 1
+	return inset if side == "player" else BATTLE_HEX_COLUMNS - 1 - inset
 
 static func _formation_rows(stack_count: int) -> Array:
 	match stack_count:
 		0:
 			return []
 		1:
-			return [3]
+			return [4]
 		2:
-			return [2, 4]
+			return [2, 6]
 		3:
-			return [1, 3, 5]
+			return [1, 4, 7]
 		4:
-			return [1, 2, 4, 5]
+			return [1, 3, 5, 7]
 		5:
-			return [0, 2, 3, 4, 6]
+			return [0, 2, 4, 6, 8]
 		6:
-			return [0, 1, 2, 4, 5, 6]
+			return [0, 2, 3, 5, 6, 8]
+		7:
+			return [0, 1, 3, 4, 5, 7, 8]
+		8:
+			return [0, 1, 2, 3, 5, 6, 7, 8]
 		_:
-			return [0, 1, 2, 3, 4, 5, 6]
+			return [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
+## Seeded from the combat seed and terrain, so a battle replays and reloads with
+## the same field. It has its own generator: the damage stream never moves.
+## Obstacles stay off both armies' edge columns, never touch each other and
+## always leave a two-hex body a way across. Town battles keep an open field.
+static func _generate_battle_obstacles(battle: Dictionary) -> void:
+	var obstacles := []
+	var context: Variant = battle.get("context", {})
+	if context is Dictionary and String(context.get("type", "")) in ["town_defense", "town_assault"]:
+		battle[OBSTACLES_KEY] = obstacles
+		return
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash("%s|%s|obstacles_v1" % [str(battle.get("combat_seed", "")), String(battle.get("terrain", ""))])
+	var target_count := rng.randi_range(OBSTACLE_MIN_COUNT, OBSTACLE_MAX_COUNT)
+	var blocked := {}
+	var attempts := 0
+	while obstacles.size() < target_count and attempts < 64:
+		attempts += 1
+		var size := 2 if rng.randf() < 0.4 else 1
+		var q := rng.randi_range(OBSTACLE_EDGE_CLEAR_COLUMNS, BATTLE_HEX_COLUMNS - 1 - OBSTACLE_EDGE_CLEAR_COLUMNS - (size - 1))
+		var r := rng.randi_range(0, BATTLE_HEX_ROWS - 1)
+		var kind: String = OBSTACLE_KINDS[rng.randi_range(0, OBSTACLE_KINDS.size() - 1)]
+		var variant := rng.randi_range(0, OBSTACLE_VARIANT_COUNT - 1)
+		var cells := [_hex_cell(q, r)]
+		if size == 2:
+			cells.append(_hex_cell(q + 1, r))
+		if not _obstacle_cells_clear(cells, blocked):
+			continue
+		var trial := blocked.duplicate()
+		for cell in cells:
+			trial[_hex_key(cell)] = OBSTACLE_BLOCKER_PREFIX
+		if not _obstacle_field_stays_open(trial):
+			continue
+		blocked = trial
+		obstacles.append({"id": "o%d" % (obstacles.size() + 1), "kind": kind, "size": size, "variant": variant, "cells": cells})
+	battle[OBSTACLES_KEY] = obstacles
+
+static func _obstacle_cells_clear(cells: Array, blocked: Dictionary) -> bool:
+	for cell in cells:
+		if blocked.has(_hex_key(cell)):
+			return false
+		for neighbor in _hex_neighbors(cell):
+			if blocked.has(_hex_key(neighbor)):
+				return false
+	return true
+
+## A two-hex body of either side can still walk from its own edge to the other.
+static func _obstacle_field_stays_open(blocked: Dictionary) -> bool:
+	for side in ["player", "enemy"]:
+		var body := {"side": side, "battle_footprint": 2}
+		var start_q := 1 if side == "player" else BATTLE_HEX_COLUMNS - 2
+		var goal_q := BATTLE_HEX_COLUMNS - 1 if side == "player" else 0
+		var frontier := []
+		var seen := {}
+		for r in range(BATTLE_HEX_ROWS):
+			var start := _hex_cell(start_q, r)
+			if Footprint.fits(body, start, blocked, BATTLE_HEX_COLUMNS, BATTLE_HEX_ROWS):
+				frontier.append(start)
+				seen[_hex_key(start)] = true
+		var crossed := false
+		while not frontier.is_empty() and not crossed:
+			var cell: Dictionary = frontier.pop_front()
+			if int(cell.get("q", -1)) == goal_q:
+				crossed = true
+				break
+			for neighbor in _hex_neighbors(cell):
+				var key := _hex_key(neighbor)
+				if seen.has(key) or not Footprint.fits(body, neighbor, blocked, BATTLE_HEX_COLUMNS, BATTLE_HEX_ROWS):
+					continue
+				seen[key] = true
+				frontier.append(neighbor)
+		if not crossed:
+			return false
+	return true
+
+static func _normalize_battle_obstacles(value: Variant) -> Array:
+	var normalized := []
+	if not (value is Array):
+		return normalized
+	var taken := {}
+	for entry in value:
+		if not (entry is Dictionary):
+			continue
+		var cells := []
+		for cell_value in entry.get("cells", []):
+			var cell := _normalize_hex_cell(cell_value)
+			if cell.is_empty() or taken.has(_hex_key(cell)):
+				continue
+			cells.append(cell)
+		if cells.is_empty():
+			continue
+		for cell in cells:
+			taken[_hex_key(cell)] = true
+		var kind := String(entry.get("kind", OBSTACLE_KINDS[0]))
+		normalized.append({
+			"id": String(entry.get("id", "o%d" % (normalized.size() + 1))),
+			"kind": kind if kind in OBSTACLE_KINDS else OBSTACLE_KINDS[0],
+			"size": cells.size(),
+			"variant": clampi(int(entry.get("variant", 0)), 0, OBSTACLE_VARIANT_COUNT - 1),
+			"cells": cells,
+		})
+	return normalized
+
+static func battle_obstacles(battle: Dictionary) -> Array:
+	var obstacles: Variant = battle.get(OBSTACLES_KEY, [])
+	return obstacles.duplicate(true) if obstacles is Array else []
+
+## "q,r" -> "obstacle:<id>" for every obstacle cell.
+static func battle_obstacle_cells(battle: Dictionary) -> Dictionary:
+	return _obstacle_cell_map(battle)
+
+static func _obstacle_cell_map(battle: Dictionary) -> Dictionary:
+	var blocked := {}
+	var obstacles: Variant = battle.get(OBSTACLES_KEY, [])
+	if not (obstacles is Array):
+		return blocked
+	for obstacle in obstacles:
+		if not (obstacle is Dictionary):
+			continue
+		for cell in obstacle.get("cells", []):
+			var normalized := _normalize_hex_cell(cell)
+			if not normalized.is_empty():
+				blocked[_hex_key(normalized)] = OBSTACLE_BLOCKER_PREFIX + String(obstacle.get("id", ""))
+	return blocked
+
+## What a body can neither stand on nor walk through: living stacks and obstacles.
+## The occupancy map stays stack-only for target and body reads.
+static func _build_blocking_map(battle: Dictionary) -> Dictionary:
+	var blocked := _obstacle_cell_map(battle)
+	blocked.merge(_build_occupancy_map(battle), true)
+	return blocked
 
 static func _hex_cell(q: int, r: int) -> Dictionary:
 	return {
@@ -8808,24 +8950,6 @@ static func _hex_key(cell: Dictionary) -> String:
 
 static func _hex_key_from_coords(q: int, r: int) -> String:
 	return "%d,%d" % [q, r]
-
-static func _first_open_hex_near(preferred: Dictionary, used: Dictionary) -> Dictionary:
-	var preferred_key := _hex_key(preferred)
-	if not used.has(preferred_key):
-		return preferred
-	var frontier := [preferred]
-	var seen := {preferred_key: true}
-	while not frontier.is_empty():
-		var current: Dictionary = frontier.pop_front()
-		for neighbor in _hex_neighbors(current):
-			var key := _hex_key(neighbor)
-			if seen.has(key):
-				continue
-			if not used.has(key):
-				return neighbor
-			seen[key] = true
-			frontier.append(neighbor)
-	return preferred
 
 static func _first_open_body_near(stack: Dictionary, preferred: Dictionary, used: Dictionary) -> Dictionary:
 	var frontier := [preferred]
@@ -8872,7 +8996,7 @@ static func _set_stack_hex(battle: Dictionary, battle_id: String, cell: Dictiona
 	var moving := _get_stack_by_id(battle, battle_id)
 	var from_hex := _stack_hex(moving)
 	var normalized := _normalize_hex_cell(cell)
-	if normalized.is_empty() or not Footprint.fits(moving, normalized, _build_occupancy_map(battle), BATTLE_HEX_COLUMNS, BATTLE_HEX_ROWS):
+	if normalized.is_empty() or not Footprint.fits(moving, normalized, _build_blocking_map(battle), BATTLE_HEX_COLUMNS, BATTLE_HEX_ROWS):
 		return
 	var playback_path := _presentation_walk_path(battle, from_hex, normalized) if battle.has(ActionPlayback.CAPTURE_KEY) else []
 	var stacks = battle.get("stacks", [])
@@ -8889,7 +9013,7 @@ static func _set_stack_hex(battle: Dictionary, battle_id: String, cell: Dictiona
 
 static func _presentation_walk_path(battle: Dictionary, start: Dictionary, destination: Dictionary) -> Array:
 	if start.is_empty() or destination.is_empty(): return []
-	var occupied := _build_occupancy_map(battle)
+	var occupied := _build_blocking_map(battle)
 	var moving := _get_stack_by_id(battle, String(occupied.get(_hex_key(start), "")))
 	occupied.erase(_hex_key(start))
 	var frontier := [[start]]
@@ -8942,7 +9066,7 @@ static func _reachable_empty_hexes(battle: Dictionary, stack: Dictionary, max_st
 	var start := _stack_hex(stack)
 	if start.is_empty() or max_steps <= 0:
 		return []
-	var occupied := _build_occupancy_map(battle)
+	var occupied := _build_blocking_map(battle)
 	var start_key := _hex_key(start)
 	occupied.erase(start_key)
 	var frontier := [{"cell": start, "steps": 0}]
@@ -9003,11 +9127,13 @@ static func _sync_distance_from_hexes(battle: Dictionary) -> void:
 	if best < 999:
 		battle["distance"] = _distance_band_from_hex_distance(best)
 
+## The legal destination that brings the stack nearest its target without
+## standing closer than desired_gap to any enemy.
 static func _best_advance_destination(
 	battle: Dictionary,
 	stack: Dictionary,
 	preferred_target: Dictionary = {},
-	desired_distance_band: int = -1
+	desired_gap: int = 1
 ) -> Dictionary:
 	var destinations := legal_destinations_for_stack(battle, String(stack.get("battle_id", "")))
 	if destinations.is_empty():
@@ -9016,20 +9142,16 @@ static func _best_advance_destination(
 	if target.is_empty() or _alive_count(target) <= 0 or String(target.get("side", "")) == String(stack.get("side", "")):
 		target = _nearest_opposing_stack(battle, stack)
 	var best := {}
-	var best_score := 99999
+	var best_score := 0
 	for destination in destinations:
 		if not (destination is Dictionary):
 			continue
 		var score := 0
 		if not target.is_empty():
-			var projected_distance := Footprint.distance(stack, target, destination)
-			if desired_distance_band >= 0:
-				var projected_band := _distance_band_from_hex_distance(_projected_min_opposing_hex_distance(battle, stack, destination))
-				if projected_band < desired_distance_band:
-					score += (desired_distance_band - projected_band) * 1000
-				elif projected_band > desired_distance_band:
-					score += (projected_band - desired_distance_band) * 200
-			score += projected_distance * 10
+			var closest_gap := _projected_min_opposing_hex_distance(battle, stack, destination)
+			if closest_gap < desired_gap:
+				score += (desired_gap - closest_gap) * 1000
+			score += maxi(0, Footprint.distance(stack, target, destination) - desired_gap) * 100
 		score += int(destination.get("steps", 1))
 		score += _advance_lateral_penalty(stack, destination)
 		if best.is_empty() or score < best_score:
@@ -9316,34 +9438,37 @@ static func _selected_target_can_remain_for_active_stack(
 		and String(target.get("side", "")) != String(active_stack.get("side", ""))
 	)
 
-static func _apply_auto_advance_movement(battle: Dictionary, active_stack: Dictionary, start_distance: int) -> int:
-	var distance_delta := _advance_distance_delta(active_stack, battle)
-	if distance_delta <= 0:
-		if start_distance <= 0:
-			var reposition_destination: Dictionary = _best_advance_destination(
-				battle,
-				active_stack,
-				_nearest_opposing_stack(battle, active_stack),
-				0
-			)
-			if not reposition_destination.is_empty():
-				_set_stack_hex(battle, String(active_stack.get("battle_id", "")), reposition_destination)
-				_sync_distance_from_hexes(battle)
-		return distance_delta
-	var desired_distance: int = max(0, start_distance - distance_delta)
-	if start_distance <= 1 and _reach_available(active_stack, battle) and not bool(active_stack.get("ranged", false)):
-		desired_distance = max(desired_distance, 1)
+## Advance walks toward the nearest enemy as far as the stack's movement allows
+## and stops where its attack works: next to the enemy for melee, two hexes off
+## for reach, out of contact for a shooter with shots. Returns whether it moved.
+static func _apply_auto_advance_movement(battle: Dictionary, active_stack: Dictionary) -> bool:
+	if _advance_stalled_by_obstruction(active_stack, battle):
+		return false
+	var battle_id := String(active_stack.get("battle_id", ""))
+	var start_key := _hex_key(_stack_hex(active_stack))
 	var destination: Dictionary = _best_advance_destination(
 		battle,
 		active_stack,
 		_nearest_opposing_stack(battle, active_stack),
-		desired_distance
+		_advance_desired_gap(active_stack, battle)
 	)
 	if not destination.is_empty():
-		_set_stack_hex(battle, String(active_stack.get("battle_id", "")), destination)
+		_set_stack_hex(battle, battle_id, destination)
 	# Without a destination nobody moved, so the band must not shrink.
 	_sync_distance_from_hexes(battle)
-	return distance_delta
+	return _hex_key(_stack_hex(_get_stack_by_id(battle, battle_id))) != start_key
+
+static func _advance_desired_gap(stack: Dictionary, battle: Dictionary) -> int:
+	if bool(stack.get("ranged", false)) and int(stack.get("shots_remaining", 0)) > 0:
+		return 2
+	if _reach_available(stack, battle):
+		return 2
+	return 1
+
+## The enemy's obstruction line holds a stack that cannot breach it in place
+## until the lines meet somewhere on the board.
+static func _advance_stalled_by_obstruction(stack: Dictionary, battle: Dictionary) -> bool:
+	return int(battle.get("distance", 1)) > 0 and _advance_distance_delta(stack, battle) <= 0
 
 static func _hex_label(cell: Dictionary) -> String:
 	if cell.is_empty():
@@ -9617,7 +9742,7 @@ static func _damage_modifier(
 	var resolved_distance = int(battle.get("distance", 1)) if attack_distance < 0 else attack_distance
 	if is_ranged and String(battle.get("terrain", "")) == "forest":
 		modifier *= 0.8
-	if is_ranged and resolved_distance == 0:
+	if is_ranged and _stack_is_engaged(attacker, battle):
 		modifier *= 0.6
 	if not is_ranged and String(battle.get("terrain", "")) == "mire":
 		modifier *= 0.9
@@ -10896,7 +11021,7 @@ static func _apply_hookline_pull(battle: Dictionary, attacker: Dictionary, defen
 	var defender_cell := _stack_hex(defender)
 	if attacker_cell.is_empty() or defender_cell.is_empty() or _stack_hex_distance(attacker, defender) != 2:
 		return false
-	var occupied := _build_occupancy_map(battle)
+	var occupied := _build_blocking_map(battle)
 	var destination := {}
 	var candidates := _hex_neighbors(attacker_cell) if Footprint.width(attacker) == 1 and Footprint.width(defender) == 1 else _hex_neighbors(defender_cell)
 	for candidate in candidates:
@@ -13326,6 +13451,16 @@ static func _stack_is_isolated(battle: Dictionary, stack: Dictionary) -> bool:
 		return _allied_melee_count(battle, side) <= 0
 	return false
 
+## Standing next to a living enemy: a shooter there shoots at x0.6, whichever
+## stack it aims at.
+static func _stack_is_engaged(stack: Dictionary, battle: Dictionary) -> bool:
+	if stack.is_empty() or _stack_hex(stack).is_empty():
+		return false
+	for enemy in _alive_stacks_for_side(battle, _opposing_side(String(stack.get("side", "")))):
+		if _stack_hex_distance(stack, enemy) <= 1:
+			return true
+	return false
+
 static func _stack_is_hex_isolated(battle: Dictionary, stack: Dictionary) -> bool:
 	if stack.is_empty():
 		return false
@@ -13849,24 +13984,6 @@ static func _normalize_command(value: Variant) -> Dictionary:
 		"power": max(0, int(value.get("power", 0))),
 		"knowledge": max(0, int(value.get("knowledge", 0))),
 	}
-
-static func _starting_distance_for_encounter(encounter: Dictionary, context: Variant = {}) -> int:
-	var distance = _starting_distance_for_terrain(String(encounter.get("terrain", "plains")))
-	var battlefield_tags = _normalized_battlefield_tags(encounter, context)
-	if "chokepoint" in battlefield_tags or "fortified_line" in battlefield_tags or "fortress_lane" in battlefield_tags or "wall_pressure" in battlefield_tags:
-		distance = min(distance, 1)
-	if "elevated_fire" in battlefield_tags or "open_lane" in battlefield_tags or "battery_nest" in battlefield_tags:
-		distance = max(distance, 2)
-	return clamp(distance, 0, 2)
-
-static func _starting_distance_for_terrain(terrain: String) -> int:
-	match terrain:
-		"forest":
-			return 2
-		"mire":
-			return 1
-		_:
-			return 1
 
 static func _normalize_side_token(side: String, allow_neutral: bool = true) -> String:
 	match side:

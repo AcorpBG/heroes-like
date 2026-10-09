@@ -18,7 +18,7 @@ const COMMANDER_SPELL_CAST_ROUNDS_KEY := "commander_spell_cast_rounds"
 const ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY := "_enemy_commander_spell_cast_in_drain"
 const ENEMY_WITHDRAWAL_SCORING_POLICY := "battle_ai_enemy_withdrawal_decision_v1"
 const BATTLE_HEX_COLUMNS := 11
-const BATTLE_HEX_ROWS := 7
+const BATTLE_HEX_ROWS := 9
 const DECISIVE_ATTACK_TARGET_SIDE_HEALTH_RATIO_MAX := 0.4
 const DECISIVE_ATTACK_ACTING_SIDE_HEALTH_RATIO_MIN := 0.5
 const DECISIVE_ATTACK_MAX_DEFEND_SCORE_GAP := 2.0
@@ -2001,7 +2001,7 @@ static func _estimate_damage(
 	if is_ranged and String(battle.get("terrain", "")) == "forest":
 		modifier *= 0.8
 	var resolved_distance := int(battle.get("distance", 1)) if attack_distance < 0 else attack_distance
-	if is_ranged and resolved_distance == 0:
+	if is_ranged and _stack_is_engaged(attacker, battle):
 		modifier *= 0.6
 	if not is_ranged and String(battle.get("terrain", "")) == "mire":
 		modifier *= 0.9
@@ -3136,6 +3136,15 @@ static func _stack_is_isolated(battle: Dictionary, stack: Dictionary) -> bool:
 		return true
 	if bool(stack.get("ranged", false)):
 		return _allied_melee_count(battle, side) <= 0
+	return false
+
+## BattleRules._stack_is_engaged: a shooter next to a living enemy shoots at x0.6.
+static func _stack_is_engaged(stack: Dictionary, battle: Dictionary) -> bool:
+	if stack.is_empty() or _stack_hex(stack).is_empty():
+		return false
+	for enemy in _alive_stacks_for_side(battle, _opposing_side(String(stack.get("side", "")))):
+		if _stack_hex_distance(stack, enemy) <= 1:
+			return true
 	return false
 
 static func _stack_is_hex_isolated(battle: Dictionary, stack: Dictionary) -> bool:

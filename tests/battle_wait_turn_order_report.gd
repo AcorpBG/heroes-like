@@ -224,7 +224,7 @@ func _place(battle: Dictionary, stack: Dictionary, columns: Array, rows: int) ->
 	for q in columns:
 		for r in range(rows):
 			var cell := {"q": int(q), "r": r}
-			if Footprint.fits(stack, cell, BattleRules._build_occupancy_map(battle), BattleRules.BATTLE_HEX_COLUMNS, rows):
+			if Footprint.fits(stack, cell, BattleRules._build_blocking_map(battle), BattleRules.BATTLE_HEX_COLUMNS, rows):
 				stack["hex"] = cell
 				return
 	_check(false, "room to place %s in columns %s" % [String(stack.get("battle_id", "")), columns])

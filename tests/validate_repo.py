@@ -29276,7 +29276,7 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
         'bool(terrain_summary.get("terrain_hex_variation_subordinate", false))',
         'is_equal_approx(context_alpha, 0.92)',
         'is_equal_approx(variation_alpha, 0.24)',
-        'int(terrain_summary.get("texture_source_sample_count", 0)) == 77',
+        'int(terrain_summary.get("texture_source_sample_count", 0)) == 99',
         'session.to_dict() == authority_before',
     ):
         ensure(required_token in terrain_contract, errors, f"UI visual report Battle terrain-cohesion contract is missing exact token: {required_token}")
@@ -29783,7 +29783,6 @@ def validate_battle_faction_identity(errors: list[str]) -> None:
         "func _normalized_battlefield_tags",
         "func _normalized_battle_traits",
         "func _hero_has_trait",
-        "func _starting_distance_for_encounter",
         "func _side_has_ability",
         "func _stack_has_positive_effect",
         "func _side_positive_effect_count",
