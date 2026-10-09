@@ -57,6 +57,8 @@ func _run() -> void:
 	var size_class := OS.get_environment("HEROES_AI_MATCH_SIZE").strip_edges()
 	if size_class == "":
 		size_class = "homm3_small"
+	# Turn time by phase is always recorded; the ledger keeps it per player.
+	OS.set_environment("HEROES_STRATEGIC_AI_PROFILE", "1")
 	var trace := OS.get_environment("HEROES_AI_MATCH_TRACE").strip_edges() not in ["", "0"]
 	var out_path := OS.get_environment("HEROES_AI_MATCH_OUT").strip_edges()
 	if out_path == "":
@@ -144,6 +146,9 @@ func _run() -> void:
 		if trace:
 			_print_trace(session, seats)
 		var row := _day_row(session, seats)
+		# Every hero decision of the day, with the alternatives it weighed.
+		row["decisions"] = session.flags.get(AiHeroRulesScript.DECISION_LOG_KEY, [])
+		session.flags[AiHeroRulesScript.DECISION_LOG_KEY] = []
 		# Where each computer player's turn went, in milliseconds by phase.
 		for faction_profile in turn.get("enemy_turn_profile", {}).get("factions", []):
 			if faction_profile is Dictionary and row.sides.has(String(faction_profile.get("player_id", ""))):

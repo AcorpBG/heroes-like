@@ -52,7 +52,8 @@ static func normalize_session(
 
 	var scenario := ContentService.get_scenario_readonly(session.scenario_id)
 	var resolved_primary_id := String(session.hero_id)
-	if resolved_primary_id == "":
+	var fallen: Array = session.flags.get(PRIMARY_FALLEN_FLAG, []) if session.flags.get(PRIMARY_FALLEN_FLAG, []) is Array else []
+	if resolved_primary_id == "" and fallen.is_empty():
 		resolved_primary_id = primary_hero_id if primary_hero_id != "" else String(scenario.get("hero_id", ""))
 	session.hero_id = resolved_primary_id
 
@@ -110,7 +111,11 @@ static func normalize_session(
 			seen[resolved_primary_id] = true
 
 	if resolved_primary_id == "" and not normalized_heroes.is_empty():
-		resolved_primary_id = String(normalized_heroes[0].get("id", ""))
+		# A fallen leader still in the list (it is being removed) does not lead.
+		for candidate in normalized_heroes:
+			if String(candidate.get("id", "")) not in fallen:
+				resolved_primary_id = String(candidate.get("id", ""))
+				break
 		session.hero_id = resolved_primary_id
 
 	for index in range(normalized_heroes.size()):
@@ -1961,6 +1966,33 @@ static func transfer_town_stack(
 			_holder_label(session, town, target_holder),
 		],
 	}
+
+## The leading heroes that have fallen on a generated map, by id: none of them
+## is brought back from the scenario or made leader again, and the next hero
+## hired leads when no other is left.
+const PRIMARY_FALLEN_FLAG := "primary_hero_fallen"
+
+## The leading (primary) hero falls on a generated map and the game goes on
+## (owner decision 2026-10-09): the most experienced of the other heroes leads,
+## or, with none left, the next one hired. Call before removing the fallen hero.
+static func hand_over_primary(session: SessionStateStoreScript.SessionData, fallen_id: String) -> void:
+	var heroes: Array = session.overworld.get("player_heroes", [])
+	var next_id := ""
+	var best_experience := -1
+	for hero in heroes:
+		if hero is Dictionary and String(hero.get("id", "")) != fallen_id and int(hero.get("experience", 0)) > best_experience:
+			best_experience = int(hero.get("experience", 0))
+			next_id = String(hero.get("id", ""))
+	for index in range(heroes.size()):
+		if heroes[index] is Dictionary:
+			heroes[index]["is_primary"] = String(heroes[index].get("id", "")) == next_id
+	session.overworld["player_heroes"] = heroes
+	session.hero_id = next_id
+	var fallen: Array = session.flags.get(PRIMARY_FALLEN_FLAG, []) if session.flags.get(PRIMARY_FALLEN_FLAG, []) is Array else []
+	if fallen_id != "" and fallen_id not in fallen:
+		fallen.append(fallen_id)
+	session.flags[PRIMARY_FALLEN_FLAG] = fallen
+	_sync_active_hero_mirror(session)
 
 static func remove_active_hero_after_defeat(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_session(session)

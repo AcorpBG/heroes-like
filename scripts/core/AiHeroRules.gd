@@ -34,6 +34,11 @@ const BATTLE_LOG_FLAG := "ai_battle_log_enabled"
 ## and troops go (`_economy_add`): strength and gold of recruits, strength
 ## dismissed for room, gold on buildings, hires and town services.
 const ECONOMY_LOG_KEY := "ai_economy_log"
+## With the battle log on, every hero decision of the day (`_log_decision`):
+## where the hero stood, its strength, the plan it took and the best
+## alternatives it scored, so a match can be read without replaying it.
+const DECISION_LOG_KEY := "ai_decision_log"
+const DECISION_LOG_ALTERNATIVES := 3
 const BATTLE_LOG_KEY := "ai_battle_log"
 const BATTLE_LOG_OWNER_KEY := "battle_log_owner"
 const CAPTURE_LOG_KEY := "ai_capture_log"
@@ -41,6 +46,14 @@ const AI_DIFFICULTY := "normal"
 const MAX_DECISIONS_PER_DAY := 6
 const SEARCH_DAYS := 3
 const FAR_SEARCH_DAYS := 7
+## Main and field armies also look this many days of movement out for what
+## decides the game (`_strategic_candidate`): rival and neutral towns, hostile
+## heroes and the guards in the way to a known town. On large maps the leading
+## player's armies only ever looked three days out, found a mine or a pile of
+## resources there every day, and never went for the rival towns in the far
+## corners, each worth a hundred mines; four of ten large-map games ran to the
+## day cap that way.
+const STRATEGIC_DAYS := 12
 const MIN_SEARCH_RADIUS := 14
 ## A guard is considered (and previewed) from this strength margin. With the
 ## strength estimate calibrated on the 2026-10-08 battle stats, a 1.3x margin
@@ -1897,7 +1910,13 @@ static func _run_hero_day(session: SessionStateStoreScript.SessionData, context:
 			entry[AI_HERO_KEY] = holding
 			_store_entry(session, index, entry)
 			break
+		var logging := bool(session.flags.get(BATTLE_LOG_FLAG, false))
+		if logging:
+			context["decision_alternatives"] = []
 		var plan := _choose_plan(session, context, entry)
+		if logging:
+			_log_decision(session, context, entry, plan)
+			context.erase("decision_alternatives")
 		if plan.is_empty():
 			break
 		var act_started := Time.get_ticks_usec()
@@ -1908,6 +1927,8 @@ static func _run_hero_day(session: SessionStateStoreScript.SessionData, context:
 		if bool(step.get("battle_started", false)):
 			return {"messages": messages, "events": events, "battle_started": true}
 		if not bool(step.get("arrived", false)):
+			if bool(step.get("rerouted", false)):
+				continue
 			break
 		var acted := bool(step.get("acted", not step.get("events", []).is_empty() or String(plan.get("kind", "")) == "town_own"))
 		if not acted:
@@ -1998,6 +2019,14 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 	started = Time.get_ticks_usec()
 	var best := _vetted_candidate(session, context, entry, search, movement_max)
 	_profile_add(context, "choose_ms", started)
+	# Main and field armies weigh what decides the game anywhere on the map
+	# against the best thing near them, by the same value per day of travel.
+	if _plans_far(session, context, entry):
+		started = Time.get_ticks_usec()
+		var far := _strategic_candidate(session, context, entry, movement_max, radius)
+		_profile_add(context, "strategic_ms", started)
+		if not far.is_empty() and float(far.get("score", 0.0)) > float(best.get("score", 0.0)):
+			return far
 	if best.is_empty():
 		# Nothing worth doing nearby: look a week out before standing still.
 		started = Time.get_ticks_usec()
@@ -2021,6 +2050,75 @@ static func _choose_plan(session: SessionStateStoreScript.SessionData, context: 
 	if best.is_empty():
 		return {}
 	best["path"] = _path_to(search, int(best.tile_index))
+	return best
+
+## Whether this hero is one of the player's armies (the main hero or a field
+## army), the heroes that look across the map for the game's objectives.
+static func _plans_far(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> bool:
+	var placement_id := String(entry.get("placement_id", ""))
+	return placement_id == _decision_main_id(session, context) or _decision_field_ids(session, context).has(placement_id)
+
+## The best objective beyond the hero's daily search: a known rival or
+## neutral town, a hostile hero, or a guard standing first in the way to a
+## known town (`_war_paths`), scored as everything else is, value per day of
+## travel; or, while a rival's towns are unseen, the nearest unexplored ground.
+## Carries the path there.
+static func _strategic_candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, movement_max: int, local_radius: int) -> Dictionary:
+	var search := _search(session, context, entry, movement_max * STRATEGIC_DAYS)
+	var known := _explored(session, context, LevelRules.level_of(entry))
+	var power := hero_power(entry)
+	var needs := _resource_needs(session, context)
+	var block: Dictionary = entry.get(AI_HERO_KEY, {})
+	var avoid: Dictionary = block.get("avoid", {}) if block.get("avoid", {}) is Dictionary else {}
+	var goal: Dictionary = block.get("goal", {}) if block.get("goal", {}) is Dictionary else {}
+	var war := _war_paths(session, context, entry, search, needs)
+	var stops: Dictionary = search.get("stops", {})
+	var best := {}
+	var best_score := 0.0
+	for tile_index in stops.keys():
+		var distance := int(search.dist[int(tile_index)])
+		if distance <= local_radius:
+			continue
+		for ref in stops[tile_index]:
+			match int(ref.kind):
+				STOP_TOWN:
+					if known[int(tile_index)] == 0:
+						continue
+				STOP_HERO, STOP_AI_HERO:
+					pass
+				STOP_ENCOUNTER:
+					if not war.has(int(ref.index)):
+						continue
+				_:
+					continue
+			var candidate := _candidate(session, context, entry, ref, power, needs, search)
+			if candidate.is_empty() or String(candidate.get("kind", "")) in ["town_own", "meet"]:
+				continue
+			if int(avoid.get(String(candidate.get("id", "")), -1)) >= int(session.day):
+				continue
+			var value := float(candidate.get("value", 0.0))
+			if value <= 0.0:
+				continue
+			var score := value / (1.0 + float(distance) / float(movement_max))
+			if String(goal.get("id", "")) != "" and String(goal.get("id", "")) == String(candidate.get("id", "")):
+				score *= GOAL_CONTINUITY_BONUS
+			if context.has("decision_alternatives"):
+				_note_alternative(context, candidate, score, distance)
+			if score > best_score:
+				best_score = score
+				candidate["tile_index"] = int(tile_index)
+				candidate["distance"] = distance
+				candidate["score"] = score
+				best = candidate
+	if _rival_towns_unknown(session, context):
+		var explore := _exploration_candidate(session, context, entry, search)
+		if not explore.is_empty() and int(explore.distance) > local_radius:
+			var explore_score := float(explore.value) / (1.0 + float(explore.distance) / float(movement_max))
+			if explore_score > best_score:
+				explore["score"] = explore_score
+				best = explore
+	if not best.is_empty():
+		best["path"] = _path_to(search, int(best.tile_index))
 	return best
 
 ## Visible hostile heroes strong enough to beat this one (DANGER_RATIO), with
@@ -2465,6 +2563,8 @@ static func _best_candidate(session: SessionStateStoreScript.SessionData, contex
 			var score := value / (1.0 + float(distance) / float(movement_max))
 			if String(goal.get("id", "")) != "" and String(goal.get("id", "")) == String(candidate.get("id", "")):
 				score *= GOAL_CONTINUITY_BONUS
+			if context.has("decision_alternatives"):
+				_note_alternative(context, candidate, score, distance)
 			if score > best_score:
 				best_score = score
 				candidate["tile_index"] = int(tile_index)
@@ -2489,8 +2589,16 @@ static func _exploration_candidate(session: SessionStateStoreScript.SessionData,
 	var known := _explored(session, context, LevelRules.level_of(entry))
 	var order: PackedInt32Array = search.get("order", PackedInt32Array())
 	var size: Vector2i = context.map_size
+	var portals: Dictionary = _level_surface(session, context, LevelRules.level_of(entry)).get("portals", {})
+	var portal_frontier := -1
+	for portal_tile in portals.keys():
+		var portal_distance := int(search.dist[int(portal_tile)]) if int(portal_tile) < search.dist.size() else -1
+		if portal_distance > 0 and _portal_leads_unseen(portals[portal_tile], known) and (portal_frontier < 0 or portal_distance < int(search.dist[portal_frontier])):
+			portal_frontier = int(portal_tile)
 	for position in range(1, int(search.get("order_count", 0))):
 		var tile_index := order[position]
+		if portal_frontier >= 0 and int(search.dist[portal_frontier]) <= int(search.dist[tile_index]):
+			return {"kind": "explore", "id": "explore:%d" % portal_frontier, "index": portal_frontier, "value": _explore_value(session, context), "tile_index": portal_frontier, "distance": int(search.dist[portal_frontier])}
 		var x := tile_index % size.x
 		var y := tile_index / size.x
 		for direction in range(8):
@@ -2500,6 +2608,8 @@ static func _exploration_candidate(session: SessionStateStoreScript.SessionData,
 				continue
 			if known[ny * size.x + nx] == 0:
 				return {"kind": "explore", "id": "explore:%d" % tile_index, "index": tile_index, "value": _explore_value(session, context), "tile_index": tile_index, "distance": int(search.dist[tile_index])}
+	if portal_frontier >= 0:
+		return {"kind": "explore", "id": "explore:%d" % portal_frontier, "index": portal_frontier, "value": _explore_value(session, context), "tile_index": portal_frontier, "distance": int(search.dist[portal_frontier])}
 	return {}
 
 static func _candidate(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, ref: Dictionary, power: float, needs: Dictionary, search: Dictionary = {}) -> Dictionary:
@@ -3138,6 +3248,7 @@ static func _follow_plan(session: SessionStateStoreScript.SessionData, context: 
 	block.erase("parked")
 	var last := path.size() - 1
 	var arrived := false
+	var rerouted := false
 	for step_index in range(path.size()):
 		if int(movement.get("current", 0)) <= 0:
 			break
@@ -3148,19 +3259,68 @@ static func _follow_plan(session: SessionStateStoreScript.SessionData, context: 
 			break
 		var before := LevelRules.position(entry)
 		plan["retreat_tile"] = Vector2i(int(before.get("x", 0)), int(before.get("y", 0)))
-		entry["x"] = tile.x
-		entry["y"] = tile.y
+		var through := _portal_step(session, context, entry, tile, level)
+		var landed: Vector2i = through.get("exit", tile)
+		entry["x"] = landed.x
+		entry["y"] = landed.y
 		TurnPlayback.move(session, entry, before)
 		_reveal(session, context, LevelRules.position(entry), _sight_radius(entry))
+		if landed != tile:
+			# A random portal sent the hero elsewhere: it plans again from there.
+			rerouted = true
+			break
 		if step_index == last:
 			arrived = true
+	# A hero that came to scout a portal steps through it to see where it leads.
+	if arrived and String(plan.get("kind", "")) == "explore" and int(movement.get("current", 0)) > 0:
+		var scouted := _portal_step(session, context, entry, Vector2i(-1000, -1000), level)
+		if scouted.has("exit"):
+			var before := LevelRules.position(entry)
+			movement["current"] = int(movement.get("current", 0)) - 1
+			entry["x"] = scouted.exit.x
+			entry["y"] = scouted.exit.y
+			TurnPlayback.move(session, entry, before)
+			_reveal(session, context, LevelRules.position(entry), _sight_radius(entry))
+			rerouted = true
+			arrived = false
 	block["movement"] = movement
 	entry[AI_HERO_KEY] = block
 	_store_entry(session, index, entry)
 	_overworld_rules().invalidate_spatial_lookup(session)
 	if not arrived:
-		return {"arrived": false}
+		return {"arrived": false, "rerouted": rerouted}
 	return _interact(session, context, index, plan)
+
+## A step from a portal's entrance to a tile that is not next to it goes
+## through the portal. A network with several exits rolls the exit with the
+## human's rule (`native_random_exit_check`, keyed by portal, day, traveller and
+## trip); returns the tile the hero comes out on as "exit" when that differs
+## from the planned one.
+static func _portal_step(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, tile: Vector2i, level: int) -> Dictionary:
+	var here := Vector2i(int(entry.get("x", 0)), int(entry.get("y", 0)))
+	if maxi(absi(tile.x - here.x), absi(tile.y - here.y)) <= 1:
+		return {}
+	var size: Vector2i = context.map_size
+	var portals: Dictionary = _level_surface(session, context, level).get("portals", {})
+	var portal: Dictionary = portals.get(here.y * size.x + here.x, {})
+	if portal.is_empty():
+		return {}
+	if (portal.exits as PackedInt32Array).size() < 2:
+		# A fixed portal leads where the route says; scouting one, it leads to
+		# its single exit.
+		if tile.x < 0:
+			var only: int = (portal.exits as PackedInt32Array)[0]
+			return {"exit": Vector2i(only % size.x, only / size.x)}
+		return {}
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	var node: Dictionary = nodes[int(portal.node)] if int(portal.node) < nodes.size() else {}
+	var actor_id := String(entry.get("placement_id", ""))
+	var check: Dictionary = _overworld_rules().native_random_exit_check(session, node, Vector3i(here.x, here.y, level), actor_id)
+	if not bool(check.get("ok", false)):
+		return {}
+	_overworld_rules().note_native_trip(session, actor_id)
+	var exit: Vector3i = check.get("exit", Vector3i(tile.x, tile.y, level))
+	return {"exit": Vector2i(exit.x, exit.y)}
 
 ## Whether the hero must act from the neighbouring tile. Like the human, a hero
 ## ends its route on a town doorway or a site's visit tile even where that tile
@@ -3273,12 +3433,15 @@ static func _level_surface(session: SessionStateStoreScript.SessionData, context
 			if tile is Vector2i and tile.x >= 0 and tile.y >= 0 and tile.x < size.x and tile.y < size.y:
 				zone.append(tile.y * size.x + tile.x)
 		neutrals.append({"id": String(encounter.get("placement_id", "")), "index": index, "body": body, "zone": zone})
-	# Portals with one fixed exit on this level (a Wayring pair, a one-way
-	# gate with a single Wayfall): stepping in comes out at the exit, as for the
-	# human. Networks that pick an exit at random are not planned through. Until
-	# 2026-10-09 heroes could not use portals at all, and on medium maps whose
-	# halves meet only at a Wayring pair two players never met: one side held
-	# 38,000 strength and five towns for 70 days without reaching the other.
+	# Portals on this level, by entrance tile: their exits on this level and the
+	# portal node. Stepping in comes out at an exit, as for the human; a network
+	# with several exits sends the hero to a random one (`_search` plans with the
+	# exits this player has seen). Until 2026-10-09 heroes could not use portals
+	# at all, and on medium maps whose halves meet only at a Wayring pair two
+	# players never met: one side held 38,000 strength and five towns for 70
+	# days without reaching the other. Random networks followed on 2026-10-09:
+	# a large map whose start region opened only through them kept its player
+	# out of everyone's reach.
 	var portals := {}
 	for index in range(resources.size()):
 		var node = resources[index]
@@ -3286,20 +3449,44 @@ static func _level_surface(session: SessionStateStoreScript.SessionData, context
 			continue
 		if NativeTransit.portal_kind(node) not in ["two_way_portal", "one_way_entrance"]:
 			continue
-		var options := NativeTransit.destinations(node)
-		if options.size() != 1:
-			continue
-		var exit := NativeTransit.point(options[0].get("exit", {}))
-		if exit.z != level or exit.x < 0 or exit.y < 0 or exit.x >= size.x or exit.y >= size.y:
+		var exits := PackedInt32Array()
+		for option in NativeTransit.destinations(node):
+			var exit := NativeTransit.point(option.get("exit", {}))
+			if exit.z == level and exit.x >= 0 and exit.y >= 0 and exit.x < size.x and exit.y < size.y:
+				exits.append(exit.y * size.x + exit.x)
+		if exits.is_empty():
 			continue
 		var map_object: Dictionary = overworld_rules._map_object_for_resource_node(node)
 		for tile in overworld_rules._resource_node_world_interaction_tiles(map_object, node):
 			if tile is Vector2i and tile.x >= 0 and tile.y >= 0 and tile.x < size.x and tile.y < size.y:
-				portals[tile.y * size.x + tile.x] = exit.y * size.x + exit.x
+				portals[tile.y * size.x + tile.x] = {"exits": exits, "node": index}
 	var surface := {"blocked": blocked, "stops": stops, "stop_mask": stop_mask, "site_stops": site_stops, "neutrals": neutrals, "portals": portals}
 	levels[level] = surface
 	_profile_add(context, "surface_ms", surface_started)
 	return surface
+
+## Where a portal can take a hero, as far as its player knows: the one exit of a
+## fixed portal; for a network with several exits (one picked at random, as for
+## the human) the exits on ground this player has seen, which the network's
+## colour tells apart on the map. The route is planned as if the hero came out
+## at the right one; where it does not, the hero plans again from where it is.
+static func _portal_exits(portal: Dictionary, seen_map: PackedByteArray) -> PackedInt32Array:
+	var exits: PackedInt32Array = portal.exits
+	if exits.size() == 1:
+		return exits
+	var known := PackedInt32Array()
+	for exit in exits:
+		if exit < seen_map.size() and seen_map[exit] != 0:
+			known.append(exit)
+	return known
+
+## Whether this portal has an exit the player has not seen: stepping in shows
+## where it leads, as a human scouts an unknown monolith.
+static func _portal_leads_unseen(portal: Dictionary, seen_map: PackedByteArray) -> bool:
+	for exit in portal.exits:
+		if exit >= seen_map.size() or seen_map[exit] == 0:
+			return true
+	return false
 
 ## Whether a hero may cross this site's tile without stopping: the pickup is
 ## gone, or the site is already this player's (or an ally's).
@@ -3453,14 +3640,15 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 	queue[0] = start_index
 	var native_corners := NativeTransit.uses_native_adjacency(session)
 	var portals: Dictionary = surface.get("portals", {})
+	var seen_map := _explored(session, context, level) if not portals.is_empty() else PackedByteArray()
 	# A hero that stopped on a portal goes through it first thing.
 	if portals.has(start_index):
-		var start_exit := int(portals[start_index])
-		if dist[start_exit] < 0:
-			dist[start_exit] = 1
-			parent[start_exit] = start_index
-			queue[tail] = start_exit
-			tail += 1
+		for start_exit in _portal_exits(portals[start_index], seen_map):
+			if dist[start_exit] < 0:
+				dist[start_exit] = 1
+				parent[start_exit] = start_index
+				queue[tail] = start_exit
+				tail += 1
 	var reached := []
 	# Whether the radius cut the search short: if not, it reached every tile the
 	# hero can walk to.
@@ -3494,14 +3682,15 @@ static func _search(session: SessionStateStoreScript.SessionData, context: Dicti
 					queue[tail] = next
 					tail += 1
 				elif portals.has(next):
-					# Through the portal: the hero comes out standing on the exit
-					# (usually the other portal) and the route goes on from there.
-					var exit := int(portals[next])
-					if dist[exit] < 0:
-						dist[exit] = next_distance + 1
-						parent[exit] = next
-						queue[tail] = exit
-						tail += 1
+					# Through the portal: the hero comes out standing on an exit
+					# (usually another portal of the network) and the route goes
+					# on from there.
+					for exit in _portal_exits(portals[next], seen_map):
+						if dist[exit] < 0:
+							dist[exit] = next_distance + 1
+							parent[exit] = next
+							queue[tail] = exit
+							tail += 1
 				continue
 			if blocked[next] != 0:
 				continue
@@ -4196,6 +4385,33 @@ static func _log_battle(session: SessionStateStoreScript.SessionData, context: D
 		"resolution": outcome.get("resolution", {}).duplicate(true),
 	})
 	session.flags[BATTLE_LOG_KEY] = records
+
+## Keeps the best-scoring options a hero weighed in this decision.
+static func _note_alternative(context: Dictionary, candidate: Dictionary, score: float, distance: int) -> void:
+	var alternatives: Array = context.decision_alternatives
+	alternatives.append([snappedf(score, 1.0), String(candidate.get("kind", "")), String(candidate.get("id", "")).get_slice("_object_", 1), snappedf(float(candidate.get("value", 0.0)), 1.0), distance])
+	alternatives.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) > float(b[0]))
+	if alternatives.size() > DECISION_LOG_ALTERNATIVES + 1:
+		alternatives.resize(DECISION_LOG_ALTERNATIVES + 1)
+	context["decision_alternatives"] = alternatives
+
+static func _log_decision(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary, plan: Dictionary) -> void:
+	var log: Array = session.flags.get(DECISION_LOG_KEY, [])
+	var chosen := String(plan.get("id", "")).get_slice("_object_", 1)
+	var alternatives := []
+	for alternative in context.get("decision_alternatives", []):
+		if alternative[2] != chosen and alternatives.size() < DECISION_LOG_ALTERNATIVES:
+			alternatives.append(alternative)
+	log.append({
+		"player_id": String(context.controller),
+		"hero": hero_name(entry),
+		"at": [int(entry.get("x", 0)), int(entry.get("y", 0))],
+		"power": snappedf(hero_power(entry), 1.0),
+		"move": int(entry.get(AI_HERO_KEY, {}).get("movement", {}).get("current", 0)),
+		"plan": [String(plan.get("kind", "")), chosen, snappedf(float(plan.get("value", 0.0)), 1.0), int(plan.get("distance", -1))],
+		"alternatives": alternatives,
+	})
+	session.flags[DECISION_LOG_KEY] = log
 
 static func _economy_add(session: SessionStateStoreScript.SessionData, controller: String, key: String, amount: float) -> void:
 	if amount == 0.0 or not bool(session.flags.get(BATTLE_LOG_FLAG, false)):

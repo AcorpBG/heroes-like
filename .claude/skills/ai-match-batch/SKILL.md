@@ -87,13 +87,26 @@ When all matches are in, give one table:
   (`slowest_ai_day_ms` over ~10 s);
 - anything that needs a closer look, by match seed.
 
-Diagnosing a stalled or odd game is your job, not the subagents': replay its `match_seed` with
-the same parameters (`HEROES_AI_MATCH_SEED=<seed>`; add `HEROES_AI_MATCH_TRACE=1` for each day's
-hero goals, `HEROES_STRATEGIC_AI_PROFILE=1` to record each player's turn time by phase in the
-ledger's `turn_ms`). A seed replays exactly only on the same commit: content and balance changes alter the
-map. The match record (`<run>.json`) also holds the full battle log, daily ledgers with an
-`economy` breakdown (recruited strength and gold, buildings, hires, dismissals) and weekly town
-snapshots. If the owner wants a report page, build an artifact from these records.
+Diagnosing a stalled or odd game is your job, not the subagents'. Read the match record first;
+it is written with full tracing on, so a replay is rarely needed:
+
+- `ledger[day].decisions`: every hero decision of the day: player, hero, position, strength,
+  movement left, the plan taken (`[kind, id, value, distance]`) and the best alternatives it
+  scored (`[score, kind, id, value, distance]`). Why an army did not attack a town, chased a
+  courier or stood still is answered here.
+- `ledger[day].sides[player].turn_ms`: that player's turn time by phase (`choose_ms`,
+  `preview_ms` fight previews, `search_ms`, `strategic_ms`, `towns_ms`, counts of previews and
+  searches).
+- `ledger[day].sides[player].economy`: running totals of recruited strength and gold, buildings,
+  hires, dismissals.
+- `town_weeks`: each town's owner, buildings, unbought creatures and garrison every week.
+- `battles`, `timeline`: every auto-resolved fight (both commanders' stats, spells, how it ended)
+  and every capture, hire and fallen hero.
+
+Only when the record cannot answer it, replay the `match_seed` with the same parameters
+(`HEROES_AI_MATCH_SEED=<seed>`, players, size, guards, factions) and add temporary prints. A seed
+replays exactly only on the same commit: content and balance changes alter the map. If the owner
+wants a report page, build an artifact from these records.
 
 ## 5. Clean up
 

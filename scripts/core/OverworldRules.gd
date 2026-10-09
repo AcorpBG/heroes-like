@@ -4,6 +4,7 @@ extends RefCounted
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRules.gd")
 const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
+const PlayerEliminationRulesScript = preload("res://scripts/core/PlayerEliminationRules.gd")
 const Mines = preload("res://scripts/core/MineRules.gd")
 const TownDevelopment = preload("res://scripts/core/TownDevelopmentRules.gd")
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
@@ -1525,6 +1526,8 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 	var enemy_message := String(enemy_turn_result.get("message", ""))
 	if enemy_message != "":
 		messages.append(enemy_message)
+	# A player with no town for a week, or with nothing left, is out.
+	messages.append_array(PlayerEliminationRulesScript.apply_daily(session))
 	var result := _finalize_action_result(session, true, " ".join(messages))
 	normalize_overworld_state(session)
 	result["enemy_activity_summary"] = enemy_activity_summary

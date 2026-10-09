@@ -114689,6 +114689,18 @@
       "notes": "Owner request after the stronger generated guards: a fully built town grew 540-660 battle power a week for 7.6-8.9k gold against 28k weekly Capital Hall income, T6/T7 grew 1 and Muster Captain rank 1 added nothing above T3. T1-T6 growth (base and Veteran, 130 units) now gives about 115 power a week per line with its tier's shared growth building, never below the old value; 35 roster-unit map-dwelling amounts follow. building_dev_fort_2 growth_percent 50, building_dev_fort_3 100, applied in TownDevelopmentRules.growth to base plus flat bonuses, rounded down; the town board lists it. Fully built with Great Ramparts: 1,544-1,730 power and 20-26k gold a week; with Muster Captain rank 4, 2,190-2,470. Starting-army growth shares cut (0.55-1.1 / 0.33-0.65) so opening armies keep their strength. Owner follow-up: Citadel rounds up (T7 2 at Citadel); Muster Captain growth skips T7 (rank 4 kept 2 a week instead of 3); recruit-cost discounts round up (rank 1 had halved the 2-rare T7 price). Great Ramparts with Muster rank 4 is now 2,086-2,337 power a week; hero_specialty_catalog_report 155 checks pass. A +1 Mireclaw T1-T3 boost was tried and reverted (it made Mireclaw the strongest). Embercourt T1-T3 lines (12 units, 3 map dwellings) grow +1 instead: at Great Ramparts Embercourt makes 1,601 power a week, 92.5% of top Sunvault (was 1,544, 88%); the other factions sit at 95.8-98.4%. town_development_regression 784 checks (new Citadel/Ramparts checks), town_creature_upgrades 655, town_ai_services 104, creature_dwellings, hero_hire_army_level and town_garrison_rows reports pass; validate_repo shows only its 883 pre-existing failures after its 15 pinned unit growth values were updated. Not run: full AI matches with the new economy.",
       "updatedAt": "2026-10-09T15:00:00Z",
       "validatedAt": "2026-10-09T15:00:00Z"
+    },
+    {
+      "id": "ai-long-range-portals-elimination-20261009",
+      "title": "AI long-range planning, random portal travel, townless elimination, starting hero loss not fatal, always-on match tracing",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ai_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Owner decisions 2026-10-09. Main and field armies search 12 days of movement for towns, hostile heroes, war-path guards and unexplored ground (_strategic_candidate). Heroes use random-exit portal networks with the human's exit roll, planning with exits they have seen; portals with unseen exits are explored. PlayerEliminationRules: generated maps eliminate a player with no town and no hero, or with no town for 7 days (human: countdown then defeat; AI: heroes leave); losing the starting hero no longer ends the game (HeroCommandRules.hand_over_primary, fallen heroes not rebuilt). Match runner always records each hero decision with its top alternatives and turn time by phase. Tests: player_elimination_rules_report (5 cases), ai_player_rules, ai_known_world_memory, ai_hero_task_live_turn_execution pass. Replays of the 4 stalled large-map seeds still run to day 160: armies plan town attacks 600-840 times per game but stay fragmented across field heroes (no decisive force), towns trade at parity, and a lone strong hero holding its last town survives. Open: army concentration on large maps."
     }
   ],
   "project": "heroes-like",

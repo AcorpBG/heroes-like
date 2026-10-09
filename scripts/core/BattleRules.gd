@@ -8,6 +8,7 @@ const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const CreatureDwellings = preload("res://scripts/core/CreatureDwellingRules.gd")
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
+const PlayerEliminationRulesScript = preload("res://scripts/core/PlayerEliminationRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
@@ -7393,9 +7394,13 @@ static func _finalize_player_battle_loss(session: SessionStateStoreScript.Sessio
 	if _is_town_defense_context(session.battle.get("context", {})):
 		return _finalize_town_defense_loss(session)
 	if HeroCommandRulesScript.active_hero_is_primary(session):
-		if _is_town_assault_context(session.battle.get("context", {})):
-			return _finalize_primary_defeat(session, "The assault collapses beneath the walls and the primary commander is defeated.")
-		return _finalize_primary_defeat(session)
+		if not PlayerEliminationRulesScript.applies(session):
+			if _is_town_assault_context(session.battle.get("context", {})):
+				return _finalize_primary_defeat(session, "The assault collapses beneath the walls and the primary commander is defeated.")
+			return _finalize_primary_defeat(session)
+		# On a generated map losing the starting hero does not end the game:
+		# another hero leads (owner decision 2026-10-09).
+		HeroCommandRulesScript.hand_over_primary(session, String(session.overworld.get("active_hero_id", "")))
 	return _finalize_secondary_hero_defeat(session)
 
 static func _finalize_primary_defeat(
@@ -7486,12 +7491,17 @@ static func _finalize_secondary_hero_defeat(session: SessionStateStoreScript.Ses
 	)
 	session.battle = {}
 	OverworldRulesScript.refresh_fog_of_war(session)
+	# On a generated map the game ends only when no town and no hero is left.
+	if PlayerEliminationRulesScript.applies(session) and session.scenario_status == "in_progress" and PlayerEliminationRulesScript.human_has_nothing_left(session):
+		session.flags["campaign"] = "defeat"
+		session.scenario_status = "defeat"
+		session.scenario_summary = "Your realm has no town and no hero left."
 	var scenario_result = ScenarioRulesScript.evaluate_session(session)
 	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
 	var final_message = " ".join(messages)
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
-	return {"state": "hero_defeat", "message": final_message}
+	return {"state": "defeat" if session.scenario_status == "defeat" else "hero_defeat", "message": final_message}
 
 static func _finalize_retreat(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if _is_town_defense_context(session.battle.get("context", {})):
@@ -11884,7 +11894,9 @@ static func _finalize_town_defense_loss(session: SessionStateStoreScript.Session
 
 	var defending_hero = HeroCommandRulesScript.hero_by_id(session, defending_hero_id) if defender_owner == "player" else {}
 	if not defending_hero.is_empty():
-		if bool(defending_hero.get("is_primary", false)):
+		if bool(defending_hero.get("is_primary", false)) and PlayerEliminationRulesScript.applies(session):
+			HeroCommandRulesScript.hand_over_primary(session, defending_hero_id)
+		elif bool(defending_hero.get("is_primary", false)):
 			var defeat_result = _finalize_primary_defeat(session, "The primary commander is defeated.", "town_lost")
 			var report = session.flags.get("last_battle_aftermath", {})
 			if report is Dictionary:
