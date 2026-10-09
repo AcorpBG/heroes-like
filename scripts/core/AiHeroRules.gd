@@ -30,6 +30,10 @@ const AI_HERO_ENCOUNTER_ID := "encounter_mire_raid"
 ## `session.flags[BATTLE_LOG_KEY]` (see `_log_battle`) and every town capture
 ## in `session.flags[CAPTURE_LOG_KEY]`.
 const BATTLE_LOG_FLAG := "ai_battle_log_enabled"
+## With the battle log on, running totals per computer player of where gold
+## and troops go (`_economy_add`): strength and gold of recruits, strength
+## dismissed for room, gold on buildings, hires and town services.
+const ECONOMY_LOG_KEY := "ai_economy_log"
 const BATTLE_LOG_KEY := "ai_battle_log"
 const BATTLE_LOG_OWNER_KEY := "battle_log_owner"
 const CAPTURE_LOG_KEY := "ai_capture_log"
@@ -1037,6 +1041,7 @@ static func build_in_town(session: SessionStateStoreScript.SessionData, context:
 		return {"ok": false}
 	_market_cover(session, town, treasury, cost, true)
 	turn_rules._spend_from_pool(treasury, cost)
+	_economy_add(session, String(context.controller), "build_gold", float(cost.get("gold", 0)))
 	var built: Array = town.get("built_buildings", []) if town.get("built_buildings", []) is Array else []
 	built.append(building_id)
 	town["built_buildings"] = built
@@ -1147,6 +1152,7 @@ static func _hire_hero(session: SessionStateStoreScript.SessionData, context: Di
 	if hired.is_empty():
 		return {}
 	_turn_rules()._spend_from_pool(treasury, cost)
+	_economy_add(session, String(context.controller), "hire_gold", float(cost.get("gold", 0)))
 	var tavern: Dictionary = state.get("ai_tavern", {})
 	var remaining: Array = tavern.get("hero_ids", []).duplicate() if tavern.get("hero_ids", []) is Array else []
 	remaining.erase(choice)
@@ -1319,6 +1325,9 @@ static func _recruit_town(session: SessionStateStoreScript.SessionData, context:
 			var total: Dictionary = turn_rules._scale_resource_pool(cost, count)
 			_market_cover(session, town, treasury, total, true)
 			turn_rules._spend_from_pool(treasury, total)
+			_economy_add(session, String(context.controller), "recruited_power", army_power([{"unit_id": unit_id, "count": count}]))
+			_economy_add(session, String(context.controller), "recruit_gold", float(total.get("gold", 0)))
+			_economy_add(session, String(context.controller), "dismissed_power", float(plan.get("dismissed_power", 0.0)))
 			town["garrison"] = plan.get("stacks", [])
 			town["available_recruits"] = turn_rules._consume_recruits(town.get("available_recruits", {}), unit_id, count)
 			var event: Dictionary = turn_rules.ai_town_recruit_event(session, context.config, town, {
@@ -1351,7 +1360,9 @@ static func _make_room(garrison: Array, unit_id: String, count: int) -> Dictiona
 	if weakest < 0 or weakest_power >= army_power([{"unit_id": unit_id, "count": count}]):
 		return {"ok": false}
 	stacks.remove_at(weakest)
-	return HeroCommandRulesScript.army_addition_plan(stacks, {unit_id: count})
+	var plan := HeroCommandRulesScript.army_addition_plan(stacks, {unit_id: count})
+	plan["dismissed_power"] = weakest_power
+	return plan
 
 ## Army transfers in an owned town, as a human would arrange them: the main
 ## (strongest) hero takes the garrison along unless the town is under threat;
@@ -1922,7 +1933,11 @@ static func _visit_own_town_if_inside(session: SessionStateStoreScript.SessionDa
 		return {}
 	var count_before := _creature_total(entry.get("enemy_army", {}).get("stacks", []))
 	entry = _take_garrison(session, entry, town, context)
+	var gold_before := int(context.state.treasury.get("gold", 0))
+	var power_before := army_power(entry.get("enemy_army", {}).get("stacks", []))
 	TownServices.visit(town, entry, context.state.treasury, int(session.day), String(context.controller))
+	_economy_add(session, String(context.controller), "service_gold", float(gold_before - int(context.state.treasury.get("gold", 0))))
+	_economy_add(session, String(context.controller), "upgraded_power", army_power(entry.get("enemy_army", {}).get("stacks", [])) - power_before)
 	block["visited_town_day"] = int(session.day)
 	entry[AI_HERO_KEY] = block
 	_store_entry(session, index, entry)
@@ -4165,6 +4180,15 @@ static func _log_battle(session: SessionStateStoreScript.SessionData, context: D
 		"resolution": outcome.get("resolution", {}).duplicate(true),
 	})
 	session.flags[BATTLE_LOG_KEY] = records
+
+static func _economy_add(session: SessionStateStoreScript.SessionData, controller: String, key: String, amount: float) -> void:
+	if amount == 0.0 or not bool(session.flags.get(BATTLE_LOG_FLAG, false)):
+		return
+	var log: Dictionary = session.flags.get(ECONOMY_LOG_KEY, {})
+	var row: Dictionary = log.get(controller, {})
+	row[key] = float(row.get(key, 0.0)) + amount
+	log[controller] = row
+	session.flags[ECONOMY_LOG_KEY] = log
 
 ## What a hero brings to a battle besides its troops, for the battle log.
 static func _commander_brief(commander: Variant) -> Dictionary:

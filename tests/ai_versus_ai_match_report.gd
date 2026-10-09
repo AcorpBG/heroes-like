@@ -357,6 +357,7 @@ func _town_snapshot(session) -> Dictionary:
 			"built": (town.get("built_buildings", []) as Array).duplicate(),
 			"recruits": (town.get("available_recruits", {}) as Dictionary).duplicate(),
 			"garrison": AiHeroRulesScript.army_power(town.get("garrison", [])),
+			"recruits_power": AiHeroRulesScript.army_power((town.get("available_recruits", {}) as Dictionary).keys().map(func(unit_id): return {"unit_id": String(unit_id), "count": int(town.get("available_recruits", {}).get(unit_id, 0))})),
 			"stacks": (town.get("garrison", []) as Array).map(func(stack): return "%s:%d" % [String(stack.get("unit_id", "")), int(stack.get("count", 0))]),
 		})
 	return {"day": int(session.day), "towns": rows}
@@ -390,6 +391,7 @@ func _day_row(session, seats: Array) -> Dictionary:
 			"garrison_power": snappedf(garrison_power, 0.1),
 			"sites": sites,
 			"explored": AiHeroRulesScript.explored_tile_count(state),
+			"economy": (session.flags.get(AiHeroRulesScript.ECONOMY_LOG_KEY, {}).get(seat, {}) as Dictionary).duplicate(),
 		}
 	return row
 
