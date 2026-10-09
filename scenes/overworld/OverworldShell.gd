@@ -21,6 +21,7 @@ const HeroExchangeScreenScript = preload("res://scenes/overworld/HeroExchangeScr
 var _hero_exchange: Control
 var _hero_exchange_partner_id := ""
 const HeroLevelUpDialogScript = preload("res://scenes/shared/HeroLevelUpDialog.gd")
+const GainFeed = preload("res://scripts/core/OverworldGainFeed.gd")
 const BattleArtPrewarmScript = preload("res://scripts/ui/BattleArtPrewarm.gd")
 var _hero_level_up_dialog: ConfirmationDialog
 var _level_up_retry_pending := false
@@ -2190,7 +2191,9 @@ func _on_context_action_pressed(action_id: String) -> void:
 	if action_id == "collect_resource":
 		resources_before = _duplicate_dictionary(_session.overworld.get("resources", {}))
 	var route_response_context: Dictionary = _cached_active_context().duplicate(true) if action_id == "site_response" else {}
+	var gain_before := GainFeed.snapshot(_session)
 	var result = OverworldRules.perform_context_action(_session, action_id)
+	_float_gains_since(gain_before)
 	_sync_native_transit_presentation(result)
 	_sync_resource_reward_presentation(result)
 	if result.is_empty():
@@ -2371,7 +2374,9 @@ func _on_spell_action_pressed(action_id: String) -> void:
 	var spell_id := ""
 	if action_id.begins_with("cast_spell:"):
 		spell_id = action_id.trim_prefix("cast_spell:")
+		var gain_before := GainFeed.snapshot(_session)
 		result = OverworldRules.cast_overworld_spell(_session, spell_id)
+		_float_gains_since(gain_before)
 
 	if result.is_empty():
 		return
@@ -2488,11 +2493,22 @@ func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
 	var hero_pos_before := OverworldRules.hero_position(_session)
 	var debug_started := _debug_begin_path_command("move", hero_pos_before + Vector2i(dx, dy))
 	var movement_rules_started_usec := _debug_phase_begin("movement_rules")
+	var gain_before := GainFeed.snapshot(_session)
 	var result = OverworldRules.try_move(_session, dx, dy)
 	_debug_phase_end("movement_rules", movement_rules_started_usec, {"ok": bool(result.get("ok", false)), "route": String(result.get("route", ""))})
-	_handle_move_result(result, preserve_selection, debug_started)
+	_handle_move_result(result, preserve_selection, debug_started, gain_before)
 
-func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_started: bool) -> void:
+## Floats what the player gained since `before` (GainFeed.snapshot) above
+## the active hero: resources, artifacts, troops, sites claimed and more.
+## `movement_walked` is what a walk spent, so restored movement shows fully.
+func _float_gains_since(before: Dictionary, movement_walked: int = 0) -> void:
+	if _session == null or before.is_empty() or _map_view == null:
+		return
+	var lines := GainFeed.gains(before, GainFeed.snapshot(_session), movement_walked)
+	if not lines.is_empty():
+		_map_view.call("show_gain_floaters", OverworldRules.hero_position(_session), lines)
+
+func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_started: bool, gain_before: Dictionary = {}) -> void:
 	_sync_native_transit_presentation(result)
 	_sync_resource_reward_presentation(result)
 	var route := String(result.get("route", ""))
@@ -2516,6 +2532,9 @@ func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_sta
 	_last_enemy_activity_text = ""
 	_last_turn_resolution_text = ""
 	_record_result_feedback(_feedback_kind_for_move(result, route), result, _movement_feedback_fallback(result))
+	if route == "":
+		var walked: Array = result.get("route_steps", []) if result.get("route_steps", []) is Array else []
+		_float_gains_since(gain_before, walked.size())
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		if not preserve_selection:
@@ -2586,6 +2605,7 @@ func _move_toward_selected_tile() -> void:
 		return
 	var movement_rules_started_usec := _debug_phase_begin("movement_rules")
 	var resolve_fallback_destination_interaction := not bool(destination_descriptor.get("town_entry_movement", false))
+	var gain_before := GainFeed.snapshot(_session)
 	var result: Dictionary = OverworldRules.execute_prevalidated_route(_session, route, preview, -1, destination_descriptor) if use_cached_execution else OverworldRules.try_move_along_route(_session, route, -1, resolve_fallback_destination_interaction)
 	var executed_steps := 0
 	var route_steps = result.get("route_steps", [])
@@ -2626,7 +2646,7 @@ func _move_toward_selected_tile() -> void:
 		}
 	)
 	_adopt_selected_route_after_execution(route, result)
-	_handle_move_result(result, true, debug_started)
+	_handle_move_result(result, true, debug_started, gain_before)
 
 func _selected_cached_route_execution_fallback_reason(route_state: Dictionary, route: Array, preview: Dictionary) -> String:
 	if route_state.is_empty() or not bool(route_state.get("valid", false)):
@@ -3172,7 +3192,9 @@ func _on_dwelling_recruit_confirmed() -> void:
 	var hires := _dwelling_recruit_selection()
 	var context := _dwelling_recruit_context.duplicate(true)
 	_on_dwelling_recruit_canceled()
+	var gain_before := GainFeed.snapshot(_session)
 	var result := OverworldRules.hire_from_dwelling(_session, hires, context)
+	_float_gains_since(gain_before)
 	_last_message = String(result.get("message", ""))
 	_record_result_feedback("resource", result, "Creatures hired.")
 	if bool(_handle_session_resolution().get("handled", false)):
@@ -3231,7 +3253,9 @@ func _on_resource_reward_selected(choice_id: StringName) -> void:
 	var context := _resource_reward_context.duplicate(true)
 	_on_resource_reward_canceled()
 	var before := _duplicate_dictionary(_session.overworld.get("resources", {}))
+	var gain_before := GainFeed.snapshot(_session)
 	var result := OverworldRules.choose_resource_reward(_session, String(choice_id), context)
+	_float_gains_since(gain_before)
 	_record_object_resolution_presentation(result, "")
 	_last_message = String(result.get("message", ""))
 	_record_result_feedback("resource", result, "Treasure collected.")
@@ -3379,7 +3403,9 @@ func _on_site_recruit_confirmed() -> void:
 	var context := _close_site_recruit_dialog()
 	if slot_index < 0 or context.is_empty():
 		return
+	var gain_before := GainFeed.snapshot(_session)
 	var result := OverworldRules.take_site_recruits_by_dismissing(_session, slot_index, context)
+	_float_gains_since(gain_before)
 	_last_message = String(result.get("message", ""))
 	_record_result_feedback("hero", result, "Army updated.")
 	_refresh()

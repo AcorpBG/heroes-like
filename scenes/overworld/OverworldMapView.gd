@@ -54,6 +54,7 @@ const CreatureIdle = preload("res://scenes/overworld/OverworldCreatureIdle.gd")
 const Mines = preload("res://scripts/core/MineRules.gd")
 const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
 const PortalFx = preload("res://scenes/overworld/OverworldPortalFx.gd")
+const GainFloaters = preload("res://scenes/overworld/OverworldGainFloaters.gd")
 const MineArt = preload("res://scenes/overworld/OverworldMine.gd")
 const ControlFlag = preload("res://scenes/overworld/OverworldControlFlag.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
@@ -618,6 +619,7 @@ var _terrain_ambient_layer: Control = null
 var _state_layer: Control = null
 # Animated portal light, a child of the state layer (OverworldPortalFx.gd).
 var _portal_fx: Control = null
+var _gain_floaters: Control = null
 var _scenery_batches = SceneryBatch.new()
 var _scenery_manifest: Dictionary = {}
 var _dynamic_layer: Control = null
@@ -1200,6 +1202,24 @@ func _sync_hero_movement_presentation(presentation: Dictionary) -> void:
 	_sync_presentation_processing()
 	_invalidate_dynamic_layer("hero_movement_started")
 
+## Float `lines` (OverworldGainFeed.gains) up from `tile` once the hero's
+## walk there has finished.
+func show_gain_floaters(tile: Vector2i, lines: Array) -> void:
+	_ensure_render_layers()
+	_gain_floaters.show_gains(tile, lines)
+
+## Gain text waits while the hero is still walking to where it was gained.
+func gain_floaters_should_wait() -> bool:
+	return _hero_movement_active
+
+## Where gain text starts for `tile`: above the hero standing on it.
+func gain_anchor_for_tile(tile: Vector2i) -> Vector2:
+	var rect := _tile_rect(_board_rect(), tile)
+	return Vector2(rect.get_center().x, rect.position.y - rect.size.y * 0.35)
+
+func validation_gain_floaters() -> Dictionary:
+	return _gain_floaters.snapshot() if _gain_floaters != null else {}
+
 ## Seconds left in the hero route walk now on screen; 0 when none is playing.
 func hero_movement_remaining_sec() -> float:
 	if not _hero_movement_active:
@@ -1534,6 +1554,10 @@ func _ensure_render_layers() -> void:
 	_portal_fx = PortalFx.new()
 	_state_layer.add_child(_portal_fx)
 	_dynamic_layer = _create_render_layer("DynamicLayer", Callable(self, "_draw_dynamic_layer"))
+	_gain_floaters = GainFloaters.new()
+	_gain_floaters.name = "GainFloaterLayer"
+	_gain_floaters.map_view = self
+	add_child(_gain_floaters)
 	_frame_layer = _create_render_layer("FrameLayer", Callable(self, "_draw_frame_layer"))
 
 func _create_render_layer(layer_name: String, draw_callback: Callable) -> Control:

@@ -110,6 +110,10 @@ Rules:
 
 `ux-hero-level-up-roll-display-20261008` (completed, owner request): the level-up popup shows what the hero rolled above the specialty choices: a "Rolled +1 Spell power" headline, the four command stats with their new values (rolled ones lit gold with their gain, a short pulse unless reduced motion is on), the path's odds and, for several levels at once, each level's roll. See `docs/hero-level-up-popup.md`.
 
+### Gain floaters
+
+`ux-overworld-gain-floaters-20261009` (completed, owner request): whatever an action on the map gives the player floats up above the hero, one line each, and slowly fades out: sites claimed, artifacts, spells, resources, troops, stats, experience, mana, movement, battle boosts, and costs in muted red. The shell compares a snapshot from before each move, context action, reward choice, hire, recruit or map spell with the state after, so every source counts; lines wait for the hero's walk to finish. See `docs/overworld-gain-floaters.md`.
+
 ### Hero specialties
 
 `content-hero-specialty-catalog-20261008` (completed, owner request): 35 specialties with four ranks each (was 7 with two), at most six per hero. The catalog moved to `content/hero_specialties.json`: 9 adventure and economy, 12 command and battle, 14 magic (including a mastery per spell school); every new effect has a real hook in the map, economy, battle or spell rules. Level-up offers lead with an upgrade and a new specialty, lean to the hero's path and are seeded per hero; the computer picks by focus, path and rank. 28 new insignia were generated in the original style. See `docs/hero-specialties.md`.
