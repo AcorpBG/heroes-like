@@ -103,6 +103,17 @@ const DEFENSE_SHARE_MAX_MAIN := 0.3
 ## What a field army joining the main army is worth on top of the troops,
 ## when the main army alone cannot beat a hostile hero or town (`_main_shortfall`).
 const JOIN_BASE_VALUE := 3000.0
+## A field army keeps at most this share of the main army's strength; above
+## it, it goes and joins the main army, which takes the stronger stacks. One
+## army wins the war; field armies hold ground behind it. On large maps every
+## player's strength sat in three or four armies of 5,000 to 30,000, none of
+## them able to clear the strong guards on the way to a rival, and the last
+## three of eight players never attacked each other in the final 40 days.
+const FIELD_SHARE_MAX := 0.35
+## The main hero remembers the strength it lacked to clear the guard standing
+## first in its way to a known rival town (`_strategic_candidate`), so field
+## armies come to join it (`_main_shortfall`).
+const BLOCKED_NEED_KEY := "blocked_need"
 ## A defending hero whose single strongest spell would take this share of the
 ## attacker's health is never attacked unseen: the fight is previewed.
 const SPELL_BURST_PREVIEW_SHARE := 0.25
@@ -154,10 +165,13 @@ const EXPLORE_VALUE := 220.0
 ## While a rival still holds a town this player has never seen, the unexplored
 ## frontier is worth up to this much more, rising from HUNT_START_DAY to
 ## HUNT_FULL_DAY: early on heroes expand, later they go and find the enemy.
-## Heroes only target towns they have seen; in a four-player medium game the
+## It equals ELIMINATION_VALUE: at 6,000 a 66,000-strength main hero on a large
+## map preferred fetching troops from its own towns to scouting the 5% of the
+## map where the last rival held out. Heroes only target towns they have seen;
+## in a four-player medium game the
 ## leading player (32,000 strength) never scouted the corners where its two
 ## rivals held one weakly guarded town each, and the game ran to its day cap.
-const HUNT_EXPLORE_VALUE := 6000.0
+const HUNT_EXPLORE_VALUE := 20000.0
 const HUNT_START_DAY := 21
 const HUNT_FULL_DAY := 56
 ## Ground behind a guard that the hero cannot reach today: a base value for
@@ -1546,6 +1560,10 @@ static func _main_shortfall(session: SessionStateStoreScript.SessionData, contex
 		var required := defense * TOWN_ATTACK_RATIO
 		if required > power:
 			need = minf(need, required)
+	# A guard the main army found in its way to a rival town and could not beat.
+	var blocked := float(main.get(AI_HERO_KEY, {}).get(BLOCKED_NEED_KEY, 0.0))
+	if blocked > power:
+		need = minf(need, blocked)
 	var shortfall := 0.0 if need == INF else need - power
 	cache["shortfall"] = shortfall
 	context["decision"] = cache
@@ -2075,6 +2093,7 @@ static func _strategic_candidate(session: SessionStateStoreScript.SessionData, c
 	var stops: Dictionary = search.get("stops", {})
 	var best := {}
 	var best_score := 0.0
+	var blocked_need := INF
 	for tile_index in stops.keys():
 		var distance := int(search.dist[int(tile_index)])
 		if distance <= local_radius:
@@ -2093,6 +2112,9 @@ static func _strategic_candidate(session: SessionStateStoreScript.SessionData, c
 				STOP_ENCOUNTER:
 					if not war.has(int(ref.index)):
 						continue
+					var guard_need := _guard_power(session.overworld.encounters[int(ref.index)]) * GUARD_WIN_RATIO
+					if guard_need > power:
+						blocked_need = minf(blocked_need, guard_need)
 				_:
 					continue
 			var candidate := _candidate(session, context, entry, ref, power, needs, search)
@@ -2121,9 +2143,29 @@ static func _strategic_candidate(session: SessionStateStoreScript.SessionData, c
 			if explore_score > best_score:
 				explore["score"] = explore_score
 				best = explore
+		elif explore.is_empty():
+			# Shut in with the rivals unseen and no ground left to scout: the
+			# guards around are the way out, and the weakest it cannot beat
+			# says how much stronger the main army must grow. On an extra-large
+			# map with strong guards each surviving player's armies, split
+			# 20,000 to 35,000, stayed shut in their own corner for 60 days.
+			for tile_index in stops.keys():
+				for ref in stops[tile_index]:
+					if int(ref.kind) != STOP_ENCOUNTER:
+						continue
+					var way_out := _guard_power(session.overworld.encounters[int(ref.index)]) * GUARD_WIN_RATIO
+					if way_out > power:
+						blocked_need = minf(blocked_need, way_out)
 	if not best.is_empty():
 		best["path"] = _path_to(search, int(best.tile_index))
+	# Remember what strength the way to a rival town needs, for the field armies.
+	if placement_is_main(session, context, entry):
+		block[BLOCKED_NEED_KEY] = 0.0 if blocked_need == INF else blocked_need
+		entry[AI_HERO_KEY] = block
 	return best
+
+static func placement_is_main(session: SessionStateStoreScript.SessionData, context: Dictionary, entry: Dictionary) -> bool:
+	return String(entry.get("placement_id", "")) == _decision_main_id(session, context)
 
 ## Visible hostile heroes strong enough to beat this one (DANGER_RATIO), with
 ## where they stand and how far they reach next turn. Kept for the decision.
@@ -2679,7 +2721,7 @@ static func _meet_candidate(session: SessionStateStoreScript.SessionData, contex
 	if _decision_field_ids(session, context).has(String(entry.get("placement_id", ""))):
 		# A field army joins the main army when something it has to beat is
 		# beyond the main army alone: the main hero takes the stronger stacks.
-		if _main_shortfall(session, context, other) <= 0.0:
+		if _main_shortfall(session, context, other) <= 0.0 and hero_power(entry) <= hero_power(other) * FIELD_SHARE_MAX:
 			return {}
 		var swap := _garrison_pickup(other.get("enemy_army", {}).get("stacks", []).duplicate(true), entry.get("enemy_army", {}).get("stacks", []).duplicate(true))
 		if float(swap.gain) <= 0.0:
@@ -4510,6 +4552,7 @@ static func _log_decision(session: SessionStateStoreScript.SessionData, context:
 		"power": snappedf(hero_power(entry), 1.0),
 		"move": int(entry.get(AI_HERO_KEY, {}).get("movement", {}).get("current", 0)),
 		"plan": [String(plan.get("kind", "")), chosen, snappedf(float(plan.get("value", 0.0)), 1.0), int(plan.get("distance", -1))],
+		"blocked_need": snappedf(float(entry.get(AI_HERO_KEY, {}).get(BLOCKED_NEED_KEY, 0.0)), 1.0),
 		"alternatives": alternatives,
 	})
 	session.flags[DECISION_LOG_KEY] = log

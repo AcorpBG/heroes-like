@@ -114769,6 +114769,18 @@
       "notes": "Owner request 2026-10-09 after comparing the Glassbound Eyrie with the HoMM3 Crypt it translates (CRBANKS.TXT from the local install). GeneratedRewardRules.CREATURE_BANKS rolls one Crypt level per placement by stable hash (30/30/30/10). The claim pays 1,500/2,000/2,500/5,000 gold, and on levels 3-4 one random artifact of the rarity the random map gives HoMM3 treasure artifacts (common), skipping artifacts the hero holds (ArtifactRules._select_rarity_source_reward). No ore, experience, recruits, faction relic or survey: new ResourceNodePayloadRules keys payload_recruits, payload_vision_radius, payload_artifact_rarity, kept by node normalization. The supplemental site guard fields the level's army (GeneratedNeutralEncounterRules.stacks_for_native_budget): Skeletons, Walking Dead, Wights and Vampires become Kitehook Runners, Cliffhawk Wardens, Windglass Slingers and Galehorn Striders at AI value x headcount x 0.06, giving power 225/287/508/672 against the old 7+3 guard's 80. Authored placements and older saves keep the site definition. Tests: creature_banks_report (new) passes; pickups_income_rules, artifact_guarded_site_reward_execution, site_recruit_overflow, creature_dwellings, visit_buildings, water_travel, native_rmg_end_to_end_runtime_boundary and ai_player_rules reports pass. artifact_source_reward_report still fails on its stale 9-table count (14 tables since 2026-08). validate_repo's failure set is identical before and after (886 lines). Open: other HoMM3 banks (Creature Bank subtypes, Derelict Ship, Shipwreck, Dragon Utopia, Pyramid, Warrior's Tomb) still map to a random guarded site with its authored payload; the common artifact pool holds only 2 artifacts; the looted-Crypt morale penalty is not carried over.",
       "updatedAt": "2026-10-09T16:00:00Z",
       "validatedAt": "2026-10-09T16:00:00Z"
+    },
+    {
+      "id": "ai-army-concentration-20261009",
+      "title": "AI field armies concentrate into the main army; boxed-in main armies call for help; unseen rivals worth hunting",
+      "status": "in_progress",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ai_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Owner request. Implemented: FIELD_SHARE_MAX 0.35, blocked_need on the main hero (war-path guard or way-out guard when rivals unseen) feeding _main_shortfall, HUNT_EXPLORE_VALUE 20000, blocked_need in the decision log. Replays: ai-match-557313547 (4P large) decided day 159 (was undecided); ai-match-724865121 (6P large) still undecided: leader keeps 38k in garrisons with 3-5k heroes against a lone 29.6k hero in the last rival town; ai-match-1103018058 (8P XL strong) still undecided: 3 survivors with split armies, 26-58% of the map seen. Open: strength parked in garrisons across many towns (defence budget per town), concentration limited by seven army slots. Tests: ai_player_rules, ai_known_world_memory, ai_hero_task_live_turn_execution, player_elimination_rules pass."
     }
   ],
   "project": "heroes-like",
