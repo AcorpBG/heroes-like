@@ -18,6 +18,8 @@ extends Node
 #                          places swapped, to tell map balance from faction.
 # HEROES_AI_MATCH_PLAYERS  computer players on the map (default 2); a match
 #                          of more ends when one player is left standing.
+# HEROES_AI_MATCH_FACTIONS comma-separated faction ids, one per seat, in
+#                          place of the seed's random draw.
 # HEROES_AI_MATCH_SIZE     map size class (default homm3_small; homm3_medium,
 #                          homm3_large, homm3_extra_large), one level.
 
@@ -61,6 +63,12 @@ func _run() -> void:
 	var drawn := []
 	for _seat in range(player_count):
 		drawn.append(String(faction_ids[rng.randi_range(0, faction_ids.size() - 1)]))
+	var chosen := OS.get_environment("HEROES_AI_MATCH_FACTIONS").strip_edges()
+	if chosen != "":
+		drawn = Array(chosen.split(",", false)).map(func(id): return String(id).strip_edges())
+		if drawn.size() != player_count or drawn.any(func(id): return not faction_ids.has(id)):
+			_fail("HEROES_AI_MATCH_FACTIONS needs %d of %s, got %s." % [player_count, JSON.stringify(faction_ids), chosen])
+			return
 	var map_seed := str(rng.randi())
 	# A two-player match keeps the map seed it always drew.
 	if player_count != 2:
