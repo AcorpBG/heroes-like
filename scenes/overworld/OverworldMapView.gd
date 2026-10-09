@@ -525,6 +525,10 @@ const HERO_MARKER_RADIUS := 0.20
 const FOCUS_RING_WIDTH_FACTOR := 0.045
 const PAN_DRAG_THRESHOLD := 6.0
 const WHEEL_PAN_TILES := 3
+# Edge scrolling: the camera pans while the pointer rests at a window edge.
+const EDGE_SCROLL_MARGIN_PX := 8.0
+const EDGE_SCROLL_PIXELS_PER_SEC := 900.0
+const EDGE_SCROLL_MAX_STEP_SEC := 0.05
 const DIRECTIONS := [
 	Vector2i.LEFT,
 	Vector2i.RIGHT,
@@ -567,6 +571,11 @@ var _manual_camera := false
 var _drag_start_position := Vector2.ZERO
 var _drag_last_position := Vector2.ZERO
 var _dragging_camera := false
+## Set by the owner screen; edge scrolling only runs while this returns true.
+var edge_scroll_allowed := Callable()
+var _edge_scroll_active := false
+var _pointer_in_window := true
+var _edge_scroll_pointer := Vector2(-1.0, -1.0)
 var _pending_click_position := Vector2.ZERO
 var _terrain_grammar: Dictionary = {}
 var _terrain_styles: Dictionary = {}
@@ -889,6 +898,8 @@ func _ready() -> void:
 	_scenery_manifest = JSON.parse_string(FileAccess.get_file_as_string("res://content/overworld_scenery_animation.json"))
 	_load_overworld_vfx_manifest()
 	_invalidate_frame_layer("ready")
+	get_window().mouse_entered.connect(func(): _pointer_in_window = true)
+	get_window().mouse_exited.connect(func(): _pointer_in_window = false)
 	set_process(false)
 
 func _on_settings_changed(_settings: Dictionary) -> void:
@@ -1020,6 +1031,19 @@ func set_route_preview_enabled(enabled: bool) -> void:
 func _process(delta: float) -> void:
 	var redraw_dynamic := false
 	var elapsed_delta := maxf(0.0, delta)
+	if _edge_scroll_active:
+		var edge := edge_scroll_direction()
+		if edge == Vector2.ZERO:
+			_edge_scroll_active = false
+		else:
+			_ensure_camera_state()
+			if _pan_camera_pixels(-edge * EDGE_SCROLL_PIXELS_PER_SEC * minf(elapsed_delta, EDGE_SCROLL_MAX_STEP_SEC)):
+				# The map slides under a resting pointer; keep the hover tile true.
+				var hovered := _tile_from_local(get_global_transform_with_canvas().affine_inverse() * _edge_scroll_pointer)
+				if hovered != _hover_tile:
+					_hover_tile = hovered
+					tile_hovered.emit(hovered)
+					redraw_dynamic = true
 	if _overworld_terrain_ambient_should_animate():
 		_terrain_ambient_phase = fmod(_terrain_ambient_phase + elapsed_delta * TERRAIN_AMBIENT_PHASE_SPEED, TAU)
 		_terrain_ambient_elapsed += elapsed_delta
@@ -1062,7 +1086,7 @@ func _process(delta: float) -> void:
 		_invalidate_dynamic_layer("overworld_presentation_frame")
 
 func _sync_presentation_processing() -> void:
-	set_process(_overworld_terrain_ambient_should_animate() or _hero_movement_active or _object_resolution_active or _object_resolution_queued or _route_blocked_active or _spell_cast_active or _portal_fx_should_animate())
+	set_process(_edge_scroll_active or _overworld_terrain_ambient_should_animate() or _hero_movement_active or _object_resolution_active or _object_resolution_queued or _route_blocked_active or _spell_cast_active or _portal_fx_should_animate())
 
 func _portal_fx_motion_enabled() -> bool:
 	return not SettingsService.reduced_motion_enabled()
@@ -1869,6 +1893,31 @@ func _canvas_draw_texture_rect_flipped(
 	canvas.draw_set_transform(rect.get_center(), 0.0, Vector2(-1.0 if flip_x else 1.0, -1.0 if flip_y else 1.0))
 	canvas.draw_texture_rect(texture, Rect2(rect.size * -0.5, rect.size), false, modulate, transpose)
 	canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+# Motion anywhere in the window can start edge scrolling, including over the
+# side rails, as in HoMM; _process keeps it going while the pointer rests.
+func _input(event: InputEvent) -> void:
+	if not event is InputEventMouseMotion: return
+	_edge_scroll_pointer = event.position
+	if not _edge_scroll_active and edge_scroll_direction() != Vector2.ZERO:
+		_edge_scroll_active = true
+		_sync_presentation_processing()
+
+func edge_scroll_direction() -> Vector2:
+	if not _pointer_in_window or _dragging_camera or not is_visible_in_tree() or not get_window().has_focus():
+		return Vector2.ZERO
+	if not _can_pan_camera() or (edge_scroll_allowed.is_valid() and not bool(edge_scroll_allowed.call())):
+		return Vector2.ZERO
+	var bounds := get_viewport().get_visible_rect()
+	var pointer := _edge_scroll_pointer
+	if not bounds.has_point(pointer):
+		return Vector2.ZERO
+	var direction := Vector2.ZERO
+	if pointer.x < bounds.position.x + EDGE_SCROLL_MARGIN_PX: direction.x = -1.0
+	elif pointer.x >= bounds.end.x - EDGE_SCROLL_MARGIN_PX: direction.x = 1.0
+	if pointer.y < bounds.position.y + EDGE_SCROLL_MARGIN_PX: direction.y = -1.0
+	elif pointer.y >= bounds.end.y - EDGE_SCROLL_MARGIN_PX: direction.y = 1.0
+	return direction
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:

@@ -10,8 +10,8 @@ const AudioPaletteScript = preload("res://scripts/audio/AudioPalette.gd")
 const RuntimeAudioLoaderScript = preload("res://scripts/audio/RuntimeAudioLoader.gd")
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 
-const HEX_COLUMNS := 11
-const HEX_ROWS := 7
+const HEX_COLUMNS := BattleRulesScript.BATTLE_HEX_COLUMNS
+const HEX_ROWS := BattleRulesScript.BATTLE_HEX_ROWS
 const SQRT_3 := 1.7320508075688772
 const BATTLE_BOARD_CURSOR_SEMANTIC_MAX_CHARS := 320
 const BATTLE_BOARD_CURSOR_SEMANTIC_DEBOUNCE_SECONDS := 0.42
@@ -147,6 +147,28 @@ const TERRAIN_AMBIENT_PROFILES := {
 	"underground": {"id": "glasscap_motes", "kind": "spore", "count": 11, "color": Color(0.43, 0.88, 0.86, 1.0), "alpha": 0.17, "radius_factor": 0.0024, "drift": Vector2(0.009, 0.008)},
 }
 const TERRAIN_HEX_TEXTURE_INSET := 1.0
+const OBSTACLE_ART_ROOT := "res://art/overworld/runtime/objects/decorations/biome_components_20260919"
+const OBSTACLE_ART_BIOMES := {
+	"grass": "grasslands",
+	"road": "grasslands",
+	"forest": "deep_forest",
+	"swamp": "mire_fen",
+	"mire": "mire_fen",
+	"rough": "rough_badlands",
+	"snow": "snow_frost_marches",
+	"coast": "coast_archipelago",
+	"lava": "ash_lava_wastes",
+	"underground": "subterranean_underways",
+}
+# Props are anchored by the bottom of their painted content (about 0.93 of the
+# 256 px sheet) a little below the cell centre, and span about one hex per cell.
+const OBSTACLE_ART_CONTENT_BOTTOM := 0.93
+const OBSTACLE_ART_BASE_OFFSET := 0.45
+const OBSTACLE_ART_WIDTH_PER_CELL := 1.12
+# A lone prop is drawn a little larger so thin deadwood still reads as a blocked hex.
+const OBSTACLE_ART_SINGLE_SCALE := 1.18
+const OBSTACLE_SHADOW_COLOR := Color(0.02, 0.025, 0.02, 0.38)
+const OBSTACLE_FALLBACK_STONE := Color(0.42, 0.40, 0.36, 0.96)
 const TERRAIN_HEX_FALLBACK_INSET := 0.975
 const TEXTURED_HEX_LINE_COLOR := Color(0.98, 0.89, 0.62, 0.10)
 const TEXTURED_HEX_CENTER_LINE := Color(1.0, 0.86, 0.46, 0.14)
@@ -185,6 +207,9 @@ var _enemy_stacks: Array = []
 var _active_stack: Dictionary = {}
 var _target_stack: Dictionary = {}
 var _field_objectives: Array = []
+# This round from the active stack, the waiting stacks, then the predicted
+# next round (BattleRules.turn_order_forecast), refreshed with each battle state.
+var _turn_forecast: Dictionary = {}
 var _stack_hit_shapes: Array = []
 var _hover_destination_cell := Vector2i(-1, -1)
 var _consequence_preview: Dictionary = {}
@@ -202,6 +227,8 @@ func set_spell_target_candidates(ids: Array, previews: Dictionary = {}, targetin
 var _consequence_hover_key := ""
 var _controller_cursor_cell := Vector2i(-1, -1)
 var _terrain_textures: Dictionary = {}
+var _obstacle_textures: Dictionary = {}
+var _obstacle_texture_missing: Dictionary = {}
 var _terrain_texture_missing: Dictionary = {}
 var _unit_battle_icon_textures: Dictionary = {}
 var _unit_battle_icon_missing: Dictionary = {}
@@ -927,6 +954,7 @@ func _apply_battle_dictionary(battle: Dictionary) -> void:
 	_active_stack = {}
 	_target_stack = {}
 	_field_objectives = []
+	_turn_forecast = {}
 	_stack_hit_shapes = []
 	if battle.is_empty():
 		_controller_cursor_cell = Vector2i(-1, -1)
@@ -939,6 +967,7 @@ func _apply_battle_dictionary(battle: Dictionary) -> void:
 		_active_stack = BattleRulesScript.get_active_stack(_battle)
 		_target_stack = BattleRulesScript.get_selected_target(_battle)
 		_field_objectives = _battle.get(BattleRulesScript.FIELD_OBJECTIVES_KEY, []).duplicate(true) if _battle.get(BattleRulesScript.FIELD_OBJECTIVES_KEY, []) is Array else []
+		_turn_forecast = BattleRulesScript.turn_order_forecast(_battle)
 		for stack in _battle.get("stacks", []):
 			if not (stack is Dictionary) or not _stack_visible_for_presentation(stack):
 				continue
@@ -1058,10 +1087,23 @@ func validation_hex_layout_summary() -> Dictionary:
 			}
 		)
 
+	var obstacle_entries := []
+	for obstacle in BattleRulesScript.battle_obstacles(_battle):
+		var obstacle_path := obstacle_art_path(_battle_terrain_id(), obstacle)
+		obstacle_entries.append({
+			"id": String(obstacle.get("id", "")),
+			"kind": String(obstacle.get("kind", "")),
+			"cells": obstacle.get("cells", []),
+			"art_path": obstacle_path,
+			"art_loaded": _obstacle_texture(obstacle_path) != null,
+			"art_rect": _obstacle_art_rect(obstacle, layout),
+		})
+
 	return {
 		"presentation": "hex",
 		"columns": HEX_COLUMNS,
 		"rows": HEX_ROWS,
+		"obstacles": obstacle_entries,
 		"hex_count": HEX_COLUMNS * HEX_ROWS,
 		"hex_radius": hex_radius,
 		"board_rect": Rect2(Vector2.ZERO, size),
@@ -2296,7 +2338,8 @@ func _draw_hex_procedural_detail(center: Vector2, radius: float, terrain: String
 			if detail_roll > 0.30:
 				_draw_hill(center + Vector2(0.0, radius * 0.06), radius * 0.88, radius * 0.38)
 		"road":
-			if cell.y == 3 or (cell.y == 2 and cell.x < 4) or (cell.y == 4 and cell.x > 6):
+			var road_row := int(HEX_ROWS / 2)
+			if cell.y == road_row or (cell.y == road_row - 1 and cell.x < 4) or (cell.y == road_row + 1 and cell.x > 6):
 				draw_line(center + Vector2(-radius * 0.46, radius * 0.18), center + Vector2(radius * 0.46, -radius * 0.12), Color(0.50, 0.39, 0.24, 0.36), radius * 0.20, true)
 		_:
 			if detail_roll > 0.48:
@@ -2350,6 +2393,10 @@ static func art_texture_paths_for_battle(battle: Dictionary) -> PackedStringArra
 	var terrain_path := String(TERRAIN_TEXTURE_PATHS.get(String(TERRAIN_TEXTURE_ALIASES.get(terrain_id, terrain_id)), ""))
 	if terrain_path != "":
 		paths.append(terrain_path)
+	for obstacle in BattleRulesScript.battle_obstacles(battle):
+		var obstacle_path := obstacle_art_path(terrain_id, obstacle)
+		if obstacle_path != "" and not paths.has(obstacle_path):
+			paths.append(obstacle_path)
 	var stacks: Variant = battle.get("stacks", [])
 	for stack in (stacks if stacks is Array else []):
 		var unit_id := String(stack.get("unit_id", "")) if stack is Dictionary else ""
@@ -2768,9 +2815,8 @@ func _terrain_color_for(terrain_id: String) -> Color:
 
 func _draw_hex_grid(hex_layout: Dictionary, terrain_texture_loaded: bool) -> void:
 	var radius := float(hex_layout.get("radius", 1.0))
-	var distance := clampi(int(_battle.get("distance", 1)), 0, 2)
-	var player_front := _front_column("player", distance)
-	var enemy_front := _front_column("enemy", distance)
+	var player_front := _deployment_zone_front("player")
+	var enemy_front := _deployment_zone_front("enemy")
 	for row in range(HEX_ROWS):
 		for column in range(HEX_COLUMNS):
 			var cell := Vector2i(column, row)
@@ -2979,6 +3025,71 @@ func _draw_controller_cursor(hex_layout: Dictionary) -> void:
 	_draw_hex_outline(center, radius * 1.13, color, 3.6)
 	draw_circle(center, clampf(radius * 0.09, 2.5, 4.5), color)
 
+static func obstacle_art_path(terrain_id: String, obstacle: Dictionary) -> String:
+	var normalized := terrain_id.strip_edges().to_lower()
+	var texture_id := String(TERRAIN_TEXTURE_ALIASES.get(normalized if normalized != "" else "plains", normalized))
+	var biome := String(OBSTACLE_ART_BIOMES.get(texture_id, "grasslands"))
+	var kind := String(obstacle.get("kind", "rock"))
+	if kind not in BattleRulesScript.OBSTACLE_KINDS:
+		kind = BattleRulesScript.OBSTACLE_KINDS[0]
+	var sheet := ("cluster_" if int(obstacle.get("size", 1)) >= 2 else "") + kind
+	return "%s/%s/%s_%02d.png" % [OBSTACLE_ART_ROOT, biome, sheet, clampi(int(obstacle.get("variant", 0)), 0, BattleRulesScript.OBSTACLE_VARIANT_COUNT - 1)]
+
+func _obstacle_texture(path: String) -> Texture2D:
+	if _obstacle_textures.has(path):
+		return _obstacle_textures[path]
+	if _obstacle_texture_missing.has(path):
+		return null
+	var texture: Texture2D = null
+	if ResourceLoader.exists(path):
+		var resource = load(path)
+		if resource is Texture2D:
+			texture = resource
+	if texture != null:
+		_obstacle_textures[path] = texture
+		return texture
+	_obstacle_texture_missing[path] = true
+	return null
+
+## The midpoint of an obstacle's cells: one hex, or the seam of two.
+func _obstacle_center(obstacle: Dictionary, hex_layout: Dictionary) -> Vector2:
+	var total := Vector2.ZERO
+	var count := 0
+	for cell in obstacle.get("cells", []):
+		if cell is Dictionary:
+			total += _hex_center(Vector2i(int(cell.get("q", 0)), int(cell.get("r", 0))), hex_layout)
+			count += 1
+	return total / float(count) if count > 0 else Vector2.ZERO
+
+func _obstacle_art_rect(obstacle: Dictionary, hex_layout: Dictionary) -> Rect2:
+	var radius := float(hex_layout.get("radius", 1.0))
+	var hex_width := float(hex_layout.get("hex_width", SQRT_3 * radius))
+	var cell_count := maxi(1, obstacle.get("cells", []).size())
+	var width := hex_width * OBSTACLE_ART_WIDTH_PER_CELL * float(cell_count) * (OBSTACLE_ART_SINGLE_SCALE if cell_count == 1 else 1.0)
+	var center := _obstacle_center(obstacle, hex_layout)
+	var base_y := center.y + radius * OBSTACLE_ART_BASE_OFFSET
+	return Rect2(Vector2(center.x - width * 0.5, base_y - width * OBSTACLE_ART_CONTENT_BOTTOM), Vector2(width, width))
+
+func _draw_battle_obstacle(obstacle: Dictionary, hex_layout: Dictionary) -> void:
+	var radius := float(hex_layout.get("radius", 1.0))
+	var hex_width := float(hex_layout.get("hex_width", SQRT_3 * radius))
+	for cell in obstacle.get("cells", []):
+		if not (cell is Dictionary):
+			continue
+		var base := _hex_center(Vector2i(int(cell.get("q", 0)), int(cell.get("r", 0))), hex_layout) + Vector2(0.0, radius * (OBSTACLE_ART_BASE_OFFSET - 0.1))
+		draw_set_transform(base, 0.0, Vector2(1.0, 0.36))
+		draw_circle(Vector2.ZERO, hex_width * 0.44, OBSTACLE_SHADOW_COLOR)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	var texture := _obstacle_texture(obstacle_art_path(_battle_terrain_id(), obstacle))
+	if texture != null:
+		draw_texture_rect(texture, _obstacle_art_rect(obstacle, hex_layout), false)
+		return
+	# Missing art still shows a blocked cell: a plain stone mound per cell.
+	for cell in obstacle.get("cells", []):
+		if cell is Dictionary:
+			var cell_center := _hex_center(Vector2i(int(cell.get("q", 0)), int(cell.get("r", 0))), hex_layout)
+			_draw_hill(cell_center + Vector2(0.0, radius * 0.18), radius * 0.92, radius * 0.62)
+
 func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
 	var radius := float(hex_layout.get("radius", 1.0))
 	_draw_battle_corpses(hex_layout)
@@ -2992,6 +3103,9 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		var cell: Vector2i = stack_cells.get(battle_id)
 		var center := _stack_presentation_center(stack, cell, hex_layout, stack_cells)
 		visual_rows.append({"stack": stack, "battle_id": battle_id, "center": center})
+	# "!" sorts an obstacle before the stacks of its own row, so they stand in front of it.
+	for obstacle in BattleRulesScript.battle_obstacles(_battle):
+		visual_rows.append({"obstacle": obstacle, "battle_id": "!" + String(obstacle.get("id", "")), "center": _obstacle_center(obstacle, hex_layout)})
 	visual_rows.sort_custom(func(left: Dictionary, right: Dictionary) -> bool:
 		var left_center: Vector2 = left.get("center", Vector2.ZERO)
 		var right_center: Vector2 = right.get("center", Vector2.ZERO)
@@ -3001,6 +3115,9 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 	)
 	for row_value in visual_rows:
 		var row: Dictionary = row_value if row_value is Dictionary else {}
+		if row.has("obstacle"):
+			_draw_battle_obstacle(row.get("obstacle", {}), hex_layout)
+			continue
 		var stack: Dictionary = row.get("stack", {}) if row.get("stack", {}) is Dictionary else {}
 		var battle_id := String(row.get("battle_id", ""))
 		var center: Vector2 = row.get("center", Vector2.ZERO)
@@ -3051,6 +3168,8 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 	_draw_combat_vfx_foreground(hex_layout, stack_cells)
 	for row_value in visual_rows:
 		var row: Dictionary = row_value
+		if row.has("obstacle"):
+			continue
 		var stack: Dictionary = row.stack
 		var battle_id := String(row.battle_id)
 		var center: Vector2 = row.center
@@ -4624,27 +4743,65 @@ func _draw_turn_strip(field_rect: Rect2) -> void:
 		draw_rect(portrait_rect, side_color.darkened(0.14), false, 1.0)
 		draw_rect(rect, ACTIVE_COLOR if current else TURN_STRIP_QUEUED_FRAME, false, 2.0 if current else 1.0)
 		_draw_text(_turn_strip_chip_label(stack, rect.size.x), rect.position + Vector2(TURN_STRIP_LABEL_LEFT_INSET, 18.0), TEXT_COLOR, 10)
+		_draw_turn_strip_phase_mark(entry, rect)
+
+## Waiting chips get a wait badge on the portrait; next-round chips are
+## dimmed, and the first one is set off by a divider and the round number.
+func _draw_turn_strip_phase_mark(entry: Dictionary, rect: Rect2) -> void:
+	var portrait_rect := _turn_strip_portrait_rect(rect)
+	match String(entry.get("phase", "current")):
+		"waiting":
+			var badge := Rect2(portrait_rect.end - Vector2(10.0, 10.0), Vector2(11.0, 11.0))
+			draw_rect(badge, TURN_STRIP_PORTRAIT_FILL, true)
+			draw_rect(badge, ACTIVE_COLOR, false, 1.0)
+			_draw_badge_text("W", badge.get_center(), ACTIVE_COLOR, 9)
+		"next_round":
+			draw_rect(rect, Color(0.0, 0.0, 0.0, 0.34), true)
+			if bool(entry.get("first_of_phase", false)):
+				draw_line(rect.position + Vector2(-3.5, -2.0), rect.position + Vector2(-3.5, rect.size.y + 2.0), ACTIVE_COLOR, 2.0)
+				var tag := Rect2(portrait_rect.position - Vector2(1.0, 1.0), Vector2(16.0, 10.0))
+				draw_rect(tag, TURN_STRIP_PORTRAIT_FILL, true)
+				_draw_badge_text("R%d" % (int(_turn_forecast.get("round", 1)) + 1), tag.get_center(), ACTIVE_COLOR, 8)
+
+## Small text centred on a point, for badges.
+func _draw_badge_text(text: String, center: Vector2, color: Color, font_size: int) -> void:
+	var font = get_theme_default_font()
+	if font == null:
+		return
+	var text_size: Vector2 = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
+	draw_string(font, Vector2(center.x - text_size.x * 0.5, center.y + float(font_size) * 0.36), text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, color)
 
 func _turn_strip_rect(field_rect: Rect2) -> Rect2:
 	var strip_width := maxf(0.0, minf(field_rect.size.x - TURN_STRIP_MARGIN * 2.0, TURN_STRIP_MAX_WIDTH))
 	return Rect2(field_rect.position + Vector2(TURN_STRIP_MARGIN, TURN_STRIP_MARGIN), Vector2(strip_width, TURN_STRIP_HEIGHT))
 
+## The strip's order: this round from the active stack, the waiting stacks,
+## then the predicted next round.
+func _turn_strip_order() -> Array:
+	var order: Array = []
+	for phase in ["current", "waiting", "next_round"]:
+		var ids: Variant = _turn_forecast.get(phase, [])
+		if ids is Array:
+			for battle_id_value in ids:
+				order.append({"battle_id": String(battle_id_value), "phase": phase})
+	return order
+
 func _turn_strip_entries(field_rect: Rect2) -> Array:
 	var entries: Array = []
-	var turn_order = BattleRulesScript.upcoming_actor_ids(_battle, 5)
-	if not (turn_order is Array):
-		return entries
+	var turn_order := _turn_strip_order()
 	var strip_rect := _turn_strip_rect(field_rect)
 	var chip_width: float = minf(122.0, (strip_rect.size.x - 14.0) / float(maxi(1, mini(turn_order.size(), 5))))
-	for battle_id_value in turn_order:
+	for slot_value in turn_order:
 		if entries.size() >= 5:
 			break
-		var stack: Dictionary = _stack_by_id(String(battle_id_value))
+		var stack: Dictionary = _stack_by_id(String(slot_value.get("battle_id", "")))
 		if stack.is_empty() or _stack_alive_count(stack) <= 0:
 			continue
 		entries.append({
 			"slot": entries.size() + 1,
 			"stack": stack,
+			"phase": String(slot_value.get("phase", "current")),
+			"first_of_phase": entries.is_empty() or String(entries.back().get("phase", "")) != String(slot_value.get("phase", "current")),
 			"rect": Rect2(
 				strip_rect.position + Vector2(7.0 + float(entries.size()) * chip_width, 5.0),
 				Vector2(chip_width - 5.0, strip_rect.size.y - 10.0)
@@ -4690,13 +4847,19 @@ func _turn_strip_entry_tooltip(entry: Dictionary, visible_count: int) -> String:
 	if stack.is_empty():
 		return tooltip_text
 	var current := String(stack.get("battle_id", "")) == String(_battle.get("active_stack_id", ""))
+	var state := "current stack" if current else "queued stack"
+	match String(entry.get("phase", "current")):
+		"waiting":
+			state = "waiting stack, acts after the others"
+		"next_round":
+			state = "next round (round %d), predicted" % (int(_turn_forecast.get("round", 1)) + 1)
 	return "Initiative Strip\n- Visible slot: %d of %d\n- Stack: %s x%d\n- Side: %s\n- State: %s\n- Inspection: hovering this chip does not advance initiative or spend an action." % [
 		int(entry.get("slot", 0)),
 		visible_count,
 		_stack_full_name(stack),
 		_stack_alive_count(stack),
 		String(stack.get("side", "neutral")).capitalize(),
-		"current stack" if current else "queued stack",
+		state,
 	]
 
 func _turn_strip_chip_label(stack: Dictionary, chip_width: float) -> String:
@@ -5332,9 +5495,8 @@ func _terrain_grid_repaints_texture_cells(texture_loaded: bool) -> bool:
 	return texture_loaded and _terrain_grid_max_fill_alpha(texture_loaded) > TEXTURED_GRID_MAX_CELL_FILL_ALPHA
 
 func _terrain_grid_max_fill_alpha(texture_loaded: bool) -> float:
-	var distance := clampi(int(_battle.get("distance", 1)), 0, 2)
-	var player_front := _front_column("player", distance)
-	var enemy_front := _front_column("enemy", distance)
+	var player_front := _deployment_zone_front("player")
+	var enemy_front := _deployment_zone_front("enemy")
 	var max_alpha := 0.0
 	for column in range(HEX_COLUMNS):
 		var fill := _cell_fill_color(column, player_front, enemy_front, texture_loaded)
@@ -5345,13 +5507,11 @@ func _terrain_grid_max_fill_alpha(texture_loaded: bool) -> float:
 
 func _stack_cells() -> Dictionary:
 	var cells := {}
-	var distance := clampi(int(_battle.get("distance", 1)), 0, 2)
-	_assign_stack_cells(cells, _visible_stack_list(_player_stacks), "player", distance)
-	_assign_stack_cells(cells, _visible_stack_list(_enemy_stacks), "enemy", distance)
+	_assign_stack_cells(cells, _visible_stack_list(_player_stacks), "player")
+	_assign_stack_cells(cells, _visible_stack_list(_enemy_stacks), "enemy")
 	return cells
 
-func _assign_stack_cells(cells: Dictionary, stacks: Array, side: String, distance: int) -> void:
-	var rows := _formation_rows(stacks.size())
+func _assign_stack_cells(cells: Dictionary, stacks: Array, side: String) -> void:
 	for index in range(stacks.size()):
 		var stack_value = stacks[index]
 		if not (stack_value is Dictionary):
@@ -5359,55 +5519,44 @@ func _assign_stack_cells(cells: Dictionary, stacks: Array, side: String, distanc
 		var stack: Dictionary = stack_value
 		var hex := _stack_hex_cell(stack)
 		if hex.x < 0:
-			var column := _front_column(side, distance)
-			if bool(stack.get("ranged", false)):
-				column += -1 if side == "player" else 1
-			column = clampi(column, 0, HEX_COLUMNS - 1)
-			var row := int(rows[index]) if index < rows.size() else clampi(index, 0, HEX_ROWS - 1)
-			hex = Vector2i(column, row)
+			var deployment := BattleRulesScript.default_deployment_hex(side, index, stacks.size(), stack)
+			hex = Vector2i(int(deployment.get("q", 0)), int(deployment.get("r", 0)))
 		cells[String(stack.get("battle_id", ""))] = hex
 
-func _formation_rows(stack_count: int) -> Array:
-	match stack_count:
-		0:
-			return []
-		1:
-			return [3]
-		2:
-			return [2, 4]
-		3:
-			return [1, 3, 5]
-		4:
-			return [1, 2, 4, 5]
-		5:
-			return [0, 2, 3, 4, 6]
-		6:
-			return [0, 1, 2, 4, 5, 6]
-		_:
-			return [0, 1, 2, 3, 4, 5, 6]
-
-func _front_column(side: String, distance: int) -> int:
-	var normalized_distance := clampi(distance, 0, 2)
-	if side == "player":
-		return [4, 3, 1][normalized_distance]
-	return [5, 7, 9][normalized_distance]
+## The first column past an army's deployment edge; the columns behind it are
+## tinted as that army's ground.
+func _deployment_zone_front(side: String) -> int:
+	var clear := BattleRulesScript.OBSTACLE_EDGE_CLEAR_COLUMNS
+	return clear if side == "player" else HEX_COLUMNS - 1 - clear
 
 func _objective_cell(index: int, objective_type: String) -> Vector2i:
+	var cell := _objective_anchor_cell(index, objective_type)
+	var blocked := BattleRulesScript.battle_obstacle_cells(_battle)
+	if not blocked.has("%d,%d" % [cell.x, cell.y]):
+		return cell
+	for neighbor in BattleRulesScript._hex_neighbors({"q": cell.x, "r": cell.y}):
+		if not blocked.has("%d,%d" % [int(neighbor.q), int(neighbor.r)]):
+			return Vector2i(int(neighbor.q), int(neighbor.r))
+	return cell
+
+func _objective_anchor_cell(index: int, objective_type: String) -> Vector2i:
+	var mid := int(HEX_ROWS / 2)
+	var centre := int(HEX_COLUMNS / 2)
 	match objective_type:
 		"lane_battery":
-			return Vector2i(5, 1 if index % 2 == 0 else 5)
+			return Vector2i(centre, mid - 2 if index % 2 == 0 else mid + 2)
 		"cover_line":
-			return Vector2i(4, 2 + (index % 3))
+			return Vector2i(centre - 1, mid - 1 + (index % 3))
 		"obstruction_line":
-			return Vector2i(5, 3)
+			return Vector2i(centre, mid)
 		"hazard_zone":
-			return Vector2i(6, 2 + (index % 3))
+			return Vector2i(centre + 1, mid - 1 + (index % 3))
 		"signal_beacon":
-			return Vector2i(5, 0 if index % 2 == 0 else 6)
+			return Vector2i(centre, 0 if index % 2 == 0 else HEX_ROWS - 1)
 		"breach_point":
-			return Vector2i(5, 3)
+			return Vector2i(centre, mid)
 		_:
-			var defaults := [Vector2i(5, 3), Vector2i(5, 2), Vector2i(5, 4), Vector2i(4, 3), Vector2i(6, 3)]
+			var defaults := [Vector2i(centre, mid), Vector2i(centre, mid - 1), Vector2i(centre, mid + 1), Vector2i(centre - 1, mid), Vector2i(centre + 1, mid)]
 			return defaults[index % defaults.size()]
 
 func _stack_hex_cell(stack: Dictionary) -> Vector2i:

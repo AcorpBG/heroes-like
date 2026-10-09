@@ -339,9 +339,9 @@ func _battle_terrain_cohesion_contract(shell: Node) -> Dictionary:
 		and is_equal_approx(context_alpha, 0.92) \
 		and is_equal_approx(variation_alpha, 0.24) \
 		and context_alpha > variation_alpha \
-		and int(terrain_summary.get("hex_tile_count", 0)) == 77 \
-		and int(terrain_summary.get("texture_source_sample_count", 0)) == 77 \
-		and int(hex_summary.get("hex_count", 0)) == 77 \
+		and int(terrain_summary.get("hex_tile_count", 0)) == 99 \
+		and int(terrain_summary.get("texture_source_sample_count", 0)) == 99 \
+		and int(hex_summary.get("hex_count", 0)) == 99 \
 		and bool(terrain_summary.get("texture_uv_within_0_1", false)) \
 		and bool(terrain_summary.get("texture_source_within_texture", false)) \
 		and bool(terrain_summary.get("texture_visible", false)) \
