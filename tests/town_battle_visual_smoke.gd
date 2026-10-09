@@ -3842,12 +3842,12 @@ func _assert_town_departure_confirmation_contract(shell: Node) -> bool:
 		String(departure.get("why_it_matters", "")),
 		String(departure.get("next_step", "")),
 	])
-	for token in ["Ready check:", "Departure Check", "Town readiness:", "Next practical action:", "Return to Field"]:
+	for token in ["Ready check:", "Departure Check", "Town readiness:", "Next practical action:", "Close"]:
 		if not departure_text.contains(token):
 			push_error("Town smoke: town departure confirmation lost %s clarity: %s." % [token, departure_text])
 			return false
-	if String(departure.get("button_label", "")) != "Return to Field" or String(snapshot.get("leave_button_text", "")) != "Return to Field":
-		push_error("Town smoke: authoritative and live departure labels are not exact Return to Field commands: %s." % snapshot)
+	if String(departure.get("button_label", "")) != "Return to Field" or String(snapshot.get("leave_button_text", "")) != "Close":
+		push_error("Town smoke: the authoritative departure label is not Return to Field or the live button is not Close: %s." % snapshot)
 		return false
 	for key in ["button_label", "visible_text", "tooltip_text", "town_readiness", "affected", "why_it_matters", "next_step"]:
 		if String(departure.get(key, "")) == "":
@@ -3914,7 +3914,7 @@ func _assert_town_departure_movement_copy_matrix(shell: Node) -> bool:
 			or String(remaining.get("visible_text", "")) != expected_remaining \
 			or String(cached_remaining.get("button_label", "")) != "Return to Field" \
 			or String(cached_remaining.get("visible_text", "")) != expected_remaining \
-			or String(remaining_snapshot.get("leave_button_text", "")) != "Return to Field" \
+			or String(remaining_snapshot.get("leave_button_text", "")) != "Close" \
 			or String(remaining_snapshot.get("leave_button_tooltip_text", "")) != String(remaining.get("tooltip_text", "")):
 		_restore_town_departure_test_state(session, towns_before, resources_before, movement_before, hero_before, player_heroes_before, shell)
 		push_error("Town smoke: authoritative/cache/live remaining-movement departure copy diverged: expected=%s authoritative=%s cached=%s." % [expected_remaining, remaining, cached_remaining])
@@ -3936,7 +3936,7 @@ func _assert_town_departure_movement_copy_matrix(shell: Node) -> bool:
 			or String(exhausted.get("visible_text", "")) != expected_exhausted \
 			or String(cached_exhausted.get("button_label", "")) != "Return to Field" \
 			or String(cached_exhausted.get("visible_text", "")) != expected_exhausted \
-			or String(exhausted_snapshot.get("leave_button_text", "")) != "Return to Field" \
+			or String(exhausted_snapshot.get("leave_button_text", "")) != "Close" \
 			or String(exhausted_snapshot.get("leave_button_tooltip_text", "")) != String(exhausted.get("tooltip_text", "")):
 		_restore_town_departure_test_state(session, towns_before, resources_before, movement_before, hero_before, player_heroes_before, shell)
 		push_error("Town smoke: authoritative/cache/live exhausted-movement departure copy diverged: expected=%s authoritative=%s cached=%s." % [expected_exhausted, exhausted, cached_exhausted])

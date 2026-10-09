@@ -32698,7 +32698,7 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         "JOY_BUTTON_DPAD_LEFT",
         "_click_town_management_tab",
         "_town_management_authority_snapshot",
-        'return_to_field.text != "Return to Field"',
+        'return_to_field.text != "Close"',
         'get_node_or_null("%EndTurn")',
         "JOY_BUTTON_RIGHT_SHOULDER",
     ):

@@ -1,6 +1,7 @@
 extends PanelContainer
 ## Town screen army panel, HoMM style (docs/town-garrison-rows.md): the town's
-## command squares (Build, Muster, Market, Mage Guild), then the garrison row
+## command squares (Build, Muster, Tavern / Market, Mage Guild, Intelligence
+## Report), then the garrison row
 ## (garrison hero portrait + seven slots) above the visiting row (the hero at
 ## the gate + seven slots). Clicks and drags become orders the Town screen sends
 ## to the rules; this panel never edits the session itself.
@@ -41,7 +42,7 @@ func _ready() -> void:
 	add_child(box)
 	_command_grid = GridContainer.new()
 	_command_grid.name = "TownCommands"
-	_command_grid.columns = 2
+	_command_grid.columns = 3
 	_command_grid.add_theme_constant_override("h_separation", GAP)
 	_command_grid.add_theme_constant_override("v_separation", GAP)
 	box.add_child(_command_grid)
@@ -65,7 +66,7 @@ func _ready() -> void:
 		_cells[side] = cells
 	_build_split_popup()
 
-## Moves the town's command buttons into the 2x2 command block as rounded
+## Moves the town's command buttons into the 3x2 command block as rounded
 ## squares the size of an army slot, cropped to their emblems so they read.
 func set_command_buttons(buttons: Array) -> void:
 	for button_value in buttons:

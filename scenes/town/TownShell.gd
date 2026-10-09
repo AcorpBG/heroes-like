@@ -28,6 +28,8 @@ const TOWN_WIDE_MANAGEMENT_RAIL_WIDTH := 290.0
 const TOWN_HEADER_HEIGHT := 48.0
 const TOWN_FOOTER_HEIGHT := 48.0
 const TOWN_EDGE_GAP := 8.0
+const TOWN_CLOSE_LABEL := "Close"
+const TOWN_CLOSE_WIDTH := 120.0
 const TOWN_SWITCHER_WIDTH := 172.0
 const TOWN_SWITCHER_ICON_HEIGHT := 76.0
 const TOWN_ACTION_ICON_PATHS := {
@@ -36,6 +38,8 @@ const TOWN_ACTION_ICON_PATHS := {
 	"spells": "res://art/towns/runtime/building_categories/magic.png",
 	"trade": "res://art/towns/runtime/building_categories/economy.png",
 	"log": "res://art/towns/runtime/building_categories/support.png",
+	"tavern": "res://art/towns/runtime/town_commands/tavern.png",
+	"intel": "res://art/towns/runtime/town_commands/intelligence_report.png",
 }
 const TOWN_MANAGEMENT_TAB_CONTENT_MARGIN_HORIZONTAL := 4.0
 const TOWN_MANAGEMENT_TAB_STATE_STYLES := [
@@ -80,6 +84,8 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _spells_action_button: Button = %SpellsAction
 @onready var _trade_action_button: Button = %TradeAction
 @onready var _log_action_button: Button = %LogAction
+@onready var _tavern_action_button: Button = %TavernAction
+@onready var _intel_action_button: Button = %IntelAction
 @onready var _log_badge_label: Label = %LogBadge
 @onready var _management_tabs: TabContainer = %ManagementTabs
 @onready var _build_panel: PanelContainer = %BuildPanel
@@ -230,6 +236,13 @@ func _open_market_popout(origin: Dictionary = {}, need: Dictionary = {}) -> bool
 	_open_town_catalog("building_info")
 	return true
 
+func _open_tavern_popout() -> bool:
+	if _session == null or not TownRules.get_active_town(_session).get("built_buildings", []).has(HeroCommandRules.HALL_BUILDING_ID):
+		return false
+	_selected_building_info_id = HeroCommandRules.HALL_BUILDING_ID
+	_open_town_catalog("building_info")
+	return true
+
 func _open_guild_popout() -> bool:
 	var building_id := TownBuildingPanelScript.guild_building_id(TownRules.get_active_town(_session)) if _session != null else ""
 	if building_id == "":
@@ -267,8 +280,8 @@ func _on_building_market_trade_requested(action_id: String) -> void:
 	_on_market_action_pressed(action_id)
 	_refresh_building_information()
 
-## The Spells and Trade commands follow their building: disabled with a hint
-## until it stands.
+## The Spells, Trade and Tavern commands follow their building: disabled with a
+## hint until it stands.
 func _sync_building_shortcuts() -> void:
 	var town := TownRules.get_active_town(_session)
 	var guild_id := TownBuildingPanelScript.guild_building_id(town)
@@ -279,6 +292,11 @@ func _sync_building_shortcuts() -> void:
 	_trade_action_button.disabled = market_id == ""
 	_trade_action_button.tooltip_text = "Open the %s to buy, sell and convert resources." % String(ContentService.get_building(market_id).get("name", "market")) if market_id != "" else "Build a Marketplace to trade resources."
 	_trade_action_button.accessibility_description = _trade_action_button.tooltip_text
+	var tavern_name := String(ContentService.get_building(HeroCommandRules.HALL_BUILDING_ID).get("name", "tavern"))
+	var tavern_built: bool = town.get("built_buildings", []).has(HeroCommandRules.HALL_BUILDING_ID)
+	_tavern_action_button.disabled = not tavern_built
+	_tavern_action_button.tooltip_text = "Open the %s to hire heroes." % tavern_name if tavern_built else "Build the %s to hire heroes." % tavern_name
+	_tavern_action_button.accessibility_description = _tavern_action_button.tooltip_text
 
 func _on_construction_view_in_town(building_id: String) -> void:
 	_town_stage_view.set_construction_preview(building_id)
@@ -448,7 +466,7 @@ func _apply_responsive_layout() -> void:
 	_narrow_orders_open = false
 	_stage_column.visible = true
 	# The Command card, action dock and footer are retired; the army panel, the
-	# resource bar and the banner's Return to Field replace them.
+	# resource bar and Close in the bottom right corner replace them.
 	_sidebar_shell_panel.visible = false
 	_footer_panel.visible = false
 	_resource_chip_panel.visible = false
@@ -573,6 +591,8 @@ func _configure_direct_action_buttons() -> void:
 		"spells": _spells_action_button,
 		"trade": _trade_action_button,
 		"log": _log_action_button,
+		"tavern": _tavern_action_button,
+		"intel": _intel_action_button,
 	}
 	for mode_value in controls:
 		var mode := String(mode_value)
@@ -604,6 +624,9 @@ func _on_open_spells_dialog_pressed() -> void:
 
 func _on_open_trade_dialog_pressed() -> void:
 	_open_market_popout()
+
+func _on_open_tavern_dialog_pressed() -> void:
+	_open_tavern_popout()
 
 func _on_open_log_dialog_pressed() -> void:
 	_open_town_catalog("log")
@@ -1079,12 +1102,12 @@ func _refresh_army_management(town: Dictionary) -> void:
 
 ## Builds the HoMM-style town furniture: the army panel (command squares,
 ## garrison and visiting rows), the overworld resource bar along the bottom
-## edge, the town list at the top right and Return to Field in the banner.
+## edge, the town list at the top right and Close in the bottom right corner.
 func _build_garrison_rows_layout() -> void:
 	_army_rows = TownArmyRowsScript.new()
 	_army_rows.name = "TownArmyRows"
 	add_child(_army_rows)
-	_army_rows.set_command_buttons([_build_action_button, _muster_action_button, _trade_action_button, _spells_action_button])
+	_army_rows.set_command_buttons([_build_action_button, _muster_action_button, _tavern_action_button, _trade_action_button, _spells_action_button, _intel_action_button])
 	_log_action_button.visible = false
 	_army_rows.slot_order_requested.connect(_on_army_slot_operation_requested)
 	_army_rows.garrison_hero_requested.connect(_on_garrison_hero_requested)
@@ -1105,10 +1128,10 @@ func _build_garrison_rows_layout() -> void:
 	_town_switcher.add_theme_constant_override("separation", 6)
 	_town_switcher.z_index = 16
 	add_child(_town_switcher)
-	var top_bar := _resource_chip_panel.get_parent()
 	_leave_button.get_parent().remove_child(_leave_button)
-	top_bar.add_child(_leave_button)
-	top_bar.move_child(_leave_button, _resource_chip_panel.get_index())
+	add_child(_leave_button)
+	_leave_button.text = TOWN_CLOSE_LABEL
+	_leave_button.z_index = 16
 
 ## Places the army panel bottom left above the resource bar and the town list
 ## top right; returns the space the resource bar takes at the bottom edge.
@@ -1116,9 +1139,12 @@ func _layout_garrison_rows() -> float:
 	if _army_rows == null or _resource_bar_panel == null:
 		return 0.0
 	var viewport_size := size if size.x > 0.0 and size.y > 0.0 else get_viewport_rect().size
-	var bar_height := maxf(34.0, _resource_bar_panel.get_combined_minimum_size().y)
+	var bar_height := maxf(34.0, maxf(_resource_bar_panel.get_combined_minimum_size().y, _leave_button.get_combined_minimum_size().y))
+	var close_width := maxf(TOWN_CLOSE_WIDTH, _leave_button.get_combined_minimum_size().x)
+	_leave_button.position = Vector2(viewport_size.x - close_width - 4.0, viewport_size.y - bar_height - 4.0)
+	_leave_button.size = Vector2(close_width, bar_height)
 	_resource_bar_panel.position = Vector2(4.0, viewport_size.y - bar_height - 4.0)
-	_resource_bar_panel.size = Vector2(viewport_size.x - 8.0, bar_height)
+	_resource_bar_panel.size = Vector2(viewport_size.x - close_width - 12.0, bar_height)
 	var rows_size := _army_rows.get_combined_minimum_size()
 	_army_rows.position = Vector2(TOWN_EDGE_GAP, viewport_size.y - bar_height - 8.0 - rows_size.y)
 	_army_rows.size = rows_size
@@ -1654,7 +1680,7 @@ func _configure_town_keyboard_focus(force: bool = false) -> void:
 		var guide_controls := FrontierVisualKit.configure_focus_cycle([_guide_close_button])
 		FrontierVisualKit.grab_keyboard_focus(self, _guide_close_button, guide_controls, true)
 		return
-	var direct_surfaces := [_build_action_button, _muster_action_button, _spells_action_button, _trade_action_button, _log_action_button]
+	var direct_surfaces := [_build_action_button, _muster_action_button, _tavern_action_button, _spells_action_button, _trade_action_button, _intel_action_button, _log_action_button]
 	if _town_stage_view.has_method("main_building_hotspot_control"):
 		direct_surfaces.push_front(_town_stage_view.call("main_building_hotspot_control"))
 	if _town_stage_view.has_method("building_hotspot_controls"):
@@ -3320,7 +3346,7 @@ func _refresh_save_slot_picker(force_surface: bool = false, view_state: Dictiona
 		if lazy_departure.is_empty():
 			lazy_departure = TownRules.town_departure_confirmation(_session)
 		_last_departure_confirmation = lazy_departure.duplicate(true)
-		_leave_button.text = String(lazy_departure.get("button_label", "Leave"))
+		_leave_button.text = TOWN_CLOSE_LABEL
 		_leave_button.tooltip_text = String(lazy_departure.get("tooltip_text", "Return to the overworld without leaving the current expedition."))
 		_menu_button.text = "Main Menu"
 		_menu_button.tooltip_text = "Return to the main menu after updating autosave."
@@ -3367,7 +3393,7 @@ func _refresh_save_slot_picker(force_surface: bool = false, view_state: Dictiona
 	if departure.is_empty():
 		departure = TownRules.town_departure_confirmation(_session)
 	_last_departure_confirmation = departure.duplicate(true)
-	_leave_button.text = String(departure.get("button_label", "Leave"))
+	_leave_button.text = TOWN_CLOSE_LABEL
 	_leave_button.tooltip_text = String(departure.get("tooltip_text", "Return to the overworld without leaving the current expedition."))
 	_menu_button.text = String(surface.get("menu_button_label", "Main Menu"))
 	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
@@ -6777,7 +6803,8 @@ func _apply_visual_theme() -> void:
 
 	for button in [_open_build_catalog_button, _open_muster_catalog_button, _town_orders_toggle_button, _save_button, _leave_button, _guide_button, _settings_button, _menu_button]:
 		_style_action_button(button, true)
-	for button in [_build_action_button, _muster_action_button, _spells_action_button, _trade_action_button, _log_action_button]:
+	FrontierVisualKit.apply_button(_leave_button, "primary", TOWN_CLOSE_WIDTH, 34.0, 14)
+	for button in [_build_action_button, _muster_action_button, _spells_action_button, _trade_action_button, _log_action_button, _tavern_action_button, _intel_action_button]:
 		FrontierVisualKit.apply_button(button, "secondary", 44.0, 44.0, 11)
 	FrontierVisualKit.apply_button(_town_catalog_close_button, "secondary", 108.0, 30.0, 12)
 	FrontierVisualKit.apply_button(_guide_close_button, "secondary", 108.0, 30.0, 12)

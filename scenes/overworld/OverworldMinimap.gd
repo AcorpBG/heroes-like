@@ -212,13 +212,16 @@ func _draw_towns(field: Rect2, cell: Vector2) -> void:
 	for value in _session.overworld.get("towns", []):
 		if not (value is Dictionary) or not LevelRules.on_level(value, _level):
 			continue
-		var entrance := LevelRules.town_entrance(value)
-		var tile := Vector2i(int(entrance.x), int(entrance.y))
-		if not _tile_in_bounds(tile) or not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
-			continue
-		var rect := _marker_rect(field, cell, tile, 0.62)
-		draw_rect(rect, TOWN_OUTLINE_COLOR, true)
-		draw_rect(rect.grow(-1.0), _town_color(value), true)
+		var rects: Array[Rect2] = []
+		for tile in OverworldRulesScript.town_footprint_tiles(value):
+			if _tile_in_bounds(tile) and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+				rects.append(_tile_rect(field, cell, tile))
+		# Outline the whole footprint first so inner tile edges stay filled.
+		for rect in rects:
+			draw_rect(rect.grow(1.0), TOWN_OUTLINE_COLOR, true)
+		var color := _town_color(value)
+		for rect in rects:
+			draw_rect(rect, color, true)
 
 
 ## Matches the map's ownership flags: the owner's slot colour, grey if neutral.
@@ -266,13 +269,6 @@ func _draw_viewport(field: Rect2, cell: Vector2) -> void:
 	viewport_rect = viewport_rect.intersection(field)
 	if viewport_rect.size.x > 0.0 and viewport_rect.size.y > 0.0:
 		draw_rect(viewport_rect.grow(-1.0), VIEWPORT_COLOR, false, 2.0)
-
-
-## Whole pixels, and at least 6 wide so the owner colour shows inside the outline.
-func _marker_rect(field: Rect2, cell: Vector2, tile: Vector2i, factor: float) -> Rect2:
-	var tile_rect := _tile_rect(field, cell, tile)
-	var extent := roundf(clampf(minf(cell.x, cell.y) * factor, 6.0, 9.0))
-	return Rect2((tile_rect.get_center() - Vector2(extent, extent) * 0.5).round(), Vector2(extent, extent))
 
 
 func _tile_rect(field: Rect2, cell: Vector2, tile: Vector2i) -> Rect2:
