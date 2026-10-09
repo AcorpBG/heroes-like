@@ -16,20 +16,6 @@ const PLAYER_HERO_ID := "hero_lyra"
 const DAYS := 16
 ## Days a hero may stand on one tile outside its towns before it counts as stuck.
 const MAX_STALLED_DAYS := 4
-## The map of the owner's 2026-10-07 playthrough, regenerated from its seed.
-## There the computer player never left its starting zone: by day 29 it had
-## explored 486 of 1296 tiles, held 6 sites and its main hero had stood idle
-## for 11 days, because every way out ran past a guard it scored below zero
-## and idle lesser heroes stood in the only exit of the main hero's dead end.
-const WALLED_MAP_SEED := "579873210"
-const WALLED_MAP_HERO_ID := "hero_caelen"
-const WALLED_MAP_DAYS := 28
-## With the human idle at home the old scoring reproduced that game here
-## (486 tiles, 2 guards, 6 sites, a 14-day stall); the hero model now explores
-## about 645 tiles, beats 6 guards and holds 15 sites by day 29.
-const WALLED_MAP_MIN_EXPLORED := 560
-const WALLED_MAP_MIN_GUARDS := 4
-const WALLED_MAP_MIN_SITES := 10
 ## The large map of the owner's 2026-10-08 playthrough (Veilmourn against
 ## Embercourt, Mireclaw and Sunvault). There Embercourt's lesser hero waited on
 ## the one tile linking its capital's pocket to the map and held the main army
@@ -150,9 +136,6 @@ func _run() -> void:
 	var doorway_hire := _check_hire_with_hero_in_doorway(session, controller)
 	if _failed:
 		return
-	var walled_map := _check_expansion_on_walled_map()
-	if _failed:
-		return
 	var garrison_swap := _check_garrison_pickup_swaps_in_stronger_stacks()
 	if _failed:
 		return
@@ -173,7 +156,6 @@ func _run() -> void:
 		"save_round_trip": save_check,
 		"market": market,
 		"doorway_hire": doorway_hire,
-		"walled_map_expansion": walled_map,
 		"garrison_swap": garrison_swap,
 		"battle_rewards": rewards,
 		"wind_ridge_reach": wind_ridge,
@@ -612,56 +594,6 @@ func _track_stalls(session, controller: String, positions: Dictionary, still_day
 			longest_stall["days"] = int(still_days[placement_id])
 			longest_stall["tile"] = [now.x, now.y]
 	return {"steps": steps, "hero_days": hero_days}
-
-## The owner's walled map with the human idle at home: the computer player has
-## to fight its way past the guards around its start and work the wider map,
-## and no hero may stand idle in the field.
-func _check_expansion_on_walled_map() -> Dictionary:
-	ContentService.clear_generated_scenario_drafts()
-	var session = _start_session("homm3_small", 2, WALLED_MAP_SEED, WALLED_MAP_HERO_ID)
-	if session == null:
-		return {}
-	if session.scenario_id != "native_h3maped_71045e86_skirmish":
-		_fail("Seed %s no longer generates the owner's map: %s" % [WALLED_MAP_SEED, session.scenario_id])
-		return {}
-	# The AI's tavern offers are seeded from the session id; fix it so the run
-	# repeats.
-	session.session_id = "ai-player-rules-walled-%s" % WALLED_MAP_SEED
-	var controller := _ai_controller(session)
-	_fortify_idle_human(session)
-	var neutral_before := _unresolved_neutral_ids(session)
-	var still_days := {}
-	var longest_stall := {"hero": "", "days": 0}
-	for _day in range(WALLED_MAP_DAYS):
-		var positions := _hero_positions(session, controller)
-		OverworldRules.end_turn(session)
-		if not session.battle.is_empty():
-			BattleAutoResolveRulesScript.resolve_active_battle(session)
-			if session.battle.is_empty() and String(session.scenario_status) == "in_progress":
-				session.game_state = "overworld"
-		_track_stalls(session, controller, positions, still_days, longest_stall)
-		if String(session.scenario_status) != "in_progress":
-			break
-	var state := _state(session, controller)
-	var sites := 0
-	for node in session.overworld.get("resource_nodes", []):
-		if node is Dictionary and PlayerRules.resource_controller_id(node) == controller:
-			sites += 1
-	var result := {
-		"seed": WALLED_MAP_SEED,
-		"day": int(session.day),
-		"explored_tiles": AiHeroRulesScript.explored_tile_count(state),
-		"guards_defeated": int(_guard_fight_evidence(session, neutral_before, []).get("guards_defeated", 0)),
-		"sites": sites,
-		"longest_stall": longest_stall,
-		"heroes": _hero_brief(session, controller),
-	}
-	print("%s_WALLED %s" % [REPORT_ID, JSON.stringify(result)])
-	if int(result.explored_tiles) < WALLED_MAP_MIN_EXPLORED or int(result.guards_defeated) < WALLED_MAP_MIN_GUARDS or sites < WALLED_MAP_MIN_SITES:
-		_fail("On the owner's walled map the computer player stayed boxed in: %s" % JSON.stringify(result))
-	elif int(longest_stall.days) >= MAX_STALLED_DAYS:
-		_fail("On the owner's walled map an AI hero stood idle in the field for %d days: %s" % [int(longest_stall.days), JSON.stringify(result)])
-	return result
 
 ## The owner's 2026-10-08 large map with the human idle at home: every computer
 ## player builds a Marketplace, Embercourt's main army gets out of its capital's

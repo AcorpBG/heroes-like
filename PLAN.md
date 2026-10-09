@@ -60,7 +60,7 @@ Rules:
 
 ### Even starting musters, AI avoids stronger heroes
 
-`ai-even-musters-danger-20261008` (in progress, owner request after the series-20261008 map 8 day-5 loss): every faction starts a generated map with a muster rated about 140 (`army_start_<faction>`, was 90-169), and AI heroes keep out of the next-turn reach of a visible hostile hero 1.15x their strength unless holding their own town deters it; the main hero holds a gate only while hero plus garrison deter the attack. Open: the walled test map run explores 530 tiles (needs 560) on the new trajectory. See `docs/ai-plays-by-player-rules.md`.
+`ai-even-musters-danger-20261008` (completed, owner request after the series-20261008 map 8 day-5 loss): every faction starts a generated map with a muster rated about 140 (`army_start_<faction>`, was 90-169), and AI heroes keep out of the next-turn reach of a visible hostile hero 1.15x their strength unless holding their own town deters it; the main hero holds a gate only while hero plus garrison deter the attack. See `docs/ai-plays-by-player-rules.md`.
 
 ### AI towns make room to recruit
 

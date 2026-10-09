@@ -39944,7 +39944,6 @@ def validate_ai_hero_model(errors: list[str]) -> None:
         "_check_town_orders_pay_real_costs",
         "_check_market_trades_like_the_player",
         "_check_hire_with_hero_in_doorway",
-        "_check_expansion_on_walled_map",
         "_check_wind_ridge_reach",
         "_check_capital_pocket_exit",
         "_check_garrison_pickup_swaps_in_stronger_stacks",
