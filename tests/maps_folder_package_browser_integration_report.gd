@@ -582,7 +582,8 @@ func _normalize_runtime_session_ids(value: Variant) -> void:
 	if value is Dictionary:
 		for key_value in value.keys():
 			var key := String(key_value)
-			if key == "session_id":
+			# Both are rolled per launch; starting heroes take a random growth seed.
+			if key == "session_id" or key == "growth_seed":
 				value[key_value] = "selected-entry-parity"
 			else:
 				_normalize_runtime_session_ids(value[key_value])

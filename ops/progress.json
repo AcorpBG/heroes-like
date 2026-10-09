@@ -114417,6 +114417,19 @@
       "notes": "Owner request: floating text over the map when the hero picks up anything (dwellings, resources, artifacts), slowly fading out. scripts/core/OverworldGainFeed.gd: snapshot(session) of stockpile, active hero experience/command/artifacts/spells/mana/movement/army/battle boosts, player sites (collected_by_faction_id); gains(before, after, movement_walked) -> ordered lines {text, icon, tone}: claimed sites (persistent_control only), artifacts, resources gained, troops, command, spells, experience, mana, movement (walk cost added back), boosts, costs. OverworldShell: GainFeed snapshot before try_move, route execution, perform_context_action, choose_resource_reward, hire_from_dwelling, take_site_recruits_by_dismissing and cast_overworld_spell; _float_gains_since sends lines to OverworldMapView.show_gain_floaters (route moves only for plain routes, not battle/town/rendezvous). scenes/overworld/OverworldGainFloaters.gd: map layer between DynamicLayer and FrameLayer; waits for the hero walk (gain_floaters_should_wait), anchors above the tile (gain_anchor_for_tile), staggered 0.35 s lines with icon and outlined text, 0.25 s fade in, 44 px rise, 1.6 s fade out over 3.4 s; reduced motion fades without rising. Validation: new tests/overworld_gain_floaters_report (14 checks, incl. a live wood pickup on a generated small map through the real shell) passes; 1920x1080 windowed capture with a five-line sample reviewed; validate_repo identical."
     },
     {
+      "id": "ux-generated-skirmish-fronts-monster-strength-20261009",
+      "title": "Generated maps in Skirmish Fronts; Map Forge monster strength",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/rmg-exploration-and-guarded-routes.md"
+      ],
+      "notes": "Owner playtest: generated maps were missing from Skirmish Fronts, and the Map Forge needed a monster strength toggle. ScenarioSelectRules.build_skirmish_browser_entries returned early for the archived authored catalog (c9d69e688) before appending the maps-folder packages; authored entries are now gated alone. Map Forge: GeneratedMonsterStrengthPicker (Weak/Normal/Strong, Normal default; RANDOM_MAP_MONSTER_STRENGTH_OPTIONS) feeds build_random_map_player_config's new monster_strength argument, and _random_map_public_h3maped_launch_config keeps a catalog-auto config's strength across its rebuild (other configs keep the previous normal). Native random is not offered: it maps to the same raw setup +0x48 = -1 as weak. Medium seed 10 2p land: weak 41 guards/1,461 creatures, normal 65/2,487, strong 88/3,673. Validation: maps_folder_package_browser_integration_report (now ignores the per-launch hero growth_seed like session_id), random_map_player_setup_retry_ux_report (strong reaches the launched native config), generated_map_setup_visual_smoke at 1280x720 and 1920x1080; validate_repo error set unchanged from HEAD."
+    },
+    {
       "id": "content-hero-specialty-catalog-20261008",
       "title": "35 hero specialties with four ranks, six per hero",
       "status": "completed",

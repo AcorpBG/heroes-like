@@ -197,6 +197,14 @@ const RANDOM_MAP_LEVEL_OPTIONS := [
 	{"id": "surface", "label": "Surface Only (1 Level)", "level_count": 1, "underground": false},
 	{"id": "surface_underground", "label": "Surface + Underground (2 Levels)", "level_count": 2, "underground": true},
 ]
+# The three distinct native setup strengths. Native "random" is left out: it
+# aliases weak (raw setup -1), so offering it would mislabel weak monsters.
+const RANDOM_MAP_MONSTER_STRENGTH_OPTIONS := [
+	{"id": "weak", "label": "Weak Monsters"},
+	{"id": "normal", "label": "Normal Monsters"},
+	{"id": "strong", "label": "Strong Monsters"},
+]
+const RANDOM_MAP_DEFAULT_MONSTER_STRENGTH := "normal"
 const RANDOM_MAP_PLAYER_RETRY_POLICY := {
 	"max_attempts": 5,
 	"mode": "seed_salt",
@@ -323,8 +331,14 @@ static func build_current_session_summary(session: SessionStateStoreScript.Sessi
 static func build_skirmish_browser_entries() -> Array:
 	var entries := []
 	# An archived authored catalog offers no scenarios (they stay test setups).
-	if not _scenario_domain_is_player_facing():
-		return entries
+	# Generated map packages under maps/ are offered either way.
+	if _scenario_domain_is_player_facing():
+		entries.append_array(_authored_skirmish_browser_entries())
+	entries.append_array(build_maps_folder_package_browser_entries())
+	return entries
+
+static func _authored_skirmish_browser_entries() -> Array:
+	var entries := []
 	for scenario in _scenario_items():
 		if not (scenario is Dictionary):
 			continue
@@ -347,8 +361,6 @@ static func build_skirmish_browser_entries() -> Array:
 				"recommended_difficulty": String(selection.get("recommended_difficulty", default_difficulty_id())),
 			}
 		)
-	for package_entry in build_maps_folder_package_browser_entries():
-		entries.append(package_entry)
 	return entries
 
 static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> Dictionary:
@@ -485,6 +497,7 @@ static func random_map_player_setup_options() -> Dictionary:
 		"profile_options_by_template": _random_map_profile_options_by_template(profile_options),
 		"water_modes": _random_map_public_water_options(),
 		"level_options": _random_map_public_level_options(),
+		"monster_strengths": RANDOM_MAP_MONSTER_STRENGTH_OPTIONS.duplicate(true),
 		"factions": faction_options,
 		"default_faction_id": default_faction_id,
 		"default_hero_id": default_hero_id,
@@ -496,6 +509,7 @@ static func random_map_player_setup_options() -> Dictionary:
 		"size_class_defaults": RANDOM_MAP_SIZE_CLASS_DEFAULTS.duplicate(true),
 		"default_player_count": _random_map_normalize_player_count_for_template("translated_rmg_template_049_v1", 3, 3),
 		"default_water_mode": "land",
+		"default_monster_strength": RANDOM_MAP_DEFAULT_MONSTER_STRENGTH,
 		"default_level_count": 1,
 		"default_underground": false,
 		"public_generation_scope": RANDOM_MAP_PUBLIC_H3MAPED_SCOPE.duplicate(true),
@@ -857,7 +871,8 @@ static func build_random_map_player_config(
 	size_class_id: String = "homm3_small",
 	template_selection_mode: String = RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
 	player_faction_id: String = "",
-	player_hero_id: String = ""
+	player_hero_id: String = "",
+	monster_strength: String = ""
 ) -> Dictionary:
 	var seed_record := random_map_h3maped_seed_record(seed)
 	var normalized_seed := String(seed_record.get("normalized_seed", seed))
@@ -895,13 +910,16 @@ static func build_random_map_player_config(
 	var normalized_player_faction_id := _valid_random_map_player_faction_id(player_faction_id)
 	var normalized_player_hero_id := _valid_random_map_player_hero_id(player_hero_id, normalized_player_faction_id)
 	var faction_seed_order := _random_map_faction_seed_order(normalized_player_faction_id)
+	var normalized_monster_strength := random_map_monster_strength_id(monster_strength)
+	if normalized_monster_strength == "":
+		normalized_monster_strength = RANDOM_MAP_DEFAULT_MONSTER_STRENGTH if auto_catalog_selection else "weak"
 	var result := {
 		"generator_version": RandomMapGeneratorRulesScript.GENERATOR_VERSION,
 		"seed": normalized_seed,
-		# The player-facing catalog profile below says normal. Send the actual
-		# native setup option too; omitting it aliases random to weak (-1).
-		# Explicit historical size profiles retain their prior weak setting.
-		"monster_strength": "normal" if auto_catalog_selection else "weak",
+		# Always send the native setup option; omitting it aliases random to
+		# weak (-1). Without a chosen strength, catalog-auto setups use normal
+		# and explicit historical size profiles retain their prior weak setting.
+		"monster_strength": normalized_monster_strength,
 		"seed_identity": seed_record,
 		"size": {
 			"preset": "player_facing_skirmish_setup",
@@ -933,7 +951,7 @@ static func build_random_map_player_config(
 		"profile": {
 			"id": "" if auto_catalog_selection else String(profile_option.get("id", normalized_profile_id)),
 			"template_id": normalized_template_id,
-			"guard_strength_profile": "normal" if auto_catalog_selection else String(profile_option.get("guard_strength_profile", "core_low")),
+			"guard_strength_profile": normalized_monster_strength if auto_catalog_selection else String(profile_option.get("guard_strength_profile", "core_low")),
 			"faction_ids": faction_seed_order if normalized_player_faction_id != "" else ([] if auto_catalog_selection else profile_option.get("faction_ids", [])),
 		},
 		"template_selection": {
@@ -2569,6 +2587,23 @@ static func _random_map_size_option(size_class_id: String) -> Dictionary:
 static func random_map_size_class_label(size_class_id: String) -> String:
 	return String(_random_map_size_option(size_class_id).get("label", "Small 36x36"))
 
+# Returns the offered strength id, or "" when the value is not one of them.
+static func random_map_monster_strength_id(value: String) -> String:
+	var key := value.strip_edges().to_lower()
+	for option in RANDOM_MAP_MONSTER_STRENGTH_OPTIONS:
+		if String(option.get("id", "")) == key:
+			return key
+	return ""
+
+static func random_map_monster_strength_label(value: String) -> String:
+	var key := random_map_monster_strength_id(value)
+	if key == "":
+		key = RANDOM_MAP_DEFAULT_MONSTER_STRENGTH
+	for option in RANDOM_MAP_MONSTER_STRENGTH_OPTIONS:
+		if String(option.get("id", "")) == key:
+			return String(option.get("label", key))
+	return key
+
 static func _random_map_profile_option(profile_id: String) -> Dictionary:
 	var options := _random_map_profile_options()
 	for option in options:
@@ -2602,6 +2637,12 @@ static func _random_map_public_h3maped_launch_config(input_config: Dictionary) -
 	var source_seed := String(input_config.get("seed", ""))
 	if seed_source != "auto_on_launch":
 		source_seed = String(input_config.get("seed_input", seed_identity.get("input_seed", source_seed)))
+	# A catalog-auto setup carries the player's monster strength across the
+	# rebuild. Other configs keep the catalog-auto default, as before.
+	var template_selection: Dictionary = input_config.get("template_selection", {}) if input_config.get("template_selection", {}) is Dictionary else {}
+	var monster_strength := ""
+	if String(template_selection.get("mode", "")) == RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO:
+		monster_strength = String(input_config.get("monster_strength", ""))
 	var config := build_random_map_player_config(
 		source_seed,
 		"",
@@ -2612,7 +2653,8 @@ static func _random_map_public_h3maped_launch_config(input_config: Dictionary) -
 		size_class_id,
 		RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,
 		String(player_setup.get("faction_id", "")),
-		String(player_setup.get("hero_id", ""))
+		String(player_setup.get("hero_id", "")),
+		monster_strength
 	)
 	config["seed_source"] = seed_source
 	config["seed_input"] = String(input_config.get("seed_input", seed_identity.get("input_seed", source_seed)))
