@@ -753,7 +753,9 @@ func checkpoint_battle_resolution_for_overworld(route_after_checkpoint: bool = f
 		return _battle_resolution_checkpoint_route_after_save(_battle_resolution_checkpoint_last_result)
 	return _battle_resolution_checkpoint_last_result.duplicate(true)
 
-func route_checkpointed_battle_resolution() -> Dictionary:
+## in_place keeps the battle scene open: it shows the result over the field
+## (BattleShell) instead of opening the battle report scene.
+func route_checkpointed_battle_resolution(in_place: bool = false) -> Dictionary:
 	_battle_resolution_checkpoint_route_request_count += 1
 	if not SessionState.has_playable_session():
 		_clear_battle_resolution_checkpoint_authority()
@@ -825,9 +827,10 @@ func route_checkpointed_battle_resolution() -> Dictionary:
 	var save_result: Dictionary = save_result_value if save_result_value is Dictionary else {}
 	_clear_battle_resolution_checkpoint_authority()
 	_battle_resolution_checkpoint_skipped_durable_route_count += 1
-	var routed := _record_battle_resolution_checkpoint_route(BATTLE_REPORT_SCENE, "already_saved")
+	var routed := _record_battle_resolution_checkpoint_route(BATTLE_REPORT_SCENE, "already_saved", in_place)
 	if routed:
-		_change_scene(BATTLE_REPORT_SCENE)
+		if not in_place:
+			_change_scene(BATTLE_REPORT_SCENE)
 	else:
 		_clear_pending_battle_resolution_overworld_presentation()
 	_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
@@ -883,12 +886,13 @@ func _battle_resolution_checkpoint_result(
 		"save_result": save_result.duplicate(true),
 	}
 
-func _record_battle_resolution_checkpoint_route(scene_path: String, reason: String) -> bool:
+func _record_battle_resolution_checkpoint_route(scene_path: String, reason: String, in_place: bool = false) -> bool:
 	_battle_resolution_checkpoint_route_attempt_count += 1
 	_battle_resolution_checkpoint_last_route = {
 		"target_scene": scene_path,
 		"target": "battle_report" if scene_path == BATTLE_REPORT_SCENE else "overworld" if scene_path == OVERWORLD_SCENE else scene_path,
 		"reason": reason,
+		"in_place": in_place,
 		"suppressed": _validation_battle_resolution_checkpoint_routing_suppressed,
 	}
 	if _validation_battle_resolution_checkpoint_routing_suppressed:
@@ -1400,7 +1404,9 @@ func validation_battle_entry_snapshot() -> Dictionary:
 		"last_runtime_issue": _battle_entry_last_runtime_issue.duplicate(true),
 	}
 
-func go_to_battle_report(skip_required_save: bool = false) -> Dictionary:
+## in_place keeps the battle scene open to show the report over the field
+## (BattleShell). A load with a pending report still opens the report scene.
+func go_to_battle_report(skip_required_save: bool = false, in_place: bool = false) -> Dictionary:
 	_battle_report_entry_request_count += 1
 	if not SessionState.has_playable_session():
 		_battle_report_last_entry_result = _battle_report_result(
@@ -1432,7 +1438,7 @@ func go_to_battle_report(skip_required_save: bool = false) -> Dictionary:
 		saved = bool(save_result.get("ok", false))
 		if not saved:
 			_battle_report_entry_save_failure_count += 1
-	var routed := _route_battle_report(BATTLE_REPORT_SCENE, "saved" if saved else "autosave_failed")
+	var routed := _route_battle_report(BATTLE_REPORT_SCENE, "saved" if saved else "autosave_failed", in_place)
 	_battle_report_last_entry_result = _battle_report_result(
 		saved,
 		saved,
@@ -1513,18 +1519,20 @@ func _battle_report_result(
 		"report_id": report_id,
 	}
 
-func _route_battle_report(scene_path: String, reason: String) -> bool:
+func _route_battle_report(scene_path: String, reason: String, in_place: bool = false) -> bool:
 	_battle_report_route_attempt_count += 1
 	_battle_report_last_route = {
 		"target_scene": scene_path,
 		"target": "battle_report" if scene_path == BATTLE_REPORT_SCENE else "scenario_outcome" if scene_path == SCENARIO_OUTCOME_SCENE else "overworld" if scene_path == OVERWORLD_SCENE else "main_menu",
 		"reason": reason,
+		"in_place": in_place,
 		"suppressed": _validation_battle_report_routing_suppressed,
 	}
 	if _validation_battle_report_routing_suppressed:
 		_battle_report_suppressed_route_count += 1
 		return false
-	_change_scene(scene_path)
+	if not in_place:
+		_change_scene(scene_path)
 	return true
 
 func validation_set_battle_report_routing_suppressed(suppressed: bool) -> void:

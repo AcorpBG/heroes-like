@@ -1,10 +1,12 @@
 extends Node
 ## The battle screen counts living creatures from stack health (bug found
 ## 2026-10-09). Battle stacks have no "count"; BattleRules._alive_count gives
-## the creatures left from total_health and unit_hp. BattleShell read the
-## missing count, so the Active and Target labels showed x0, the initiative cue
-## never found the next living stack ("no queued stack") and left the count and
-## health off its labels, and the target-cycle fallback listed no enemies.
+## the creatures left from total_health and unit_hp. The old screen read the
+## missing count, so its labels showed x0 and its cues lost the living stacks.
+## The reworked screen (docs/battle-rework.md) shows the counts on the turn
+## ribbon's chips and the stacks' badges: each counts the creatures left from
+## health, a wounded creature counts as one, a fallen stack leaves the ribbon
+## and the enemy count, and the log line names the stack whose turn it is.
 ## The battle comes from a generated small map.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
@@ -24,18 +26,22 @@ func _check(condition: bool, label: String) -> void:
 		push_error("%s check failed: %s" % [REPORT_ID, label])
 
 func _run() -> void:
-	var session = _session()
-	if session != null:
-		var battle: Dictionary = session.battle.duplicate(true)
+	var base = _session()
+	if base != null:
+		SessionState.set_active_session(base)
+		var frame := Control.new()
+		frame.size = Vector2(1920, 1080)
+		add_child(frame)
 		var shell = load("res://scenes/battle/BattleShell.tscn").instantiate()
-		shell._session = session
-		session.battle = battle.duplicate(true)
-		_check_focus_labels(shell, session)
-		session.battle = battle.duplicate(true)
-		_check_initiative_cue(shell, session)
-		session.battle = battle.duplicate(true)
-		_check_target_fallback(shell, session)
-		shell.free()
+		frame.add_child(shell)
+		for _frame in range(3):
+			await get_tree().process_frame
+		_check_ribbon_counts(shell)
+		_check_wounded_stack(shell)
+		_check_fallen_stack(shell)
+		_check_log_line(shell)
+		frame.queue_free()
+		await get_tree().process_frame
 	var report := {"ok": _failures.is_empty(), "checks": _checks, "failures": _failures}
 	print("%s %s" % [REPORT_ID, JSON.stringify(report)])
 	get_tree().quit(0 if _failures.is_empty() else 1)
@@ -61,68 +67,80 @@ func _session():
 func _living_enemies(battle: Dictionary) -> Array:
 	return battle.get("stacks", []).filter(func(stack): return String(stack.get("side", "")) == "enemy" and BattleRules._alive_count(stack) > 0)
 
-func _ids(stacks: Array) -> Array:
-	return stacks.map(func(stack): return String(stack.get("battle_id", "")))
+## The ribbon's chip for a stack, or {} when the stack is not on it.
+func _chip_for(board, battle_id: String) -> Dictionary:
+	for chip in board._turn_ribbon_chips():
+		if String((chip.get("stack", {}) as Dictionary).get("battle_id", "")) == battle_id:
+			return chip
+	return {}
 
-## Two whole creatures and one wounded one left.
-func _wound(stack: Dictionary) -> void:
-	stack["total_health"] = int(stack.get("unit_hp", 1)) * 2 + 1
-
-## The Active and Target labels show the creatures left and the stack's health.
-func _check_focus_labels(shell, session) -> void:
-	var active := BattleRules.get_active_stack(session.battle)
-	_check(not active.is_empty(), "setup: the battle has an active stack")
-	var count := BattleRules._alive_count(active)
-	var text: String = shell._battle_focus_visible_surface("Active", active, {})
-	var expected := "| x%d | HP %d" % [count, int(active.get("total_health", 0))]
-	_check(count > 0 and text.contains(expected), "the Active label shows %s: %s" % [expected, text.replace("\n", " / ")])
-
-	var target: Dictionary = _living_enemies(session.battle)[0]
-	_wound(target)
-	text = shell._battle_focus_visible_surface("Target", target, {})
-	expected = "| x3 | HP %d" % int(target.get("total_health", 0))
-	_check(text.contains(expected), "a wounded Target with two whole creatures and one hurt shows %s: %s" % [expected, text.replace("\n", " / ")])
-
-## The initiative cue names the next living stack in turn order with its
-## creatures and health, and skips a fallen one.
-func _check_initiative_cue(shell, session) -> void:
-	var cue: Dictionary = shell._battle_initiative_handoff_surface()
-	var active := BattleRules.get_active_stack(session.battle)
-	_check(String(cue.get("current_stack", "")) == _stack_label(active), "the current stack reads %s (%s)" % [_stack_label(active), cue.get("current_stack", "")])
-	var next := _expected_next(session.battle)
-	_check(not next.is_empty() and String(cue.get("next_stack", "")) == _stack_label(next), "the next stack reads %s (%s)" % [_stack_label(next), cue.get("next_stack", "")])
-
-	next["total_health"] = 0
-	var after := _expected_next(session.battle)
-	cue = shell._battle_initiative_handoff_surface()
-	_check(not after.is_empty() and String(after.get("battle_id", "")) != String(next.get("battle_id", "")), "setup: another stack is left to act after %s falls" % next.get("battle_id", ""))
-	_check(String(cue.get("next_stack", "")) == _stack_label(after), "a fallen stack is skipped for %s (%s)" % [_stack_label(after), cue.get("next_stack", "")])
-
-func _stack_label(stack: Dictionary) -> String:
-	return "%s x%d, %d HP" % [String(stack.get("name", "")).strip_edges(), BattleRules._alive_count(stack), int(stack.get("total_health", 0))]
-
-## The first living stack after the active one in turn order, else the first of
-## the next round.
-func _expected_next(battle: Dictionary) -> Dictionary:
-	var turn_order: Array = battle.get("turn_order", [])
-	var start := int(battle.get("turn_index", 0)) + 1
-	for index in range(start, turn_order.size()) + range(0, turn_order.size()):
-		var stack := BattleRules._get_stack_by_id(battle, String(turn_order[index]))
-		if not stack.is_empty() and BattleRules._alive_count(stack) > 0:
+## A stack of the battle the screen shows, which a test may wound.
+func _battle_stack(shell, battle_id: String) -> Dictionary:
+	for stack in shell._session.battle.get("stacks", []):
+		if stack is Dictionary and String(stack.get("battle_id", "")) == battle_id:
 			return stack
 	return {}
 
-## With no legal targets the target cycle runs over every living enemy stack.
-func _check_target_fallback(shell, session) -> void:
-	var living := _ids(_living_enemies(session.battle))
-	_check(shell._living_enemy_target_ids() == living, "every living enemy stack can be cycled to %s (%s)" % [living, shell._living_enemy_target_ids()])
-	var fallen: Dictionary = _living_enemies(session.battle).back()
-	fallen["total_health"] = 0
-	living = _ids(_living_enemies(session.battle))
-	_check(shell._living_enemy_target_ids() == living, "a fallen enemy stack drops out of the cycle %s (%s)" % [living, shell._living_enemy_target_ids()])
+## Every chip on the ribbon counts its stack's living creatures from health.
+func _check_ribbon_counts(shell) -> void:
+	var board = shell._battle_board_view
+	var chips: Array = board._turn_ribbon_chips()
+	var active := BattleRules.get_active_stack(shell._session.battle)
+	_check(not active.is_empty(), "setup: the battle has an active stack")
+	var active_chip := _chip_for(board, String(active.get("battle_id", "")))
+	_check(String(active_chip.get("phase", "")) == "active", "the active stack leads the ribbon (%s)" % active_chip.get("phase", ""))
+	_check(chips.size() >= 3, "the ribbon shows the stacks of the round (%d chips)" % chips.size())
+	for chip in chips:
+		var stack: Dictionary = chip.get("stack", {})
+		var expected := BattleRules._alive_count(stack)
+		_check(expected > 0 and board._stack_alive_count(stack) == expected, "%s's chip counts %d creatures (%d)" % [stack.get("battle_id", ""), expected, board._stack_alive_count(stack)])
 
-	var active := BattleRules.get_active_stack(session.battle)
-	var target: Dictionary = _living_enemies(session.battle)[0]
-	var cue: Dictionary = shell._battle_target_cycle_cue_surface(true, active, target, [], living.size())
-	_check(String(cue.get("scope", "")) == "enemy stacks" and int(cue.get("target_count", 0)) == living.size(), "the fallback cycle counts %d enemy stacks (%s, %d)" % [living.size(), cue.get("scope", ""), int(cue.get("target_count", 0))])
-	_check(String(cue.get("position", "")) == "1/%d" % living.size(), "the first living enemy is target 1/%d (%s)" % [living.size(), cue.get("position", "")])
+## Two whole creatures and one hurt one count as three, on the ribbon and on
+## the field.
+func _check_wounded_stack(shell) -> void:
+	var board = shell._battle_board_view
+	var active_id := String(BattleRules.get_active_stack(shell._session.battle).get("battle_id", ""))
+	var target := {}
+	for stack in _living_enemies(shell._session.battle):
+		if String(stack.get("battle_id", "")) != active_id:
+			target = _battle_stack(shell, String(stack.get("battle_id", "")))
+			break
+	_check(not target.is_empty(), "setup: an enemy stack to wound")
+	if target.is_empty():
+		return
+	target["total_health"] = int(target.get("unit_hp", 1)) * 2 + 1
+	shell._refresh()
+	var battle_id := String(target.get("battle_id", ""))
+	var chip := _chip_for(board, battle_id)
+	_check(not chip.is_empty(), "the wounded %s stays on the ribbon" % battle_id)
+	_check(board._stack_alive_count(chip.get("stack", {})) == 3, "the wounded %s's chip counts 3 (%d)" % [battle_id, board._stack_alive_count(chip.get("stack", {}))])
+	_check(board._stack_alive_count(board._stack_by_id(battle_id)) == 3, "the wounded %s's badge on the field counts 3" % battle_id)
+
+## A fallen stack leaves the ribbon and the enemy count.
+func _check_fallen_stack(shell) -> void:
+	var board = shell._battle_board_view
+	var active_id := String(BattleRules.get_active_stack(shell._session.battle).get("battle_id", ""))
+	var living := _living_enemies(shell._session.battle)
+	var fallen := {}
+	for index in range(living.size() - 1, -1, -1):
+		if String(living[index].get("battle_id", "")) != active_id:
+			fallen = _battle_stack(shell, String(living[index].get("battle_id", "")))
+			break
+	_check(not fallen.is_empty(), "setup: an enemy stack to fell")
+	if fallen.is_empty():
+		return
+	var battle_id := String(fallen.get("battle_id", ""))
+	_check(not _chip_for(board, battle_id).is_empty(), "setup: %s is on the ribbon before it falls" % battle_id)
+	fallen["total_health"] = 0
+	shell._refresh()
+	_check(_chip_for(board, battle_id).is_empty(), "the fallen %s leaves the ribbon" % battle_id)
+	var left := _living_enemies(shell._session.battle).size()
+	_check(left == living.size() - 1 and shell._enemy_target_count() == left, "the enemy count drops to %d (%d)" % [left, shell._enemy_target_count()])
+	for chip in board._turn_ribbon_chips():
+		_check(board._stack_alive_count(chip.get("stack", {})) > 0, "only living stacks are on the ribbon (%s)" % (chip.get("stack", {}) as Dictionary).get("battle_id", ""))
+
+## With nothing else to say, the log line names the stack whose turn it is.
+func _check_log_line(shell) -> void:
+	var active := BattleRules.get_active_stack(shell._session.battle)
+	var name := String(active.get("name", "")).strip_edges()
+	_check(name != "" and String(shell._idle_log_text()).contains(name), "the idle log line names %s (%s)" % [name, shell._idle_log_text()])

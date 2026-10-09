@@ -1,12 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://battle_scene"]
+[gd_scene load_steps=7 format=3 uid="uid://battle_scene"]
 
 [ext_resource type="Script" path="res://scenes/battle/BattleShell.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/battle/BattleBoardView.gd" id="2"]
-[ext_resource type="Script" path="res://scenes/ui/FrontierBannerGlyph.gd" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/shared/ManualSaveOverwriteDialog.tscn" id="4_save_overwrite"]
 [ext_resource type="PackedScene" path="res://scenes/shared/ActivePlaySettingsDialog.tscn" id="5_active_settings"]
 [ext_resource type="Script" path="res://scenes/ui/HeroPortraitView.gd" id="6_hero_portrait"]
-[ext_resource type="Texture2D" path="res://art/ui/runtime/battle/sidebar_heraldic_watermark.png" id="7_sidebar_watermark"]
+[ext_resource type="Script" path="res://scripts/ui/BattleCommandButton.gd" id="7_command_button"]
 
 [node name="BattleShell" type="Control"]
 layout_mode = 3
@@ -32,720 +31,489 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0.0509804, 0.0588235, 0.0745098, 1)
+mouse_filter = 2
+color = Color(0.0431373, 0.0392157, 0.0313726, 1)
 
-[node name="ContentMargin" type="MarginContainer" parent="."]
+[node name="BattleBoard" type="Control" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="Content" type="VBoxContainer" parent="ContentMargin"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 6
-
-[node name="Banner" type="PanelContainer" parent="ContentMargin/Content"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="BannerPad" type="MarginContainer" parent="ContentMargin/Content/Banner"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 6
-
-[node name="BannerBox" type="VBoxContainer" parent="ContentMargin/Content/Banner/BannerPad"]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="TopBar" type="HBoxContainer" parent="ContentMargin/Content/Banner/BannerPad/BannerBox"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="BannerGlyph" type="Control" parent="ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
-custom_minimum_size = Vector2(42, 26)
-layout_mode = 2
-script = ExtResource("3")
-glyph_id = "battle"
-
-[node name="Header" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.8
-text = "Battle"
-
-[node name="Status" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 1.4
-clip_text = true
-text = "Round 1"
-
-[node name="Pressure" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.8
-clip_text = true
-text = "Pressure"
-
-[node name="TacticalDetails" type="Button" parent="ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/Header"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -124.0
-offset_bottom = 30.0
-grow_horizontal = 0
 focus_mode = 2
-clip_text = true
-tooltip_text = "Show the full tactical report and battle detail rail."
-text = "Tactical Details"
-accessibility_name = "Tactical details"
-accessibility_description = "Show the full tactical report and battle detail rail."
-
-[node name="Event" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 0
-clip_text = true
-text = "Battle dispatch."
-
-[node name="BattleContext" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 0
-clip_text = true
-text = "Battle context."
-
-[node name="MainRow" type="HBoxContainer" parent="ContentMargin/Content"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 6
-
-[node name="FieldColumn" type="VBoxContainer" parent="ContentMargin/Content/MainRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 0
-
-[node name="SituationRow" type="HBoxContainer" parent="ContentMargin/Content/MainRow/FieldColumn"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 8
-
-[node name="BriefingPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/FieldColumn/SituationRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="BriefingPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/FieldColumn/SituationRow/BriefingPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
-
-[node name="BriefingBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/FieldColumn/SituationRow/BriefingPanel/BriefingPad"]
-layout_mode = 2
-theme_override_constants/separation = 3
-
-[node name="BriefingTitle" type="Label" parent="ContentMargin/Content/MainRow/FieldColumn/SituationRow/BriefingPanel/BriefingPad/BriefingBox"]
-layout_mode = 2
-text = "Briefing"
-
-[node name="Briefing" type="Label" parent="ContentMargin/Content/MainRow/FieldColumn/SituationRow/BriefingPanel/BriefingPad/BriefingBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Opening tactical guidance."
-
-[node name="RiskPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/FieldColumn/SituationRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="RiskPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/FieldColumn/SituationRow/RiskPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
-
-[node name="RiskBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/FieldColumn/SituationRow/RiskPanel/RiskPad"]
-layout_mode = 2
-theme_override_constants/separation = 3
-
-[node name="RiskTitle" type="Label" parent="ContentMargin/Content/MainRow/FieldColumn/SituationRow/RiskPanel/RiskPad/RiskBox"]
-layout_mode = 2
-text = "Risk"
-
-[node name="Risk" type="Label" parent="ContentMargin/Content/MainRow/FieldColumn/SituationRow/RiskPanel/RiskPad/RiskBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Risk board"
-
-[node name="ConsequencePanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/FieldColumn/SituationRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ConsequencePad" type="MarginContainer" parent="ContentMargin/Content/MainRow/FieldColumn/SituationRow/ConsequencePanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
-
-[node name="ConsequenceBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/FieldColumn/SituationRow/ConsequencePanel/ConsequencePad"]
-layout_mode = 2
-theme_override_constants/separation = 3
-
-[node name="ConsequenceTitle" type="Label" parent="ContentMargin/Content/MainRow/FieldColumn/SituationRow/ConsequencePanel/ConsequencePad/ConsequenceBox"]
-layout_mode = 2
-text = "Orders"
-
-[node name="Consequence" type="Label" parent="ContentMargin/Content/MainRow/FieldColumn/SituationRow/ConsequencePanel/ConsequencePad/ConsequenceBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Order consequences"
-
-[node name="BattlefieldPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/FieldColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="BattlefieldPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/FieldColumn/BattlefieldPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 6
-theme_override_constants/margin_bottom = 6
-
-[node name="BattlefieldBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/FieldColumn/BattlefieldPanel/BattlefieldPad"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 0
-
-[node name="BattlefieldHeader" type="HBoxContainer" parent="ContentMargin/Content/MainRow/FieldColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox"]
-visible = false
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="BattlefieldTitle" type="Label" parent="ContentMargin/Content/MainRow/FieldColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox/BattlefieldHeader"]
-layout_mode = 2
-text = "Field"
-
-[node name="BattlefieldHint" type="Label" parent="ContentMargin/Content/MainRow/FieldColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox/BattlefieldHeader"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-autowrap_mode = 3
-horizontal_alignment = 2
-text = "Active stack, range lanes, and objective pressure stay on the board."
-
-[node name="BattlefieldFrame" type="PanelContainer" parent="ContentMargin/Content/MainRow/FieldColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="BattlefieldInset" type="MarginContainer" parent="ContentMargin/Content/MainRow/FieldColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox/BattlefieldFrame"]
-layout_mode = 2
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
-
-[node name="BattleBoard" type="Control" parent="ContentMargin/Content/MainRow/FieldColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox/BattlefieldFrame/BattlefieldInset"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(620, 300)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 script = ExtResource("2")
 
-[node name="ArmyRow" type="HBoxContainer" parent="ContentMargin/Content/MainRow/FieldColumn"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 8
-
-[node name="PlayerPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/FieldColumn/ArmyRow"]
+[node name="Hud" type="Control" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 110)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="PlayerPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/FieldColumn/ArmyRow/PlayerPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="PlayerBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/FieldColumn/ArmyRow/PlayerPanel/PlayerPad"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="PlayerTitle" type="Label" parent="ContentMargin/Content/MainRow/FieldColumn/ArmyRow/PlayerPanel/PlayerPad/PlayerBox"]
-layout_mode = 2
-text = "Friendly"
-
-[node name="PlayerRoster" type="Label" parent="ContentMargin/Content/MainRow/FieldColumn/ArmyRow/PlayerPanel/PlayerPad/PlayerBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Player roster"
-
-[node name="EnemyPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/FieldColumn/ArmyRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 110)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="EnemyPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/FieldColumn/ArmyRow/EnemyPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="EnemyBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/FieldColumn/ArmyRow/EnemyPanel/EnemyPad"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="EnemyTitle" type="Label" parent="ContentMargin/Content/MainRow/FieldColumn/ArmyRow/EnemyPanel/EnemyPad/EnemyBox"]
-layout_mode = 2
-text = "Enemy"
-
-[node name="EnemyRoster" type="Label" parent="ContentMargin/Content/MainRow/FieldColumn/ArmyRow/EnemyPanel/EnemyPad/EnemyBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Enemy roster"
-
-[node name="SidebarShell" type="PanelContainer" parent="ContentMargin/Content/MainRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(248, 0)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="SidebarPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="SidebarBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 6
-
-[node name="CommandPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="CommandPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="CommandBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad"]
-layout_mode = 2
-theme_override_constants/separation = 3
-
-[node name="CommandTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-text = "Command"
-
-[node name="PlayerCommanderIdentity" type="HBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-theme_override_constants/separation = 7
-
-[node name="PlayerCommanderPortrait" type="TextureRect" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox/PlayerCommanderIdentity"]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(32, 43)
-layout_mode = 2
-script = ExtResource("6_hero_portrait")
-
-[node name="PlayerCommand" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox/PlayerCommanderIdentity"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-clip_text = true
-text_overrun_behavior = 4
-text = "Player command"
-
-[node name="EnemyCommanderIdentity" type="HBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-theme_override_constants/separation = 7
-
-[node name="EnemyCommanderPortrait" type="TextureRect" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox/EnemyCommanderIdentity"]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(32, 43)
-layout_mode = 2
-script = ExtResource("6_hero_portrait")
-
-[node name="EnemyCommand" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox/EnemyCommanderIdentity"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-clip_text = true
-text_overrun_behavior = 4
-text = "Enemy command"
-
-[node name="BattleTabs" type="TabContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 248)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
-
-[node name="InitiativePanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="InitiativePad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/InitiativePanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="InitiativeBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/InitiativePanel/InitiativePad"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="InitiativeTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/InitiativePanel/InitiativePad/InitiativeBox"]
-layout_mode = 2
-text = "Order"
-
-[node name="Initiative" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/InitiativePanel/InitiativePad/InitiativeBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Initiative"
-
-[node name="ContextPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="ContextPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/ContextPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 7
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 7
-
-[node name="ContextBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/ContextPanel/ContextPad"]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="ContextTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/ContextPanel/ContextPad/ContextBox"]
-layout_mode = 2
-text = "Focus"
-
-[node name="Active" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/ContextPanel/ContextPad/ContextBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Active"
-
-[node name="Target" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/ContextPanel/ContextPad/ContextBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Target"
-
-[node name="SpellPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="SpellPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/SpellPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="SpellBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/SpellPanel/SpellPad"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="SpellTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/SpellPanel/SpellPad/SpellBox"]
-layout_mode = 2
-text = "Spells"
-
-[node name="Spellbook" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/SpellPanel/SpellPad/SpellBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Spellbook"
-
-[node name="Effects" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/SpellPanel/SpellPad/SpellBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Effects"
-
-[node name="TimingPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="TimingPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/TimingPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="TimingBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/TimingPanel/TimingPad"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="TimingTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/TimingPanel/TimingPad/TimingBox"]
-layout_mode = 2
-text = "Timing"
-
-[node name="Timing" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/TimingPanel/TimingPad/TimingBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Timing"
-
-[node name="SidebarWatermark" type="TextureRect" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 mouse_filter = 2
-self_modulate = Color(0.82, 0.72, 0.52, 0.20)
-texture = ExtResource("7_sidebar_watermark")
+
+[node name="PlayerHeroPlate" type="PanelContainer" parent="Hud"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+mouse_default_cursor_shape = 2
+
+[node name="PlayerPlateRow" type="HBoxContainer" parent="Hud/PlayerHeroPlate"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="PlayerPlateEmblem" type="Control" parent="Hud/PlayerHeroPlate/PlayerPlateRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(42, 56)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="PlayerCommanderPortrait" type="TextureRect" parent="Hud/PlayerHeroPlate/PlayerPlateRow/PlayerPlateEmblem"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+mouse_filter = 2
+script = ExtResource("6_hero_portrait")
+
+[node name="PlayerCrest" type="TextureRect" parent="Hud/PlayerHeroPlate/PlayerPlateRow/PlayerPlateEmblem"]
+unique_name_in_owner = true
+layout_mode = 0
+mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Footer" type="PanelContainer" parent="ContentMargin/Content"]
+[node name="PlayerPlateText" type="VBoxContainer" parent="Hud/PlayerHeroPlate/PlayerPlateRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="PlayerHeroName" type="Label" parent="Hud/PlayerHeroPlate/PlayerPlateRow/PlayerPlateText"]
 unique_name_in_owner = true
 layout_mode = 2
+clip_text = true
+text_overrun_behavior = 3
 
-[node name="FooterPad" type="MarginContainer" parent="ContentMargin/Content/Footer"]
-unique_name_in_owner = true
+[node name="PlayerManaRow" type="HBoxContainer" parent="Hud/PlayerHeroPlate/PlayerPlateRow/PlayerPlateText"]
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 6
+mouse_filter = 2
 
-[node name="FooterRow" type="GridContainer" parent="ContentMargin/Content/Footer/FooterPad"]
-unique_name_in_owner = true
-layout_mode = 2
-columns = 2
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
-
-[node name="ActionPanel" type="PanelContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow"]
+[node name="PlayerManaBar" type="ProgressBar" parent="Hud/PlayerHeroPlate/PlayerPlateRow/PlayerPlateText/PlayerManaRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 4
+mouse_filter = 2
+show_percentage = false
 
-[node name="ActionPad" type="MarginContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel"]
+[node name="PlayerManaText" type="Label" parent="Hud/PlayerHeroPlate/PlayerPlateRow/PlayerPlateText/PlayerManaRow"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 6
 
-[node name="ActionBox" type="VBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad"]
+[node name="PlayerHeroStatus" type="Label" parent="Hud/PlayerHeroPlate/PlayerPlateRow/PlayerPlateText"]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 4
+clip_text = true
+text_overrun_behavior = 3
 
-[node name="ActionTitle" type="Label" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox"]
-visible = false
-layout_mode = 2
-text = "Orders"
-
-[node name="ActionGuide" type="Label" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox"]
+[node name="EnemyHeroPlate" type="PanelContainer" parent="Hud"]
 unique_name_in_owner = true
 visible = false
-layout_mode = 2
-autowrap_mode = 3
-text = "Action guide"
+layout_mode = 0
 
-[node name="SpellActions" type="HFlowContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox"]
+[node name="EnemyPlateRow" type="HBoxContainer" parent="Hud/EnemyHeroPlate"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="EnemyPlateEmblem" type="Control" parent="Hud/EnemyHeroPlate/EnemyPlateRow"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(42, 56)
 layout_mode = 2
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 6
+mouse_filter = 2
 
-[node name="TargetBar" type="HBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="PrevTarget" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/TargetBar"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Prev"
-
-[node name="NextTarget" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/TargetBar"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Next"
-
-[node name="ActionBar" type="HFlowContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 6
-
-[node name="Advance" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Advance"
-
-[node name="Strike" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Strike"
-
-[node name="Shoot" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Shoot"
-
-[node name="Defend" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Defend"
-
-[node name="Wait" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Wait"
-
-[node name="QuickResolve" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar"]
-unique_name_in_owner = true
-layout_mode = 2
-tooltip_text = "Resolve the remaining battle automatically. Confirmation is required because casualties, mana use, and objective consequences are permanent."
-text = "Quick Resolve"
-
-[node name="Retreat" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Retreat"
-
-[node name="Surrender" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Surrender"
-
-[node name="SystemPanel" type="PanelContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(132, 0)
-layout_mode = 2
-
-[node name="SystemPad" type="MarginContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 6
-
-[node name="SystemBox" type="VBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="SystemTitle" type="Label" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]
-visible = false
-layout_mode = 2
-text = "System"
-
-[node name="SystemBody" type="Label" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]
+[node name="EnemyCommanderPortrait" type="TextureRect" parent="Hud/EnemyHeroPlate/EnemyPlateRow/EnemyPlateEmblem"]
 unique_name_in_owner = true
 visible = false
-layout_mode = 2
-autowrap_mode = 3
-text = "Latest ready save: none."
+layout_mode = 0
+mouse_filter = 2
+script = ExtResource("6_hero_portrait")
 
-[node name="SpeedBar" type="HBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]
+[node name="EnemyCrest" type="TextureRect" parent="Hud/EnemyHeroPlate/EnemyPlateRow/EnemyPlateEmblem"]
+unique_name_in_owner = true
+layout_mode = 0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="EnemyPlateText" type="VBoxContainer" parent="Hud/EnemyHeroPlate/EnemyPlateRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="EnemyHeroName" type="Label" parent="Hud/EnemyHeroPlate/EnemyPlateRow/EnemyPlateText"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 4
+clip_text = true
+text_overrun_behavior = 3
 
-[node name="SpeedNormal" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SpeedBar"]
+[node name="EnemyManaRow" type="HBoxContainer" parent="Hud/EnemyHeroPlate/EnemyPlateRow/EnemyPlateText"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="EnemyManaBar" type="ProgressBar" parent="Hud/EnemyHeroPlate/EnemyPlateRow/EnemyPlateText/EnemyManaRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+mouse_filter = 2
+show_percentage = false
+
+[node name="EnemyManaText" type="Label" parent="Hud/EnemyHeroPlate/EnemyPlateRow/EnemyPlateText/EnemyManaRow"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="EnemyHeroStatus" type="Label" parent="Hud/EnemyHeroPlate/EnemyPlateRow/EnemyPlateText"]
+unique_name_in_owner = true
+layout_mode = 2
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="Banner" type="Label" parent="Hud"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+mouse_filter = 2
+horizontal_alignment = 1
+
+[node name="CommandBar" type="PanelContainer" parent="Hud"]
+unique_name_in_owner = true
+layout_mode = 0
+
+[node name="CommandRow" type="HBoxContainer" parent="Hud/CommandBar"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LeftCommands" type="HBoxContainer" parent="Hud/CommandBar/CommandRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Options" type="Button" parent="Hud/CommandBar/CommandRow/LeftCommands"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(46, 46)
+layout_mode = 2
+tooltip_text = "Options: battle speed, save, settings and the main menu. Esc"
+accessibility_name = "Options"
+script = ExtResource("7_command_button")
+glyph = "gear"
+
+[node name="Surrender" type="Button" parent="Hud/CommandBar/CommandRow/LeftCommands"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(46, 46)
+layout_mode = 2
+accessibility_name = "Surrender"
+script = ExtResource("7_command_button")
+glyph = "flag"
+
+[node name="Retreat" type="Button" parent="Hud/CommandBar/CommandRow/LeftCommands"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(46, 46)
+layout_mode = 2
+accessibility_name = "Retreat"
+script = ExtResource("7_command_button")
+glyph = "retreat"
+key_hint = "R"
+
+[node name="AutoBattle" type="Button" parent="Hud/CommandBar/CommandRow/LeftCommands"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(46, 46)
+layout_mode = 2
+toggle_mode = true
+accessibility_name = "Auto battle"
+script = ExtResource("7_command_button")
+glyph = "auto"
+key_hint = "A"
+
+[node name="QuickResolve" type="Button" parent="Hud/CommandBar/CommandRow/LeftCommands"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(46, 46)
+layout_mode = 2
+accessibility_name = "Quick Resolve"
+script = ExtResource("7_command_button")
+glyph = "quick"
+
+[node name="LogLine" type="Button" parent="Hud/CommandBar/CommandRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+clip_text = true
+text_overrun_behavior = 3
+alignment = 0
+accessibility_name = "Latest battle message; open the battle log"
+
+[node name="LogOpen" type="Button" parent="Hud/CommandBar/CommandRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "Battle log"
+accessibility_name = "Open the battle log"
+script = ExtResource("7_command_button")
+glyph = "chevron"
+
+[node name="RightCommands" type="HBoxContainer" parent="Hud/CommandBar/CommandRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Spellbook" type="Button" parent="Hud/CommandBar/CommandRow/RightCommands"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 50)
+layout_mode = 2
+accessibility_name = "Spellbook"
+script = ExtResource("7_command_button")
+glyph = "book"
+key_hint = "S"
+
+[node name="Wait" type="Button" parent="Hud/CommandBar/CommandRow/RightCommands"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 50)
+layout_mode = 2
+accessibility_name = "Wait"
+script = ExtResource("7_command_button")
+glyph = "hourglass"
+key_hint = "W"
+
+[node name="Defend" type="Button" parent="Hud/CommandBar/CommandRow/RightCommands"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 50)
+layout_mode = 2
+accessibility_name = "Defend"
+script = ExtResource("7_command_button")
+glyph = "shield"
+key_hint = "D"
+
+[node name="OptionsPopover" type="PanelContainer" parent="Hud"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+
+[node name="OptionsBox" type="VBoxContainer" parent="Hud/OptionsPopover"]
+layout_mode = 2
+
+[node name="OptionsTitle" type="Label" parent="Hud/OptionsPopover/OptionsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Options"
+
+[node name="SpeedRow" type="HBoxContainer" parent="Hud/OptionsPopover/OptionsBox"]
+layout_mode = 2
+
+[node name="SpeedLabel" type="Label" parent="Hud/OptionsPopover/OptionsBox/SpeedRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Battle speed"
+
+[node name="SpeedBar" type="HBoxContainer" parent="Hud/OptionsPopover/OptionsBox/SpeedRow"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SpeedNormal" type="Button" parent="Hud/OptionsPopover/OptionsBox/SpeedRow/SpeedBar"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Normal"
 
-[node name="SpeedFast" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SpeedBar"]
+[node name="SpeedFast" type="Button" parent="Hud/OptionsPopover/OptionsBox/SpeedRow/SpeedBar"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Fast"
 
-[node name="SpeedInstant" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SpeedBar"]
+[node name="SpeedInstant" type="Button" parent="Hud/OptionsPopover/OptionsBox/SpeedRow/SpeedBar"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Instant"
 
-[node name="SystemActions" type="HBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]
+[node name="SystemBody" type="Label" parent="Hud/OptionsPopover/OptionsBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 4
+autowrap_mode = 3
 
-[node name="SaveSlot" type="OptionButton" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions"]
-unique_name_in_owner = true
+[node name="SystemActions" type="HBoxContainer" parent="Hud/OptionsPopover/OptionsBox"]
 layout_mode = 2
 
-[node name="Save" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Save"
-
-[node name="Settings" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Settings"
-
-[node name="Menu" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Menu"
-
-[node name="FooterWatermark" type="TextureRect" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]
+[node name="SaveSlot" type="OptionButton" parent="Hud/OptionsPopover/OptionsBox/SystemActions"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+
+[node name="Save" type="Button" parent="Hud/OptionsPopover/OptionsBox/SystemActions"]
+unique_name_in_owner = true
+layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 2
-self_modulate = Color(0.82, 0.72, 0.52, 0.18)
-texture = ExtResource("7_sidebar_watermark")
+text = "Save game"
+
+[node name="Settings" type="Button" parent="Hud/OptionsPopover/OptionsBox/SystemActions"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Settings"
+
+[node name="Menu" type="Button" parent="Hud/OptionsPopover/OptionsBox/SystemActions"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Main Menu"
+
+[node name="SpellbookPopover" type="PanelContainer" parent="Hud"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+
+[node name="SpellbookBox" type="VBoxContainer" parent="Hud/SpellbookPopover"]
+layout_mode = 2
+
+[node name="SpellbookHeader" type="HBoxContainer" parent="Hud/SpellbookPopover/SpellbookBox"]
+layout_mode = 2
+
+[node name="SpellbookPortrait" type="TextureRect" parent="Hud/SpellbookPopover/SpellbookBox/SpellbookHeader"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(54, 72)
+layout_mode = 2
 expand_mode = 1
-stretch_mode = 5
+stretch_mode = 6
+
+[node name="SpellbookHeroText" type="VBoxContainer" parent="Hud/SpellbookPopover/SpellbookBox/SpellbookHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="SpellbookHeroName" type="Label" parent="Hud/SpellbookPopover/SpellbookBox/SpellbookHeader/SpellbookHeroText"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SpellbookHeroStats" type="Label" parent="Hud/SpellbookPopover/SpellbookBox/SpellbookHeader/SpellbookHeroText"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SpellbookNote" type="Label" parent="Hud/SpellbookPopover/SpellbookBox/SpellbookHeader/SpellbookHeroText"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="SpellScroll" type="ScrollContainer" parent="Hud/SpellbookPopover/SpellbookBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="SpellList" type="VBoxContainer" parent="Hud/SpellbookPopover/SpellbookBox/SpellScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LogPopover" type="PanelContainer" parent="Hud"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+
+[node name="LogBox" type="VBoxContainer" parent="Hud/LogPopover"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LogTitle" type="Label" parent="Hud/LogPopover/LogBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Battle log"
+
+[node name="ResultOverlay" type="Control" parent="Hud"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ResultShade" type="ColorRect" parent="Hud/ResultOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.0313726, 0.0235294, 0.0156863, 0.62)
+
+[node name="ResultPanel" type="PanelContainer" parent="Hud/ResultOverlay"]
+unique_name_in_owner = true
+layout_mode = 0
+
+[node name="ResultBox" type="VBoxContainer" parent="Hud/ResultOverlay/ResultPanel"]
+layout_mode = 2
+
+[node name="ResultTitle" type="Label" parent="Hud/ResultOverlay/ResultPanel/ResultBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ResultLead" type="Label" parent="Hud/ResultOverlay/ResultPanel/ResultBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="ResultLosses" type="HBoxContainer" parent="Hud/ResultOverlay/ResultPanel/ResultBox"]
+layout_mode = 2
+
+[node name="PlayerLosses" type="VBoxContainer" parent="Hud/ResultOverlay/ResultPanel/ResultBox/ResultLosses"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlayerLossesTitle" type="Label" parent="Hud/ResultOverlay/ResultPanel/ResultBox/ResultLosses/PlayerLosses"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Your losses"
+
+[node name="PlayerLossIcons" type="HFlowContainer" parent="Hud/ResultOverlay/ResultPanel/ResultBox/ResultLosses/PlayerLosses"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="EnemyLosses" type="VBoxContainer" parent="Hud/ResultOverlay/ResultPanel/ResultBox/ResultLosses"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EnemyLossesTitle" type="Label" parent="Hud/ResultOverlay/ResultPanel/ResultBox/ResultLosses/EnemyLosses"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Enemy losses"
+
+[node name="EnemyLossIcons" type="HFlowContainer" parent="Hud/ResultOverlay/ResultPanel/ResultBox/ResultLosses/EnemyLosses"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ResultAftermath" type="Label" parent="Hud/ResultOverlay/ResultPanel/ResultBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="ResultStatus" type="Label" parent="Hud/ResultOverlay/ResultPanel/ResultBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="ResultButtons" type="HBoxContainer" parent="Hud/ResultOverlay/ResultPanel/ResultBox"]
+layout_mode = 2
+alignment = 2
+
+[node name="ViewField" type="Button" parent="Hud/ResultOverlay/ResultPanel/ResultBox/ResultButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "View the field"
+
+[node name="Continue" type="Button" parent="Hud/ResultOverlay/ResultPanel/ResultBox/ResultButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Continue"
+
+[node name="ShowResult" type="Button" parent="Hud"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+text = "Show result"
 
 [node name="QuickResolveConfirmationDialog" type="ConfirmationDialog" parent="."]
 title = "Quick Resolve Battle?"
@@ -753,7 +521,11 @@ initial_position = 1
 exclusive = true
 dialog_hide_on_ok = false
 ok_button_text = "Resolve Battle"
-dialog_text = "Quick Resolve automatically plays the remaining battle.\n\nSurviving armies keep permanent casualties, commanders may use mana, and the final outcome applies normal victory, defeat, and objective consequences.\n\nThis cannot be undone."
+dialog_text = "Quick Resolve automatically plays the remaining battle.
+
+Surviving armies keep permanent casualties, commanders may use mana, and the final outcome applies normal victory, defeat, and objective consequences.
+
+This cannot be undone."
 
 [node name="WithdrawalConfirmationDialog" type="ConfirmationDialog" parent="."]
 title = "Confirm Withdrawal?"
@@ -766,24 +538,29 @@ dialog_text = "Confirm this army-wide battle exit order?"
 [node name="ManualSaveOverwriteDialog" parent="." instance=ExtResource("4_save_overwrite")]
 
 [node name="ActivePlaySettingsDialog" parent="." instance=ExtResource("5_active_settings")]
+unique_name_in_owner = true
 
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/TargetBar/PrevTarget" to="." method="_on_prev_target_pressed"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/TargetBar/NextTarget" to="." method="_on_next_target_pressed"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Advance" to="." method="_on_advance_pressed"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Strike" to="." method="_on_strike_pressed"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Shoot" to="." method="_on_shoot_pressed"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Defend" to="." method="_on_defend_pressed"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Wait" to="." method="_on_wait_pressed"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/QuickResolve" to="." method="_on_quick_resolve_pressed"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Retreat" to="." method="_on_retreat_pressed"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox/ActionBar/Surrender" to="." method="_on_surrender_pressed"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SpeedBar/SpeedNormal" to="." method="_on_speed_normal_pressed"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SpeedBar/SpeedFast" to="." method="_on_speed_fast_pressed"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SpeedBar/SpeedInstant" to="." method="_on_speed_instant_pressed"]
-[connection signal="item_selected" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions/SaveSlot" to="." method="_on_save_slot_selected"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions/Save" to="." method="_on_save_pressed"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions/Settings" to="." method="_on_settings_pressed"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions/Menu" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="Hud/CommandBar/CommandRow/LeftCommands/Options" to="." method="_toggle_options_popover"]
+[connection signal="pressed" from="Hud/CommandBar/CommandRow/LeftCommands/Surrender" to="." method="_on_surrender_pressed"]
+[connection signal="pressed" from="Hud/CommandBar/CommandRow/LeftCommands/Retreat" to="." method="_on_retreat_pressed"]
+[connection signal="toggled" from="Hud/CommandBar/CommandRow/LeftCommands/AutoBattle" to="." method="_on_auto_battle_toggled"]
+[connection signal="pressed" from="Hud/CommandBar/CommandRow/LeftCommands/QuickResolve" to="." method="_on_quick_resolve_pressed"]
+[connection signal="pressed" from="Hud/CommandBar/CommandRow/LogLine" to="." method="_toggle_log_popover"]
+[connection signal="pressed" from="Hud/CommandBar/CommandRow/LogOpen" to="." method="_toggle_log_popover"]
+[connection signal="pressed" from="Hud/CommandBar/CommandRow/RightCommands/Spellbook" to="." method="_on_spellbook_button_pressed"]
+[connection signal="pressed" from="Hud/CommandBar/CommandRow/RightCommands/Wait" to="." method="_on_wait_pressed"]
+[connection signal="pressed" from="Hud/CommandBar/CommandRow/RightCommands/Defend" to="." method="_on_defend_pressed"]
+[connection signal="gui_input" from="Hud/PlayerHeroPlate" to="." method="_on_player_plate_gui_input"]
+[connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/SpeedRow/SpeedBar/SpeedNormal" to="." method="_on_speed_normal_pressed"]
+[connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/SpeedRow/SpeedBar/SpeedFast" to="." method="_on_speed_fast_pressed"]
+[connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/SpeedRow/SpeedBar/SpeedInstant" to="." method="_on_speed_instant_pressed"]
+[connection signal="item_selected" from="Hud/OptionsPopover/OptionsBox/SystemActions/SaveSlot" to="." method="_on_save_slot_selected"]
+[connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/SystemActions/Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/SystemActions/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/SystemActions/Menu" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="Hud/ResultOverlay/ResultPanel/ResultBox/ResultButtons/ViewField" to="." method="_on_view_field_pressed"]
+[connection signal="pressed" from="Hud/ResultOverlay/ResultPanel/ResultBox/ResultButtons/Continue" to="." method="_on_result_continue_pressed"]
+[connection signal="pressed" from="Hud/ShowResult" to="." method="_on_show_result_pressed"]
 [connection signal="canceled" from="QuickResolveConfirmationDialog" to="." method="_on_quick_resolve_canceled"]
 [connection signal="confirmed" from="QuickResolveConfirmationDialog" to="." method="_on_quick_resolve_confirmed"]
 [connection signal="canceled" from="WithdrawalConfirmationDialog" to="." method="_on_withdrawal_confirmation_canceled"]

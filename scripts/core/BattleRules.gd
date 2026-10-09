@@ -88,6 +88,8 @@ const SELECTED_TARGET_CONTINUITY_KEY := "selected_target_continuity_id"
 const SELECTED_TARGET_CLOSING_KEY := "selected_target_closing_context"
 # Stacks that waited this round, in the order they waited; cleared each round.
 const WAITED_STACK_IDS_KEY := "waited_stack_ids"
+# How many orders the player has given in this battle (player_has_given_orders).
+const PLAYER_ORDERS_KEY := "player_orders_given"
 const BATTLE_HEX_COLUMNS := 11
 const BATTLE_HEX_ROWS := 9
 const COHESION_MIN := 0
@@ -321,6 +323,7 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 		HEX_BOARD_KEY: _hex_board_descriptor(),
 		OCCUPIED_HEXES_KEY: {},
 		COMMANDER_SPELL_CAST_ROUNDS_KEY: {},
+		PLAYER_ORDERS_KEY: 0,
 		FIELD_OBJECTIVES_KEY: _normalize_field_objectives(
 			[],
 			encounter,
@@ -1391,6 +1394,7 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 	session.battle[COMMANDER_SPELL_CAST_ROUNDS_KEY] = _normalize_commander_spell_cast_rounds(
 		session.battle.get(COMMANDER_SPELL_CAST_ROUNDS_KEY, {})
 	)
+	session.battle[PLAYER_ORDERS_KEY] = maxi(0, int(session.battle.get(PLAYER_ORDERS_KEY, 0)))
 	session.battle["terrain"] = String(session.battle.get("terrain", "plains"))
 	var battle_position = session.battle.get("position", {})
 	session.battle["position"] = LevelRules.position({
@@ -6327,7 +6331,66 @@ static func perform_presented_action(session: SessionStateStoreScript.SessionDat
 	else:
 		# A strike can name the hex to strike from as its destination.
 		result = perform_player_action(session, action, destination if action == "strike" else {})
+	if action != "ready":
+		record_player_order(session.battle, result)
 	return ActionPlayback.finish(original_battle, result)
+
+## Counts an order the player gave (a move, attack, defence, wait or the
+## hero's cast) once it was carried out. Quick Resolve is offered only before
+## the first one (player_has_given_orders).
+static func record_player_order(battle: Dictionary, result: Dictionary) -> void:
+	if battle.is_empty() or String(result.get("state", "invalid")) == "invalid":
+		return
+	battle[PLAYER_ORDERS_KEY] = maxi(0, int(battle.get(PLAYER_ORDERS_KEY, 0))) + 1
+
+static func player_has_given_orders(battle: Dictionary) -> bool:
+	return int(battle.get(PLAYER_ORDERS_KEY, 0)) > 0
+
+## What the battle screen shows for a side's hero, or {} when no commander
+## leads that side. A hero from the content roster stands beside its army
+## (has_figure); a town captain or a guard's commander has no figure. mana is
+## the commander's spellbook mana, which its casts spend.
+static func hero_presentation(battle: Dictionary, side: String) -> Dictionary:
+	if battle.is_empty() or side not in ["player", "enemy"]:
+		return {}
+	var state_value: Variant = _commander_state_for_side(battle, side)
+	var state: Dictionary = state_value if state_value is Dictionary else {}
+	if state.is_empty():
+		return {}
+	var hero_id := ""
+	if side == "player":
+		var source: Dictionary = battle.get("player_commander_source", {}) if battle.get("player_commander_source", {}) is Dictionary else {}
+		if String(source.get("type", "")) in ["active_hero", "town_hero"]:
+			hero_id = String(source.get("hero_id", "")).strip_edges()
+			if hero_id == "":
+				hero_id = String(state.get("id", "")).strip_edges()
+	else:
+		for key in ["roster_hero_id", "hero_id", "id"]:
+			var candidate := String(state.get(key, "")).strip_edges()
+			if candidate != "" and not ContentService.get_hero(candidate).is_empty():
+				hero_id = candidate
+				break
+	var template: Dictionary = ContentService.get_hero(hero_id) if hero_id != "" else {}
+	if template.is_empty():
+		hero_id = ""
+	var spellbook: Dictionary = state.get("spellbook", {}) if state.get("spellbook", {}) is Dictionary else {}
+	var mana: Dictionary = spellbook.get("mana", {}) if spellbook.get("mana", {}) is Dictionary else {}
+	var battle_spell_count := SpellRulesScript.known_spells(state, "battle").size()
+	var name := commander_name(battle, side)
+	return {
+		"side": side,
+		"actor_id": hero_actor_id(side),
+		"name": name if name != "" else ("Your commander" if side == "player" else "Enemy commander"),
+		"hero_id": hero_id,
+		"faction_id": String(state.get("faction_id", template.get("faction_id", ""))).strip_edges(),
+		"has_figure": hero_id != "",
+		"role": _commander_role_label(battle, side),
+		"level": maxi(1, int(state.get("level", 1))),
+		"mana_current": maxi(0, int(mana.get("current", 0))),
+		"mana_max": maxi(0, int(mana.get("max", 0))),
+		"battle_spell_count": battle_spell_count,
+		"cast_this_round": _commander_spell_cast_this_round(battle, side),
+	}
 
 ## approach names the hex a strike is made from (q, r): one of
 ## melee_approach_cells. Without it the stack strikes from where it stands, or

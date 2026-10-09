@@ -16503,74 +16503,6 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
     ensure("var battle_focus_return_exact :=" not in active_play_report_text, errors, "Active-play Settings compact focus oracle must keep an explicit bool type")
     ensure("not battle_settings_control.is_visible_in_tree()" not in active_play_report_text, errors, "Active-play Settings compact focus oracle must require the now-visible Settings origin instead of accepting a hidden-origin fallback")
 
-    footer_row_header = '[node name="FooterRow" type="GridContainer" parent="ContentMargin/Content/Footer/FooterPad"]'
-    footer_pad_header = '[node name="FooterPad" type="MarginContainer" parent="ContentMargin/Content/Footer"]'
-    footer_pad_match = re.search(re.escape(footer_pad_header) + r"\n(?P<body>.*?)(?=\n\[node )", battle_scene_text, flags=re.DOTALL)
-    ensure(footer_pad_match is not None and "unique_name_in_owner = true" in footer_pad_match.group("body"), errors, "Battle footer pad must remain uniquely owned for compact edge-spacing reclamation")
-    ensure("@onready var _footer_pad: MarginContainer = %FooterPad" in battle_shell_text, errors, "BattleShell must own the authored FooterPad without path-coupled replacement")
-    ensure(battle_scene_text.count(footer_row_header) == 1, errors, "Battle footer must own one responsive GridContainer row")
-    footer_row_match = re.search(re.escape(footer_row_header) + r"\n(?P<body>.*?)(?=\n\[node )", battle_scene_text, flags=re.DOTALL)
-    ensure(footer_row_match is not None, errors, "Could not isolate the responsive Battle FooterRow")
-    if footer_row_match is not None:
-        footer_row_body = footer_row_match.group("body")
-        for required_token in ("unique_name_in_owner = true", "columns = 2", "theme_override_constants/h_separation = 8", "theme_override_constants/v_separation = 8"):
-            ensure(required_token in footer_row_body, errors, f"Battle FooterRow is missing wide-layout contract token: {required_token}")
-        for forbidden_token in ("visible = false", "size_flags_vertical", "custom_minimum_size"):
-            ensure(forbidden_token not in footer_row_body, errors, f"Battle FooterRow must not hide or impose a new size contract via {forbidden_token}")
-    for unique_header in (
-        '[node name="ActionBar" type="HFlowContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox"]',
-        '[node name="ActionPad" type="MarginContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel"]',
-        '[node name="SystemPad" type="MarginContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel"]',
-        '[node name="SpeedBar" type="HBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]',
-        '[node name="SystemActions" type="HBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]',
-    ):
-        unique_match = re.search(re.escape(unique_header) + r"\n(?P<body>.*?)(?=\n\[node )", battle_scene_text, flags=re.DOTALL)
-        ensure(unique_match is not None and "unique_name_in_owner = true" in unique_match.group("body"), errors, f"Battle compact command proof requires a unique existing node: {unique_header}")
-
-    responsive_layout_match = re.search(
-        r"func _apply_responsive_layout\(\) -> void:(?P<body>.*?)(?=\nfunc )",
-        battle_shell_text,
-        flags=re.DOTALL,
-    )
-    ensure(responsive_layout_match is not None, errors, "Could not isolate Battle responsive layout ownership")
-    if responsive_layout_match is not None:
-        responsive_layout_body = responsive_layout_match.group("body")
-        responsive_order = tuple(responsive_layout_body.find(token) for token in (
-            "var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0",
-            "var banner_details_visible := not compact_layout or available_size.x >= 1180.0",
-            "var horizontal_footer := not compact_layout or available_size.x >= 1180.0",
-            "_compact_layout_active = compact_layout",
-            "_refit_battle_action_guide()",
-            "_status_label.visible = banner_details_visible",
-            "_pressure_label.visible = banner_details_visible",
-            "_footer_row.columns = 2 if horizontal_footer else 1",
-            '_footer_row.add_theme_constant_override("v_separation", 8 if horizontal_footer else 0)',
-            '_footer_pad.add_theme_constant_override("margin_top", 2 if compact_layout else 6)',
-            '_footer_pad.add_theme_constant_override("margin_bottom", 2 if compact_layout else 6)',
-            '_action_pad.add_theme_constant_override("margin_top", 0 if compact_layout else 6)',
-            '_action_pad.add_theme_constant_override("margin_bottom", 0 if compact_layout else 6)',
-            "if compact_layout:",
-            '_system_panel.add_theme_stylebox_override("panel", _compact_system_panel_style)',
-            "else:",
-            '_system_panel.remove_theme_stylebox_override("panel")',
-            "_system_panel.visible = true",
-            '_system_pad.add_theme_constant_override("margin_top", 0 if compact_layout else 6)',
-            '_system_pad.add_theme_constant_override("margin_bottom", 0 if compact_layout else 6)',
-            "_system_body_label.visible = not compact_layout and not _system_body_label.text.strip_edges().is_empty()",
-            "_speed_bar.visible = not compact_layout",
-            "_prev_target_button.visible = true",
-            "_next_target_button.visible = true",
-            "_battle_board_view.custom_minimum_size = Vector2(520.0, 240.0) if compact_layout else Vector2(620.0, 300.0)",
-        ))
-        ensure(all(index >= 0 for index in responsive_order) and list(responsive_order) == sorted(responsive_order), errors, "Battle responsive layout must reflow the existing footer, retain essential commands, compact only spacing/speed, and then preserve existing target/board contracts in order")
-        ensure("_system_panel.visible = not compact_layout" not in responsive_layout_body, errors, "Battle compact layout must not hide the existing essential system commands")
-        ensure("_footer_row.columns = 1 if compact_layout else 2" not in responsive_layout_body, errors, "Battle standard-height compact layout must not stack the command dock solely because of height")
-        ensure(responsive_layout_body.count("banner_details_visible") == 3, errors, "Battle responsive layout must derive one logical-width banner-detail predicate and apply it only to Status and Pressure")
-        ensure(responsive_layout_body.count("horizontal_footer") == 4, errors, "Battle responsive layout must derive one logical-width command-dock predicate and apply it only to FooterRow columns, the passive watermark, and separation")
-        ensure("_status_label.visible = not compact_layout" not in responsive_layout_body and "_pressure_label.visible = not compact_layout" not in responsive_layout_body, errors, "Battle banner details must not remain coupled to the height-sensitive compact breakpoint")
-        for forbidden_token in ("reparent", "remove_child", "add_child", "queue_free", "new()", "call_deferred", "create_timer"):
-            ensure(forbidden_token not in responsive_layout_body, errors, f"Battle compact footer reflow must not add, replace, or defer UI through {forbidden_token}")
-
     layout_contract_match = re.search(
         r"func _battle_system_command_layout_contract\(shell, compact: bool\) -> Dictionary:(?P<body>.*?)(?=\nfunc )",
         active_play_report_text,
@@ -16603,46 +16535,6 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         for forbidden_token in ("_apply_responsive_layout", ".visible =", "custom_minimum_size =", "set_deferred", "call_deferred", "await ", "create_timer", "queue_free"):
             ensure(forbidden_token not in layout_contract_body, errors, f"Battle layout contract must remain read-only and source-independent: {forbidden_token}")
 
-    ensure("var _compact_layout_active := false" in battle_shell_text, errors, "Battle compact system summary visibility must use one local responsive-layout state flag")
-    ensure("var _compact_system_panel_style := StyleBoxEmpty.new()" in battle_shell_text, errors, "Battle compact system row must remove only the decorative panel frame with one local empty style")
-    ensure(len(re.findall(r"^\t_system_body_label\.visible = not _compact_layout_active$", battle_shell_text, flags=re.MULTILINE)) == 2, errors, "Battle save-failure surfaces must keep the supplemental system summary hidden in compact mode")
-    ensure(battle_shell_text.count("_system_body_label.visible = not _compact_layout_active and not status_lines.is_empty()") == 1, errors, "Battle ordinary save summary must stay visible only in wide mode when content exists")
-    for forbidden_token in ("_system_body_label.text = \"\"", "_system_body_label.tooltip_text = \"\"", "status_lines.clear()", "status_lines.erase("):
-        ensure(forbidden_token not in battle_shell_text, errors, f"Battle compact layout must preserve the full supplemental save summary behind the existing tooltip rather than deleting it via {forbidden_token}")
-    action_guide_setter_match = re.search(r"func _set_battle_action_guide\(full_text: String\) -> void:(?P<body>.*?)(?=\nfunc )", battle_shell_text, flags=re.DOTALL)
-    ensure(action_guide_setter_match is not None, errors, "BattleShell must own one compact-only fitted ActionGuide setter")
-    if action_guide_setter_match is not None:
-        action_guide_setter_body = action_guide_setter_match.group("body")
-        action_guide_order = tuple(action_guide_setter_body.find(token) for token in (
-            "_action_guide_source_text = full_text",
-            "_refit_battle_action_guide()",
-            "_action_guide.tooltip_text = full_text",
-        ))
-        ensure(all(index >= 0 for index in action_guide_order) and list(action_guide_order) == sorted(action_guide_order), errors, "Battle ActionGuide setter must retain exact source text, refit the visible lines, and preserve the exact full tooltip")
-        for forbidden_token in ("replace(", "erase(", "normalize", "BattleRules", "SettingsService", "custom_minimum_size", "visible =", "await ", "call_deferred", "create_timer"):
-            ensure(forbidden_token not in action_guide_setter_body, errors, f"Battle ActionGuide compact first view must not rewrite semantics, mutate layout, or add timing via {forbidden_token}")
-    action_guide_refit_match = re.search(r"func _refit_battle_action_guide\(\) -> void:(?P<body>.*?)(?=\nfunc )", battle_shell_text, flags=re.DOTALL)
-    ensure(action_guide_refit_match is not None, errors, "BattleShell must refit existing ActionGuide source text on breakpoint changes")
-    if action_guide_refit_match is not None:
-        action_guide_refit_body = action_guide_refit_match.group("body")
-        action_guide_refit_order = tuple(action_guide_refit_body.find(token) for token in (
-            'if _action_guide_source_text == "":',
-            "return",
-            "var visible_lines: Array[String] = []",
-            'for raw_line in _action_guide_source_text.split("\\n", false):',
-            "var line := String(raw_line).strip_edges()",
-            'if line != "":',
-            "visible_lines.append(_battle_action_context_word_text(line, 96))",
-            "var line_limit := 1 if _compact_layout_active else 3",
-            '_action_guide.text = "\\n".join(visible_lines.slice(0, min(line_limit, visible_lines.size())))',
-        ))
-        ensure(all(index >= 0 for index in action_guide_refit_order) and list(action_guide_refit_order) == sorted(action_guide_refit_order), errors, "Battle ActionGuide refit must preserve source order, apply the established whole-word ellipsis per line, and select exactly one compact or three wide lines")
-        ensure("tooltip_text" not in action_guide_refit_body, errors, "Responsive ActionGuide refit must not replace the already-enriched exact tooltip")
-        for forbidden_token in ("FrontierVisualKit.compact_text", '"..."', "left(", "substr(", "replace(", "erase(", "normalize", "BattleRules", "SettingsService", "custom_minimum_size", "visible =", "await ", "call_deferred", "create_timer"):
-            ensure(forbidden_token not in action_guide_refit_body, errors, f"Battle ActionGuide responsive refit must not rewrite semantics, mutate layout, or add timing via {forbidden_token}")
-    ensure(battle_shell_text.count("_set_battle_action_guide(") == 2, errors, "Battle ActionGuide must have exactly one setter definition and one refresh call")
-    ensure(battle_shell_text.count("_refit_battle_action_guide()") == 3, errors, "Battle ActionGuide refit must have one definition plus setter and responsive-layout calls")
-    ensure(battle_shell_text.count("_action_guide.tooltip_text = _join_tooltip_sections([") == 1, errors, "Battle ActionGuide must preserve one exact enriched tactical tooltip after its compact setter")
     action_guide_word_safe_match = re.search(r"func _battle_action_guide_visible_text_is_word_safe\(action_guide: Label, source_text: String\) -> bool:(?P<body>.*?)(?=\nfunc )", active_play_report_text, flags=re.DOTALL)
     ensure(action_guide_word_safe_match is not None, errors, "Active-play Settings report must independently prove ActionGuide word-safe visible fitting")
     if action_guide_word_safe_match is not None:
@@ -17741,6 +17633,93 @@ def validate_battle_layout_detached_route_compatibility(errors: list[str]) -> No
             ensure(forbidden_token not in stage_helper_body, errors, f"Battle layout diagnostic helper must remain observation-only and avoid {forbidden_token}")
 
 
+def validate_battle_fullscreen_composition(errors: list[str]) -> None:
+    report_path = ROOT / "tests" / "battle_screen_report.gd"
+    required_paths = (BATTLE_SCENE_PATH, BATTLE_SCRIPT_PATH, BATTLE_BOARD_VIEW_SCRIPT_PATH, report_path)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing full-screen battle owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    def gd_block(text: str, name: str) -> str:
+        match = re.search(rf"^func {re.escape(name)}\([^\n]*\)[^\n]*:\n[\s\S]*?(?=^func |\Z)", text, re.MULTILINE)
+        return match.group(0) if match else ""
+
+    def node_body(scene_text: str, header: str) -> str | None:
+        match = re.search(re.escape(header) + r"\n(?P<body>.*?)(?=\n\[)", scene_text, re.S)
+        return match.group("body") if match else None
+
+    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    # The field fills the window; the HUD floats over it.
+    for header in (
+        '[node name="BattleBoard" type="Control" parent="."]',
+        '[node name="Hud" type="Control" parent="."]',
+    ):
+        body = node_body(scene_text, header)
+        ensure(body is not None and "anchors_preset = 15" in body and "anchor_right = 1.0" in body and "anchor_bottom = 1.0" in body, errors, f"Battle must stretch over the whole window: {header}")
+    hud_body = node_body(scene_text, '[node name="Hud" type="Control" parent="."]') or ""
+    ensure("mouse_filter = 2" in hud_body, errors, "Battle HUD layer must let clicks through to the field")
+    for retired_node in ("SidebarShell", "BattleTabs", "Footer", "ActionGuide", "BriefingPanel", "RiskPanel", "ConsequencePanel", "TimingPanel", "InitiativePanel", "PlayerRoster", "EnemyRoster", "SpellbookDialog"):
+        ensure(f'[node name="{retired_node}"' not in scene_text, errors, f"Battle must not bring back the retired {retired_node} panel")
+    command_headers = [
+        f'[node name="{name}" type="{node_type}" parent="Hud/CommandBar/CommandRow{parent}"]'
+        for name, node_type, parent in (
+            ("Options", "Button", "/LeftCommands"),
+            ("Surrender", "Button", "/LeftCommands"),
+            ("Retreat", "Button", "/LeftCommands"),
+            ("AutoBattle", "Button", "/LeftCommands"),
+            ("QuickResolve", "Button", "/LeftCommands"),
+            ("LogLine", "Button", ""),
+            ("LogOpen", "Button", ""),
+            ("Spellbook", "Button", "/RightCommands"),
+            ("Wait", "Button", "/RightCommands"),
+            ("Defend", "Button", "/RightCommands"),
+        )
+    ]
+    command_indexes = [scene_text.find(header) for header in command_headers]
+    ensure(all(index >= 0 for index in command_indexes) and command_indexes == sorted(command_indexes), errors, "Battle command bar must hold Options, Surrender, Retreat, Auto, Quick Resolve, the log line, then Spellbook, Wait and Defend")
+    for overlay in ("OptionsPopover", "SpellbookPopover", "LogPopover", "ResultOverlay"):
+        header = next((line for line in scene_text.splitlines() if line.startswith(f'[node name="{overlay}" ') and 'parent="Hud"' in line), "")
+        body = node_body(scene_text, header) if header else None
+        ensure(body is not None and "visible = false" in body, errors, f"Battle {overlay} must start closed so the field stays clear")
+
+    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    plates = gd_block(shell_text, "_layout_plate")
+    for token in (
+        "var layout: Dictionary = _battle_board_view.hero_figure_layout(side)",
+        "room = minf(room, grid.position.x - PLATE_GRID_GAP * k - edge if side == \"player\" else size.x - edge - grid.end.x - PLATE_GRID_GAP * k)",
+        "name_label.add_theme_font_size_override(\"font_size\", name_font_size)",
+    ):
+        ensure(token in plates, errors, f"Battle hero plates must hang under the heroes and fit the name beside the hexes: {token}")
+    result = gd_block(shell_text, "_populate_result")
+    ensure("if summary != \"\" and line.contains(summary):" in result, errors, "Battle result details must not repeat how the battle ended")
+    for function_name in ("_refresh_hero_plates", "_refresh_command_bar", "validation_hud_snapshot", "_open_battle_report_in_place"):
+        ensure(f"func {function_name}(" in shell_text, errors, f"BattleShell is missing full-screen owner {function_name}")
+
+    board_text = BATTLE_BOARD_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure('return -1.0 if side == "enemy" else 1.0' in gd_block(board_text, "_hero_facing"), errors, "The enemy hero must be mirrored to face the field")
+    ensure("Vector2(_hero_facing(side) * scale, scale * (1.0 + bob))" in gd_block(board_text, "_draw_hero_figures"), errors, "Hero figures must be drawn through their facing")
+    chip_hit = gd_block(board_text, "_turn_ribbon_chip_at_position")
+    ensure("for entry in _turn_ribbon_chips():" in chip_hit and 'Rect2(entry.get("rect", Rect2())).has_point(position)' in chip_hit, errors, "Turn-ribbon hit testing must reuse the painted chips")
+    draw_board = gd_block(board_text, "_draw_board")
+    draw_order = [draw_board.find(token) for token in ("_draw_terrain(", "_draw_hero_figures(hex_layout)", "_draw_hex_grid(", "_draw_stack_tokens(", "_draw_turn_ribbon()", "_draw_hover_forecast()")]
+    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Battle field must paint terrain, heroes, hexes, stacks, then the ribbon and the hover forecast on top")
+
+    report_text = report_path.read_text(encoding="utf-8")
+    for token in (
+        "const LAYOUT_SIZES := [Vector2i(1920, 1080), Vector2i(1280, 720)",
+        "for size in [Vector2i(1920, 1080), Vector2i(1280, 720)]:",
+        "await _check_two_heroes(size)",
+        "func _covered_hexes(",
+        "func _play_by_mouse()",
+        "func _play_by_keyboard()",
+        "func _check_result(",
+        "func _check_auto_battle()",
+        "func _check_quick_resolve()",
+    ):
+        ensure(token in report_text, errors, f"Battle screen report is missing full-screen coverage: {token}")
+
+
 def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     board_path = BATTLE_BOARD_VIEW_SCRIPT_PATH
     shell_path = BATTLE_SCRIPT_PATH
@@ -17755,21 +17734,9 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     scene_text = scene_path.read_text(encoding="utf-8")
     smoke_text = smoke_path.read_text(encoding="utf-8")
 
-    for commander_name in ("PlayerCommand", "EnemyCommand"):
-        commander_match = re.search(
-            rf'\[node name="{commander_name}" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox/[^"]+"\]\n(?P<body>.*?)(?=\n\[node )',
-            scene_text,
-            re.S,
-        )
-        ensure(commander_match is not None, errors, f"BattleShell must retain the authored {commander_name} Label")
-        if commander_match is not None:
-            commander_body = commander_match.group("body")
-            ensure("clip_text = true" in commander_body, errors, f"{commander_name} must clip only genuine horizontal overflow")
-            ensure("text_overrun_behavior = 4" in commander_body, errors, f"{commander_name} must use native word ellipsis")
-            ensure("autowrap_mode" not in commander_body, errors, f"{commander_name} must not wrap its two explicit compact lines")
-    system_actions_header = '[node name="SystemActions" type="HBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]'
-    ensure(scene_text.count(system_actions_header) == 1, errors, "Battle system controls must own one compact SystemActions row")
-    system_action_parent = "ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions"
+    system_actions_header = '[node name="SystemActions" type="HBoxContainer" parent="Hud/OptionsPopover/OptionsBox"]'
+    ensure(scene_text.count(system_actions_header) == 1, errors, "Battle Options must own one compact SystemActions row")
+    system_action_parent = "Hud/OptionsPopover/OptionsBox/SystemActions"
     system_action_headers = tuple(
         f'[node name="{name}" type="{node_type}" parent="{system_action_parent}"]'
         for name, node_type in (("SaveSlot", "OptionButton"), ("Save", "Button"), ("Settings", "Button"), ("Menu", "Button"))
@@ -17782,40 +17749,6 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     nullable_live_lookup = '@onready var _battle_board_cursor_live_label: Label = get_node_or_null("%BattleBoardCursorLive") as Label'
     ensure(board_text.count(nullable_live_lookup) == 1, errors, "BattleBoardView must use exactly one nullable BattleBoardCursorLive lookup for standalone report fixtures")
     ensure('@onready var _battle_board_cursor_live_label: Label = %BattleBoardCursorLive' not in board_text, errors, "BattleBoardView must not hard-resolve BattleBoardCursorLive outside the authored BattleShell scene")
-
-    status_helper_match = re.search(
-        r"func _set_battle_status_text\(full_text: String\) -> void:\n(?P<body>.*?)(?=\nfunc )",
-        shell_text,
-        re.S,
-    )
-    ensure(status_helper_match is not None, errors, "BattleShell must own one full-status native pixel-ellipsis helper")
-    ensure(shell_text.count("_set_battle_status_text(BattleRules.describe_status(_session))") == 1, errors, "Battle refresh must pass the exact full BattleRules status to native ellipsis once")
-    ensure("FrontierVisualKit.set_compact_label(_status_label, BattleRules.describe_status(_session), 1, 62, false)" not in shell_text, errors, "Battle Status must not retain the fixed 62-character visible cut")
-    for label_name, stretch_ratio in (("Header", "0.8"), ("Status", "1.4"), ("Pressure", "0.8")):
-        label_match = re.search(
-            rf'\[node name="{label_name}" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"\]\n(?P<body>.*?)(?=\n\[node )',
-            scene_text,
-            re.S,
-        )
-        ensure(label_match is not None, errors, f"Battle banner must retain the authored {label_name} Label")
-        if label_match is not None:
-            label_body = label_match.group("body")
-            ensure("size_flags_horizontal = 3" in label_body, errors, f"Battle banner {label_name} must remain flexible")
-            ensure(f"size_flags_stretch_ratio = {stretch_ratio}" in label_body, errors, f"Battle banner {label_name} must retain its responsive stretch share {stretch_ratio}")
-            ensure("custom_minimum_size" not in label_body, errors, f"Battle banner {label_name} must not impose a fixed width")
-    if status_helper_match is not None:
-        status_helper_body = status_helper_match.group("body")
-        status_helper_order = tuple(status_helper_body.find(token) for token in (
-            "_status_label.text = full_text",
-            "_status_label.tooltip_text = full_text",
-            "_status_label.clip_text = true",
-            "_status_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
-        ))
-        ensure(all(index >= 0 for index in status_helper_order) and list(status_helper_order) == sorted(status_helper_order), errors, "Battle Status helper must assign exact full text/tooltip then native clipped ellipsis in order")
-        ensure(status_helper_body.count("_status_label") == 4, errors, "Battle Status native-ellipsis helper must change only the existing Status Label's four exact properties")
-        ensure("OVERRUN_TRIM_ELLIPSIS" not in status_helper_body and "OVERRUN_TRIM_WORD_ELLIPSIS_FORCE" not in status_helper_body, errors, "Battle Status must use ordinary native word ellipsis without character or forced overflow policy")
-        for forbidden_token in ("compact", "left(", "substr(", "...", "_header_label", "_pressure_label", "custom_minimum_size", "size_flags", "autowrap", "queue_redraw", "call_deferred"):
-            ensure(forbidden_token not in status_helper_body, errors, f"Battle Status helper must not introduce character/layout/timing drift via {forbidden_token}")
 
     battle_live_match = re.search(
         r'\[node name="BattleBoardCursorLive" type="Label" parent="\."\]\n(?P<body>.*?)(?=\n\[node )',
@@ -17840,24 +17773,7 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
 
     function_names = (
         "_get_tooltip",
-        "_draw_turn_strip",
-        "_turn_strip_rect",
-        "_turn_strip_entries",
-        "_turn_strip_portrait_rect",
-        "_turn_strip_portrait_payload",
-        "_turn_strip_entry_at_position",
-        "_turn_strip_entry_tooltip",
-        "_turn_strip_chip_label",
         "validation_turn_strip_identity_surface",
-        "_draw_stack_caption",
-        "_stack_caption_layout",
-        "_stack_caption_label",
-        "validation_stack_caption_summary",
-        "_draw_footer_line",
-        "_footer_summary_text",
-        "_footer_summary_fit",
-        "validation_footer_summary",
-        "validation_footer_fit_summary",
         "_gui_input",
         "_handle_controller_navigation_input",
         "handle_root_controller_navigation_cancel",
@@ -17891,229 +17807,11 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
             bodies[function_name] = match.group("body")
 
     tooltip_body = bodies.get("_get_tooltip", "")
-    turn_probe_index = tooltip_body.find("_turn_strip_entry_at_position(at_position)")
-    turn_return_index = tooltip_body.find("_turn_strip_entry_tooltip(", turn_probe_index)
+    turn_probe_index = tooltip_body.find("_turn_ribbon_chip_at_position(at_position)")
+    turn_return_index = tooltip_body.find("_turn_ribbon_chip_tooltip(", turn_probe_index)
     hex_probe_index = tooltip_body.find("_hex_cell_at_position(at_position)")
-    ensure(0 <= turn_probe_index < turn_return_index < hex_probe_index, errors, "BattleBoard tooltip routing must resolve an exact painted initiative chip before any hex/stack fallback")
-    ensure(tooltip_body.count("_turn_strip_entry_at_position(at_position)") == 1 and tooltip_body.count("_turn_strip_entry_tooltip(") == 1, errors, "BattleBoard tooltip routing must probe and return one initiative-chip tooltip exactly once")
-
-    draw_turn_body = bodies.get("_draw_turn_strip", "")
-    ensure(draw_turn_body.count("_turn_strip_rect(field_rect)") == 1, errors, "Battle initiative drawing must consume the shared ribbon foundation geometry exactly once")
-    ensure(draw_turn_body.count("_turn_strip_entries(field_rect)") == 1, errors, "Battle initiative drawing must consume the shared chip geometry exactly once")
-    ensure(draw_turn_body.count("_turn_strip_portrait_payload(stack, rect)") == 1, errors, "Battle initiative drawing must consume each stack's exact shared portrait payload once")
-    ensure(draw_turn_body.count("_turn_strip_chip_label(stack, rect.size.x)") == 1, errors, "Battle initiative drawing must use the width-fitted readable stack label exactly once")
-    draw_turn_order = tuple(draw_turn_body.find(token) for token in (
-        "var strip_rect := _turn_strip_rect(field_rect)",
-        "draw_rect(strip_rect, TURN_STRIP_FOUNDATION_FILL, true)",
-        "for entry_value in _turn_strip_entries(field_rect):",
-        'var current := String(stack.get("battle_id", "")) == String(_battle.get("active_stack_id", ""))',
-        "draw_rect(rect, TURN_STRIP_ACTIVE_FILL if current else TURN_STRIP_CHIP_FILL, true)",
-        "draw_rect(accent_rect, side_color, true)",
-        "var portrait := _turn_strip_portrait_payload(stack, rect)",
-        "draw_rect(portrait_rect, TURN_STRIP_PORTRAIT_FILL, true)",
-        "if portrait_texture is Texture2D:",
-        "draw_texture_rect(portrait_texture, portrait_rect, false",
-        "draw_rect(rect, ACTIVE_COLOR if current else TURN_STRIP_QUEUED_FRAME",
-        "_draw_text(_turn_strip_chip_label(stack, rect.size.x), rect.position + Vector2(TURN_STRIP_LABEL_LEFT_INSET, 18.0), TEXT_COLOR, 10)",
-    ))
-    ensure(all(index >= 0 for index in draw_turn_order) and list(draw_turn_order) == sorted(draw_turn_order), errors, "Battle initiative portrait ribbon must draw foundation, dark chips, side accents, portraits, state frames, then readable labels in exact order")
-    for forbidden_token in ("_stack_initials", '"%s x%d" % [_stack_initials', "turn_order =", "chip_width:", "drawn :="):
-        ensure(forbidden_token not in draw_turn_body, errors, f"Battle initiative drawing must not retain duplicate/initial-only geometry via {forbidden_token}")
-    for forbidden_token in ('_side_color(String(stack.get("side", ""))).darkened(0.14)', "fill = ACTIVE_COLOR", "Color(0.10, 0.12, 0.14, 0.96)"):
-        ensure(forbidden_token not in draw_turn_body, errors, f"Battle initiative ribbon must not retain the rejected flat colored chip paint via {forbidden_token}")
-    ensure("func _stack_initials(" not in board_text, errors, "BattleBoardView must not retain the opaque initials-only initiative-label helper")
-
-    for token in (
-        'const TURN_STRIP_PRESENTATION_MODEL := "compact_art_backed_unit_portrait_ribbon"',
-        "const TURN_STRIP_MAX_WIDTH := 620.0",
-        "const TURN_STRIP_HEIGHT := 36.0",
-        "const TURN_STRIP_MARGIN := 10.0",
-        "const TURN_STRIP_PORTRAIT_EXTENT := 22.0",
-        "const TURN_STRIP_LABEL_LEFT_INSET := 32.0",
-    ):
-        ensure(board_text.count(token) == 1, errors, f"Battle initiative portrait ribbon is missing exact bounded presentation constant: {token}")
-
-    strip_rect_body = bodies.get("_turn_strip_rect", "")
-    strip_rect_order = tuple(strip_rect_body.find(token) for token in (
-        "field_rect.size.x - TURN_STRIP_MARGIN * 2.0",
-        "TURN_STRIP_MAX_WIDTH",
-        "field_rect.position + Vector2(TURN_STRIP_MARGIN, TURN_STRIP_MARGIN)",
-        "Vector2(strip_width, TURN_STRIP_HEIGHT)",
-    ))
-    ensure(all(index >= 0 for index in strip_rect_order) and list(strip_rect_order) == sorted(strip_rect_order), errors, "Battle initiative ribbon geometry must derive one bounded foundation from the live field rectangle")
-    for forbidden_token in ("_battle", "turn_order", "Input.", "draw_", "queue_redraw", "await ", "create_timer", "position =", "size ="):
-        ensure(forbidden_token not in strip_rect_body, errors, f"Battle initiative ribbon foundation geometry must remain pure and avoid {forbidden_token}")
-
-    entries_body = bodies.get("_turn_strip_entries", "")
-    for required_token in (
-        "var strip_rect := _turn_strip_rect(field_rect)",
-        "minf(122.0, (strip_rect.size.x - 14.0)",
-        "if entries.size() >= 5:",
-        "if stack.is_empty() or _stack_alive_count(stack) <= 0:",
-        '"slot": entries.size() + 1',
-        '"stack": stack',
-        '"rect": Rect2(',
-        "strip_rect.position + Vector2(7.0 + float(entries.size()) * chip_width, 5.0)",
-        "Vector2(chip_width - 5.0, strip_rect.size.y - 10.0)",
-    ):
-        ensure(required_token in entries_body, errors, f"Battle initiative shared geometry is missing exact token: {required_token}")
-    ensure(entries_body.count("_stack_by_id(") == 1 and entries_body.count("entries.append({") == 1, errors, "Battle initiative shared geometry must materialize each ordered live stack through one path")
-    ensure("430.0" not in entries_body and "92.0" not in entries_body, errors, "Battle initiative chip geometry must not retain the rejected narrow text-only dimensions")
-
-    portrait_rect_body = bodies.get("_turn_strip_portrait_rect", "")
-    portrait_rect_order = tuple(portrait_rect_body.find(token) for token in (
-        "minf(TURN_STRIP_PORTRAIT_EXTENT, maxf(0.0, chip_rect.size.y - 6.0))",
-        "chip_rect.position + Vector2(4.0 + extent * 0.5, chip_rect.size.y * 0.5)",
-        "return Rect2(center - Vector2(extent, extent) * 0.5, Vector2(extent, extent))",
-    ))
-    ensure(all(index >= 0 for index in portrait_rect_order) and list(portrait_rect_order) == sorted(portrait_rect_order), errors, "Battle initiative portrait geometry must stay bounded and centered within its chip")
-    for forbidden_token in ("_battle", "ContentService", "load(", "Input.", "draw_", "queue_redraw", "await ", "create_timer"):
-        ensure(forbidden_token not in portrait_rect_body, errors, f"Battle initiative portrait geometry must remain pure and avoid {forbidden_token}")
-
-    portrait_payload_body = bodies.get("_turn_strip_portrait_payload", "")
-    portrait_payload_order = tuple(portrait_payload_body.find(token) for token in (
-        'String(stack.get("unit_id", "")).strip_edges()',
-        "ContentService.get_unit_art(unit_id) if unit_id != \"\" else {}",
-        'String(art.get("battle_icon", "")).strip_edges()',
-        "_unit_battle_icon_for_stack(stack) if unit_id != \"\" else null",
-        "_turn_strip_portrait_rect(chip_rect)",
-        '"model": TURN_STRIP_PRESENTATION_MODEL',
-        '"path": path',
-        '"loaded": texture != null',
-        '"iconless_fallback": texture == null',
-        '"contained": chip_rect.encloses(portrait_rect)',
-    ))
-    ensure(all(index >= 0 for index in portrait_payload_order) and list(portrait_payload_order) == sorted(portrait_payload_order), errors, "Battle initiative portrait payload must resolve exact content art through the established loader before exposing fail-closed geometry")
-    for forbidden_token in ("BattleRules", "advance_turn", "Input.", "emit_signal", "queue_redraw", "sort(", "erase(", "await ", "create_timer"):
-        ensure(forbidden_token not in portrait_payload_body, errors, f"Battle initiative portrait payload must remain presentation-only and avoid {forbidden_token}")
-
-    hit_body = bodies.get("_turn_strip_entry_at_position", "")
-    ensure(hit_body.count("_turn_strip_entries(_current_field_rect())") == 1 and hit_body.count("rect.has_point(position)") == 1, errors, "Battle initiative hit testing must reuse the exact current painted geometry and native Rect2 containment")
-    for forbidden_token in ("_hex_cell_at_position", "_stack_id_at_position", "sort", "erase", "Input."):
-        ensure(forbidden_token not in hit_body, errors, f"Battle initiative hit testing must remain geometry-only and avoid {forbidden_token}")
-
-    strip_tooltip_body = bodies.get("_turn_strip_entry_tooltip", "")
-    for required_token in (
-        '"Initiative Strip\\n- Visible slot: %d of %d\\n- Stack: %s x%d\\n- Side: %s\\n- State: %s\\n- Inspection: hovering this chip does not advance initiative or spend an action."',
-        "_stack_full_name(stack)",
-        "_stack_alive_count(stack)",
-        '"current stack" if current else "queued stack"',
-    ):
-        ensure(required_token in strip_tooltip_body, errors, f"Battle initiative chip tooltip is missing exact identity/authority token: {required_token}")
-    for forbidden_token in ("BattleRules", "advance_turn", "emit_signal", "Input.", "queue_redraw"):
-        ensure(forbidden_token not in strip_tooltip_body, errors, f"Battle initiative tooltip must remain observation-only and avoid {forbidden_token}")
-
-    chip_label_body = bodies.get("_turn_strip_chip_label", "")
-    for required_token in (
-        "_stack_full_name(stack)",
-        'var suffix := " x%d" % _stack_alive_count(stack)',
-        "get_theme_default_font()",
-        'var words := full_name.split(" ", false)',
-        "font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x <= max_text_width",
-        "for word_count in range(words.size() - 1, 0, -1):",
-        'var word_prefix := " ".join(words.slice(0, word_count))',
-        'candidate = "%s…%s" % [word_prefix, suffix]',
-        'var compact_name := String(words[0]) if not words.is_empty() else full_name',
-        "maxf(24.0, chip_width - TURN_STRIP_LABEL_LEFT_INSET - 6.0)",
-        "while compact_name.length() > 3:",
-        'return "%s…%s" % [full_name.left(3), suffix]',
-    ):
-        ensure(required_token in chip_label_body, errors, f"Battle initiative word-boundary label fitter is missing exact token: {required_token}")
-    word_fit_index = chip_label_body.find("for word_count in range(words.size() - 1, 0, -1):")
-    character_fit_index = chip_label_body.find("while compact_name.length() > 3:")
-    ensure(0 <= word_fit_index < character_fit_index, errors, "Battle initiative label fitting must exhaust complete-word prefixes before the unbreakable-first-word character fallback")
-    for forbidden_token in ('"..."', "to_upper", "_stack_initials", "stack[", "sort", "erase(", "BattleRules", "Input."):
-        ensure(forbidden_token not in chip_label_body, errors, f"Battle initiative word-boundary label fitter must preserve source identity and avoid {forbidden_token}")
-
-    draw_caption_body = bodies.get("_draw_stack_caption", "")
-    ensure(draw_caption_body.count("_stack_caption_layout(center, radius, stack)") == 1 and "_stack_short_label(stack)" not in draw_caption_body, errors, "Painted BattleBoard stack captions must use only the shared nameplate layout")
-    for required_token in (
-        'const STACK_CAPTION_PLATE_MODEL := "compact_translucent_side_accent_nameplate"',
-        "const STACK_CAPTION_FONT_SIZE := 10",
-        "const STACK_CAPTION_HORIZONTAL_PADDING := 5.0",
-        "const STACK_CAPTION_PLATE_HEIGHT := 16.0",
-        "const STACK_CAPTION_TOKEN_GAP := 2.0",
-        "const STACK_CAPTION_ACCENT_WIDTH := 2.0",
-        "const STACK_CAPTION_PLATE_FILL := Color(0.018, 0.024, 0.029, 0.78)",
-        "const STACK_CAPTION_PLATE_FRAME := Color(0.80, 0.74, 0.57, 0.30)",
-        "const STACK_CAPTION_PLATE_SHADOW := Color(0.01, 0.014, 0.018, 0.42)",
-        "const STACK_CAPTION_ACCENT_ALPHA := 0.82",
-    ):
-        ensure(board_text.count(required_token) == 1, errors, f"Battle stack nameplate must own one exact restrained presentation constant: {required_token}")
-    for required_token in (
-        'var layout := _stack_caption_layout(center, radius, stack)',
-        'draw_rect(Rect2(plate_rect.position + Vector2(1.0, 2.0), plate_rect.size), STACK_CAPTION_PLATE_SHADOW, true)',
-        "draw_rect(plate_rect, STACK_CAPTION_PLATE_FILL, true)",
-        "draw_rect(plate_rect, STACK_CAPTION_PLATE_FRAME, false, 1.0)",
-        "draw_rect(accent_rect, accent_color, true)",
-        '_draw_text(String(layout.get("label", "")), text_position, TEXT_COLOR, STACK_CAPTION_FONT_SIZE)',
-    ):
-        ensure(required_token in draw_caption_body, errors, f"Painted Battle stack caption is missing exact nameplate draw order: {required_token}")
-    draw_caption_order = tuple(draw_caption_body.find(token) for token in (
-        "STACK_CAPTION_PLATE_SHADOW",
-        "STACK_CAPTION_PLATE_FILL",
-        "STACK_CAPTION_PLATE_FRAME",
-        "draw_rect(accent_rect, accent_color, true)",
-        "_draw_text(",
-    ))
-    ensure(all(index >= 0 for index in draw_caption_order) and list(draw_caption_order) == sorted(draw_caption_order), errors, "Battle stack nameplate must paint shadow, plate, frame, side accent, then exact caption text")
-    for forbidden_token in ("_battle", "BattleRules", "Input.", "emit_signal", "queue_redraw", "await ", "create_timer", "create_tween"):
-        ensure(forbidden_token not in draw_caption_body, errors, f"Battle stack nameplate drawing must remain presentation-only and avoid {forbidden_token}")
-
-    caption_layout_body = bodies.get("_stack_caption_layout", "")
-    ensure(caption_layout_body.count("_stack_caption_label(stack)") == 1 and "_stack_short_label(stack)" not in caption_layout_body, errors, "Battle stack nameplate layout must retain the dedicated word-boundary caption label")
-    caption_layout_order = tuple(caption_layout_body.find(token) for token in (
-        "var label := _stack_caption_label(stack)",
-        "get_theme_default_font()",
-        "font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1.0, STACK_CAPTION_FONT_SIZE)",
-        "var upper_extent := _stack_standee_size(radius, stack).y - radius * STACK_STANDEE_GROUND_OFFSET_FACTOR",
-        "center.y - upper_extent - STACK_CAPTION_TOKEN_GAP - plate_size.y",
-        "var plate_rect := Rect2(plate_position, plate_size)",
-        "var text_rect := Rect2(Vector2(text_position.x, plate_position.y + 2.0), text_size)",
-        "var accent_rect := Rect2(plate_position, Vector2(STACK_CAPTION_ACCENT_WIDTH, plate_size.y))",
-        'var side_color := _side_color(String(stack.get("side", "")))',
-        "var accent_color := Color(side_color.r, side_color.g, side_color.b, STACK_CAPTION_ACCENT_ALPHA)",
-        '"model": STACK_CAPTION_PLATE_MODEL',
-    ))
-    ensure(all(index >= 0 for index in caption_layout_order) and list(caption_layout_order) == sorted(caption_layout_order), errors, "Battle stack nameplate geometry must derive exact text size, token clearance, contained plate/text/accent, and live side accent in order")
-    for forbidden_token in ("_battle", "BattleRules", "_stack_cells", "Input.", "draw_", "queue_redraw", "sort(", "erase(", "await ", "create_timer"):
-        ensure(forbidden_token not in caption_layout_body, errors, f"Battle stack nameplate layout must stay detached, local, and avoid {forbidden_token}")
-
-    caption_label_body = bodies.get("_stack_caption_label", "")
-    caption_order = tuple(caption_label_body.find(token) for token in (
-        "var full_name := _stack_full_name(stack)",
-        "if full_name.length() <= 13:",
-        "return full_name",
-        "var prefix := full_name.left(12)",
-        'var boundary := prefix.rfind(" ")',
-        'return "%s…" % full_name.left(12)',
-        'return "%s…" % prefix.left(boundary).strip_edges()',
-    ))
-    ensure(all(index >= 0 for index in caption_order) and list(caption_order) == sorted(caption_order), errors, "BattleBoard caption fitter must retain exact fitting names and truncate overflowing multi-word names only at the last complete word")
-    for forbidden_token in ('"..."', "_turn_strip_chip_label", "_stack_short_label", "get_theme", "BattleRules", "Input.", "sort(", "erase("):
-        ensure(forbidden_token not in caption_label_body, errors, f"BattleBoard caption fitting must remain local, deterministic, and caption-only: {forbidden_token}")
-    caption_surface_body = bodies.get("validation_stack_caption_summary", "")
-    caption_surface_order = tuple(caption_surface_body.find(token) for token in (
-        "var field_rect := _current_field_rect()",
-        "var hex_layout := _hex_layout(field_rect)",
-        "var stack_cells := _stack_cells()",
-        "for stack in _all_visible_stacks():",
-        'var battle_id := String(stack.get("battle_id", ""))',
-        "var center := _stack_presentation_center(stack, cell, hex_layout, stack_cells)",
-        "var layout := _stack_caption_layout(center, radius, stack)",
-        '"full_name": _stack_full_name(stack)',
-        '"visible_caption": _stack_caption_label(stack)',
-        '"tooltip": _stack_board_tooltip(battle_id)',
-        '"plate_model": STACK_CAPTION_PLATE_MODEL',
-        '"text_contained": plate_rect.encloses(text_rect)',
-        '"accent_contained": plate_rect.encloses(accent_rect)',
-        '"plate_above_token": plate_rect.end.y <= center.y - token_radius + 0.01',
-        '"field_contained": field_rect.encloses(plate_rect)',
-        "return rows",
-    ))
-    ensure(all(index >= 0 for index in caption_surface_order) and list(caption_surface_order) == sorted(caption_surface_order), errors, "BattleBoard caption validation must expose exact painted/full/tooltip identity and nameplate geometry in live stack order")
-    for forbidden_token in ("Input.", "emit_signal", "queue_redraw", "sort(", "erase(", "BattleRules"):
-        ensure(forbidden_token not in caption_surface_body, errors, f"BattleBoard caption validation must remain observation-only: {forbidden_token}")
+    ensure(0 <= turn_probe_index < turn_return_index < hex_probe_index, errors, "BattleBoard tooltip routing must resolve an exact painted turn-ribbon chip before any hex/stack fallback")
+    ensure(tooltip_body.count("_turn_ribbon_chip_at_position(at_position)") == 1 and tooltip_body.count("_turn_ribbon_chip_tooltip(") == 1, errors, "BattleBoard tooltip routing must probe and return one turn-ribbon chip tooltip exactly once")
 
     caption_test_match = re.search(r"func _validate_stack_caption_word_boundaries\(board: Control, session\) -> bool:(?P<body>.*?)(?=\nfunc )", smoke_text, re.S)
     ensure(caption_test_match is not None, errors, "Battle controller owner must independently prove painted stack-caption word boundaries")
@@ -18131,79 +17829,6 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
             ensure(required_token in caption_control_body, errors, f"Independent Battle caption control is missing exact token: {required_token}")
         for forbidden_token in ("_stack_caption_label", "_stack_short_label", "BattleBoardView", "board.call", "sort(", "erase("):
             ensure(forbidden_token not in caption_control_body, errors, f"Independent Battle caption control must not depend on production helpers: {forbidden_token}")
-
-    validation_surface_body = bodies.get("validation_turn_strip_identity_surface", "")
-    validation_order = tuple(validation_surface_body.find(token) for token in (
-        "_current_field_rect()",
-        "var strip_rect := _turn_strip_rect(field_rect)",
-        "_turn_strip_entries(field_rect)",
-        "for entry_value in entries:",
-        "var center := rect.get_center()",
-        "var visible_label := _turn_strip_chip_label(stack, rect.size.x)",
-        "var portrait := _turn_strip_portrait_payload(stack, rect)",
-        '"visible_label": visible_label',
-        '"visible_label_width": font.get_string_size(visible_label, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x if font != null else 0.0',
-        '"tooltip": _get_tooltip(center)',
-        '"presentation_model": TURN_STRIP_PRESENTATION_MODEL',
-        '"missing_portrait_control": _turn_strip_portrait_payload({"unit_id": "unit_missing_turn_strip_portrait"}',
-        '"turn_order":',
-    ))
-    ensure(all(index >= 0 for index in validation_order) and list(validation_order) == sorted(validation_order), errors, "Battle initiative validation must capture shared geometry, then exact painted labels and native center tooltips in order")
-    for forbidden_token in ("Input.", "emit_signal", "BattleRules", "advance_turn", "queue_redraw", "sort", "erase"):
-        ensure(forbidden_token not in validation_surface_body, errors, f"Battle initiative validation must remain detached/read-only and avoid {forbidden_token}")
-
-    draw_footer_body = bodies.get("_draw_footer_line", "")
-    footer_summary_body = bodies.get("_footer_summary_text", "")
-    footer_fit_body = bodies.get("_footer_summary_fit", "")
-    footer_validation_body = bodies.get("validation_footer_summary", "")
-    footer_control_body = bodies.get("validation_footer_fit_summary", "")
-    ensure(draw_footer_body.count("_footer_summary_fit(_footer_summary_text(), footer_width)") == 1 and 'String(fit.get("visible_text", ""))' in draw_footer_body, errors, "Battle footer drawing must fit the exact full summary once and paint only its returned visible text")
-    ensure("summary.left(84)" not in board_text, errors, "Battle footer must not retain the unsafe fixed-character cut")
-    footer_summary_order = tuple(footer_summary_body.find(token) for token in (
-        'String(_battle.get("encounter_name", "Battle"))',
-        'int(_battle.get("round", 1))',
-        'int(_battle.get("max_rounds", 12))',
-        'String(_battle.get("terrain", "plains")).capitalize()',
-        '_distance_label(int(_battle.get("distance", 1)))',
-        '_target_state_label()',
-        '_movement_state_label()',
-        '_controller_cursor_state_label()',
-        "return summary",
-    ))
-    ensure(all(index >= 0 for index in footer_summary_order) and list(footer_summary_order) == sorted(footer_summary_order), errors, "Battle footer must retain the exact encounter/round/terrain/distance/target/movement/cursor full-summary order")
-    for required_token in (
-        "var max_text_width := maxf(0.0, footer_width - 18.0)",
-        "get_theme_default_font()",
-        "font.get_string_size(full_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 11).x",
-        'var boundary := candidate.rfind(" ")',
-        'candidate = candidate.trim_suffix("|").strip_edges()',
-        'var visible_text := "%s…" % candidate if candidate != "" else "…"',
-        "font.get_string_size(visible_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 11).x",
-        '"full_text": full_text',
-        '"visible_text": visible_text',
-        '"max_text_width": max_text_width',
-        '"fits": true',
-        '"truncated": true',
-    ):
-        ensure(required_token in footer_fit_body, errors, f"Battle footer pixel fitter is missing exact token: {required_token}")
-    for forbidden_token in ("left(84)", "substr(0, 84)", "get_string_size(candidate", "sort(", "erase(", "Input.", "BattleRules"):
-        ensure(forbidden_token not in footer_fit_body, errors, f"Battle footer pixel fitter must stay word/pixel-only and avoid {forbidden_token}")
-    footer_validation_order = tuple(footer_validation_body.find(token) for token in (
-        "_current_field_rect()",
-        "minf(field_rect.size.x - 20.0, 520.0)",
-        "var board_rect := Rect2(Vector2.ZERO, size)",
-        "_footer_summary_fit(_footer_summary_text(), footer_width)",
-        'summary["footer_rect"] = footer_rect',
-        'summary["field_rect"] = field_rect',
-        'summary["board_rect"] = board_rect',
-        'summary["footer_contained"] = board_rect.encloses(footer_rect)',
-        "return summary",
-    ))
-    ensure(all(index >= 0 for index in footer_validation_order) and list(footer_validation_order) == sorted(footer_validation_order), errors, "Battle footer validation must report the actual shared fit and exact current footer containment")
-    ensure(footer_control_body.count("_footer_summary_fit(text, footer_width)") == 1 and "_footer_summary_text" not in footer_control_body, errors, "Battle footer short control must use the shared fitter with caller-owned text exactly once")
-    for body, owner in ((footer_validation_body, "live validation"), (footer_control_body, "short control")):
-        for forbidden_token in ("Input.", "emit_signal", "queue_redraw", "sort(", "erase(", "BattleRules"):
-            ensure(forbidden_token not in body, errors, f"Battle footer {owner} must remain observation-only and avoid {forbidden_token}")
 
     footer_focused_match = re.search(
         r"func _validate_board_footer_pixel_ellipsis\(board: Control, session, width: int, expect_cursor: bool\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
@@ -18624,44 +18249,58 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     ensure(return_body.count("UiAudio.play_invalid(") == 1, errors, "BattleShell Board result boundary must own exactly one invalid-audio call")
     for forbidden_token in ("BattleRules", "PresentationAudio", "await ", "Timer", "create_timer", "call_deferred", "result.erase(", "result[", "_refresh("):
         ensure(forbidden_token not in return_body, errors, f"BattleShell Board invalid-audio boundary must not change rules, result authority, presentation, timing, or refresh ownership through {forbidden_token}")
-    ensure("return {" not in shell_bodies.get("_on_board_stack_focus_requested", "") and "return _movement_click_response" not in shell_bodies.get("_on_board_hex_destination_requested", "") and shell_bodies.get("_reject_board_stack_click", "").rstrip().endswith("return _return_board_cursor_action_result(response)"), errors, "Every BattleShell board stack/destination result path must converge on the controller-result wrapper")
+    # The body regex runs to the next func, so drop a following doc comment.
+    reject_body = re.sub(r"(?:\n[ \t]*#[^\n]*|\n[ \t]*)+\Z", "", shell_bodies.get("_reject_board_stack_click", ""))
+    ensure("return {" not in shell_bodies.get("_on_board_stack_focus_requested", "") and "return _movement_click_response" not in shell_bodies.get("_on_board_hex_destination_requested", "") and reject_body.endswith("return _return_board_cursor_action_result(response)"), errors, "Every BattleShell board stack/destination result path must converge on the controller-result wrapper")
 
-    root_input_match = re.search(r"func _on_root_window_input\([^\n]*\) -> void:\n(?P<body>.*?)(?=\nfunc _battle_board_root_cancel_input_owned)", shell_text, re.S)
-    board_owned_match = re.search(r"func _battle_board_root_cancel_input_owned\([^\n]*\) -> bool:\n(?P<body>.*?)(?=\nfunc _forward_root_physical_input_to_confirmation)", shell_text, re.S)
-    ensure(root_input_match is not None and board_owned_match is not None, errors, "Could not isolate BattleShell public root-cancel bridge helpers")
+    # The root window forwards physical keys only to an open confirmation;
+    # Esc itself is the shell's: it puts a targeted spell away, closes a
+    # popover, or opens Options.
+    root_input_match = re.search(r"func _on_root_window_input\([^\n]*\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.S)
+    shell_input_match = re.search(r"func _input\(event: InputEvent\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.S)
+    cancel_key_match = re.search(r"func _handle_cancel_key\(\) -> bool:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.S)
+    modal_match = re.search(r"func _modal_window_open\(\) -> bool:\n(?P<body>.*?)(?=\n\n)", shell_text, re.S)
+    ensure(root_input_match is not None and shell_input_match is not None and cancel_key_match is not None and modal_match is not None, errors, "Could not isolate BattleShell confirmation forwarding and Esc helpers")
     if root_input_match is not None:
         root_input_body = root_input_match.group("body")
-        root_bridge_order = (
-            root_input_body.find("_forwarding_confirmation_root_physical_input"),
-            root_input_body.find("not (event is InputEventKey or event is InputEventJoypadButton)"),
-            root_input_body.find('if (not _pending_board_order.is_empty() or _spell_targeting_id != "")'),
-            root_input_body.find('_cancel_selected_order()'),
-            root_input_body.find('_battle_board_root_cancel_input_owned() and event.is_action_pressed("ui_cancel")'),
-            root_input_body.find('bool(_battle_board_view.call("handle_root_controller_navigation_cancel"))'),
-            root_input_body.find("get_tree().root.set_input_as_handled()", root_input_body.find('bool(_battle_board_view.call("handle_root_controller_navigation_cancel"))')),
-            root_input_body.find("return", root_input_body.find('bool(_battle_board_view.call("handle_root_controller_navigation_cancel"))')),
-            root_input_body.find("var dialog := _active_exclusive_confirmation_dialog()"),
-        )
-        ensure(all(index >= 0 for index in root_bridge_order) and list(root_bridge_order) == sorted(root_bridge_order), errors, "BattleShell root input must gate recursion/type, recognize owned Board cancel, call the public cancel method once, handle, return, then consider exclusive dialogs")
-        ensure(root_input_body.count('_battle_board_view.call("handle_root_controller_navigation_cancel")') == 1, errors, "BattleShell root input must call the Board public root-cancel method exactly once")
-        for forbidden_token in ("_forward_root_cancel_input_to_battle_board", "board.push_input(event)", "_forwarding_battle_board_root_cancel_input"):
-            ensure(forbidden_token not in root_input_body, errors, f"BattleShell public Board cancel branch must not retain invalid deferred/private forwarding via {forbidden_token}")
+        root_bridge_order = tuple(root_input_body.find(token) for token in (
+            "_forwarding_confirmation_root_physical_input",
+            "not (event is InputEventKey or event is InputEventJoypadButton)",
+            "var dialog := _active_exclusive_confirmation_dialog()",
+            "get_tree().root.set_input_as_handled()",
+            'call_deferred("_forward_root_physical_input_to_confirmation", dialog, detached_event)',
+        ))
+        ensure(all(index >= 0 for index in root_bridge_order) and list(root_bridge_order) == sorted(root_bridge_order), errors, "BattleShell root input must gate recursion and type, then forward physical keys only to the one open confirmation")
+        for forbidden_token in ("handle_root_controller_navigation_cancel", "_forward_root_cancel_input_to_battle_board", "board.push_input(event)", "_forwarding_battle_board_root_cancel_input"):
+            ensure(forbidden_token not in root_input_body, errors, f"BattleShell root input must not reach into the Board via {forbidden_token}")
         ensure("_forward_root_cancel_input_to_battle_board" not in shell_text and "_forwarding_battle_board_root_cancel_input" not in shell_text and "board.push_input(event)" not in shell_text, errors, "BattleShell must not retain the invalid deferred/private Board cancel bridge")
-    if board_owned_match is not None:
-        board_owned_body = board_owned_match.group("body")
+    if shell_input_match is not None:
+        shell_input_body = shell_input_match.group("body")
+        modal_index = shell_input_body.find("if _modal_window_open():")
+        cancel_index = shell_input_body.find('if event.is_action_pressed("ui_cancel", false):', max(modal_index, 0))
+        helper_index = shell_input_body.find("if _handle_cancel_key():", max(cancel_index, 0))
+        handled_index = shell_input_body.find("get_viewport().set_input_as_handled()", max(helper_index, 0))
+        ensure(0 <= modal_index < cancel_index < helper_index < handled_index, errors, "BattleShell Esc must leave open dialogs alone, then cancel through one helper and mark the key handled")
+    if cancel_key_match is not None:
+        cancel_key_body = cancel_key_match.group("body")
+        cancel_key_order = tuple(cancel_key_body.find(token) for token in (
+            'if _spell_targeting_id != "":',
+            "_cancel_spell_targeting(true)",
+            "if _any_popover_open():",
+            "_close_popovers()",
+            "if _action_playback_in_progress or _battle_exit_handoff_in_progress:",
+            "_toggle_options_popover()",
+        ))
+        ensure(all(index >= 0 for index in cancel_key_order) and list(cancel_key_order) == sorted(cancel_key_order), errors, "BattleShell Esc must put a targeted spell away first, then close a popover, and open Options only when nothing else is open")
+    if modal_match is not None:
+        modal_body = modal_match.group("body")
         for required_token in (
-            "_battle_board_view == null",
-            "not is_instance_valid(_battle_board_view)",
-            'not _battle_board_view.has_method("handle_root_controller_navigation_cancel")',
-            "not _battle_board_view.is_inside_tree()",
-            "not _battle_board_view.is_visible_in_tree()",
-            "get_tree().root.gui_get_focus_owner() != _battle_board_view",
             "_quick_resolve_confirmation_dialog.visible",
             "_withdrawal_confirmation_dialog.visible",
             "_manual_save_overwrite_dialog.visible",
-            "_active_play_settings_dialog == null or not _active_play_settings_dialog.is_open()",
+            "_active_play_settings_dialog.is_open()",
         ):
-            ensure(required_token in board_owned_body, errors, f"BattleShell Board root-cancel ownership is missing exact focus/tree/modal token: {required_token}")
+            ensure(required_token in modal_body, errors, f"BattleShell modal ownership is missing exact dialog token: {required_token}")
 
     for required_token in (
         "for width in [1280, 1920]:",
@@ -20009,7 +19648,6 @@ def validate_confirmation_dialog_visual_surfaces(errors: list[str]) -> None:
             'FrontierVisualKit.apply_confirmation_dialog(_quick_resolve_confirmation_dialog, "primary")',
             'FrontierVisualKit.apply_confirmation_dialog(_withdrawal_confirmation_dialog, "danger")',
             'FrontierVisualKit.apply_confirmation_dialog(_manual_save_overwrite_dialog as ConfirmationDialog, "danger")',
-            'FrontierVisualKit.apply_confirmation_dialog(_spellbook_dialog)',
         ),
         "Map Editor": ('FrontierVisualKit.apply_confirmation_dialog(_dirty_transition_dialog, "danger")',),
         "Outcome": (
@@ -20286,7 +19924,6 @@ def validate_shared_cartographic_tab_plaques(errors: list[str]) -> None:
 
     for path, token, label in (
         (town_path, "FrontierVisualKit.apply_tab_container(_management_tabs)", "Town"),
-        (battle_path, "FrontierVisualKit.apply_tab_container(_battle_tabs)", "Battle"),
         (outcome_path, "FrontierVisualKit.apply_tab_container(_recap_tabs)", "Outcome"),
         (MAIN_MENU_SCRIPT_PATH, 'FrontierVisualKit.apply_tab_container(_menu_tabs, "smoke")', "Main Menu high-contrast owner"),
     ):
@@ -27139,750 +26776,14 @@ def validate_battle_deterministic_rng_state(errors: list[str]) -> None:
             ensure(required_text in contract_text, errors, f"Deterministic battle RNG contract is missing required text: {required_text}")
 
 
-def validate_battle_action_context_word_boundary_ellipsis(errors: list[str]) -> None:
+def validate_battle_animation_started_playback_observer(errors: list[str]) -> None:
     def function_block(text: str, name: str) -> str:
         match = re.search(rf"func {re.escape(name)}\([^\n]*\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\nfunc |\Z)", text, re.S)
         return match.group("body") if match is not None else ""
 
-    smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
-    board_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
-    for path in (BATTLE_SCRIPT_PATH, smoke_path, board_path):
-        ensure(path.exists(), errors, f"Missing Battle action-context word-boundary owner: {path.relative_to(ROOT)}")
-    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, smoke_path, board_path)):
+    ensure(BATTLE_EVENT_ANIMATION_STATE_REPORT_SCRIPT_PATH.exists(), errors, f"Missing battle animation compatibility owner: {BATTLE_EVENT_ANIMATION_STATE_REPORT_SCRIPT_PATH.relative_to(ROOT)}")
+    if not BATTLE_EVENT_ANIMATION_STATE_REPORT_SCRIPT_PATH.exists():
         return
-
-    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
-    smoke_text = smoke_path.read_text(encoding="utf-8")
-    board_text = board_path.read_text(encoding="utf-8")
-    helper = function_block(shell_text, "_battle_action_context_word_text")
-    surface = function_block(shell_text, "_battle_action_context_surface")
-    general_short = function_block(shell_text, "_short_text")
-    ensure(helper and surface and general_short, errors, "Could not isolate Battle action-context whole-word production boundary")
-    if helper:
-        helper_order = tuple(helper.find(token) for token in (
-            "var cleaned := _strip_sentence(text)",
-            "if max_chars <= 0:",
-            'return ""',
-            "if cleaned.length() <= max_chars:",
-            "return cleaned",
-            "if max_chars == 1:",
-            'return "…"',
-            "var prefix := cleaned.left(max_chars - 1).strip_edges()",
-            'var boundary := prefix.rfind(" ")',
-            "if boundary <= 0:",
-            "var fitted := prefix.left(boundary).strip_edges()",
-            'var trailing_connectors := ["a", "an", "the", "to", "of", "and", "or", "for", "with", "from"]',
-            'while fitted.contains(" ") and fitted.get_slice(" ", fitted.get_slice_count(" ") - 1).to_lower() in trailing_connectors:',
-            'fitted = fitted.left(fitted.rfind(" ")).strip_edges()',
-            'return "%s…" % fitted if fitted != "" else "…"',
-        ))
-        ensure(all(index >= 0 for index in helper_order) and list(helper_order) == sorted(helper_order), errors, "Battle action-context compactor must normalize, preserve fitting text, fail closed at bounds, and return the last complete word plus one Unicode ellipsis")
-        for forbidden in ('"..."', "_short_text", "Label", "Control", "font", "size.x", "tooltip", "sort(", "erase(", "await ", "call_deferred"):
-            ensure(forbidden not in helper, errors, f"Battle action-context compactor must remain display-segment-only and avoid {forbidden}")
-    if surface:
-        surface_order = tuple(surface.find(token) for token in (
-            'var visible := "Latest: %s" % _battle_action_context_word_text(latest_action, 38)',
-            'visible = "%s | Next: %s" % [',
-            '_battle_action_context_word_text(next_step.trim_suffix("."), 34)',
-            '"tooltip_text": tooltip',
-            '"latest_action": latest_action',
-            '"next_step": next_step',
-            '"handoff_check": handoff_check',
-            '"source": "post_action_recap"',
-        ))
-        ensure(all(index >= 0 for index in surface_order) and list(surface_order) == sorted(surface_order), errors, "Battle action-context surface must compact only Latest/Next before retaining the exact full tooltip and structured authority")
-        ensure(surface.count("_battle_action_context_word_text(") == 2 and "_short_text(" not in surface, errors, "Battle action-context surface must use its whole-word helper exactly twice and never the general character slicer")
-        for forbidden in ("_last_action_recap_payload.erase", "_last_action_recap_payload[", "BattleRules.", "sort(", "call_deferred", "await "):
-            ensure(forbidden not in surface, errors, f"Battle action-context rendering must not mutate or broaden semantics via {forbidden}")
-    if general_short:
-        ensure('return "%s..." % cleaned.substr(0, max_chars - 1).strip_edges()' in general_short, errors, "General Battle _short_text behavior must remain unchanged outside the action-context slice")
-
-    event_setter = function_block(shell_text, "_set_battle_event_compact_label")
-    event_compact = function_block(shell_text, "_battle_event_compact_text")
-    ensure(event_setter and event_compact, errors, "BattleShell must isolate Event-only assignment and word-safe compact materialization")
-    if event_setter:
-        setter_order = tuple(event_setter.find(token) for token in (
-            "_event_label.tooltip_text = full_text",
-            "_event_label.text = _battle_event_compact_text(full_text, max_lines, 96)",
-        ))
-        ensure(all(index >= 0 for index in setter_order) and list(setter_order) == sorted(setter_order), errors, "Battle Event setter must retain the exact full tooltip before assigning the bounded word-safe visible surface")
-        ensure(event_setter.count("_event_label") == 2, errors, "Battle Event setter must change exactly the existing Label tooltip and text")
-    if event_compact:
-        compact_order = tuple(event_compact.find(token) for token in (
-            "var lines: Array[String] = []",
-            'full_text.split("\\n", false)',
-            "String(raw_line).strip_edges()",
-            'line.begins_with("- ")',
-            'line.trim_prefix("- ").strip_edges()',
-            "lines.append(_battle_action_context_word_text(line, max_chars))",
-            "if lines.is_empty():",
-            "return full_text.strip_edges()",
-            "if lines.size() > max_lines:",
-            "var hidden := lines.size() - max_lines",
-            "lines = lines.slice(0, max_lines)",
-            'lines.append("+ %d more" % hidden)',
-            'return "\\n".join(lines)',
-        ))
-        ensure(all(index >= 0 for index in compact_order) and list(compact_order) == sorted(compact_order), errors, "Battle Event compactor must preserve source-line order, prefix normalization, exact line limits/hidden count, and word-safe fitting")
-        for forbidden in ("FrontierVisualKit", "_event_label", "Label", "Control", "sort(", "erase(", "await ", "call_deferred"):
-            ensure(forbidden not in event_compact, errors, f"Battle Event compact materializer must remain detached and avoid {forbidden}")
-    ensure(shell_text.count("_set_battle_event_compact_label(") == 5, errors, "Battle Event word-safe setter must own the briefing, two refresh paths, ordered playback and its definition")
-    ensure("_set_compact_label(_event_label" not in shell_text and "FrontierVisualKit.set_compact_label(_event_label" not in shell_text, errors, "Battle Event must not fall back to the shared mid-token character compactor")
-
-    control = function_block(smoke_text, "_battle_action_context_word_text_control")
-    focused = function_block(smoke_text, "_assert_battle_post_action_status_recap_contract")
-    ensure(control and focused, errors, "Focused Town/Battle smoke must own an independent action-context word-boundary control and live comparison")
-    if control:
-        for token in ('text.strip_edges().replace("\\n", " ")', 'normalized = normalized.replace("  ", " ")', "if max_chars <= 0:", "if normalized.length() <= max_chars:", "if max_chars == 1:", "var prefix := normalized.left(max_chars - 1).strip_edges()", 'var boundary := prefix.rfind(" ")', "var fitted := prefix.left(boundary).strip_edges()", 'var trailing_connectors := ["a", "an", "the", "to", "of", "and", "or", "for", "with", "from"]', 'fitted = fitted.left(fitted.rfind(" ")).strip_edges()', 'return "%s…" % fitted if fitted != "" else "…"'):
-            ensure(token in control, errors, f"Independent Battle action-context control is missing exact token: {token}")
-        for forbidden in ("shell", "BattleShell", "_battle_action_context_word_text", "_short_text", "Label", "Control", "sort(", "erase("):
-            ensure(forbidden not in control, errors, f"Independent Battle action-context control must avoid production/layout dependency: {forbidden}")
-    if focused:
-        focused_order = tuple(focused.find(token) for token in (
-            'var latest_action := String(context.get("latest_action", ""))',
-            'var next_step := String(context.get("next_step", ""))',
-            'var expected_visible := "Latest: %s | Next: %s"',
-            "_battle_action_context_word_text_control(latest_action, 38)",
-            '_battle_action_context_word_text_control(next_step.trim_suffix("."), 34)',
-            'var actual_visible := String(context.get("visible_text", ""))',
-            'var event_first_line := String(snapshot.get("event_visible_text", "")).get_slice("\\n", 0)',
-            'latest_action != String(response_recap.get("happened", ""))',
-            "actual_visible != expected_visible",
-            "event_first_line != expected_visible",
-            'actual_visible.contains("...")',
-            'not actual_visible.contains("…")',
-            'not String(snapshot.get("event_tooltip_text", "")).contains(latest_action)',
-            '_battle_action_context_word_text_control("Ready now", 9)',
-            '_battle_action_context_word_text_control("overflow", 1)',
-            '_battle_action_context_word_text_control("unbrokenword", 6)',
-            '_battle_action_context_word_text_control("Move to a highlighted hex", 10)',
-        ))
-        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Battle action-context proof must derive the independent visible line, compare the live rail, retain full tooltip authority, then exercise fit and fail-closed controls")
-        for forbidden in ('shell.call("_battle_action_context', "set_text", ".text =", "sort(", "erase("):
-            ensure(forbidden not in focused, errors, f"Focused Battle action-context proof must remain public/read-only and avoid {forbidden}")
-
-    board_control = function_block(board_text, "_battle_event_word_text_control")
-    board_run = function_block(board_text, "_run")
-    ensure(board_control and board_run, errors, "Focused Board smoke must independently prove the shipped blocked-action Event fallback line")
-    if board_control:
-        for token in ('text.strip_edges().replace("\\n", " ")', 'normalized = normalized.replace("  ", " ")', "if max_chars <= 0:", "if normalized.length() <= max_chars:", "if max_chars == 1:", "var prefix := normalized.left(max_chars - 1).strip_edges()", 'var boundary := prefix.rfind(" ")', "var fitted := prefix.left(boundary).strip_edges()", 'var trailing_connectors := ["a", "an", "the", "to", "of", "and", "or", "for", "with", "from"]', 'fitted = fitted.left(fitted.rfind(" ")).strip_edges()', 'return "%s…" % fitted if fitted != "" else "…"'):
-            ensure(token in board_control, errors, f"Independent Board Event word control is missing exact token: {token}")
-        for forbidden in ("shell", "BattleShell", "_battle_action_context_word_text", "_battle_event_compact_text", "_short_text", "Label", "Control", "sort(", "erase("):
-            ensure(forbidden not in board_control, errors, f"Independent Board Event word control must avoid production/layout dependency: {forbidden}")
-    if board_run:
-        board_order = tuple(board_run.find(token) for token in (
-            'var blocked_result_message := String(shell.get("_last_message")).strip_edges()',
-            'var blocked_snapshot: Dictionary = shell.call("validation_snapshot")',
-            "var blocked_dispatch := BattleRules.describe_dispatch(session, blocked_result_message)",
-            'var blocked_full_latest := blocked_dispatch.get_slice("\\n", 0)',
-            "var blocked_expected_latest := _battle_event_word_text_control(blocked_full_latest, 96)",
-            'String(blocked_snapshot.get("event_visible_text", "")).split("\\n", false)',
-            'line.begins_with("Latest:")',
-            "blocked_full_latest.length() <= 96",
-            "blocked_latest_count != 1",
-            "blocked_visible_latest != blocked_expected_latest",
-            'blocked_visible_latest.contains("...")',
-            'not blocked_visible_latest.ends_with("…")',
-            '_battle_event_word_text_control("Move to a highlighted hex", 10)',
-            'not String(blocked_snapshot.get("event_tooltip_text", "")).contains(blocked_full_latest)',
-            'var blocked_result_text := _bounded_text("Battle board result: %s" % blocked_result_message, 320)',
-        ))
-        ensure(all(index >= 0 for index in board_order) and list(board_order) == sorted(board_order), errors, "Focused Board proof must derive the exact blocked dispatch, find one live Latest row, require whole-word overflow/full tooltip, then continue existing semantic-result ownership")
-        ensure(board_run.count("_battle_event_word_text_control(blocked_full_latest, 96)") == 1, errors, "Focused Board proof must independently fit the blocked Event row exactly once")
-        for forbidden in ('shell.call("_set_battle', 'shell.call("_battle_event', "set_text", ".text =", "sort(", "erase("):
-            ensure(forbidden not in board_run, errors, f"Focused Board Event proof must remain public/read-only and avoid {forbidden}")
-
-
-def validate_battle_info_tab_controller_navigation(errors: list[str]) -> None:
-    active_play_focus_path = ROOT / "tests" / "active_play_keyboard_focus_smoke.gd"
-    required_paths = (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, active_play_focus_path)
-    for path in required_paths:
-        ensure(path.exists(), errors, f"Missing Battle info-tab controller file: {path.relative_to(ROOT)}")
-    if not all(path.exists() for path in required_paths):
-        return
-
-    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
-    for required_token in (
-        "_battle_tabs.get_tab_bar()",
-        "_configure_battle_info_tab_accessibility",
-        "_on_battle_info_tab_bar_gui_input",
-        "_selectable_battle_info_tab_in_direction",
-        "validation_reset_battle_info_tab_navigation_state",
-        "validation_battle_info_tab_navigation_snapshot",
-        '"tab_bar_boundary_policy": "retain"',
-        '"tab_bar_occurrences"',
-        '"focus_retention_count"',
-        '"boundary_retain_count"',
-    ):
-        ensure(required_token in shell_text, errors, f"BattleShell.gd is missing Battle info-tab controller token: {required_token}")
-
-    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
-    ensure(
-        '[node name="BattleTabs" type="TabContainer"' in scene_text,
-        errors,
-        "BattleShell.tscn must retain the native BattleTabs TabContainer",
-    )
-
-    focus_text = active_play_focus_path.read_text(encoding="utf-8")
-    for required_token in (
-        "_check_battle_info_tab_controller_navigation",
-        "_assert_battle_info_tab_state",
-        "_battle_info_tab_authority_snapshot",
-        "_click_battle_info_tab",
-        "JOY_BUTTON_RIGHT_SHOULDER",
-        "JOY_BUTTON_DPAD_RIGHT",
-        "JOY_BUTTON_DPAD_LEFT",
-        "await _press_key(KEY_RIGHT)",
-        "await _press_key(KEY_LEFT)",
-        'expected_titles := ["Order", "Focus", "Spell", "Timing"]',
-        'shell.get_node_or_null("%TacticalDetails")',
-        'shell.get_node_or_null("%SidebarShell")',
-        "details_button.grab_focus()",
-        "await _press_joypad_button(JOY_BUTTON_A)",
-        "not sidebar.is_visible_in_tree()",
-        'String(reset.get("tab_bar_boundary_policy", "")) != "retain"',
-        'int(reset.get("tab_bar_occurrences", 0)) != 1',
-        'int(post_tab_snapshot.get("active_tab", -1)) != 3',
-        'details_button.text != "Tactical Details"',
-    ):
-        ensure(required_token in focus_text, errors, f"Active-play focus smoke is missing Battle info-tab controller token: {required_token}")
-
-
-def validate_battle_order_tab_compact_initiative_summary(errors: list[str]) -> None:
-    smoke_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
-    for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, smoke_path):
-        ensure(path.exists(), errors, f"Missing Battle Order-tab compact-summary file: {path.relative_to(ROOT)}")
-    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, smoke_path)):
-        return
-
-    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
-    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
-    smoke_text = smoke_path.read_text(encoding="utf-8")
-    for required_token in (
-        "const BATTLE_ORDER_VISIBLE_LINE_COUNT := 3",
-        "const BATTLE_ORDER_VISIBLE_STACK_CHAR_LIMIT := 18",
-        'var visible := "Initiative cue:\\nNow: %s\\nNext: %s"',
-        "_short_text(current_label, BATTLE_ORDER_VISIBLE_STACK_CHAR_LIMIT)",
-        "_short_text(next_label, BATTLE_ORDER_VISIBLE_STACK_CHAR_LIMIT)",
-        "String(initiative_handoff.get(\"visible_text\", \"\"))",
-        "BATTLE_ORDER_VISIBLE_LINE_COUNT",
-        'String(initiative_handoff.get("tooltip_text", ""))',
-        "initiative_track",
-    ):
-        ensure(required_token in shell_text, errors, f"BattleShell compact Order-tab summary is missing exact token: {required_token}")
-    for forbidden_token in (
-        '"%s\\n%s" % [String(initiative_handoff.get("visible_text", "")), initiative_track]',
-        "_set_compact_label(_initiative_label, initiative_track, 5)",
-        "_initiative_label.autowrap_mode =",
-        "_initiative_panel.custom_minimum_size =",
-        "_battle_tabs.custom_minimum_size =",
-    ):
-        ensure(forbidden_token not in shell_text, errors, f"Battle Order-tab compaction must not retain/introduce forbidden source token: {forbidden_token}")
-    initiative_node = re.search(
-        r'\[node name="Initiative" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/InitiativePanel/InitiativePad/InitiativeBox"\]\n(?P<body>.*?)(?=\n\[node )',
-        scene_text,
-        re.S,
-    )
-    ensure(initiative_node is not None, errors, "BattleShell.tscn must retain the existing native Initiative Label")
-    if initiative_node is not None:
-        initiative_body = initiative_node.group("body")
-        ensure("autowrap_mode = 3" in initiative_body and "custom_minimum_size" not in initiative_body, errors, "Battle Order-tab fix must fit the existing autowrap label without scene sizing overrides")
-
-    focused_match = re.search(
-        r"func _validate_order_tab_compact_summary\(shell: Control, session, width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
-        smoke_text,
-        re.S,
-    )
-    expected_match = re.search(
-        r"func _expected_initiative_handoff_for_test\(session\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )",
-        smoke_text,
-        re.S,
-    )
-    ensure(focused_match is not None and expected_match is not None, errors, "Battle controller smoke must own independent compact-summary and handoff controls")
-    if focused_match is not None:
-        focused_body = focused_match.group("body")
-        focused_order = tuple(focused_body.find(token) for token in (
-            "_battle_background_authority(session)",
-            'shell.call("validation_snapshot")',
-            "_expected_initiative_handoff_for_test(session)",
-            "BattleRules.describe_initiative_track(session)",
-            'initiative_label.get_theme_font("font")',
-            "for line_value in visible_lines:",
-            "if initiative_panel.is_visible_in_tree():",
-            "initiative_geometry_exact = widest_line <= initiative_label.size.x + 0.5",
-            "handoff != expected_handoff",
-            "not initiative_geometry_exact",
-            "_battle_background_authority(session) != authority_before",
-        ))
-        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Battle Order-tab proof must bracket independent content, themed-font, containment, and authority checks in exact order")
-        for required_token in (
-            'visible_lines.size() != 3',
-            'initiative_label.get_line_count() == 3',
-            'initiative_label.text.contains(" | Init ")',
-            'initiative_label.text.contains(" | HP ")',
-            'not initiative_label.tooltip_text.contains(" | Init ")',
-            'not initiative_label.tooltip_text.contains(" | HP ")',
-            'initiative_label.tooltip_text != expected_tooltip',
-            'String(snapshot.get("initiative_visible_text", "")) != expected_visible',
-        ):
-            ensure(required_token in focused_body, errors, f"Focused Battle Order-tab proof is missing exact token: {required_token}")
-        for forbidden_token in ("shell.call(\"_battle_initiative_handoff_surface", "sort(", "erase(", "Input.", "queue_redraw", "set_text", ".text ="):
-            ensure(forbidden_token not in focused_body, errors, f"Focused Battle Order-tab proof must remain public/read-only and avoid {forbidden_token}")
-    if expected_match is not None:
-        expected_body = expected_match.group("body")
-        for required_token in (
-            "BattleRules.get_active_stack(battle)",
-            "_next_living_stack_for_test(battle, turn_order, turn_index + 1)",
-            "_next_living_stack_for_test(battle, turn_order, 0)",
-            "_initiative_stack_label_for_test(active_stack)",
-            '"visible_text": "Initiative cue:\\nNow: %s\\nNext: %s"',
-            '"tooltip_text": tooltip',
-            '"handoff": "%s; %s"',
-        ):
-            ensure(required_token in expected_body, errors, f"Independent Battle handoff control is missing exact token: {required_token}")
-        for forbidden_token in ("shell.", "validation_snapshot", "_battle_initiative_handoff_surface", "sort(", "erase(", "Input."):
-            ensure(forbidden_token not in expected_body, errors, f"Independent Battle handoff control must avoid circular/mutating dependency: {forbidden_token}")
-
-    width_match = re.search(r"func _validate_battle_board_semantics_width\(width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )", smoke_text, re.S)
-    ensure(width_match is not None, errors, "Could not isolate Battle 1280/1920 focused owner for Order-tab proof")
-    if width_match is not None:
-        width_body = width_match.group("body")
-        strip_call = width_body.find("_validate_turn_strip_identity_surface(board, session, width)")
-        order_call = width_body.find("_validate_order_tab_compact_summary(shell, session, width)")
-        focus_call = width_body.find("board.grab_focus()")
-        ensure(0 <= strip_call < order_call < focus_call and width_body.count("_validate_order_tab_compact_summary(shell, session, width)") == 1, errors, "Battle Order-tab proof must run once at each existing width after strip proof and before focus/input mutation")
-
-
-def validate_battle_info_tab_header_compact_fit(errors: list[str]) -> None:
-    board_smoke_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
-    focus_smoke_path = ROOT / "tests" / "active_play_keyboard_focus_smoke.gd"
-    for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, board_smoke_path, focus_smoke_path):
-        ensure(path.exists(), errors, f"Missing Battle info-tab header-fit file: {path.relative_to(ROOT)}")
-    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, board_smoke_path, focus_smoke_path)):
-        return
-
-    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
-    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
-    board_smoke_text = board_smoke_path.read_text(encoding="utf-8")
-    focus_smoke_text = focus_smoke_path.read_text(encoding="utf-8")
-    ensure(shell_text.count('const BATTLE_INFO_TAB_VISIBLE_TITLES := ["Order", "Focus", "Spell", "Timing"]') == 1, errors, "BattleShell must own one exact readable four-title header set")
-    refresh_match = re.search(r"func _refresh_battle_tab_cues\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.S)
-    styles_match = re.search(r"func _apply_visual_theme\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.S)
-    readiness_match = re.search(r"func _battle_tab_readiness_payload\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.S)
-    ensure(refresh_match is not None and styles_match is not None and readiness_match is not None, errors, "Could not isolate Battle header refresh/style/readiness owners")
-    for match, owner in ((refresh_match, "refresh"), (styles_match, "style")):
-        if match is None:
-            continue
-        body = match.group("body")
-        for required_token in (
-            "range(min(_battle_tabs.get_tab_count(), BATTLE_INFO_TAB_VISIBLE_TITLES.size()))",
-            "_battle_tabs.set_tab_title(index, String(BATTLE_INFO_TAB_VISIBLE_TITLES[index]))",
-        ):
-            ensure(required_token in body, errors, f"Battle header {owner} owner is missing exact compact-title token: {required_token}")
-        for forbidden_token in ('set_tab_title(0, "Order")', 'set_tab_title(2, "Spells")', 'tab.get("title"', "custom_minimum_size", "font_size", "scrolling_enabled"):
-            ensure(forbidden_token not in body, errors, f"Battle header {owner} owner must avoid duplicated/resized readiness title path: {forbidden_token}")
-    if readiness_match is not None:
-        readiness_body = readiness_match.group("body")
-        for required_token in (
-            '_battle_tab_readiness_entry("Order"',
-            '"Focus",',
-            '_battle_tab_readiness_entry("Spells"',
-            '"Timing",',
-            'tooltip_lines.append("- %s" % String(tab.get("summary", "")))',
-            'tooltip_lines.append("Selected: %s" % String(selected.get("focus", "")))',
-        ):
-            ensure(required_token in readiness_body, errors, f"Battle readiness semantics must retain full title/count/tooltip token: {required_token}")
-        ensure("BATTLE_INFO_TAB_VISIBLE_TITLES" not in readiness_body, errors, "Compact visible Battle titles must not alter semantic readiness calculation")
-    ensure('custom_minimum_size = Vector2(248, 0)' in scene_text, errors, "Battle header fit must retain the existing 248px SidebarShell minimum")
-    ensure(scene_text.count('[node name="BattleTabs" type="TabContainer"') == 1, errors, "Battle header fit must retain one native BattleTabs container")
-
-    focused_match = re.search(
-        r"func _validate_battle_info_tab_header_fit\(shell: Control, session, width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
-        board_smoke_text,
-        re.S,
-    )
-    ensure(focused_match is not None, errors, "Battle controller owner must prove two-width native header geometry and semantics")
-    if focused_match is not None:
-        body = focused_match.group("body")
-        order = tuple(body.find(token) for token in (
-            "_battle_background_authority(session)",
-            'shell.call("validation_snapshot")',
-            'expected_visible_titles := ["Order", "Focus", "Spell", "Timing"]',
-            'expected_semantic_titles := ["Order", "Focus", "Spells", "Timing"]',
-            "for index in range(expected_visible_titles.size()):",
-            "bar_rect.encloses(rect)",
-            "rect.position.x + 0.01 >= previous_right",
-            'String(semantic.get("base_title", "")) == expected_semantic_titles[index]',
-            "total_width <= tab_bar.size.x + 0.01",
-            "_battle_background_authority(session) != authority_before",
-        ))
-        ensure(all(index >= 0 for index in order) and list(order) == sorted(order), errors, "Focused Battle header proof must bracket exact visual/semantic/geometry checks with whole authority")
-        for required_token in (
-            "rect.size.x > 0.0",
-            "rect.size.y > 0.0",
-            'String(battle_tabs.tooltip_text).contains(summary)',
-            'semantic_title == "%s %d" % [expected_semantic_titles[index], ready_count]',
-            'String(battle_tabs.tooltip_text).contains("Selected: %s"',
-            "tab_bar.get_tab_rect(index)",
-        ):
-            ensure(required_token in body, errors, f"Focused Battle header proof is missing exact token: {required_token}")
-        for forbidden_token in ("set_tab_title", "custom_minimum_size", "add_theme_font", "scrolling_enabled =", "sort(", "erase(", "Input."):
-            ensure(forbidden_token not in body, errors, f"Focused Battle header proof must remain public/read-only and avoid {forbidden_token}")
-    width_match = re.search(r"func _validate_battle_board_semantics_width\(width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )", board_smoke_text, re.S)
-    ensure(width_match is not None, errors, "Could not isolate Battle two-width owner for header fit")
-    if width_match is not None:
-        width_body = width_match.group("body")
-        summary_call = width_body.find("_validate_order_tab_compact_summary(shell, session, width)")
-        header_call = width_body.find("_validate_battle_info_tab_header_fit(shell, session, width)")
-        focus_call = width_body.find("board.grab_focus()")
-        ensure(0 <= summary_call < header_call < focus_call and width_body.count("_validate_battle_info_tab_header_fit(shell, session, width)") == 1, errors, "Battle header proof must run once per existing width before focus/input mutation")
-    ensure(focus_smoke_text.count('var expected_titles := ["Order", "Focus", "Spell", "Timing"]') == 1, errors, "Active-play Battle navigation must traverse the exact compact visible title set")
-    ensure('var expected_titles := ["Order", "Focus", "Spells", "Timing"]' not in focus_smoke_text, errors, "Active-play Battle navigation must not retain the overflowing Spells header oracle")
-
-
-def validate_battle_focus_spell_tab_body_containment(errors: list[str]) -> None:
-    def function_block(text: str, name: str) -> str:
-        match = re.search(rf"func {re.escape(name)}\([^\n]*\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\nfunc |\Z)", text, re.S)
-        return match.group("body") if match is not None else ""
-
-    board_smoke_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
-    focus_smoke_path = ROOT / "tests" / "active_play_keyboard_focus_smoke.gd"
-    for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, board_smoke_path, focus_smoke_path):
-        ensure(path.exists(), errors, f"Missing Battle Focus/Spell body-containment file: {path.relative_to(ROOT)}")
-    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, board_smoke_path, focus_smoke_path)):
-        return
-
-    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
-    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
-    board_smoke_text = board_smoke_path.read_text(encoding="utf-8")
-    focus_smoke_text = focus_smoke_path.read_text(encoding="utf-8")
-    for required_token in (
-        "const BATTLE_FOCUS_VISIBLE_NAME_CHAR_LIMIT := 14",
-        "const BATTLE_FOCUS_VISIBLE_ORDER_CHAR_LIMIT := 16",
-        "const BATTLE_SPELL_VISIBLE_NAME_CHAR_LIMIT := 16",
-        '_active_label.text = _battle_focus_visible_surface(',
-        '"Active",\n\t\t\tBattleRules.get_active_stack(_session.battle),',
-        '_target_label.text = _battle_focus_visible_surface(',
-        '"Target",\n\t\t\tBattleRules.get_selected_target(_session.battle),',
-        "_spell_label.text = _battle_spellbook_visible_surface(spellbook_text, spell_actions)",
-        "_spell_label.tooltip_text = spellbook_text",
-        "_effect_label.text = _battle_effect_visible_surface(status_check)",
-        'String(active_stack_check.get("tooltip_text", ""))',
-        'String(engagement_check.get("tooltip_text", ""))',
-        'String(status_check.get("tooltip_text", ""))',
-    ):
-        ensure(required_token in shell_text, errors, f"Battle Focus/Spell compact refresh is missing exact token: {required_token}")
-    for helper_name in ("_battle_focus_visible_surface", "_battle_spellbook_visible_surface", "_battle_effect_visible_surface"):
-        helper = function_block(shell_text, helper_name)
-        ensure(helper, errors, f"Could not isolate Battle compact body helper {helper_name}")
-        for forbidden_token in ("custom_minimum_size", "minimum_size_changed", "queue_sort", "set_deferred", "await ", "create_timer", "BattleRules.perform", "SessionState", "SaveService", "AppRouter"):
-            ensure(forbidden_token not in helper, errors, f"Battle compact body helper {helper_name} must remain view-only and avoid {forbidden_token}")
-    focus_helper = function_block(shell_text, "_battle_focus_visible_surface")
-    for required_token in (
-        'var cue_label := "Stack check:" if prefix == "Active" else "Engagement check:"',
-        'return "%s\\n%s: none\\nSide: unavailable\\nState: %s"',
-        '_short_text(name, BATTLE_FOCUS_VISIBLE_NAME_CHAR_LIMIT)',
-        'max(0, int(stack.get("count", 0)))',
-        'max(0, int(stack.get("total_health", 0)))',
-        'state_line = "%s: %s" % [readiness, _short_text(order, BATTLE_FOCUS_VISIBLE_ORDER_CHAR_LIMIT)]',
-    ):
-        ensure(required_token in focus_helper, errors, f"Battle Focus compact summary is missing exact live-state token: {required_token}")
-    spell_helper = function_block(shell_text, "_battle_spellbook_visible_surface")
-    for required_token in (
-        'part.begins_with("Mana ")',
-        'bool(action_value.get("disabled", false))',
-        'ready_line = "Ready: %s" % _short_text(first_ready, BATTLE_SPELL_VISIBLE_NAME_CHAR_LIMIT)',
-        'return "%s\\n%s\\nSpells: %d/%d ready"',
-    ):
-        ensure(required_token in spell_helper, errors, f"Battle Spell compact summary is missing exact live-state token: {required_token}")
-    effect_helper = function_block(shell_text, "_battle_effect_visible_surface")
-    for required_token in (
-        'status_check.get("readiness", "Review")',
-        'status_check.get("effect_stack_count", 0)',
-        'return "Status check: %s\\nEffects: %d stack%s"',
-    ):
-        ensure(required_token in effect_helper, errors, f"Battle effect compact summary is missing exact live-state token: {required_token}")
-    for forbidden_token in (
-        "_context_panel.custom_minimum_size",
-        "_spell_panel.custom_minimum_size",
-        "_battle_tabs.custom_minimum_size",
-        "_footer.custom_minimum_size",
-        "_active_label.add_theme_font",
-        "_spell_label.add_theme_font",
-    ):
-        ensure(forbidden_token not in shell_text, errors, f"Battle body containment must not resize/restyle the shipped composition: {forbidden_token}")
-    ensure(scene_text.count('[node name="ContextPanel" type="PanelContainer"') == 1 and scene_text.count('[node name="SpellPanel" type="PanelContainer"') == 1, errors, "Battle Focus/Spell containment must retain the authored native pages")
-
-    focused_match = re.search(
-        r"func _validate_battle_focus_spell_tab_body_fit\(shell: Control, session, width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
-        board_smoke_text,
-        re.S,
-    )
-    ensure(focused_match is not None, errors, "Battle controller owner must prove Focus/Spell body and footer containment at both widths")
-    if focused_match is not None:
-        body = focused_match.group("body")
-        ordered = tuple(body.find(token) for token in (
-            "_battle_background_authority(session)",
-            "tabs.current_tab = 0\n\tawait _settle()",
-            "var contained_tabs_height := tabs.size.y",
-            'shell.call("validation_snapshot")',
-            '_focus_visible_surface_for_test("Active", active_stack, stack_check)',
-            "for row_value in rows:",
-            "tabs.current_tab = int(row.get(\"tab\", 0))",
-            "shell.get_global_rect().encloses(footer.get_global_rect())",
-            "label.get_visible_line_count() == int(line_counts[index])",
-            "widest_line <= label.size.x + 0.5",
-            "tabs.current_tab = initial_tab",
-            "_battle_background_authority(session) != authority_before",
-        ))
-        ensure(all(index >= 0 for index in ordered) and list(ordered) == sorted(ordered), errors, "Focused Battle body proof must bracket independent semantics, real tab selection, geometry/font checks, restoration, and authority in exact order")
-        for required_token in (
-            '"line_counts": [4, 4]',
-            '"line_counts": [3, 2]',
-            'is_equal_approx(tabs.size.y, contained_tabs_height)',
-            'tabs.get_global_rect().encloses(panel.get_global_rect())',
-            'panel.get_global_rect().encloses(label.get_global_rect())',
-            'label.tooltip_text == String(tooltips[index])',
-        ):
-            ensure(required_token in body, errors, f"Focused Battle body proof is missing exact token: {required_token}")
-        for forbidden_token in ("_battle_focus_visible_surface", "_battle_spellbook_visible_surface", "_battle_effect_visible_surface", "custom_minimum_size =", "set_text", "sort(", "erase(", "create_timer", "Input."):
-            ensure(forbidden_token not in body, errors, f"Focused Battle body proof must remain independent/read-only and avoid {forbidden_token}")
-    width_match = re.search(r"func _validate_battle_board_semantics_width\(width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )", board_smoke_text, re.S)
-    ensure(width_match is not None, errors, "Could not isolate Battle two-width owner for Focus/Spell body containment")
-    if width_match is not None:
-        width_body = width_match.group("body")
-        header_call = width_body.find("_validate_battle_info_tab_header_fit(shell, session, width)")
-        body_call = width_body.find("await _validate_battle_focus_spell_tab_body_fit(shell, session, width)")
-        focus_call = width_body.find("board.grab_focus()")
-        ensure(0 <= header_call < body_call < focus_call and width_body.count("await _validate_battle_focus_spell_tab_body_fit(shell, session, width)") == 1, errors, "Battle body proof must run once per width after header proof and before focus/input mutation")
-    ensure(focus_smoke_text.count("_battle_info_tab_footer_contained(shell)") == 3, errors, "Active-play navigation must prove real Focus/Spell footer containment in forward, reverse, and mouse paths")
-    focus_containment = function_block(focus_smoke_text, "_battle_info_tab_footer_contained")
-    ensure('shell_control.get_global_rect().encloses(footer.get_global_rect())' in focus_containment, errors, "Active-play Focus/Spell containment helper must compare live shell and footer rectangles")
-    for forbidden_token in ("custom_minimum_size", "set_size", "set_position", "queue_sort", "await ", "create_timer"):
-        ensure(forbidden_token not in focus_containment, errors, f"Active-play Focus/Spell containment helper must remain observation-only: {forbidden_token}")
-
-
-def validate_battle_timing_tab_compact_summary(errors: list[str]) -> None:
-    def function_block(text: str, name: str) -> str:
-        match = re.search(rf"func {re.escape(name)}\([^\n]*\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\nfunc |\Z)", text, re.S)
-        return match.group("body") if match is not None else ""
-
-    board_smoke_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
-    for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, board_smoke_path):
-        ensure(path.exists(), errors, f"Missing Battle Timing compact-summary file: {path.relative_to(ROOT)}")
-    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, board_smoke_path)):
-        return
-
-    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
-    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
-    smoke_text = board_smoke_path.read_text(encoding="utf-8")
-    # The Timing tab is part of the Tactical Details refresh that _refresh() runs.
-    ensure("_refresh_tactical_detail_surfaces(action_confirmation, buckets)" in function_block(shell_text, "_refresh"), errors, "Battle refresh must keep refreshing the Tactical Details Timing tab")
-    refresh_helper = function_block(shell_text, "_refresh_tactical_detail_surfaces")
-    ensure(refresh_helper, errors, "Could not isolate Battle refresh for Timing compact summary")
-    refresh_order = tuple(refresh_helper.find(token) for token in (
-        "var spell_timing_board := BattleRules.describe_spell_timing_board(_session)",
-        "var timing_check := _battle_timing_check_cue_surface(spell_timing_board)",
-        "if timing_check.is_empty():",
-        "_set_compact_label(_timing_label, spell_timing_board, 3)",
-        "_timing_label.text = _battle_timing_visible_surface(timing_check)",
-        "_timing_label.tooltip_text = _join_tooltip_sections([",
-        'String(timing_check.get("tooltip_text", ""))',
-        'call_deferred("_refit_battle_timing_visible_surface")',
-    ))
-    ensure(all(index >= 0 for index in refresh_order) and list(refresh_order) == sorted(refresh_order), errors, "Battle Timing refresh must derive one semantic visible summary and preserve the exact full tooltip in order")
-    ensure('_timing_label.tooltip_text = _join_tooltip_sections([\n\t\t\tString(timing_check.get("tooltip_text", "")),\n\t\t\tspell_timing_board,\n\t\t])' in refresh_helper, errors, "Battle Timing tooltip must retain the complete cue and full board in exact order")
-    ensure('"%s\\n%s" % [String(timing_check.get("visible_text", "")), spell_timing_board]' not in shell_text, errors, "Battle Timing first view must not retain the duplicated raw timing-check plus full-board materialization")
-    ensure(scene_text.count('[node name="TimingPanel" type="PanelContainer"') == 1 and scene_text.count('[node name="Timing" type="Label"') == 1, errors, "Battle Timing compact summary must retain the authored native panel and label")
-
-    visible_helper = function_block(shell_text, "_battle_timing_visible_surface")
-    clause_helper = function_block(shell_text, "_battle_timing_compact_clause")
-    fit_helper = function_block(shell_text, "_fit_battle_timing_line")
-    ensure(visible_helper and clause_helper and fit_helper, errors, "Could not isolate Battle Timing compact production helpers")
-    for required_token in (
-        'timing_check.get("readiness", "Review")',
-        'timing_check.get("ready_spell", "")',
-        'timing_check.get("ready_order", "")',
-        'timing_check.get("burst_risk", "")',
-        'timing_check.get("protection_need", "")',
-        'timing_check.get("enemy_pressure", "")',
-        '"Timing check: %s" % readiness',
-        '"%s: %s" % [action_prefix, action_value]',
-        '"Watch: %s" % watch_value',
-        'ready_spell.trim_prefix("Cast ").strip_edges()',
-        "_fit_battle_timing_line(String(line_value))",
-        'return "\\n".join(visible_lines)',
-    ):
-        ensure(required_token in visible_helper, errors, f"Battle Timing visible helper is missing exact semantic token: {required_token}")
-    for required_token in (
-        '"Burst risk:"',
-        '"Incoming burst:"',
-        '"Protection need:"',
-        '"Enemy spell pressure:"',
-        'clause.get_slice(" | ", 0)',
-        'clause.get_slice("; ", 0)',
-        'clause.get_slice(" is best placed to cast ", 1)',
-        'clause.get_slice(" on ", 0)',
-    ):
-        ensure(required_token in clause_helper, errors, f"Battle Timing clause helper is missing exact player-facing reduction token: {required_token}")
-    fit_order = tuple(fit_helper.find(token) for token in (
-        '_timing_label.get_theme_font("font")',
-        '_timing_label.get_theme_font_size("font_size")',
-        "var max_width := _timing_label.size.x",
-        "font.get_string_size(normalized",
-        'var ellipsis := "…"',
-        'normalized.split(" ", false)',
-        'return "%s%s" % [prefix, ellipsis] if prefix != "" else ellipsis',
-    ))
-    ensure(all(index >= 0 for index in fit_order) and list(fit_order) == sorted(fit_order), errors, "Battle Timing line fit must use the live themed width and whole-word Unicode ellipsis in order")
-    refit_helper = function_block(shell_text, "_refit_battle_timing_visible_surface")
-    ensure(refit_helper, errors, "Could not isolate deferred Battle Timing live-width refit")
-    if refit_helper:
-        refit_order = tuple(refit_helper.find(token) for token in (
-            "not is_inside_tree()",
-            "_session == null",
-            "_session.battle.is_empty()",
-            "BattleRules.describe_spell_timing_board(_session)",
-            "_battle_timing_check_cue_surface(timing_board)",
-            "if timing_check.is_empty():",
-            "_timing_label.text = _battle_timing_visible_surface(timing_check)",
-        ))
-        ensure(all(index >= 0 for index in refit_order) and list(refit_order) == sorted(refit_order), errors, "Deferred Battle Timing refit must guard live state and rematerialize current view after layout in order")
-        for forbidden_token in ("tooltip_text", "SessionState", "SaveService", "AppRouter", "BattleRules.perform", "await ", "create_timer", "custom_minimum_size"):
-            ensure(forbidden_token not in refit_helper, errors, f"Deferred Battle Timing refit must change only current visible text and avoid {forbidden_token}")
-    for helper_name, helper in (
-        ("_battle_timing_visible_surface", visible_helper),
-        ("_battle_timing_compact_clause", clause_helper),
-        ("_fit_battle_timing_line", fit_helper),
-    ):
-        for forbidden_token in ("BattleRules.perform", "SessionState", "SaveService", "AppRouter", "custom_minimum_size", "minimum_size_changed", "queue_sort", "set_deferred", "await ", "create_timer", "..."):
-            ensure(forbidden_token not in helper, errors, f"Battle Timing production helper {helper_name} must remain view-only and avoid {forbidden_token}")
-
-    focused = function_block(smoke_text, "_validate_battle_timing_tab_body_fit")
-    ensure(focused, errors, "Battle controller owner must prove the Timing compact body at both widths")
-    if focused:
-        focused_order = tuple(focused.find(token) for token in (
-            "_battle_background_authority(session)",
-            "tabs.current_tab = 0\n\tawait _settle()",
-            "var contained_tabs_height := tabs.size.y",
-            "tabs.current_tab = 3",
-            'shell.call("validation_snapshot")',
-            "BattleRules.describe_spell_timing_board(session)",
-            "_timing_visible_lines_for_test(timing_label, timing_check)",
-            "widest_line <= timing_label.size.x + 0.5",
-            'timing_label.tooltip_text == expected_tooltip',
-            "tabs.current_tab = initial_tab",
-            "_battle_background_authority(session) != authority_before",
-        ))
-        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Battle Timing proof must bracket public tab selection, independent semantics, full tooltip, live geometry, restoration, and authority in order")
-        for required_token in (
-            "timing_label.get_line_count() == 3",
-            "timing_label.get_visible_line_count() == 3",
-            'not timing_label.text.contains("...")',
-            'not timing_label.text.contains("Spell and Ability Timing")',
-            'timing_label.tooltip_text.contains("Spell and Ability Timing")',
-            "is_equal_approx(tabs.size.y, contained_tabs_height)",
-            "shell.get_global_rect().encloses(footer.get_global_rect())",
-            "tabs.get_global_rect().encloses(panel.get_global_rect())",
-            "panel.get_global_rect().encloses(timing_label.get_global_rect())",
-        ):
-            ensure(required_token in focused, errors, f"Focused Battle Timing proof is missing exact contract token: {required_token}")
-        for forbidden_token in ("_battle_timing_visible_surface", "_battle_timing_compact_clause", "_fit_battle_timing_line", "custom_minimum_size", "set_text", "sort(", "erase(", "create_timer", "Input."):
-            ensure(forbidden_token not in focused, errors, f"Focused Battle Timing proof must remain independent/read-only and avoid {forbidden_token}")
-    for helper_name in ("_timing_visible_lines_for_test", "_timing_clause_for_test", "_fit_themed_timing_line_for_test"):
-        helper = function_block(smoke_text, helper_name)
-        ensure(helper, errors, f"Missing independent focused Battle Timing helper {helper_name}")
-        for forbidden_token in ("_battle_timing_visible_surface", "_battle_timing_compact_clause", "_fit_battle_timing_line", "shell.call", "BattleRules.perform", "SessionState", "SaveService", "custom_minimum_size", "await ", "create_timer"):
-            ensure(forbidden_token not in helper, errors, f"Independent Battle Timing helper {helper_name} must not call production/mutate authority via {forbidden_token}")
-    width_body = function_block(smoke_text, "_validate_battle_board_semantics_width")
-    focus_spell_call = width_body.find("await _validate_battle_focus_spell_tab_body_fit(shell, session, width)")
-    timing_call = width_body.find("await _validate_battle_timing_tab_body_fit(shell, session, width)")
-    focus_call = width_body.find("board.grab_focus()")
-    ensure(0 <= focus_spell_call < timing_call < focus_call and width_body.count("await _validate_battle_timing_tab_body_fit(shell, session, width)") == 1, errors, "Battle Timing proof must run once per width after existing body proof and before input mutation")
-    capture_order = tuple(smoke_text.find(token) for token in (
-        'var capture_tabs: TabContainer = shell.get_node("%BattleTabs")',
-        'OS.get_environment("BATTLE_CONTROLLER_BOARD_CAPTURE_TAB_INDEX")',
-        'var capture_initial_tab: int = capture_tabs.current_tab',
-        'capture_tabs.current_tab = capture_tab_index',
-        "await _capture_if_requested()",
-        'capture_tabs.current_tab = capture_initial_tab',
-    ))
-    ensure(all(index >= 0 for index in capture_order) and list(capture_order) == sorted(capture_order), errors, "Optional Battle screenshot capture must select and restore the requested real info tab around the unchanged capture")
-
-
-def validate_battle_timing_check_detail_prefix_deduplication(errors: list[str]) -> None:
-    def function_block(text: str, name: str) -> str:
-        match = re.search(rf"func {re.escape(name)}\([^\n]*\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\nfunc |\Z)", text, re.S)
-        return match.group("body") if match is not None else ""
-
-    smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
-    for path in (BATTLE_SCRIPT_PATH, smoke_path):
-        ensure(path.exists(), errors, f"Missing Battle Timing detail-deduplication file: {path.relative_to(ROOT)}")
-    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, smoke_path)):
-        return
-
-    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
-    smoke_text = smoke_path.read_text(encoding="utf-8")
-    cue_helper = function_block(shell_text, "_battle_timing_check_cue_surface")
-    line_helper = function_block(shell_text, "_battle_timing_board_line_with_prefix")
-    ensure(cue_helper and line_helper, errors, "Could not isolate Battle Timing detail production helpers")
-    if line_helper:
-        line_order = tuple(line_helper.find(token) for token in (
-            'board_text.split("\\n", false)',
-            'line.begins_with("- ")',
-            'if line.begins_with(prefix):',
-            'return line.trim_prefix(prefix).strip_edges()',
-            'return ""',
-        ))
-        ensure(all(index >= 0 for index in line_order) and list(line_order) == sorted(line_order), errors, "Battle Timing board extractor must preserve source traversal and return only the requested heading value")
-        ensure("return line\n" not in line_helper and "sort(" not in line_helper and "erase(" not in line_helper, errors, "Battle Timing board extractor must not retain whole prefixed rows or reorder/filter the board")
-    if cue_helper:
-        cue_order = tuple(cue_helper.find(token) for token in (
-            'var ready_spell_label := String(ready_spell.get("label", "")).strip_edges()',
-            'elif ready_spell_label != "":',
-            'var ready_spell_subject := ready_spell_label.trim_prefix("Cast ").strip_edges()',
-            'if ready_spell_subject == "":',
-            'ready_spell_subject = ready_spell_label',
-            'next_step = "Cast %s now if it helps; the stack still gives its order after the cast." % ready_spell_subject',
-            '"ready_spell": ready_spell_label',
-        ))
-        ensure(all(index >= 0 for index in cue_order) and list(cue_order) == sorted(cue_order), errors, "Battle Timing cue must normalize only the next-action subject while preserving the exact ready action payload")
-        for prefix in ("Spell window:", "Support payoff:", "Protection need:", "Burst risk:", "Enemy initiative:", "Enemy spell pressure:", "Incoming burst:"):
-            ensure(f'_battle_timing_board_line_with_prefix(board_text, "{prefix}")' in cue_helper, errors, f"Battle Timing cue must retain exact source lookup for {prefix}")
-        for forbidden_token in ("BattleRules.perform", "SessionState", "SaveService", "AppRouter", "sort(", "erase(", "await ", "create_timer", "custom_minimum_size"):
-            ensure(forbidden_token not in cue_helper, errors, f"Battle Timing copy correction must remain passive and avoid {forbidden_token}")
-
-    focused = function_block(smoke_text, "_assert_battle_timing_check_cue_contract")
-    control = function_block(smoke_text, "_timing_board_value_for_test")
-    ensure(focused and control, errors, "Town/Battle visual owner must prove independent Timing detail prefix/action deduplication")
-    if focused:
-        focused_order = tuple(focused.find(token) for token in (
-            'var timing_board := String(snapshot.get("spell_timing_text", ""))',
-            '_timing_board_value_for_test(timing_board, "Spell window:")',
-            '_timing_board_value_for_test(timing_board, "Support payoff:")',
-            '_timing_board_value_for_test(timing_board, "Protection need:")',
-            '_timing_board_value_for_test(timing_board, "Burst risk:")',
-            '_timing_board_value_for_test(timing_board, "Enemy spell pressure:")',
-            'String(timing_check.get("spell_window", "")) != expected_spell_window',
-            'for heading in ["Spell window:", "Support payoff:", "Protection need:", "Burst risk:", "Enemy pressure:"]:',
-            'cue_tooltip.count(heading) != 1',
-            'cue_tooltip.contains("Cast Cast")',
-            'String(snapshot.get("spell_timing_tooltip_text", "")) != expected_full_tooltip',
-        ))
-        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Battle Timing detail proof must derive independent values, compare payload, count headings, reject duplicate action verbs, and retain the full board in order")
-        for forbidden_token in ("_battle_timing_board_line_with_prefix", "_battle_timing_check_cue_surface", "sort(", "erase(", "BattleRules.perform", "SessionState", "SaveService", "await ", "create_timer"):
-            ensure(forbidden_token not in focused, errors, f"Focused Battle Timing detail proof must remain independent/read-only and avoid {forbidden_token}")
-    if control:
-        for required_token in (
-            'board_text.split("\\n", false)',
-            'line.begins_with("- ")',
-            'line.trim_prefix("- ").strip_edges()',
-            'line.begins_with(prefix)',
-            'line.trim_prefix(prefix).strip_edges()',
-        ):
-            ensure(required_token in control, errors, f"Independent Timing board control is missing exact token: {required_token}")
-        for forbidden_token in ("_battle_timing_board_line_with_prefix", "_battle_timing_check_cue_surface", "sort(", "erase(", "BattleRules", "SessionState", "SaveService", "await ", "create_timer"):
-            ensure(forbidden_token not in control, errors, f"Independent Timing board control must not use production or mutate authority via {forbidden_token}")
 
     animation_text = BATTLE_EVENT_ANIMATION_STATE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     melee_case = function_block(animation_text, "_validate_melee_hit_state")
@@ -28269,7 +27170,7 @@ def validate_battle_resolution_autosave_failure_route_safety(errors: list[str]) 
     router_text = APP_ROUTER_PATH.read_text(encoding="utf-8")
     for required_token in (
         "func checkpoint_battle_resolution_for_overworld(",
-        "func route_checkpointed_battle_resolution()",
+        "func route_checkpointed_battle_resolution(in_place: bool = false)",
         "func validation_set_battle_resolution_checkpoint_routing_suppressed(",
         "func validation_reset_battle_resolution_checkpoint_state()",
         "func validation_battle_resolution_checkpoint_snapshot()",
@@ -28353,7 +27254,7 @@ def validate_post_battle_report_screen(errors: list[str]) -> None:
         "BattleRules.acknowledge_pending_battle_report(session)",
         "SaveService.save_runtime_autosave_session(session)",
         "session.from_dict(snapshot)",
-        '_record_battle_resolution_checkpoint_route(BATTLE_REPORT_SCENE, "already_saved")',
+        '_record_battle_resolution_checkpoint_route(BATTLE_REPORT_SCENE, "already_saved", in_place)',
         "func validation_battle_report_snapshot(",
     ):
         ensure(required_token in router_text, errors, f"AppRouter.gd is missing post-battle report routing token: {required_token}")
@@ -28855,15 +27756,11 @@ def validate_battle_ability_layer(errors: list[str]) -> None:
     for required_token in (
         "BattleRules.roster_lines",
         "BattleRules.get_action_surface",
-        "_player_roster",
-        "_enemy_roster",
-        "_set_compact_label(_player_roster",
-        "_set_compact_label(_enemy_roster",
     ):
         ensure(required_token in battle_shell_text, errors, f"BattleShell.gd is missing required battle-ability UI token: {required_token}")
 
     battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
-    for node_name in ("PlayerRoster", "EnemyRoster", "Strike", "Shoot", "Defend"):
+    for node_name in ("Defend", "Wait", "Spellbook"):
         ensure(
             f'[node name="{node_name}"' in battle_scene_text,
             errors,
@@ -28884,21 +27781,16 @@ def validate_battle_shell_release_polish(errors: list[str]) -> None:
         errors,
         "BattleShell.tscn",
         [
-            ("Banner", "PanelContainer"),
-            ("BriefingPanel", "PanelContainer"),
-            ("RiskPanel", "PanelContainer"),
-            ("ConsequencePanel", "PanelContainer"),
-            ("BattlefieldPanel", "PanelContainer"),
-            ("PlayerPanel", "PanelContainer"),
-            ("EnemyPanel", "PanelContainer"),
-            ("CommandPanel", "PanelContainer"),
-            ("InitiativePanel", "PanelContainer"),
-            ("ContextPanel", "PanelContainer"),
-            ("SpellPanel", "PanelContainer"),
-            ("TimingPanel", "PanelContainer"),
+            ("Banner", "Label"),
             ("BattleBoard", "Control"),
-            ("ActionGuide", "Label"),
-            ("Footer", "PanelContainer"),
+            ("PlayerHeroPlate", "PanelContainer"),
+            ("EnemyHeroPlate", "PanelContainer"),
+            ("CommandBar", "PanelContainer"),
+            ("LogLine", "Button"),
+            ("OptionsPopover", "PanelContainer"),
+            ("SpellbookPopover", "PanelContainer"),
+            ("LogPopover", "PanelContainer"),
+            ("ResultOverlay", "Control"),
             ("SaveSlot", "OptionButton"),
         ],
     )
@@ -28954,23 +27846,10 @@ def validate_battle_shell_release_polish(errors: list[str]) -> None:
 
     battle_script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "_briefing_panel",
-        "_briefing_label",
         "_tactical_briefing_text",
         "BattleRules.consume_tactical_briefing",
-        "_pressure_label",
-        "_player_command_label",
-        "_initiative_label",
-        "_active_label",
-        "_effect_label",
-        "_action_guide",
         "_save_slot_picker",
-        "_risk_label",
-        "BattleRules.describe_pressure",
-        "BattleRules.describe_risk_readiness_board",
         "BattleRules.describe_commander_summary",
-        "BattleRules.describe_initiative_track",
-        "BattleRules.describe_effect_board",
         "BattleRules.describe_action_surface",
         "AppRouter.active_manual_save_action",
         "AppRouter.save_active_session_to_manual_slot",
@@ -28978,7 +27857,6 @@ def validate_battle_shell_release_polish(errors: list[str]) -> None:
         "_complete_battle_exit_animation_handoff",
         "_battle_exit_handoff_in_progress",
         "set_battle_presentation_snapshot",
-        "_style_action_button",
     ):
         ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required battle-shell polish token: {required_token}")
 
@@ -29013,7 +27891,7 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
         '"terrain_hex_variation_subordinate": texture != null and TERRAIN_TEXTURE_MODULATE.a >= 0.18 and TERRAIN_TEXTURE_MODULATE.a <= 0.30',
         '"single_board_backdrop": texture != null',
         '"terrain_single_board_backdrop": terrain_texture != null',
-        '"texture_sample_mode": "continuous_field_plus_subordinate_per_hex_variation" if texture != null else ""',
+        '"texture_sample_mode": "cover_region" if texture != null else ""',
     ):
         ensure(required_token in board_text, errors, f"BattleBoardView terrain context is missing exact authority token: {required_token}")
     for rejected_token in (
@@ -29026,23 +27904,30 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
     draw_terrain = gdscript_function_block(board_text, "_draw_terrain")
     ensure(draw_terrain != "", errors, "Could not isolate BattleBoardView _draw_terrain")
     if draw_terrain:
-        context_index = draw_terrain.find("_draw_terrain_context_underlay(field_rect, terrain_texture)")
-        hex_index = draw_terrain.find("_draw_hex_snapped_terrain_texture(hex_layout, terrain_texture)")
-        ensure(context_index >= 0 and hex_index > context_index, errors, "Battle continuous terrain field must draw before the subordinate authoritative per-hex variation pass")
-        ensure('_draw_terrain_context_underlay(field_rect, terrain_texture)' in draw_terrain.split("else:", 1)[0], errors, "Battle texture context must be confined to the loaded-texture branch")
-    context_helper = gdscript_function_block(board_text, "_draw_terrain_context_underlay")
+        # The painted battlefield covers the window behind the field; only a
+        # missing painting falls back to per-hex terrain colours.
+        terrain_order = tuple(draw_terrain.find(token) for token in (
+            "var board_rect := Rect2(Vector2.ZERO, size)",
+            "if terrain_texture != null:",
+            "draw_texture_rect_region(terrain_texture, board_rect, _cover_region(terrain_texture.get_size(), board_rect.size))",
+            "else:",
+            "_draw_hex_snapped_procedural_terrain(hex_layout, terrain)",
+            "draw_texture_rect(_vignette(), board_rect, false, BATTLEFIELD_VIGNETTE_COLOR)",
+        ))
+        ensure(all(index >= 0 for index in terrain_order) and list(terrain_order) == sorted(terrain_order), errors, "Battle painted battlefield must cover the window, fall back to hex colours only without a painting, then darken the edges")
+        for forbidden_token in ("await ", "Timer", "session", "BattleRules", "Input.", "set_battle_state", "queue_redraw"):
+            ensure(forbidden_token not in draw_terrain, errors, f"Battle terrain painter must remain passive presentation: {forbidden_token}")
+    cover_region = gdscript_function_block(board_text, "_cover_region")
     for required_token in (
-        "texture.get_size()",
-        "draw_texture_rect(texture, field_rect, false, TERRAIN_CONTEXT_TEXTURE_MODULATE)",
-        "draw_rect(field_rect, TERRAIN_CONTEXT_READABILITY_WASH, true)",
+        "var scale := maxf(target_size.x / texture_size.x, target_size.y / texture_size.y)",
+        "var source_size := target_size / scale",
+        "return Rect2((texture_size - source_size) * 0.5, source_size)",
     ):
-        ensure(required_token in context_helper, errors, f"Battle terrain context helper is missing passive draw token: {required_token}")
-    for forbidden_token in ("await ", "Timer", "session", "BattleRules", "Input.", "set_battle_state", "queue_redraw", "_draw_terrain_edge_context", "_terrain_edge_context_rects", "_terrain_edge_source_rect"):
-        ensure(forbidden_token not in context_helper, errors, f"Battle terrain context helper must remain a passive full-field underlay: {forbidden_token}")
+        ensure(required_token in cover_region, errors, f"Battle battlefield cover must keep the painting's aspect and centre: {required_token}")
     for obsolete_token in ("TERRAIN_EDGE_CONTEXT", "_draw_terrain_edge_context", "_terrain_edge_context_rects", "_terrain_edge_source_rect"):
         ensure(obsolete_token not in board_text, errors, f"BattleBoardView must not retain the incomplete rectangular-edge terrain model: {obsolete_token}")
     rendering_mode = gdscript_function_block(board_text, "_terrain_rendering_mode")
-    ensure('return "continuous_field_with_hex_variation" if texture_loaded else "hex_snapped_color_fallback"' in rendering_mode, errors, "Battle terrain rendering mode must distinguish the cohesive textured field from the procedural fallback")
+    ensure('return "painted_battlefield_cover" if texture_loaded else "hex_snapped_color_fallback"' in rendering_mode, errors, "Battle terrain rendering mode must distinguish the painted battlefield cover from the procedural fallback")
     texture_visible = gdscript_function_block(board_text, "_terrain_texture_visible")
     for required_token in (
         "TERRAIN_CONTEXT_TEXTURE_MODULATE.a >= 0.88",
@@ -29054,7 +27939,7 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
 
     for required_token in (
         'const TERRAIN_AMBIENT_MODEL := "deterministic_terrain_specific_passive_motes"',
-        'const TERRAIN_AMBIENT_DRAW_ORDER := ["terrain", "ambient_motes", "hex_grid", "objectives", "movement_affordances", "controller_cursor", "battle_vfx", "stack_tokens", "turn_strip", "footer"]',
+        'const TERRAIN_AMBIENT_DRAW_ORDER := ["terrain", "ambient_motes", "hero_figures", "hex_grid", "objectives", "movement_affordances", "controller_cursor", "battle_vfx", "stack_tokens", "turn_ribbon", "hover_forecast"]',
         'const TERRAIN_AMBIENT_PHASE_SPEED := 0.52',
         'const TERRAIN_AMBIENT_STATIC_PHASE := 0.0',
         '"grass": {"id": "sunlit_pollen", "kind": "pollen", "count": 14',
@@ -29076,16 +27961,17 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
     ambient_draw_order = [battle_draw.find(token) for token in (
         "_draw_terrain(field_rect, hex_layout)",
         "_draw_terrain_ambient(field_rect)",
+        "_draw_hero_figures(hex_layout)",
         "_draw_hex_grid(hex_layout, terrain_texture_loaded)",
         "_draw_field_objectives(hex_layout)",
         "_draw_tactical_affordances(hex_layout, stack_cells)",
         "_draw_controller_cursor(hex_layout)",
         "_draw_vfx_cues(hex_layout, stack_cells)",
         "_draw_stack_tokens(hex_layout, stack_cells)",
-        "_draw_turn_strip(field_rect)",
-        "_draw_footer_line(field_rect)",
+        "_draw_turn_ribbon()",
+        "_draw_hover_forecast()",
     )]
-    ensure(all(index >= 0 for index in ambient_draw_order) and ambient_draw_order == sorted(ambient_draw_order), errors, "Battle ambient motes must draw after terrain and before every tactical/UI surface")
+    ensure(all(index >= 0 for index in ambient_draw_order) and ambient_draw_order == sorted(ambient_draw_order), errors, "Battle ambient motes must draw after terrain and before the heroes and every tactical/UI surface")
     ambient_process = gdscript_function_block(board_text, "_process")
     for required_token in (
         "if _terrain_ambient_should_animate():",
@@ -29149,30 +28035,6 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
     ):
         for forbidden_token in ("BattleRules", "SessionState", "SaveService", "AppRouter", "Input.", "rand", "Time.", "Timer", "Tween", "Particle", "await ", "create_timer", "create_tween", "session.", "_battle["):
             ensure(forbidden_token not in helper, errors, f"Battle terrain ambient helper {helper_name} must remain deterministic presentation-only: {forbidden_token}")
-
-    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
-    for required_token in (
-        "var _wide_system_panel_style: StyleBox = null",
-        "var system_panel_style := _system_panel.get_theme_stylebox(\"panel\")",
-        "_wide_system_panel_style = system_panel_style.duplicate()",
-        '_system_panel.add_theme_stylebox_override("panel", _compact_system_panel_style)',
-        '_system_panel.add_theme_stylebox_override("panel", _wide_system_panel_style)',
-    ):
-        ensure(required_token in shell_text, errors, f"Battle System frame lifecycle is missing token: {required_token}")
-    theme_body = gdscript_function_block(shell_text, "_apply_visual_theme")
-    authored_apply = theme_body.find("FrontierVisualKit.apply_art_panel(_system_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL")
-    wide_capture = theme_body.find("_wide_system_panel_style = system_panel_style.duplicate()")
-    ensure(authored_apply >= 0 and wide_capture > authored_apply, errors, "BattleShell must capture the wide System frame only after applying the authored art panel")
-    responsive_body = gdscript_function_block(shell_text, "_apply_responsive_layout")
-    for required_token in (
-        "var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0",
-        "if compact_layout:",
-        '_system_panel.add_theme_stylebox_override("panel", _compact_system_panel_style)',
-        "elif _wide_system_panel_style != null:",
-        '_system_panel.add_theme_stylebox_override("panel", _wide_system_panel_style)',
-        "_speed_bar.visible = not compact_layout",
-    ):
-        ensure(required_token in responsive_body, errors, f"Battle responsive System frame is missing exact compact/wide token: {required_token}")
 
     smoke_text = smoke_path.read_text(encoding="utf-8")
     smoke_helper = gdscript_function_block(smoke_text, "_assert_battle_system_frame_roundtrip")
@@ -29353,14 +28215,6 @@ def validate_battle_order_consequence_board(errors: list[str]) -> None:
     session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
     ensure("const SAVE_VERSION := 9" in session_text, errors, "Battle order consequence board must preserve save version 9")
 
-    battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
-    for node_name, node_type in (
-        ("ConsequencePanel", "PanelContainer"),
-        ("ConsequenceTitle", "Label"),
-        ("Consequence", "Label"),
-    ):
-        ensure(scene_has_node(battle_scene_text, node_name, node_type), errors, f"BattleShell.tscn must define {node_name} ({node_type}) for the battle order consequence board")
-
     battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
         "func describe_order_consequence_board",
@@ -29387,13 +28241,6 @@ def validate_battle_order_consequence_board(errors: list[str]) -> None:
         "BattleAiRulesScript.choose_enemy_action",
     ):
         ensure(required_token in battle_rules_text, errors, f"BattleRules.gd is missing required battle order-consequence token: {required_token}")
-
-    battle_script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
-    for required_token in (
-        "_consequence_label",
-        "BattleRules.describe_order_consequence_board",
-    ):
-        ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required battle order-consequence token: {required_token}")
 
     battle_ai_text = BATTLE_AI_RULES_PATH.read_text(encoding="utf-8")
     ensure("func choose_enemy_action" in battle_ai_text, errors, "BattleAiRules.gd must keep choose_enemy_action for battle order consequence surfacing")
@@ -29486,20 +28333,6 @@ def validate_battle_intent_forecast(errors: list[str]) -> None:
         '"intent_forecast_tooltip_text"',
     ):
         ensure(required_token in battle_shell_text, errors, f"BattleShell.gd is missing required battle intent-forecast token: {required_token}")
-    preferred_focus_block = function_block(battle_shell_text, "_preferred_battle_keyboard_focus")
-    rebuild_spells_block = function_block(battle_shell_text, "_rebuild_spell_actions")
-    for required_token in (
-        'action_id.begins_with("cast_spell:")',
-        "if is_instance_valid(_spellbook_button): return _spellbook_button",
-    ):
-        ensure(required_token in preferred_focus_block, errors, f"BattleShell forecast spell focus must lead to the shared book: {required_token}")
-    ensure(
-        '_spellbook_button.pressed.connect(_open_spellbook)' in rebuild_spells_block
-        and '_on_spell_action_pressed("cast_spell:" + spell_id)' in function_block(battle_shell_text, "_prepare_book_spell"),
-        errors,
-        "BattleShell forecast launcher must open the shared book and prepare its exact selected spell through targeting",
-    )
-
     report_text = BATTLE_INTENT_FORECAST_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         "BATTLE_INTENT_FORECAST_REPORT",
@@ -29622,49 +28455,6 @@ def validate_battle_refresh_derived_surface_reuse(errors: list[str]) -> None:
     )
     ensure(hex_summary_block.count("legal_destinations_for_active_stack(battle)") == 1, errors, "Battle hex-state summary must enumerate legal destinations exactly once")
 
-    battle_shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
-    refresh_block = function_block(battle_shell_text, "_refresh")
-    preferred_focus_block = function_block(battle_shell_text, "_preferred_battle_keyboard_focus")
-    position_check_block = function_block(battle_shell_text, "_battle_position_check_cue_surface")
-    for required_token in (
-        "var _last_refresh_intent_forecast: Dictionary = {}",
-        "var _last_refresh_intent_forecast_battle_hash := 0",
-    ):
-        ensure(required_token in battle_shell_text, errors, f"BattleShell refresh reuse is missing invocation-local field: {required_token}")
-    require_order(
-        refresh_block,
-        (
-            "_last_refresh_intent_forecast = {}",
-            "_last_refresh_intent_forecast_battle_hash = 0",
-            "var intent_forecast := BattleRules.intent_forecast_payload(_session)",
-            "_last_refresh_intent_forecast = intent_forecast",
-            "_last_refresh_intent_forecast_battle_hash = hash(_session.battle)",
-            'call_deferred("_configure_battle_keyboard_focus", false)',
-        ),
-        "Battle refresh forecast lifecycle",
-    )
-    require_order(
-        preferred_focus_block,
-        (
-            "var intent_forecast := _last_refresh_intent_forecast",
-            "if intent_forecast.is_empty() or _last_refresh_intent_forecast_battle_hash != hash(_session.battle):",
-            "intent_forecast = BattleRules.intent_forecast_payload(_session)",
-            'var action_id := String(intent_forecast.get("action_id", ""))',
-        ),
-        "Battle preferred-focus cache validation and fresh fallback",
-    )
-    require_order(
-        position_check_block,
-        (
-            "var legal_destinations := BattleRules.legal_destinations_for_active_stack(battle)",
-            "BattleRules.active_movement_board_click_intent(battle, legal_destinations)",
-            "BattleRules.legal_movement_intents_for_active_stack(battle, legal_destinations)",
-        ),
-        "Battle position-check destination reuse",
-    )
-    ensure(position_check_block.count("legal_destinations_for_active_stack(battle)") == 1, errors, "Battle position-check cue must enumerate legal destinations exactly once")
-    ensure("session.battle[\"_last_refresh_intent_forecast\"]" not in battle_shell_text, errors, "Battle forecast reuse must never enter battle/save authority")
-
     forecast_report_text = BATTLE_INTENT_FORECAST_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         "var movement_authority_before: Dictionary = player_session.to_dict()",
@@ -29707,14 +28497,6 @@ def validate_battle_spell_timing_board(errors: list[str]) -> None:
     session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
     ensure("const SAVE_VERSION := 9" in session_text, errors, "Battle spell timing board must preserve save version 9")
 
-    battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
-    for node_name, node_type in (
-        ("TimingPanel", "PanelContainer"),
-        ("TimingTitle", "Label"),
-        ("Timing", "Label"),
-    ):
-        ensure(scene_has_node(battle_scene_text, node_name, node_type), errors, f"BattleShell.tscn must define {node_name} ({node_type}) for the battle spell timing board")
-
     battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
         "func describe_spell_timing_board",
@@ -29746,13 +28528,6 @@ def validate_battle_spell_timing_board(errors: list[str]) -> None:
         "Best before the next volley or before the lane closes.",
     ):
         ensure(required_token in spell_rules_text, errors, f"SpellRules.gd is missing required battle spell-timing token: {required_token}")
-
-    battle_script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
-    for required_token in (
-        "_timing_label",
-        "BattleRules.describe_spell_timing_board",
-    ):
-        ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required battle spell-timing token: {required_token}")
 
     battle_ai_text = BATTLE_AI_RULES_PATH.read_text(encoding="utf-8")
     ensure("func choose_enemy_action" in battle_ai_text, errors, "BattleAiRules.gd must keep choose_enemy_action for battle spell timing surfacing")
@@ -30018,7 +28793,7 @@ def validate_in_session_save_controls(errors: list[str]) -> None:
     battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
     ensure('name="ManualSaveOverwriteDialog"' in battle_scene_text, errors, "BattleShell.tscn must instance the shared manual-save overwrite dialog")
     for node_name, node_type in (
-        ("SystemPanel", "PanelContainer"),
+        ("OptionsPopover", "PanelContainer"),
         ("SystemBody", "Label"),
         ("SaveSlot", "OptionButton"),
         ("Save", "Button"),
@@ -35088,466 +33863,6 @@ def validate_battle_movement_range_perimeter_contour(errors: list[str]) -> None:
             "var screenshot_size := await _save_screenshot(render_viewport, screenshot_path)",
         ))
         ensure(all(index >= 0 for index in visual_order) and list(visual_order) == sorted(visual_order), errors, "Captured Battle movement-range contract must pass before each unchanged screenshot")
-
-
-def validate_battle_sidebar_tactical_card_height_cap(errors: list[str]) -> None:
-    def gd_function_block(text: str, name: str) -> str:
-        start = text.find(f"func {name}(")
-        if start < 0:
-            return ""
-        end = text.find("\nfunc ", start + 1)
-        return text[start:] if end < 0 else text[start:end]
-
-    controller_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
-    visual_path = ROOT / "tests" / "ui_runtime_skin_visual_report.gd"
-    for path in (BATTLE_SCENE_PATH, controller_path, visual_path):
-        ensure(path.exists(), errors, f"Missing Battle sidebar tactical-card owner: {path.relative_to(ROOT)}")
-    if not all(path.exists() for path in (BATTLE_SCENE_PATH, controller_path, visual_path)):
-        return
-
-    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
-    controller_text = controller_path.read_text(encoding="utf-8")
-    visual_text = visual_path.read_text(encoding="utf-8")
-    tabs_match = re.search(
-        r'\[node name="BattleTabs" type="TabContainer"[^\n]*\]\n(?P<body>.*?)(?=\n\[node name="InitiativePanel")',
-        scene_text,
-        re.S,
-    )
-    ensure(tabs_match is not None, errors, "Could not isolate the authored BattleTabs tactical-card node")
-    if tabs_match is not None:
-        tabs_body = tabs_match.group("body")
-        ensure(tabs_body.count("custom_minimum_size = Vector2(0, 248)") == 1, errors, "BattleTabs must own one exact 248px tactical-card minimum")
-        ensure(tabs_body.count("size_flags_horizontal = 3") == 1 and tabs_body.count("size_flags_vertical = 1") == 1, errors, "BattleTabs must fill horizontally without vertically expanding through the sidebar")
-        ensure("size_flags_vertical = 3" not in tabs_body, errors, "BattleTabs must not retain the full-height vertical expand flag")
-        for forbidden in ("visible = false", "clip_contents", "position =", "offset_", "anchor_", "grow_", "script ="):
-            ensure(forbidden not in tabs_body, errors, f"BattleTabs height cap must remain one container-owned sizing policy without {forbidden}")
-
-    controller = gd_function_block(controller_text, "_validate_battle_focus_spell_tab_body_fit")
-    ensure(controller, errors, "Could not isolate focused Battle tactical-card geometry owner")
-    if controller:
-        controller_order = tuple(controller.find(token) for token in (
-            '_battle_background_authority(session)',
-            'shell.get_node("%SidebarShell")',
-            'shell.get_node("%CommandPanel")',
-            'shell.get_node("%BattleTabs")',
-            "tabs.custom_minimum_size.y, 248.0",
-            "tabs.size_flags_vertical != Control.SIZE_FILL",
-            "tabs.current_tab = 0",
-            "var contained_tabs_height := tabs.size.y",
-            "if sidebar_shell.is_visible_in_tree():",
-            "var remaining_rail_gutter := sidebar_rect.end.y - tabs_rect.end.y",
-            "not is_equal_approx(contained_tabs_height, 248.0)",
-            "not sidebar_rect.encloses(command_rect)",
-            "not sidebar_rect.encloses(tabs_rect)",
-            "command_rect.intersects(tabs_rect)",
-            "remaining_rail_gutter < 80.0",
-            "elif width >= 1360:",
-            "for row_value in rows:",
-            "is_equal_approx(tabs.size.y, contained_tabs_height)",
-            "tabs.current_tab = initial_tab",
-            "_battle_background_authority(session) != authority_before",
-        ))
-        ensure(all(index >= 0 for index in controller_order) and list(controller_order) == sorted(controller_order), errors, "Focused Battle tactical-card proof must validate authored sizing, wide/compact geometry, stable page height, restore, then whole authority in order")
-        for token in (
-            'return _fail_bool("Battle wide layout unexpectedly hides the tactical sidebar at requested width %d." % width)',
-            "command_rect.end.y > tabs_rect.position.y + 0.01",
-            "tabs.get_global_rect().encloses(panel.get_global_rect())",
-            "panel.get_global_rect().encloses(label.get_global_rect())",
-            "label.get_visible_line_count() == int(line_counts[index])",
-        ):
-            ensure(token in controller, errors, f"Focused Battle tactical-card proof is missing exact containment/content token: {token}")
-        for forbidden in ("custom_minimum_size =", "size_flags_vertical =", "set_deferred", "call_deferred", "create_timer", "await get_tree().create_timer", "queue_sort", "sort(", "erase("):
-            ensure(forbidden not in controller, errors, f"Focused Battle tactical-card proof must remain observational and avoid {forbidden}")
-
-    visual_helper = gd_function_block(visual_text, "_battle_sidebar_tactical_card_contract")
-    visual_run = gd_function_block(visual_text, "_run_shell")
-    ensure(visual_helper and visual_run, errors, "Could not isolate all-size Battle tactical-card visual owner")
-    if visual_helper:
-        visual_order = tuple(visual_helper.find(token) for token in (
-            'shell.get_node_or_null("%SidebarShell")',
-            'shell.get_node_or_null("%CommandPanel")',
-            'shell.get_node_or_null("%BattleTabs")',
-            'shell.get_node_or_null("%TacticalDetails")',
-            'shell.get_node_or_null("%Event")',
-            'shell.get_node_or_null("%BattleContext")',
-            'shell.get_node_or_null("%BattleBoard")',
-            'shell.get_node_or_null("%InitiativePanel")',
-            'shell.get_node_or_null("%ContextPanel")',
-            'shell.get_node_or_null("%SpellPanel")',
-            'shell.get_node_or_null("%TimingPanel")',
-            "var authority_before: Dictionary = session.to_dict()",
-            'var expected_titles := ["Order", "Focus", "Spell", "Timing"]',
-            "var compact := viewport_size.x < 1360 or viewport_size.y < 760",
-            "var collapsed_board_rect := board.get_global_rect()",
-            "var default_field_first_exact := not sidebar_shell.is_visible_in_tree()",
-            "details_button.pressed.emit()",
-            "for index in range(panels.size()):",
-            "titles.append(tabs.get_tab_title(index))",
-            "heights.append(tabs.size.y)",
-            "pages_contained = pages_contained and tabs.get_global_rect().encloses(panels[index].get_global_rect())",
-            "tabs.custom_minimum_size.y, 248.0",
-            "tabs.size_flags_vertical == Control.SIZE_FILL",
-            "heights.all(func(height): return is_equal_approx(height, 248.0))",
-            "remaining_rail_gutter >= 80.0",
-            "var compact_geometry_exact := not sidebar_shell.is_visible_in_tree()",
-            "tabs.current_tab = original_tab",
-            "var restored_board_rect := board.get_global_rect()",
-            "var restored_field_first_exact := not sidebar_shell.is_visible_in_tree()",
-            "var authority_exact := session.to_dict() == authority_before",
-        ))
-        ensure(all(index >= 0 for index in visual_order) and list(visual_order) == sorted(visual_order), errors, "All-size Battle tactical-card proof must traverse all native pages, inspect wide/compact geometry, restore selection, then verify authority")
-        for token in (
-            "sidebar_rect.encloses(command_rect)",
-            "sidebar_rect.encloses(tabs_rect)",
-            "command_rect.end.y <= tabs_rect.position.y + 0.01",
-            "not command_rect.intersects(tabs_rect)",
-            "and titles == expected_titles",
-            "compact_geometry_exact if compact else wide_geometry_exact",
-        ):
-            ensure(token in visual_helper, errors, f"All-size Battle tactical-card proof is missing exact native geometry/title token: {token}")
-        for forbidden in ("custom_minimum_size =", "tabs.size_flags_vertical = Control.SIZE", "set_deferred", "call_deferred", "create_timer", "await get_tree().create_timer", "minimum_size_changed", "queue_sort", "sort(", "erase("):
-            ensure(forbidden not in visual_helper, errors, f"All-size Battle tactical-card proof must remain passive and avoid {forbidden}")
-    if visual_run:
-        visual_run_order = tuple(visual_run.find(token) for token in (
-            "var sidebar_contract := await _battle_sidebar_tactical_card_contract(shell, viewport_size)",
-            'shell_report["battle_sidebar_tactical_card"] = sidebar_contract',
-            'if not bool(sidebar_contract.get("ok", false)):',
-            "var screenshot_size := await _save_screenshot(render_viewport, screenshot_path)",
-        ))
-        ensure(all(index >= 0 for index in visual_run_order) and list(visual_run_order) == sorted(visual_run_order), errors, "Battle tactical-card all-size contract must pass before every captured screenshot")
-
-
-def validate_battle_sidebar_heraldic_watermark(errors: list[str]) -> None:
-    def gd_function_block(text: str, name: str) -> str:
-        start = text.find(f"func {name}(")
-        if start < 0:
-            return ""
-        end = text.find("\nfunc ", start + 1)
-        return text[start:] if end < 0 else text[start:end]
-
-    asset_path = ROOT / "art" / "ui" / "runtime" / "battle" / "sidebar_heraldic_watermark.png"
-    controller_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
-    for path in (asset_path, BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, controller_path):
-        ensure(path.exists(), errors, f"Missing Battle sidebar watermark owner: {path.relative_to(ROOT)}")
-    if not all(path.exists() for path in (asset_path, BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, controller_path)):
-        return
-
-    asset_bytes = asset_path.read_bytes()
-    ensure(png_size(asset_path) == (512, 512), errors, "Battle sidebar heraldic watermark must remain an exact 512x512 PNG")
-    ensure(len(asset_bytes) > 25 and asset_bytes[:8] == b"\x89PNG\r\n\x1a\n" and asset_bytes[25] == 6, errors, "Battle sidebar heraldic watermark must retain its RGBA transparency")
-
-    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
-    script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
-    controller_text = controller_path.read_text(encoding="utf-8")
-    resource_token = '[ext_resource type="Texture2D" path="res://art/ui/runtime/battle/sidebar_heraldic_watermark.png" id="7_sidebar_watermark"]'
-    ensure(scene_text.count(resource_token) == 1, errors, "BattleShell must import exactly one authored sidebar heraldic watermark texture")
-    watermark_node = scene_node_block(scene_text, "SidebarWatermark", "TextureRect")
-    ensure(watermark_node, errors, "BattleShell must author one SidebarWatermark TextureRect")
-    if watermark_node:
-        ensure(scene_node_parent(scene_text, "SidebarWatermark", "TextureRect") == "ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox", errors, "Battle sidebar watermark must remain inside the existing flexible SidebarBox negative-space owner")
-        for token in (
-            "unique_name_in_owner = true",
-            "visible = false",
-            "layout_mode = 2",
-            "size_flags_vertical = 3",
-            "mouse_filter = 2",
-            "self_modulate = Color(0.82, 0.72, 0.52, 0.20)",
-            'texture = ExtResource("7_sidebar_watermark")',
-            "expand_mode = 1",
-            "stretch_mode = 5",
-        ):
-            ensure(watermark_node.count(token) == 1, errors, f"Battle sidebar watermark is missing exact passive presentation token: {token}")
-        for forbidden in ("custom_minimum_size", "offset_", "anchor_", "grow_", "script =", "text =", "tooltip_text", "focus_mode", "clip_contents"):
-            ensure(forbidden not in watermark_node, errors, f"Battle sidebar watermark must not add layout, focus, text, or behavior through {forbidden}")
-    watermark_index = scene_text.find('[node name="SidebarWatermark" type="TextureRect"')
-    tabs_index = scene_text.find('[node name="BattleTabs" type="TabContainer"')
-    footer_index = scene_text.find('[node name="Footer" type="PanelContainer" parent="ContentMargin/Content"]')
-    ensure(0 <= tabs_index < watermark_index < footer_index, errors, "Battle sidebar watermark must remain the final flexible SidebarBox child after BattleTabs and before the existing Footer")
-
-    ensure(script_text.count("const BATTLE_SIDEBAR_WATERMARK_MIN_ROOT_HEIGHT := 1000.0") == 1, errors, "BattleShell must own one exact tall-rail watermark threshold")
-    ensure(script_text.count("@onready var _sidebar_watermark: TextureRect = %SidebarWatermark") == 1, errors, "BattleShell must bind the authored watermark exactly once")
-    responsive = gd_function_block(script_text, "_apply_responsive_layout")
-    ensure(responsive, errors, "Could not isolate BattleShell responsive layout for watermark validation")
-    if responsive:
-        responsive_order = tuple(responsive.find(token) for token in (
-            "var available_size := size",
-            "var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0",
-            "var tactical_details_visible := not compact_layout and _tactical_details_expanded",
-            "_sidebar_shell_panel.visible = tactical_details_visible",
-            "_sidebar_watermark.visible = tactical_details_visible and available_size.y >= BATTLE_SIDEBAR_WATERMARK_MIN_ROOT_HEIGHT",
-            "_battle_context_label.visible = tactical_details_visible",
-        ))
-        ensure(all(index >= 0 for index in responsive_order) and list(responsive_order) == sorted(responsive_order), errors, "BattleShell must derive watermark visibility from the existing logical responsive layout after sidebar visibility")
-        ensure(responsive.count("_sidebar_watermark.visible =") == 1, errors, "BattleShell responsive layout must own exactly one watermark visibility assignment")
-        for forbidden in ("get_window()", "DisplayServer", "_sidebar_watermark.custom_minimum_size", "_sidebar_watermark.size_flags_", "_sidebar_watermark.texture =", "_sidebar_watermark.self_modulate =", "queue_sort", "call_deferred", "create_timer"):
-            ensure(forbidden not in responsive, errors, f"Battle watermark responsive policy must not mutate layout/art/timing through {forbidden}")
-
-    run_block = gd_function_block(controller_text, "_run")
-    focused = gd_function_block(controller_text, "_validate_battle_sidebar_watermark_responsiveness")
-    ensure(run_block and focused, errors, "Battle controller smoke must own the focused sidebar watermark runtime proof")
-    if run_block:
-        watermark_call = run_block.find("if not await _validate_battle_sidebar_watermark_responsiveness():")
-        width_loop = run_block.find("for width in [1280, 1920]:")
-        ensure(0 <= watermark_call < width_loop and run_block.count("_validate_battle_sidebar_watermark_responsiveness()") == 1, errors, "Battle watermark proof must run exactly once before existing board input fixtures")
-    if focused:
-        focused_order = tuple(focused.find(token) for token in (
-            "var frame := Control.new()",
-            'frame.name = "BattleSidebarWatermarkFrame"',
-            "frame.size = Vector2(1920.0, 1080.0)",
-            "frame.add_child(shell)",
-            "await _settle()",
-            "var authority_before := _battle_background_authority(session)",
-            'var watermark: TextureRect = shell.get_node("%SidebarWatermark")',
-            "var watermark_texture: Texture2D = watermark.texture",
-            "var watermark_image: Image = watermark_texture.get_image() if watermark_texture != null else null",
-            "watermark_image.get_format() != Image.FORMAT_RGBA8",
-            "not is_zero_approx(watermark_image.get_pixel(0, 0).a)",
-            "watermark_image.get_pixel(256, 256).a < 0.95",
-            "for viewport_size in [Vector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080), Vector2i(2560, 1440)]:",
-            "frame.size = Vector2(viewport_size)",
-            "var wide_layout: bool = viewport_size.x >= 1360 and viewport_size.y >= 760",
-            "var collapsed_board_rect := board.get_global_rect()",
-            "details_button.pressed.emit()",
-            "var expected_sidebar_visible := wide_layout",
-            "var expected_watermark_visible: bool = wide_layout and viewport_size.y >= 1000",
-            "sidebar.visible != expected_sidebar_visible or watermark.visible != expected_watermark_visible",
-            "tabs.size.y, 248.0",
-            "var watermark_rect := watermark.get_global_rect()",
-            "not sidebar_rect.encloses(watermark_rect)",
-            "watermark_rect.intersects(command_rect)",
-            "watermark_rect.intersects(tabs_rect)",
-            'details_button.text != "Tactical Details"',
-            "board.get_global_rect().is_equal_approx(collapsed_board_rect)",
-            "_battle_background_authority(session) != authority_before",
-        ))
-        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Battle watermark proof must validate authority, real asset alpha, four logical sizes, containment, and cleanup in order")
-        ensure(focused.rfind("frame.queue_free()") > focused_order[-1], errors, "Focused Battle watermark proof must free its whole logical host after the final authority gate")
-        for token in (
-            'watermark_texture.resource_path != "res://art/ui/runtime/battle/sidebar_heraldic_watermark.png"',
-            "Vector2i(watermark_texture.get_size()) != Vector2i(512, 512)",
-            "watermark.custom_minimum_size != Vector2.ZERO",
-            "watermark.size_flags_vertical != Control.SIZE_EXPAND_FILL",
-            "watermark.mouse_filter != Control.MOUSE_FILTER_IGNORE",
-            "watermark.focus_mode != Control.FOCUS_NONE",
-            "watermark.expand_mode != TextureRect.EXPAND_IGNORE_SIZE",
-            "watermark.stretch_mode != TextureRect.STRETCH_KEEP_ASPECT_CENTERED",
-            "not is_equal_approx(watermark.self_modulate.a, 0.20)",
-            "watermark.size.x <= 0.0 or watermark.size.y <= 0.0",
-            "watermark_rect.position.y + 0.01 < tabs_rect.end.y",
-        ):
-            ensure(token in focused, errors, f"Focused Battle watermark proof is missing exact passive asset/geometry token: {token}")
-        for forbidden in ("get_window().size = viewport_size", "watermark.visible =", "watermark.texture =", "watermark.self_modulate =", "custom_minimum_size =", "size_flags_vertical =", "grab_focus", "Input.", "push_input", "create_timer", "sort(", "erase("):
-            ensure(forbidden not in focused, errors, f"Focused Battle watermark proof must remain observational and avoid {forbidden}")
-
-
-def validate_battle_field_first_tactical_disclosure(errors: list[str]) -> None:
-    def gd_block(text: str, name: str) -> str:
-        start = text.find(f"func {name}(")
-        if start < 0:
-            return ""
-        end = text.find("\nfunc ", start + 1)
-        return text[start:] if end < 0 else text[start:end]
-
-    controller_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
-    visual_path = ROOT / "tests" / "ui_runtime_skin_visual_report.gd"
-    for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, controller_path, visual_path):
-        ensure(path.exists(), errors, f"Missing Battle field-first disclosure owner: {path.relative_to(ROOT)}")
-    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, controller_path, visual_path)):
-        return
-
-    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
-    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
-    controller_text = controller_path.read_text(encoding="utf-8")
-    visual_text = visual_path.read_text(encoding="utf-8")
-    layout_text = (ROOT / "tests" / "battle_layout_smoke.gd").read_text(encoding="utf-8")
-    button = scene_node_block(scene_text, "TacticalDetails", "Button")
-    ensure(scene_text.count('[node name="TacticalDetails" type="Button"') == 1 and button, errors, "BattleShell must author exactly one TacticalDetails button")
-    if button:
-        ensure(scene_node_parent(scene_text, "TacticalDetails", "Button") == "ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/Header", errors, "Battle TacticalDetails must remain overlaid in the existing Header allocation without growing the TopBar minimum")
-        for token in (
-            "unique_name_in_owner = true",
-            "visible = false",
-            "layout_mode = 1",
-            "anchors_preset = 1",
-            "anchor_left = 1.0",
-            "anchor_right = 1.0",
-            "offset_left = -124.0",
-            "offset_bottom = 30.0",
-            "grow_horizontal = 0",
-            "focus_mode = 2",
-            "clip_text = true",
-            'text = "Tactical Details"',
-            'accessibility_name = "Tactical details"',
-        ):
-            ensure(button.count(token) == 1, errors, f"Battle TacticalDetails is missing exact authored token: {token}")
-        for forbidden in ("script =", "shortcut =", "button_pressed", "toggle_mode", "disabled = true"):
-            ensure(forbidden not in button, errors, f"Battle TacticalDetails must remain one ordinary explicit action without {forbidden}")
-
-    for token in (
-        "@onready var _tactical_details_button: Button = %TacticalDetails",
-        "var _tactical_details_expanded := false",
-        "_tactical_details_button.pressed.connect(_on_tactical_details_pressed)",
-        "_style_action_button(_tactical_details_button, false, 124)",
-        "_tactical_details_button.custom_minimum_size = Vector2.ZERO",
-    ):
-        ensure(shell_text.count(token) == 1, errors, f"Battle tactical disclosure lifecycle is missing exact token: {token}")
-    focus_cycle = gd_block(shell_text, "_configure_battle_keyboard_focus")
-    ensure(focus_cycle.count("_tactical_details_button,") == 1, errors, "Battle TacticalDetails must appear exactly once in the normal keyboard/controller focus cycle")
-    responsive = gd_block(shell_text, "_apply_responsive_layout")
-    for token in (
-        "var tactical_details_visible := not compact_layout and _tactical_details_expanded",
-        "_tactical_details_button.visible = not compact_layout",
-        "_sidebar_shell_panel.visible = tactical_details_visible",
-        "_sidebar_watermark.visible = tactical_details_visible and available_size.y >= BATTLE_SIDEBAR_WATERMARK_MIN_ROOT_HEIGHT",
-        "_battle_context_label.visible = tactical_details_visible",
-        "_event_label.visible = tactical_details_visible",
-        "_sync_tactical_details_button()",
-    ):
-        ensure(responsive.count(token) == 1, errors, f"Battle field-first responsive layout is missing exact token: {token}")
-    for forbidden in ("queue_free", "reparent", "remove_child", "BattleRules", "SessionState", "SaveService", "AppRouter", "create_timer"):
-        ensure(forbidden not in responsive, errors, f"Battle disclosure must remain presentation-only and avoid {forbidden}")
-    pressed = gd_block(shell_text, "_on_tactical_details_pressed")
-    sync = gd_block(shell_text, "_sync_tactical_details_button")
-    for token in (
-        "if _compact_layout_active:",
-        "_tactical_details_expanded = not _tactical_details_expanded",
-        "_apply_responsive_layout()",
-        "_tactical_details_button.grab_focus()",
-        'call_deferred("_configure_battle_keyboard_focus", false)',
-    ):
-        ensure(pressed.count(token) == 1, errors, f"Battle tactical disclosure press handler is missing exact token: {token}")
-    for token in (
-        '"Hide Details" if _tactical_details_expanded else "Tactical Details"',
-        '"%s the full tactical report and battle detail rail." % action',
-        "_tactical_details_button.accessibility_name = _tactical_details_button.text",
-        "_tactical_details_button.accessibility_description = _tactical_details_button.tooltip_text",
-    ):
-        ensure(sync.count(token) == 1, errors, f"Battle tactical disclosure semantic sync is missing exact token: {token}")
-    for block_name, block in (("pressed", pressed), ("sync", sync)):
-        for forbidden in ("BattleRules", "SessionState", "SaveService", "AppRouter", "Input.", "create_timer", "await ", "queue_free", "reparent"):
-            ensure(forbidden not in block, errors, f"Battle disclosure {block_name} helper must not change gameplay/authority through {forbidden}")
-
-    focused = gd_block(controller_text, "_validate_battle_sidebar_watermark_responsiveness")
-    visual = gd_block(visual_text, "_battle_sidebar_tactical_card_contract")
-    for block_name, block in (("focused", focused), ("visual", visual)):
-        for token in (
-            '"%TacticalDetails"',
-            '"%Event"',
-            '"%BattleContext"',
-            '"%BattleBoard"',
-            "details_button.pressed.emit()",
-            'details_button.text != "Tactical Details"' if block_name == "focused" else 'details_button.text == "Tactical Details"',
-            "is_equal_approx(collapsed_board_rect)",
-        ):
-            ensure(token in block, errors, f"Battle {block_name} disclosure runtime proof is missing token: {token}")
-        for forbidden in ("_on_tactical_details_pressed", "_tactical_details_expanded =", "visible =", "custom_minimum_size =", "BattleRules.perform", "SaveService", "create_timer"):
-            ensure(forbidden not in block, errors, f"Battle {block_name} disclosure proof must use the public control without bypass/mutation through {forbidden}")
-    for token in (
-        'not bool(hex_summary.get("terrain_single_board_backdrop", false))',
-        'String(terrain_summary.get("rendering_mode", "")) != "continuous_field_with_hex_variation"',
-        'String(terrain_summary.get("texture_sample_mode", "")) != "continuous_field_plus_subordinate_per_hex_variation"',
-        'not bool(terrain_summary.get("terrain_context_primary", false))',
-        'not bool(terrain_summary.get("terrain_hex_variation_subordinate", false))',
-    ):
-        ensure(layout_text.count(token) == 1, errors, f"Battle layout compatibility must observe the shipped continuous terrain contract: {token}")
-    ensure('"hex_snapped_texture"' not in layout_text, errors, "Battle layout compatibility must not restore the superseded per-cell texture renderer oracle")
-
-
-def validate_battle_footer_heraldic_watermark(errors: list[str]) -> None:
-    def gd_function_block(text: str, name: str) -> str:
-        start = text.find(f"func {name}(")
-        if start < 0:
-            return ""
-        end = text.find("\nfunc ", start + 1)
-        return text[start:] if end < 0 else text[start:end]
-
-    smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
-    for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, smoke_path):
-        ensure(path.exists(), errors, f"Missing Battle footer watermark owner: {path.relative_to(ROOT)}")
-    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, smoke_path)):
-        return
-
-    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
-    script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
-    smoke_text = smoke_path.read_text(encoding="utf-8")
-    resource_token = '[ext_resource type="Texture2D" path="res://art/ui/runtime/battle/sidebar_heraldic_watermark.png" id="7_sidebar_watermark"]'
-    ensure(scene_text.count(resource_token) == 1, errors, "Battle footer watermark must reuse the one existing imported heraldic texture")
-    footer_node = scene_node_block(scene_text, "FooterWatermark", "TextureRect")
-    ensure(scene_text.count('[node name="FooterWatermark" type="TextureRect"') == 1 and footer_node, errors, "BattleShell must author exactly one FooterWatermark TextureRect")
-    if footer_node:
-        ensure(scene_node_parent(scene_text, "FooterWatermark", "TextureRect") == "ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox", errors, "Battle footer watermark must remain in the existing flexible SystemBox rest field")
-        for token in (
-            "unique_name_in_owner = true",
-            "visible = false",
-            "layout_mode = 2",
-            "size_flags_horizontal = 3",
-            "size_flags_vertical = 3",
-            "mouse_filter = 2",
-            "self_modulate = Color(0.82, 0.72, 0.52, 0.18)",
-            'texture = ExtResource("7_sidebar_watermark")',
-            "expand_mode = 1",
-            "stretch_mode = 5",
-        ):
-            ensure(footer_node.count(token) == 1, errors, f"Battle footer watermark is missing exact passive scene token: {token}")
-        for forbidden in ("custom_minimum_size", "offset_", "anchor_", "grow_", "script =", "text =", "tooltip_text", "focus_mode", "clip_contents"):
-            ensure(forbidden not in footer_node, errors, f"Battle footer watermark must not add layout, focus, text, or behavior through {forbidden}")
-    menu_index = scene_text.find('[node name="Menu" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions"]')
-    footer_index = scene_text.find('[node name="FooterWatermark" type="TextureRect"')
-    dialog_index = scene_text.find('[node name="QuickResolveConfirmationDialog" type="ConfirmationDialog"')
-    ensure(0 <= menu_index < footer_index < dialog_index, errors, "Battle footer watermark must remain the final SystemBox child after all existing System actions")
-
-    ensure(script_text.count("@onready var _footer_watermark: TextureRect = %FooterWatermark") == 1, errors, "BattleShell must bind the footer watermark exactly once")
-    responsive = gd_function_block(script_text, "_apply_responsive_layout")
-    ensure(responsive, errors, "Could not isolate Battle responsive footer watermark policy")
-    if responsive:
-        responsive_order = tuple(responsive.find(token) for token in (
-            "var horizontal_footer := not compact_layout or available_size.x >= 1180.0",
-            "_footer_row.columns = 2 if horizontal_footer else 1",
-            "_footer_watermark.visible = horizontal_footer and not FrontierVisualKit.high_contrast_enabled()",
-            '_footer_row.add_theme_constant_override("v_separation", 8 if horizontal_footer else 0)',
-        ))
-        ensure(all(index >= 0 for index in responsive_order) and list(responsive_order) == sorted(responsive_order), errors, "Battle footer watermark visibility must follow the existing horizontal-footer decision before unchanged spacing")
-        ensure(responsive.count("_footer_watermark.visible =") == 1, errors, "Battle responsive layout must own exactly one footer-watermark visibility assignment")
-        for forbidden in ("_footer_watermark.custom_minimum_size", "_footer_watermark.size_flags_", "_footer_watermark.texture =", "_footer_watermark.self_modulate =", "_footer_watermark.tooltip_text", "_footer_watermark.grab_focus", "call_deferred", "create_timer"):
-            ensure(forbidden not in responsive, errors, f"Battle footer watermark policy must not mutate layout, art, focus, text, or timing through {forbidden}")
-
-    focused = gd_function_block(smoke_text, "_assert_battle_system_frame_roundtrip")
-    ensure(focused, errors, "Could not isolate focused Battle System/footer roundtrip proof")
-    if focused:
-        focused_order = tuple(focused.find(token) for token in (
-            'var footer_row := shell.get_node_or_null("%FooterRow") as GridContainer',
-            'var footer_watermark := shell.get_node_or_null("%FooterWatermark") as TextureRect',
-            'var sidebar_watermark := shell.get_node_or_null("%SidebarWatermark") as TextureRect',
-            "footer_watermark.texture != sidebar_watermark.texture",
-            'footer_watermark.texture.resource_path != "res://art/ui/runtime/battle/sidebar_heraldic_watermark.png"',
-            "footer_watermark.custom_minimum_size != Vector2.ZERO",
-            "footer_watermark.size_flags_horizontal != Control.SIZE_EXPAND_FILL",
-            "footer_watermark.size_flags_vertical != Control.SIZE_EXPAND_FILL",
-            "footer_watermark.mouse_filter != Control.MOUSE_FILTER_IGNORE",
-            "footer_watermark.focus_mode != Control.FOCUS_NONE",
-            "not is_equal_approx(footer_watermark.self_modulate.a, 0.18)",
-            "window.size = Vector2i(1280, 720)",
-            "not compact_system_box_rect.encloses(compact_watermark_rect)",
-            "compact_watermark_rect.intersects(compact_system_actions_rect)",
-            "window.size = Vector2i(1920, 1080)",
-            "not wide_system_box_rect.encloses(wide_watermark_rect)",
-            "wide_watermark_rect.intersects(wide_system_actions_rect)",
-            "FrontierVisualKitScript.set_high_contrast_enabled(true)",
-            'shell.call("_apply_responsive_layout")',
-            "if footer_watermark.visible:",
-            "FrontierVisualKitScript.set_high_contrast_enabled(original_high_contrast)",
-            "if not footer_watermark.visible:",
-            "window.size = Vector2i(1024, 720)",
-            "footer_row.columns != 1 or footer_watermark.visible",
-            "footer_row.columns != 2 or not footer_watermark.visible",
-            "session.to_dict() != session_before",
-        ))
-        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Battle footer watermark proof must validate shared art, passive properties, two horizontal sizes, high contrast, vertical hiding, roundtrip, and authority in order")
-        ensure(focused.count("window.size = Vector2i(1280, 720)") == 2, errors, "Focused Battle footer watermark proof must return to the exact 1280 horizontal layout after its wide, high-contrast, and vertical checks")
-        ensure(re.search(r"^\s*footer_watermark\.texture\s*=(?!=)", focused, re.M) is None, errors, "Focused Battle footer watermark proof must not assign its production texture")
-        ensure(re.search(r"^\s*footer_watermark\.size_flags_\w+\s*=(?!=)", focused, re.M) is None, errors, "Focused Battle footer watermark proof must not assign production size flags")
-        for forbidden in ("footer_watermark.visible =", "footer_watermark.self_modulate =", "footer_watermark.custom_minimum_size =", "footer_watermark.grab_focus", "footer_watermark.tooltip_text ="):
-            ensure(forbidden not in focused, errors, f"Focused Battle footer watermark proof must remain observational and avoid {forbidden}")
 
 
 def validate_town_management_card_height_cap(errors: list[str]) -> None:
@@ -45118,7 +43433,6 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
     ensure('_hero_sheet.spell_cast_requested.connect(func(spell_id: String): _on_spell_action_pressed("cast_spell:%s" % spell_id))' in overworld_spell_text, errors, "Overworld spells must be cast from the shared spellbook on the hero sheet")
     for shell_path, rebuild_name in (
         (TOWN_SCRIPT_PATH, "_rebuild_study_actions"),
-        (BATTLE_SCRIPT_PATH, "_rebuild_spell_actions"),
     ):
         shell_text = shell_path.read_text(encoding="utf-8")
         rebuild_block = function_block(shell_text, rebuild_name)
@@ -45130,16 +43444,7 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
             rebuild_block.find("button.pressed.connect"),
             rebuild_block.find("add_child(button)"),
         ]
-        if shell_path == BATTLE_SCRIPT_PATH:
-            # The shared book replaces an unbounded footer full of individual
-            # spell actions. Its cards retain the same authoritative art resolver.
-            book_text = (ROOT / "scenes/shared/SpellbookView.gd").read_text(encoding="utf-8")
-            ensure("_spellbook_button.pressed.connect(_open_spellbook)" in rebuild_block, errors, "Battle footer must open the shared spellbook")
-            for token in ("Spells.spell_icon_path(spell_id)", "button.icon = load(icon_path)", "Spells.spell_role_categories(spell)", "button.tooltip_text = _description(spell)"):
-                ensure(token in book_text, errors, f"Shared spellbook missing icon/filter/description contract: {token}")
-            ensure("_on_spell_action_pressed(\"cast_spell:\" + spell_id)" in shell_text, errors, "Spellbook must reuse battle targeting authority")
-        else:
-            ensure(all(index >= 0 for index in order) and order == sorted(order), errors, f"{shell_path.name} must apply school icons after existing style and before unchanged binding/order")
+        ensure(all(index >= 0 for index in order) and order == sorted(order), errors, f"{shell_path.name} must apply school icons after existing style and before unchanged binding/order")
         for token in (
             'SpellRules.spell_id_for_action(String(action.get("id", "")))',
             "SpellRules.spell_icon_path(spell_id)",
@@ -45153,6 +43458,22 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
             ensure(token in helper_block, errors, f"{shell_path.name} spell icon helper is missing exact live token: {token}")
         for forbidden in ("button.text =", "button.tooltip_text =", "button.disabled =", "queue_free", "await ", "create_timer", "create_tween", "ContentService.get_spell"):
             ensure(forbidden not in helper_block, errors, f"{shell_path.name} spell icon helper must not alter spell, action, timing, or layout authority: {forbidden}")
+
+    # The shared book serves the hero sheet; battle lists the commander's
+    # spells in its own spellbook popover, with art from the same resolver.
+    book_text = (ROOT / "scenes/shared/SpellbookView.gd").read_text(encoding="utf-8")
+    for token in ("Spells.spell_icon_path(spell_id)", "button.icon = load(icon_path)", "Spells.spell_role_categories(spell)", "button.tooltip_text = _description(spell)"):
+        ensure(token in book_text, errors, f"Shared spellbook missing icon/filter/description contract: {token}")
+    battle_spell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    battle_spell_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('[connection signal="pressed" from="Hud/CommandBar/CommandRow/RightCommands/Spellbook" to="." method="_on_spellbook_button_pressed"]' in battle_spell_scene_text, errors, "Battle command bar must open the battle spellbook")
+    rebuild_book_block = function_block(battle_spell_text, "_rebuild_spellbook(")
+    for token in ('SpellRules.known_spells(hero_state, "battle")', "_spell_list.add_child(_spell_row(spell, hero_state, cost, reason))"):
+        ensure(token in rebuild_book_block, errors, f"Battle spellbook must list the commander's known battle spells: {token}")
+    spell_row_block = function_block(battle_spell_text, "_spell_row(")
+    for token in ("SpellRules.spell_icon_path(spell_id)", "icon.texture = load(icon_path) as Texture2D", 'row.disabled = reason != ""', "row.pressed.connect(_on_spell_chosen.bind(spell_id))"):
+        ensure(token in spell_row_block, errors, f"Battle spellbook row is missing exact icon/availability/binding token: {token}")
+    ensure("_begin_spell_targeting(spell_id)" in function_block(battle_spell_text, "_on_spell_chosen("), errors, "Battle spellbook must start the chosen spell's targeting")
 
     report_text = SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     report_scene_text = SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCENE_PATH.read_text(encoding="utf-8")
@@ -51186,8 +49507,8 @@ def validate_battle_status_effect_badges(errors: list[str]) -> None:
     draw_start = board_text.find("func _draw_stack_tokens")
     draw_end = board_text.find("\nfunc ", draw_start + 1)
     draw_block = board_text[draw_start:draw_end]
-    draw_order = [draw_block.find(token) for token in ("_draw_stack_side_cue", "_draw_stack_status_effect_badges", "_draw_stack_health_bar", "_draw_count_badge", "_draw_stack_caption")]
-    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Battle stack draw order must retain side cue, status badges, health, count, and caption")
+    draw_order = [draw_block.find(token) for token in ("_draw_stack_side_cue", "_draw_stack_status_effect_badges", "_draw_count_badge")]
+    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Battle stack draw order must retain side cue, status badges, then the count plate")
     badge_start = board_text.find("func _draw_stack_status_effect_badges")
     badge_end = board_text.find("\nfunc ", badge_start + 1)
     badge_block = board_text[badge_start:badge_end]
@@ -52918,20 +51239,21 @@ def validate_active_play_load_resumed_cue_playback(errors: list[str]) -> None:
     ensure(re.search(r"_status_control\.tooltip_text\s*=(?!=)", presenter_text) is None, errors, "Shared load-resumed presenter must not replace status tooltip")
 
     expected_targets = {
-        "overworld": ("_save_status_label", "\t_render_state()\n\t_apply_responsive_layout()\n\t_present_load_resumed_cue()"),
-        "town": ("_save_status_label", "\t_refresh(true)\n\t_present_load_resumed_cue()"),
-        "battle": ("_system_body_label", "\t_refresh()\n\tif _handle_battle_resolution(initial_result):\n\t\treturn\n\t_present_load_resumed_cue()"),
-        "scenario_outcome": ("_save_status_label", "\t_refresh()\n\t_present_load_resumed_cue()"),
+        "overworld": ("_save_status_label", "_save_button", "\t_render_state()\n\t_apply_responsive_layout()\n\t_present_load_resumed_cue()"),
+        "town": ("_save_status_label", "_save_button", "\t_refresh(true)\n\t_present_load_resumed_cue()"),
+        # Battle shows the cue on its log line, next to the Options button.
+        "battle": ("_log_line", "_options_button", "\t_refresh()\n\tif _handle_battle_resolution(initial_result):\n\t\treturn\n\t_present_load_resumed_cue()"),
+        "scenario_outcome": ("_save_status_label", "_save_button", "\t_refresh()\n\t_present_load_resumed_cue()"),
     }
     for surface, text in shell_texts.items():
         if surface == "battle":
-            ensure('_refresh()\n\t\t\tif bool(completed.get("entry_playback",false)): _present_load_resumed_cue()' in text, errors, "Enemy-first battle entry must consume the shared load cue after playback and authoritative refresh")
-        target, ordered_consume = expected_targets[surface]
+            ensure('_refresh()\n\t\t\tif bool(completed.get("entry_playback", false)): _present_load_resumed_cue()' in text, errors, "Enemy-first battle entry must consume the shared load cue after playback and authoritative refresh")
+        target, button, ordered_consume = expected_targets[surface]
         for token in (
             'const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemLoadResumedCuePresenter.gd")',
             "var _load_resumed_cue_presenter: SystemLoadResumedCuePresenter",
             '_load_resumed_cue_presenter.name = "SystemLoadResumedCuePresenter"',
-            f'_load_resumed_cue_presenter.configure({target}, _save_button, "{surface}")',
+            f'_load_resumed_cue_presenter.configure({target}, {button}, "{surface}")',
             ordered_consume,
             f'AppRouter.consume_load_resumed_presentation("{surface}")',
             "func validation_load_resumed_cue_snapshot() -> Dictionary:",
@@ -55644,15 +53966,15 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
     for required_token in (
         "%PlayerCommanderPortrait",
         "%EnemyCommanderPortrait",
-        "_player_commander_portrait.set_hero_id(_battle_player_hero_id())",
-        "_enemy_commander_portrait.set_hero_id(_battle_enemy_hero_id())",
+        'hero_id = _battle_player_hero_id() if side == "player" else _battle_enemy_hero_id()',
+        'portrait.set_hero_id(hero_id) if shown else portrait.set_hero_id("")',
         '"player_commander_portrait": _player_commander_portrait.validation_snapshot()',
         '"enemy_commander_portrait": _enemy_commander_portrait.validation_snapshot()',
         'source = _session.battle.get("player_commander_source", {})',
         'hero = _session.battle.get("enemy_hero", {})',
     ):
         ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing live commander portrait token {required_token}")
-    for required_token in ('path="res://scenes/ui/HeroPortraitView.gd"', 'name="PlayerCommanderIdentity"', 'name="PlayerCommanderPortrait"', 'name="EnemyCommanderIdentity"', 'name="EnemyCommanderPortrait"'):
+    for required_token in ('path="res://scenes/ui/HeroPortraitView.gd"', 'name="PlayerHeroPlate"', 'name="PlayerCommanderPortrait"', 'name="EnemyHeroPlate"', 'name="EnemyCommanderPortrait"'):
         ensure(required_token in battle_scene_text, errors, f"BattleShell.tscn is missing live commander portrait token {required_token}")
 
     live_report_text = LIVE_COMMANDER_PORTRAIT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
@@ -60708,18 +59030,18 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "const STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR := 0.07",
         "const STACK_TOKEN_RADIUS_FACTOR := 0.68",
         "const STACK_TOKEN_RADIUS_MIN := 15.0",
-        "const STACK_TOKEN_RADIUS_MAX := 32.0",
+        "const STACK_TOKEN_RADIUS_MAX := 52.0",
         "const STACK_HIT_RADIUS_FACTOR := 0.58",
         "const STACK_HIT_RADIUS_MIN := 13.0",
-        "const STACK_HIT_RADIUS_MAX := 28.0",
+        "const STACK_HIT_RADIUS_MAX := 46.0",
         "const STACK_HIT_RADIUS_PADDING := 10.0",
         "const STACK_ANIMATION_ART_EXTENT_FACTOR := 1.96",
         "const STACK_ICON_ART_EXTENT_FACTOR := 1.86",
         "const STACK_STANDEE_ART_HEIGHT_FACTOR := 2.55",
         "const STACK_STANDEE_ART_HEIGHT_MIN := 70.0",
-        "const STACK_STANDEE_ART_HEIGHT_MAX := 104.0",
+        "const STACK_STANDEE_ART_HEIGHT_MAX := 260.0",
         "const STACK_STANDEE_ASPECT := 192.0 / 224.0",
-        "const STACK_STANDEE_GROUND_OFFSET_FACTOR := 0.52",
+        "const STACK_STANDEE_GROUND_OFFSET_FACTOR := 0.28",
         'const STACK_TOKEN_PRESENTATION_MODEL := "grounded_full_body_standee_event_animation_swap"',
     ):
         ensure(battle_board_text.count(required_token) == 1, errors, f"Battle character standee renderer must own one exact production constant: {required_token}")
@@ -60749,9 +59071,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "var fallback_frame_size := token_radius * STACK_ANIMATION_ART_EXTENT_FACTOR",
         "_draw_unit_glyph(center, token_radius, stack)",
         "_draw_stack_side_cue(center, token_radius, side)",
-        "_draw_stack_health_bar(center, radius, stack)",
-        "_draw_count_badge(center, token_radius, stack)",
-        "_draw_stack_caption(center, radius, stack)",
+        "_draw_count_badge(center, radius, stack)",
         '"radius": _stack_hit_shape_radius(radius)',
     ))
     ensure(all(index >= 0 for index in stack_token_draw_order) and list(stack_token_draw_order) == sorted(stack_token_draw_order), errors, "Battle standees must preserve depth order, grounded selection plinth, event/standee/icon fallbacks, overlays, and unchanged hit geometry in exact draw order")
@@ -60967,8 +59287,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     draw_block = battle_board_text[battle_board_text.find("func _draw() -> void:"):battle_board_text.find("func _draw_terrain", battle_board_text.find("func _draw() -> void:"))]
     ensure(draw_block.find("_draw_vfx_cues(hex_layout, stack_cells)") < draw_block.find("_draw_stack_tokens(hex_layout, stack_cells)"), errors, "Ground VFX must precede the unit/effects/readout composite")
     token_block = battle_board_text[battle_board_text.find("func _draw_stack_tokens"):battle_board_text.find("func _active_mapped_status_effects")]
-    effect_order = [token_block.find(token) for token in ("_draw_stack_art(", "_draw_combat_vfx_foreground(", "_draw_stack_health_bar(", "_draw_count_badge(", "_draw_stack_caption(")]
-    ensure(all(index >= 0 for index in effect_order) and effect_order == sorted(effect_order), errors, "Layered combat effects must sit above unit art and below health/count/caption readouts")
+    effect_order = [token_block.find(token) for token in ("_draw_stack_art(", "_draw_combat_vfx_foreground(", "_draw_count_badge(")]
+    ensure(all(index >= 0 for index in effect_order) and effect_order == sorted(effect_order), errors, "Layered combat effects must sit above unit art and below the count plate")
     imported_draw_block = battle_board_text[battle_board_text.find("func _draw_imported_vfx_asset"):battle_board_text.find("func _vfx_draw_entries", battle_board_text.find("func _draw_imported_vfx_asset"))]
     for required_token in (
         "if spec.is_empty():\n\t\treturn false",
@@ -62265,7 +60585,7 @@ def validate_battle_surrender_pursuit_aftermath(errors: list[str]) -> None:
         "@onready var _surrender_button: Button",
         "func _on_surrender_pressed",
         '_request_withdrawal_confirmation("surrender", _surrender_button)',
-        "_apply_action_surface(_surrender_button",
+        '_apply_command_surface(_surrender_button, surface.get("surrender", {})',
         '"surrender"',
     ):
         ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required surrender UI token: {required_token}")
@@ -80612,13 +78932,9 @@ def main() -> int:
     validate_settings_and_onboarding(errors)
     validate_native_screen_reader_semantics(errors)
     validate_battle_layout_detached_route_compatibility(errors)
+    validate_battle_fullscreen_composition(errors)
     validate_battle_board_cursor_semantics(errors)
-    validate_battle_action_context_word_boundary_ellipsis(errors)
-    validate_battle_order_tab_compact_initiative_summary(errors)
-    validate_battle_info_tab_header_compact_fit(errors)
-    validate_battle_focus_spell_tab_body_containment(errors)
-    validate_battle_timing_tab_compact_summary(errors)
-    validate_battle_timing_check_detail_prefix_deduplication(errors)
+    validate_battle_animation_started_playback_observer(errors)
     validate_main_menu_credits_third_party_notices(errors)
     validate_main_menu_first_view(errors)
     validate_main_menu_stage_dock_cartography_surface(errors)
@@ -80644,7 +78960,6 @@ def main() -> int:
     validate_army_stack_management_bar(errors)
     validate_overworld_fog(errors)
     validate_battle_deterministic_rng_state(errors)
-    validate_battle_info_tab_controller_navigation(errors)
     validate_battle_quick_resolve_runtime(errors)
     validate_battle_withdrawal_confirmation_runtime(errors)
     validate_battle_resolution_autosave_failure_route_safety(errors)
@@ -80657,10 +78972,6 @@ def main() -> int:
     validate_battle_autoplay_balance_diagnostics(errors)
     validate_battle_shell_release_polish(errors)
     validate_battle_movement_range_perimeter_contour(errors)
-    validate_battle_sidebar_tactical_card_height_cap(errors)
-    validate_battle_sidebar_heraldic_watermark(errors)
-    validate_battle_field_first_tactical_disclosure(errors)
-    validate_battle_footer_heraldic_watermark(errors)
     validate_battle_terrain_context_and_system_frame(errors)
     validate_battle_objective_pressure_slice(errors)
     validate_battle_order_consequence_board(errors)

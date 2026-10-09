@@ -52,7 +52,8 @@ func resolve_routes() -> void:
 			await settle()
 			continue
 		var path := String(scene.scene_file_path)
-		if path.ends_with("BattleShell.tscn"):
+		var result_pending: bool = path.ends_with("BattleShell.tscn") and scene.validation_result_pending()
+		if path.ends_with("BattleShell.tscn") and not result_pending:
 			await capture("battle_%03d" % actions.size(), true)
 			var started := Time.get_ticks_usec()
 			var request: Dictionary = scene.validation_request_quick_resolve_confirmation()
@@ -63,7 +64,8 @@ func resolve_routes() -> void:
 			if not bool(request.get("ok", false)) or not bool(result.get("performed", false)):
 				failures.append("legal Quick Resolve failed")
 				return
-		elif path.ends_with("BattleReportShell.tscn"):
+		elif result_pending or path.ends_with("BattleReportShell.tscn"):
+			# The result shows over the field, or on a loaded save's report screen.
 			await capture("casualties_%03d" % actions.size(), true)
 			var started := Time.get_ticks_usec()
 			scene.get_node("%Continue").pressed.emit()

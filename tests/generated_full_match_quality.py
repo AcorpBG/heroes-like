@@ -135,7 +135,7 @@ func resolve_routes() -> void:
 		if scene == null:
 			await settle()
 			continue
-		if scene_path().ends_with("BattleShell.tscn"):
+		if scene_path().ends_with("BattleShell.tscn") and not scene.validation_result_pending():
 			if int(counts.get("battle", 0)) < 2:
 				await screenshot("battle_%02d" % int(counts.get("battle", 0)))
 			var started := Time.get_ticks_usec()
@@ -147,20 +147,31 @@ func resolve_routes() -> void:
 			if not bool(request.get("ok",false)) or not bool(result.get("performed",false)):
 				failures.append("shipped Quick Resolve failed")
 				return
+		elif scene_path().ends_with("BattleShell.tscn"):
+			# The battle's result shows over the field.
+			if not await continue_battle_report(scene):
+				return
 		elif scene_path().ends_with("BattleReportShell.tscn"):
-			if int(counts.get("battle_report",0)) < 2:
-				await screenshot("casualties_%02d" % int(counts.get("battle_report",0)))
-			var started := Time.get_ticks_usec()
-			scene.get_node("%Continue").pressed.emit()
-			var result: Dictionary = scene._last_continue_result.duplicate(true)
-			await settle()
-			record("battle_report",started,{"ok":result.get("ok",false)})
-			if not bool(result.get("ok",false)):
-				failures.append("required battle report save failed")
+			if not await continue_battle_report(scene):
 				return
 		else:
 			return
 	failures.append("battle/outcome routing did not settle")
+
+## Continue on the battle's result, over the field or on a loaded save's
+## report screen: it saves the result and goes on.
+func continue_battle_report(scene) -> bool:
+	if int(counts.get("battle_report",0)) < 2:
+		await screenshot("casualties_%02d" % int(counts.get("battle_report",0)))
+	var started := Time.get_ticks_usec()
+	scene.get_node("%Continue").pressed.emit()
+	var result: Dictionary = scene._last_continue_result.duplicate(true)
+	await settle()
+	record("battle_report",started,{"ok":result.get("ok",false)})
+	if not bool(result.get("ok",false)):
+		failures.append("required battle report save failed")
+		return false
+	return true
 
 func checkpoint(label: String, slot: int) -> void:
 	var started := Time.get_ticks_usec()

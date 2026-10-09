@@ -3,6 +3,7 @@ extends "res://scripts/ui/BoundedTooltipControl.gd"
 signal stack_focus_requested(battle_id: String)
 signal hex_destination_requested(q: int, r: int)
 signal controller_navigation_cancelled
+signal hero_figure_pressed(side: String)
 
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
 const AnimationCueCatalogScript = preload("res://scripts/core/AnimationCueCatalog.gd")
@@ -13,6 +14,55 @@ const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 const HEX_COLUMNS := BattleRulesScript.BATTLE_HEX_COLUMNS
 const HEX_ROWS := BattleRulesScript.BATTLE_HEX_ROWS
 const SQRT_3 := 1.7320508075688772
+# The field is seen at an angle: each row is squashed to this share of its
+# height (docs/battle-rework.md).
+const HEX_VERTICAL_SCALE := 0.82
+# The hexes fill the middle of the window. The margins are for a 1920x1080
+# window and scale with it (ui_scale): the heroes stand in the side margins,
+# the turn ribbon sits above the field and the command bar below it.
+const FIELD_REFERENCE_SIZE := Vector2(1920.0, 1080.0)
+const FIELD_MARGIN_SIDE := 250.0
+const FIELD_MARGIN_TOP := 165.0
+const FIELD_MARGIN_BOTTOM := 90.0
+# The hex radius the sizes below were drawn for (a 1920x1080 window).
+const REFERENCE_HEX_RADIUS := 71.29
+const BATTLEFIELD_VIGNETTE_COLOR := Color(0.031, 0.024, 0.012, 0.42)
+const BATTLEFIELD_GRID_LINE := Color(1.0, 0.973, 0.871, 0.27)
+const BATTLEFIELD_GRID_SHADOW := Color(0.125, 0.094, 0.031, 0.2)
+# A hero stands beside its army, HERO_FOOT_OUTSET_RADII hex radii outside the
+# grid and a quarter of the way down it, its canvas drawn
+# HERO_FIGURE_CANVAS_RADII radii tall. Its casts start HERO_CAST_POINT_RADII
+# above its feet.
+const HERO_FOOT_OUTSET_RADII := 1.515
+const HERO_FOOT_GRID_FRACTION := 0.254
+const HERO_FIGURE_CANVAS_RADII := 3.34
+const HERO_HIT_HALF_WIDTH_RADII := 1.09
+const HERO_HIT_TOP_RADII := 3.2
+const HERO_HIT_BOTTOM_RADII := 0.2
+const HERO_CAST_POINT_RADII := 1.55
+const HERO_READY_GLOW := Color(1.0, 0.84, 0.44)
+# The turn ribbon across the top of the window (sizes for 1920x1080).
+const RIBBON_MAX_WIDTH := 1390.0
+const RIBBON_PADDING_TOP := 8.0
+const RIBBON_PADDING_BOTTOM := 13.0
+const RIBBON_PADDING_SIDE := 16.0
+const RIBBON_GAP := 6.0
+const RIBBON_ACTIVE_CHIP := 74.0
+const RIBBON_CHIP := 52.0
+const RIBBON_NEXT_CHIP := 40.0
+const RIBBON_FILL := Color(0.055, 0.043, 0.027, 0.78)
+const UI_GOLD := Color(0.878, 0.722, 0.4)
+const UI_GOLD_HI := Color(0.965, 0.863, 0.604)
+const UI_GOLD_DIM := Color(0.878, 0.722, 0.4, 0.45)
+const UI_GOLD_FAINT := Color(0.878, 0.722, 0.4, 0.18)
+const UI_CREAM := Color(0.953, 0.918, 0.831)
+const UI_MUTED := Color(0.737, 0.682, 0.561)
+const UI_PANEL := Color(0.063, 0.047, 0.031, 0.93)
+const UI_PLAYER := Color(0.42, 0.659, 0.902)
+const UI_PLAYER_DEEP := Color(0.106, 0.216, 0.337)
+const UI_ENEMY := Color(0.839, 0.38, 0.329)
+const UI_ENEMY_DEEP := Color(0.337, 0.106, 0.086)
+const UI_ACTIVE := Color(0.988, 0.878, 0.478)
 const BATTLE_BOARD_CURSOR_SEMANTIC_MAX_CHARS := 320
 const BATTLE_BOARD_CURSOR_SEMANTIC_DEBOUNCE_SECONDS := 0.42
 const BATTLE_BOARD_CURSOR_RESULT_VISIBLE_SECONDS := 1.20
@@ -20,8 +70,6 @@ const BATTLE_BOARD_CURSOR_RESULT_VISIBLE_SECONDS := 1.20
 const FRAME_FILL := Color(0.045, 0.052, 0.061, 1.0)
 const BOARD_FILL := Color(0.072, 0.078, 0.070, 1.0)
 const FRAME_COLOR := Color(0.82, 0.67, 0.37, 0.94)
-const HEX_LINE_COLOR := Color(0.93, 0.86, 0.62, 0.28)
-const HEX_CENTER_LINE := Color(0.98, 0.86, 0.55, 0.42)
 const TEXT_COLOR := Color(0.96, 0.94, 0.89, 1.0)
 const SUBTEXT_COLOR := Color(0.83, 0.87, 0.91, 0.95)
 const PLAYER_COLOR := Color(0.42, 0.66, 0.90, 0.98)
@@ -30,45 +78,24 @@ const NEUTRAL_COLOR := Color(0.68, 0.72, 0.78, 0.94)
 const ACTIVE_COLOR := Color(0.99, 0.88, 0.48, 1.0)
 const TARGET_COLOR := Color(0.97, 0.64, 0.38, 0.98)
 const BLOCKED_TARGET_COLOR := Color(0.78, 0.20, 0.18, 0.96)
-const TURN_STRIP_PRESENTATION_MODEL := "compact_art_backed_unit_portrait_ribbon"
-const TURN_STRIP_MAX_WIDTH := 620.0
-const TURN_STRIP_HEIGHT := 36.0
-const TURN_STRIP_MARGIN := 10.0
-const TURN_STRIP_PORTRAIT_EXTENT := 22.0
-const TURN_STRIP_LABEL_LEFT_INSET := 32.0
-const TURN_STRIP_FOUNDATION_FILL := Color(0.025, 0.032, 0.038, 0.92)
-const TURN_STRIP_CHIP_FILL := Color(0.055, 0.066, 0.072, 0.96)
-const TURN_STRIP_ACTIVE_FILL := Color(0.115, 0.102, 0.060, 0.98)
-const TURN_STRIP_PORTRAIT_FILL := Color(0.018, 0.024, 0.028, 0.96)
-const TURN_STRIP_QUEUED_FRAME := Color(0.45, 0.49, 0.48, 0.78)
 const STACK_TOKEN_PRESENTATION_MODEL := "grounded_full_body_standee_event_animation_swap"
 const STACK_TOKEN_INNER_FILL := Color(0.035, 0.045, 0.055, 0.32)
 const STACK_TOKEN_SIDE_RIM_ALPHA := 0.78
 const STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR := 0.07
 const STACK_TOKEN_RADIUS_FACTOR := 0.68
 const STACK_TOKEN_RADIUS_MIN := 15.0
-const STACK_TOKEN_RADIUS_MAX := 32.0
+const STACK_TOKEN_RADIUS_MAX := 52.0
 const STACK_HIT_RADIUS_FACTOR := 0.58
 const STACK_HIT_RADIUS_MIN := 13.0
-const STACK_HIT_RADIUS_MAX := 28.0
+const STACK_HIT_RADIUS_MAX := 46.0
 const STACK_HIT_RADIUS_PADDING := 10.0
 const STACK_ANIMATION_ART_EXTENT_FACTOR := 1.96
 const STACK_ICON_ART_EXTENT_FACTOR := 1.86
 const STACK_STANDEE_ART_HEIGHT_FACTOR := 2.55
 const STACK_STANDEE_ART_HEIGHT_MIN := 70.0
-const STACK_STANDEE_ART_HEIGHT_MAX := 104.0
+const STACK_STANDEE_ART_HEIGHT_MAX := 260.0
 const STACK_STANDEE_ASPECT := 192.0 / 224.0
-const STACK_STANDEE_GROUND_OFFSET_FACTOR := 0.52
-const STACK_CAPTION_PLATE_MODEL := "compact_translucent_side_accent_nameplate"
-const STACK_CAPTION_FONT_SIZE := 10
-const STACK_CAPTION_HORIZONTAL_PADDING := 5.0
-const STACK_CAPTION_PLATE_HEIGHT := 16.0
-const STACK_CAPTION_TOKEN_GAP := 2.0
-const STACK_CAPTION_ACCENT_WIDTH := 2.0
-const STACK_CAPTION_PLATE_FILL := Color(0.018, 0.024, 0.029, 0.78)
-const STACK_CAPTION_PLATE_FRAME := Color(0.80, 0.74, 0.57, 0.30)
-const STACK_CAPTION_PLATE_SHADOW := Color(0.01, 0.014, 0.018, 0.42)
-const STACK_CAPTION_ACCENT_ALPHA := 0.82
+const STACK_STANDEE_GROUND_OFFSET_FACTOR := 0.28
 const MOVE_COLOR := Color(0.42, 0.82, 0.66, 0.58)
 const MOVE_RANGE_VISUAL_MODEL := "broken_exposed_edge_perimeter_center_pips_near_transparent_fill"
 const MOVE_RANGE_FILL_RADIUS_FACTOR := 0.58
@@ -81,7 +108,6 @@ const MOVE_RANGE_PIP_RADIUS_FACTOR := 0.040
 const MOVE_RANGE_PIP_ALPHA := 0.46
 const LEGAL_MELEE_COLOR := Color(1.0, 0.78, 0.36, 0.90)
 const LEGAL_RANGED_COLOR := Color(0.72, 0.88, 1.0, 0.82)
-const HEALTH_COLOR := Color(0.95, 0.79, 0.35, 0.96)
 const CONTROLLER_CURSOR_COLOR := Color(1.0, 0.92, 0.58, 1.0)
 const CONTROLLER_CURSOR_BLOCKED_COLOR := Color(0.94, 0.48, 0.32, 1.0)
 const SHADOW_COLOR := Color(0.025, 0.028, 0.031, 0.32)
@@ -131,7 +157,7 @@ const TERRAIN_CONTEXT_TEXTURE_MODULATE := Color(0.78, 0.81, 0.75, 0.92)
 const TERRAIN_CONTEXT_READABILITY_WASH := Color(0.015, 0.020, 0.018, 0.10)
 const TERRAIN_CONTEXT_MODEL := "continuous_primary_field_with_subordinate_hex_variation"
 const TERRAIN_AMBIENT_MODEL := "deterministic_terrain_specific_passive_motes"
-const TERRAIN_AMBIENT_DRAW_ORDER := ["terrain", "ambient_motes", "hex_grid", "objectives", "movement_affordances", "controller_cursor", "battle_vfx", "stack_tokens", "turn_strip", "footer"]
+const TERRAIN_AMBIENT_DRAW_ORDER := ["terrain", "ambient_motes", "hero_figures", "hex_grid", "objectives", "movement_affordances", "controller_cursor", "battle_vfx", "stack_tokens", "turn_ribbon", "hover_forecast"]
 const TERRAIN_AMBIENT_PHASE_SPEED := 0.52
 const TERRAIN_AMBIENT_STATIC_PHASE := 0.0
 const TERRAIN_AMBIENT_PROFILES := {
@@ -170,8 +196,6 @@ const OBSTACLE_ART_SINGLE_SCALE := 1.18
 const OBSTACLE_SHADOW_COLOR := Color(0.02, 0.025, 0.02, 0.38)
 const OBSTACLE_FALLBACK_STONE := Color(0.42, 0.40, 0.36, 0.96)
 const TERRAIN_HEX_FALLBACK_INSET := 0.975
-const TEXTURED_HEX_LINE_COLOR := Color(0.98, 0.89, 0.62, 0.10)
-const TEXTURED_HEX_CENTER_LINE := Color(1.0, 0.86, 0.46, 0.14)
 const TEXTURED_DEPLOYMENT_FILL_ALPHA := 0.035
 const TEXTURED_CENTER_FILL_ALPHA := 0.045
 const TEXTURED_MID_LANE_FILL_ALPHA := 0.018
@@ -191,6 +215,7 @@ const BATTLE_SFX_MANIFEST_PATH := "res://content/battle_sfx_manifest.json"
 const BATTLE_VFX_MANIFEST_PATH := "res://content/battle_vfx_manifest.json"
 const CombatVfxMotion = preload("res://scripts/ui/CombatVfxMotion.gd")
 const BattleUnitPose = preload("res://scripts/ui/BattleUnitPose.gd")
+const BattleHeroFigureScript = preload("res://scripts/ui/BattleHeroFigure.gd")
 const BATTLE_FIELD_OBJECTIVE_ART_MANIFEST_PATH := "res://content/battle_field_objective_art_manifest.json"
 const BATTLE_FIELD_OBJECTIVE_ART_PRESENTATION_MODEL := "type_distinct_imported_landmark_with_non_color_control_shape_and_legacy_geometry_fallback"
 const BATTLE_STATUS_EFFECT_ART_MANIFEST_PATH := "res://content/battle_status_effect_art_manifest.json"
@@ -213,7 +238,6 @@ var _turn_forecast: Dictionary = {}
 var _stack_hit_shapes: Array = []
 var _hover_destination_cell := Vector2i(-1, -1)
 var _consequence_preview: Dictionary = {}
-var _staged_order_preview: Dictionary = {}
 var _spell_target_candidates: Array = []
 var _spell_target_previews: Dictionary = {}
 var _spell_target_mode := false
@@ -226,6 +250,8 @@ func set_spell_target_candidates(ids: Array, previews: Dictionary = {}, targetin
 	queue_redraw()
 var _consequence_hover_key := ""
 var _controller_cursor_cell := Vector2i(-1, -1)
+# Keys or a controller are steering the board (see _input()).
+var _keyboard_cursor_active := false
 var _terrain_textures: Dictionary = {}
 var _obstacle_textures: Dictionary = {}
 var _obstacle_texture_missing: Dictionary = {}
@@ -277,6 +303,25 @@ var _board_query_cache: Dictionary = {}
 var _board_query_signature := 0
 var _board_query_in_draw := false
 var _presentation_was_animating := false
+# Each side's hero as BattleRules.hero_presentation describes it, plus the
+# figure's texture path (figure_path) when it has one.
+var _hero_presentations: Dictionary = {}
+var _hero_figure_textures: Dictionary = {}
+var _hero_cast_ready := false
+var _hover_hero_side := ""
+var _hover_ribbon_battle_id := ""
+var _pointer_position := Vector2(-1.0, -1.0)
+var _vignette_texture: GradientTexture2D = null
+var _soft_glow_texture: GradientTexture2D = null
+var _ribbon_style: StyleBoxFlat = null
+var _forecast_style: StyleBoxFlat = null
+var _box_style: StyleBoxFlat = null
+var _hover_stack_id := ""
+# The ribbon's layout for one battle state and board size (_turn_ribbon_layout).
+var _ribbon_cache: Dictionary = {}
+var _ribbon_cache_key := ""
+# The battle is over (settle_final_field): the field stands still under the result.
+var _field_final := false
 
 @onready var _battle_board_cursor_live_label: Label = get_node_or_null("%BattleBoardCursorLive") as Label
 
@@ -287,7 +332,7 @@ func _ready() -> void:
 	tooltip_text = "Outlined hex click moves. Highlighted enemy click attacks; blocked enemies need movement."
 	focus_entered.connect(_on_controller_focus_entered)
 	focus_exited.connect(_on_controller_focus_exited)
-	mouse_exited.connect(func(): set_consequence_preview({}))
+	mouse_exited.connect(_on_pointer_left)
 	_configure_battle_board_cursor_semantic_timer()
 	_load_battle_vfx_manifest()
 	_load_field_objective_art_manifest()
@@ -327,12 +372,51 @@ func _presentation_animating() -> bool:
 		or not _stack_animation_cue_playback_records.is_empty()
 	)
 
+## The keyboard cursor shows while keys or a controller drive the board. The
+## shell keeps the board focused for its keys, so focus alone does not mean
+## the player is steering with keys: moving or clicking the mouse hands the
+## forecast back to the pointer.
+func _input(event: InputEvent) -> void:
+	if not _keyboard_cursor_active:
+		return
+	if event is InputEventMouseMotion and (event as InputEventMouseMotion).relative.length() > 2.0:
+		_set_keyboard_cursor_active(false)
+	elif event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+		_set_keyboard_cursor_active(false)
+
+## The stack under the pointer, or under the keyboard cursor while keys
+## steer the board.
+func _pointed_stack_id() -> String:
+	if _keyboard_cursor_shown():
+		return _stack_id_at_cell(_controller_cursor_cell)
+	return _hover_stack_id
+
+func _keyboard_cursor_shown() -> bool:
+	return _keyboard_cursor_active and has_focus()
+
+func _set_keyboard_cursor_active(active: bool) -> void:
+	if _keyboard_cursor_active == active:
+		return
+	_keyboard_cursor_active = active
+	if active:
+		_ensure_controller_cursor()
+		_sync_controller_cursor_preview()
+	elif _pointer_position.x >= 0.0 and not _battle.is_empty() and not _battle.has("playback_event"):
+		_update_pointer_hover(_pointer_position)
+		_preview_position(_pointer_position)
+	else:
+		_hover_destination_cell = Vector2i(-1, -1)
+		set_consequence_preview({})
+	queue_redraw()
+
 func _gui_input(event: InputEvent) -> void:
 	if _handle_controller_navigation_input(event):
 		accept_event()
 		return
 	if event is InputEventMouseMotion:
 		var motion_event := event as InputEventMouseMotion
+		_pointer_position = motion_event.position
+		_update_pointer_hover(motion_event.position)
 		_preview_position(motion_event.position)
 		var hovered_cell := _hex_cell_at_position(motion_event.position)
 		if not _is_legal_destination_cell(hovered_cell):
@@ -346,6 +430,14 @@ func _gui_input(event: InputEvent) -> void:
 	var mouse_event := event as InputEventMouseButton
 	if mouse_event.button_index != MOUSE_BUTTON_LEFT or not mouse_event.pressed:
 		return
+	var hero_side := _hero_side_at_position(mouse_event.position)
+	if hero_side != "":
+		hero_figure_pressed.emit(hero_side)
+		accept_event()
+		return
+	if _ribbon_rect().has_point(mouse_event.position):
+		accept_event()
+		return
 	var dispatch := _dispatch_board_click_at_position(mouse_event.position)
 	if bool(dispatch.get("accepted", false)):
 		accept_event()
@@ -354,19 +446,27 @@ func _handle_controller_navigation_input(event: InputEvent) -> bool:
 	if not has_focus():
 		return false
 	if event.is_action_pressed("ui_up"):
+		_set_keyboard_cursor_active(true)
 		_move_controller_cursor(Vector2i.UP, event is InputEventKey or event is InputEventJoypadButton)
 		return true
 	if event.is_action_pressed("ui_down"):
+		_set_keyboard_cursor_active(true)
 		_move_controller_cursor(Vector2i.DOWN, event is InputEventKey or event is InputEventJoypadButton)
 		return true
 	if event.is_action_pressed("ui_left"):
+		_set_keyboard_cursor_active(true)
 		_move_controller_cursor(Vector2i.LEFT, event is InputEventKey or event is InputEventJoypadButton)
 		return true
 	if event.is_action_pressed("ui_right"):
+		_set_keyboard_cursor_active(true)
 		_move_controller_cursor(Vector2i.RIGHT, event is InputEventKey or event is InputEventJoypadButton)
 		return true
 	if event.is_action_pressed("ui_accept"):
 		if event is InputEventKey and event.echo: return true
+		if not _keyboard_cursor_active:
+			# The first Enter shows the cursor where it stands; the next acts.
+			_set_keyboard_cursor_active(true)
+			return true
 		return _dispatch_controller_cursor()
 	if event.is_action_pressed("ui_cancel"):
 		return handle_root_controller_navigation_cancel()
@@ -382,14 +482,18 @@ func handle_root_controller_navigation_cancel() -> bool:
 
 func _on_controller_focus_entered() -> void:
 	_cancel_battle_board_cursor_semantic()
+	# Tab into the board steers it with keys.
+	if Input.is_action_pressed("ui_focus_next") or Input.is_action_pressed("ui_focus_prev"):
+		_keyboard_cursor_active = true
 	_ensure_controller_cursor()
 	_sync_controller_cursor_preview()
 	queue_redraw()
 
 func _on_controller_focus_exited() -> void:
 	_cancel_battle_board_cursor_semantic(false)
-	_hover_destination_cell = Vector2i(-1, -1)
-	set_consequence_preview({})
+	if _keyboard_cursor_active:
+		_hover_destination_cell = Vector2i(-1, -1)
+		set_consequence_preview({})
 	queue_redraw()
 
 func _ensure_controller_cursor() -> void:
@@ -422,18 +526,15 @@ func _move_controller_cursor(delta: Vector2i, announce_semantic: bool = false) -
 		_schedule_battle_board_cursor_semantic()
 
 func _sync_controller_cursor_preview() -> void:
-	_hover_destination_cell = _controller_cursor_cell if has_focus() and _is_legal_destination_cell(_controller_cursor_cell) else Vector2i(-1, -1)
-	if has_focus(): _preview_position(_hex_center(_controller_cursor_cell, _current_hex_layout()))
+	if not _keyboard_cursor_shown():
+		return
+	_hover_destination_cell = _controller_cursor_cell if _is_legal_destination_cell(_controller_cursor_cell) else Vector2i(-1, -1)
+	_preview_position(_hex_center(_controller_cursor_cell, _current_hex_layout()))
 
 func set_consequence_preview(preview: Dictionary) -> void:
-	if not _staged_order_preview.is_empty(): preview = _staged_order_preview
 	_consequence_preview = preview.duplicate(true) if not _battle.has("playback_event") else {}
 	_consequence_hover_key = ""
 	queue_redraw()
-
-func set_staged_order_preview(preview: Dictionary) -> void:
-	_staged_order_preview = preview.duplicate(true)
-	set_consequence_preview(preview)
 
 func preview_attack(action: String, target_id: String) -> void:
 	if _spell_target_mode: return
@@ -443,9 +544,13 @@ func preview_attack(action: String, target_id: String) -> void:
 	set_consequence_preview(BattleRulesScript.attack_consequence_preview(_battle, action, target_id))
 
 func _preview_position(position: Vector2) -> void:
-	var target_id := _stack_id_at_position(position)
+	if _ribbon_rect().has_point(position) or _hero_side_at_position(position) != "":
+		if _consequence_hover_key != "outside":
+			set_consequence_preview({})
+			_consequence_hover_key = "outside"
+		return
 	var cell := _hex_cell_at_position(position)
-	if target_id == "": target_id = _stack_id_at_cell(cell)
+	var target_id := _stack_id_at_board_position(position, cell)
 	var key := "%s:%s" % [target_id, str(cell)]
 	if key == _consequence_hover_key: return
 	if _spell_target_mode:
@@ -765,46 +870,21 @@ func _bounded_battle_board_cursor_semantic_text(value: String, maximum_character
 
 func _dispatch_board_click_at_position(position: Vector2) -> Dictionary:
 	var target_cell := _hex_cell_at_position(position)
-	var battle_id := _stack_id_at_position(position)
-	if _spell_target_mode:
-		var spell_target := _stack_id_at_cell(target_cell)
-		if spell_target == "": spell_target = battle_id
-		if spell_target != "":
-			stack_focus_requested.emit(spell_target)
-			return {"accepted": true, "dispatch": "spell_target", "battle_id": spell_target}
-	if battle_id != "":
-		if _is_legal_destination_cell(target_cell):
-			hex_destination_requested.emit(target_cell.x, target_cell.y)
-			return {
-				"accepted": true,
-				"dispatch": "destination",
-				"battle_id": "",
-				"shape_battle_id": battle_id,
-				"q": target_cell.x,
-				"r": target_cell.y,
-			}
-		var cell_battle_id := _stack_id_at_cell(target_cell)
-		if cell_battle_id != "" and cell_battle_id != battle_id:
-			stack_focus_requested.emit(cell_battle_id)
-			return {
-				"accepted": true,
-				"dispatch": "stack_hex",
-				"battle_id": cell_battle_id,
-				"shape_battle_id": battle_id,
-				"q": target_cell.x,
-				"r": target_cell.y,
-			}
+	var cell_battle_id := _stack_id_at_cell(target_cell)
+	var battle_id := _stack_id_at_board_position(position, target_cell)
+	if _spell_target_mode and battle_id != "":
+		stack_focus_requested.emit(battle_id)
+		return {"accepted": true, "dispatch": "spell_target", "battle_id": battle_id}
+	if cell_battle_id != "":
+		stack_focus_requested.emit(cell_battle_id)
+		return {
+			"accepted": true,
+			"dispatch": "stack_hex",
+			"battle_id": cell_battle_id,
+			"q": target_cell.x,
+			"r": target_cell.y,
+		}
 	if battle_id == "":
-		battle_id = _stack_id_at_cell(target_cell)
-		if battle_id != "":
-			stack_focus_requested.emit(battle_id)
-			return {
-				"accepted": true,
-				"dispatch": "stack_hex",
-				"battle_id": battle_id,
-				"q": target_cell.x,
-				"r": target_cell.y,
-			}
 		if target_cell.x < 0:
 			return {
 				"accepted": false,
@@ -843,25 +923,18 @@ func _dispatch_board_click_at_position(position: Vector2) -> Dictionary:
 	}
 
 func _get_tooltip(at_position: Vector2) -> String:
-	var turn_strip_entry := _turn_strip_entry_at_position(at_position)
+	var turn_strip_entry := _turn_ribbon_chip_at_position(at_position)
 	if not turn_strip_entry.is_empty():
-		return _turn_strip_entry_tooltip(turn_strip_entry, _turn_strip_entries(_current_field_rect()).size())
-	if _spell_target_mode:
-		var id := _stack_id_at_cell(_hex_cell_at_position(at_position))
-		if id == "": id = _stack_id_at_position(at_position)
-		return _stack_board_tooltip(id)
+		return _turn_ribbon_chip_tooltip(turn_strip_entry, _turn_ribbon_chips().size())
+	var hero_side := _hero_side_at_position(at_position)
+	if hero_side != "":
+		return _hero_tooltip(hero_side)
 	var destination_cell := _hex_cell_at_position(at_position)
-	var battle_id := _stack_id_at_position(at_position)
-	if battle_id != "":
-		if _is_legal_destination_cell(destination_cell):
-			return _movement_board_tooltip(destination_cell)
-		var cell_battle_id := _stack_id_at_cell(destination_cell)
-		if cell_battle_id != "" and cell_battle_id != battle_id:
-			return _stack_board_tooltip(cell_battle_id)
-		return _stack_board_tooltip(battle_id)
-	battle_id = _stack_id_at_cell(destination_cell)
+	var battle_id := _stack_id_at_board_position(at_position, destination_cell)
 	if battle_id != "":
 		return _stack_board_tooltip(battle_id)
+	if _spell_target_mode:
+		return ""
 	if _is_legal_destination_cell(destination_cell):
 		return _movement_board_tooltip(destination_cell)
 	if _cell_in_bounds(destination_cell):
@@ -869,14 +942,15 @@ func _get_tooltip(at_position: Vector2) -> String:
 		var message := String(movement_intent.get("message", ""))
 		if bool(movement_intent.get("blocked", false)) and message != "":
 			return message
-	return _fallback_board_tooltip()
+		return _fallback_board_tooltip()
+	# The painted scenery around the field has no tooltip.
+	return ""
 
 func contextual_inspection_text() -> String:
-	return _get_tooltip(_hex_center(_controller_cursor_cell, _current_hex_layout())) if has_focus() else get_tooltip(get_local_mouse_position())
+	return _get_tooltip(_hex_center(_controller_cursor_cell, _current_hex_layout())) if _keyboard_cursor_shown() else get_tooltip(get_local_mouse_position())
 
 func contextual_help_exclusion_rects() -> Array:
-	var field := _current_field_rect()
-	return [_turn_strip_rect(field), Rect2(Vector2(field.position.x, field.end.y - 55), Vector2(field.size.x, 55))]
+	return [Rect2(_turn_ribbon_layout().get("rect", Rect2()))]
 
 func set_battle_state(session) -> void:
 	_session = session
@@ -942,11 +1016,33 @@ func finish_action_playback(session) -> void:
 			_latest_animation_serial_by_stack[String(event.get("battle_id", ""))] = int(event.get("serial", 0))
 	set_battle_state(session)
 
+## The battle is over and the session holds no battle any more: the board
+## keeps the field as the last exchange left it, still, under the result.
+func settle_final_field() -> void:
+	_stack_animation_playback_records.clear()
+	_stack_animation_playback_until_msec.clear()
+	_stack_animation_cue_playback_records.clear()
+	_stack_animation_audio_playback_records.clear()
+	_session = null
+	_hero_cast_ready = false
+	if _battle.is_empty():
+		queue_redraw()
+		return
+	var still := _battle.duplicate(true)
+	still.erase("playback_event")
+	still.erase("_fluid_contact_reaction")
+	# It is nobody's turn: no active stack, movement range, target line or
+	# turn ribbon over the field the result is read against.
+	still["active_stack_id"] = ""
+	still["selected_target_id"] = ""
+	_field_final = true
+	_apply_battle_dictionary(still)
+
 func _apply_battle_dictionary(battle: Dictionary) -> void:
 	set_meta("contextual_help_revision", int(get_meta("contextual_help_revision", 0)) + 1)
 	_board_query_cache = {}
 	_cancel_battle_board_cursor_semantic()
-	_consequence_preview = _staged_order_preview.duplicate(true)
+	_consequence_preview = {}
 	_consequence_hover_key = ""
 	_battle = {}
 	_player_stacks = []
@@ -955,6 +1051,9 @@ func _apply_battle_dictionary(battle: Dictionary) -> void:
 	_target_stack = {}
 	_field_objectives = []
 	_turn_forecast = {}
+	_hero_presentations = {}
+	_ribbon_cache = {}
+	_ribbon_cache_key = ""
 	_stack_hit_shapes = []
 	if battle.is_empty():
 		_controller_cursor_cell = Vector2i(-1, -1)
@@ -968,6 +1067,12 @@ func _apply_battle_dictionary(battle: Dictionary) -> void:
 		_target_stack = BattleRulesScript.get_selected_target(_battle)
 		_field_objectives = _battle.get(BattleRulesScript.FIELD_OBJECTIVES_KEY, []).duplicate(true) if _battle.get(BattleRulesScript.FIELD_OBJECTIVES_KEY, []) is Array else []
 		_turn_forecast = BattleRulesScript.turn_order_forecast(_battle)
+		for side in ["player", "enemy"]:
+			var presentation := BattleRulesScript.hero_presentation(_battle, side)
+			if bool(presentation.get("has_figure", false)):
+				presentation["figure_path"] = BattleHeroFigureScript.figure_path(String(presentation.get("hero_id", "")), String(presentation.get("faction_id", "")))
+				presentation["has_figure"] = String(presentation.get("figure_path", "")) != ""
+			_hero_presentations[side] = presentation
 		for stack in _battle.get("stacks", []):
 			if not (stack is Dictionary) or not _stack_visible_for_presentation(stack):
 				continue
@@ -977,7 +1082,11 @@ func _apply_battle_dictionary(battle: Dictionary) -> void:
 				_enemy_stacks.append(stack)
 	if has_focus():
 		_ensure_controller_cursor()
+	if _keyboard_cursor_shown():
 		_sync_controller_cursor_preview()
+	elif _pointer_position.x >= 0.0 and not _battle.is_empty() and not _battle.has("playback_event"):
+		_update_pointer_hover(_pointer_position)
+		_preview_position(_pointer_position)
 	elif not _target_stack.is_empty():
 		var intent := BattleRulesScript.board_click_attack_intent_for_target(_battle, String(_target_stack.get("battle_id", "")))
 		preview_attack(String(intent.get("action", "")), String(_target_stack.get("battle_id", "")))
@@ -1392,49 +1501,6 @@ func _stack_token_visual_contract(hex_layout: Dictionary) -> Dictionary:
 		"art_contained_within_token": STACK_ANIMATION_ART_EXTENT_FACTOR <= 2.0 and STACK_ICON_ART_EXTENT_FACTOR <= 2.0,
 	}
 
-func validation_stack_caption_summary() -> Array:
-	var rows: Array = []
-	var field_rect := _current_field_rect()
-	var hex_layout := _hex_layout(field_rect)
-	var stack_cells := _stack_cells()
-	for stack in _all_visible_stacks():
-		if not (stack is Dictionary):
-			continue
-		var battle_id := String(stack.get("battle_id", ""))
-		if not stack_cells.has(battle_id):
-			continue
-		var cell: Vector2i = stack_cells.get(battle_id)
-		var center := _stack_presentation_center(stack, cell, hex_layout, stack_cells)
-		var radius := float(hex_layout.get("radius", 1.0))
-		var layout := _stack_caption_layout(center, radius, stack)
-		var plate_rect: Rect2 = layout.get("plate_rect", Rect2())
-		var text_rect: Rect2 = layout.get("text_rect", Rect2())
-		var accent_rect: Rect2 = layout.get("accent_rect", Rect2())
-		var token_radius := _stack_token_radius(radius)
-		rows.append({
-			"battle_id": battle_id,
-			"full_name": _stack_full_name(stack),
-			"visible_caption": _stack_caption_label(stack),
-			"tooltip": _stack_board_tooltip(battle_id),
-			"plate_model": STACK_CAPTION_PLATE_MODEL,
-			"plate_rect": plate_rect,
-			"text_rect": text_rect,
-			"accent_rect": accent_rect,
-			"field_rect": field_rect,
-			"token_center": center,
-			"token_radius": token_radius,
-			"plate_fill_alpha": STACK_CAPTION_PLATE_FILL.a,
-			"plate_frame_alpha": STACK_CAPTION_PLATE_FRAME.a,
-			"plate_shadow_alpha": STACK_CAPTION_PLATE_SHADOW.a,
-			"accent_side": String(stack.get("side", "")),
-			"accent_color": layout.get("accent_color", Color.TRANSPARENT),
-			"text_contained": plate_rect.encloses(text_rect),
-			"accent_contained": plate_rect.encloses(accent_rect),
-			"plate_above_token": plate_rect.end.y <= center.y - token_radius + 0.01,
-			"field_contained": field_rect.encloses(plate_rect),
-		})
-	return rows
-
 func validation_animation_playback_summary() -> Dictionary:
 	_expire_animation_playback_records()
 	var records := {}
@@ -1784,7 +1850,7 @@ func validation_terrain_rendering_summary() -> Dictionary:
 		"hex_snapped": true,
 		"single_board_backdrop": texture != null,
 		"hex_tile_count": _terrain_hex_tile_count(),
-		"texture_sample_mode": "continuous_field_plus_subordinate_per_hex_variation" if texture != null else "",
+		"texture_sample_mode": "cover_region" if texture != null else "",
 		"source_tile_width": source_size.x,
 		"source_tile_height": source_size.y,
 		"texture_modulate_alpha": TERRAIN_TEXTURE_MODULATE.a if texture != null else 0.0,
@@ -2087,49 +2153,35 @@ func validation_board_fallback_tooltip() -> Dictionary:
 		"shape_target": shape_target,
 	}
 
+## The turn ribbon's chips as the screen draws them, for reports.
 func validation_turn_strip_identity_surface() -> Dictionary:
-	var field_rect := _current_field_rect()
-	var strip_rect := _turn_strip_rect(field_rect)
-	var entries := _turn_strip_entries(field_rect)
+	var layout := _turn_ribbon_layout()
+	var chips := _turn_ribbon_chips()
 	var rows: Array = []
-	for entry_value in entries:
-		if not (entry_value is Dictionary):
-			continue
-		var entry: Dictionary = entry_value
+	for entry in chips:
 		var stack: Dictionary = entry.get("stack", {}) if entry.get("stack", {}) is Dictionary else {}
 		var rect: Rect2 = entry.get("rect", Rect2())
-		var center := rect.get_center()
-		var visible_label := _turn_strip_chip_label(stack, rect.size.x)
-		var portrait := _turn_strip_portrait_payload(stack, rect)
-		var font = get_theme_default_font()
 		rows.append({
 			"slot": int(entry.get("slot", 0)),
+			"phase": String(entry.get("phase", "")),
 			"battle_id": String(stack.get("battle_id", "")),
 			"full_name": _stack_full_name(stack),
 			"alive_count": _stack_alive_count(stack),
 			"side": String(stack.get("side", "")),
 			"unit_id": String(stack.get("unit_id", "")),
 			"current": String(stack.get("battle_id", "")) == String(_battle.get("active_stack_id", "")),
-			"visible_label": visible_label,
-			"visible_label_width": font.get_string_size(visible_label, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x if font != null else 0.0,
-			"visible_label_max_width": maxf(24.0, rect.size.x - TURN_STRIP_LABEL_LEFT_INSET - 6.0),
-			"portrait": portrait,
-			"tooltip": _get_tooltip(center),
+			"portrait_loaded": _unit_battle_icon_for_stack(stack) != null,
+			"tooltip": _get_tooltip(rect.get_center()),
 			"rect": rect,
-			"center": center,
+			"center": rect.get_center(),
 		})
 	return {
 		"rows": rows,
 		"visible_count": rows.size(),
-		"visible_cap": 5,
-		"presentation_model": TURN_STRIP_PRESENTATION_MODEL,
-		"strip_rect": strip_rect,
-		"portrait_extent": TURN_STRIP_PORTRAIT_EXTENT,
-		"label_left_inset": TURN_STRIP_LABEL_LEFT_INSET,
-		"missing_portrait_control": _turn_strip_portrait_payload({"unit_id": "unit_missing_turn_strip_portrait"}, Rect2(Vector2.ZERO, Vector2(112.0, 28.0))),
-		"field_rect": field_rect,
+		"ribbon_rect": Rect2(layout.get("rect", Rect2())),
+		"overflow": bool(layout.get("overflow", false)),
 		"active_stack_id": String(_battle.get("active_stack_id", "")),
-		"turn_order": (_battle.get("turn_order", []) as Array).duplicate(true) if _battle.get("turn_order", []) is Array else [],
+		"turn_forecast": _turn_forecast.duplicate(true),
 	}
 
 func _draw() -> void:
@@ -2143,16 +2195,13 @@ func _draw() -> void:
 	_board_query_in_draw = false
 
 func _draw_board() -> void:
-	var board_rect := Rect2(Vector2(14.0, 14.0), size - Vector2(28.0, 28.0))
-	draw_rect(board_rect, BOARD_FILL, true)
-	draw_rect(board_rect, FRAME_COLOR, false, 3.0)
-
 	var field_rect := _current_field_rect()
 	var hex_field_rect := _hex_field_rect(field_rect)
 	var hex_layout := _hex_layout(hex_field_rect)
 	hex_layout = _camera_adjusted_hex_layout(hex_layout)
 	var terrain_texture_loaded := _draw_terrain(field_rect, hex_layout)
 	_draw_terrain_ambient(field_rect)
+	_draw_hero_figures(hex_layout)
 	_draw_hex_grid(hex_layout, terrain_texture_loaded)
 	_draw_field_objectives(hex_layout)
 	var stack_cells := _stack_cells()
@@ -2163,7 +2212,7 @@ func _draw_board() -> void:
 	if not _battle.has("playback_event"):
 		for id in _spell_target_candidates:
 			if not stack_cells.has(id): continue
-			var selected := String(_staged_order_preview.get("target_id", "")) == String(id)
+			var selected := String(id) == _pointed_stack_id()
 			for body_cell in BattleRulesScript.Footprint.cells(_stack_by_id(String(id))):
 				var center := _hex_center(Vector2i(int(body_cell.q), int(body_cell.r)), hex_layout)
 				_draw_hex_outline(center, float(hex_layout.get("radius", 20.0)) * 0.96, ACTIVE_COLOR if selected else Color(0.42, 0.80, 1.0, 0.85), 4.0 if selected else 1.5)
@@ -2175,24 +2224,60 @@ func _draw_board() -> void:
 				var body_center := _hex_center(Vector2i(int(body_cell.q), int(body_cell.r)), hex_layout)
 				draw_arc(body_center, float(hex_layout.get("radius", 20.0)) * 0.88, 0.0, TAU, 32, ACTIVE_COLOR, 2.0, true)
 			_draw_text("END", center + Vector2(-12, 20), ACTIVE_COLOR, 11)
-	_draw_turn_strip(field_rect)
-	_draw_footer_line(field_rect)
+	if not _hover_ribbon_battle_id.is_empty() and stack_cells.has(_hover_ribbon_battle_id):
+		_draw_body_outline(_hover_ribbon_battle_id, hex_layout, float(hex_layout.get("radius", 20.0)) * 0.98, Color(1.0, 1.0, 1.0, 0.85), 2.4)
+	_draw_turn_ribbon()
+	_draw_hover_forecast()
 
-func _draw_terrain(field_rect: Rect2, hex_layout: Dictionary) -> bool:
+## The painted battlefield fills the window behind the field, darkened
+## towards the edges. Without a painting the hexes get their terrain colours.
+func _draw_terrain(_field_rect: Rect2, hex_layout: Dictionary) -> bool:
 	var terrain := _battle_terrain_id()
-	var base_color := _terrain_color_for(terrain)
-	draw_rect(field_rect, base_color, true)
+	var board_rect := Rect2(Vector2.ZERO, size)
+	draw_rect(board_rect, _terrain_color_for(terrain), true)
 	var terrain_texture = _terrain_texture_for(terrain)
 	if terrain_texture != null:
-		_draw_terrain_context_underlay(field_rect, terrain_texture)
-		_draw_hex_snapped_terrain_texture(hex_layout, terrain_texture)
-		draw_rect(field_rect, TERRAIN_TEXTURE_READABILITY_WASH, true)
-		draw_rect(field_rect, Color(0.0, 0.0, 0.0, 0.14), false, 2.0)
-		return true
+		draw_texture_rect_region(terrain_texture, board_rect, _cover_region(terrain_texture.get_size(), board_rect.size))
 	else:
 		_draw_hex_snapped_procedural_terrain(hex_layout, terrain)
-	draw_rect(field_rect, Color(0.0, 0.0, 0.0, 0.14), false, 2.0)
-	return false
+	draw_texture_rect(_vignette(), board_rect, false, BATTLEFIELD_VIGNETTE_COLOR)
+	return terrain_texture != null
+
+## The part of a texture that covers target_size without stretching it.
+func _cover_region(texture_size: Vector2, target_size: Vector2) -> Rect2:
+	if texture_size.x <= 0.0 or texture_size.y <= 0.0 or target_size.x <= 0.0 or target_size.y <= 0.0:
+		return Rect2(Vector2.ZERO, texture_size)
+	var scale := maxf(target_size.x / texture_size.x, target_size.y / texture_size.y)
+	var source_size := target_size / scale
+	return Rect2((texture_size - source_size) * 0.5, source_size)
+
+func _vignette() -> Texture2D:
+	if _vignette_texture == null:
+		var gradient := Gradient.new()
+		gradient.offsets = PackedFloat32Array([0.0, 0.6, 1.0])
+		gradient.colors = PackedColorArray([Color(1.0, 1.0, 1.0, 0.0), Color(1.0, 1.0, 1.0, 0.0), Color(1.0, 1.0, 1.0, 1.0)])
+		_vignette_texture = GradientTexture2D.new()
+		_vignette_texture.gradient = gradient
+		_vignette_texture.fill = GradientTexture2D.FILL_RADIAL
+		_vignette_texture.fill_from = Vector2(0.5, 0.54)
+		_vignette_texture.fill_to = Vector2(1.25, 0.54)
+		_vignette_texture.width = 256
+		_vignette_texture.height = 256
+	return _vignette_texture
+
+func _soft_glow() -> Texture2D:
+	if _soft_glow_texture == null:
+		var gradient := Gradient.new()
+		gradient.offsets = PackedFloat32Array([0.0, 1.0])
+		gradient.colors = PackedColorArray([Color(1.0, 1.0, 1.0, 1.0), Color(1.0, 1.0, 1.0, 0.0)])
+		_soft_glow_texture = GradientTexture2D.new()
+		_soft_glow_texture.gradient = gradient
+		_soft_glow_texture.fill = GradientTexture2D.FILL_RADIAL
+		_soft_glow_texture.fill_from = Vector2(0.5, 0.5)
+		_soft_glow_texture.fill_to = Vector2(1.0, 0.5)
+		_soft_glow_texture.width = 128
+		_soft_glow_texture.height = 128
+	return _soft_glow_texture
 
 func _terrain_ambient_profile() -> Dictionary:
 	var profile_value: Variant = TERRAIN_AMBIENT_PROFILES.get(_terrain_texture_id(_battle_terrain_id()), {})
@@ -2269,43 +2354,6 @@ func _draw_terrain_ambient(field_rect: Rect2) -> void:
 			draw_circle(center, radius * 3.2, halo_color)
 			draw_circle(center, radius * 1.55, soft_color)
 			draw_circle(center, radius * 0.52, core_color)
-
-func _draw_terrain_context_underlay(field_rect: Rect2, texture: Texture2D) -> void:
-	var texture_size := texture.get_size()
-	if texture_size.x <= 0.0 or texture_size.y <= 0.0 or field_rect.size.x <= 0.0 or field_rect.size.y <= 0.0:
-		return
-	draw_texture_rect(texture, field_rect, false, TERRAIN_CONTEXT_TEXTURE_MODULATE)
-	draw_rect(field_rect, TERRAIN_CONTEXT_READABILITY_WASH, true)
-
-func _draw_hex_snapped_terrain_texture(hex_layout: Dictionary, texture: Texture2D) -> void:
-	var texture_size := texture.get_size()
-	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
-		return
-	var radius := float(hex_layout.get("radius", 1.0))
-	var source_size := _terrain_hex_texture_source_size(texture_size)
-	for row in range(HEX_ROWS):
-		for column in range(HEX_COLUMNS):
-			var cell := Vector2i(column, row)
-			var center := _hex_center(cell, hex_layout)
-			var points := _hex_points(center, radius * TERRAIN_HEX_TEXTURE_INSET)
-			var bounds := _points_bounds(points)
-			if bounds.size.x <= 0.0 or bounds.size.y <= 0.0:
-				continue
-			var source_rect := Rect2(_terrain_hex_texture_source_position(cell, texture_size, source_size), source_size)
-			var uvs := _terrain_hex_texture_uvs(points, bounds, source_rect, texture_size)
-			if uvs.size() != points.size():
-				continue
-			var shade := 0.92 + _hex_variation(cell, 43.0) * 0.10
-			var modulate := Color(
-				clampf(TERRAIN_TEXTURE_MODULATE.r * shade, 0.0, 1.0),
-				clampf(TERRAIN_TEXTURE_MODULATE.g * shade, 0.0, 1.0),
-				clampf(TERRAIN_TEXTURE_MODULATE.b * shade, 0.0, 1.0),
-				TERRAIN_TEXTURE_MODULATE.a
-			)
-			var colors := PackedColorArray()
-			for _point in points:
-				colors.append(modulate)
-			draw_polygon(points, colors, uvs, texture)
 
 func _draw_hex_snapped_procedural_terrain(hex_layout: Dictionary, terrain: String) -> void:
 	var radius := float(hex_layout.get("radius", 1.0))
@@ -2407,6 +2455,12 @@ static func art_texture_paths_for_battle(battle: Dictionary) -> PackedStringArra
 		for path in [String(animation.get("pose_sheet", animation.get("sprite_sheet", ""))), String(art.get("battle_standee", "")), String(art.get("battle_icon", ""))]:
 			if path != "" and not paths.has(path):
 				paths.append(path)
+	for side in ["player", "enemy"]:
+		var hero := BattleRulesScript.hero_presentation(battle, side)
+		if bool(hero.get("has_figure", false)):
+			var figure_path := BattleHeroFigureScript.figure_path(String(hero.get("hero_id", "")), String(hero.get("faction_id", "")))
+			if figure_path != "" and not paths.has(figure_path):
+				paths.append(figure_path)
 	return paths
 
 func _unit_battle_icon_for_stack(stack: Dictionary) -> Texture2D:
@@ -2816,32 +2870,14 @@ func _terrain_color_for(terrain_id: String) -> Color:
 	var texture_id := _terrain_texture_id(terrain_id)
 	return TERRAIN_COLORS.get(texture_id, TERRAIN_COLORS["plains"])
 
-func _draw_hex_grid(hex_layout: Dictionary, terrain_texture_loaded: bool) -> void:
-	var radius := float(hex_layout.get("radius", 1.0))
-	var player_front := _deployment_zone_front("player")
-	var enemy_front := _deployment_zone_front("enemy")
-	for row in range(HEX_ROWS):
-		for column in range(HEX_COLUMNS):
-			var cell := Vector2i(column, row)
-			var center := _hex_center(cell, hex_layout)
-			var fill := _cell_fill_color(column, player_front, enemy_front, terrain_texture_loaded)
-			if terrain_texture_loaded:
-				_draw_hex(center, radius * TERRAIN_HEX_TEXTURE_INSET, fill, Color(0.0, 0.0, 0.0, 0.0), 0.0)
-			else:
-				_draw_hex(center, radius * 0.96, fill, HEX_LINE_COLOR, 1.6)
-			if column >= player_front and column <= enemy_front:
-				var lane_alpha := TEXTURED_MID_LANE_FILL_ALPHA if terrain_texture_loaded else 0.035
-				_draw_hex(center, radius * 0.82, Color(0.93, 0.79, 0.47, lane_alpha), Color(0.0, 0.0, 0.0, 0.0), 0.0)
-
-	if terrain_texture_loaded:
-		var grid_color := Color(0.98, 0.89, 0.62, 0.38) if FrontierVisualKitScript.high_contrast_enabled() else TEXTURED_HEX_LINE_COLOR
-		_draw_unique_hex_grid_lines(hex_layout, grid_color, 1.05, TERRAIN_HEX_TEXTURE_INSET)
-
-	for row in range(HEX_ROWS):
-		var center_cell := Vector2i(int(HEX_COLUMNS / 2), row)
-		var center_color := TEXTURED_HEX_CENTER_LINE if terrain_texture_loaded else HEX_CENTER_LINE
-		var center_width := 1.1 if terrain_texture_loaded else 1.4
-		_draw_hex_outline(_hex_center(center_cell, hex_layout), radius * 0.98, center_color, center_width)
+## Thin lines over the painted field, with a faint shadow under them.
+func _draw_hex_grid(hex_layout: Dictionary, _terrain_texture_loaded: bool) -> void:
+	var k := float(hex_layout.get("radius", 1.0)) / REFERENCE_HEX_RADIUS
+	var line := Color(0.98, 0.89, 0.62, 0.5) if FrontierVisualKitScript.high_contrast_enabled() else BATTLEFIELD_GRID_LINE
+	draw_set_transform(Vector2(0.0, 1.3 * k), 0.0, Vector2.ONE)
+	_draw_unique_hex_grid_lines(hex_layout, BATTLEFIELD_GRID_SHADOW, maxf(1.0, 2.2 * k), 1.0)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	_draw_unique_hex_grid_lines(hex_layout, line, maxf(1.0, 1.3 * k), 1.0)
 
 func _draw_field_objectives(hex_layout: Dictionary) -> void:
 	var marker_count: int = mini(_field_objectives.size(), 5)
@@ -2867,9 +2903,9 @@ func _draw_body_outline(battle_id: String, hex_layout: Dictionary, radius: float
 			# in the painted creature with a dominant full gold hexagon.
 			for index in range(6):
 				var angle := deg_to_rad(60.0 * index - 30.0)
-				var corner := center + Vector2.from_angle(angle) * radius
+				var corner := center + _hex_corner_offset(angle, radius)
 				for direction in [-1.0, 1.0]:
-					var neighbor := center + Vector2.from_angle(angle + direction * PI / 3.0) * radius
+					var neighbor := center + _hex_corner_offset(angle + direction * PI / 3.0, radius)
 					draw_line(corner, corner.lerp(neighbor, 0.22), color, minf(width, 1.8), true)
 
 func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
@@ -3017,7 +3053,7 @@ func _movement_range_neighbor_for_edge(cell: Vector2i, edge_index: int) -> Vecto
 	return cell + offsets[clampi(edge_index, 0, 5)]
 
 func _draw_controller_cursor(hex_layout: Dictionary) -> void:
-	if not has_focus() or not _cell_in_bounds(_controller_cursor_cell):
+	if not _keyboard_cursor_shown() or not _cell_in_bounds(_controller_cursor_cell):
 		return
 	var radius := float(hex_layout.get("radius", 1.0))
 	var color := CONTROLLER_CURSOR_COLOR
@@ -3128,7 +3164,7 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		var side := String(stack.get("side", ""))
 		var is_active := battle_id == String(_battle.get("active_stack_id", ""))
 		var is_target := battle_id == String(_battle.get("selected_target_id", ""))
-		if _spell_target_mode: is_target = battle_id == String(_staged_order_preview.get("target_id", ""))
+		if _spell_target_mode: is_target = battle_id == _pointed_stack_id()
 		var is_blocked_target := is_target and _selected_target_is_blocked()
 		var fill := _side_color(side)
 		if bool(stack.get("defending", false)):
@@ -3180,15 +3216,14 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		var side := String(stack.get("side", ""))
 		_draw_stack_side_cue(center, token_radius, side)
 		_draw_stack_status_effect_badges(center, radius, token_radius, stack)
-		_draw_stack_health_bar(center, radius, stack)
-		_draw_count_badge(center, token_radius, stack)
-		_draw_stack_caption(center, radius, stack)
+		_draw_count_badge(center, radius, stack)
 		_stack_hit_shapes.append(
 			{
 				"battle_id": battle_id,
 				"side": side,
 				"center": center,
 				"radius": _stack_hit_shape_radius(radius),
+				"body_rect": _stack_body_rect(center, radius, stack),
 			}
 		)
 
@@ -4725,130 +4760,15 @@ func _active_audio_player_count() -> int:
 	_cleanup_audio_players()
 	return _active_audio_players.size()
 
-func _draw_turn_strip(field_rect: Rect2) -> void:
-	var strip_rect := _turn_strip_rect(field_rect)
-	draw_rect(strip_rect, TURN_STRIP_FOUNDATION_FILL, true)
-	draw_rect(strip_rect, FRAME_COLOR.darkened(0.22), false, 1.4)
-	for entry_value in _turn_strip_entries(field_rect):
-		if not (entry_value is Dictionary):
-			continue
-		var entry: Dictionary = entry_value
-		var stack: Dictionary = entry.get("stack", {}) if entry.get("stack", {}) is Dictionary else {}
-		var rect: Rect2 = entry.get("rect", Rect2())
-		var current := String(stack.get("battle_id", "")) == String(_battle.get("active_stack_id", ""))
-		var side_color := _side_color(String(stack.get("side", "")))
-		draw_rect(rect, TURN_STRIP_ACTIVE_FILL if current else TURN_STRIP_CHIP_FILL, true)
-		var accent_rect := Rect2(rect.position + Vector2(0.0, rect.size.y - 3.0), Vector2(rect.size.x, 3.0))
-		draw_rect(accent_rect, side_color, true)
-		var portrait := _turn_strip_portrait_payload(stack, rect)
-		var portrait_rect: Rect2 = portrait.get("rect", Rect2())
-		draw_rect(portrait_rect, TURN_STRIP_PORTRAIT_FILL, true)
-		var portrait_texture = portrait.get("texture", null)
-		if portrait_texture is Texture2D:
-			draw_texture_rect(portrait_texture, portrait_rect, false, Color(0.96, 0.97, 0.92, 1.0))
-		draw_rect(portrait_rect, side_color.darkened(0.14), false, 1.0)
-		draw_rect(rect, ACTIVE_COLOR if current else TURN_STRIP_QUEUED_FRAME, false, 2.0 if current else 1.0)
-		_draw_text(_turn_strip_chip_label(stack, rect.size.x), rect.position + Vector2(TURN_STRIP_LABEL_LEFT_INSET, 18.0), TEXT_COLOR, 10)
-		_draw_turn_strip_phase_mark(entry, rect)
-
-## Waiting chips get a wait badge on the portrait; next-round chips are
-## dimmed, and the first one is set off by a divider and the round number.
-func _draw_turn_strip_phase_mark(entry: Dictionary, rect: Rect2) -> void:
-	var portrait_rect := _turn_strip_portrait_rect(rect)
-	match String(entry.get("phase", "current")):
-		"waiting":
-			var badge := Rect2(portrait_rect.end - Vector2(10.0, 10.0), Vector2(11.0, 11.0))
-			draw_rect(badge, TURN_STRIP_PORTRAIT_FILL, true)
-			draw_rect(badge, ACTIVE_COLOR, false, 1.0)
-			_draw_badge_text("W", badge.get_center(), ACTIVE_COLOR, 9)
-		"next_round":
-			draw_rect(rect, Color(0.0, 0.0, 0.0, 0.34), true)
-			if bool(entry.get("first_of_phase", false)):
-				draw_line(rect.position + Vector2(-3.5, -2.0), rect.position + Vector2(-3.5, rect.size.y + 2.0), ACTIVE_COLOR, 2.0)
-				var tag := Rect2(portrait_rect.position - Vector2(1.0, 1.0), Vector2(16.0, 10.0))
-				draw_rect(tag, TURN_STRIP_PORTRAIT_FILL, true)
-				_draw_badge_text("R%d" % (int(_turn_forecast.get("round", 1)) + 1), tag.get_center(), ACTIVE_COLOR, 8)
-
-## Small text centred on a point, for badges.
-func _draw_badge_text(text: String, center: Vector2, color: Color, font_size: int) -> void:
-	var font = get_theme_default_font()
-	if font == null:
-		return
-	var text_size: Vector2 = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
-	draw_string(font, Vector2(center.x - text_size.x * 0.5, center.y + float(font_size) * 0.36), text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, color)
-
-func _turn_strip_rect(field_rect: Rect2) -> Rect2:
-	var strip_width := maxf(0.0, minf(field_rect.size.x - TURN_STRIP_MARGIN * 2.0, TURN_STRIP_MAX_WIDTH))
-	return Rect2(field_rect.position + Vector2(TURN_STRIP_MARGIN, TURN_STRIP_MARGIN), Vector2(strip_width, TURN_STRIP_HEIGHT))
-
-## The strip's order: this round from the active stack, the waiting stacks,
-## then the predicted next round.
-func _turn_strip_order() -> Array:
-	var order: Array = []
-	for phase in ["current", "waiting", "next_round"]:
-		var ids: Variant = _turn_forecast.get(phase, [])
-		if ids is Array:
-			for battle_id_value in ids:
-				order.append({"battle_id": String(battle_id_value), "phase": phase})
-	return order
-
-func _turn_strip_entries(field_rect: Rect2) -> Array:
-	var entries: Array = []
-	var turn_order := _turn_strip_order()
-	var strip_rect := _turn_strip_rect(field_rect)
-	var chip_width: float = minf(122.0, (strip_rect.size.x - 14.0) / float(maxi(1, mini(turn_order.size(), 5))))
-	for slot_value in turn_order:
-		if entries.size() >= 5:
-			break
-		var stack: Dictionary = _stack_by_id(String(slot_value.get("battle_id", "")))
-		if stack.is_empty() or _stack_alive_count(stack) <= 0:
-			continue
-		entries.append({
-			"slot": entries.size() + 1,
-			"stack": stack,
-			"phase": String(slot_value.get("phase", "current")),
-			"first_of_phase": entries.is_empty() or String(entries.back().get("phase", "")) != String(slot_value.get("phase", "current")),
-			"rect": Rect2(
-				strip_rect.position + Vector2(7.0 + float(entries.size()) * chip_width, 5.0),
-				Vector2(chip_width - 5.0, strip_rect.size.y - 10.0)
-			),
-		})
-	return entries
-
-func _turn_strip_portrait_rect(chip_rect: Rect2) -> Rect2:
-	var extent := minf(TURN_STRIP_PORTRAIT_EXTENT, maxf(0.0, chip_rect.size.y - 6.0))
-	var center := chip_rect.position + Vector2(4.0 + extent * 0.5, chip_rect.size.y * 0.5)
-	return Rect2(center - Vector2(extent, extent) * 0.5, Vector2(extent, extent))
-
-func _turn_strip_portrait_payload(stack: Dictionary, chip_rect: Rect2) -> Dictionary:
-	var unit_id := String(stack.get("unit_id", "")).strip_edges()
-	var art := ContentService.get_unit_art(unit_id) if unit_id != "" else {}
-	var path := String(art.get("battle_icon", "")).strip_edges()
-	var texture: Texture2D = _unit_battle_icon_for_stack(stack) if unit_id != "" else null
-	var portrait_rect := _turn_strip_portrait_rect(chip_rect)
-	return {
-		"model": TURN_STRIP_PRESENTATION_MODEL,
-		"unit_id": unit_id,
-		"path": path,
-		"loaded": texture != null,
-		"iconless_fallback": texture == null,
-		"rect": portrait_rect,
-		"contained": chip_rect.encloses(portrait_rect),
-		"texture": texture,
-	}
-
-func _turn_strip_entry_at_position(position: Vector2) -> Dictionary:
+func _turn_ribbon_chip_at_position(position: Vector2) -> Dictionary:
 	if _battle.is_empty():
 		return {}
-	for entry_value in _turn_strip_entries(_current_field_rect()):
-		if entry_value is Dictionary:
-			var entry: Dictionary = entry_value
-			var rect: Rect2 = entry.get("rect", Rect2())
-			if rect.has_point(position):
-				return entry
+	for entry in _turn_ribbon_chips():
+		if Rect2(entry.get("rect", Rect2())).has_point(position):
+			return entry
 	return {}
 
-func _turn_strip_entry_tooltip(entry: Dictionary, visible_count: int) -> String:
+func _turn_ribbon_chip_tooltip(entry: Dictionary, visible_count: int) -> String:
 	var stack: Dictionary = entry.get("stack", {}) if entry.get("stack", {}) is Dictionary else {}
 	if stack.is_empty():
 		return tooltip_text
@@ -4859,164 +4779,13 @@ func _turn_strip_entry_tooltip(entry: Dictionary, visible_count: int) -> String:
 			state = "waiting stack, acts after the others"
 		"next_round":
 			state = "next round (round %d), predicted" % (int(_turn_forecast.get("round", 1)) + 1)
-	return "Initiative Strip\n- Visible slot: %d of %d\n- Stack: %s x%d\n- Side: %s\n- State: %s\n- Inspection: hovering this chip does not advance initiative or spend an action." % [
+	return "Turn order\n- Visible slot: %d of %d\n- Stack: %s x%d\n- Side: %s\n- State: %s\n- Inspection: hovering this chip does not advance initiative or spend an action." % [
 		int(entry.get("slot", 0)),
 		visible_count,
 		_stack_full_name(stack),
 		_stack_alive_count(stack),
 		String(stack.get("side", "neutral")).capitalize(),
 		state,
-	]
-
-func _turn_strip_chip_label(stack: Dictionary, chip_width: float) -> String:
-	var full_name := _stack_full_name(stack)
-	var suffix := " x%d" % _stack_alive_count(stack)
-	var font = get_theme_default_font()
-	var words := full_name.split(" ", false)
-	if font == null:
-		var fallback_name := full_name if full_name.length() <= 6 else full_name.left(6)
-		return "%s%s" % [fallback_name, suffix] if fallback_name == full_name else "%s…%s" % [fallback_name, suffix]
-	var max_text_width := maxf(24.0, chip_width - TURN_STRIP_LABEL_LEFT_INSET - 6.0)
-	var candidate := "%s%s" % [full_name, suffix]
-	if font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x <= max_text_width:
-		return candidate
-	for word_count in range(words.size() - 1, 0, -1):
-		var word_prefix := " ".join(words.slice(0, word_count))
-		candidate = "%s…%s" % [word_prefix, suffix]
-		if font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x <= max_text_width:
-			return candidate
-	var compact_name := String(words[0]) if not words.is_empty() else full_name
-	while compact_name.length() > 3:
-		candidate = "%s…%s" % [compact_name, suffix]
-		if font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x <= max_text_width:
-			return candidate
-		compact_name = compact_name.left(compact_name.length() - 1)
-	return "%s…%s" % [full_name.left(3), suffix]
-
-func _draw_footer_line(field_rect: Rect2) -> void:
-	if _battle.has("playback_caption"):
-		var caption := String(_battle.playback_caption)
-		var width := minf(field_rect.size.x - 20.0, 980.0)
-		var box := Rect2(Vector2(field_rect.position.x + 10.0, field_rect.end.y - 38.0), Vector2(width,32.0))
-		draw_rect(box,Color(0.04,0.05,0.07,0.94),true)
-		draw_rect(box,FRAME_COLOR,false,1.2)
-		var font := get_theme_default_font()
-		while caption.length()>1 and font.get_string_size(caption,HORIZONTAL_ALIGNMENT_LEFT,-1,16).x>width-20.0:
-			caption=caption.left(caption.length()-2)+"…"
-		_draw_text(caption,box.position+Vector2(10,22),Color(1.0,0.92,0.72),16)
-		return
-	if not _consequence_preview.is_empty():
-		var box := Rect2(Vector2(field_rect.position.x + 10.0, field_rect.end.y - 55.0), Vector2(field_rect.size.x - 20.0, 49.0))
-		draw_rect(box, Color(0.025, 0.032, 0.038, 0.94), true)
-		var lines := String(_consequence_preview.get("message", "")).split("\n")
-		for index in range(mini(2, lines.size())):
-			var line := String(lines[index])
-			var font := get_theme_default_font()
-			while line.length() > 1 and font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x > box.size.x - 20.0:
-				line = line.left(line.length() - 2) + "…"
-			_draw_text(line, box.position + Vector2(10, 18 + 20 * index), ACTIVE_COLOR if index == 0 else TEXT_COLOR, 12)
-		return
-	var footer_width: float = minf(field_rect.size.x - 20.0, 520.0)
-	var footer_rect := Rect2(field_rect.position + Vector2(10.0, field_rect.end.y - 28.0), Vector2(footer_width, 22.0))
-	draw_rect(footer_rect, Color(0.08, 0.10, 0.12, 0.82), true)
-	draw_rect(footer_rect, FRAME_COLOR, false, 1.2)
-	var fit := _footer_summary_fit(_footer_summary_text(), footer_width)
-	_draw_text(String(fit.get("visible_text", "")), footer_rect.position + Vector2(9.0, 15.0), SUBTEXT_COLOR, 11)
-
-func _footer_summary_text() -> String:
-	var summary := "%s | R%d/%d | %s | %s" % [
-		String(_battle.get("encounter_name", "Battle")),
-		int(_battle.get("round", 1)),
-		int(_battle.get("max_rounds", 12)),
-		String(_battle.get("terrain", "plains")).capitalize(),
-		_distance_label(int(_battle.get("distance", 1))),
-	]
-	var target_state := _target_state_label()
-	if target_state != "":
-		summary = "%s | %s" % [summary, target_state]
-	var movement_state := _movement_state_label()
-	if movement_state != "":
-		summary = "%s | %s" % [summary, movement_state]
-	var cursor_state := _controller_cursor_state_label()
-	if cursor_state != "":
-		summary = "%s | %s" % [summary, cursor_state]
-	return summary
-
-func _footer_summary_fit(summary: String, footer_width: float) -> Dictionary:
-	var full_text := summary.strip_edges()
-	var max_text_width := maxf(0.0, footer_width - 18.0)
-	var font = get_theme_default_font()
-	if full_text == "" or font == null or max_text_width <= 0.0:
-		return {
-			"full_text": full_text,
-			"visible_text": "",
-			"visible_width": 0.0,
-			"max_text_width": max_text_width,
-			"fits": full_text == "",
-			"truncated": full_text != "",
-		}
-	var full_width := font.get_string_size(full_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 11).x
-	if full_width <= max_text_width:
-		return {
-			"full_text": full_text,
-			"visible_text": full_text,
-			"visible_width": full_width,
-			"max_text_width": max_text_width,
-			"fits": true,
-			"truncated": false,
-		}
-	var candidate := full_text
-	while candidate != "":
-		var boundary := candidate.rfind(" ")
-		candidate = candidate.left(boundary).strip_edges() if boundary > 0 else ""
-		candidate = candidate.trim_suffix("|").strip_edges()
-		var visible_text := "%s…" % candidate if candidate != "" else "…"
-		var visible_width := font.get_string_size(visible_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 11).x
-		if visible_width <= max_text_width:
-			return {
-				"full_text": full_text,
-				"visible_text": visible_text,
-				"visible_width": visible_width,
-				"max_text_width": max_text_width,
-				"fits": true,
-				"truncated": true,
-			}
-	return {
-		"full_text": full_text,
-		"visible_text": "",
-		"visible_width": 0.0,
-		"max_text_width": max_text_width,
-		"fits": false,
-		"truncated": true,
-	}
-
-func validation_footer_summary() -> Dictionary:
-	var field_rect := _current_field_rect()
-	var footer_width: float = minf(field_rect.size.x - 20.0, 520.0)
-	var footer_rect := Rect2(field_rect.position + Vector2(10.0, field_rect.end.y - 28.0), Vector2(footer_width, 22.0))
-	var board_rect := Rect2(Vector2.ZERO, size)
-	var summary := _footer_summary_fit(_footer_summary_text(), footer_width)
-	summary["footer_rect"] = footer_rect
-	summary["field_rect"] = field_rect
-	summary["board_rect"] = board_rect
-	summary["footer_contained"] = board_rect.encloses(footer_rect)
-	return summary
-
-func validation_footer_fit_summary(text: String) -> Dictionary:
-	var field_rect := _current_field_rect()
-	var footer_width: float = minf(field_rect.size.x - 20.0, 520.0)
-	return _footer_summary_fit(text, footer_width)
-
-func _controller_cursor_state_label() -> String:
-	if not has_focus() or not _cell_in_bounds(_controller_cursor_cell):
-		return ""
-	var battle_id := _stack_id_at_cell(_controller_cursor_cell)
-	if battle_id != "":
-		return "Cursor: %s" % _stack_short_label(_stack_by_id(battle_id))
-	return "Cursor: %d,%d %s" % [
-		_controller_cursor_cell.x,
-		_controller_cursor_cell.y,
-		"move" if _is_legal_destination_cell(_controller_cursor_cell) else "blocked",
 	]
 
 func _controller_cursor_cell_role() -> String:
@@ -5164,55 +4933,28 @@ func _draw_stack_side_cue(center: Vector2, token_radius: float, side: String) ->
 	draw_polyline(PackedVector2Array([triangle[0], triangle[1], triangle[2], triangle[0]]), outline, 1.6, true)
 	_draw_centered_text("E", marker_center + Vector2(0.0, 3.8), outline, 9)
 
-func _draw_stack_health_bar(center: Vector2, radius: float, stack: Dictionary) -> void:
-	var bar_size := Vector2(radius * 0.96, 5.0)
-	var bar_rect := Rect2(center + Vector2(-bar_size.x * 0.5, radius * 0.54), bar_size)
-	draw_rect(bar_rect, Color(0.07, 0.08, 0.09, 0.82), true)
-	var hp_rect := bar_rect
-	hp_rect.size.x *= _stack_health_ratio(stack)
-	draw_rect(hp_rect, HEALTH_COLOR, true)
-
-func _draw_count_badge(center: Vector2, token_radius: float, stack: Dictionary) -> void:
-	var count := _stack_alive_count(stack)
-	var badge_center := center + Vector2(token_radius * 0.70, token_radius * 0.68)
-	draw_circle(badge_center, max(8.0, token_radius * 0.38), Color(0.08, 0.10, 0.12, 0.92))
-	draw_circle(badge_center, max(8.0, token_radius * 0.38), Color(0.96, 0.90, 0.68, 0.76), false, 1.2)
-	_draw_centered_text(str(count), badge_center + Vector2(0.0, 3.5), TEXT_COLOR, 10)
-
-func _draw_stack_caption(center: Vector2, radius: float, stack: Dictionary) -> void:
-	var layout := _stack_caption_layout(center, radius, stack)
-	var plate_rect: Rect2 = layout.get("plate_rect", Rect2())
-	var accent_rect: Rect2 = layout.get("accent_rect", Rect2())
-	var text_position: Vector2 = layout.get("text_position", Vector2.ZERO)
-	var accent_color: Color = layout.get("accent_color", Color.TRANSPARENT)
-	draw_rect(Rect2(plate_rect.position + Vector2(1.0, 2.0), plate_rect.size), STACK_CAPTION_PLATE_SHADOW, true)
-	draw_rect(plate_rect, STACK_CAPTION_PLATE_FILL, true)
-	draw_rect(plate_rect, STACK_CAPTION_PLATE_FRAME, false, 1.0)
-	draw_rect(accent_rect, accent_color, true)
-	_draw_text(String(layout.get("label", "")), text_position, TEXT_COLOR, STACK_CAPTION_FONT_SIZE)
-
-func _stack_caption_layout(center: Vector2, radius: float, stack: Dictionary) -> Dictionary:
-	var label := _stack_caption_label(stack)
-	var font := get_theme_default_font()
-	var text_size := font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1.0, STACK_CAPTION_FONT_SIZE) if font != null else Vector2(float(label.length()) * 5.5, 10.0)
-	var plate_size := Vector2(ceil(text_size.x) + STACK_CAPTION_HORIZONTAL_PADDING * 2.0 + STACK_CAPTION_ACCENT_WIDTH, STACK_CAPTION_PLATE_HEIGHT)
-	var upper_extent := _stack_standee_size(radius, stack).y - radius * STACK_STANDEE_GROUND_OFFSET_FACTOR
-	var plate_position := Vector2(round(center.x - plate_size.x * 0.5), round(center.y - upper_extent - STACK_CAPTION_TOKEN_GAP - plate_size.y))
-	var plate_rect := Rect2(plate_position, plate_size)
-	var text_position := plate_position + Vector2(STACK_CAPTION_HORIZONTAL_PADDING + STACK_CAPTION_ACCENT_WIDTH, 12.0)
-	var text_rect := Rect2(Vector2(text_position.x, plate_position.y + 2.0), text_size)
-	var accent_rect := Rect2(plate_position, Vector2(STACK_CAPTION_ACCENT_WIDTH, plate_size.y))
-	var side_color := _side_color(String(stack.get("side", "")))
-	var accent_color := Color(side_color.r, side_color.g, side_color.b, STACK_CAPTION_ACCENT_ALPHA)
-	return {
-		"model": STACK_CAPTION_PLATE_MODEL,
-		"label": label,
-		"plate_rect": plate_rect,
-		"text_position": text_position,
-		"text_rect": text_rect,
-		"accent_rect": accent_rect,
-		"accent_color": accent_color,
-	}
+## The stack's count in a pill of its side's colour under its feet, with a
+## sword or a bow for how it fights.
+func _draw_count_badge(center: Vector2, radius: float, stack: Dictionary) -> void:
+	var font = get_theme_default_font()
+	if font == null:
+		return
+	var k := clampf(radius / REFERENCE_HEX_RADIUS, 0.55, 1.6)
+	var count_text := str(_stack_alive_count(stack))
+	var font_size := int(round(15.0 * k))
+	var text_width: float = font.get_string_size(count_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x
+	var icon_extent := 15.0 * k
+	var height := 24.0 * k
+	var width := 4.0 * k + icon_extent + 3.0 * k + text_width + 7.0 * k
+	var ground_y := center.y + radius * STACK_STANDEE_GROUND_OFFSET_FACTOR
+	var pill := Rect2(Vector2(center.x - width * 0.5, ground_y + radius * 0.1 * HEX_VERTICAL_SCALE), Vector2(width, height))
+	var player := String(stack.get("side", "")) == "player"
+	var is_active := String(stack.get("battle_id", "")) == String(_battle.get("active_stack_id", ""))
+	_draw_rounded_box(pill, UI_PLAYER_DEEP if player else UI_ENEMY_DEEP, UI_PLAYER if player else UI_ENEMY, 7.0 * k, maxf(1.0, k))
+	if is_active:
+		_draw_rounded_box(pill.grow(2.0 * k), Color(0.0, 0.0, 0.0, 0.0), UI_ACTIVE, 9.0 * k, 2.0 * k)
+	_draw_role_glyph(Vector2(pill.position.x + 4.0 * k + icon_extent * 0.5, pill.get_center().y), icon_extent, bool(stack.get("ranged", false)), Color(1.0, 0.925, 0.8))
+	draw_string(font, Vector2(pill.position.x + 7.0 * k + icon_extent, pill.get_center().y + float(font_size) * 0.36), count_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, Color.WHITE)
 
 func _draw_focus_link(start: Vector2, end: Vector2, active_side: String) -> void:
 	var color := ACTIVE_COLOR if active_side == "player" else TARGET_COLOR
@@ -5287,8 +5029,12 @@ func _hex_points(center: Vector2, radius: float) -> PackedVector2Array:
 	var points := PackedVector2Array()
 	for index in range(6):
 		var angle := deg_to_rad(30.0 + 60.0 * float(index))
-		points.append(center + Vector2(cos(angle), sin(angle)) * radius)
+		points.append(center + _hex_corner_offset(angle, radius))
 	return points
+
+## A hex corner's offset from its centre on the squashed field.
+func _hex_corner_offset(angle: float, radius: float) -> Vector2:
+	return Vector2(cos(angle) * radius, sin(angle) * radius * HEX_VERTICAL_SCALE)
 
 func _closed_points(points: PackedVector2Array) -> PackedVector2Array:
 	var closed := PackedVector2Array(points)
@@ -5333,23 +5079,6 @@ func _terrain_hex_texture_source_position(cell: Vector2i, texture_size: Vector2,
 		floor(usable.x * _hex_variation(cell, 3.0)),
 		floor(usable.y * _hex_variation(cell, 17.0))
 	)
-
-func _terrain_hex_texture_uvs(points: PackedVector2Array, bounds: Rect2, source_rect: Rect2, texture_size: Vector2) -> PackedVector2Array:
-	var uvs := PackedVector2Array()
-	if texture_size.x <= 0.0 or texture_size.y <= 0.0 or bounds.size.x <= 0.0 or bounds.size.y <= 0.0:
-		return uvs
-	for point in points:
-		var relative := Vector2(
-			(point.x - bounds.position.x) / bounds.size.x,
-			(point.y - bounds.position.y) / bounds.size.y
-		)
-		var source_point := source_rect.position + Vector2(
-			relative.x * source_rect.size.x,
-			relative.y * source_rect.size.y
-		)
-		# CanvasItem.draw_polygon samples Texture2D with normalized UVs.
-		uvs.append(_terrain_texture_normalized_uv(source_point, texture_size))
-	return uvs
 
 func _terrain_texture_normalized_uv(source_point: Vector2, texture_size: Vector2) -> Vector2:
 	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
@@ -5427,27 +5156,25 @@ func _terrain_hex_tile_count() -> int:
 	return HEX_COLUMNS * HEX_ROWS
 
 func _terrain_rendering_mode(texture_loaded: bool) -> String:
-	return "continuous_field_with_hex_variation" if texture_loaded else "hex_snapped_color_fallback"
+	return "painted_battlefield_cover" if texture_loaded else "hex_snapped_color_fallback"
 
 func _hex_field_rect(field_rect: Rect2) -> Rect2:
-	return Rect2(
-		field_rect.position + Vector2(10.0, 44.0),
-		Vector2(max(1.0, field_rect.size.x - 20.0), max(1.0, field_rect.size.y - 78.0))
-	)
+	return field_rect
 
 func _hex_layout(hex_field_rect: Rect2) -> Dictionary:
 	var radius_x := hex_field_rect.size.x / (SQRT_3 * (float(HEX_COLUMNS) + 0.5))
-	var radius_y := hex_field_rect.size.y / (1.5 * float(HEX_ROWS - 1) + 2.0)
+	var radius_y := hex_field_rect.size.y / ((1.5 * float(HEX_ROWS - 1) + 2.0) * HEX_VERTICAL_SCALE)
 	var radius: float = maxf(8.0, minf(radius_x, radius_y))
 	var grid_size := Vector2(
 		SQRT_3 * radius * (float(HEX_COLUMNS) + 0.5),
-		radius * (1.5 * float(HEX_ROWS - 1) + 2.0)
+		radius * HEX_VERTICAL_SCALE * (1.5 * float(HEX_ROWS - 1) + 2.0)
 	)
 	var origin := hex_field_rect.position + (hex_field_rect.size - grid_size) * 0.5
 	return {
 		"origin": origin,
 		"radius": radius,
 		"hex_width": SQRT_3 * radius,
+		"vertical_scale": HEX_VERTICAL_SCALE,
 		"grid_size": grid_size,
 		"rect": Rect2(origin, grid_size),
 	}
@@ -5455,10 +5182,15 @@ func _hex_layout(hex_field_rect: Rect2) -> Dictionary:
 func _hex_center(cell: Vector2i, layout: Dictionary) -> Vector2:
 	var origin: Vector2 = layout.get("origin", Vector2.ZERO)
 	var radius := float(layout.get("radius", 1.0))
+	if not _cell_in_bounds(cell):
+		# A hero's casts start from its figure (_hero_anchor_cell).
+		for side in ["player", "enemy"]:
+			if cell == _hero_anchor_cell(side) and _hero_has_figure(side):
+				return _hero_foot(side, layout) - Vector2(0.0, HERO_CAST_POINT_RADII * radius)
 	var hex_width := float(layout.get("hex_width", SQRT_3 * radius))
 	return origin + Vector2(
 		hex_width * (float(cell.x) + 0.5 * float(cell.y % 2)) + hex_width * 0.5,
-		radius * (1.5 * float(cell.y) + 1.0)
+		radius * HEX_VERTICAL_SCALE * (1.5 * float(cell.y) + 1.0)
 	)
 
 func _cell_fill_color(column: int, player_front: int, enemy_front: int, terrain_texture_loaded: bool = false) -> Color:
@@ -5624,9 +5356,26 @@ func _hex_cell_at_position(position: Vector2) -> Vector2i:
 func _current_hex_layout() -> Dictionary:
 	return _hex_layout(_hex_field_rect(_current_field_rect()))
 
+## The middle of the window the hexes fill (FIELD_MARGIN_*).
 func _current_field_rect() -> Rect2:
-	var board_rect := Rect2(Vector2(14.0, 14.0), size - Vector2(28.0, 28.0))
-	return board_rect.grow(-12.0)
+	var k := ui_scale()
+	var side := FIELD_MARGIN_SIDE * k
+	var top := FIELD_MARGIN_TOP * k
+	return Rect2(
+		Vector2(side, top),
+		Vector2(maxf(1.0, size.x - side * 2.0), maxf(1.0, size.y - top - FIELD_MARGIN_BOTTOM * k))
+	)
+
+## The window's size against 1920x1080, for sizes laid out for that window.
+## The player's UI scale (Settings) already enlarges the canvas, which makes
+## size smaller by that factor; multiplying it back keeps the HUD and ribbon
+## as much larger as the setting asks while the field takes the rest.
+func ui_scale() -> float:
+	var factor := 1.0
+	var window := get_window() if is_inside_tree() else null
+	if window != null:
+		factor = clampf(window.content_scale_factor, 0.5, 3.0)
+	return clampf(minf(size.x / FIELD_REFERENCE_SIZE.x, size.y / FIELD_REFERENCE_SIZE.y) * factor, 0.3, 4.0)
 
 func _camera_adjusted_hex_layout(hex_layout: Dictionary) -> Dictionary:
 	var adjusted := hex_layout.duplicate(true)
@@ -5842,28 +5591,6 @@ func _resolve_target_state_label() -> String:
 		return "Target: blocked"
 	return ""
 
-func _movement_state_label() -> String:
-	if String(_active_stack.get("side", "")) != "player":
-		return ""
-	var hovered_preview := _hover_destination_preview()
-	if not hovered_preview.is_empty():
-		var detail := String(hovered_preview.get("destination_detail", ""))
-		var setup_label := String(hovered_preview.get("selected_target_setup_label", ""))
-		if bool(hovered_preview.get("sets_up_selected_target_attack", false)) and setup_label != "":
-			return "Move: %s -> later %s" % [detail, setup_label]
-		if bool(hovered_preview.get("closes_on_selected_target", false)):
-			return "Move: %s -> close target" % detail
-		if detail != "":
-			return "Move: %s" % detail
-	var movement_intent: Dictionary = _board_query("active_movement_intent", func(): return BattleRulesScript.active_movement_board_click_intent(_battle, _legal_destinations()))
-	if String(movement_intent.get("action", "")) == "move":
-		if bool(movement_intent.get("selected_target_blocked", false)):
-			return "Move: choose destination"
-		return "Move: available"
-	if bool(movement_intent.get("blocked", false)) and bool(movement_intent.get("selected_target_blocked", false)):
-		return "Move: unavailable"
-	return ""
-
 func _hover_destination_preview() -> Dictionary:
 	if _is_legal_destination_cell(_hover_destination_cell):
 		var cell := _hover_destination_cell
@@ -5931,6 +5658,34 @@ func _stack_id_at_position(position: Vector2) -> String:
 		if position.distance_to(center) <= radius:
 			return String(shape.get("battle_id", ""))
 	return ""
+
+## The stack whose drawn figure covers position, front-most first.
+func _stack_body_at_position(position: Vector2) -> String:
+	for index in range(_stack_hit_shapes.size() - 1, -1, -1):
+		var shape_value = _stack_hit_shapes[index]
+		if shape_value is Dictionary and Rect2(shape_value.get("body_rect", Rect2())).has_point(position):
+			return String(shape_value.get("battle_id", ""))
+	return ""
+
+## The stack a pointer at position points at: the one standing on the hex
+## under it, else one whose figure covers it. Off the hexes the old round
+## token shapes still count.
+func _stack_id_at_board_position(position: Vector2, cell: Vector2i) -> String:
+	var battle_id := _stack_id_at_cell(cell)
+	if battle_id == "":
+		battle_id = _stack_body_at_position(position)
+	if battle_id == "" and not _cell_in_bounds(cell):
+		battle_id = _stack_id_at_position(position)
+	return battle_id
+
+## The box over a stack's drawn figure that a click on it hits: up from its
+## feet, as wide as its body.
+func _stack_body_rect(center: Vector2, radius: float, stack: Dictionary) -> Rect2:
+	var hex_width := SQRT_3 * radius
+	var half_width := hex_width * (0.7 if BattleRulesScript.Footprint.width(stack) == 2 else 0.28)
+	var ground_y := center.y + radius * STACK_STANDEE_GROUND_OFFSET_FACTOR
+	var height := _stack_standee_size(radius, stack).y * 0.72
+	return Rect2(Vector2(center.x - half_width, ground_y - height), Vector2(half_width * 2.0, height))
 
 func _stack_token_radius(hex_radius: float) -> float:
 	return clampf(hex_radius * STACK_TOKEN_RADIUS_FACTOR, STACK_TOKEN_RADIUS_MIN, STACK_TOKEN_RADIUS_MAX)
@@ -6165,29 +5920,9 @@ func _stack_alive_count(stack: Dictionary) -> int:
 		return 0
 	return int(ceil(float(total_health) / float(unit_hp)))
 
-func _stack_health_ratio(stack: Dictionary) -> float:
-	var unit_hp: int = maxi(1, int(stack.get("unit_hp", stack.get("hp", 1))))
-	var base_count: int = maxi(1, int(stack.get("base_count", _stack_alive_count(stack))))
-	var max_health: int = maxi(1, unit_hp * base_count)
-	return clampf(float(max(0, int(stack.get("total_health", 0)))) / float(max_health), 0.0, 1.0)
-
 func _stack_full_name(stack: Dictionary) -> String:
 	var name := String(stack.get("name", stack.get("unit_id", "Stack"))).strip_edges()
 	return name if name != "" else "Stack"
-
-func _stack_short_label(stack: Dictionary) -> String:
-	var name := String(stack.get("name", stack.get("unit_id", "Stack")))
-	return name.left(13)
-
-func _stack_caption_label(stack: Dictionary) -> String:
-	var full_name := _stack_full_name(stack)
-	if full_name.length() <= 13:
-		return full_name
-	var prefix := full_name.left(12)
-	var boundary := prefix.rfind(" ")
-	if boundary <= 0:
-		return "%s…" % full_name.left(12)
-	return "%s…" % prefix.left(boundary).strip_edges()
 
 func _side_color(side: String) -> Color:
 	var fallback := PLAYER_COLOR if side == "player" else ENEMY_COLOR
@@ -6223,3 +5958,596 @@ func _draw_centered_text(text: String, position: Vector2, color: Color, font_siz
 		return
 	var text_size := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
 	draw_string(font, position - Vector2(text_size.x * 0.5, text_size.y * 0.45), text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, color)
+
+
+# --- Pointer hover -----------------------------------------------------------
+
+## What the pointer is over outside the order preview: a hero, a ribbon chip
+## or a stack. The forecast beside the pointer and the highlights follow it.
+func _update_pointer_hover(position: Vector2) -> void:
+	var hero_side := _hero_side_at_position(position)
+	var chip := _turn_ribbon_chip_at_position(position)
+	var chip_stack: Dictionary = chip.get("stack", {}) if chip.get("stack", {}) is Dictionary else {}
+	var ribbon_id := String(chip_stack.get("battle_id", ""))
+	var stack_id := ""
+	if hero_side == "" and not _ribbon_rect().has_point(position):
+		stack_id = _stack_id_at_board_position(position, _hex_cell_at_position(position))
+	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND if hero_side == "player" else Control.CURSOR_ARROW
+	_hover_hero_side = hero_side
+	_hover_ribbon_battle_id = ribbon_id
+	_hover_stack_id = stack_id
+	# The forecast follows the pointer.
+	queue_redraw()
+
+func _on_pointer_left() -> void:
+	_pointer_position = Vector2(-1.0, -1.0)
+	_hover_hero_side = ""
+	_hover_ribbon_battle_id = ""
+	_hover_stack_id = ""
+	mouse_default_cursor_shape = Control.CURSOR_ARROW
+	if not _keyboard_cursor_shown():
+		_hover_destination_cell = Vector2i(-1, -1)
+		set_consequence_preview({})
+	queue_redraw()
+
+## The board draws its own forecast beside the pointer, so the delayed hover
+## card stays away from the field; F1 still inspects the same text.
+func _make_custom_tooltip(_for_text: String) -> Object:
+	var hidden := Control.new()
+	hidden.hide()
+	return hidden
+
+# --- Heroes beside their armies ---------------------------------------------
+
+func _hero_presentation_for(side: String) -> Dictionary:
+	var value: Variant = _hero_presentations.get(side, {})
+	return value if value is Dictionary else {}
+
+func _hero_has_figure(side: String) -> bool:
+	return bool(_hero_presentation_for(side).get("has_figure", false))
+
+## Where a hero stands: beside its army's edge, a quarter of the way down the
+## field, clear of the hexes.
+func _hero_foot(side: String, layout: Dictionary) -> Vector2:
+	var grid: Rect2 = layout.get("rect", Rect2())
+	var radius := float(layout.get("radius", 1.0))
+	var x := grid.position.x - HERO_FOOT_OUTSET_RADII * radius
+	if side != "player":
+		x = grid.end.x + HERO_FOOT_OUTSET_RADII * radius
+	return Vector2(x, grid.position.y + grid.size.y * HERO_FOOT_GRID_FRACTION)
+
+func _hero_hit_rect(foot: Vector2, radius: float) -> Rect2:
+	var half_width := HERO_HIT_HALF_WIDTH_RADII * radius
+	return Rect2(
+		foot - Vector2(half_width, HERO_HIT_TOP_RADII * radius),
+		Vector2(half_width * 2.0, (HERO_HIT_TOP_RADII + HERO_HIT_BOTTOM_RADII) * radius)
+	)
+
+func _hero_side_at_position(position: Vector2) -> String:
+	if _battle.is_empty():
+		return ""
+	var layout := _current_hex_layout()
+	var radius := float(layout.get("radius", 1.0))
+	for side in ["player", "enemy"]:
+		if _hero_has_figure(side) and _hero_hit_rect(_hero_foot(side, layout), radius).has_point(position):
+			return side
+	return ""
+
+func _hero_figure_texture(side: String) -> Texture2D:
+	var path := String(_hero_presentation_for(side).get("figure_path", ""))
+	if path == "":
+		return null
+	if not _hero_figure_textures.has(path):
+		var loaded: Variant = load(path) if ResourceLoader.exists(path) else null
+		_hero_figure_textures[path] = loaded if loaded is Texture2D else null
+	return _hero_figure_textures.get(path) as Texture2D
+
+## How strongly a hero's cast still shows: 1 as it starts, 0 once it ends.
+func _hero_cast_intensity(side: String) -> float:
+	var record := _animation_playback_record_for_stack(BattleRulesScript.hero_actor_id(side))
+	if record.is_empty():
+		return 0.0
+	var started := int(record.get("started_at_msec", 0))
+	var expires := int(record.get("expires_at_msec", started))
+	var now := int(Time.get_ticks_msec())
+	if now < started:
+		return 0.0
+	if expires <= started:
+		return 1.0
+	return clampf(1.0 - float(now - started) / float(expires - started), 0.0, 1.0)
+
+## Both commanders stand beside their armies; the right-hand one is mirrored
+## to face the field. The player's glows while its spell is ready, and a
+## casting hero rises a little and flares.
+func _draw_hero_figures(hex_layout: Dictionary) -> void:
+	var radius := float(hex_layout.get("radius", 1.0))
+	var k := radius / REFERENCE_HEX_RADIUS
+	var motion := not SettingsService.reduced_motion_enabled()
+	var msec := float(Time.get_ticks_msec())
+	for side: String in ["player", "enemy"]:
+		if not _hero_has_figure(side):
+			continue
+		var texture := _hero_figure_texture(side)
+		if texture == null:
+			continue
+		var foot := _hero_foot(side, hex_layout)
+		var cast := _hero_cast_intensity(side)
+		var hovered := _hover_hero_side == side
+		draw_texture_rect(_soft_glow(), Rect2(foot - Vector2(84.0, 17.0) * k, Vector2(168.0, 34.0) * k), false, Color(0.0, 0.0, 0.0, 0.55))
+		var glow := 0.0
+		if cast > 0.0:
+			glow = 0.55 * cast + 0.2
+		elif side == "player" and _hero_cast_ready:
+			glow = 0.16 + (0.1 * sin(msec / 420.0) if motion else 0.0) + (0.14 if hovered else 0.0)
+		elif hovered:
+			glow = 0.14
+		if glow > 0.0:
+			var tint := HERO_READY_GLOW if side == "player" else UI_ENEMY.lightened(0.35)
+			draw_texture_rect(_soft_glow(), Rect2(foot - Vector2(100.0, 34.0) * k, Vector2(200.0, 60.0) * k), false, Color(tint.r, tint.g, tint.b, glow))
+		var scale := HERO_FIGURE_CANVAS_RADII * radius / maxf(1.0, texture.get_size().y)
+		var bob := sin(msec / 900.0 + (1.7 if side == "enemy" else 0.0)) * 0.006 if motion else 0.0
+		var anchor := BattleHeroFigureScript.foot_anchor(texture)
+		draw_set_transform(foot - Vector2(0.0, cast * 7.0 * k), 0.0, Vector2(_hero_facing(side) * scale, scale * (1.0 + bob)))
+		draw_texture(texture, -anchor)
+		if cast > 0.0 or hovered:
+			draw_texture(texture, -anchor, Color(1.6, 1.5, 1.3, 0.35 * cast if cast > 0.0 else 0.1))
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+## A hero's place on the board, for the screen's plates: its feet, its
+## clickable box and whether it is drawn.
+func hero_figure_layout(side: String) -> Dictionary:
+	if _battle.is_empty():
+		return {}
+	var layout := _current_hex_layout()
+	var radius := float(layout.get("radius", 1.0))
+	var foot := _hero_foot(side, layout)
+	return {
+		"side": side,
+		"has_figure": _hero_has_figure(side),
+		"figure_path": String(_hero_presentation_for(side).get("figure_path", "")),
+		"foot": foot,
+		"hit_rect": _hero_hit_rect(foot, radius),
+		"hex_radius": radius,
+		"grid_rect": Rect2(layout.get("rect", Rect2())),
+		"facing": _hero_facing(side),
+	}
+
+## The figures are painted facing right; the enemy's hero is mirrored to face
+## the field from the right.
+func _hero_facing(side: String) -> float:
+	return -1.0 if side == "enemy" else 1.0
+
+## The player's hero glows while it can cast this turn.
+func set_hero_cast_ready(ready: bool) -> void:
+	if ready != _hero_cast_ready:
+		_hero_cast_ready = ready
+		queue_redraw()
+
+func hero_presentation(side: String) -> Dictionary:
+	return _hero_presentation_for(side).duplicate(true)
+
+func _hero_status_line(hero: Dictionary) -> String:
+	if bool(hero.get("cast_this_round", false)):
+		return "Spell cast this round"
+	if int(hero.get("battle_spell_count", 0)) <= 0:
+		return "Knows no battle spells"
+	return "Can cast one spell this round"
+
+func _hero_tooltip(side: String) -> String:
+	var hero := _hero_presentation_for(side)
+	if hero.is_empty():
+		return ""
+	var lines := PackedStringArray([String(hero.get("name", "Commander"))])
+	var role := String(hero.get("role", "")).strip_edges()
+	if role != "":
+		lines.append(role)
+	lines.append("Mana %d/%d" % [int(hero.get("mana_current", 0)), int(hero.get("mana_max", 0))])
+	lines.append(_hero_status_line(hero))
+	if side == "player":
+		lines.append("Click: spellbook. One spell per round; the stack keeps its turn.")
+	return "\n".join(lines)
+
+# --- Turn ribbon ---------------------------------------------------------------
+
+func _ribbon_rect() -> Rect2:
+	return Rect2(_turn_ribbon_layout().get("rect", Rect2()))
+
+## The living stacks of one phase of the turn-order forecast.
+func _forecast_stacks(phase: String) -> Array:
+	var stacks: Array = []
+	var ids: Variant = _turn_forecast.get(phase, [])
+	if ids is Array:
+		for battle_id in ids:
+			var stack := _stack_by_id(String(battle_id))
+			if not stack.is_empty() and _stack_alive_count(stack) > 0:
+				stacks.append(stack)
+	return stacks
+
+## The ribbon along the top edge: the round, the active stack's large chip,
+## the rest of this round, the waiting stacks after an hourglass, then the
+## next round's predicted order. What does not fit is left off, and the
+## ribbon fades out on the right.
+func _turn_ribbon_layout() -> Dictionary:
+	if _battle.is_empty() or _field_final:
+		return {}
+	var cache_key := str(size)
+	if _ribbon_cache_key == cache_key:
+		return _ribbon_cache
+	var k := ui_scale()
+	var round_number := maxi(1, int(_turn_forecast.get("round", _battle.get("round", 1))))
+	var items: Array = [{"kind": "round", "width": 46.0 * k, "value": round_number}]
+	var active_id := ""
+	if not _active_stack.is_empty() and _stack_alive_count(_active_stack) > 0:
+		active_id = String(_active_stack.get("battle_id", ""))
+		items.append({"kind": "chip", "phase": "active", "stack": _active_stack, "width": RIBBON_ACTIVE_CHIP * k, "margin": 6.0 * k})
+	for stack in _forecast_stacks("current"):
+		if String(stack.get("battle_id", "")) != active_id:
+			items.append({"kind": "chip", "phase": "current", "stack": stack, "width": RIBBON_CHIP * k})
+	var waiting: Array = []
+	for stack in _forecast_stacks("waiting"):
+		if String(stack.get("battle_id", "")) != active_id:
+			waiting.append(stack)
+	if not waiting.is_empty():
+		items.append({"kind": "wait_mark", "width": 29.0 * k, "height": 44.0 * k})
+		for stack in waiting:
+			items.append({"kind": "chip", "phase": "waiting", "stack": stack, "width": RIBBON_CHIP * k})
+	if active_id != "":
+		items.append({"kind": "round_mark", "width": 58.0 * k, "height": 50.0 * k, "value": round_number + 1})
+		for stack in _forecast_stacks("next_round"):
+			items.append({"kind": "chip", "phase": "next_round", "stack": stack, "width": RIBBON_NEXT_CHIP * k})
+	var padding := RIBBON_PADDING_SIDE * k
+	var gap := RIBBON_GAP * k
+	var max_width := minf(RIBBON_MAX_WIDTH * k, size.x - 24.0 * k)
+	var content_width := 0.0
+	var fitted: Array = []
+	var overflow := false
+	for item in items:
+		var needed := float(item.get("width", 0.0)) + float(item.get("margin", 0.0)) + (gap if not fitted.is_empty() else 0.0)
+		if padding * 2.0 + content_width + needed > max_width:
+			overflow = true
+			break
+		content_width += needed
+		fitted.append(item)
+	var tallest := (RIBBON_ACTIVE_CHIP if active_id != "" else RIBBON_CHIP) * k
+	var rect := Rect2(
+		Vector2((size.x - content_width - padding * 2.0) * 0.5, 0.0),
+		Vector2(content_width + padding * 2.0, (RIBBON_PADDING_TOP + RIBBON_PADDING_BOTTOM) * k + tallest)
+	)
+	var center_y := RIBBON_PADDING_TOP * k + tallest * 0.5
+	var x := rect.position.x + padding
+	var entries: Array = []
+	var slot := 0
+	var previous_phase := ""
+	for item in fitted:
+		if not entries.is_empty():
+			x += gap
+		var entry: Dictionary = item.duplicate()
+		var item_width := float(item.get("width", 0.0))
+		var chip := String(item.get("kind", "")) == "chip"
+		var item_height := item_width if chip else float(item.get("height", tallest))
+		entry["rect"] = Rect2(Vector2(x, center_y - item_height * 0.5), Vector2(item_width, item_height))
+		if chip:
+			slot += 1
+			entry["slot"] = slot
+			var phase := String(item.get("phase", ""))
+			entry["first_of_phase"] = phase != previous_phase
+			previous_phase = phase
+		entries.append(entry)
+		x += item_width + float(item.get("margin", 0.0))
+	_ribbon_cache = {"rect": rect, "entries": entries, "overflow": overflow, "scale": k}
+	_ribbon_cache_key = cache_key
+	return _ribbon_cache
+
+func _turn_ribbon_chips() -> Array:
+	var chips: Array = []
+	for entry in _turn_ribbon_layout().get("entries", []):
+		if String(entry.get("kind", "")) == "chip":
+			chips.append(entry)
+	return chips
+
+func _draw_turn_ribbon() -> void:
+	var layout := _turn_ribbon_layout()
+	if layout.is_empty():
+		return
+	var k := float(layout.get("scale", ui_scale()))
+	var rect: Rect2 = layout.get("rect", Rect2())
+	if _ribbon_style == null:
+		_ribbon_style = StyleBoxFlat.new()
+		_ribbon_style.anti_aliasing = true
+		_ribbon_style.bg_color = RIBBON_FILL
+		_ribbon_style.border_color = UI_GOLD_DIM
+		_ribbon_style.shadow_color = Color(0.0, 0.0, 0.0, 0.35)
+		_ribbon_style.border_width_top = 0
+	var line := maxi(1, int(round(k)))
+	_ribbon_style.border_width_left = line
+	_ribbon_style.border_width_right = line
+	_ribbon_style.border_width_bottom = line
+	_ribbon_style.corner_radius_bottom_left = int(round(16.0 * k))
+	_ribbon_style.corner_radius_bottom_right = int(round(16.0 * k))
+	_ribbon_style.shadow_size = int(round(9.0 * k))
+	_ribbon_style.shadow_offset = Vector2(0.0, 6.0 * k)
+	draw_style_box(_ribbon_style, rect)
+	var overflow := bool(layout.get("overflow", false))
+	var fade_width := maxf(1.0, rect.size.x * 0.07)
+	var highlight_id := _hover_ribbon_battle_id if _hover_ribbon_battle_id != "" else _hover_stack_id
+	for entry in layout.get("entries", []):
+		var entry_rect: Rect2 = entry.get("rect", Rect2())
+		var alpha := 1.0
+		if overflow:
+			alpha = clampf((rect.end.x - entry_rect.get_center().x) / fade_width, 0.0, 1.0)
+		if alpha <= 0.02:
+			continue
+		match String(entry.get("kind", "")):
+			"round", "round_mark":
+				_draw_ribbon_round_mark(entry, k, alpha)
+			"wait_mark":
+				_draw_ribbon_wait_mark(entry, k, alpha)
+			"chip":
+				var stack: Dictionary = entry.get("stack", {})
+				_draw_ribbon_chip(entry, k, alpha, highlight_id != "" and String(stack.get("battle_id", "")) == highlight_id)
+
+func _draw_ribbon_round_mark(entry: Dictionary, k: float, alpha: float) -> void:
+	var rect: Rect2 = entry.get("rect", Rect2())
+	var separator := String(entry.get("kind", "")) == "round_mark"
+	if separator:
+		var faint := Color(UI_GOLD_FAINT, UI_GOLD_FAINT.a * alpha)
+		draw_line(rect.position, Vector2(rect.position.x, rect.end.y), faint, maxf(1.0, k))
+		draw_line(Vector2(rect.end.x, rect.position.y), rect.end, faint, maxf(1.0, k))
+	var center := rect.get_center()
+	_draw_centered_label("ROUND", center - Vector2(0.0, 9.0 * k), Color(UI_MUTED if separator else UI_GOLD, alpha), int(round(10.0 * k)))
+	_draw_centered_label(str(int(entry.get("value", 1))), center + Vector2(0.0, 8.0 * k), Color(Color(0.863, 0.784, 0.604) if separator else UI_GOLD_HI, alpha), int(round(21.0 * k)))
+
+func _draw_ribbon_wait_mark(entry: Dictionary, k: float, alpha: float) -> void:
+	var rect: Rect2 = entry.get("rect", Rect2())
+	draw_dashed_line(rect.position, Vector2(rect.position.x, rect.end.y), Color(UI_GOLD_DIM, UI_GOLD_DIM.a * alpha), maxf(1.0, k), 3.0 * k)
+	_draw_hourglass_glyph(Vector2(rect.position.x + 17.5 * k, rect.get_center().y), 17.0 * k, Color(0.914, 0.843, 0.678, alpha))
+
+## One stack on the ribbon: its unit in a ring of its side's colour (gold for
+## the active stack), its count below, a bow or sword badge, and an hourglass
+## badge while it waits. The next round's chips are smaller and dimmer.
+func _draw_ribbon_chip(entry: Dictionary, k: float, alpha: float, highlighted: bool) -> void:
+	var rect: Rect2 = entry.get("rect", Rect2())
+	var stack: Dictionary = entry.get("stack", {}) if entry.get("stack", {}) is Dictionary else {}
+	var phase := String(entry.get("phase", "current"))
+	var active := phase == "active"
+	var next_round := phase == "next_round"
+	if next_round:
+		alpha *= 0.78
+	var center := rect.get_center()
+	var radius := rect.size.x * 0.5
+	var player := String(stack.get("side", "")) == "player"
+	var ring_width := (3.0 if active else 2.0) * k
+	draw_texture_rect(_soft_glow(), Rect2(center - Vector2(radius, radius) * 1.25 + Vector2(0.0, 2.0 * k), Vector2(radius, radius) * 2.5), false, Color(0.0, 0.0, 0.0, 0.5 * alpha))
+	if active:
+		draw_texture_rect(_soft_glow(), Rect2(center - Vector2(radius, radius) * 1.5, Vector2(radius, radius) * 3.0), false, Color(UI_ACTIVE, 0.45 * alpha))
+	draw_circle(center, radius, Color(0.086, 0.071, 0.047, alpha))
+	var texture := _unit_battle_icon_for_stack(stack)
+	if texture != null:
+		_draw_circle_texture(texture, center, radius - ring_width * 0.5, Color(1.0, 1.0, 1.0, alpha))
+	else:
+		_draw_role_glyph(center, radius, bool(stack.get("ranged", false)), Color(UI_CREAM, alpha))
+	var ring := UI_ACTIVE if active else (UI_PLAYER if player else UI_ENEMY)
+	draw_arc(center, radius - ring_width * 0.5, 0.0, TAU, 48, Color(ring, alpha), ring_width, true)
+	if highlighted:
+		draw_arc(center, radius + 1.5 * k, 0.0, TAU, 48, Color(1.0, 1.0, 1.0, 0.95 * alpha), 3.0 * k, true)
+	var font := get_theme_default_font()
+	if font != null:
+		var font_size := int(round((13.0 if active else (11.0 if next_round else 12.0)) * k))
+		var count_text := str(_stack_alive_count(stack))
+		var text_width := font.get_string_size(count_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x
+		var pill_height := float(font_size) * 1.15 + 4.0 * k
+		var pill_width := maxf((18.0 if next_round else 22.0) * k, text_width + (10.0 if next_round else 12.0) * k)
+		var pill_bottom := rect.end.y + (6.0 if next_round else 7.0) * k
+		var pill := Rect2(Vector2(center.x - pill_width * 0.5, pill_bottom - pill_height), Vector2(pill_width, pill_height))
+		_draw_rounded_box(pill, Color(UI_PLAYER_DEEP if player else UI_ENEMY_DEEP, alpha), Color(UI_PLAYER if player else UI_ENEMY, alpha), 8.0 * k, maxf(1.0, k))
+		_draw_centered_label(count_text, pill.get_center(), Color(1.0, 1.0, 1.0, alpha), font_size)
+	var badge := (16.0 if next_round else 19.0) * k
+	var badge_center := Vector2(rect.end.x + (5.0 if next_round else 4.0) * k - badge * 0.5, rect.position.y - (4.0 if next_round else 3.0) * k + badge * 0.5)
+	_draw_ribbon_badge(badge_center, badge, k, alpha)
+	_draw_role_glyph(badge_center, (10.0 if next_round else 12.0) * k, bool(stack.get("ranged", false)), Color(0.965, 0.886, 0.706, alpha))
+	if not next_round and BattleRulesScript.stack_has_waited(_battle, String(stack.get("battle_id", ""))):
+		var wait_center := Vector2(rect.position.x - 4.0 * k + badge * 0.5, rect.position.y - 3.0 * k + badge * 0.5)
+		_draw_ribbon_badge(wait_center, badge, k, alpha)
+		_draw_hourglass_glyph(wait_center, 12.0 * k, Color(0.965, 0.886, 0.706, alpha))
+
+func _draw_ribbon_badge(center: Vector2, extent: float, k: float, alpha: float) -> void:
+	draw_circle(center, extent * 0.5, Color(0.086, 0.071, 0.047, alpha))
+	draw_arc(center, extent * 0.5, 0.0, TAU, 24, Color(UI_GOLD_DIM, UI_GOLD_DIM.a * alpha), maxf(1.0, k), true)
+
+## A texture cut to a circle.
+func _draw_circle_texture(texture: Texture2D, center: Vector2, radius: float, modulate: Color) -> void:
+	var points := PackedVector2Array()
+	var uvs := PackedVector2Array()
+	for index in range(36):
+		var direction := Vector2.from_angle(TAU * float(index) / 36.0)
+		points.append(center + direction * radius)
+		uvs.append(Vector2(0.5, 0.5) + direction * 0.5)
+	draw_colored_polygon(points, modulate, uvs, texture)
+
+# --- Glyphs and boxes -------------------------------------------------------
+
+## A sword for melee stacks, a bow with an arrow for ranged ones.
+func _draw_role_glyph(center: Vector2, extent: float, ranged: bool, color: Color) -> void:
+	var width := maxf(1.0, extent * 0.12)
+	if ranged:
+		var bow_center := center + Vector2(0.18, 0.0) * extent
+		draw_arc(bow_center, 0.52 * extent, PI * 2.0 / 3.0, PI * 4.0 / 3.0, 12, color, width, true)
+		var top := bow_center + Vector2.from_angle(PI * 2.0 / 3.0) * 0.52 * extent
+		var bottom := bow_center + Vector2.from_angle(PI * 4.0 / 3.0) * 0.52 * extent
+		draw_line(top, bottom, color, maxf(1.0, width * 0.6), true)
+		var tip := center + Vector2(0.5, 0.0) * extent
+		draw_line(center - Vector2(0.5, 0.0) * extent, tip, color, width, true)
+		draw_line(tip, tip + Vector2(-0.2, -0.15) * extent, color, width, true)
+		draw_line(tip, tip + Vector2(-0.2, 0.15) * extent, color, width, true)
+		return
+	var along := Vector2(1.0, -1.0).normalized()
+	var across := Vector2(1.0, 1.0).normalized()
+	var guard := center - along * 0.2 * extent
+	draw_line(guard, center + along * 0.48 * extent, color, width * 1.25, true)
+	draw_line(guard - across * 0.24 * extent, guard + across * 0.24 * extent, color, width, true)
+	draw_line(guard, center - along * 0.42 * extent, color, width, true)
+	draw_circle(center - along * 0.46 * extent, width * 0.75, color)
+
+func _draw_hourglass_glyph(center: Vector2, extent: float, color: Color) -> void:
+	var width := maxf(1.0, extent * 0.1)
+	var half := extent * 0.42
+	var top := center.y - half
+	var bottom := center.y + half
+	draw_line(Vector2(center.x - extent * 0.32, top), Vector2(center.x + extent * 0.32, top), color, width, true)
+	draw_line(Vector2(center.x - extent * 0.32, bottom), Vector2(center.x + extent * 0.32, bottom), color, width, true)
+	draw_polyline(PackedVector2Array([
+		Vector2(center.x - extent * 0.26, top),
+		center,
+		Vector2(center.x - extent * 0.26, bottom),
+	]), color, width, true)
+	draw_polyline(PackedVector2Array([
+		Vector2(center.x + extent * 0.26, top),
+		center,
+		Vector2(center.x + extent * 0.26, bottom),
+	]), color, width, true)
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(center.x - extent * 0.17, bottom - extent * 0.06),
+		Vector2(center.x + extent * 0.17, bottom - extent * 0.06),
+		Vector2(center.x, center.y + extent * 0.14),
+	]), color)
+
+func _draw_rounded_box(rect: Rect2, fill: Color, border: Color, radius: float, border_width: float) -> void:
+	if _box_style == null:
+		_box_style = StyleBoxFlat.new()
+		_box_style.anti_aliasing = true
+	_box_style.bg_color = fill
+	_box_style.draw_center = fill.a > 0.0
+	_box_style.border_color = border
+	_box_style.set_border_width_all(maxi(0, int(round(border_width))))
+	_box_style.set_corner_radius_all(maxi(0, int(round(radius))))
+	draw_style_box(_box_style, rect)
+
+## Text centred on a point, both ways.
+func _draw_centered_label(text: String, center: Vector2, color: Color, font_size: int) -> void:
+	var font := get_theme_default_font()
+	if font == null or text == "":
+		return
+	var width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x
+	var baseline := center.y + (font.get_ascent(font_size) - font.get_descent(font_size)) * 0.5
+	draw_string(font, Vector2(center.x - width * 0.5, baseline), text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, color)
+
+# --- Forecast beside the pointer --------------------------------------------
+
+## Where the forecast hangs: beside the pointer, or beside the keyboard
+## cursor's hex while keys steer the board. (-1, -1) for nowhere.
+func _forecast_anchor() -> Vector2:
+	if _keyboard_cursor_shown() and _cell_in_bounds(_controller_cursor_cell):
+		return _hex_center(_controller_cursor_cell, _current_hex_layout())
+	return _pointer_position
+
+## What the forecast says: a hovered chip's or hero's summary, a stack's
+## identity when no order applies to it, else the order preview (the attack,
+## spell or move outcome), else why the hex is blocked.
+func _hover_forecast_lines() -> PackedStringArray:
+	var lines := PackedStringArray()
+	if _battle.is_empty() or _battle.has("playback_event"):
+		return lines
+	var focused := _keyboard_cursor_shown() and _cell_in_bounds(_controller_cursor_cell)
+	if not focused and _pointer_position.x < 0.0:
+		return lines
+	if not focused and _hover_ribbon_battle_id != "":
+		var chip_stack := _stack_by_id(_hover_ribbon_battle_id)
+		if not chip_stack.is_empty():
+			lines.append("%s ×%d" % [_stack_full_name(chip_stack), _stack_alive_count(chip_stack)])
+			lines.append(_ribbon_phase_text(_hover_ribbon_battle_id))
+		return lines
+	if not focused and _hover_hero_side != "":
+		var hero := _hero_presentation_for(_hover_hero_side)
+		lines.append(String(hero.get("name", "Commander")))
+		if _hover_hero_side == "player":
+			lines.append("Already cast a spell this round" if bool(hero.get("cast_this_round", false)) else "Click: spellbook · one spell per round, the stack keeps its turn")
+		else:
+			lines.append("Mana %d/%d · %s" % [int(hero.get("mana_current", 0)), int(hero.get("mana_max", 0)), _hero_status_line(hero)])
+		return lines
+	var cell := _controller_cursor_cell if focused else _hex_cell_at_position(_pointer_position)
+	var stack_id := _stack_id_at_cell(cell) if focused else _hover_stack_id
+	var player_turn := String(_active_stack.get("side", "")) == "player"
+	if stack_id != "" and not _spell_target_mode:
+		var stack := _stack_by_id(stack_id)
+		if String(stack.get("side", "")) == "player" or not player_turn:
+			lines.append("%s ×%d" % [_stack_full_name(stack), _stack_alive_count(stack)])
+			lines.append("%s · %s" % ["Your stack" if String(stack.get("side", "")) == "player" else "Enemy stack", "Ranged" if bool(stack.get("ranged", false)) else "Melee"])
+			return lines
+	var message := String(_consequence_preview.get("message", "")).strip_edges()
+	if message != "" and (stack_id != "" or bool(_consequence_preview.get("ok", false))):
+		for message_line in message.split("\n", false):
+			for part in String(message_line).split(" | ", false):
+				if lines.size() < 4 and String(part).strip_edges() != "":
+					lines.append(String(part).strip_edges())
+		return lines
+	if player_turn and not _spell_target_mode and _cell_in_bounds(cell) and stack_id == "" and not _is_legal_destination_cell(cell):
+		var intent: Dictionary = _board_query("move_intent:%d,%d" % [cell.x, cell.y], func(): return BattleRulesScript.movement_intent_for_destination(_battle, cell.x, cell.y))
+		var reason := String(intent.get("message", "")).strip_edges()
+		if bool(intent.get("blocked", false)) and reason != "":
+			lines.append(reason)
+	return lines
+
+func _ribbon_phase_text(battle_id: String) -> String:
+	if battle_id == String(_battle.get("active_stack_id", "")):
+		return "Acting now"
+	for phase in ["current", "waiting", "next_round"]:
+		var ids: Variant = _turn_forecast.get(phase, [])
+		if ids is Array and (ids as Array).has(battle_id):
+			match phase:
+				"current":
+					return "Acts later this round"
+				"waiting":
+					return "Waiting: acts at the end of the round, slowest first"
+				_:
+					return "Next round (predicted)"
+	return ""
+
+func _draw_hover_forecast() -> void:
+	var lines := _hover_forecast_lines()
+	if lines.is_empty():
+		return
+	var font := get_theme_default_font()
+	if font == null:
+		return
+	var anchor := _forecast_anchor()
+	if anchor.x < 0.0:
+		return
+	var k := ui_scale()
+	var sizes: Array = []
+	var width := 0.0
+	var height := 0.0
+	for index in range(lines.size()):
+		var font_size := int(round((16.0 if index == 0 else (13.0 if index == 1 else 12.0)) * k))
+		sizes.append(font_size)
+		width = maxf(width, font.get_string_size(lines[index], HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x)
+		height += float(font_size) * 1.25 + (3.0 * k if index > 0 else 0.0)
+	var box_size := Vector2(width + 21.0 * k, height + 15.0 * k)
+	var position := anchor + Vector2(22.0, 24.0) * k
+	if position.x + box_size.x > size.x - 12.0 * k:
+		position.x = anchor.x - box_size.x - 22.0 * k
+	var bottom_limit := size.y - 92.0 * k
+	if position.y + box_size.y > bottom_limit:
+		position.y = anchor.y - box_size.y - 18.0 * k
+	var top_limit := _ribbon_rect().end.y + 6.0 * k
+	position.x = clampf(position.x, 12.0 * k, maxf(12.0 * k, size.x - box_size.x - 12.0 * k))
+	position.y = clampf(position.y, top_limit, maxf(top_limit, bottom_limit - box_size.y))
+	var box := Rect2(position, box_size)
+	if _forecast_style == null:
+		_forecast_style = StyleBoxFlat.new()
+		_forecast_style.anti_aliasing = true
+		_forecast_style.bg_color = UI_PANEL
+		_forecast_style.border_color = UI_GOLD_DIM
+		_forecast_style.shadow_color = Color(0.0, 0.0, 0.0, 0.5)
+	_forecast_style.set_border_width_all(maxi(1, int(round(k))))
+	_forecast_style.set_corner_radius_all(int(round(9.0 * k)))
+	_forecast_style.shadow_size = int(round(8.0 * k))
+	_forecast_style.shadow_offset = Vector2(0.0, 6.0 * k)
+	draw_style_box(_forecast_style, box)
+	var y := position.y + 7.0 * k
+	for index in range(lines.size()):
+		var font_size: int = sizes[index]
+		if index > 0:
+			y += 3.0 * k
+		var color := Color(1.0, 0.902, 0.651) if index == 0 else (UI_CREAM if index == 1 else UI_MUTED)
+		draw_string(font, Vector2(position.x + 10.0 * k, y + font.get_ascent(font_size)), lines[index], HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, color)
+		y += float(font_size) * 1.25

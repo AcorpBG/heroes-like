@@ -4329,7 +4329,13 @@ func _wait_for_scene(scene_path: String, timeout_ms: int):
 		if current != null and String(current.scene_file_path) == scene_path:
 			_prepare_profile_session_identity(scene_path)
 			return current
-		if current != null and String(current.scene_file_path) == BATTLE_REPORT_SCENE and scene_path in [OVERWORLD_SCENE, SCENARIO_OUTCOME_SCENE]:
+		# The battle's result shows over the field (BattleShell) after a battle,
+		# and on its own screen (BattleReportShell) when a save is loaded with it.
+		var result_pending: bool = (
+			current != null and String(current.scene_file_path) == BATTLE_SCENE
+			and current.has_method("validation_result_pending") and bool(current.call("validation_result_pending"))
+		)
+		if current != null and (String(current.scene_file_path) == BATTLE_REPORT_SCENE or result_pending) and scene_path in [OVERWORLD_SCENE, SCENARIO_OUTCOME_SCENE]:
 			var instance_id := current.get_instance_id()
 			if not acknowledged_reports.has(instance_id):
 				acknowledged_reports[instance_id] = true

@@ -113,7 +113,9 @@ func run() -> void:
 				await settle()
 				combat.validation_confirm_quick_resolve_confirmation()
 				await settle()
-				checks["battle_report_routes"] = get_tree().current_scene.scene_file_path.ends_with("BattleReportShell.tscn")
+				# The result shows over the field and waits for Continue.
+				var after_battle = get_tree().current_scene
+				checks["battle_report_routes"] = after_battle.scene_file_path.ends_with("BattleShell.tscn") and after_battle.validation_result_pending()
 				if checks.battle_report_routes:
 					get_tree().current_scene.get_node("%Continue").pressed.emit()
 					await settle()

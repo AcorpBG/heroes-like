@@ -682,7 +682,8 @@ func resolve_late_court_guard() -> void:
 	await settle_late_court_field()
 	for attempt in range(4):
 		var scene=get_tree().current_scene
-		if scene.scene_file_path.ends_with("BattleShell.tscn"):
+		var result_pending: bool=scene.scene_file_path.ends_with("BattleShell.tscn") and scene.validation_result_pending()
+		if scene.scene_file_path.ends_with("BattleShell.tscn") and not result_pending:
 			await RenderingServer.frame_post_draw
 			get_viewport().get_texture().get_image().save_png(out.path_join("supply_guard_battle.png"))
 			var request: Dictionary=scene.validation_request_quick_resolve_confirmation()
@@ -692,7 +693,7 @@ func resolve_late_court_guard() -> void:
 			check(result.get("performed",false),"normal supply guard Quick Resolve failed")
 			rows.append({"label":"ordinary_late_court_supply_battle","request_ok":request.get("ok",false),"performed":result.get("performed",false),"terminal_result":result.get("terminal_result",{})})
 			await settle_late_court_field()
-		elif scene.scene_file_path.ends_with("BattleReportShell.tscn"):
+		elif result_pending or scene.scene_file_path.ends_with("BattleReportShell.tscn"):
 			await RenderingServer.frame_post_draw
 			get_viewport().get_texture().get_image().save_png(out.path_join("supply_guard_casualties.png"))
 			scene.get_node("%Continue").pressed.emit()
