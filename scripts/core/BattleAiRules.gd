@@ -429,7 +429,8 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 	var best := best_attack if force_engaged_attack and not best_attack.is_empty() else {"action": "defend", "score": defend_score}
 	if not force_engaged_attack and not best_attack.is_empty() and _candidate_beats(best_attack, best):
 		best = best_attack
-	if (distance > 0 or best_attack.is_empty()) and not lethal_attack_available:
+	var rooted := SpellRulesScript.has_effect_id(active_stack, scoring_battle, STATUS_ROOTED)
+	if (distance > 0 or best_attack.is_empty()) and not lethal_attack_available and not rooted:
 		var advance_candidate := {"action": "advance", "score": advance_score}
 		if _candidate_beats(advance_candidate, best):
 			best = advance_candidate
@@ -1275,6 +1276,7 @@ static func _damage_spell_score(
 			var success_chance := float(max(0, 100 - SpellRulesScript.control_resistance_pct(battle, target, spell))) / 100.0
 			score += 2.0 * success_chance
 			score += _allied_status_synergy_score(battle, String(active_stack.get("side", "")), status_id) * success_chance
+			score += _status_tactical_value(status_id, target) * success_chance
 		if status_id == STATUS_HARRIED and _health_ratio(target) <= 0.75:
 			score += 1.0
 	var status_modifiers = status_effect.get("modifiers", {})
@@ -1374,6 +1376,7 @@ static func _control_spell_score(battle: Dictionary, active_stack: Dictionary, t
 	if status_id != "" and not SpellRulesScript.has_effect_id(target, battle, status_id):
 		score += 3.0 * success_chance
 		score += _allied_status_synergy_score(battle, String(active_stack.get("side", "")), status_id) * success_chance
+		score += _status_tactical_value(status_id, target) * success_chance
 	elif status_id != "":
 		score -= 4.0
 	if already_controlled:
@@ -1389,6 +1392,17 @@ static func _control_spell_score(battle: Dictionary, active_stack: Dictionary, t
 	score += _objective_action_score(battle, String(active_stack.get("side", "")), "cast_spell", active_stack, target)
 	score -= float(int(spell.get("mana_cost", 0))) * 0.2
 	return score * max(0.15, success_chance)
+
+## What a status's own rule is worth on `target`: Rooted pins a stack that
+## must walk to fight, Staggered silences a stack that would strike back.
+static func _status_tactical_value(status_id: String, target: Dictionary) -> float:
+	var melee := not bool(target.get("ranged", false))
+	match status_id:
+		STATUS_ROOTED:
+			return 2.0 if melee else 0.5
+		STATUS_STAGGERED:
+			return 1.5 if melee and int(target.get("retaliations_left", 0)) > 0 else 0.5
+	return 0.0
 
 static func _target_immediate_threat_score(defended_stack: Dictionary, target: Dictionary, battle: Dictionary) -> float:
 	if defended_stack.is_empty() or target.is_empty():
@@ -1584,6 +1598,10 @@ static func _buff_spell_score(
 			score += 1.5
 		if String(target_stack.get("faction_id", "")) == "faction_sunvault" and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
 			score += 1.0
+	# Haste's speed matters to a melee stack that still has to close in.
+	var speed_bonus := int(modifiers.get("speed", 0))
+	if speed_bonus > 0 and not bool(target_stack.get("ranged", false)) and not _can_make_melee_attack(target_stack, battle):
+		score += 1.5 + float(speed_bonus) * 1.0
 	var attack_bonus := int(modifiers.get("attack", 0))
 	if attack_bonus > 0:
 		score += float(attack_bonus) * 1.35
@@ -2432,6 +2450,8 @@ static func _distance_band_from_hex_distance(hex_distance: int) -> int:
 	return 2
 
 static func _can_make_retaliation(stack: Dictionary, attack_distance: int, battle: Dictionary) -> bool:
+	if SpellRulesScript.has_effect_id(stack, battle, STATUS_STAGGERED):
+		return false
 	if attack_distance <= 0:
 		return true
 	return attack_distance == 1 and _reach_available(stack, battle)

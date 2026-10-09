@@ -70,6 +70,21 @@ Rules:
 
 `ai-garrison-room-20261009` (completed, owner question after a four-player AI stalemate): a full computer garrison dismisses its weakest stack when what it would buy is stronger, so town growth turns into armies instead of gold hoards. See `docs/ai-plays-by-player-rules.md`.
 
+### H3MapEd parity basis: Windows vs Wine
+
+`rmg-h3maped-parity-basis-windows-wine-20261009` (completed, recovery evidence only; no native change): driven by window messages (`tools/rmg_h3maped_win32_trace/h3trace.c`), Windows H3MapEd matches the Wine references, and native for map 8, for all eight seeds tried. So there is no platform split. Only the earlier desktop-controlled Windows runs differ, from the first `0x4aab7e` reward pick on; the cause is recovered below. Seeds 137 and 211 are native defects with private-state proof. See `docs/h3maped-parity-basis-windows-wine.md`.
+
+- `native-rmg-owner-success-and-entry-occupant-20261009` (completed, native fix):
+  - The `0x4a8db2` replay no longer copies the shared type-98 pair success into `owner.byte_0x3c`. H3MapEd writes `+0x3c` only at `0x4a95a4`.
+  - Both `0x49aa93` ports test the entry-cell occupant's `0x598300` flag 2, as H3MapEd does at `0x49ab87..0x49abac`.
+  - Validation: 60 of 72 references exact (was 57: Small 137 and 211, Medium compare 17 fixed, no other reference changed). The selftest passes on Windows and Linux, and the 72 payloads are byte-identical across platforms. The three native Godot smokes pass on Windows; Linux Godot smokes were not run. All `bin/` native binaries are rebuilt.
+- `rmg-h3maped-desktop-input-divergence-20261009` (completed, recovery evidence only; no native change):
+  - Cause: generator field `+0xf5c` is never initialized. The generator object is a stack local and setup writes `+0xf58` only, so `+0xf5c` holds leftover stack bytes that depend on how File > New was opened.
+  - Ctrl+N leaves 0. The File menu, the toolbar button, posted commands and Wine leave values outside 0..7.
+  - The Keymaster's Tent value at `0x49cd9b` requires `+0xf5c` to equal the tent's colour, so with 0 the colour-0 tents enter the reward candidate sets.
+  - Proof: forcing `+0xf5c` = 0 at generator entry reproduces all six desktop maps. The File-menu and toolbar runs match Wine.
+  - Owner decision: keep the current behaviour (no Keymaster's Tents; native as is), or model Ctrl+N. Modelling it needs the unported tent projection branch `0x540b00`/`0x49c019`/`0x4adb72`/`0x4adef7` and its writeout. With `+0xf5c` = 0 alone, native reproduces five of the six desktop maps and stops on seed 2, where a tent is placed.
+
 ### Raid director removal
 
 `ai-raid-director-removal-20261007` (completed, follow-up of `ai-plays-by-player-rules-20261007`): the raid director nothing live called is removed from `EnemyAdventureRules`/`EnemyTurnRules` with its unit-level tests; the save migration, the AI site seizure and the multi-level path surfaces the RMG validation tools use stay. The headless harness raid cases (town and site defense, regroup, pressure coverage, objective targeting) are rewritten for heroes, and a computer player's own hero in a town's doorway no longer blocks hiring there. Open owner decision: the now inert Border Warden pillage resistance and `DifficultyRules` enemy pressure and raid knobs. See `docs/ai-plays-by-player-rules.md`.
@@ -118,9 +133,17 @@ Rules:
 
 `ux-hero-level-up-roll-display-20261008` (completed, owner request): the level-up popup shows what the hero rolled above the specialty choices: a "Rolled +1 Spell power" headline, the four command stats with their new values (rolled ones lit gold with their gain, a short pulse unless reduced motion is on), the path's odds and, for several levels at once, each level's roll. See `docs/hero-level-up-popup.md`.
 
+### Battle spell effects
+
+`battle-spell-effect-identity-20261009` (completed, owner review): each battle spell family has one job (attack buffs: attack and momentum; defense buffs: defense and cohesion; haste: initiative and speed) and the three statuses have real rules and one name each: Harried drains cohesion, Staggered cannot strike back, Rooted cannot move. Spell effects last the affected stack's own next turns instead of rounds, the casting turn does not count, and initiative changes reorder the rest of the round. Previews say what an effect does and for how long. See `docs/battle-spell-effects.md`.
+
 ### Gain floaters
 
 `ux-overworld-gain-floaters-20261009` (completed, owner request): whatever an action on the map gives the player floats up above the hero, one line each, and slowly fades out: sites claimed, artifacts, spells, resources, troops, stats, experience, mana, movement, battle boosts, and costs in muted red. The shell compares a snapshot from before each move, context action, reward choice, hire, recruit or map spell with the state after, so every source counts; lines wait for the hero's walk to finish. See `docs/overworld-gain-floaters.md`.
+
+### Generated skirmish setup
+
+`ux-generated-skirmish-fronts-monster-strength-20261009` (completed, owner playtest fix): the Skirmish Fronts list shows the generated map packages in `maps/` again (the authored-catalog archive had stopped the list before adding them). The Map Forge has a monster strength picker (Weak, Normal, Strong; Normal by default) sent to the native generator as its `monster_strength` setup. Native random is not offered because it uses the same raw setup as weak. See `docs/rmg-exploration-and-guarded-routes.md`.
 
 ### Hero specialties
 

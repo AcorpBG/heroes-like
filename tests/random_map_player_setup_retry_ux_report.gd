@@ -81,7 +81,13 @@ func _run() -> void:
 	shell.call("validation_select_generated_player_count", 2)
 	shell.call("validation_select_generated_water_mode", "normal_water")
 	shell.call("validation_set_generated_underground", true)
+	if not bool(shell.call("validation_select_generated_monster_strength", "strong")):
+		_fail("Monster-strength control hook did not select strong monsters.")
+		return
 	var launch_snapshot: Dictionary = shell.call("validation_generated_random_map_snapshot")
+	if String(launch_snapshot.get("provenance_full", "")).find("Strong Monsters") < 0:
+		_fail("Generated setup did not show the selected monster strength: %s" % String(launch_snapshot.get("provenance_full", "")))
+		return
 	var launch_setup: Dictionary = launch_snapshot.get("setup", {}) if launch_snapshot.get("setup", {}) is Dictionary else {}
 	if String(launch_setup.get("template_id", "")) != AUTO_TEMPLATE_ID or String(launch_setup.get("profile_id", "")) != AUTO_TEMPLATE_ID:
 		_fail("Generated UI setup did not expose native catalog auto-selection provenance before launch: %s" % JSON.stringify(launch_setup))
@@ -93,6 +99,10 @@ func _run() -> void:
 		return
 	var scenario_id := String(launch_result.get("active_scenario_id", ""))
 	if not _assert_session_boundary(launch_result, "strict_small_36x36_two_level_normal_water", "normal_water", 2):
+		return
+	var launched_config: Dictionary = launch_result.get("active_provenance", {}).get("normalized_config", {})
+	if String(launched_config.get("monster_strength", "")) != "strong":
+		_fail("Generated UI launch dropped the selected monster strength: %s" % JSON.stringify(launched_config))
 		return
 	if not _assert_no_authored_writeback(scenario_id, "after generated UI launch"):
 		return
@@ -115,6 +125,7 @@ func _assert_hooks(shell: Node) -> bool:
 		"validation_select_generated_size_class",
 		"validation_select_generated_player_count",
 		"validation_select_generated_water_mode",
+		"validation_select_generated_monster_strength",
 		"validation_set_generated_underground",
 		"validation_force_generated_random_map_config",
 		"validation_start_generated_skirmish",
@@ -127,7 +138,7 @@ func _assert_hooks(shell: Node) -> bool:
 
 func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 	var controls: Dictionary = snapshot.get("controls", {}) if snapshot.get("controls", {}) is Dictionary else {}
-	for key in ["seed", "size_class_id", "size_class_label", "player_count", "water_mode", "underground", "level_count", "level_options", "retry_policy", "visible_player_controls", "internal_template_provenance"]:
+	for key in ["seed", "size_class_id", "size_class_label", "player_count", "water_mode", "monster_strength", "underground", "level_count", "level_options", "retry_policy", "visible_player_controls", "internal_template_provenance"]:
 		if not controls.has(key):
 			_fail("Generated setup controls missed %s: %s" % [key, JSON.stringify(controls)])
 			return false
@@ -164,7 +175,7 @@ func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 		_fail("Generated level option list missed the supported release levels: %s" % JSON.stringify(level_options))
 		return false
 	var visible_controls: Array = controls.get("visible_player_controls", []) if controls.get("visible_player_controls", []) is Array else []
-	for expected_control in ["seed", "size_class", "player_count", "water_mode", "level_count", "underground", "launch_generated"]:
+	for expected_control in ["seed", "size_class", "player_count", "water_mode", "level_count", "underground", "monster_strength", "launch_generated"]:
 		if expected_control not in visible_controls:
 			_fail("Generated visible player controls missed %s: %s" % [expected_control, JSON.stringify(visible_controls)])
 			return false
@@ -175,6 +186,10 @@ func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 	var water_options: Array = controls.get("water_options", []) if controls.get("water_options", []) is Array else []
 	if water_options != ["Land", "Normal Water", "Islands"]:
 		_fail("Generated water option list missed supported water modes: %s" % JSON.stringify(water_options))
+		return false
+	var monster_strength_options: Array = controls.get("monster_strength_options", []) if controls.get("monster_strength_options", []) is Array else []
+	if monster_strength_options != ["Weak Monsters", "Normal Monsters", "Strong Monsters"] or String(controls.get("monster_strength", "")) != "normal":
+		_fail("Generated monster strength control missed its options or normal default: %s" % JSON.stringify(controls))
 		return false
 	var size_options: Array = controls.get("size_options", []) if controls.get("size_options", []) is Array else []
 	if size_options != ["Small 36x36", "Medium 72x72", "Large 108x108", "Extra Large 144x144"]:
@@ -200,7 +215,7 @@ func _assert_player_setup_snapshot(snapshot: Dictionary) -> bool:
 		String(snapshot.get("provenance_full", "")),
 		String(snapshot.get("start_tooltip", "")),
 	])
-	for token in ["Ready to build", "checked before Day 1", "Seed", "Small 36x36", "3 players", "Land", "Surface only", "Builds this map", "no save is changed"]:
+	for token in ["Ready to build", "checked before Day 1", "Seed", "Small 36x36", "3 players", "Land", "Surface only", "Normal Monsters", "Builds this map", "no save is changed"]:
 		if combined_text.find(token) < 0:
 			_fail("Generated setup player-facing text missed token %s: %s" % [token, combined_text])
 			return false

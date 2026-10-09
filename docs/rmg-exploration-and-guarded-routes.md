@@ -80,6 +80,11 @@ balance limits below remain explicitly unfinished.
   normal raw setup `0`. Historical size profiles explicitly retain weak; saved
   sessions and explicit replay configs are not rewritten. This chooses an
   existing recovered setup mode, not a new multiplier or guard-placement rule.
+- Since 2026-10-09 the Map Forge lets the player choose Weak, Normal (the
+  default) or Strong; the choice is the native `monster_strength` setup
+  (raw `-1`, `0`, `1`). Random is not offered while it aliases weak `-1`.
+  Medium seed 10, two players, land: weak 41 guards / 1,461 creatures,
+  normal 65 / 2,487, strong 88 / 3,673.
 - Actual guarded-site collection/save checks exposed a pre-existing omission:
   resource normalization discarded `state_id` and `route_state_id` after a site
   opened. Both existing optional fields now survive normalization and restore;

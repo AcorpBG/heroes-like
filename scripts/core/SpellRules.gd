@@ -15,6 +15,18 @@ const MAX_SPELL_RESISTANCE_PCT := 75
 const MAX_CONTROL_RESISTANCE_PCT := 80
 const POWER_PER_EXTRA_ROUND := 4
 const MAX_POWER_EXTRA_ROUNDS := 3
+## Battle spell effects last for turns of the stack they are on, not rounds:
+## `turns_left` counts down when that stack's turn ends (BattleRules
+## spend_effect_turns), and the turn a spell is cast on the acting stack does
+## not count. Their round expiry is parked far ahead so round-based checks
+## keep treating them as active.
+const TURN_EFFECT_ROUND_SENTINEL := 1000000
+## What each battle status does besides its numbers (BattleRules).
+const STATUS_RULES := {
+	"status_harried": "loses 1 cohesion each round and each time it is hit; attackers gain momentum against it",
+	"status_staggered": "cannot strike back",
+	"status_rooted": "cannot move",
+}
 # The battle's persisted seeded stream (BattleRules owns the other RNG keys).
 const BATTLE_RNG_STATE_KEY := "damage_rng_state"
 # Resolution field: stream state after a resistance roll, committed by the cast.
@@ -827,19 +839,21 @@ static func _battle_spell_effect_summary(
 			var summary := "%d damage to %s" % [damage, target_label]
 			var status_effect: Dictionary = effect.get("status_effect", {})
 			if status_effect is Dictionary and not status_effect.is_empty():
-				summary += "; applies %s %dr" % [
+				summary += "; leaves it %s (%s) for %s" % [
 					String(status_effect.get("label", "effect")),
-					spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1), spell, "debuff"),
+					_status_terms(status_effect),
+					_turns_label(spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1), spell, "debuff")),
 				]
 			if _wounded_bonus_applies(effect, target_stack):
 				summary += "; wounded target bonus"
 			return summary
 		"control_enemy":
 			var status_effect: Dictionary = effect.get("status_effect", {})
-			return "applies %s to %s for %d rounds" % [
+			return "%s (%s) on %s for %s" % [
 				String(status_effect.get("label", "control")),
+				_status_terms(status_effect),
 				String(target_stack.get("name", "selected enemy")),
-				spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1), spell, "debuff"),
+				_turns_label(spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1), spell, "debuff")),
 			]
 		"recover_ally":
 			var target_label := String(active_stack.get("name", "active stack"))
@@ -847,9 +861,9 @@ static func _battle_spell_effect_summary(
 			var summary := "restores up to %d health to surviving creatures in %s; fallen creatures are not restored" % [recovery_amount, target_label]
 			var modifiers := battle_spell_modifiers(spell)
 			if not modifiers.is_empty():
-				summary += "; %s for %d rounds" % [
+				summary += "; %s for %s" % [
 					_modifier_summary(modifiers),
-					spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff"),
+					_turns_label(spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff")),
 				]
 			return summary
 		"cleanse_ally":
@@ -860,17 +874,17 @@ static func _battle_spell_effect_summary(
 			]
 			var cleanse_modifiers := battle_spell_modifiers(spell)
 			if not cleanse_modifiers.is_empty():
-				cleanse_summary += "; %s for %d rounds" % [
+				cleanse_summary += "; %s for %s" % [
 					_modifier_summary(cleanse_modifiers),
-					spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff"),
+					_turns_label(spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff")),
 				]
 			return cleanse_summary
 		"defense_buff", "initiative_buff", "attack_buff":
 			var target_label := String(active_stack.get("name", "active stack"))
-			return "%s to %s for %d rounds" % [
+			return "%s to %s for %s" % [
 				_modifier_summary(battle_spell_modifiers(spell)),
 				target_label,
-				spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff"),
+				_turns_label(spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff")),
 			]
 		_:
 			return "No supported battle effect"
@@ -1453,8 +1467,16 @@ static func effect_summary(stack: Dictionary, battle: Dictionary) -> String:
 	var tags := []
 	var current_round := int(battle.get("round", 1))
 	for effect in active_effects_for_round(stack, current_round):
-		var rounds_left := int(effect.get("expires_after_round", current_round)) - current_round + 1
-		tags.append("%s %dr" % [String(effect.get("label", effect.get("kind", "Effect"))), max(1, rounds_left)])
+		var label := String(effect.get("label", effect.get("kind", "Effect")))
+		var rules := status_rules_text(String(effect.get("effect_id", "")))
+		if rules != "":
+			label += " (%s)" % rules
+		if effect.has("turns_left"):
+			var turns := int(effect.get("turns_left", 1))
+			tags.append("%s, %d turn%s" % [label, turns, "" if turns == 1 else "s"])
+		else:
+			var rounds_left := int(effect.get("expires_after_round", current_round)) - current_round + 1
+			tags.append("%s %dr" % [label, max(1, rounds_left)])
 	return ", ".join(tags)
 
 static func normalize_stack_effects(stack: Dictionary) -> Dictionary:
@@ -1528,6 +1550,19 @@ static func _school_bonus(bonuses: Dictionary, key: String, spell: Dictionary) -
 		return 0
 	return int(by_school.get(String(spell.get("school_id", "")), 0))
 
+## Makes `effect` last `turns_left` turns of the stack it lands on.
+static func _counted_in_turns(effect: Dictionary, turns: int) -> Dictionary:
+	effect["turns_left"] = maxi(1, turns)
+	effect["expires_after_round"] = TURN_EFFECT_ROUND_SENTINEL
+	return effect
+
+## A status's rules beyond its numbers, for summaries and tooltips.
+static func status_rules_text(status_id: String) -> String:
+	return String(STATUS_RULES.get(status_id, ""))
+
+static func _turns_label(turns: int) -> String:
+	return "its next turn" if turns == 1 else "its next %d turns" % turns
+
 static func battle_spell_modifiers(spell: Dictionary) -> Dictionary:
 	var effect = spell.get("effect", {})
 	match String(effect.get("type", "")):
@@ -1554,7 +1589,7 @@ static func battle_spell_recoverable_health(stack: Dictionary) -> int:
 
 static func _effect_payload(spell: Dictionary, effect: Dictionary, battle: Dictionary, hero_state: Dictionary = {}) -> Dictionary:
 	var modifiers := battle_spell_modifiers(spell)
-	return build_battle_effect(
+	return _counted_in_turns(build_battle_effect(
 		"spell:%s:%s" % [String(spell.get("id", "")), String(effect.get("type", ""))],
 		String(spell.get("name", "Spell")),
 		modifiers,
@@ -1563,7 +1598,7 @@ static func _effect_payload(spell: Dictionary, effect: Dictionary, battle: Dicti
 		"spell",
 		String(spell.get("id", "")),
 		effect.get("status_immunity_ids", [])
-	)
+	), spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff"))
 
 static func _battle_spell_action_summary(
 	hero_state: Dictionary,
@@ -1590,9 +1625,10 @@ static func _battle_spell_action_summary(
 			if status_effect is Dictionary and not status_effect.is_empty():
 				var status_payload := _status_effect_from_spell_effect(spell, battle, hero_state)
 				var control_pct := control_resistance_pct(battle, target_stack, spell)
-				summary += " Applies %s for %d rounds." % [
+				summary += " Leaves it %s (%s) for %s." % [
 					String(status_effect.get("label", "a battle effect")),
-					spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1), spell, "debuff"),
+					_status_terms(status_effect),
+					_turns_label(spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1), spell, "debuff")),
 				]
 				if target_is_immune_to_status(target_stack, battle, String(status_payload.get("effect_id", ""))):
 					summary += " Target is immune to that rider."
@@ -1603,10 +1639,11 @@ static func _battle_spell_action_summary(
 			return summary
 		"control_enemy":
 			var control_effect: Dictionary = effect.get("status_effect", {})
-			var summary := "Apply %s to %s for %d rounds." % [
-				String(control_effect.get("label", "control")),
+			var summary := "Leave %s %s (%s) for %s." % [
 				String(target_stack.get("name", "the selected enemy")),
-				spell_duration_rounds(hero_state, control_effect.get("duration_rounds", 1), spell, "debuff"),
+				String(control_effect.get("label", "control")),
+				_status_terms(control_effect),
+				_turns_label(spell_duration_rounds(hero_state, control_effect.get("duration_rounds", 1), spell, "debuff")),
 			]
 			var control_payload := _status_effect_from_spell_effect(spell, battle, hero_state)
 			var control_pct := control_resistance_pct(battle, target_stack, spell)
@@ -1624,9 +1661,9 @@ static func _battle_spell_action_summary(
 			]
 			var recovery_modifiers := battle_spell_modifiers(spell)
 			if not recovery_modifiers.is_empty():
-				recovery_summary += " Grant %s for %d rounds." % [
+				recovery_summary += " Grant %s for %s." % [
 					_modifier_summary(recovery_modifiers),
-					spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff"),
+					_turns_label(spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff")),
 				]
 			if timing_hint != "":
 				recovery_summary += " Timing: %s" % timing_hint
@@ -1638,27 +1675,27 @@ static func _battle_spell_action_summary(
 			]
 			var cleanse_modifiers := battle_spell_modifiers(spell)
 			if not cleanse_modifiers.is_empty():
-				cleanse_summary += " Grant %s for %d rounds." % [
+				cleanse_summary += " Grant %s for %s." % [
 					_modifier_summary(cleanse_modifiers),
-					spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff"),
+					_turns_label(spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff")),
 				]
 			if timing_hint != "":
 				cleanse_summary += " Timing: %s" % timing_hint
 			return cleanse_summary
 		"defense_buff":
-			var summary := "Grant %s to %s for %d rounds." % [
+			var summary := "Grant %s to %s for %s." % [
 				_modifier_summary(battle_spell_modifiers(spell)),
 				String(active_stack.get("name", "the active stack")),
-				spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff"),
+				_turns_label(spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff")),
 			]
 			if timing_hint != "":
 				summary += " Timing: %s" % timing_hint
 			return summary
 		"initiative_buff", "attack_buff":
-			var summary := "Grant %s to %s for %d rounds." % [
+			var summary := "Grant %s to %s for %s." % [
 				_modifier_summary(battle_spell_modifiers(spell)),
 				String(active_stack.get("name", "the active stack")),
-				spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff"),
+				_turns_label(spell_duration_rounds(hero_state, effect.get("duration_rounds", 1), spell, "buff")),
 			]
 			if timing_hint != "":
 				summary += " Timing: %s" % timing_hint
@@ -1977,6 +2014,10 @@ static func _normalize_effects(value: Variant) -> Array:
 				normalized_effect["protected_side"] = String(effect.get("protected_side", ""))
 				normalized_effect["target_role"] = String(effect.get("target_role", ""))
 				normalized_effect["target_min_tier"] = max(1, int(effect.get("target_min_tier", 1)))
+			if effect.has("turns_left"):
+				normalized_effect["turns_left"] = max(1, int(effect.get("turns_left", 1)))
+				if bool(effect.get("skip_current_turn", false)):
+					normalized_effect["skip_current_turn"] = true
 			effects.append(normalized_effect)
 	return effects
 
@@ -2083,7 +2124,7 @@ static func _status_effect_from_spell_effect(spell: Dictionary, battle: Dictiona
 	var effect_id := String(status_effect.get("effect_id", status_effect.get("status_id", "")))
 	if effect_id == "":
 		return {}
-	return build_battle_effect(
+	return _counted_in_turns(build_battle_effect(
 		effect_id,
 		String(status_effect.get("label", effect_id.capitalize())),
 		status_effect.get("modifiers", {}),
@@ -2092,7 +2133,7 @@ static func _status_effect_from_spell_effect(spell: Dictionary, battle: Dictiona
 		"spell",
 		String(spell.get("id", "")),
 		status_effect.get("status_immunity_ids", [])
-	)
+	), spell_duration_rounds(hero_state, status_effect.get("duration_rounds", 1), spell, "debuff"))
 
 static func _battle_spell_damage(hero_state: Dictionary, spell: Dictionary, target_stack: Dictionary) -> int:
 	var effect = spell.get("effect", {})
@@ -2130,11 +2171,22 @@ static func _cleanse_labels(effect: Dictionary) -> Array:
 				labels.append(effect_id.replace("status_", "").replace("_", " ").capitalize())
 	return labels
 
+## A status's numbers and rules: "-1 defense, cannot move".
+static func _status_terms(status_effect: Dictionary) -> String:
+	var modifiers = status_effect.get("modifiers", {})
+	var parts := []
+	if modifiers is Dictionary and not modifiers.is_empty():
+		parts.append(_modifier_summary(modifiers))
+	var rules := status_rules_text(String(status_effect.get("effect_id", status_effect.get("status_id", ""))))
+	if rules != "":
+		parts.append(rules)
+	return ", ".join(parts)
+
 static func _modifier_summary(modifiers: Dictionary) -> String:
 	if modifiers.is_empty():
 		return "no battlefield bonus"
 	var parts := []
-	var ordered_keys := ["attack", "defense", "initiative", "cohesion", "momentum"]
+	var ordered_keys := ["attack", "defense", "initiative", "speed", "cohesion", "momentum"]
 	for key in ordered_keys:
 		if modifiers.has(key):
 			parts.append("%s %s" % [_signed_modifier_label(int(modifiers[key])), key])

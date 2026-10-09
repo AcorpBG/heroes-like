@@ -32,6 +32,7 @@ DEFENSE_REDUCTION_PER_POINT = 0.025
 DEFENSE_REDUCTION_MAX = 0.7
 POWER_PER_EXTRA_ROUND = 4
 MAX_POWER_EXTRA_ROUNDS = 3
+TURN_EFFECT_ROUND_SENTINEL = 1000000
 SIMULATION_GUARD_MAX_ROUNDS = 200
 DEFAULT_SEEDS = 100
 DEFAULT_WEEKS = [1, 2, 3, 4]
@@ -934,7 +935,36 @@ class FastBattleBenchmark:
         side_bias = 1 if stack.get("side") == battle.get("initiative_tie_side", INTERNAL_SIDE_A) else 0
         return (-initiative, -int(stack.get("speed", 0)), -side_bias, int(stack.get("side_slot", 0)))
 
+    def _spend_effect_turns(self, battle: dict[str, Any], battle_id: str) -> None:
+        """Mirror of BattleRules.spend_effect_turns."""
+        stack = self._stack_by_id(battle, battle_id)
+        if not stack:
+            return
+        kept = []
+        for effect in stack.get("effects", []):
+            if not isinstance(effect, dict) or "turns_left" not in effect:
+                kept.append(effect)
+                continue
+            if effect.pop("skip_current_turn", False):
+                kept.append(effect)
+                continue
+            effect["turns_left"] = int(effect.get("turns_left", 1)) - 1
+            if effect["turns_left"] > 0:
+                kept.append(effect)
+        stack["effects"] = kept
+
+    def _resort_remaining_turn_order(self, battle: dict[str, Any]) -> None:
+        """Mirror of BattleRules._resort_remaining_turn_order."""
+        order = list(battle.get("turn_order", []))
+        active_id = battle.get("active_stack_id", "")
+        if active_id not in order:
+            return
+        index = order.index(active_id)
+        remaining = sorted(order[index + 1:], key=lambda battle_id: self._turn_order_key(battle, battle_id))
+        battle["turn_order"] = order[:index + 1] + remaining
+
     def _advance_turn(self, battle: dict[str, Any]) -> None:
+        self._spend_effect_turns(battle, str(battle.get("active_stack_id", "")))
         order = battle.get("turn_order", [])
         index = int(battle.get("turn_index", 0)) + 1
         while index < len(order):
@@ -965,7 +995,7 @@ class FastBattleBenchmark:
                     candidate = {"action": "strike", "target_battle_id": target["battle_id"], "score": score}
                     candidates.append(candidate)
                     attack_candidates.append(candidate)
-        if int(battle.get("distance", 0)) > 0 and not bool(active.get("ranged", False)):
+        if int(battle.get("distance", 0)) > 0 and not bool(active.get("ranged", False)) and not self._has_effect_id(active, battle, STATUS_ROOTED):
             candidates.append({"action": "advance", "score": self._advance_score(active, battle, targets)})
         if not self._must_force_engaged_attack(active, battle, targets, attack_candidates):
             candidates.append({"action": "defend", "score": self._defend_score(active, battle, targets)})
@@ -1125,6 +1155,9 @@ class FastBattleBenchmark:
                     score += 1.0
                 if bool(target.get("ranged", False)) and int(target.get("shots_remaining", 0)) > 0:
                     score += 0.6
+            # Mirror of BattleAiRules haste value: speed for a melee stack still closing in.
+            if int(modifiers.get("speed", 0)) > 0 and not bool(target.get("ranged", False)) and not self._can_make_melee_attack(target, battle):
+                score += 1.5 + int(modifiers.get("speed", 0)) * 1.0
             return score - (mana_cost * 0.2)
         if effect_type == "recover_ally":
             missing = self._stack_recoverable_health(target)
@@ -2192,6 +2225,13 @@ class FastBattleBenchmark:
             "target_min_tier": max(1, int(effect.get("target_min_tier", 1))),
             "expires_after_round": max(1, int(battle.get("round", 1))) + max(1, int(effect.get("duration_rounds", 1))) + duration_bonus - 1,
         })
+        if source_type == "spell":
+            added = stack["effects"][-1]
+            added["turns_left"] = max(1, int(effect.get("duration_rounds", 1))) + duration_bonus
+            added["expires_after_round"] = TURN_EFFECT_ROUND_SENTINEL
+            if str(stack.get("battle_id", "")) == str(battle.get("active_stack_id", "")):
+                added["skip_current_turn"] = True
+            self._resort_remaining_turn_order(battle)
         return True
 
     def _cohesion_base_for_unit(self, unit: dict[str, Any]) -> int:
@@ -2414,6 +2454,8 @@ class FastBattleBenchmark:
         return distance <= 0 or (distance == 1 and (self._reach_available(stack, battle) or self._hookline_available(stack, battle)))
 
     def _can_make_retaliation(self, stack: dict[str, Any], attack_distance: int, battle: dict[str, Any]) -> bool:
+        if self._has_effect_id(stack, battle, STATUS_STAGGERED):
+            return False
         return attack_distance <= 0 or (attack_distance == 1 and self._reach_available(stack, battle))
 
     def _apply_damage(self, stack: dict[str, Any], damage: int) -> None:

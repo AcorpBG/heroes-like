@@ -141,6 +141,7 @@ const TAB_HELP_TOPIC := {
 @onready var _generated_hero_picker: OptionButton = %GeneratedHeroPicker
 @onready var _generated_player_count_picker: OptionButton = %GeneratedPlayerCountPicker
 @onready var _generated_water_picker: OptionButton = %GeneratedWaterPicker
+@onready var _generated_monster_strength_picker: OptionButton = %GeneratedMonsterStrengthPicker
 @onready var _generated_underground_toggle: OptionButton = %GeneratedUndergroundToggle
 @onready var _generated_map_panel: PanelContainer = %GeneratedMapPanel
 @onready var _generated_map_controls: GridContainer = %GeneratedMapControls
@@ -246,6 +247,7 @@ var _generated_faction_id := ""
 var _generated_hero_id := ""
 var _generated_player_count := 3
 var _generated_water_mode := "land"
+var _generated_monster_strength := ScenarioSelectRulesScript.RANDOM_MAP_DEFAULT_MONSTER_STRENGTH
 var _generated_underground := false
 var _generated_last_setup := {}
 var _generated_map_forge_expanded := false
@@ -1025,6 +1027,12 @@ func _on_generated_water_selected(index: int) -> void:
 	_generated_water_mode = String(_generated_water_picker.get_item_metadata(index))
 	_refresh_generated_random_map_setup()
 
+func _on_generated_monster_strength_selected(index: int) -> void:
+	if index < 0 or index >= _generated_monster_strength_picker.get_item_count():
+		return
+	_generated_monster_strength = String(_generated_monster_strength_picker.get_item_metadata(index))
+	_refresh_generated_random_map_setup()
+
 func _on_generated_level_selected(index: int) -> void:
 	if index < 0 or index >= _generated_underground_toggle.get_item_count():
 		return
@@ -1052,7 +1060,7 @@ func _refresh_generated_map_forge_disclosure() -> void:
 		else (
 			"Hide the generated-map controls and return visual priority to the selected Skirmish front."
 			if expanded
-			else "Open the Map Forge to choose a seed, map size, player count, water layout, and level count."
+			else "Open the Map Forge to choose a seed, map size, player count, water layout, level count, and monster strength."
 		)
 	)
 	_generated_map_toggle_button.accessibility_name = "Close Map Forge" if expanded else "Open Map Forge"
@@ -2742,6 +2750,11 @@ func _configure_generated_random_map_controls() -> void:
 		_generated_water_picker.select(water_selected)
 	_generated_water_picker.tooltip_text = "Choose the generated map water layout."
 
+	if ScenarioSelectRulesScript.random_map_monster_strength_id(_generated_monster_strength) == "":
+		_generated_monster_strength = String(options.get("default_monster_strength", ScenarioSelectRulesScript.RANDOM_MAP_DEFAULT_MONSTER_STRENGTH))
+	_rebuild_generated_option_picker(_generated_monster_strength_picker, options.get("monster_strengths", []), _generated_monster_strength, "monster strength")
+	_generated_monster_strength_picker.tooltip_text = "Monster strength: how strong the neutral armies guarding routes and treasure are."
+
 	_rebuild_generated_level_picker()
 	var underground_supported := _generated_underground_supported()
 	if not underground_supported:
@@ -2902,7 +2915,7 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 		var level_label := "Surface + Underground" if _generated_underground else "Surface only"
 		var faction := ContentService.get_faction(_generated_faction_id)
 		var hero := ContentService.get_hero(_generated_hero_id)
-		plan_text = "%s · %s | Seed: %s | %s | %d players | %s | %s" % [
+		plan_text = "%s · %s | Seed: %s | %s | %d players | %s | %s | %s" % [
 			String(faction.get("name", _generated_faction_id)),
 			String(hero.get("name", _generated_hero_id)),
 			seed_label,
@@ -2910,6 +2923,7 @@ func _apply_generated_random_map_setup_surface(setup: Dictionary) -> void:
 			_generated_player_count,
 			water_label,
 			level_label,
+			ScenarioSelectRulesScript.random_map_monster_strength_label(_generated_monster_strength),
 		]
 		_start_generated_skirmish_button.disabled = false
 		_start_generated_skirmish_button.tooltip_text = "Builds this map, checks that routes and starting positions are playable, and then starts Day 1. If map creation fails, you stay here and no save is changed."
@@ -3130,6 +3144,7 @@ func _set_generated_random_map_inputs_disabled(disabled: bool) -> void:
 		_generated_hero_picker,
 		_generated_player_count_picker,
 		_generated_water_picker,
+		_generated_monster_strength_picker,
 		_generated_underground_toggle,
 	]:
 		if control is LineEdit:
@@ -3203,7 +3218,8 @@ func _generated_random_map_config() -> Dictionary:
 		_generated_size_class_id,
 		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,
 		_generated_faction_id,
-		_generated_hero_id
+		_generated_hero_id,
+		_generated_monster_strength
 	)
 	config["seed_source"] = seed_source
 	config["seed_input"] = raw_seed
@@ -4549,6 +4565,7 @@ func _generated_random_map_control_snapshot() -> Dictionary:
 		"player_count",
 		"water_mode",
 		"level_count",
+		"monster_strength",
 		"launch_generated",
 	]
 	if _generated_underground_supported():
@@ -4563,6 +4580,7 @@ func _generated_random_map_control_snapshot() -> Dictionary:
 		"hero_label": _generated_hero_picker.get_item_text(_generated_hero_picker.selected) if _generated_hero_picker.selected >= 0 else "",
 		"player_count": _generated_player_count,
 		"water_mode": _generated_water_mode,
+		"monster_strength": _generated_monster_strength,
 		"underground": _generated_underground,
 		"level_count": level_count,
 		"level_options": _picker_item_labels(_generated_underground_toggle),
@@ -4575,6 +4593,7 @@ func _generated_random_map_control_snapshot() -> Dictionary:
 		"player_count_options": _picker_item_labels(_generated_player_count_picker),
 		"player_count_values": _picker_item_metadata_ints(_generated_player_count_picker),
 		"water_options": _picker_item_labels(_generated_water_picker),
+		"monster_strength_options": _picker_item_labels(_generated_monster_strength_picker),
 		"visible_player_controls": visible_controls,
 		"level_picker_visible": _generated_underground_toggle.visible,
 		"internal_template_provenance": _generated_random_map_internal_template_provenance(),
@@ -4847,6 +4866,15 @@ func validation_select_generated_water_mode(water_mode: String) -> bool:
 			continue
 		_generated_water_picker.select(index)
 		_on_generated_water_selected(index)
+		return true
+	return false
+
+func validation_select_generated_monster_strength(monster_strength: String) -> bool:
+	for index in range(_generated_monster_strength_picker.get_item_count()):
+		if String(_generated_monster_strength_picker.get_item_metadata(index)) != monster_strength:
+			continue
+		_generated_monster_strength_picker.select(index)
+		_on_generated_monster_strength_selected(index)
 		return true
 	return false
 
@@ -5572,6 +5600,7 @@ func _apply_visual_theme() -> void:
 		_generated_hero_picker,
 		_generated_player_count_picker,
 		_generated_water_picker,
+		_generated_monster_strength_picker,
 		_generated_underground_toggle,
 		_presentation_mode_picker,
 		_resolution_picker,

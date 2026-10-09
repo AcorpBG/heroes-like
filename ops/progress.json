@@ -114391,6 +114391,19 @@
       "notes": "Owner accepted the prototype shown as before/after sheets. overworld_ground_surface.gdshader: border_warp (three rotated value-noise octaves, warp 0.36 tile + detail) bends the corner-weight lookup, faded to zero within 0.3 tile of tile centres so each tile's middle keeps its own ground; candidate materials score merged corner weight + border_priority (ground_materials.json, by slot) + painted-detail height (luminance above the material average, x1.3) and blend within blend_depth 0.26; the beach band uses the bent corner weights; decals fade by each ground's final blend share. OverworldGroundSurface passes border_priority. Validation: owner-map and generated-map border captures (sand/grass, snow/grass, swamp/grass, snow/dirt, dirt/grass, rough/dirt) and a generated coast reviewed; overworld_sandy_shore_regression 53/53 (tile-centre identity restored by the centre fade), overworld_ground_materials_contract passes, validate_repo identical (828)."
     },
     {
+      "id": "battle-spell-effect-identity-20261009",
+      "title": "One job per battle spell family; real status rules; effects counted in turns",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "gameplay_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/battle-spell-effects.md"
+      ],
+      "notes": "Owner review: buffs/debuffs were confusing and most spells felt the same. Content (content/spells.json, 79 battle spells): attack buffs attack+momentum, defense buffs defense+cohesion, initiative buffs initiative+speed (haste); statuses one name and one stat each: Harried -cohesion, Staggered -initiative, Rooted -defense (tier bands kept); Snares, Boundaries and Moonfen Dragnet now root, Fogbinds and Drowned-Bell Verdict stagger (harried 14, staggered 12, rooted 10); 7 descriptions reworded. Rules: Staggered cannot retaliate (BattleRules/BattleAiRules _can_make_retaliation); Rooted cannot move (_stack_movement_points 0, no advance for player or AI, no melee approach); speed modifier adds movement points. Spell effects count the affected stack's turns: SpellRules._counted_in_turns sets turns_left (expiry parked at TURN_EFFECT_ROUND_SENTINEL), _normalize_effects keeps it, BattleRules.spend_effect_turns runs from advance_turn, the casting turn does not count (skip_current_turn), _resort_remaining_turn_order reorders stacks still to act when an effect lands. Wording: STATUS_RULES and status_rules_text; previews read 'Leave X Rooted (-1 defense, cannot move) for its next turn' / 'Grant +2 attack, +1 momentum to X for its next 2 turns'; effect_summary lists rules and turns. AI: _status_tactical_value (Rooted on melee, Staggered on stacks with retaliation), haste speed value for melee stacks still closing in. Benchmark mirrors turns, reordering, Rooted, Staggered and haste value. Validator: signature-spell rider pins rewritten for the families, 112-spell mechanics hash re-pinned. Specialty texts now say turns. Validation: new tests/battle_spell_effects_report (105 checks, battle from a generated small map) passes; battle_stat_scaling, hero_specialty_catalog, magic battle spell behavior, resistance/countercontrol, prism bastion, AI spell valuation (payload-bridge fixture now Bulwark Litany for a Linekeeper) and deterministic RNG reports pass; unit_ability_runtime_report (76) and battle_intent_forecast_report (1) fail as before; validate_repo identical. Benchmark before/after: outliers 52->54, mean pair deviation 26.1->25.1; casts shift from buffs to damage/control; see docs/battle-spell-effects.md."
+    },
+    {
       "id": "ux-overworld-gain-floaters-20261009",
       "title": "Floating gain text over the map",
       "status": "completed",
@@ -114402,6 +114415,19 @@
         "docs/overworld-gain-floaters.md"
       ],
       "notes": "Owner request: floating text over the map when the hero picks up anything (dwellings, resources, artifacts), slowly fading out. scripts/core/OverworldGainFeed.gd: snapshot(session) of stockpile, active hero experience/command/artifacts/spells/mana/movement/army/battle boosts, player sites (collected_by_faction_id); gains(before, after, movement_walked) -> ordered lines {text, icon, tone}: claimed sites (persistent_control only), artifacts, resources gained, troops, command, spells, experience, mana, movement (walk cost added back), boosts, costs. OverworldShell: GainFeed snapshot before try_move, route execution, perform_context_action, choose_resource_reward, hire_from_dwelling, take_site_recruits_by_dismissing and cast_overworld_spell; _float_gains_since sends lines to OverworldMapView.show_gain_floaters (route moves only for plain routes, not battle/town/rendezvous). scenes/overworld/OverworldGainFloaters.gd: map layer between DynamicLayer and FrameLayer; waits for the hero walk (gain_floaters_should_wait), anchors above the tile (gain_anchor_for_tile), staggered 0.35 s lines with icon and outlined text, 0.25 s fade in, 44 px rise, 1.6 s fade out over 3.4 s; reduced motion fades without rising. Validation: new tests/overworld_gain_floaters_report (14 checks, incl. a live wood pickup on a generated small map through the real shell) passes; 1920x1080 windowed capture with a five-line sample reviewed; validate_repo identical."
+    },
+    {
+      "id": "ux-generated-skirmish-fronts-monster-strength-20261009",
+      "title": "Generated maps in Skirmish Fronts; Map Forge monster strength",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ui_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/rmg-exploration-and-guarded-routes.md"
+      ],
+      "notes": "Owner playtest: generated maps were missing from Skirmish Fronts, and the Map Forge needed a monster strength toggle. ScenarioSelectRules.build_skirmish_browser_entries returned early for the archived authored catalog (c9d69e688) before appending the maps-folder packages; authored entries are now gated alone. Map Forge: GeneratedMonsterStrengthPicker (Weak/Normal/Strong, Normal default; RANDOM_MAP_MONSTER_STRENGTH_OPTIONS) feeds build_random_map_player_config's new monster_strength argument, and _random_map_public_h3maped_launch_config keeps a catalog-auto config's strength across its rebuild (other configs keep the previous normal). Native random is not offered: it maps to the same raw setup +0x48 = -1 as weak. Medium seed 10 2p land: weak 41 guards/1,461 creatures, normal 65/2,487, strong 88/3,673. Validation: maps_folder_package_browser_integration_report (now ignores the per-launch hero growth_seed like session_id), random_map_player_setup_retry_ux_report (strong reaches the launched native config), generated_map_setup_visual_smoke at 1280x720 and 1920x1080; validate_repo error set unchanged from HEAD."
     },
     {
       "id": "content-hero-specialty-catalog-20261008",
@@ -114568,6 +114594,49 @@
         "docs/ai-plays-by-player-rules.md"
       ],
       "notes": "Owner question after a four-player AI match (seed ai-match-3854663367) ended in a 160-day stalemate with 922k/409k gold hoards. Weekly town snapshots (ai_versus_ai_match_report town_weeks) showed garrisons stuck at seven odd stacks so army_addition_plan rejected every new unit kind and growth piled up unbought for weeks. AiHeroRules._make_room dismisses the weakest garrison stack when the purchase is stronger. Same seed: decided Day 77, 24 captures (5 unopposed) instead of undecided at 160 with 82 (25). Random 4-player ai-match-3463369466: Thornwake wins Day 42. ai_versus_ai_match_report passes; ai_player_rules_report walled map unchanged (530 tiles, open in ai-even-musters-danger-20261008). ai_versus_ai_match_report gains HEROES_AI_MATCH_PLAYERS and weekly town snapshots."
+    },
+    {
+      "id": "rmg-h3maped-parity-basis-windows-wine-20261009",
+      "title": "H3MapEd parity basis: Windows vs Wine, seeds 137 and 211",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "rmg_recovery_investigation",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/h3maped-parity-basis-windows-wine.md",
+        "docs/lessons-learned.md"
+      ],
+      "notes": "Recovery evidence only; no native generator change. Seed-patched h3maped.exe (SHA-256 4480fba1..., same LODs) driven on Windows 10 by window messages through tools/rmg_h3maped_win32_trace/h3trace.c (debugger attached after startup; rand/srand and marker logging) matches the Wine references semantically for seeds 58, 1, 73, 2, 28, 137, 211 and native for map 8 seed 3451295931 (0 tile cells, identical object multisets). Seed 58 also matches without a debugger, over three generations in one process, with four OK paths, posted-click dialog input and 64 KiB of junk below the generator entry stack. Only the earlier desktop-controlled Windows maps differ, from the first 0x4aab7e reward pick; RNG offsets -8..+24 before the reward loop, single extra draws at reward-owner boundaries, editor registry settings, AppCompat/IFEO, message pumping and reads of town-less owners' +0x30..+0x38 are ruled out. Seed 137: native 0x4a8db2 replay copies the shared type-98 pair success byte into owner +0x3c, which H3MapEd writes only at 0x4a95a4 (owners 0, 1, 5 traced), inflating 0x4aadd2 terrain pressure and creature Pandora values. Seed 211: both native 0x49aa93 ports skip the entry-cell bit-22 occupant check at 0x49ab87..0x49abac (occupant type 53, 0x598300 flag 2 = 0), placing an extra Crystal pile. Evidence: .artifacts/rmg_recovery/support/windows_h3maped_parity_basis_20261009/ (also moved map8_unguarded_route_20261009 into the main store with a correction note).",
+      "updatedAt": "2026-10-09T11:30:00Z"
+    },
+    {
+      "id": "native-rmg-owner-success-and-entry-occupant-20261009",
+      "title": "Native RMG: owner success byte only from 0x4a95a4; 0x49aa93 entry-cell occupant check",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "native_rmg_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/h3maped-parity-basis-windows-wine.md",
+        "docs/lessons-learned.md"
+      ],
+      "notes": "Owner-approved 2026-10-09. Source-backed fixes with private-state proof (rmg-h3maped-parity-basis-windows-wine-20261009): the 0x4a8db2 replay no longer copies the shared type-98 pair success byte into owner.byte_0x3c (H3MapEd writes owner +0x3c only at 0x4a95a4 in the 0x4a93a2 success path; constructor 0x49b4cd zeroes it), and both 0x49aa93 ports call projection_cell_occupant_allows_entry_0x49aa93, which requires 0x598300 flag 2 of the entry cell's first-reference occupant when the cell has bit 22 (0x49ab87..0x49abac) instead of the candidate's allow_existing_bit22. Validation: semantic sweep over the 72 references 57 -> 60 exact (Small 137 by the owner fix; Small 211 and Medium compare 17 by the occupant check), no other reference changed exactness, cell count or object count; h3maped_rmg_core_selftest passes on Windows (MSVC 2022) and Linux (GCC 13.3, built on the server from the same tree); all 72 reference payloads byte-identical between Windows and Linux builds; Windows Godot 4.6.2 map_package_api_skeleton_report, native_random_map_homm3_re_object_table_proxy_report and native_rmg_end_to_end_runtime_boundary_report pass with an isolated profile; Linux Godot smokes not run. All eight bin/ native binaries rebuilt (Windows debug/release DLLs, Linux debug/release .so, selftest and batch export CLI for both).",
+      "updatedAt": "2026-10-09T12:00:00Z",
+      "validatedAt": "2026-10-09T12:00:00Z"
+    },
+    {
+      "id": "rmg-h3maped-desktop-input-divergence-20261009",
+      "title": "Recover the input that changes desktop-controlled H3MapEd reward selection",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "rmg_recovery_investigation",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/h3maped-parity-basis-windows-wine.md"
+      ],
+      "notes": "Recovery evidence only; no native change. Owner-approved desktop control 2026-10-09. A desktop-started scratch editor traced with h3trace --pid (Ctrl+N, mouse/keyboard dialog input) reproduces the old desktop map for seed 58 exactly (323/323). Phase RNG matches the message-driven run to 0x4ac7c4; the first different draw is the first 0x4a9f1c reward pick, where Keymaster's Tent candidates (vtable 0x540ca0, type 10, subtype 0) score their base value instead of -1. Their value (0x49cd9b) requires generator +0xf5c to equal the tent colour. The generator object is a stack local; setup writes +0xf58 but never +0xf5c, and none of its eight writers runs for these maps, so +0xf5c is leftover stack bytes: 0 for Ctrl+N (generator 0x19dfa8), 0x011d6fc0 File menu and 0x01xxxxxx posted commands (0x19e05c), 0x011be0d0 toolbar (0x19dacc), 0x7a1befdf under Wine. Forcing +0xf5c = 0 at generator entry in message-driven runs reproduces all six desktop maps (seeds 58, 3451295931, 1, 73, 2, 28); File-menu and toolbar runs match Wine. For seed 58 the Border Guard endpoint 0x4a5e73 (the other reader) is not reached. Native set to +0xf5c = 0 reproduces 5/6 desktop maps; seed 2, the only one with a placed tent (AVXkey00), stops at 0x4ad1e3_ordered_payload_final_zero_sentinel_missing because the tent projection branch 0x540b00/0x49c019/0x4adb72/0x4adef7 and its writeout are unported. Owner decision pending: keep the current Wine/menu behaviour or model the Ctrl+N variant (needs that branch ported). Evidence: .artifacts/rmg_recovery/support/windows_h3maped_parity_basis_20261009/desktop_input_f5c/.",
+      "updatedAt": "2026-10-09T12:40:00Z",
+      "validatedAt": "2026-10-09T12:40:00Z"
     }
   ],
   "project": "heroes-like",
