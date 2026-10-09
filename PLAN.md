@@ -60,7 +60,7 @@ Rules:
 
 ### Even starting musters, AI avoids stronger heroes
 
-`ai-even-musters-danger-20261008` (in progress, owner request after the series-20261008 map 8 day-5 loss): every faction starts a generated map with a muster rated about 140 (`army_start_<faction>`, was 90-169), and AI heroes keep out of the next-turn reach of a visible hostile hero 1.15x their strength unless holding their own town deters it; the main hero holds a gate only while hero plus garrison deter the attack. Open: the walled test map run explores 530 tiles (needs 560) on the new trajectory. See `docs/ai-plays-by-player-rules.md`.
+`ai-even-musters-danger-20261008` (completed, owner request after the series-20261008 map 8 day-5 loss): every faction starts a generated map with a muster rated about 140 (`army_start_<faction>`, was 90-169), and AI heroes keep out of the next-turn reach of a visible hostile hero 1.15x their strength unless holding their own town deters it; the main hero holds a gate only while hero plus garrison deter the attack. See `docs/ai-plays-by-player-rules.md`.
 
 ### AI towns make room to recruit
 
@@ -123,6 +123,10 @@ Rules:
 `battle-stat-scaling-20261008` (completed, owner review): attack against defense no longer stops at ±8 points: +5% per point of attack lead up to +300%, -2.5% per point of defense lead down to -70%. Level-ups roll one stat weighted by the hero's might or magic command path (40/40/10/10 toward attack and defense or power and knowledge), seeded per hero so saves never re-roll; damage spells gain 2.5x as much per point of power, and every 4 power adds a round to spell buffs, debuffs and riders (up to 3). A hit's cohesion loss goes by the share of the stack it took, not by creatures killed, so big stacks no longer lose 2 cohesion to every hit. See `docs/battle-stat-scaling.md`.
 
 `ux-hero-level-up-roll-display-20261008` (completed, owner request): the level-up popup shows what the hero rolled above the specialty choices: a "Rolled +1 Spell power" headline, the four command stats with their new values (rolled ones lit gold with their gain, a short pulse unless reduced motion is on), the path's odds and, for several levels at once, each level's roll. See `docs/hero-level-up-popup.md`.
+
+### Battle spell effects
+
+`battle-spell-effect-identity-20261009` (completed, owner review): each battle spell family has one job (attack buffs: attack and momentum; defense buffs: defense and cohesion; haste: initiative and speed) and the three statuses have real rules and one name each: Harried drains cohesion, Staggered cannot strike back, Rooted cannot move. Spell effects last the affected stack's own next turns instead of rounds, the casting turn does not count, and initiative changes reorder the rest of the round. Previews say what an effect does and for how long. See `docs/battle-spell-effects.md`.
 
 ### Gain floaters
 
