@@ -101,7 +101,7 @@
       "dwelling_scope": "faction_linked",
       "persistent_control": true,
       "weekly_recruits": {
-        "unit_river_guard": 7
+        "unit_river_guard": 12
       },
       "dwelling_kind": "single",
       "runtime_boundary": {
@@ -754,7 +754,7 @@
       "dwelling_scope": "faction_linked",
       "persistent_control": true,
       "weekly_recruits": {
-        "unit_shard_guard": 7
+        "unit_shard_guard": 9
       },
       "dwelling_kind": "single",
       "runtime_boundary": {
@@ -10983,7 +10983,7 @@
         "moonwax_reed_circle_claimed": true
       },
       "weekly_recruits": {
-        "unit_mireclaw_mireglass_reedcasters": 3
+        "unit_mireclaw_mireglass_reedcasters": 5
       },
       "runtime_boundary": {
         "status": "faction_linked_dwelling_live",
@@ -11009,7 +11009,7 @@
         "facet_vigil_claimed": true
       },
       "weekly_recruits": {
-        "unit_sunvault_noonfacet_sentinels": 3
+        "unit_sunvault_noonfacet_sentinels": 5
       },
       "runtime_boundary": {
         "status": "faction_linked_dwelling_live",
@@ -11035,7 +11035,7 @@
         "heartseed_bolt_grove_claimed": true
       },
       "weekly_recruits": {
-        "unit_thornwake_dawnseed_bolters": 3
+        "unit_thornwake_dawnseed_bolters": 5
       },
       "runtime_boundary": {
         "status": "faction_linked_dwelling_live",
@@ -11061,7 +11061,7 @@
         "blackbell_assay_watch_claimed": true
       },
       "weekly_recruits": {
-        "unit_brasshollow_gaugeplate_bailiffs": 3
+        "unit_brasshollow_gaugeplate_bailiffs": 5
       },
       "runtime_boundary": {
         "status": "faction_linked_dwelling_live",
@@ -11087,7 +11087,7 @@
         "last_memory_mooring_claimed": true
       },
       "weekly_recruits": {
-        "unit_veilmourn_tidehook_deckhands": 5
+        "unit_veilmourn_tidehook_deckhands": 7
       },
       "runtime_boundary": {
         "status": "faction_linked_dwelling_live",
@@ -14160,7 +14160,7 @@
         "gorefenring_veteran_muster_claimed": true
       },
       "weekly_recruits": {
-        "unit_mireclaw_gorefen_rippers": 1
+        "unit_mireclaw_gorefen_rippers": 2
       },
       "runtime_boundary": {
         "status": "guarded_faction_linked_dwelling_live",
@@ -14218,10 +14218,10 @@
         "fivebough_veteran_muster_claimed": true
       },
       "weekly_recruits": {
-        "unit_thornwake_pollenhook_whistlers": 8,
-        "unit_thornwake_bramblekite_needlers": 5,
-        "unit_thornwake_seedshield_wardens": 4,
-        "unit_thornwake_graft_matriarchs": 1,
+        "unit_thornwake_pollenhook_whistlers": 9,
+        "unit_thornwake_bramblekite_needlers": 9,
+        "unit_thornwake_seedshield_wardens": 5,
+        "unit_thornwake_graft_matriarchs": 2,
         "unit_thornwake_worldroot_bastion": 1
       },
       "runtime_boundary": {
@@ -14251,8 +14251,8 @@
         "threegauge_veteran_muster_claimed": true
       },
       "weekly_recruits": {
-        "unit_brasshollow_quenchspool_slingers": 5,
-        "unit_brasshollow_gaugefire_arbalists": 4,
+        "unit_brasshollow_quenchspool_slingers": 8,
+        "unit_brasshollow_gaugefire_arbalists": 5,
         "unit_brasshollow_foundry_saint": 1
       },
       "runtime_boundary": {
@@ -16185,7 +16185,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_brasshollow_scrip_haulers": 8
+        "unit_brasshollow_scrip_haulers": 12
       },
       "public_summary": "Hire Scrip Haulers here each week.",
       "runtime_boundary": {
@@ -16206,7 +16206,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_brasshollow_debt_engine_exactors": 2
+        "unit_brasshollow_debt_engine_exactors": 4
       },
       "public_summary": "Hire Debt-Engine Exactors here each week.",
       "runtime_boundary": {
@@ -16227,7 +16227,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_brasshollow_crucible_crawlers": 1
+        "unit_brasshollow_crucible_crawlers": 2
       },
       "public_summary": "Hire Crucible Crawlers here each week.",
       "runtime_boundary": {
@@ -16248,7 +16248,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_embercourt_lantern_sappers": 5
+        "unit_embercourt_lantern_sappers": 10
       },
       "public_summary": "Hire Lantern Sappers here each week.",
       "runtime_boundary": {
@@ -16269,7 +16269,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_embercourt_bargebow_crews": 4
+        "unit_embercourt_bargebow_crews": 6
       },
       "public_summary": "Hire Bargebow Crews here each week.",
       "runtime_boundary": {
@@ -16290,7 +16290,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_embercourt_lockglass_writcasters": 3
+        "unit_embercourt_lockglass_writcasters": 6
       },
       "public_summary": "Hire Lockglass Writcasters here each week.",
       "runtime_boundary": {
@@ -16311,7 +16311,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_embercourt_beacon_lectors": 2
+        "unit_embercourt_beacon_lectors": 4
       },
       "public_summary": "Hire Beacon Lectors here each week.",
       "runtime_boundary": {
@@ -16332,7 +16332,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_mireclaw_reedsnare_kin": 8
+        "unit_mireclaw_reedsnare_kin": 12
       },
       "public_summary": "Hire Reedsnare Kin here each week.",
       "runtime_boundary": {
@@ -16353,7 +16353,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_mireclaw_mudglass_slingers": 5
+        "unit_mireclaw_mudglass_slingers": 8
       },
       "public_summary": "Hire Mudglass Slingers here each week.",
       "runtime_boundary": {
@@ -16374,7 +16374,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_mireclaw_bogplate_maulers": 4
+        "unit_mireclaw_bogplate_maulers": 8
       },
       "public_summary": "Hire Bogplate Maulers here each week.",
       "runtime_boundary": {
@@ -16395,7 +16395,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_mireclaw_fenbell_chainstalkers": 2
+        "unit_mireclaw_fenbell_chainstalkers": 3
       },
       "public_summary": "Hire Fenbell Chainstalkers here each week.",
       "runtime_boundary": {
@@ -16437,7 +16437,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_sunvault_prism_adepts": 5
+        "unit_sunvault_prism_adepts": 6
       },
       "public_summary": "Hire Prism Adepts here each week.",
       "runtime_boundary": {
@@ -16458,7 +16458,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_sunvault_mirror_duelists": 4
+        "unit_sunvault_mirror_duelists": 5
       },
       "public_summary": "Hire Mirror Duelists here each week.",
       "runtime_boundary": {
@@ -16479,7 +16479,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_sunvault_zenith_lensbearers": 2
+        "unit_sunvault_zenith_lensbearers": 4
       },
       "public_summary": "Hire Zenith Lensbearers here each week.",
       "runtime_boundary": {
@@ -16500,7 +16500,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_sunvault_aurora_ballistae": 1
+        "unit_sunvault_aurora_ballistae": 2
       },
       "public_summary": "Hire Aurora Bastions here each week.",
       "runtime_boundary": {
@@ -16521,7 +16521,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_thornwake_stagknot_runners": 2
+        "unit_thornwake_stagknot_runners": 3
       },
       "public_summary": "Hire Stag-Knot Runners here each week.",
       "runtime_boundary": {
@@ -16563,7 +16563,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_veilmourn_maskglass_corsairs": 4
+        "unit_veilmourn_maskglass_corsairs": 5
       },
       "public_summary": "Hire Maskglass Corsairs here each week.",
       "runtime_boundary": {
@@ -16584,7 +16584,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_veilmourn_undertow_harpooners": 3
+        "unit_veilmourn_undertow_harpooners": 6
       },
       "public_summary": "Hire Undertow Harpooners here each week.",
       "runtime_boundary": {
@@ -16605,7 +16605,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_veilmourn_obituary_scribes": 2
+        "unit_veilmourn_obituary_scribes": 3
       },
       "public_summary": "Hire Obituary Scribes here each week.",
       "runtime_boundary": {
@@ -16626,7 +16626,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_veilmourn_mirrorkeel_reavers": 1
+        "unit_veilmourn_mirrorkeel_reavers": 2
       },
       "public_summary": "Hire Mirror-Keel Reavers here each week.",
       "runtime_boundary": {
@@ -16647,7 +16647,7 @@
       "persistent_control": true,
       "dwelling_kind": "single",
       "weekly_recruits": {
-        "unit_sunvault_shard_wardens": 8
+        "unit_sunvault_shard_wardens": 9
       },
       "public_summary": "Hire Shard Wardens here each week.",
       "runtime_boundary": {

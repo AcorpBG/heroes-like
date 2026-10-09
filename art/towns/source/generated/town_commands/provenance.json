@@ -1,0 +1,23 @@
+{
+  "generator": "Codex CLI built-in image generation (imggen skill)",
+  "date": "2026-10-09",
+  "references": [
+    "art/towns/runtime/building_categories/dwelling.png",
+    "art/towns/runtime/building_categories/economy.png",
+    "art/towns/runtime/building_categories/civic.png",
+    "art/towns/runtime/building_categories/magic.png"
+  ],
+  "processing": "cropped to the medallion, scaled to 92 px and centred on a transparent 128 px canvas (same 18 px inset as the building category sigils)",
+  "items": [
+    {
+      "runtime": "art/towns/runtime/town_commands/tavern.png",
+      "source": "art/towns/source/generated/town_commands/tavern_source.png",
+      "prompt": "A single round medallion emblem icon for a painted fantasy strategy game town screen, matching the attached reference emblems exactly in style: same circular bronze-and-wood ring frame with small rivets, same painterly hand-rendered lighting from the upper left, same saturated colours and soft rim highlights, same scale with the medallion filling the square canvas edge to edge. Subject inside the ring: a tavern \u0432\u0402\u201d a wrought-iron bracket holding a hanging wooden tavern sign with a foaming pewter ale tankard painted on it, with a warm hearth-glow window behind on a deep wine-red field. No text, no letters. Centered, front view, plain transparent background outside the circular medallion."
+    },
+    {
+      "runtime": "art/towns/runtime/town_commands/intelligence_report.png",
+      "source": "art/towns/source/generated/town_commands/intelligence_report_source.png",
+      "prompt": "A single round medallion emblem icon for a painted fantasy strategy game town screen, matching the attached reference emblems exactly in style: same circular bronze-and-wood ring frame with small rivets, same painterly hand-rendered lighting from the upper left, same saturated colours and soft rim highlights, same scale with the medallion filling the square canvas edge to edge. Subject inside the ring: an intelligence report \u0432\u0402\u201d a partly unrolled parchment scroll with a red wax seal, crossed by a brass spyglass, with a stylised watchful eye sigil glowing faintly above them, on a deep slate-blue field. No readable text, no letters. Centered, front view, plain transparent background outside the circular medallion."
+    }
+  ]
+}

@@ -25,7 +25,7 @@ The seven original ids are kept, so saved heroes keep their specialties; their v
 
 | Effect | Code |
 |---|---|
-| Map movement, scouting, raid losses, recruit growth and cost, daily gold, wood, ore and rare resources, max mana, mana cost | existing hooks (`HeroCommandRules`, `OverworldRules`, `SpellRules`, `HeroProgressionRules.adjusted_mana_cost`); rare resources resolve to the hero's faction `town_resources` |
+| Map movement, scouting, raid losses, recruit growth (tiers 1-6; T7 keeps the town's growth) and cost (rounded up), daily gold, wood, ore and rare resources, max mana, mana cost | existing hooks (`HeroCommandRules`, `OverworldRules`, `SpellRules`, `HeroProgressionRules.adjusted_mana_cost`); rare resources resolve to the hero's faction `town_resources` |
 | Night March | `OverworldRules._refresh_all_player_heroes_for_new_day` stores `movement_carry` (unused movement up to the rank); `HeroCommandRules.movement_max_for_hero` adds it to that day |
 | Plunderer's Eye | `OverworldRules.apply_reward_bonus` on won battles and site pickups (not explicit reward choices) |
 | Melee, ranged, retaliation and siege damage; damage taken; defend bonus | `BattleDamageRules.hero_damage_multiplier` and the defend bonus in `BattleRules._damage_modifier` and the battle AI estimate |

@@ -32698,7 +32698,7 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         "JOY_BUTTON_DPAD_LEFT",
         "_click_town_management_tab",
         "_town_management_authority_snapshot",
-        'return_to_field.text != "Return to Field"',
+        'return_to_field.text != "Close"',
         'get_node_or_null("%EndTurn")',
         "JOY_BUTTON_RIGHT_SHOULDER",
     ):
@@ -77159,7 +77159,7 @@ def validate_three_horizon_reserve_companies(errors: list[str]) -> None:
         group = groups.get(row["army_id"], {})
         scenario = scenarios.get(row["scenario_id"], {})
         ability_ids = [str(value.get("id", "")) for value in unit.get("abilities", []) if isinstance(value, dict)]
-        ensure(unit.get("faction_id") == row["faction_id"] and unit.get("role") == row["role"] and unit.get("tier") == 3 and unit.get("growth") == 4 and unit.get("content_status") == "horizon_reserve_company_live" and ability_ids == row["ability_ids"], errors, f"{unit_id} reserve gameplay identity changed")
+        ensure(unit.get("faction_id") == row["faction_id"] and unit.get("role") == row["role"] and unit.get("tier") == 3 and unit.get("growth") == 5 and unit.get("content_status") == "horizon_reserve_company_live" and ability_ids == row["ability_ids"], errors, f"{unit_id} reserve gameplay identity changed")
         ensure(building.get("growth_bonus", {}).get(unit_id) == 1 and building.get("recruitment_discount_percent", {}).get(unit_id) == 4, errors, f"{row['building_id']} reserve growth or muster authority changed")
         stacks = group.get("stacks", [])
         ensure(group.get("faction_id") == row["faction_id"] and len(stacks) == 4 and any(stack.get("unit_id") == unit_id and stack.get("count") == 4 for stack in stacks if isinstance(stack, dict)) and any(stack.get("unit_id") == row["specialist_unit_id"] and stack.get("count") == 3 for stack in stacks if isinstance(stack, dict)), errors, f"{row['army_id']} paired reserve and specialist company changed")
@@ -77198,7 +77198,7 @@ def validate_three_horizon_reserve_companies(errors: list[str]) -> None:
 def validate_three_horizon_skirmish_companies(errors: list[str]) -> None:
     expected = {
         "unit_thornwake_bramblekite_needlers": {
-            "faction_id": "faction_thornwake", "tier": 2, "growth": 5, "ability_ids": ["harry"],
+            "faction_id": "faction_thornwake", "tier": 2, "growth": 9, "ability_ids": ["harry"],
             "building_id": "building_thornwake_bramble_toll", "town_id": "town_crownroot_refuge",
             "scenario_id": "crownroot-quenchline-verdict", "army_id": "army_crownroot_seedglass_trial",
             "relief_id": "crownroot_relief", "relief_count": 3, "hook_id": "crownroot_seedglass_survivors",
@@ -77206,7 +77206,7 @@ def validate_three_horizon_skirmish_companies(errors: list[str]) -> None:
             "battle_count": 5, "source_sha": "3550f9978d09a49ff29382ef9fcb06db350bb394425475afba7944ebb42aecf8",
         },
         "unit_brasshollow_quenchspool_slingers": {
-            "faction_id": "faction_brasshollow", "tier": 2, "growth": 5, "ability_ids": ["volley"],
+            "faction_id": "faction_brasshollow", "tier": 2, "growth": 8, "ability_ids": ["volley"],
             "building_id": "building_brasshollow_rivet_kennels", "town_id": "town_blackbell_foundry",
             "scenario_id": "blackbell-saltwake-foreclosure", "army_id": "army_blackbell_quenchbell_proving",
             "relief_id": "blackbell_relief", "relief_count": 3, "hook_id": "blackbell_quenchbell_survivors",
@@ -77214,7 +77214,7 @@ def validate_three_horizon_skirmish_companies(errors: list[str]) -> None:
             "battle_count": 5, "source_sha": "613765314d1a256a1503a0371da838f10f4ce8be62a0c0154cb3ff8cef34d05d",
         },
         "unit_veilmourn_saltbell_casters": {
-            "faction_id": "faction_veilmourn", "tier": 1, "growth": 8, "ability_ids": ["harry"],
+            "faction_id": "faction_veilmourn", "tier": 1, "growth": 11, "ability_ids": ["harry"],
             "building_id": "building_veilmourn_ransom_exchange", "town_id": "town_pale_sounding_harbor",
             "scenario_id": "pale-sounding-tidewrit-reckoning", "army_id": "army_pale_saltwake_recital",
             "relief_id": "pale_relief", "relief_count": 4, "hook_id": "pale_saltwake_survivors",
@@ -77273,25 +77273,25 @@ def validate_three_horizon_skirmish_companies(errors: list[str]) -> None:
 def validate_four_faction_roster_parity_companies(errors: list[str]) -> None:
     expected = {
         "unit_embercourt_lockglass_writcasters": {
-            "faction_id": "faction_embercourt", "tier": 4, "role": "ranged", "growth": 3, "ability_ids": ["volley"],
+            "faction_id": "faction_embercourt", "tier": 4, "role": "ranged", "growth": 6, "ability_ids": ["volley"],
             "building_id": "building_embercourt_oath_pikehall", "town_id": "town_rainwrit_bastion",
             "scenario_id": "horizon-compact-six-citadels", "relief_id": "horizon_compact_day_four_relief", "relief_count": 1,
             "source_sha": "c6593a01dc5039800abde5d5a3d291ffb88321def1943a05a14652283815b87d",
         },
         "unit_thornwake_pollenhook_whistlers": {
-            "faction_id": "faction_thornwake", "tier": 1, "role": "ranged", "growth": 8, "ability_ids": ["harry"],
+            "faction_id": "faction_thornwake", "tier": 1, "role": "ranged", "growth": 9, "ability_ids": ["harry"],
             "building_id": "building_thornwake_seed_vault", "town_id": "town_thornwake_graftroot_caravan",
             "scenario_id": "mireford-skirmish", "relief_id": "graftroot_seed_train", "relief_count": 4,
             "source_sha": "aee551c6e0435b80c3bd877f29503ce868d69196a7c881fc0bd23121d036faf4",
         },
         "unit_brasshollow_tallyspring_throwers": {
-            "faction_id": "faction_brasshollow", "tier": 1, "role": "ranged", "growth": 8, "ability_ids": ["volley"],
+            "faction_id": "faction_brasshollow", "tier": 1, "role": "ranged", "growth": 12, "ability_ids": ["volley"],
             "building_id": "building_brasshollow_ore_tithe_office", "town_id": "town_brasshollow_orevein_gantry",
             "scenario_id": "orevein-contract", "relief_id": "orevein_clause_train", "relief_count": 4,
             "source_sha": "4f7df2297cf1f5f0e38ecf50f77c5abf148789af2b035706d7b6288d6257adcd",
         },
         "unit_veilmourn_gloamkeel_bulwarks": {
-            "faction_id": "faction_veilmourn", "tier": 4, "role": "melee", "growth": 3, "ability_ids": ["brace", "fog_screen"],
+            "faction_id": "faction_veilmourn", "tier": 4, "role": "melee", "growth": 4, "ability_ids": ["brace", "fog_screen"],
             "building_id": "building_veilmourn_harpoon_gantry", "town_id": "town_veilmourn_bellwake_harbor",
             "scenario_id": "bellwake-wreck-claim", "relief_id": "bellwake_salvage_muster", "relief_count": 1,
             "source_sha": "28200cc4bc83bbaec5230cd8554fa5f94129f7d4f3cb1b07ce574ce6f1f8a6ea",
@@ -77345,11 +77345,11 @@ def validate_four_faction_roster_parity_companies(errors: list[str]) -> None:
 def validate_six_faction_reserve_companies(errors: list[str]) -> None:
     expected = {
         "unit_embercourt_cinderseal_bombardiers": ("faction_embercourt", 6, "ranged", 1, ["volley", "readiness_writ"], "building_embercourt_drake_sluice", 1, "town_rainwrit_bastion", 1, 3, "army_rainwrit_charter_watch", 1, "a9b10cbe0ba037147d2c5a565f0aed7804eb95c8b12264ebd3178083ed58c375"),
-        "unit_mireclaw_mireglass_reedcasters": ("faction_mireclaw", 4, "ranged", 3, ["rot_cant"], "building_mireclaw_chainboom_ferry", 3, "town_hollowreed_sanctuary", 1, 4, "army_nightglass_drowned_watch", 2, "15ae4a8a0d45752a075ad449bafa265ec2cf7bcb86aa7dd9dd8dc8afed0801dc"),
-        "unit_sunvault_noonfacet_sentinels": ("faction_sunvault", 4, "melee", 3, ["brace", "shielding"], "building_sunvault_harmonic_cloister", 3, "town_meridian_choirhold", 1, 4, "army_halo_spire_noon_watch", 2, "ffe6710668b1ecaea7aa352a68f334c7fc8246ff615cd9c00bc0565e419729af"),
-        "unit_thornwake_dawnseed_bolters": ("faction_thornwake", 4, "ranged", 3, ["harry", "volley"], "building_thornwake_barkmantle_run", 3, "town_crownroot_refuge", 1, 4, "army_briarwheel_witness_watch", 2, "3f7819e1b7080056d1f9959b6685513b7bf92a8c8c17b992a611ddaaa10bf633"),
-        "unit_brasshollow_gaugeplate_bailiffs": ("faction_brasshollow", 4, "melee", 3, ["brace", "shielding"], "building_brasshollow_boiler_cathedral", 3, "town_blackbell_foundry", 1, 4, "army_blackbell_quench_watch", 2, "62f316cdeb069354e60df4e2380aa7711ce5f5ea9cfbd995489a3dc7788d67d1"),
-        "unit_veilmourn_tidehook_deckhands": ("faction_veilmourn", 2, "melee", 5, ["hookline", "fog_screen"], "building_veilmourn_ransom_exchange", 5, "town_pale_sounding_harbor", 2, 4, "army_pale_sounding_memory_watch", 4, "e48a0ec6607f7c20d9cf2b8e6803d78df2e6c8afd9bd4245f65b14e7c7ccffba"),
+        "unit_mireclaw_mireglass_reedcasters": ("faction_mireclaw", 4, "ranged", 5, ["rot_cant"], "building_mireclaw_chainboom_ferry", 3, "town_hollowreed_sanctuary", 1, 4, "army_nightglass_drowned_watch", 2, "15ae4a8a0d45752a075ad449bafa265ec2cf7bcb86aa7dd9dd8dc8afed0801dc"),
+        "unit_sunvault_noonfacet_sentinels": ("faction_sunvault", 4, "melee", 5, ["brace", "shielding"], "building_sunvault_harmonic_cloister", 3, "town_meridian_choirhold", 1, 4, "army_halo_spire_noon_watch", 2, "ffe6710668b1ecaea7aa352a68f334c7fc8246ff615cd9c00bc0565e419729af"),
+        "unit_thornwake_dawnseed_bolters": ("faction_thornwake", 4, "ranged", 5, ["harry", "volley"], "building_thornwake_barkmantle_run", 3, "town_crownroot_refuge", 1, 4, "army_briarwheel_witness_watch", 2, "3f7819e1b7080056d1f9959b6685513b7bf92a8c8c17b992a611ddaaa10bf633"),
+        "unit_brasshollow_gaugeplate_bailiffs": ("faction_brasshollow", 4, "melee", 5, ["brace", "shielding"], "building_brasshollow_boiler_cathedral", 3, "town_blackbell_foundry", 1, 4, "army_blackbell_quench_watch", 2, "62f316cdeb069354e60df4e2380aa7711ce5f5ea9cfbd995489a3dc7788d67d1"),
+        "unit_veilmourn_tidehook_deckhands": ("faction_veilmourn", 2, "melee", 7, ["hookline", "fog_screen"], "building_veilmourn_ransom_exchange", 5, "town_pale_sounding_harbor", 2, 4, "army_pale_sounding_memory_watch", 4, "e48a0ec6607f7c20d9cf2b8e6803d78df2e6c8afd9bd4245f65b14e7c7ccffba"),
     }
     units = items_index(load_json(CONTENT_DIR / "units.json"))
     buildings = items_index(load_json(CONTENT_DIR / "buildings.json"))

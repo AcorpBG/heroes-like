@@ -146,16 +146,21 @@ static func convert_reserves(town: Dictionary) -> void:
 static func growth(town: Dictionary) -> Dictionary:
 	var result := {}
 	var bonuses := {}
+	var percent := 0
 	var built := active_buildings(town)
 	for id in built:
 		var b := ContentService.get_building(String(id))
 		var tier := int(b.get("growth_tier", 0))
 		bonuses[tier] = int(bonuses.get(tier, 0)) + int(b.get("growth_amount", 0))
+		percent += int(b.get("growth_percent", 0))
+	# Fortifications raise every dwelling's whole week, flat bonuses included;
+	# fractions round up, so a Citadel already brings a second T7.
 	for id in built:
 		var uid := String(ContentService.get_building(String(id)).get("unlock_unit_id", ""))
 		if uid == "": continue
 		var unit := ContentService.get_unit(uid)
-		result[uid] = int(unit.get("growth", 1)) + int(bonuses.get(int(unit.get("tier", 0)), 0))
+		var weekly := int(unit.get("growth", 1)) + int(bonuses.get(int(unit.get("tier", 0)), 0))
+		result[uid] = (weekly * (100 + percent) + 99) / 100
 	return result
 
 static func construction_growth(building: Dictionary) -> Dictionary:

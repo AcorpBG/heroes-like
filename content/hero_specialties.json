@@ -270,31 +270,31 @@
       "group": "adventure",
       "path": "any",
       "max_rank": 4,
-      "summary": "+10% recruit growth, recruits cost 5% less",
+      "summary": "+10% tier 1-6 recruit growth, recruits cost 5% less",
       "ranks": [
         {
-          "text": "+10% recruit growth, recruits cost 5% less",
+          "text": "+10% tier 1-6 recruit growth, recruits cost 5% less",
           "bonuses": {
             "recruit_growth_multiplier": 0.1,
             "recruit_cost_delta": -0.05
           }
         },
         {
-          "text": "+20% recruit growth, recruits cost 10% less",
+          "text": "+20% tier 1-6 recruit growth, recruits cost 10% less",
           "bonuses": {
             "recruit_growth_multiplier": 0.2,
             "recruit_cost_delta": -0.1
           }
         },
         {
-          "text": "+30% recruit growth, recruits cost 15% less",
+          "text": "+30% tier 1-6 recruit growth, recruits cost 15% less",
           "bonuses": {
             "recruit_growth_multiplier": 0.3,
             "recruit_cost_delta": -0.15
           }
         },
         {
-          "text": "+40% recruit growth, recruits cost 20% less",
+          "text": "+40% tier 1-6 recruit growth, recruits cost 20% less",
           "bonuses": {
             "recruit_growth_multiplier": 0.4,
             "recruit_cost_delta": -0.2

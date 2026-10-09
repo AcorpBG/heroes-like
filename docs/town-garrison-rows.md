@@ -17,13 +17,14 @@ The Town screen works like HoMM2/HoMM3: two permanent army rows instead of the T
 
 ## Town screen (`TownShell`, `TownArmyRows`)
 
-- **Army panel**, bottom left: a 2x2 block of rounded command squares (Build, Muster, Market, Mage Guild; unbuilt ones are dimmed), then the garrison row (garrison hero portrait or an empty "Garrison" square, seven slots) above the visiting row (the hero at the gate or an empty "Gate" square, seven slots). Squares are 70 px.
+- **Army panel**, bottom left: a 3x2 block of rounded command squares (Build, Muster, Tavern / Market, Mage Guild, Intelligence Report; Market, Mage Guild and Tavern are dimmed until their building stands), then the garrison row (garrison hero portrait or an empty "Garrison" square, seven slots) above the visiting row (the hero at the gate or an empty "Gate" square, seven slots). Squares are 70 px.
   - Troops: click a stack, then a slot, to move, merge or swap; Shift opens a split slider; drag and drop works too. Orders go through `TownRules.manage_army_slots_in_active_town`, so a hero is never left without creatures.
   - Heroes: click a portrait to select it, click it again (or double-click) for the hero sheet, click the other portrait (or drag onto it) to move the hero into or out of the garrison or swap them.
   - Escape cancels the split, then a selection, before it returns to the field.
+- **Command squares** (`ux-town-command-block-tavern-intel-20261009`): Tavern opens the Wayfarers Hall popout with this week's heroes. Intelligence Report is a placeholder square and is not wired yet.
+- **Close**, bottom right corner beside the resource bar, returns to the field (Escape does too). It replaced Return to Field in the banner; the departure model keeps the Return to Field label and supplies the tooltip.
 - **Resource bar**: the overworld's stockpile bar along the bottom edge of every town view, above building popouts and the construction screen. The construction board has no resource strip of its own and ends above the bar.
 - **Town list**, top right: one thumbnail per owned town with its name overlaid; the current town is outlined. Clicking another town opens it directly (`OverworldRules.set_active_town_visit`).
-- **Banner**: Return to Field replaces the old Stores chip.
 - **Retired**: the Town Log & Logistics window and its command, the Command card, the footer (Save, Guide, Settings, Main Menu; Escape returns to the field and those stay on the overworld, as in HoMM3), and the stage's "Defending troops" and "Garrison troops" chips (the rows show them).
 
 ## Overworld
@@ -33,9 +34,10 @@ The Town screen works like HoMM2/HoMM3: two permanent army rows instead of the T
 
 ## Validation
 
-`tests/town_garrison_rows_report.tscn` (58 checks, generated small map): the garrison rules (enter with troop merge, defense, swap, blocked step-out, step-out, refused overflow, walking away), the save round trip and one-time migration, the Town screen (panel, command squares, rows, resource bar above popouts, retired surfaces, banner, town list, stage chips, click-click and split orders, portrait swap, hero sheet, Escape), the construction board (no header resource strip, Close beside Build, board above the resource bar, V town view clear of the rows, Esc and Close), and the overworld medallion index and hero-list badge.
+`tests/town_garrison_rows_report.tscn` (63 checks, generated small map): the garrison rules (enter with troop merge, defense, swap, blocked step-out, step-out, refused overflow, walking away), the save round trip and one-time migration, the Town screen (panel, six command squares, Tavern popout, unwired Intelligence Report, Close in the bottom right corner, rows, resource bar above popouts, retired surfaces, town list, stage chips, click-click and split orders, portrait swap, hero sheet, Escape), the construction board (no header resource strip, Close beside Build, board above the resource bar, V town view clear of the rows, Esc and Close), and the overworld medallion index and hero-list badge.
 
 ## Follow-ups
 
+- Wire the Intelligence Report square.
 - The retired Town Log catalog code is still in `TownShell` behind validation hooks; remove it with the tests that drive it.
 - AI towns do not use the garrison row. An idle computer hero parks in its town's doorway instead (one per town) and the town's troops stay in its garrison (`docs/ai-plays-by-player-rules.md`).

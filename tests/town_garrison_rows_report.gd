@@ -160,7 +160,7 @@ func _town_ui_section(session, primary_id: String, second_id: String) -> void:
 	await _frames(8)
 	var rows = shell.get("_army_rows")
 	var snapshot: Dictionary = rows.validation_snapshot()
-	_check(bool(snapshot.get("visible", false)) and int(snapshot.get("command_count", 0)) == 4, "the army panel shows with four command squares: %s" % snapshot)
+	_check(bool(snapshot.get("visible", false)) and int(snapshot.get("command_count", 0)) == 6, "the army panel shows with six command squares: %s" % snapshot)
 	_check(String(snapshot.rows.garrison.hero_id) == second_id and String(snapshot.rows.visiting.hero_id) == primary_id, "the rows show the garrison and visiting heroes")
 	_check(int(snapshot.rows.garrison.cell_count) == 7 and int(snapshot.rows.visiting.cell_count) == 7, "each row has seven slots")
 	var bar: Control = shell.get("_resource_bar_panel")
@@ -169,7 +169,23 @@ func _town_ui_section(session, primary_id: String, second_id: String) -> void:
 	_check(bar.find_child("ResourceIconStrip", true, false) != null, "the resource bar uses the overworld's inline icons")
 	_check(not (shell.get("_sidebar_shell_panel") as Control).visible and not (shell.get("_footer_panel") as Control).visible, "the Command card and footer are retired")
 	_check(not (shell.get("_log_action_button") as Control).visible, "the Town Log command is retired")
-	_check(String((shell.get("_leave_button") as Control).get_parent().name) == "TopBar", "Return to Field sits in the banner")
+	var close_button: Button = shell.get("_leave_button")
+	var shell_size: Vector2 = (shell as Control).size
+	_check(close_button.text == "Close" and close_button.get_parent() == shell and close_button.is_visible_in_tree(), "Close replaces the banner's Return to Field")
+	_check(absf(close_button.get_rect().end.x - (shell_size.x - 4.0)) <= 1.0 and absf(close_button.get_rect().end.y - (shell_size.y - 4.0)) <= 1.0 and bar.get_rect().end.x < close_button.position.x, "Close sits in the bottom right corner beside the resource bar: %s in %s" % [close_button.get_rect(), shell_size])
+	var tavern_button: Button = shell.get("_tavern_action_button")
+	var intel_button: Button = shell.get("_intel_action_button")
+	_check(tavern_button.get_parent().name == "TownCommands" and intel_button.get_parent().name == "TownCommands", "the Tavern and Intelligence Report commands join the command block")
+	_check(not tavern_button.disabled and tavern_button.icon != null and intel_button.icon != null, "the Tavern command is live with the hall built and both commands show emblems")
+	var intel_targets := []
+	for connection in intel_button.pressed.get_connections():
+		intel_targets.append(connection.callable.get_object())
+	_check(shell not in intel_targets, "the Intelligence Report command is not wired yet")
+	tavern_button.pressed.emit()
+	await _frames(2)
+	_check(bool(shell.call("_town_catalog_is_open")) and String(shell.get("_town_catalog_mode")) == "building_info" and String(shell.get("_selected_building_info_id")) == HeroCommandRules.HALL_BUILDING_ID, "the Tavern command opens the tavern popout")
+	shell.call("_close_town_catalog")
+	await _frames(2)
 	var switcher: Control = shell.get("_town_switcher")
 	var player_towns := 0
 	for entry in session.overworld.get("towns", []):

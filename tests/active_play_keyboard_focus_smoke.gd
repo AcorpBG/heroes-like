@@ -1346,8 +1346,8 @@ func _check_town_return_to_field_controller() -> bool:
 	if town_shell == null or String(town_shell.scene_file_path) != "res://scenes/town/TownShell.tscn":
 		return _fail("Town return controller fixture did not reach TownShell.")
 	var return_to_field: Button = town_shell.get_node_or_null("%Leave")
-	if return_to_field == null or return_to_field.text != "Return to Field":
-		return _fail("Town controller route did not expose the exact Return to Field command.")
+	if return_to_field == null or return_to_field.text != "Close":
+		return _fail("Town controller route did not expose the exact Close command.")
 	return_to_field.grab_focus()
 	await get_tree().process_frame
 	await _press_joypad_button(JOY_BUTTON_A)
