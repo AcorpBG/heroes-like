@@ -135,7 +135,7 @@ func _run() -> void:
 	ledger.append(_day_row(session, seats))
 	while int(session.day) < max_days:
 		var started := Time.get_ticks_msec()
-		OverworldRules.end_turn(session)
+		var turn: Dictionary = OverworldRules.end_turn(session)
 		ai_ms_max = maxi(ai_ms_max, Time.get_ticks_msec() - started)
 		if String(session.game_state) != "overworld" or not session.battle.is_empty():
 			_fail("Day %d left the overworld (%s) with no human seat." % [int(session.day), String(session.game_state)])
@@ -143,7 +143,12 @@ func _run() -> void:
 		_note_changes(session, seats, captures_seen, heroes_seen, timeline)
 		if trace:
 			_print_trace(session, seats)
-		ledger.append(_day_row(session, seats))
+		var row := _day_row(session, seats)
+		# Where each computer player's turn went, in milliseconds by phase.
+		for faction_profile in turn.get("enemy_turn_profile", {}).get("factions", []):
+			if faction_profile is Dictionary and row.sides.has(String(faction_profile.get("player_id", ""))):
+				row.sides[String(faction_profile.player_id)]["turn_ms"] = faction_profile.get("phases_ms", {})
+		ledger.append(row)
 		if int(session.day) % 7 == 1:
 			town_weeks.append(_town_snapshot(session))
 		if AiSeatRulesScript.match_over(session):

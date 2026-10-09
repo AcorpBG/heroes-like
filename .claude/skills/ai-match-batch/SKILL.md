@@ -89,7 +89,8 @@ When all matches are in, give one table:
 
 Diagnosing a stalled or odd game is your job, not the subagents': replay its `match_seed` with
 the same parameters (`HEROES_AI_MATCH_SEED=<seed>`; add `HEROES_AI_MATCH_TRACE=1` for each day's
-hero goals). A seed replays exactly only on the same commit: content and balance changes alter the
+hero goals, `HEROES_STRATEGIC_AI_PROFILE=1` to record each player's turn time by phase in the
+ledger's `turn_ms`). A seed replays exactly only on the same commit: content and balance changes alter the
 map. The match record (`<run>.json`) also holds the full battle log, daily ledgers with an
 `economy` breakdown (recruited strength and gold, buildings, hires, dismissals) and weekly town
 snapshots. If the owner wants a report page, build an artifact from these records.
