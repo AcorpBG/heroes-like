@@ -1117,30 +1117,30 @@
       "group": "magic",
       "path": "magic",
       "max_rank": 4,
-      "summary": "Spell buffs last 1 round longer",
+      "summary": "Spell buffs last 1 turn longer",
       "ranks": [
         {
-          "text": "Spell buffs last 1 round longer",
+          "text": "Spell buffs last 1 turn longer",
           "bonuses": {
             "buff_duration_bonus": 1
           }
         },
         {
-          "text": "Spell buffs, debuffs and riders last 1 round longer",
+          "text": "Spell buffs, debuffs and riders last 1 turn longer",
           "bonuses": {
             "buff_duration_bonus": 1,
             "debuff_duration_bonus": 1
           }
         },
         {
-          "text": "Buffs last 2 rounds longer, debuffs and riders 1",
+          "text": "Buffs last 2 turns longer, debuffs and riders 1",
           "bonuses": {
             "buff_duration_bonus": 2,
             "debuff_duration_bonus": 1
           }
         },
         {
-          "text": "Spell buffs, debuffs and riders last 2 rounds longer",
+          "text": "Spell buffs, debuffs and riders last 2 turns longer",
           "bonuses": {
             "buff_duration_bonus": 2,
             "debuff_duration_bonus": 2
@@ -1318,7 +1318,7 @@
           }
         },
         {
-          "text": "Beacon spells: +24% damage and healing, -1 mana, +1 round",
+          "text": "Beacon spells: +24% damage and healing, -1 mana, +1 turn",
           "bonuses": {
             "school_potency_pct": {
               "beacon": 24
@@ -1332,7 +1332,7 @@
           }
         },
         {
-          "text": "Beacon spells: +32% damage and healing, -2 mana, +1 round",
+          "text": "Beacon spells: +32% damage and healing, -2 mana, +1 turn",
           "bonuses": {
             "school_potency_pct": {
               "beacon": 32
@@ -1385,7 +1385,7 @@
           }
         },
         {
-          "text": "Mire spells: +24% damage and healing, -1 mana, +1 round",
+          "text": "Mire spells: +24% damage and healing, -1 mana, +1 turn",
           "bonuses": {
             "school_potency_pct": {
               "mire": 24
@@ -1399,7 +1399,7 @@
           }
         },
         {
-          "text": "Mire spells: +32% damage and healing, -2 mana, +1 round",
+          "text": "Mire spells: +32% damage and healing, -2 mana, +1 turn",
           "bonuses": {
             "school_potency_pct": {
               "mire": 32
@@ -1452,7 +1452,7 @@
           }
         },
         {
-          "text": "Lens spells: +24% damage and healing, -1 mana, +1 round",
+          "text": "Lens spells: +24% damage and healing, -1 mana, +1 turn",
           "bonuses": {
             "school_potency_pct": {
               "lens": 24
@@ -1466,7 +1466,7 @@
           }
         },
         {
-          "text": "Lens spells: +32% damage and healing, -2 mana, +1 round",
+          "text": "Lens spells: +32% damage and healing, -2 mana, +1 turn",
           "bonuses": {
             "school_potency_pct": {
               "lens": 32
@@ -1519,7 +1519,7 @@
           }
         },
         {
-          "text": "Root spells: +24% damage and healing, -1 mana, +1 round",
+          "text": "Root spells: +24% damage and healing, -1 mana, +1 turn",
           "bonuses": {
             "school_potency_pct": {
               "root": 24
@@ -1533,7 +1533,7 @@
           }
         },
         {
-          "text": "Root spells: +32% damage and healing, -2 mana, +1 round",
+          "text": "Root spells: +32% damage and healing, -2 mana, +1 turn",
           "bonuses": {
             "school_potency_pct": {
               "root": 32
@@ -1586,7 +1586,7 @@
           }
         },
         {
-          "text": "Furnace spells: +24% damage and healing, -1 mana, +1 round",
+          "text": "Furnace spells: +24% damage and healing, -1 mana, +1 turn",
           "bonuses": {
             "school_potency_pct": {
               "furnace": 24
@@ -1600,7 +1600,7 @@
           }
         },
         {
-          "text": "Furnace spells: +32% damage and healing, -2 mana, +1 round",
+          "text": "Furnace spells: +32% damage and healing, -2 mana, +1 turn",
           "bonuses": {
             "school_potency_pct": {
               "furnace": 32
@@ -1653,7 +1653,7 @@
           }
         },
         {
-          "text": "Veil spells: +24% damage and healing, -1 mana, +1 round",
+          "text": "Veil spells: +24% damage and healing, -1 mana, +1 turn",
           "bonuses": {
             "school_potency_pct": {
               "veil": 24
@@ -1667,7 +1667,7 @@
           }
         },
         {
-          "text": "Veil spells: +32% damage and healing, -2 mana, +1 round",
+          "text": "Veil spells: +32% damage and healing, -2 mana, +1 turn",
           "bonuses": {
             "school_potency_pct": {
               "veil": 32
@@ -1720,7 +1720,7 @@
           }
         },
         {
-          "text": "Old Measure spells: +24% damage and healing, -1 mana, +1 round",
+          "text": "Old Measure spells: +24% damage and healing, -1 mana, +1 turn",
           "bonuses": {
             "school_potency_pct": {
               "old_measure": 24
@@ -1734,7 +1734,7 @@
           }
         },
         {
-          "text": "Old Measure spells: +32% damage and healing, -2 mana, +1 round",
+          "text": "Old Measure spells: +32% damage and healing, -2 mana, +1 turn",
           "bonuses": {
             "school_potency_pct": {
               "old_measure": 32

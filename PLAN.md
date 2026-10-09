@@ -114,6 +114,10 @@ Rules:
 
 `ux-hero-level-up-roll-display-20261008` (completed, owner request): the level-up popup shows what the hero rolled above the specialty choices: a "Rolled +1 Spell power" headline, the four command stats with their new values (rolled ones lit gold with their gain, a short pulse unless reduced motion is on), the path's odds and, for several levels at once, each level's roll. See `docs/hero-level-up-popup.md`.
 
+### Battle spell effects
+
+`battle-spell-effect-identity-20261009` (completed, owner review): each battle spell family has one job (attack buffs: attack and momentum; defense buffs: defense and cohesion; haste: initiative and speed) and the three statuses have real rules and one name each: Harried drains cohesion, Staggered cannot strike back, Rooted cannot move. Spell effects last the affected stack's own next turns instead of rounds, the casting turn does not count, and initiative changes reorder the rest of the round. Previews say what an effect does and for how long. See `docs/battle-spell-effects.md`.
+
 ### Gain floaters
 
 `ux-overworld-gain-floaters-20261009` (completed, owner request): whatever an action on the map gives the player floats up above the hero, one line each, and slowly fades out: sites claimed, artifacts, spells, resources, troops, stats, experience, mana, movement, battle boosts, and costs in muted red. The shell compares a snapshot from before each move, context action, reward choice, hire, recruit or map spell with the state after, so every source counts; lines wait for the hero's walk to finish. See `docs/overworld-gain-floaters.md`.

@@ -6237,6 +6237,8 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 
 	match action:
 		"advance":
+			if _stack_is_rooted(active_stack, session.battle):
+				return {"ok": false, "message": "%s is rooted and cannot move." % _stack_label(active_stack), "state": "invalid"}
 			if int(session.battle.get("distance", 1)) <= 0 and legal_destinations_for_active_stack(session.battle).is_empty():
 				return {"ok": false, "message": "The lines are already engaged.", "state": "invalid"}
 			_clear_stack_animation_states(session.battle)
@@ -6365,7 +6367,7 @@ static func action_availability(battle: Dictionary) -> Dictionary:
 		}
 
 	return {
-		"advance": int(battle.get("distance", 1)) > 0 or not legal_destinations_for_active_stack(battle).is_empty(),
+		"advance": not _stack_is_rooted(active_stack, battle) and (int(battle.get("distance", 1)) > 0 or not legal_destinations_for_active_stack(battle).is_empty()),
 		"strike": not selected_target.is_empty() and _can_melee_this_action(active_stack, battle, selected_target),
 		"shoot": (
 			not selected_target.is_empty()
@@ -6683,6 +6685,7 @@ static func _complete_action(session: SessionStateStoreScript.SessionData, initi
 	return {"ok": true, "message": " ".join(messages), "state": "continue"}
 
 static func advance_turn(battle: Dictionary) -> void:
+	spend_effect_turns(battle, String(battle.get("active_stack_id", "")))
 	var turn_order = battle.get("turn_order", [])
 	if not (turn_order is Array) or turn_order.is_empty():
 		_prepare_round(battle, max(1, int(battle.get("round", 1))))
@@ -6743,6 +6746,8 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 				false
 			)
 		"advance":
+			if _stack_is_rooted(active_stack, session.battle):
+				return _resolve_enemy_defend(session, active_stack)
 			var approach_target := _nearest_opposing_stack(session.battle, active_stack)
 			var approach := melee_approach_destination(session.battle, active_stack, approach_target)
 			if not bool(active_stack.get("ranged", false)) and not approach.is_empty():
@@ -6784,7 +6789,7 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 			var fallback = _lowest_health_stack(targets)
 			if bool(active_stack.get("ranged", false)) and int(active_stack.get("shots_remaining", 0)) > 0:
 				return _resolve_ai_attack(session, active_stack, fallback, true)
-			if int(session.battle.get("distance", 1)) > 0:
+			if int(session.battle.get("distance", 1)) > 0 and not _stack_is_rooted(active_stack, session.battle):
 				var fallback_start_distance := int(session.battle.get("distance", 1))
 				var fallback_distance_delta := _apply_auto_advance_movement(session.battle, active_stack, fallback_start_distance)
 				_append_presentation_event(
@@ -8793,7 +8798,13 @@ static func _stack_hex(stack: Dictionary) -> Dictionary:
 	return _normalize_hex_cell(stack.get(STACK_HEX_KEY, {}))
 
 static func _stack_movement_points(stack: Dictionary, battle: Dictionary = {}) -> int:
-	return maxi(1, clampi(int(stack.get("speed", 1)), 1, 6) - TownBattle.movement_penalty(battle, stack))
+	if not battle.is_empty() and _stack_is_rooted(stack, battle):
+		return 0
+	var haste := SpellRulesScript.effect_bonus_for_kind(stack, battle, "speed") if not battle.is_empty() else 0
+	return maxi(1, clampi(int(stack.get("speed", 1)), 1, 6) + haste - TownBattle.movement_penalty(battle, stack))
+
+static func _stack_is_rooted(stack: Dictionary, battle: Dictionary) -> bool:
+	return SpellRulesScript.has_effect_id(stack, battle, STATUS_ROOTED)
 
 static func _build_occupancy_map(battle: Dictionary) -> Dictionary:
 	var occupied := {}
@@ -10234,13 +10245,67 @@ static func _apply_stack_effect(battle: Dictionary, battle_id: String, effect_pa
 			var same_legacy_kind = effect_id == "" and kind != "" and String(existing.get("kind", "")) == kind
 			if same_effect_id or same_legacy_kind:
 				effects.remove_at(effect_index)
-		effects.append(effect_payload.duplicate(true))
+		var added: Dictionary = effect_payload.duplicate(true)
+		if added.has("turns_left") and battle_id == String(battle.get("active_stack_id", "")):
+			added["skip_current_turn"] = true
+		effects.append(added)
 		stack["effects"] = effects
 		stacks[index] = stack
 		battle["stacks"] = stacks
+		_resort_remaining_turn_order(battle)
 		return {"applied": true}
 	battle["stacks"] = stacks
 	return {}
+
+## A stack's turn has ended: its turn-counted spell effects tick down one
+## (not the turn they were cast in) and those used up end.
+static func spend_effect_turns(battle: Dictionary, battle_id: String) -> void:
+	if battle_id == "":
+		return
+	var stacks: Array = battle.get("stacks", [])
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if not (stack is Dictionary) or String(stack.get("battle_id", "")) != battle_id:
+			continue
+		var kept := []
+		var changed := false
+		for effect in stack.get("effects", []):
+			if not (effect is Dictionary) or not effect.has("turns_left"):
+				kept.append(effect)
+				continue
+			changed = true
+			var updated: Dictionary = effect.duplicate(true)
+			if bool(updated.get("skip_current_turn", false)):
+				updated.erase("skip_current_turn")
+			else:
+				updated["turns_left"] = int(updated.get("turns_left", 1)) - 1
+			if int(updated.get("turns_left", 0)) > 0:
+				kept.append(updated)
+		if changed:
+			stack["effects"] = kept
+			stacks[index] = stack
+			battle["stacks"] = stacks
+		return
+
+## Initiative changed mid-round (a spell's buff or debuff): stacks that have
+## yet to act this round are put back in initiative order, so the change
+## counts now rather than next round.
+static func _resort_remaining_turn_order(battle: Dictionary) -> void:
+	var turn_order: Array = battle.get("turn_order", []) if battle.get("turn_order", []) is Array else []
+	var active_index := turn_order.find(String(battle.get("active_stack_id", "")))
+	if active_index < 0 or active_index >= turn_order.size() - 2:
+		return
+	var remaining: Array = turn_order.slice(active_index + 1)
+	var keys := {}
+	for battle_id in remaining:
+		var stack := _get_stack_by_id(battle, String(battle_id))
+		keys[battle_id] = {
+			"score": _stack_initiative_total(stack, battle) if not stack.is_empty() else -999,
+			"speed": int(stack.get("speed", 0)),
+			"player": String(stack.get("side", "")) == "player",
+		}
+	remaining.sort_custom(func(left, right): return _compare_stack_order_keys(keys[left], keys[right]))
+	battle["turn_order"] = turn_order.slice(0, active_index + 1) + remaining
 
 static func _expired_stack_effect_count(stack: Dictionary, round_number: int) -> int:
 	var expired := 0
@@ -10430,6 +10495,8 @@ static func _apply_pressure_artillery(
 	return messages
 
 static func _can_make_retaliation(stack: Dictionary, attack_distance: int, battle: Dictionary) -> bool:
+	if SpellRulesScript.has_effect_id(stack, battle, STATUS_STAGGERED):
+		return false
 	if attack_distance <= 0:
 		return true
 	return attack_distance == 1 and _reach_available(stack, battle)

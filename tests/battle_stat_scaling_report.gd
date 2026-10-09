@@ -203,10 +203,10 @@ func _check_spells() -> void:
 	var base_rounds := int(ContentService.get_spell("spell_lantern_phalanx").get("effect", {}).get("duration_rounds", 1))
 	for entry in [[0, 0], [3, 0], [4, 1], [8, 2], [12, 3], [40, 3]]:
 		var cast := SpellRules.resolve_battle_spell(_caster(int(entry[0]), ["spell_lantern_phalanx"]), battle, ally, ally, "spell_lantern_phalanx")
-		var rounds := int(cast.get("effect", {}).get("expires_after_round", 0))
+		var rounds := int(cast.get("effect", {}).get("turns_left", 0))
 		_check(rounds == base_rounds + int(entry[1]), "Lantern Phalanx at power %d lasts %d rounds (got %d)" % [entry[0], base_rounds + int(entry[1]), rounds])
 	var rider := SpellRules.resolve_battle_spell(_caster(8, ["spell_cinder_burst"]), battle, ally, foe, "spell_cinder_burst")
 	var rider_base := int(burst.get("effect", {}).get("status_effect", {}).get("duration_rounds", 1))
-	_check(int(rider.get("post_damage_effect", {}).get("expires_after_round", 0)) == rider_base + 2, "a damage spell's rider lasts longer with power")
+	_check(int(rider.get("post_damage_effect", {}).get("turns_left", 0)) == rider_base + 2, "a damage spell's rider lasts longer with power")
 	var summary := SpellRules._battle_spell_effect_summary(_caster(8, ["spell_lantern_phalanx"]), ContentService.get_spell("spell_lantern_phalanx"), battle, ally, ally)
-	_check(summary.contains("for %d rounds" % (base_rounds + 2)), "the spell summary shows the longer duration: %s" % summary)
+	_check(summary.contains("for its next %d turns" % (base_rounds + 2)), "the spell summary shows the longer duration: %s" % summary)

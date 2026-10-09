@@ -114391,6 +114391,19 @@
       "notes": "Owner accepted the prototype shown as before/after sheets. overworld_ground_surface.gdshader: border_warp (three rotated value-noise octaves, warp 0.36 tile + detail) bends the corner-weight lookup, faded to zero within 0.3 tile of tile centres so each tile's middle keeps its own ground; candidate materials score merged corner weight + border_priority (ground_materials.json, by slot) + painted-detail height (luminance above the material average, x1.3) and blend within blend_depth 0.26; the beach band uses the bent corner weights; decals fade by each ground's final blend share. OverworldGroundSurface passes border_priority. Validation: owner-map and generated-map border captures (sand/grass, snow/grass, swamp/grass, snow/dirt, dirt/grass, rough/dirt) and a generated coast reviewed; overworld_sandy_shore_regression 53/53 (tile-centre identity restored by the centre fade), overworld_ground_materials_contract passes, validate_repo identical (828)."
     },
     {
+      "id": "battle-spell-effect-identity-20261009",
+      "title": "One job per battle spell family; real status rules; effects counted in turns",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "gameplay_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md",
+        "docs/battle-spell-effects.md"
+      ],
+      "notes": "Owner review: buffs/debuffs were confusing and most spells felt the same. Content (content/spells.json, 79 battle spells): attack buffs attack+momentum, defense buffs defense+cohesion, initiative buffs initiative+speed (haste); statuses one name and one stat each: Harried -cohesion, Staggered -initiative, Rooted -defense (tier bands kept); Snares, Boundaries and Moonfen Dragnet now root, Fogbinds and Drowned-Bell Verdict stagger (harried 14, staggered 12, rooted 10); 7 descriptions reworded. Rules: Staggered cannot retaliate (BattleRules/BattleAiRules _can_make_retaliation); Rooted cannot move (_stack_movement_points 0, no advance for player or AI, no melee approach); speed modifier adds movement points. Spell effects count the affected stack's turns: SpellRules._counted_in_turns sets turns_left (expiry parked at TURN_EFFECT_ROUND_SENTINEL), _normalize_effects keeps it, BattleRules.spend_effect_turns runs from advance_turn, the casting turn does not count (skip_current_turn), _resort_remaining_turn_order reorders stacks still to act when an effect lands. Wording: STATUS_RULES and status_rules_text; previews read 'Leave X Rooted (-1 defense, cannot move) for its next turn' / 'Grant +2 attack, +1 momentum to X for its next 2 turns'; effect_summary lists rules and turns. AI: _status_tactical_value (Rooted on melee, Staggered on stacks with retaliation), haste speed value for melee stacks still closing in. Benchmark mirrors turns, reordering, Rooted, Staggered and haste value. Validator: signature-spell rider pins rewritten for the families, 112-spell mechanics hash re-pinned. Specialty texts now say turns. Validation: new tests/battle_spell_effects_report (105 checks, battle from a generated small map) passes; battle_stat_scaling, hero_specialty_catalog, magic battle spell behavior, resistance/countercontrol, prism bastion, AI spell valuation (payload-bridge fixture now Bulwark Litany for a Linekeeper) and deterministic RNG reports pass; unit_ability_runtime_report (76) and battle_intent_forecast_report (1) fail as before; validate_repo identical. Benchmark before/after: outliers 52->54, mean pair deviation 26.1->25.1; casts shift from buffs to damage/control; see docs/battle-spell-effects.md."
+    },
+    {
       "id": "ux-overworld-gain-floaters-20261009",
       "title": "Floating gain text over the map",
       "status": "completed",

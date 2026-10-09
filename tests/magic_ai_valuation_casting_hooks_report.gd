@@ -827,7 +827,7 @@ func _run_battle_ai_spell_report_payload_bridge_case() -> Dictionary:
 			"battle_traits": ["linekeeper"],
 			"command": {"power": 2, "knowledge": 8},
 			"spellbook": {
-				"known_spell_ids": ["spell_lantern_phalanx"],
+				"known_spell_ids": ["spell_bulwark_litany"],
 				"mana": {"current": 24, "max": 24},
 			},
 		}
@@ -851,7 +851,7 @@ func _run_battle_ai_spell_report_payload_bridge_case() -> Dictionary:
 		"name": "Enemy Untraited Caster",
 		"command": {"power": 2, "knowledge": 8},
 		"spellbook": {
-			"known_spell_ids": ["spell_lantern_phalanx"],
+			"known_spell_ids": ["spell_bulwark_litany"],
 			"mana": {"current": 24, "max": 24},
 		},
 	}))
@@ -863,7 +863,7 @@ func _run_battle_ai_spell_report_payload_bridge_case() -> Dictionary:
 	if String(unbridged_report.get("commander_payload_source", "")) != "argument" or String(bridged_report.get("commander_payload_source", "")) != "argument":
 		return {"ok": false, "error": "Spell report payload bridge did not record argument payload source: unbridged=%s bridged=%s" % [unbridged_report, bridged_report]}
 	var live_action := BattleAiRules.choose_enemy_action(battle, active, linekeeper_hero)
-	if String(live_action.get("action", "")) != "cast_spell" or String(live_action.get("spell_id", "")) != "spell_lantern_phalanx":
+	if String(live_action.get("action", "")) != "cast_spell" or String(live_action.get("spell_id", "")) != "spell_bulwark_litany":
 		return {"ok": false, "error": "Spell report payload bridge live choice should stay aligned with report, got %s report=%s" % [live_action, bridged_report]}
 	var battle_state := battle.duplicate(true)
 	battle_state["enemy_hero"] = linekeeper_hero.duplicate(true)
@@ -873,10 +873,10 @@ func _run_battle_ai_spell_report_payload_bridge_case() -> Dictionary:
 	var battle_state_selected: Dictionary = battle_state_report.get("selected", {}) if battle_state_report.get("selected", {}) is Dictionary else {}
 	if String(battle_state_report.get("commander_payload_source", "")) != "battle":
 		return {"ok": false, "error": "Battle-state enemy hero fallback did not record battle payload source: %s" % battle_state_report}
-	if String(battle_state_selected.get("spell_id", "")) != "spell_lantern_phalanx":
+	if String(battle_state_selected.get("spell_id", "")) != "spell_bulwark_litany":
 		return {"ok": false, "error": "Battle-state enemy hero fallback report lost the spellbook: %s" % battle_state_report}
 	var battle_state_action := BattleAiRules.choose_enemy_action(battle_state, active, {})
-	if String(battle_state_action.get("action", "")) != "cast_spell" or String(battle_state_action.get("spell_id", "")) != "spell_lantern_phalanx":
+	if String(battle_state_action.get("action", "")) != "cast_spell" or String(battle_state_action.get("spell_id", "")) != "spell_bulwark_litany":
 		return {"ok": false, "error": "Battle-state enemy hero fallback live choice should cast the battle hero spell, got %s report=%s" % [battle_state_action, battle_state_report]}
 	if battle_state.has("enemy_hero_payload"):
 		return {"ok": false, "error": "Battle-state enemy hero fallback mutated the source battle: %s" % battle_state}
