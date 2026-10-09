@@ -62,6 +62,10 @@ Rules:
 
 `ai-even-musters-danger-20261008` (completed, owner request after the series-20261008 map 8 day-5 loss): every faction starts a generated map with a muster rated about 140 (`army_start_<faction>`, was 90-169), and AI heroes keep out of the next-turn reach of a visible hostile hero 1.15x their strength unless holding their own town deters it; the main hero holds a gate only while hero plus garrison deter the attack. See `docs/ai-plays-by-player-rules.md`.
 
+### AI field armies, town and elimination value
+
+`ai-field-armies-town-value-20261009` (completed, owner request after the medium-map AI match): lesser heroes keep field armies (one per town beyond the first, up to two) that take garrisons along, defend and capture instead of feeding the main hero; towns are worth 10,000 plus four weeks of income and troops; eliminating a player adds 20,000 shared over its last towns or heroes; a defending hero's one-cast spell burst discounts attacks and forces a preview. See `docs/ai-plays-by-player-rules.md`.
+
 ### AI towns make room to recruit
 
 `ai-garrison-room-20261009` (completed, owner question after a four-player AI stalemate): a full computer garrison dismisses its weakest stack when what it would buy is stronger, so town growth turns into armies instead of gold hoards. See `docs/ai-plays-by-player-rules.md`.
