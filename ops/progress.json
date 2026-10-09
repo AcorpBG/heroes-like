@@ -114568,6 +114568,47 @@
         "docs/ai-plays-by-player-rules.md"
       ],
       "notes": "Owner question after a four-player AI match (seed ai-match-3854663367) ended in a 160-day stalemate with 922k/409k gold hoards. Weekly town snapshots (ai_versus_ai_match_report town_weeks) showed garrisons stuck at seven odd stacks so army_addition_plan rejected every new unit kind and growth piled up unbought for weeks. AiHeroRules._make_room dismisses the weakest garrison stack when the purchase is stronger. Same seed: decided Day 77, 24 captures (5 unopposed) instead of undecided at 160 with 82 (25). Random 4-player ai-match-3463369466: Thornwake wins Day 42. ai_versus_ai_match_report passes; ai_player_rules_report walled map unchanged (530 tiles, open in ai-even-musters-danger-20261008). ai_versus_ai_match_report gains HEROES_AI_MATCH_PLAYERS and weekly town snapshots."
+    },
+    {
+      "id": "rmg-h3maped-parity-basis-windows-wine-20261009",
+      "title": "H3MapEd parity basis: Windows vs Wine, seeds 137 and 211",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "rmg_recovery_investigation",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/h3maped-parity-basis-windows-wine.md",
+        "docs/lessons-learned.md"
+      ],
+      "notes": "Recovery evidence only; no native generator change. Seed-patched h3maped.exe (SHA-256 4480fba1..., same LODs) driven on Windows 10 by window messages through tools/rmg_h3maped_win32_trace/h3trace.c (debugger attached after startup; rand/srand and marker logging) matches the Wine references semantically for seeds 58, 1, 73, 2, 28, 137, 211 and native for map 8 seed 3451295931 (0 tile cells, identical object multisets). Seed 58 also matches without a debugger, over three generations in one process, with four OK paths, posted-click dialog input and 64 KiB of junk below the generator entry stack. Only the earlier desktop-controlled Windows maps differ, from the first 0x4aab7e reward pick; RNG offsets -8..+24 before the reward loop, single extra draws at reward-owner boundaries, editor registry settings, AppCompat/IFEO, message pumping and reads of town-less owners' +0x30..+0x38 are ruled out. Seed 137: native 0x4a8db2 replay copies the shared type-98 pair success byte into owner +0x3c, which H3MapEd writes only at 0x4a95a4 (owners 0, 1, 5 traced), inflating 0x4aadd2 terrain pressure and creature Pandora values. Seed 211: both native 0x49aa93 ports skip the entry-cell bit-22 occupant check at 0x49ab87..0x49abac (occupant type 53, 0x598300 flag 2 = 0), placing an extra Crystal pile. Evidence: .artifacts/rmg_recovery/support/windows_h3maped_parity_basis_20261009/ (also moved map8_unguarded_route_20261009 into the main store with a correction note).",
+      "updatedAt": "2026-10-09T11:30:00Z"
+    },
+    {
+      "id": "native-rmg-owner-success-and-entry-occupant-20261009",
+      "title": "Native RMG: owner success byte only from 0x4a95a4; 0x49aa93 entry-cell occupant check",
+      "status": "pending",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "native_rmg_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/h3maped-parity-basis-windows-wine.md",
+        "docs/lessons-learned.md"
+      ],
+      "notes": "Two source-backed defects with private-state proof (rmg-h3maped-parity-basis-windows-wine-20261009). A: drop the owner.byte_0x3c write from the 0x4a8db2 replay (H3MapEd writes owner +0x3c only at 0x4a95a4 in the 0x4a93a2 success path; constructor 0x49b4cd zeroes it). B: in source_relation_object_coordinate_eligibility_with_policy_0x49aa93 and mine_resource_coordinate_eligibility_0x49aa93, when the projection cell has bit 22 resolve the occupant through the cell's first object reference and require 0x598300 flag 2 of its type instead of using the candidate's allow_existing_bit22. Scratch validation (native_fix_candidates.patch in the evidence folder): semantic sweep 57/72 -> 60/72 exact (Small 137 by A; Small 211 and Medium compare 17 by B), no other reference changed exactness, cell count or object count. Landing needs rebuilt Windows and Linux GDExtension/selftest binaries and the maintained native checks.",
+      "updatedAt": "2026-10-09T11:30:00Z"
+    },
+    {
+      "id": "rmg-h3maped-desktop-input-divergence-20261009",
+      "title": "Recover the input that changes desktop-controlled H3MapEd reward selection",
+      "status": "blocked",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "rmg_recovery_investigation",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/h3maped-parity-basis-windows-wine.md"
+      ],
+      "notes": "Named gap: desktop-controlled H3MapEd sessions (map8_unguarded_route_20261009/windows_h3maped_runs) diverge from controlled Windows, Wine and native at the first 0x4aab7e reward pick; the input is unidentified. Blocked on a traced replay of the desktop-controlled procedure with h3trace attached, which needs desktop-control permission. Owner decision first: whether that session variant is H3MapEd behavior the generator should match.",
+      "updatedAt": "2026-10-09T11:30:00Z"
     }
   ],
   "project": "heroes-like",
