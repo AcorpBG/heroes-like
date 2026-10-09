@@ -114640,15 +114640,28 @@
     {
       "id": "rmg-h3maped-desktop-input-divergence-20261009",
       "title": "Recover the input that changes desktop-controlled H3MapEd reward selection",
-      "status": "blocked",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "rmg_recovery_investigation",
       "source": "PLAN.md",
       "sourceDocs": [
         "docs/h3maped-parity-basis-windows-wine.md"
       ],
-      "notes": "Named gap: desktop-controlled H3MapEd sessions (map8_unguarded_route_20261009/windows_h3maped_runs) diverge from controlled Windows, Wine and native at the first 0x4aab7e reward pick; the input is unidentified. Blocked on a traced replay of the desktop-controlled procedure with h3trace attached, which needs desktop-control permission. Owner decision first: whether that session variant is H3MapEd behavior the generator should match.",
-      "updatedAt": "2026-10-09T11:30:00Z"
+      "notes": "Recovery evidence only; no native change. Owner-approved desktop control 2026-10-09. A desktop-started scratch editor traced with h3trace --pid (Ctrl+N, mouse/keyboard dialog input) reproduces the old desktop map for seed 58 exactly (323/323). Phase RNG matches the message-driven run to 0x4ac7c4; the first different draw is the first 0x4a9f1c reward pick, where Keymaster's Tent candidates (vtable 0x540ca0, type 10, subtype 0) score their base value instead of -1. Their value (0x49cd9b) requires generator +0xf5c to equal the tent colour. The generator object is a stack local; setup writes +0xf58 but never +0xf5c, and none of its eight writers runs for these maps, so +0xf5c is leftover stack bytes: 0 for Ctrl+N (generator 0x19dfa8), 0x011d6fc0 File menu and 0x01xxxxxx posted commands (0x19e05c), 0x011be0d0 toolbar (0x19dacc), 0x7a1befdf under Wine. Forcing +0xf5c = 0 at generator entry in message-driven runs reproduces all six desktop maps (seeds 58, 3451295931, 1, 73, 2, 28); File-menu and toolbar runs match Wine. For seed 58 the Border Guard endpoint 0x4a5e73 (the other reader) is not reached. Native set to +0xf5c = 0 reproduces 5/6 desktop maps; seed 2, the only one with a placed tent (AVXkey00), stops at 0x4ad1e3_ordered_payload_final_zero_sentinel_missing because the tent projection branch 0x540b00/0x49c019/0x4adb72/0x4adef7 and its writeout are unported. Owner decision pending: keep the current Wine/menu behaviour or model the Ctrl+N variant (needs that branch ported). Evidence: .artifacts/rmg_recovery/support/windows_h3maped_parity_basis_20261009/desktop_input_f5c/.",
+      "updatedAt": "2026-10-09T12:40:00Z",
+      "validatedAt": "2026-10-09T12:40:00Z"
+    },
+    {
+      "id": "ai-field-armies-town-value-20261009",
+      "title": "AI field armies, defences, town and elimination value, portal routes",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ai_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Owner requests after four-player medium AI matches: field armies (up to 3, join the main army when it cannot win alone), towns worth 10,000 + 4 weeks, elimination value 20,000 over a rival's last towns/heroes, weighed defence left in towns, spell-burst attack discount and forced preview (explains the Day 86 Bell Lance loss), war-path guard value, fixed-exit portal routing (Wayrings; the medium seed ai-match-2364197286 halves met only at a Wayring pair). Core AI tests pass (ai_player_rules, known-world memory, live turn). Open: four-player medium games can still run to the 160-day cap - armies stay creature-supply-bound while gold piles up (owner economy decision), and single-seed outcomes swing widely; owner declined a batch evaluation for now. ai_raid_assault_grouping_report (archived River Pass fixture) expects a support hero to hand over troops, which a field army no longer does."
     }
   ],
   "project": "heroes-like",
