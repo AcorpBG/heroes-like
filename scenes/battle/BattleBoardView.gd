@@ -185,6 +185,9 @@ var _enemy_stacks: Array = []
 var _active_stack: Dictionary = {}
 var _target_stack: Dictionary = {}
 var _field_objectives: Array = []
+# This round from the active stack, the waiting stacks, then the predicted
+# next round (BattleRules.turn_order_forecast), refreshed with each battle state.
+var _turn_forecast: Dictionary = {}
 var _stack_hit_shapes: Array = []
 var _hover_destination_cell := Vector2i(-1, -1)
 var _consequence_preview: Dictionary = {}
@@ -927,6 +930,7 @@ func _apply_battle_dictionary(battle: Dictionary) -> void:
 	_active_stack = {}
 	_target_stack = {}
 	_field_objectives = []
+	_turn_forecast = {}
 	_stack_hit_shapes = []
 	if battle.is_empty():
 		_controller_cursor_cell = Vector2i(-1, -1)
@@ -939,6 +943,7 @@ func _apply_battle_dictionary(battle: Dictionary) -> void:
 		_active_stack = BattleRulesScript.get_active_stack(_battle)
 		_target_stack = BattleRulesScript.get_selected_target(_battle)
 		_field_objectives = _battle.get(BattleRulesScript.FIELD_OBJECTIVES_KEY, []).duplicate(true) if _battle.get(BattleRulesScript.FIELD_OBJECTIVES_KEY, []) is Array else []
+		_turn_forecast = BattleRulesScript.turn_order_forecast(_battle)
 		for stack in _battle.get("stacks", []):
 			if not (stack is Dictionary) or not _stack_visible_for_presentation(stack):
 				continue
@@ -4624,27 +4629,65 @@ func _draw_turn_strip(field_rect: Rect2) -> void:
 		draw_rect(portrait_rect, side_color.darkened(0.14), false, 1.0)
 		draw_rect(rect, ACTIVE_COLOR if current else TURN_STRIP_QUEUED_FRAME, false, 2.0 if current else 1.0)
 		_draw_text(_turn_strip_chip_label(stack, rect.size.x), rect.position + Vector2(TURN_STRIP_LABEL_LEFT_INSET, 18.0), TEXT_COLOR, 10)
+		_draw_turn_strip_phase_mark(entry, rect)
+
+## Waiting chips get a wait badge on the portrait; next-round chips are
+## dimmed, and the first one is set off by a divider and the round number.
+func _draw_turn_strip_phase_mark(entry: Dictionary, rect: Rect2) -> void:
+	var portrait_rect := _turn_strip_portrait_rect(rect)
+	match String(entry.get("phase", "current")):
+		"waiting":
+			var badge := Rect2(portrait_rect.end - Vector2(10.0, 10.0), Vector2(11.0, 11.0))
+			draw_rect(badge, TURN_STRIP_PORTRAIT_FILL, true)
+			draw_rect(badge, ACTIVE_COLOR, false, 1.0)
+			_draw_badge_text("W", badge.get_center(), ACTIVE_COLOR, 9)
+		"next_round":
+			draw_rect(rect, Color(0.0, 0.0, 0.0, 0.34), true)
+			if bool(entry.get("first_of_phase", false)):
+				draw_line(rect.position + Vector2(-3.5, -2.0), rect.position + Vector2(-3.5, rect.size.y + 2.0), ACTIVE_COLOR, 2.0)
+				var tag := Rect2(portrait_rect.position - Vector2(1.0, 1.0), Vector2(16.0, 10.0))
+				draw_rect(tag, TURN_STRIP_PORTRAIT_FILL, true)
+				_draw_badge_text("R%d" % (int(_turn_forecast.get("round", 1)) + 1), tag.get_center(), ACTIVE_COLOR, 8)
+
+## Small text centred on a point, for badges.
+func _draw_badge_text(text: String, center: Vector2, color: Color, font_size: int) -> void:
+	var font = get_theme_default_font()
+	if font == null:
+		return
+	var text_size: Vector2 = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
+	draw_string(font, Vector2(center.x - text_size.x * 0.5, center.y + float(font_size) * 0.36), text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, color)
 
 func _turn_strip_rect(field_rect: Rect2) -> Rect2:
 	var strip_width := maxf(0.0, minf(field_rect.size.x - TURN_STRIP_MARGIN * 2.0, TURN_STRIP_MAX_WIDTH))
 	return Rect2(field_rect.position + Vector2(TURN_STRIP_MARGIN, TURN_STRIP_MARGIN), Vector2(strip_width, TURN_STRIP_HEIGHT))
 
+## The strip's order: this round from the active stack, the waiting stacks,
+## then the predicted next round.
+func _turn_strip_order() -> Array:
+	var order: Array = []
+	for phase in ["current", "waiting", "next_round"]:
+		var ids: Variant = _turn_forecast.get(phase, [])
+		if ids is Array:
+			for battle_id_value in ids:
+				order.append({"battle_id": String(battle_id_value), "phase": phase})
+	return order
+
 func _turn_strip_entries(field_rect: Rect2) -> Array:
 	var entries: Array = []
-	var turn_order = BattleRulesScript.upcoming_actor_ids(_battle, 5)
-	if not (turn_order is Array):
-		return entries
+	var turn_order := _turn_strip_order()
 	var strip_rect := _turn_strip_rect(field_rect)
 	var chip_width: float = minf(122.0, (strip_rect.size.x - 14.0) / float(maxi(1, mini(turn_order.size(), 5))))
-	for battle_id_value in turn_order:
+	for slot_value in turn_order:
 		if entries.size() >= 5:
 			break
-		var stack: Dictionary = _stack_by_id(String(battle_id_value))
+		var stack: Dictionary = _stack_by_id(String(slot_value.get("battle_id", "")))
 		if stack.is_empty() or _stack_alive_count(stack) <= 0:
 			continue
 		entries.append({
 			"slot": entries.size() + 1,
 			"stack": stack,
+			"phase": String(slot_value.get("phase", "current")),
+			"first_of_phase": entries.is_empty() or String(entries.back().get("phase", "")) != String(slot_value.get("phase", "current")),
 			"rect": Rect2(
 				strip_rect.position + Vector2(7.0 + float(entries.size()) * chip_width, 5.0),
 				Vector2(chip_width - 5.0, strip_rect.size.y - 10.0)
@@ -4690,13 +4733,19 @@ func _turn_strip_entry_tooltip(entry: Dictionary, visible_count: int) -> String:
 	if stack.is_empty():
 		return tooltip_text
 	var current := String(stack.get("battle_id", "")) == String(_battle.get("active_stack_id", ""))
+	var state := "current stack" if current else "queued stack"
+	match String(entry.get("phase", "current")):
+		"waiting":
+			state = "waiting stack, acts after the others"
+		"next_round":
+			state = "next round (round %d), predicted" % (int(_turn_forecast.get("round", 1)) + 1)
 	return "Initiative Strip\n- Visible slot: %d of %d\n- Stack: %s x%d\n- Side: %s\n- State: %s\n- Inspection: hovering this chip does not advance initiative or spend an action." % [
 		int(entry.get("slot", 0)),
 		visible_count,
 		_stack_full_name(stack),
 		_stack_alive_count(stack),
 		String(stack.get("side", "neutral")).capitalize(),
-		"current stack" if current else "queued stack",
+		state,
 	]
 
 func _turn_strip_chip_label(stack: Dictionary, chip_width: float) -> String:

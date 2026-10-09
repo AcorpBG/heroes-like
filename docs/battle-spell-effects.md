@@ -44,7 +44,7 @@ Spell previews and the stack effect list say what an effect does and for how lon
 
 ## AI and benchmark
 
-The battle AI's damage estimate knows Staggered stops retaliation; a rooted computer stack does not try to advance; spell scoring values Rooted on melee stacks and Staggered on stacks that can still strike back, and haste's speed on a melee stack that still has to close in. `tests/battle_faction_fast_balance_benchmark.py` mirrors turn-counted durations, the reordering, Rooted and Staggered (its distance model has no movement points, so haste speed is not modelled there).
+The battle AI's damage estimate knows Staggered stops retaliation; a rooted stack is never scored an advance or a reposition, so neither the enemy turn nor the shared tactical order used by Quick Resolve, computer players' battles and the suggested order gives one (until 2026-10-09 the shared order did, and Quick Resolve fell back to its availability order); spell scoring values Rooted on melee stacks and Staggered on stacks that can still strike back, and haste's speed on a melee stack that still has to close in. `tests/battle_faction_fast_balance_benchmark.py` mirrors turn-counted durations, the reordering, Rooted and Staggered (its distance model has no movement points, so haste speed is not modelled there).
 
 ## Wounded targets
 

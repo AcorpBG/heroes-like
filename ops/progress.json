@@ -114759,6 +114759,35 @@
       "validatedAt": "2026-10-09T15:31:00Z"
     },
     {
+      "id": "bugfix-rooted-tactical-order-20261009",
+      "title": "Tactical scoring never orders a rooted stack to advance",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/ai-plays-by-player-rules.md",
+        "docs/battle-spell-effects.md"
+      ],
+      "notes": "Follow-up to bugfix-quick-resolve-focus-target-20261009: BattleAiRules.choose_stack_tactical_order (the shared order behind Quick Resolve, AI battles via AiHeroRules._simulate_battle and the human's suggested order) scored an advance for a rooted stack, which BattleRules.action_availability refuses, so player_autoplay_decision fell back with scored_order_unavailable (probe 2026-10-09: 194 fallbacks in 158 rooted battles). _advance_score now returns -9999 for a rooted stack (advance and reposition alike) and both choose_stack_tactical_order and choose_enemy_action skip the advance candidate through one _stack_is_rooted helper, so a real order (defend, a spell, an adjacent strike or a shot) is scored; the enemy turn already skipped advance and now also reports advance as scored out. tests/battle_quick_resolve_focus_report (generated small map, 15 checks): a rooted melee stack out of reach gets a scored, available order that is not an advance and is carried out; a rooted enemy stack gets no advance from either scorer; the weakest-enemy fallback is checked directly. With the old scoring it fails 4 checks (the shared order also advanced a rooted enemy stack). Same seeds before and after: 78 hero-versus-guard battles on 3 generated small maps with every player stack rooted 3 turns fell back 76 times before, 0 after, with the same result and survivors in all 78 (400 orders before, 398 after; 7 defends became spells). 7 AI matches (four 2-player small, two 3-player small incl. a Thornwake mirror, one 4-player medium; 257 battles, 1 rooted fallback before) are identical apart from turn timings: same winners, final days, battles and ledgers. battle_spell_effects (105), battle_stack_health_normalize (89), battle_ai_withdrawal_decision and ai_player_rules reports pass; battle_autoplay_tactical_order_report failed before and after on its unrelated enemy_hero fallback check and passes after rebasing on 8270a3a35, as do the focus, spell effects and withdrawal reports. Seen, not fixed: the same matches hit Quick Resolve's other fallback, scored_spell_order_unavailable, 382 times; cause not investigated (a candidate: the shared order validates spells against a merged commander payload, player_autoplay_decision against battle.player_hero alone).",
+      "updatedAt": "2026-10-09T18:30:00Z",
+      "validatedAt": "2026-10-09T18:30:00Z"
+    },
+    {
+      "id": "bugfix-quick-resolve-spell-check-20261009",
+      "title": "Quick Resolve checks a scored spell against the hero's real spellbook",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Follow-up found while fixing bugfix-rooted-tactical-order-20261009. BattleAutoResolveRules.player_autoplay_decision checked a scored spell with SpellRules.validate_battle_spell against battle.player_hero, the battle stat payload (attack, defense, mana_current...), which has no spellbook and no command, so ensure_hero_spellbook read its mana as the 8-point minimum and refused every spell costing more with \"Insufficient mana.\". The scorer (choose_stack_tactical_order merges battle.player_commander_state) and the cast (BattleRules._player_spell_resolution) both use the real commander state. 27 battle spells cost more than 8, among them the 9-12 mana damage spells (Bell Lance 77 base damage, Furnace Rivet Clause, Root Loam Thorn, Old Measure Tally, Mire Silt Rot, Veil Mourning Mark). So Quick Resolve and the attacking side of every computer player battle (AiHeroRules._simulate_battle, fight previews included) never cast them and fell back to the availability order, while defending heroes, cast through _cast_enemy_spell with the resolved enemy state, did. The check now uses BattleRules._player_commander_state(session). tests/battle_quick_resolve_focus_report (21 checks, generated small map): a hero with 28 mana and Bell Lance (12) gets it scored, checked, cast at the barely standing enemy, and pays 12 mana; the old check fails 3 of these checks (falls back to advance, no cast). Same seeds before and after: 77 hero-versus-guard battles on 3 generated small maps with the hero knowing Bell Lance and Cinder Burst (20 mana): 136 refused spell orders before, 0 after; 31 casts more; 2 defeats became victories and 1 a stalemate; more creatures survive in 20 battles, fewer in 2 (470 to 588 creatures left in all). 9 AI matches on current main: the 7 that never hit the fault are identical (four 3-player small, three Thornwake/Brasshollow/Mireclaw small); the two that did changed from the battle of the first corrected cast onwards: the Thornwake 3-player mirror (seed ai-match-rooted-7) has the same winner on day 49 instead of 57 (58 battles instead of 69); the 4-player medium (ai-match-rooted-6) was won by player_3 (Thornwake) on day 90 and is now won by player_1 (Brasshollow) on day 145. No fallback of any kind in any match after the fix. battle_spell_effects (105), battle_stack_health_normalize (89), battle_autoplay_tactical_order, battle_ai_withdrawal_decision, ai_player_rules and player_elimination_rules reports pass; the Quick Resolve runtime, post-battle and autosave route reports run on the archived River Pass scenario and were not used.",
+      "updatedAt": "2026-10-09T21:00:00Z",
+      "validatedAt": "2026-10-09T21:00:00Z"
+    },
+    {
       "id": "content-creature-bank-levels-20261009",
       "title": "HoMM3 creature banks keep their levels: the Crypt becomes a levelled Glassbound Eyrie with gold, a random artifact and a Crypt-strength guard",
       "status": "completed",
@@ -114806,7 +114835,7 @@
     {
       "id": "battle-rework-wait-turn-order-20261009",
       "title": "Wait command and a live turn order across this round, waiting stacks and the next round",
-      "status": "pending",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "gameplay_implementation_slice",
       "source": "PLAN.md",
@@ -114814,8 +114843,10 @@
         "PLAN.md",
         "docs/battle-rework.md"
       ],
-      "notes": "Wait once per round: the stack joins a waiting queue that acts after every other stack (owner decision: slowest first as in HoMM3, recommended, or initiative order); no second wait in a round; Defend unchanged. A rules turn-order forecast returns this round's remaining order, the waiting queue and the predicted next round (effect expiry and initiative changes included) for the ribbon. The AI may wait. Save/load carries the waiting queue. Validation: focused report (waiting order, no double wait, forecast equals the actual next round, save/load mid-wait), generated-map battle reports.",
-      "updatedAt": "2026-10-09T15:35:00Z"
+      "notes": "Wait once per round: the stack joins a waiting queue that acts after every other stack (owner decision: slowest first as in HoMM3, recommended, or initiative order); no second wait in a round; Defend unchanged. A rules turn-order forecast returns this round's remaining order, the waiting queue and the predicted next round (effect expiry and initiative changes included) for the ribbon. The AI may wait. Save/load carries the waiting queue. Validation: focused report (waiting order, no double wait, forecast equals the actual next round, save/load mid-wait), generated-map battle reports. Built 2026-10-09 (built before the board slice; the two are independent). Rules (scripts/core/BattleRules.gd): Wait order (perform_player_action \"wait\", action_availability and get_action_surface \"wait\" entries, footer text); waited_stack_ids per round, cleared in _prepare_round and normalized on load; _apply_wait moves the active stack behind every stack that has not waited, waiting stacks slowest first (score, speed, then the order they waited), without spending the stack's turn (_complete_action turn_spent=false), so its effects do not count down; _resort_remaining_turn_order keeps the waiting segment and breaks equal keys by the previous place (sort_custom is not stable); a battle_unit_wait event for playback and the log; turn_order_forecast returns this round from the active stack, the waiting stacks and the predicted next round, computed on a copy with the remaining turns spent and _prepare_round run (effect expiry, momentum decay, initiative shifts). Enemy: a melee stack with no approach this turn waits while player stacks are still to act (BattleAiRules.should_wait_for_contact, wired in the enemy advance branch; \"wait\" also accepted as an AI action). Screen (until the full-screen slice replaces it): a Wait button with the W key beside Defend; the turn strip shows this round, the waiting stacks with a W badge and the predicted next round after a divider. Validation: new tests/battle_wait_turn_order_report.tscn on a generated small map, 45/45 (order after a wait, slowest first, no second wait, effect turns not spent, round end and queue reset, forecast equals the next round's real order with a one-turn haste running out, an out-of-reach computer melee stack waits, JSON save/load mid-wait, the player's Wait through perform_presented_action with its playback event and the blocked second Wait); generated-map/synthetic battle reports pass (spell effects 105, stat scaling 50, quick resolve focus 10, wounded target 18, stack health normalize 89, shell living count 12, deterministic RNG, autoplay tactical order, AI withdrawal, magic spell behavior, magic AI valuation, hero specialty catalog 155); battle_intent_forecast_report (1 error) and battle_event_animation_state_report (55 errors) fail identically on the unchanged code; tests/validate_repo.py failure set identical to the unchanged code.",
+      "updatedAt": "2026-10-09T21:30:00Z",
+      "startedAt": "2026-10-09T21:30:00Z",
+      "completedAt": "2026-10-09T21:30:00Z"
     },
     {
       "id": "battle-rework-hero-casting-20261009",
@@ -114928,6 +114959,18 @@
       "notes": "Found while fixing bugfix-battle-stack-health-normalize-20261009: battle stacks hold base_count, unit_hp and total_health but no army count. SpellRules._health_ratio used max(1, count) * unit_hp as full health, so a stack with one whole creature left counted as unhurt and _wounded_bonus_applies almost never granted wounded_bonus_damage (9 battle spells, e.g. Cinder Burst +8); _alive_stacks_for_side skipped every battle stack, so _side_has_any_ability (spell hints) was always false. SpellRules now has _alive_count (ceil(total_health / unit_hp), as BattleRules) and measures health against base_count * unit_hp. BattleShell had the same fault in the Active/Target focus labels (x0), the initiative cue (no next living stack, labels without counts) and the target-cycle fallback (no enemy stacks); it now uses BattleRules._alive_count. Balance: spell damage against stacks at or below their threshold rises by the bonus, as the balance benchmark already assumed. New tests/battle_spell_wounded_target_report (18 checks, generated small map) passes and fails 8 on the old SpellRules. battle_spell_effects (105), hero_specialty_catalog (155), battle_stack_health_normalize (89), battle_stat_scaling (50), magic_battle_spell_behavior, magic_ai_valuation_casting_hooks and magic_spell_schema reports pass; BattleShell.gd loads. Not run: battle_controller_board_navigation_smoke (River Pass, authored, archived), which mirrors the old initiative label in a test helper. Follow-up: new tests/battle_shell_living_count_report (12 checks, generated small map) drives the BattleShell functions themselves (_battle_focus_visible_surface, _battle_initiative_handoff_surface, _living_enemy_target_ids, _battle_target_cycle_cue_surface); it passes and fails 9 on the old BattleShell.",
       "updatedAt": "2026-10-09T16:35:00Z",
       "validatedAt": "2026-10-09T16:35:00Z"
+    },
+    {
+      "id": "ai-army-concentration-20261009",
+      "title": "AI field armies concentrate into the main army; boxed-in main armies call for help; unseen rivals worth hunting",
+      "status": "in_progress",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "ai_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/ai-plays-by-player-rules.md"
+      ],
+      "notes": "Owner request. Implemented: FIELD_SHARE_MAX 0.35, blocked_need on the main hero (war-path guard or way-out guard when rivals unseen) feeding _main_shortfall, HUNT_EXPLORE_VALUE 20000, blocked_need in the decision log. Replays: ai-match-557313547 (4P large) decided day 159 (was undecided); ai-match-724865121 (6P large) still undecided: leader keeps 38k in garrisons with 3-5k heroes against a lone 29.6k hero in the last rival town; ai-match-1103018058 (8P XL strong) still undecided: 3 survivors with split armies, 26-58% of the map seen. Open: strength parked in garrisons across many towns (defence budget per town), concentration limited by seven army slots. Tests: ai_player_rules, ai_known_world_memory, ai_hero_task_live_turn_execution, player_elimination_rules pass."
     }
   ],
   "project": "heroes-like",

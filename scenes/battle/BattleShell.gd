@@ -89,6 +89,7 @@ const BATTLE_SPELL_VISIBLE_NAME_CHAR_LIMIT := 16
 @onready var _strike_button: Button = %Strike
 @onready var _shoot_button: Button = %Shoot
 @onready var _defend_button: Button = %Defend
+@onready var _wait_button: Button = %Wait
 @onready var _quick_resolve_button: Button = %QuickResolve
 @onready var _retreat_button: Button = %Retreat
 @onready var _surrender_button: Button = %Surrender
@@ -266,6 +267,11 @@ func _ready() -> void:
 		button.focus_entered.connect(_preview_combat_action.bind(String(pair[1])))
 		button.mouse_exited.connect(_battle_board_view.set_consequence_preview.bind({}))
 		button.focus_exited.connect(_battle_board_view.set_consequence_preview.bind({}))
+	var wait_key := InputEventKey.new()
+	wait_key.keycode = KEY_W
+	var wait_shortcut := Shortcut.new()
+	wait_shortcut.events = [wait_key]
+	_wait_button.shortcut = wait_shortcut
 	if _battle_board_view.has_signal("hex_destination_requested"):
 		_battle_board_view.hex_destination_requested.connect(_on_board_hex_destination_requested)
 	if _battle_board_view.has_signal("controller_navigation_cancelled"):
@@ -822,6 +828,9 @@ func _on_shoot_pressed() -> void:
 
 func _on_defend_pressed() -> void:
 	_perform_action("defend")
+
+func _on_wait_pressed() -> void:
+	_perform_action("wait")
 
 func _on_quick_resolve_pressed() -> Dictionary:
 	if _action_playback_in_progress: return _action_playback_block_result()
@@ -1794,7 +1803,7 @@ func _begin_battle_exit_animation_handoff(result: Dictionary, route_target: Stri
 	return true
 
 func _disable_battle_exit_handoff_inputs() -> void:
-	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _quick_resolve_button, _retreat_button, _surrender_button, _prev_target_button, _next_target_button]:
+	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _wait_button, _quick_resolve_button, _retreat_button, _surrender_button, _prev_target_button, _next_target_button]:
 		if button != null:
 			button.disabled = true
 	for child in _spell_actions.get_children():
@@ -2306,6 +2315,7 @@ func _configure_battle_keyboard_focus(force: bool = false) -> void:
 		_strike_button,
 		_shoot_button,
 		_defend_button,
+		_wait_button,
 		_confirm_order_button,
 		_cancel_order_button,
 		_spell_actions,
@@ -2350,6 +2360,8 @@ func _preferred_battle_keyboard_focus() -> Control:
 			return _shoot_button
 		"defend":
 			return _defend_button
+		"wait":
+			return _wait_button
 		"retreat":
 			return _retreat_button
 		"surrender":
@@ -2467,6 +2479,7 @@ func _refresh_action_buttons() -> void:
 	_apply_action_surface(_strike_button, surface.get("strike", {}), true)
 	_apply_action_surface(_shoot_button, surface.get("shoot", {}), true)
 	_apply_action_surface(_defend_button, surface.get("defend", {}), true)
+	_apply_action_surface(_wait_button, surface.get("wait", {}), true)
 	_quick_resolve_button.text = "Quick Resolve"
 	_quick_resolve_button.disabled = _battle_exit_handoff_in_progress or _session.battle.is_empty() or _session.scenario_status != "in_progress"
 	_quick_resolve_button.tooltip_text = "Resolve the remaining battle automatically. Confirmation is required because casualties, mana use, and objective consequences are permanent."
@@ -3877,7 +3890,7 @@ func validation_battle_resolution_checkpoint_snapshot() -> Dictionary:
 	}
 
 func _battle_resolution_combat_inputs_disabled() -> bool:
-	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _quick_resolve_button, _retreat_button, _surrender_button, _prev_target_button, _next_target_button]:
+	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _wait_button, _quick_resolve_button, _retreat_button, _surrender_button, _prev_target_button, _next_target_button]:
 		if button != null and not button.disabled:
 			return false
 	for child in _spell_actions.get_children():
@@ -4802,7 +4815,7 @@ func _apply_visual_theme() -> void:
 	for button in [_prev_target_button, _next_target_button]:
 		_style_action_button(button, false, 88)
 	_style_action_button(_tactical_details_button, false, 124)
-	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _quick_resolve_button, _retreat_button, _surrender_button]:
+	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _wait_button, _quick_resolve_button, _retreat_button, _surrender_button]:
 		_style_action_button(button, true)
 	for button in [_speed_normal_button, _speed_fast_button, _speed_instant_button]:
 		_style_action_button(button, false, 78)
