@@ -18,6 +18,8 @@ extends Node
 #                          places swapped, to tell map balance from faction.
 # HEROES_AI_MATCH_PLAYERS  computer players on the map (default 2); a match
 #                          of more ends when one player is left standing.
+# HEROES_AI_MATCH_SIZE     map size class (default homm3_small; homm3_medium,
+#                          homm3_large, homm3_extra_large), one level.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const AiHeroRulesScript = preload("res://scripts/core/AiHeroRules.gd")
@@ -42,6 +44,9 @@ func _run() -> void:
 	var max_days := int(OS.get_environment("HEROES_AI_MATCH_MAX_DAYS")) if OS.get_environment("HEROES_AI_MATCH_MAX_DAYS") != "" else DEFAULT_MAX_DAYS
 	var swapped := OS.get_environment("HEROES_AI_MATCH_SWAP").strip_edges() not in ["", "0"]
 	var player_count := clampi(int(OS.get_environment("HEROES_AI_MATCH_PLAYERS")), 2, 8) if OS.get_environment("HEROES_AI_MATCH_PLAYERS") != "" else 2
+	var size_class := OS.get_environment("HEROES_AI_MATCH_SIZE").strip_edges()
+	if size_class == "":
+		size_class = "homm3_small"
 	var trace := OS.get_environment("HEROES_AI_MATCH_TRACE").strip_edges() not in ["", "0"]
 	var out_path := OS.get_environment("HEROES_AI_MATCH_OUT").strip_edges()
 	if out_path == "":
@@ -61,7 +66,7 @@ func _run() -> void:
 	if player_count != 2:
 		map_seed = "%s-p%d" % [map_seed, player_count]
 
-	var session = _start_session(map_seed, drawn[0], player_count)
+	var session = _start_session(map_seed, drawn[0], player_count, size_class)
 	if session == null:
 		return
 	var seats := []
@@ -168,19 +173,19 @@ func _run() -> void:
 	_cleanup()
 	get_tree().quit(0)
 
-func _start_session(map_seed: String, faction_id: String, player_count: int = 2):
+func _start_session(map_seed: String, faction_id: String, player_count: int = 2, size_class: String = "homm3_small"):
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
-		map_seed, "", "", player_count, "land", false, "homm3_small",
+		map_seed, "", "", player_count, "land", false, size_class,
 		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,
 		faction_id, ""
 	)
 	var setup := ScenarioSelectRulesScript.build_random_map_skirmish_setup_with_retry(config, "normal", ScenarioSelectRulesScript.RANDOM_MAP_PLAYER_RETRY_POLICY)
 	if not bool(setup.get("ok", false)):
-		_fail("Small generated setup failed: %s" % JSON.stringify(setup).left(600))
+		_fail("Generated %s setup failed: %s" % [size_class, JSON.stringify(setup).left(600)])
 		return null
 	var session = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
 	if session == null or session.scenario_id == "":
-		_fail("Small generated session could not start.")
+		_fail("The generated session could not start.")
 		return null
 	OverworldRules.normalize_overworld_state(session)
 	return session
