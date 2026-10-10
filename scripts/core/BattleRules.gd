@@ -2610,11 +2610,16 @@ static func upcoming_actor_ids(battle: Dictionary, limit: int = 5) -> Array:
 ## Enumerate the authored primary damage rolls on isolated battle copies.
 ## Retaliation is evaluated AFTER abilities, morale and surviving headcounts,
 ## using the same modifier as resolution, without creating/advancing an RNG.
-static func attack_consequence_preview(battle: Dictionary, action: String, target_id: String) -> Dictionary:
+## approach names the hex a strike is made from (one of melee_approach_cells);
+## without it the stack strikes from where it stands, or walks to the nearest
+## hex it can strike from (melee_approach_destination). The forecast says the
+## kills and damage, the strike-back or why there is none, the walk (steps and
+## path) and the shots, as forecast_lines for the battle screen's badge.
+static func attack_consequence_preview(battle: Dictionary, action: String, target_id: String, approach: Dictionary = {}) -> Dictionary:
 	if _consequence_cache_battle != battle:
 		_consequence_cache_battle = battle.duplicate(true)
 		_consequence_cache.clear()
-	var cache_key := action + ":" + target_id
+	var cache_key := "%s:%s:%s" % [action, target_id, _hex_key(approach) if not approach.is_empty() else ""]
 	if _consequence_cache.has(cache_key): return _consequence_cache[cache_key].duplicate(true)
 	var attacker := get_active_stack(battle)
 	var target := _get_stack_by_id(battle, target_id)
@@ -2622,13 +2627,30 @@ static func attack_consequence_preview(battle: Dictionary, action: String, targe
 	if action not in ["strike", "shoot"] or attacker.is_empty() or target.is_empty(): return rejected
 	if _alive_count(target) <= 0 or String(attacker.get("side", "")) == String(target.get("side", "")): return rejected
 	var ranged := action == "shoot"
-	var approach := {} if ranged else melee_approach_destination(battle, attacker, target)
 	if ranged and not _can_make_ranged_attack(attacker, battle, target): return rejected
-	if not ranged and approach.is_empty() and not _can_make_melee_attack(attacker, battle, target): return rejected
+	var strike_from := {}
+	if not ranged:
+		if not approach.is_empty():
+			strike_from = _matching_melee_approach(battle, attacker, target, approach)
+			if strike_from.is_empty():
+				rejected["message"] = "%s cannot strike %s from %s." % [_stack_label(attacker), _stack_label(target), _hex_label(approach)]
+				return rejected
+		elif _can_make_melee_attack(attacker, battle, target):
+			strike_from = _melee_approach_entry(attacker, target, _stack_hex(attacker), 0)
+		else:
+			var nearest := melee_approach_destination(battle, attacker, target)
+			if nearest.is_empty(): return rejected
+			strike_from = _matching_melee_approach(battle, attacker, target, nearest)
+			if strike_from.is_empty(): strike_from = _melee_approach_entry(attacker, target, nearest, int(nearest.get("steps", 0)))
+	var steps := int(strike_from.get("steps", 0))
 	var prepared := battle.duplicate(true)
 	prepared.erase(ActionPlayback.CAPTURE_KEY)
 	var actor_id := String(attacker.get("battle_id", ""))
-	if not approach.is_empty(): _apply_melee_approach(prepared, _get_stack_by_id(prepared, actor_id), approach)
+	var path := []
+	if steps > 0:
+		for cell in _presentation_walk_path(prepared, _stack_hex(attacker), strike_from):
+			path.append({"q": int(cell.get("q", -1)), "r": int(cell.get("r", -1))})
+		_apply_melee_approach(prepared, _get_stack_by_id(prepared, actor_id), strike_from)
 	var moved := _get_stack_by_id(prepared, actor_id)
 	var defender := _get_stack_by_id(prepared, target_id)
 	var distance := _attack_distance_for_action(moved, defender, prepared, ranged)
@@ -2636,6 +2658,8 @@ static func attack_consequence_preview(battle: Dictionary, action: String, targe
 	var incoming := {"min_damage": 2147483647, "max_damage": 0, "min_units": 2147483647, "max_units": 0}
 	var any_retaliation := false
 	var every_retaliation := true
+	var every_kill := true
+	var shots_after := int(moved.get("shots_remaining", 0))
 	var min_roll := int(moved.get("min_damage", 1))
 	var max_roll := maxi(min_roll, int(moved.get("max_damage", 1)))
 	# Every roll starts from the same prepared state, so the damage modifier is
@@ -2659,6 +2683,8 @@ static func attack_consequence_preview(battle: Dictionary, action: String, targe
 		_apply_ranged_damage_return(trial, actor_id, before, ranged, "attack")
 		a = _get_stack_by_id(trial, actor_id)
 		d = _get_stack_by_id(trial, target_id)
+		if ranged: shots_after = int(a.get("shots_remaining", 0))
+		every_kill = every_kill and _alive_count(d) <= 0
 		var eligible := not ranged and _alive_count(d) > 0 and int(d.get("retaliations_left", 0)) > 0 and _can_make_retaliation(d, distance, trial)
 		any_retaliation = any_retaliation or eligible
 		every_retaliation = every_retaliation and eligible
@@ -2671,20 +2697,95 @@ static func attack_consequence_preview(battle: Dictionary, action: String, targe
 		incoming.max_damage = maxi(incoming.max_damage, high)
 		incoming.min_units = mini(incoming.min_units, losses.min_units)
 		incoming.max_units = maxi(incoming.max_units, losses.max_units)
-	var reply_label := "Damage return" if ranged else "Retaliation"
-	var reply_text := "%s: none" % reply_label
-	if int(incoming.max_damage) > 0:
-		reply_text = "%s%s: %s" % [reply_label, " if target survives" if any_retaliation and not every_retaliation else "", consequence_range_text(incoming)]
+	var no_reply_reason := ""
+	if not any_retaliation:
+		no_reply_reason = _no_retaliation_reason(defender, prepared, ranged, distance, every_kill)
 	var final_hex := _stack_hex(moved).duplicate(true)
 	var preview := {"ok": true, "action": action, "actor_id": actor_id, "target_id": target_id,
-		"destination": final_hex, "moved": not approach.is_empty(), "damage": outgoing,
+		"destination": final_hex, "moved": steps > 0, "damage": outgoing,
 		"incoming": incoming, "retaliation_possible": any_retaliation, "retaliation_certain": every_retaliation,
-		"message": "%s → %s | End %s\nHit: %s | %s" % [
-			"Move & strike" if not approach.is_empty() else action.capitalize(), _stack_label(target), _hex_label(final_hex),
-			consequence_range_text(outgoing), reply_text]}
+		"no_retaliation_reason": no_reply_reason,
+		"approach": strike_from.duplicate(true), "steps": steps, "path": path,
+		"strike_part": String(strike_from.get("strike_part", "")),
+		"shots_before": int(moved.get("shots_remaining", 0)) if ranged else 0,
+		"shots_after": shots_after if ranged else 0,
+		"penalised": ranged and _stack_is_engaged(moved, prepared)}
+	preview["forecast_lines"] = _attack_forecast_lines(preview, target)
+	preview["message"] = "%s %s: %s." % ["Shoot" if ranged else "Strike", _stack_label(target), forecast_text(preview.forecast_lines)]
 	if _consequence_cache.size() >= 32: _consequence_cache.clear()
 	_consequence_cache[cache_key] = preview.duplicate(true)
 	return preview
+
+## Why a forecast attack draws no strike-back.
+static func _no_retaliation_reason(defender: Dictionary, battle: Dictionary, ranged: bool, distance: int, always_destroyed: bool) -> String:
+	if ranged:
+		return "a shot"
+	if always_destroyed:
+		return "it is destroyed"
+	if int(defender.get("retaliations_left", 0)) <= 0:
+		return "it has struck back this round"
+	if SpellRulesScript.has_effect_id(defender, battle, STATUS_STAGGERED):
+		return "Staggered"
+	if distance > 0:
+		return "out of its reach"
+	return "it cannot strike back"
+
+## The battle screen's badge for an attack forecast, one line each: the kills
+## and damage; the strike-back, or why there is none (with a shot, the shots
+## left); then the walk, or a shot's point-blank penalty. Each line is
+## {"text", "detail", "tone"}: tone colours it ("red" for losses, "green" for
+## none, "amber" for a warning, "muted" for a note).
+static func _attack_forecast_lines(preview: Dictionary, target: Dictionary) -> Array:
+	var damage: Dictionary = preview.get("damage", {})
+	var incoming: Dictionary = preview.get("incoming", {})
+	var ranged := String(preview.get("action", "")) == "shoot"
+	var count := _alive_count(target)
+	var min_kills := int(damage.get("min_units", 0))
+	var max_kills := int(damage.get("max_units", 0))
+	var kills := "Destroys the stack" if min_kills >= count else "Kills %s%s" % [_range_text(min_kills, max_kills), " · may destroy" if max_kills >= count else ""]
+	var lines := [{"text": kills, "detail": "%s damage" % _range_text(int(damage.get("min_damage", 0)), int(damage.get("max_damage", 0))), "tone": ""}]
+	var shots := "%d → %d" % [int(preview.get("shots_before", 0)), int(preview.get("shots_after", 0))]
+	if int(incoming.get("max_damage", 0)) > 0:
+		var certain := bool(preview.get("retaliation_certain", false))
+		lines.append({
+			"text": "%s: lose %s" % ["Damage return" if ranged else "Strikes back", _range_text(int(incoming.get("min_units", 0)), int(incoming.get("max_units", 0)))],
+			"detail": "(%s damage%s)" % [_range_text(int(incoming.get("min_damage", 0)), int(incoming.get("max_damage", 0))), "" if certain or ranged else ", if any survive"],
+			"tone": "red",
+		})
+		if ranged:
+			lines.append({"text": "Shots %s" % shots, "detail": "", "tone": "muted"})
+	elif ranged:
+		lines.append({"text": "No retaliation · shots %s" % shots, "detail": "", "tone": "green"})
+	else:
+		lines.append({"text": "No retaliation", "detail": "(%s)" % String(preview.get("no_retaliation_reason", "it cannot strike back")), "tone": "green"})
+	if ranged:
+		if bool(preview.get("penalised", false)):
+			lines.append({"text": "Point-blank: -40% damage", "detail": "", "tone": "amber"})
+	else:
+		var steps := int(preview.get("steps", 0))
+		var walk := "Moves %d hex%s first" % [steps, "" if steps == 1 else "es"] if steps > 0 else "Strikes from where it stands"
+		if String(preview.get("strike_part", "")) == "tail":
+			walk += " · its tail strikes"
+		lines.append({"text": walk, "detail": "", "tone": "muted"})
+	return lines
+
+## A forecast's lines as one sentence each, for the log, tooltips and F1.
+static func forecast_text(lines: Array) -> String:
+	var parts := PackedStringArray()
+	for line in lines:
+		if not (line is Dictionary):
+			continue
+		var text := String(line.get("text", "")).strip_edges()
+		var detail := String(line.get("detail", "")).strip_edges()
+		if detail != "":
+			text = "%s%s%s" % [text, " " if detail.begins_with("(") or detail.begins_with("·") else ", ", detail]
+		if text != "":
+			parts.append(text)
+	return ". ".join(parts)
+
+## "3" or "3–5".
+static func _range_text(low: int, high: int) -> String:
+	return str(low) if low == high else "%d–%d" % [low, high]
 
 static func consequence_range_text(value: Dictionary) -> String:
 	return "%d–%d damage; %d–%d lost" % [int(value.get("min_damage", 0)), int(value.get("max_damage", 0)), int(value.get("min_units", 0)), int(value.get("max_units", 0))]
@@ -2728,11 +2829,22 @@ static func spell_consequence_preview(session: SessionStateStoreScript.SessionDa
 	# The legacy summary calls allied recipients the active stack; pass the
 	# resolved recipient so an explicitly selected ally keeps its own identity.
 	var effect := SpellRulesScript._battle_spell_effect_summary(hero, spell, battle, target, target)
+	var spell_name := String(spell.get("name", spell_id))
+	# The badge: the spell and its cost, what it does to the target, then that
+	# the stack keeps its turn (lines as in _attack_forecast_lines).
+	var lines := [{"text": spell_name, "detail": "%d mana" % cost, "tone": ""}]
 	if String(resolution.get("resolution_type", "")) == "damage":
 		effect = "%d damage; %d lost | No retaliation" % [damage, int(losses.min_units)]
+		lines.append({"text": "%d damage · kills %d%s" % [damage, int(losses.min_units), " (destroyed)" if int(losses.min_units) >= _alive_count(target) else ""], "detail": "", "tone": "red"})
+		lines.append({"text": "No retaliation · %s keeps its turn" % _stack_label(active), "detail": "", "tone": "muted"})
+	else:
+		var hostile := String(target.get("side", "")) != String(active.get("side", ""))
+		lines.append({"text": "%s: %s" % [_stack_label(target), effect], "detail": "", "tone": "amber" if hostile else "green"})
+		lines.append({"text": "%s keeps its turn" % _stack_label(active), "detail": "", "tone": "muted"})
 	return {"ok": true, "action": "cast_spell:" + spell_id, "target_id": String(target.get("battle_id", "")),
 		"destination": _stack_hex(active).duplicate(true), "mana_cost": cost, "damage": damage, "casualties": int(losses.min_units),
-		"message": "%s → %s | %d mana | %s keeps its turn\n%s" % [String(spell.get("name", spell_id)), _stack_label(target), cost, _stack_label(active), effect]}
+		"forecast_lines": lines,
+		"message": "%s → %s | %d mana | %s keeps its turn\n%s" % [spell_name, _stack_label(target), cost, _stack_label(active), effect]}
 
 static func describe_initiative_track(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():

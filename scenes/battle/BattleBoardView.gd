@@ -1,6 +1,9 @@
 extends "res://scripts/ui/BoundedTooltipControl.gd"
 
 signal stack_focus_requested(battle_id: String)
+# A click on an enemy, or Enter on it, with the order the cursor showed:
+# {"action": "strike" or "shoot", "approach": the hex to strike from}.
+signal stack_order_requested(battle_id: String, order: Dictionary)
 signal hex_destination_requested(q: int, r: int)
 signal controller_navigation_cancelled
 signal hero_figure_pressed(side: String)
@@ -63,6 +66,30 @@ const UI_PLAYER_DEEP := Color(0.106, 0.216, 0.337)
 const UI_ENEMY := Color(0.839, 0.38, 0.329)
 const UI_ENEMY_DEEP := Color(0.337, 0.106, 0.086)
 const UI_ACTIVE := Color(0.988, 0.878, 0.478)
+# The board draws its own cursor over the field: a sword turned toward the
+# struck side cannot be a system cursor. While the battle is open this shape
+# shows a blank image, so the system cursor hides where the board draws.
+const FIELD_CURSOR_SHAPE := Control.CURSOR_CROSS
+const FIELD_CURSOR_INPUT_SHAPE := Input.CURSOR_CROSS
+# The drawn cursor's length at 1920x1080 (ui_scale).
+const FIELD_CURSOR_EXTENT := 34.0
+const FIELD_CURSOR_OUTLINE := Color(0.051, 0.039, 0.024, 0.92)
+const FIELD_CURSOR_BLADE := Color(0.925, 0.922, 0.886)
+const FIELD_CURSOR_BLOCKED := Color(0.902, 0.329, 0.271)
+const FIELD_CURSOR_SPELL := Color(0.62, 0.84, 1.0)
+# Within this share of a target's body, measured from its middle, the pointer
+# names no side: the strike comes from where the stack stands, or from the
+# nearest hex (melee_approach_cells' first entry).
+const APPROACH_NEUTRAL_SHARE := 0.25
+const APPROACH_GHOST_ALPHA := 0.5
+const APPROACH_PATH_DOT := Color(0.988, 0.878, 0.478, 0.9)
+# The glyphs _draw_field_cursor() draws in place of the system cursor.
+const FIELD_CURSOR_GLYPHS := ["sword", "arrow", "broken_arrow", "boot", "spark", "blocked"]
+# The forecast badge's colours: the headline, losses, no losses, a warning.
+const FORECAST_HEAD := Color(1.0, 0.902, 0.651)
+const FORECAST_LOSS := Color(0.957, 0.706, 0.647)
+const FORECAST_GOOD := Color(0.624, 0.863, 0.573)
+const FORECAST_WARN := Color(1.0, 0.761, 0.478)
 const BATTLE_BOARD_CURSOR_SEMANTIC_MAX_CHARS := 320
 const BATTLE_BOARD_CURSOR_SEMANTIC_DEBOUNCE_SECONDS := 0.42
 const BATTLE_BOARD_CURSOR_RESULT_VISIBLE_SECONDS := 1.20
@@ -317,6 +344,16 @@ var _ribbon_style: StyleBoxFlat = null
 var _forecast_style: StyleBoxFlat = null
 var _box_style: StyleBoxFlat = null
 var _hover_stack_id := ""
+# What a click at the pointer, or Enter on the keyboard cursor, orders, and the
+# cursor that shows it (_resolve_order).
+var _hover_order: Dictionary = {}
+# The side the player strikes the hovered enemy from: the one the pointer
+# points at, or the one Q and E turned to while the pointer stays in that
+# sector ({"target_id", "sector", "q", "r"}).
+var _approach_choice: Dictionary = {}
+# Ctrl is held: a shooter strikes the enemy it points at instead of shooting.
+var _strike_forced := false
+static var _blank_cursor: ImageTexture = null
 # The ribbon's layout for one battle state and board size (_turn_ribbon_layout).
 var _ribbon_cache: Dictionary = {}
 var _ribbon_cache_key := ""
@@ -337,9 +374,25 @@ func _ready() -> void:
 	_load_battle_vfx_manifest()
 	_load_field_objective_art_manifest()
 	_load_battle_status_effect_art_manifest()
+	_hide_system_cursor_on_field(true)
 
 func _exit_tree() -> void:
 	_cancel_battle_board_cursor_semantic()
+	_hide_system_cursor_on_field(false)
+
+## While the battle is open the field cursor shape shows a blank image, so the
+## system cursor hides where the board draws its own.
+func _hide_system_cursor_on_field(hidden: bool) -> void:
+	if DisplayServer.get_name() == "headless":
+		return
+	if not hidden:
+		Input.set_custom_mouse_cursor(null, FIELD_CURSOR_INPUT_SHAPE)
+		return
+	if _blank_cursor == null:
+		var image := Image.create(16, 16, false, Image.FORMAT_RGBA8)
+		image.fill(Color(0.0, 0.0, 0.0, 0.0))
+		_blank_cursor = ImageTexture.create_from_image(image)
+	Input.set_custom_mouse_cursor(_blank_cursor, FIELD_CURSOR_INPUT_SHAPE, Vector2.ZERO)
 
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_RESIZED, NOTIFICATION_THEME_CHANGED, NOTIFICATION_VISIBILITY_CHANGED]:
@@ -375,8 +428,14 @@ func _presentation_animating() -> bool:
 ## The keyboard cursor shows while keys or a controller drive the board. The
 ## shell keeps the board focused for its keys, so focus alone does not mean
 ## the player is steering with keys: moving or clicking the mouse hands the
-## forecast back to the pointer.
+## forecast back to the pointer. Holding or letting go of Ctrl turns a
+## shooter's order between shooting and striking at once.
 func _input(event: InputEvent) -> void:
+	if event is InputEventKey and (event as InputEventKey).keycode == KEY_CTRL and not (event as InputEventKey).echo:
+		var held := (event as InputEventKey).pressed
+		if held != _strike_forced:
+			_strike_forced = held
+			_refresh_hover_order()
 	if not _keyboard_cursor_active:
 		return
 	if event is InputEventMouseMotion and (event as InputEventMouseMotion).relative.length() > 2.0:
@@ -406,7 +465,9 @@ func _set_keyboard_cursor_active(active: bool) -> void:
 		_preview_position(_pointer_position)
 	else:
 		_hover_destination_cell = Vector2i(-1, -1)
+		_hover_order = {}
 		set_consequence_preview({})
+		_apply_field_cursor_shape()
 	queue_redraw()
 
 func _gui_input(event: InputEvent) -> void:
@@ -416,6 +477,7 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		var motion_event := event as InputEventMouseMotion
 		_pointer_position = motion_event.position
+		_strike_forced = motion_event.ctrl_pressed
 		_update_pointer_hover(motion_event.position)
 		_preview_position(motion_event.position)
 		var hovered_cell := _hex_cell_at_position(motion_event.position)
@@ -438,7 +500,7 @@ func _gui_input(event: InputEvent) -> void:
 	if _ribbon_rect().has_point(mouse_event.position):
 		accept_event()
 		return
-	var dispatch := _dispatch_board_click_at_position(mouse_event.position)
+	var dispatch := _dispatch_board_click_at_position(mouse_event.position, mouse_event.ctrl_pressed)
 	if bool(dispatch.get("accepted", false)):
 		accept_event()
 
@@ -493,7 +555,9 @@ func _on_controller_focus_exited() -> void:
 	_cancel_battle_board_cursor_semantic(false)
 	if _keyboard_cursor_active:
 		_hover_destination_cell = Vector2i(-1, -1)
+		_hover_order = {}
 		set_consequence_preview({})
+		_apply_field_cursor_shape()
 	queue_redraw()
 
 func _ensure_controller_cursor() -> void:
@@ -529,7 +593,7 @@ func _sync_controller_cursor_preview() -> void:
 	if not _keyboard_cursor_shown():
 		return
 	_hover_destination_cell = _controller_cursor_cell if _is_legal_destination_cell(_controller_cursor_cell) else Vector2i(-1, -1)
-	_preview_position(_hex_center(_controller_cursor_cell, _current_hex_layout()))
+	_preview_position(_hex_center(_controller_cursor_cell, _current_hex_layout()), true)
 
 func set_consequence_preview(preview: Dictionary) -> void:
 	_consequence_preview = preview.duplicate(true) if not _battle.has("playback_event") else {}
@@ -543,41 +607,65 @@ func preview_attack(action: String, target_id: String) -> void:
 		return
 	set_consequence_preview(BattleRulesScript.attack_consequence_preview(_battle, action, target_id))
 
-func _preview_position(position: Vector2) -> void:
-	if _ribbon_rect().has_point(position) or _hero_side_at_position(position) != "":
-		if _consequence_hover_key != "outside":
-			set_consequence_preview({})
-			_consequence_hover_key = "outside"
-		return
-	var cell := _hex_cell_at_position(position)
-	var target_id := _stack_id_at_board_position(position, cell)
-	var key := "%s:%s" % [target_id, str(cell)]
-	if key == _consequence_hover_key: return
-	if _spell_target_mode:
-		var spell_target := _stack_id_at_cell(cell)
-		if spell_target == "": spell_target = target_id
-		set_consequence_preview(_spell_target_previews.get(spell_target, {}))
-	elif target_id != "":
-		var intent := BattleRulesScript.board_click_attack_intent_for_target(_battle, target_id)
-		preview_attack(String(intent.get("action", "")), target_id)
-	elif _is_legal_destination_cell(cell):
-		set_consequence_preview({"ok": true, "action": "move", "destination": {"q": cell.x, "r": cell.y}, "message": "Move → %s\nMovement only — no attack. Enemy choices are not predicted." % BattleRulesScript._hex_label({"q": cell.x, "r": cell.y})})
-	else:
-		set_consequence_preview({})
-	_consequence_hover_key = key
+## Shows what a click at position, or Enter on the keyboard cursor (focused),
+## would order: the cursor, the forecast and the walk to the strike.
+func _preview_position(position: Vector2, focused: bool = false) -> void:
+	_set_hover_order(_resolve_order(position, focused, _strike_forced))
+
+## The order under the pointer or the keyboard cursor again, after Ctrl or the
+## chosen approach changed.
+func _refresh_hover_order() -> void:
+	if _keyboard_cursor_shown():
+		_preview_position(_hex_center(_controller_cursor_cell, _current_hex_layout()), true)
+	elif _pointer_position.x >= 0.0:
+		_preview_position(_pointer_position)
+
+func _set_hover_order(order: Dictionary) -> void:
+	_hover_order = order
+	# A turn with Q or E holds only while the pointer stays where it was made.
+	if not _approach_choice.is_empty() and (String(order.get("kind", "")) != "strike" or String(order.get("target_id", "")) != String(_approach_choice.get("target_id", "")) or String(order.get("sector", "")) != String(_approach_choice.get("sector", ""))):
+		_approach_choice = {}
+	var key := _order_key(order)
+	if key != _consequence_hover_key:
+		set_consequence_preview(order.get("preview", {}))
+		_consequence_hover_key = key
+	_apply_field_cursor_shape()
+	queue_redraw()
 
 func _dispatch_controller_cursor() -> bool:
 	_ensure_controller_cursor()
 	if _battle.is_empty() or not _cell_in_bounds(_controller_cursor_cell):
 		return false
 	var battle_id := _stack_id_at_cell(_controller_cursor_cell)
+	var order := _resolve_order(_hex_center(_controller_cursor_cell, _current_hex_layout()), true, _strike_forced or Input.is_key_pressed(KEY_CTRL)) if battle_id != "" else {}
 	_controller_dispatch_in_progress = true
-	if battle_id != "":
+	if _is_attack_order(order, battle_id):
+		stack_order_requested.emit(battle_id, _order_payload(order))
+	elif battle_id != "":
 		stack_focus_requested.emit(battle_id)
 	else:
 		hex_destination_requested.emit(_controller_cursor_cell.x, _controller_cursor_cell.y)
 	_controller_dispatch_in_progress = false
 	return true
+
+## A click on a stack: an attack order goes out with the hex the strike is
+## made from; anything else lets the shell explain or cast.
+func _emit_stack_order(battle_id: String, order: Dictionary) -> void:
+	if _is_attack_order(order, battle_id):
+		stack_order_requested.emit(battle_id, _order_payload(order))
+	else:
+		stack_focus_requested.emit(battle_id)
+
+func _is_attack_order(order: Dictionary, battle_id: String) -> bool:
+	return battle_id != "" and String(order.get("kind", "")) in ["strike", "shoot"] and String(order.get("target_id", "")) == battle_id
+
+## An order as the shell takes it: {"action", "approach": {"q", "r"}}.
+func _order_payload(order: Dictionary) -> Dictionary:
+	var payload := {"action": String(order.get("kind", ""))}
+	var approach: Dictionary = order.get("approach", {})
+	if not approach.is_empty():
+		payload["approach"] = {"q": int(approach.get("q", -1)), "r": int(approach.get("r", -1))}
+	return payload
 
 func publish_controller_action_result(result: Dictionary, completed_playback: bool = false) -> void:
 	if not _controller_dispatch_in_progress and not completed_playback:
@@ -868,7 +956,8 @@ func _bounded_battle_board_cursor_semantic_text(value: String, maximum_character
 		normalized = normalized.replace("  ", " ")
 	return normalized.left(maximum_characters)
 
-func _dispatch_board_click_at_position(position: Vector2) -> Dictionary:
+## force_strike: Ctrl was held, so a shooter strikes instead of shooting.
+func _dispatch_board_click_at_position(position: Vector2, force_strike: bool = false) -> Dictionary:
 	var target_cell := _hex_cell_at_position(position)
 	var cell_battle_id := _stack_id_at_cell(target_cell)
 	var battle_id := _stack_id_at_board_position(position, target_cell)
@@ -876,13 +965,15 @@ func _dispatch_board_click_at_position(position: Vector2) -> Dictionary:
 		stack_focus_requested.emit(battle_id)
 		return {"accepted": true, "dispatch": "spell_target", "battle_id": battle_id}
 	if cell_battle_id != "":
-		stack_focus_requested.emit(cell_battle_id)
+		var hex_order := _resolve_order(position, false, force_strike)
+		_emit_stack_order(cell_battle_id, hex_order)
 		return {
 			"accepted": true,
 			"dispatch": "stack_hex",
 			"battle_id": cell_battle_id,
 			"q": target_cell.x,
 			"r": target_cell.y,
+			"order": _order_payload(hex_order),
 		}
 	if battle_id == "":
 		if target_cell.x < 0:
@@ -912,7 +1003,8 @@ func _dispatch_board_click_at_position(position: Vector2) -> Dictionary:
 			"q": target_cell.x,
 			"r": target_cell.y,
 		}
-	stack_focus_requested.emit(battle_id)
+	var body_order := _resolve_order(position, false, force_strike)
+	_emit_stack_order(battle_id, body_order)
 	var stack_cell := _stack_cell_for_battle_id(battle_id)
 	return {
 		"accepted": true,
@@ -920,6 +1012,7 @@ func _dispatch_board_click_at_position(position: Vector2) -> Dictionary:
 		"battle_id": battle_id,
 		"q": stack_cell.x,
 		"r": stack_cell.y,
+		"order": _order_payload(body_order),
 	}
 
 func _get_tooltip(at_position: Vector2) -> String:
@@ -1044,6 +1137,7 @@ func _apply_battle_dictionary(battle: Dictionary) -> void:
 	_cancel_battle_board_cursor_semantic()
 	_consequence_preview = {}
 	_consequence_hover_key = ""
+	_hover_order = {}
 	_battle = {}
 	_player_stacks = []
 	_enemy_stacks = []
@@ -1090,6 +1184,7 @@ func _apply_battle_dictionary(battle: Dictionary) -> void:
 	elif not _target_stack.is_empty():
 		var intent := BattleRulesScript.board_click_attack_intent_for_target(_battle, String(_target_stack.get("battle_id", "")))
 		preview_attack(String(intent.get("action", "")), String(_target_stack.get("battle_id", "")))
+	_apply_field_cursor_shape()
 	queue_redraw()
 
 func validation_hex_layout_summary() -> Dictionary:
@@ -2207,6 +2302,7 @@ func _draw_board() -> void:
 	var stack_cells := _stack_cells()
 	_draw_tactical_affordances(hex_layout, stack_cells)
 	_draw_controller_cursor(hex_layout)
+	_draw_order_path(hex_layout)
 	_draw_vfx_cues(hex_layout, stack_cells)
 	_draw_stack_tokens(hex_layout, stack_cells)
 	if not _battle.has("playback_event"):
@@ -2216,18 +2312,11 @@ func _draw_board() -> void:
 			for body_cell in BattleRulesScript.Footprint.cells(_stack_by_id(String(id))):
 				var center := _hex_center(Vector2i(int(body_cell.q), int(body_cell.r)), hex_layout)
 				_draw_hex_outline(center, float(hex_layout.get("radius", 20.0)) * 0.96, ACTIVE_COLOR if selected else Color(0.42, 0.80, 1.0, 0.85), 4.0 if selected else 1.5)
-	if bool(_consequence_preview.get("ok", false)) and (bool(_consequence_preview.get("moved", false)) or String(_consequence_preview.get("action", "")) == "move") and not _battle.has("playback_event"):
-		var end: Dictionary = _consequence_preview.get("destination", {})
-		if not end.is_empty():
-			var center := _hex_center(Vector2i(int(end.q), int(end.r)), hex_layout)
-			for body_cell in BattleRulesScript.Footprint.cells(_active_stack, end):
-				var body_center := _hex_center(Vector2i(int(body_cell.q), int(body_cell.r)), hex_layout)
-				draw_arc(body_center, float(hex_layout.get("radius", 20.0)) * 0.88, 0.0, TAU, 32, ACTIVE_COLOR, 2.0, true)
-			_draw_text("END", center + Vector2(-12, 20), ACTIVE_COLOR, 11)
 	if not _hover_ribbon_battle_id.is_empty() and stack_cells.has(_hover_ribbon_battle_id):
 		_draw_body_outline(_hover_ribbon_battle_id, hex_layout, float(hex_layout.get("radius", 20.0)) * 0.98, Color(1.0, 1.0, 1.0, 0.85), 2.4)
 	_draw_turn_ribbon()
 	_draw_hover_forecast()
+	_draw_field_cursor()
 
 ## The painted battlefield fills the window behind the field, darkened
 ## towards the edges. Without a painting the hexes get their terrain colours.
@@ -2916,8 +3005,6 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 	if not stack_cells.has(active_id):
 		return
 	var radius := float(hex_layout.get("radius", 1.0))
-	var active_cell: Vector2i = stack_cells.get(active_id)
-	var active_center := _hex_center(active_cell, hex_layout)
 	var player_input_active := String(_active_stack.get("side", "")) == "player"
 
 	if player_input_active:
@@ -2965,7 +3052,6 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 					var setup_color := LEGAL_RANGED_COLOR if String(continuity_context.get("board_click_action", "")) == "shoot" else LEGAL_MELEE_COLOR
 					_draw_body_outline(target_id, hex_layout, radius * 1.12, setup_color, 2.4)
 				_draw_body_outline(target_id, hex_layout, radius * 1.02, TARGET_COLOR, 3.2)
-				_draw_focus_link(active_center, target_center, String(_active_stack.get("side", "")))
 
 func _draw_movement_destination_cue(cell: Vector2i, center: Vector2, radius: float, legal_cell_keys: Dictionary) -> void:
 	_draw_hex(
@@ -3145,6 +3231,9 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 	# "!" sorts an obstacle before the stacks of its own row, so they stand in front of it.
 	for obstacle in BattleRulesScript.battle_obstacles(_battle):
 		visual_rows.append({"obstacle": obstacle, "battle_id": "!" + String(obstacle.get("id", "")), "center": _obstacle_center(obstacle, hex_layout)})
+	var ghost := _strike_ghost(hex_layout)
+	if not ghost.is_empty():
+		visual_rows.append({"ghost": true, "battle_id": "~ghost", "center": ghost.get("center", Vector2.ZERO)})
 	visual_rows.sort_custom(func(left: Dictionary, right: Dictionary) -> bool:
 		var left_center: Vector2 = left.get("center", Vector2.ZERO)
 		var right_center: Vector2 = right.get("center", Vector2.ZERO)
@@ -3157,11 +3246,14 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		if row.has("obstacle"):
 			_draw_battle_obstacle(row.get("obstacle", {}), hex_layout)
 			continue
-		var stack: Dictionary = row.get("stack", {}) if row.get("stack", {}) is Dictionary else {}
+		# The ghost is the active stack, faded, where it will stand to strike.
+		var is_ghost := row.has("ghost")
+		var stack: Dictionary = _active_stack if is_ghost else (row.get("stack", {}) if row.get("stack", {}) is Dictionary else {})
 		var battle_id := String(row.get("battle_id", ""))
 		var center: Vector2 = row.get("center", Vector2.ZERO)
 		var token_radius: float = _stack_token_radius(radius)
 		var side := String(stack.get("side", ""))
+		var art_alpha := APPROACH_GHOST_ALPHA if is_ghost else 1.0
 		var is_active := battle_id == String(_battle.get("active_stack_id", ""))
 		var is_target := battle_id == String(_battle.get("selected_target_id", ""))
 		if _spell_target_mode: is_target = battle_id == _pointed_stack_id()
@@ -3172,13 +3264,14 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		var ground_center := center + Vector2(0.0, radius * STACK_STANDEE_GROUND_OFFSET_FACTOR)
 		var ground_half_width := token_radius * 0.92
 		draw_set_transform(ground_center, 0.0, Vector2(1.0, 0.34))
-		draw_circle(Vector2(2.0, 5.0), ground_half_width + 4.0, SHADOW_COLOR)
-		draw_circle(Vector2(1.0, 2.0), ground_half_width + 1.0, SHADOW_COLOR)
-		if is_active or is_target:
-			draw_circle(Vector2.ZERO, ground_half_width + 2.0, ACTIVE_COLOR if is_active else (BLOCKED_TARGET_COLOR if is_blocked_target else TARGET_COLOR), false, 1.8, true)
-		draw_circle(Vector2.ZERO, ground_half_width, STACK_TOKEN_INNER_FILL)
-		var side_rim := Color(fill.r, fill.g, fill.b, STACK_TOKEN_SIDE_RIM_ALPHA)
-		draw_circle(Vector2.ZERO, ground_half_width - 1.0, side_rim, false, maxf(2.4, token_radius * STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR), true)
+		if not is_ghost:
+			draw_circle(Vector2(2.0, 5.0), ground_half_width + 4.0, SHADOW_COLOR)
+			draw_circle(Vector2(1.0, 2.0), ground_half_width + 1.0, SHADOW_COLOR)
+			if is_active or is_target:
+				draw_circle(Vector2.ZERO, ground_half_width + 2.0, ACTIVE_COLOR if is_active else (BLOCKED_TARGET_COLOR if is_blocked_target else TARGET_COLOR), false, 1.8, true)
+			draw_circle(Vector2.ZERO, ground_half_width, STACK_TOKEN_INNER_FILL)
+			var side_rim := Color(fill.r, fill.g, fill.b, STACK_TOKEN_SIDE_RIM_ALPHA)
+			draw_circle(Vector2.ZERO, ground_half_width - 1.0, side_rim, false, maxf(2.4, token_radius * STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR), true)
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		var art_source := _stack_token_art_source(stack)
 		var animation_sheet: Texture2D = _unit_animation_sheet_for_stack(stack)
@@ -3190,24 +3283,24 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 			var animation := ContentService.get_unit_animation(String(stack.get("unit_id", "")))
 			var flip := BattleUnitPose.facing_flip(animation, side)
 			var frame_rect := BattleUnitPose.grounded_rect(ground_center, frame_size, frame_region, animation, flip)
-			_draw_stack_art_region(animation_sheet, frame_rect, frame_region, flip, Color(1.0, 1.0, 1.0, 0.96))
+			_draw_stack_art_region(animation_sheet, frame_rect, frame_region, flip, Color(1.0, 1.0, 1.0, 0.96 * art_alpha))
 		elif art_source == "resting_battle_standee":
-			_draw_stack_art(battle_standee, _stack_standee_rect(center, radius, stack), side == "enemy", Color(1.0, 1.0, 1.0, 0.99))
+			_draw_stack_art(battle_standee, _stack_standee_rect(center, radius, stack), side == "enemy", Color(1.0, 1.0, 1.0, 0.99 * art_alpha))
 		elif art_source == "resting_battle_icon":
 			var icon_size := token_radius * STACK_ICON_ART_EXTENT_FACTOR
 			var icon_rect := Rect2(center - Vector2(icon_size * 0.5, icon_size * 0.5), Vector2(icon_size, icon_size))
-			draw_texture_rect(battle_icon, icon_rect, false, Color(1.0, 1.0, 1.0, 0.98))
+			draw_texture_rect(battle_icon, icon_rect, false, Color(1.0, 1.0, 1.0, 0.98 * art_alpha))
 		elif art_source == "animation_sheet_fallback":
 			var fallback_frame_size := token_radius * STACK_ANIMATION_ART_EXTENT_FACTOR
 			var fallback_frame_rect := Rect2(center - Vector2(fallback_frame_size * 0.5, fallback_frame_size * 0.55), Vector2(fallback_frame_size, fallback_frame_size))
-			draw_texture_rect_region(animation_sheet, fallback_frame_rect, _animation_frame_region_for_stack(stack), Color(1.0, 1.0, 1.0, 0.96))
+			draw_texture_rect_region(animation_sheet, fallback_frame_rect, _animation_frame_region_for_stack(stack), Color(1.0, 1.0, 1.0, 0.96 * art_alpha))
 		else:
 			_draw_unit_glyph(center, token_radius, stack)
 	# Foreground combat art belongs above the bodies but below every readout.
 	_draw_combat_vfx_foreground(hex_layout, stack_cells)
 	for row_value in visual_rows:
 		var row: Dictionary = row_value
-		if row.has("obstacle"):
+		if row.has("obstacle") or row.has("ghost"):
 			continue
 		var stack: Dictionary = row.stack
 		var battle_id := String(row.battle_id)
@@ -4956,23 +5049,6 @@ func _draw_count_badge(center: Vector2, radius: float, stack: Dictionary) -> voi
 	_draw_role_glyph(Vector2(pill.position.x + 4.0 * k + icon_extent * 0.5, pill.get_center().y), icon_extent, bool(stack.get("ranged", false)), Color(1.0, 0.925, 0.8))
 	draw_string(font, Vector2(pill.position.x + 7.0 * k + icon_extent, pill.get_center().y + float(font_size) * 0.36), count_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, Color.WHITE)
 
-func _draw_focus_link(start: Vector2, end: Vector2, active_side: String) -> void:
-	var color := ACTIVE_COLOR if active_side == "player" else TARGET_COLOR
-	draw_line(start, end, Color(color.r, color.g, color.b, 0.52), 3.0, true)
-	var delta := end - start
-	if delta.length() <= 1.0:
-		return
-	var direction := delta.normalized()
-	var perpendicular := Vector2(-direction.y, direction.x)
-	for step in range(1, 4):
-		var point := start.lerp(end, float(step) / 4.0)
-		var arrow := PackedVector2Array([
-			point + direction * 8.0,
-			point - direction * 6.0 + perpendicular * 5.0,
-			point - direction * 6.0 - perpendicular * 5.0,
-		])
-		draw_colored_polygon(arrow, Color(color.r, color.g, color.b, 0.58))
-
 func _draw_blocked_target_marker(center: Vector2, radius: float) -> void:
 	var marker_radius: float = clampf(radius * 0.34, 7.0, 14.0)
 	var marker_center := center + Vector2(radius * 0.36, -radius * 0.36)
@@ -5972,7 +6048,6 @@ func _update_pointer_hover(position: Vector2) -> void:
 	var stack_id := ""
 	if hero_side == "" and not _ribbon_rect().has_point(position):
 		stack_id = _stack_id_at_board_position(position, _hex_cell_at_position(position))
-	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND if hero_side == "player" else Control.CURSOR_ARROW
 	_hover_hero_side = hero_side
 	_hover_ribbon_battle_id = ribbon_id
 	_hover_stack_id = stack_id
@@ -5984,10 +6059,11 @@ func _on_pointer_left() -> void:
 	_hover_hero_side = ""
 	_hover_ribbon_battle_id = ""
 	_hover_stack_id = ""
-	mouse_default_cursor_shape = Control.CURSOR_ARROW
 	if not _keyboard_cursor_shown():
 		_hover_destination_cell = Vector2i(-1, -1)
+		_hover_order = {}
 		set_consequence_preview({})
+	_apply_field_cursor_shape()
 	queue_redraw()
 
 ## The board draws its own forecast beside the pointer, so the delayed hover
@@ -6440,11 +6516,14 @@ func _forecast_anchor() -> Vector2:
 		return _hex_center(_controller_cursor_cell, _current_hex_layout())
 	return _pointer_position
 
-## What the forecast says: a hovered chip's or hero's summary, a stack's
-## identity when no order applies to it, else the order preview (the attack,
-## spell or move outcome), else why the hex is blocked.
-func _hover_forecast_lines() -> PackedStringArray:
-	var lines := PackedStringArray()
+## What the forecast says, one line each ({"text", "detail", "tone", "role",
+## "icon"}; see _draw_hover_forecast): a hovered chip's or hero's summary, a
+## stack's identity when no order applies to it, else what the order under
+## the cursor does (the attack's kills, damage, strike-back and walk or
+## shots; the spell's effect), else why it is refused. A move says nothing:
+## its path shows on the field.
+func _hover_forecast() -> Array:
+	var lines: Array = []
 	if _battle.is_empty() or _battle.has("playback_event"):
 		return lines
 	var focused := _keyboard_cursor_shown() and _cell_in_bounds(_controller_cursor_cell)
@@ -6453,38 +6532,53 @@ func _hover_forecast_lines() -> PackedStringArray:
 	if not focused and _hover_ribbon_battle_id != "":
 		var chip_stack := _stack_by_id(_hover_ribbon_battle_id)
 		if not chip_stack.is_empty():
-			lines.append("%s ×%d" % [_stack_full_name(chip_stack), _stack_alive_count(chip_stack)])
-			lines.append(_ribbon_phase_text(_hover_ribbon_battle_id))
+			lines.append({"text": "%s ×%d" % [_stack_full_name(chip_stack), _stack_alive_count(chip_stack)]})
+			lines.append({"text": _ribbon_phase_text(_hover_ribbon_battle_id), "role": "note"})
 		return lines
 	if not focused and _hover_hero_side != "":
 		var hero := _hero_presentation_for(_hover_hero_side)
-		lines.append(String(hero.get("name", "Commander")))
+		lines.append({"text": String(hero.get("name", "Commander")), "icon": "book" if _hover_hero_side == "player" and not bool(hero.get("cast_this_round", false)) else ""})
 		if _hover_hero_side == "player":
-			lines.append("Already cast a spell this round" if bool(hero.get("cast_this_round", false)) else "Click: spellbook · one spell per round, the stack keeps its turn")
+			lines.append({"text": "Already cast a spell this round" if bool(hero.get("cast_this_round", false)) else "Click: spellbook · one spell per round, the stack keeps its turn", "role": "note"})
 		else:
-			lines.append("Mana %d/%d · %s" % [int(hero.get("mana_current", 0)), int(hero.get("mana_max", 0)), _hero_status_line(hero)])
+			lines.append({"text": "Mana %d/%d · %s" % [int(hero.get("mana_current", 0)), int(hero.get("mana_max", 0)), _hero_status_line(hero)], "role": "note"})
 		return lines
-	var cell := _controller_cursor_cell if focused else _hex_cell_at_position(_pointer_position)
-	var stack_id := _stack_id_at_cell(cell) if focused else _hover_stack_id
-	var player_turn := String(_active_stack.get("side", "")) == "player"
-	if stack_id != "" and not _spell_target_mode:
-		var stack := _stack_by_id(stack_id)
-		if String(stack.get("side", "")) == "player" or not player_turn:
-			lines.append("%s ×%d" % [_stack_full_name(stack), _stack_alive_count(stack)])
-			lines.append("%s · %s" % ["Your stack" if String(stack.get("side", "")) == "player" else "Enemy stack", "Ranged" if bool(stack.get("ranged", false)) else "Melee"])
-			return lines
-	var message := String(_consequence_preview.get("message", "")).strip_edges()
-	if message != "" and (stack_id != "" or bool(_consequence_preview.get("ok", false))):
-		for message_line in message.split("\n", false):
-			for part in String(message_line).split(" | ", false):
-				if lines.size() < 4 and String(part).strip_edges() != "":
-					lines.append(String(part).strip_edges())
-		return lines
-	if player_turn and not _spell_target_mode and _cell_in_bounds(cell) and stack_id == "" and not _is_legal_destination_cell(cell):
-		var intent: Dictionary = _board_query("move_intent:%d,%d" % [cell.x, cell.y], func(): return BattleRulesScript.movement_intent_for_destination(_battle, cell.x, cell.y))
-		var reason := String(intent.get("message", "")).strip_edges()
-		if bool(intent.get("blocked", false)) and reason != "":
-			lines.append(reason)
+	var preview: Dictionary = _hover_order.get("preview", {})
+	var kind := String(_hover_order.get("kind", ""))
+	match kind:
+		"info":
+			var stack := _stack_by_id(String(_hover_order.get("target_id", "")))
+			if not stack.is_empty():
+				lines.append({"text": "%s ×%d" % [_stack_full_name(stack), _stack_alive_count(stack)]})
+				lines.append({"text": "%s · %s" % ["Your stack" if String(stack.get("side", "")) == "player" else "Enemy stack", "Ranged" if bool(stack.get("ranged", false)) else "Melee"], "role": "note"})
+		"strike", "shoot", "spell":
+			if not bool(preview.get("ok", false)):
+				var refusal := String(preview.get("message", "")).strip_edges().get_slice("\n", 0)
+				if refusal != "":
+					lines.append({"text": refusal, "role": "note"})
+				return lines
+			for value in preview.get("forecast_lines", []):
+				if value is Dictionary:
+					lines.append((value as Dictionary).duplicate())
+			if lines.is_empty():
+				return lines
+			lines[0]["icon"] = "sword" if kind == "strike" else ("arrow" if kind == "shoot" else "spark")
+			var last: Dictionary = lines.back()
+			if kind == "strike" and (_hover_order.get("approaches", []) as Array).size() > 1:
+				last["detail"] = "· point at another side, or turn it with Q and E"
+			elif kind == "shoot" and bool(preview.get("penalised", false)) and bool(_hover_order.get("can_strike", false)):
+				last["detail"] = "· hold Ctrl to strike in melee"
+		"blocked":
+			var reason := String(_hover_order.get("reason", "")).strip_edges()
+			if reason != "":
+				lines.append({"text": reason, "role": "note"})
+	return lines
+
+## The forecast as plain lines, for checks and the screen reader.
+func _hover_forecast_lines() -> PackedStringArray:
+	var lines := PackedStringArray()
+	for line in _hover_forecast():
+		lines.append(BattleRulesScript.forecast_text([line]))
 	return lines
 
 func _ribbon_phase_text(battle_id: String) -> String:
@@ -6502,8 +6596,19 @@ func _ribbon_phase_text(battle_id: String) -> String:
 					return "Next round (predicted)"
 	return ""
 
+## The forecast's role per line when it names none: the headline, the main
+## consequence, then notes.
+func _forecast_line_role(line: Dictionary, index: int) -> String:
+	var role := String(line.get("role", ""))
+	if role != "":
+		return role
+	return "head" if index == 0 else ("main" if index == 1 else "note")
+
+## The badge beside the cursor: a headline (with the order's icon and its
+## detail in small type), the main consequence coloured by its tone (red for
+## losses, green for none, amber for a warning), then muted notes.
 func _draw_hover_forecast() -> void:
-	var lines := _hover_forecast_lines()
+	var lines := _hover_forecast()
 	if lines.is_empty():
 		return
 	var font := get_theme_default_font()
@@ -6513,21 +6618,33 @@ func _draw_hover_forecast() -> void:
 	if anchor.x < 0.0:
 		return
 	var k := ui_scale()
-	var sizes: Array = []
+	var rows: Array = []
 	var width := 0.0
 	var height := 0.0
 	for index in range(lines.size()):
-		var font_size := int(round((16.0 if index == 0 else (13.0 if index == 1 else 12.0)) * k))
-		sizes.append(font_size)
-		width = maxf(width, font.get_string_size(lines[index], HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x)
-		height += float(font_size) * 1.25 + (3.0 * k if index > 0 else 0.0)
+		var line: Dictionary = lines[index]
+		var role := _forecast_line_role(line, index)
+		var text_size := (19.0 if role == "head" else (14.0 if role == "main" else 12.5)) * k
+		var font_size := int(round(text_size))
+		var detail_size := int(round(13.5 * k)) if role == "head" else font_size
+		var text := String(line.get("text", ""))
+		var detail := String(line.get("detail", ""))
+		var icon := String(line.get("icon", ""))
+		var icon_width := 24.0 * k if icon != "" else 0.0
+		var text_width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x
+		var detail_width := font.get_string_size(detail, HORIZONTAL_ALIGNMENT_LEFT, -1.0, detail_size).x if detail != "" else 0.0
+		var row_width := icon_width + text_width + (7.0 * k + detail_width if detail != "" else 0.0)
+		var row_height := float(font_size) * 1.2 + ((3.0 if role == "main" else 2.0) * k if index > 0 else 0.0)
+		rows.append({"line": line, "role": role, "font_size": font_size, "detail_size": detail_size, "icon_width": icon_width, "text_width": text_width, "height": row_height})
+		width = maxf(width, row_width)
+		height += row_height
 	var box_size := Vector2(width + 21.0 * k, height + 15.0 * k)
-	var position := anchor + Vector2(22.0, 24.0) * k
+	var position := anchor + Vector2(30.0, 26.0) * k
 	if position.x + box_size.x > size.x - 12.0 * k:
-		position.x = anchor.x - box_size.x - 22.0 * k
+		position.x = anchor.x - box_size.x - 30.0 * k
 	var bottom_limit := size.y - 92.0 * k
 	if position.y + box_size.y > bottom_limit:
-		position.y = anchor.y - box_size.y - 18.0 * k
+		position.y = anchor.y - box_size.y - 22.0 * k
 	var top_limit := _ribbon_rect().end.y + 6.0 * k
 	position.x = clampf(position.x, 12.0 * k, maxf(12.0 * k, size.x - box_size.x - 12.0 * k))
 	position.y = clampf(position.y, top_limit, maxf(top_limit, bottom_limit - box_size.y))
@@ -6544,10 +6661,497 @@ func _draw_hover_forecast() -> void:
 	_forecast_style.shadow_offset = Vector2(0.0, 6.0 * k)
 	draw_style_box(_forecast_style, box)
 	var y := position.y + 7.0 * k
-	for index in range(lines.size()):
-		var font_size: int = sizes[index]
+	for index in range(rows.size()):
+		var row: Dictionary = rows[index]
+		var line: Dictionary = row.get("line", {})
+		var role := String(row.get("role", "note"))
+		var font_size := int(row.get("font_size", 12))
 		if index > 0:
-			y += 3.0 * k
-		var color := Color(1.0, 0.902, 0.651) if index == 0 else (UI_CREAM if index == 1 else UI_MUTED)
-		draw_string(font, Vector2(position.x + 10.0 * k, y + font.get_ascent(font_size)), lines[index], HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, color)
-		y += float(font_size) * 1.25
+			y += (3.0 if role == "main" else 2.0) * k
+		var baseline := y + font.get_ascent(font_size)
+		var x := position.x + 10.0 * k
+		var icon := String(line.get("icon", ""))
+		if icon != "":
+			_draw_forecast_icon(icon, Vector2(x + 8.5 * k, y + float(font_size) * 0.6), 17.0 * k)
+			x += float(row.get("icon_width", 0.0))
+		var color := _forecast_tone_color(String(line.get("tone", "")), role)
+		draw_string(font, Vector2(x, baseline), String(line.get("text", "")), HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, color)
+		var detail := String(line.get("detail", ""))
+		if detail != "":
+			draw_string(font, Vector2(x + float(row.get("text_width", 0.0)) + 7.0 * k, baseline), detail, HORIZONTAL_ALIGNMENT_LEFT, -1.0, int(row.get("detail_size", font_size)), UI_MUTED)
+		y += float(font_size) * 1.2
+
+## A forecast line's colour: the headline gold, the main line by its tone
+## (red unless it says otherwise), notes muted unless amber.
+func _forecast_tone_color(tone: String, role: String) -> Color:
+	match tone:
+		"green":
+			return FORECAST_GOOD
+		"amber":
+			return FORECAST_WARN
+		"red":
+			return FORECAST_LOSS
+		"muted":
+			return UI_MUTED
+	if role == "head":
+		return FORECAST_HEAD
+	return FORECAST_LOSS if role == "main" else UI_MUTED
+
+func _draw_forecast_icon(icon: String, center: Vector2, extent: float) -> void:
+	var tint := Color(0.965, 0.886, 0.706)
+	match icon:
+		"sword":
+			_draw_role_glyph(center, extent, false, tint)
+		"arrow":
+			_draw_role_glyph(center, extent, true, tint)
+		"spark":
+			draw_colored_polygon(_spark_points(center, extent * 0.5), tint)
+		"book":
+			var half := extent * 0.42
+			var spine := Vector2(center.x, center.y - half * 0.7)
+			draw_polyline(PackedVector2Array([spine, center + Vector2(-half, -half * 0.85), center + Vector2(-half, half * 0.75), center + Vector2(0.0, half * 0.95)]), tint, maxf(1.0, extent * 0.09), true)
+			draw_polyline(PackedVector2Array([spine, center + Vector2(half, -half * 0.85), center + Vector2(half, half * 0.75), center + Vector2(0.0, half * 0.95)]), tint, maxf(1.0, extent * 0.09), true)
+			draw_line(spine, center + Vector2(0.0, half * 0.95), tint, maxf(1.0, extent * 0.07), true)
+
+func _spark_points(center: Vector2, radius: float) -> PackedVector2Array:
+	var points := PackedVector2Array()
+	for index in range(8):
+		var reach := radius if index % 2 == 0 else radius * 0.3
+		points.append(center + Vector2.from_angle(-PI * 0.5 + PI * 0.25 * float(index)) * reach)
+	return points
+
+# --- Orders and the field cursor -------------------------------------------------
+
+## What a click at position, or Enter on the keyboard cursor (focused), orders
+## now, and the cursor that shows it. kind is "strike", "shoot", "move",
+## "spell", "blocked" (refused; reason says why), "info" (a stack no order
+## applies to), "hero", or "" for none: the scenery, the ribbon, a playback,
+## empty ground on the enemy's turn. cursor names the glyph drawn at the
+## pointer (FIELD_CURSOR_GLYPHS, or "info" beside the system pointer). A
+## strike carries the hex it is made from (approach), every hex it could be
+## made from in clockwise order (approaches) and the sector the pointer chose
+## it in; force_strike (Ctrl) makes a shooter strike instead when it can.
+func _resolve_order(position: Vector2, focused: bool, force_strike: bool = false) -> Dictionary:
+	var order := {"kind": "", "cursor": "", "target_id": "", "cell": Vector2i(-1, -1), "preview": {}, "approach": {}, "approaches": [], "sector": "", "angle": 0.0, "reason": "", "can_strike": false}
+	if _battle.is_empty() or _battle.has("playback_event") or _field_final:
+		return order
+	if not focused:
+		if position.x < 0.0 or _ribbon_rect().has_point(position):
+			return order
+		if _hero_side_at_position(position) != "":
+			order["kind"] = "hero"
+			return order
+	var cell := _controller_cursor_cell if focused else _hex_cell_at_position(position)
+	var target_id := _stack_id_at_cell(cell) if focused else _stack_id_at_board_position(position, cell)
+	order["cell"] = cell
+	order["target_id"] = target_id
+	if target_id == "" and not _cell_in_bounds(cell):
+		return order
+	if String(_active_stack.get("side", "")) != "player":
+		if target_id != "":
+			_set_order_kind(order, "info", "info")
+		return order
+	if _spell_target_mode:
+		var spell_preview: Dictionary = _spell_target_previews.get(target_id, {}) if target_id != "" else {}
+		if target_id != "" and _spell_target_candidates.has(target_id) and bool(spell_preview.get("ok", false)):
+			_set_order_kind(order, "spell", "spark")
+			order["preview"] = spell_preview
+		else:
+			_set_order_kind(order, "blocked", "blocked")
+			order["reason"] = "Not a target for this spell" if target_id != "" else "Choose a highlighted stack"
+		return order
+	if target_id == "":
+		if _is_legal_destination_cell(cell):
+			_set_order_kind(order, "move", "boot")
+			order["preview"] = _move_preview(cell)
+		else:
+			_set_order_kind(order, "blocked", "blocked")
+			order["reason"] = _blocked_hex_reason(cell)
+		return order
+	var stack := _stack_by_id(target_id)
+	if String(stack.get("side", "")) != "enemy":
+		_set_order_kind(order, "info", "info")
+		return order
+	var intent: Dictionary = _board_query("click_intent:" + target_id, func(): return BattleRulesScript.board_click_attack_intent_for_target(_battle, target_id))
+	var approaches: Array = _board_query("approaches:" + target_id, func(): return BattleRulesScript.melee_approach_cells(_battle, _active_stack, stack))
+	var action := String(intent.get("action", ""))
+	order["can_strike"] = not approaches.is_empty()
+	if force_strike and action == "shoot" and not approaches.is_empty():
+		action = "strike"
+	if action == "":
+		_set_order_kind(order, "blocked", "blocked")
+		order["reason"] = _blocked_target_reason()
+		return order
+	var layout := _current_hex_layout()
+	var line_of_attack := _stack_rest_center(stack, layout) - _stack_rest_center(_active_stack, layout)
+	if action == "shoot":
+		var shot := BattleRulesScript.attack_consequence_preview(_battle, "shoot", target_id)
+		_set_order_kind(order, "shoot", "broken_arrow" if bool(shot.get("penalised", false)) else "arrow")
+		order["preview"] = shot
+		order["angle"] = line_of_attack.angle()
+		return order
+	var clockwise := _approaches_clockwise(approaches, stack, layout)
+	var choice := _choose_approach(clockwise, approaches, stack, layout, position, focused)
+	var entry: Dictionary = choice.get("entry", {})
+	_set_order_kind(order, "strike", "sword")
+	order["approaches"] = clockwise
+	order["approach"] = entry
+	order["sector"] = String(choice.get("sector", ""))
+	order["preview"] = BattleRulesScript.attack_consequence_preview(_battle, "strike", target_id, {"q": int(entry.get("q", -1)), "r": int(entry.get("r", -1))} if not entry.is_empty() else {})
+	order["angle"] = float(entry.get("strike_angle", line_of_attack.angle()))
+	return order
+
+func _set_order_kind(order: Dictionary, kind: String, cursor: String) -> void:
+	order["kind"] = kind
+	order["cursor"] = cursor
+
+## What makes one order differ from another for the forecast.
+func _order_key(order: Dictionary) -> String:
+	var approach: Dictionary = order.get("approach", {})
+	return "%s|%s|%s|%s" % [String(order.get("kind", "")), String(order.get("target_id", "")), str(order.get("cell", Vector2i(-1, -1))), "" if approach.is_empty() else BattleRulesScript._hex_key(approach)]
+
+## A move to an empty hex: where it ends and the hexes it walks through.
+func _move_preview(cell: Vector2i) -> Dictionary:
+	return _board_query("move_preview:%d,%d" % [cell.x, cell.y], func():
+		var destination := {"q": cell.x, "r": cell.y}
+		var path: Array = []
+		for step in BattleRulesScript._presentation_walk_path(_battle, BattleRulesScript._stack_hex(_active_stack), destination):
+			path.append({"q": int(step.get("q", -1)), "r": int(step.get("r", -1))})
+		return {"ok": true, "action": "move", "destination": destination, "steps": maxi(0, path.size() - 1), "path": path,
+			"message": "Move → %s\nMovement only — no attack. Enemy choices are not predicted." % BattleRulesScript._hex_label(destination)})
+
+## Why the active stack cannot go to an empty hex, in a few words.
+func _blocked_hex_reason(cell: Vector2i) -> String:
+	if BattleRulesScript.battle_obstacle_cells(_battle).has("%d,%d" % [cell.x, cell.y]):
+		return "Blocked by an obstacle"
+	if BattleRulesScript._stack_is_rooted(_active_stack, _battle):
+		return "Rooted: cannot move"
+	if _legal_destinations().is_empty():
+		return "%s cannot move this turn" % _stack_full_name(_active_stack)
+	return "Out of reach this turn"
+
+## Why the active stack cannot attack the enemy under the cursor.
+func _blocked_target_reason() -> String:
+	if BattleRulesScript._stack_is_rooted(_active_stack, _battle):
+		return "Rooted: cannot move"
+	if bool(_active_stack.get("ranged", false)) and int(_active_stack.get("shots_remaining", 0)) <= 0:
+		return "No shots left, and out of reach this turn"
+	return "Out of reach this turn"
+
+## Where a stack's body stands while it is still: its hex, or the middle of
+## its two hexes.
+func _stack_rest_center(stack: Dictionary, layout: Dictionary) -> Vector2:
+	var cell := _stack_hex_cell(stack)
+	return _hex_center(cell, layout) + _body_center_offset(stack, cell, layout)
+
+## A screen direction with the field's vertical squash taken out, so the six
+## sides of a hex lie sixty degrees apart.
+func _unsquashed(direction: Vector2) -> Vector2:
+	return Vector2(direction.x, direction.y / HEX_VERTICAL_SCALE)
+
+func _nearest_cell_center(cells: Array, point: Vector2, layout: Dictionary) -> Vector2:
+	var nearest := point
+	var best := INF
+	for cell in cells:
+		var center := _hex_center(Vector2i(int(cell.get("q", -1)), int(cell.get("r", -1))), layout)
+		if center.distance_squared_to(point) < best:
+			best = center.distance_squared_to(point)
+			nearest = center
+	return nearest
+
+## The hexes a strike on target can be made from (melee_approach_cells), each
+## with the direction it comes from around the target (angle, unsquashed) and
+## the direction its blow lands in on screen (strike_angle), clockwise.
+func _approaches_clockwise(approaches: Array, target: Dictionary, layout: Dictionary) -> Array:
+	var middle := _stack_rest_center(target, layout)
+	var body: Array = BattleRulesScript.Footprint.cells(target)
+	var entries: Array = []
+	for index in range(approaches.size()):
+		var entry: Dictionary = (approaches[index] as Dictionary).duplicate()
+		var strike := _hex_center(Vector2i(int(entry.get("strike_q", -1)), int(entry.get("strike_r", -1))), layout)
+		entry["angle"] = _unsquashed(strike - middle).angle()
+		entry["strike_angle"] = (_nearest_cell_center(body, strike, layout) - strike).angle()
+		entry["rank"] = index
+		entries.append(entry)
+	entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if not is_equal_approx(float(a.get("angle", 0.0)), float(b.get("angle", 0.0))):
+			return float(a.get("angle", 0.0)) < float(b.get("angle", 0.0))
+		return int(a.get("rank", 0)) < int(b.get("rank", 0)))
+	return entries
+
+func _approach_with_key(entries: Array, key: String) -> Dictionary:
+	for entry in entries:
+		if BattleRulesScript._hex_key(entry) == key:
+			return entry
+	return {}
+
+## The side a strike on target comes from: the hex on the side the pointer
+## points to, seen from the target's hex under it (or nearest it), or the
+## nearest hex (where the stack stands, else the fewest steps) while the
+## pointer is on that hex's middle or keys steer. A turn made with Q or E
+## holds while the pointer stays in the sector it was made in.
+func _choose_approach(clockwise: Array, approaches: Array, target: Dictionary, layout: Dictionary, position: Vector2, focused: bool) -> Dictionary:
+	if clockwise.is_empty():
+		return {"entry": {}, "sector": ""}
+	var nearest_key := ""
+	var fewest := 1 << 30
+	for entry in approaches:
+		if int(entry.get("steps", 0)) < fewest:
+			fewest = int(entry.get("steps", 0))
+			nearest_key = BattleRulesScript._hex_key(entry)
+	var chosen := _approach_with_key(clockwise, nearest_key)
+	var sector := "keys" if focused else "middle"
+	if not focused:
+		var hovered := _hovered_body_cell_center(target, position, layout)
+		var pointer := _unsquashed(position - hovered)
+		if pointer.length() > APPROACH_NEUTRAL_SHARE * float(layout.get("radius", 1.0)):
+			var best_gap := INF
+			for entry in clockwise:
+				var strike := _hex_center(Vector2i(int(entry.get("strike_q", -1)), int(entry.get("strike_r", -1))), layout)
+				var gap := absf(angle_difference(pointer.angle(), _unsquashed(strike - hovered).angle()))
+				if gap < best_gap - 0.0001:
+					best_gap = gap
+					chosen = entry
+			sector = BattleRulesScript._hex_key(chosen)
+	var held := _approach_choice
+	if String(held.get("target_id", "")) == String(target.get("battle_id", "")) and String(held.get("active_id", "")) == String(_active_stack.get("battle_id", "")) and String(held.get("sector", "")) == sector:
+		var turned := _approach_with_key(clockwise, "%d,%d" % [int(held.get("q", -1)), int(held.get("r", -1))])
+		if not turned.is_empty():
+			chosen = turned
+	return {"entry": chosen, "sector": sector}
+
+## The centre of the target's hex under the pointer, or of the one nearest it
+## while the pointer is on the target's figure above another hex.
+func _hovered_body_cell_center(target: Dictionary, position: Vector2, layout: Dictionary) -> Vector2:
+	var pointer_cell := _hex_cell_at_position(position)
+	var body: Array = BattleRulesScript.Footprint.cells(target)
+	for body_cell in body:
+		if Vector2i(int(body_cell.get("q", -1)), int(body_cell.get("r", -1))) == pointer_cell:
+			return _hex_center(pointer_cell, layout)
+	return _nearest_cell_center(body, position, layout)
+
+## Turns the side the enemy under the cursor is struck from: E (1) clockwise,
+## Q (-1) the other way, around the hexes the strike can be made from. False
+## when no strike with a choice of sides is under the cursor.
+func cycle_approach(direction: int) -> bool:
+	if String(_hover_order.get("kind", "")) != "strike":
+		return false
+	var approaches: Array = _hover_order.get("approaches", [])
+	if approaches.size() < 2:
+		return false
+	var current := BattleRulesScript._hex_key(_hover_order.get("approach", {}))
+	var index := 0
+	for slot in range(approaches.size()):
+		if BattleRulesScript._hex_key(approaches[slot]) == current:
+			index = slot
+			break
+	var turned: Dictionary = approaches[posmod(index + direction, approaches.size())]
+	_approach_choice = {
+		"active_id": String(_active_stack.get("battle_id", "")),
+		"target_id": String(_hover_order.get("target_id", "")),
+		"sector": String(_hover_order.get("sector", "")),
+		"q": int(turned.get("q", -1)),
+		"r": int(turned.get("r", -1)),
+	}
+	_refresh_hover_order()
+	return true
+
+## The order under the cursor, for checks: its kind, cursor, target, the hex
+## a strike is made from and the ones it could turn to, and the forecast.
+func validation_pointer_order() -> Dictionary:
+	var approaches: Array = []
+	for entry in _hover_order.get("approaches", []):
+		approaches.append({"q": int(entry.get("q", -1)), "r": int(entry.get("r", -1)), "steps": int(entry.get("steps", 0)), "angle": float(entry.get("angle", 0.0))})
+	var approach: Dictionary = _hover_order.get("approach", {})
+	return {
+		"kind": String(_hover_order.get("kind", "")),
+		"cursor": String(_hover_order.get("cursor", "")),
+		"target_id": String(_hover_order.get("target_id", "")),
+		"approach": {} if approach.is_empty() else {"q": int(approach.get("q", -1)), "r": int(approach.get("r", -1)), "steps": int(approach.get("steps", 0))},
+		"approaches": approaches,
+		"sector": String(_hover_order.get("sector", "")),
+		"angle": float(_hover_order.get("angle", 0.0)),
+		"reason": String(_hover_order.get("reason", "")),
+		"preview": (_hover_order.get("preview", {}) as Dictionary).duplicate(true),
+		"forecast": _hover_forecast_lines(),
+		"cursor_shape": mouse_default_cursor_shape,
+		"strike_forced": _strike_forced,
+	}
+
+## The system cursor hides where the board draws its own glyph, points at the
+## player's hero, and is the plain arrow elsewhere.
+func _apply_field_cursor_shape() -> void:
+	var shape := Control.CURSOR_ARROW
+	if String(_hover_order.get("cursor", "")) in FIELD_CURSOR_GLYPHS and not _keyboard_cursor_shown():
+		shape = FIELD_CURSOR_SHAPE
+	elif _hover_hero_side == "player" and not _keyboard_cursor_shown():
+		shape = Control.CURSOR_POINTING_HAND
+	if mouse_default_cursor_shape != shape:
+		mouse_default_cursor_shape = shape
+
+## The walk an order makes, on the ground under the stacks: dots on the hexes
+## it passes, and a ring where it ends.
+func _draw_order_path(hex_layout: Dictionary) -> void:
+	var kind := String(_hover_order.get("kind", ""))
+	if kind not in ["strike", "move"] or _battle.has("playback_event"):
+		return
+	var preview: Dictionary = _hover_order.get("preview", {})
+	if not bool(preview.get("ok", false)):
+		return
+	var radius := float(hex_layout.get("radius", 20.0))
+	var path: Array = preview.get("path", [])
+	for index in range(1, path.size() - 1):
+		var step: Dictionary = path[index]
+		var center := _hex_center(Vector2i(int(step.get("q", -1)), int(step.get("r", -1))), hex_layout)
+		draw_circle(center + Vector2(0.0, radius * 0.03), radius * 0.1, Color(0.0, 0.0, 0.0, 0.45))
+		draw_circle(center, radius * 0.08, APPROACH_PATH_DOT)
+	var end := _order_end_cell()
+	if not _cell_in_bounds(end):
+		return
+	for body_cell in BattleRulesScript.Footprint.cells(_active_stack, {"q": end.x, "r": end.y}):
+		draw_arc(_hex_center(Vector2i(int(body_cell.q), int(body_cell.r)), hex_layout), radius * 0.88, 0.0, TAU, 32, Color(ACTIVE_COLOR, 0.85), maxf(2.0, radius * 0.035), true)
+
+## Where the order under the cursor leaves the active stack when it walks:
+## the hex a move ends on, or the one a strike is made from. (-1, -1) when
+## the stack stays where it is.
+func _order_end_cell() -> Vector2i:
+	var preview: Dictionary = _hover_order.get("preview", {})
+	match String(_hover_order.get("kind", "")):
+		"move":
+			var destination: Dictionary = preview.get("destination", {})
+			return Vector2i(int(destination.get("q", -1)), int(destination.get("r", -1)))
+		"strike":
+			if int(preview.get("steps", 0)) > 0:
+				var approach: Dictionary = preview.get("approach", {})
+				return Vector2i(int(approach.get("q", -1)), int(approach.get("r", -1)))
+	return Vector2i(-1, -1)
+
+## Where the stack will stand to strike, for _draw_stack_tokens to draw its
+## faded ghost among the stacks: {"center"} or {} when it strikes in place.
+func _strike_ghost(hex_layout: Dictionary) -> Dictionary:
+	if String(_hover_order.get("kind", "")) != "strike" or _battle.has("playback_event"):
+		return {}
+	var end := _order_end_cell()
+	if not _cell_in_bounds(end):
+		return {}
+	return {"center": _hex_center(end, hex_layout) + _body_center_offset(_active_stack, end, hex_layout)}
+
+## The board's own cursor, over everything: a sword turned the way the blow
+## lands, an arrow (broken for a point-blank shot) toward the target, a boot
+## for a move, a spark for a spell, a barred circle for a refused order, and
+## a small info badge beside the system pointer over a stack.
+func _draw_field_cursor() -> void:
+	var glyph := String(_hover_order.get("cursor", ""))
+	if glyph == "" or _battle.has("playback_event"):
+		return
+	var anchor := _forecast_anchor()
+	if anchor.x < 0.0:
+		return
+	var k := maxf(0.7, ui_scale())
+	if glyph == "info":
+		if _keyboard_cursor_shown():
+			return
+		var badge := anchor + Vector2(23.0, 26.0) * k
+		draw_circle(badge, 7.65 * k, Color(0.114, 0.239, 0.431))
+		draw_arc(badge, 7.65 * k, 0.0, TAU, 24, Color(0.906, 0.949, 1.0), maxf(1.0, 1.4 * k), true)
+		draw_circle(badge - Vector2(0.0, 3.4 * k), 1.3 * k, Color.WHITE)
+		draw_line(badge - Vector2(0.0, 0.9 * k), badge + Vector2(0.0, 4.1 * k), Color.WHITE, maxf(1.0, 2.0 * k), true)
+		return
+	if glyph not in FIELD_CURSOR_GLYPHS:
+		return
+	var turn := 0.0
+	match glyph:
+		"sword":
+			turn = float(_hover_order.get("angle", 0.0)) + PI * 0.5
+		"arrow", "broken_arrow":
+			turn = float(_hover_order.get("angle", 0.0))
+	# The glyphs are drawn on a 48-unit square centred on the pointer.
+	draw_set_transform(anchor + Vector2(0.0, 2.0 * k), turn, Vector2(k, k))
+	_draw_cursor_glyph(glyph, true)
+	draw_set_transform(anchor, turn, Vector2(k, k))
+	_draw_cursor_glyph(glyph, false)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+## One cursor glyph in its 48-unit square around the origin: shadow draws the
+## dark silhouette under it.
+func _draw_cursor_glyph(glyph: String, shadow: bool) -> void:
+	var ink := Color(0.0, 0.0, 0.0, 0.45) if shadow else FIELD_CURSOR_OUTLINE
+	match glyph:
+		"sword":
+			var blade := PackedVector2Array([Vector2(0.0, -21.5), Vector2(4.6, -15.0), Vector2(4.6, 6.0), Vector2(-4.6, 6.0), Vector2(-4.6, -15.0)])
+			_draw_glyph_shape(blade, FIELD_CURSOR_BLADE, ink, 2.2, shadow)
+			if not shadow:
+				draw_line(Vector2(0.0, -17.0), Vector2(0.0, 5.0), Color(0.663, 0.639, 0.592), 1.3, true)
+			_draw_glyph_shape(_rounded_bar(Vector2(-11.5, 6.0), Vector2(11.5, 10.4)), UI_GOLD, ink, 2.0, shadow)
+			_draw_glyph_shape(PackedVector2Array([Vector2(-2.4, 10.4), Vector2(2.4, 10.4), Vector2(2.4, 17.8), Vector2(-2.4, 17.8)]), Color(0.482, 0.29, 0.141), ink, 2.0, shadow)
+			_draw_glyph_disc(Vector2(0.0, 20.0), 3.0, UI_GOLD, ink, 2.0, shadow)
+		"arrow", "broken_arrow":
+			var broken := glyph == "broken_arrow"
+			var shaft: Array = [[Vector2(-18.0, 0.0), Vector2(-8.0, 0.0)], [Vector2(-1.0, 0.0), Vector2(10.0, 0.0)]] if broken else [[Vector2(-18.0, 0.0), Vector2(10.0, 0.0)]]
+			for part in shaft:
+				draw_line(part[0], part[1], ink, 6.5, true)
+				if not shadow:
+					draw_line(part[0], part[1], Color(0.937, 0.863, 0.682), 3.0, true)
+			if broken:
+				var crack := PackedVector2Array([Vector2(-6.5, -6.5), Vector2(-4.0, -1.5), Vector2(-6.0, 1.5), Vector2(-3.0, 7.0)])
+				draw_polyline(crack, ink, 4.5, true)
+				if not shadow:
+					draw_polyline(crack, Color(1.0, 0.541, 0.361), 2.0, true)
+			_draw_glyph_shape(PackedVector2Array([Vector2(7.0, -9.5), Vector2(21.0, 0.0), Vector2(7.0, 9.5), Vector2(10.0, 0.0)]), Color(0.965, 0.949, 0.918), ink, 2.0, shadow)
+			var fletches: Array = [[Vector2(-21.0, -7.0), Vector2(-16.0, 0.0), Vector2(-21.0, 7.0)]] if broken else [[Vector2(-21.0, -7.0), Vector2(-13.5, 0.0), Vector2(-21.0, 7.0)], [Vector2(-15.0, -7.0), Vector2(-7.5, 0.0), Vector2(-15.0, 7.0)]]
+			for fletch in fletches:
+				var points := PackedVector2Array(fletch)
+				draw_polyline(points, ink, 5.0, true)
+				if not shadow:
+					draw_polyline(points, Color(0.894, 0.416, 0.333), 2.4, true)
+		"boot":
+			var boot := PackedVector2Array([Vector2(-9.0, -18.0), Vector2(2.0, -18.0), Vector2(2.0, 1.5), Vector2(12.8, 5.9), Vector2(15.2, 6.9), Vector2(16.5, 9.0), Vector2(16.5, 15.0), Vector2(-11.5, 15.0), Vector2(-11.5, 1.5)])
+			_draw_glyph_shape(boot, Color(0.918, 0.843, 0.659), ink, 2.4, shadow)
+			_draw_glyph_shape(PackedVector2Array([Vector2(-11.5, 15.0), Vector2(16.5, 15.0), Vector2(16.5, 19.5), Vector2(-11.5, 19.5)]), Color(0.482, 0.29, 0.141), ink, 2.2, shadow)
+			if not shadow:
+				var crease := Color(FIELD_CURSOR_OUTLINE, 0.5)
+				draw_line(Vector2(-9.0, -12.0), Vector2(2.0, -12.0), crease, 1.6, true)
+				draw_line(Vector2(2.0, 1.5), Vector2(-1.5, 5.5), crease, 1.6, true)
+		"spark":
+			var star := PackedVector2Array([Vector2(0.0, -21.0), Vector2(4.2, -6.4), Vector2(19.0, 0.0), Vector2(4.2, 6.4), Vector2(0.0, 21.0), Vector2(-4.2, 6.4), Vector2(-19.0, 0.0), Vector2(-4.2, -6.4)])
+			_draw_glyph_shape(star, Color(0.898, 0.604, 0.227), ink, 2.2, shadow)
+			if not shadow:
+				var inner := PackedVector2Array()
+				for point in star:
+					inner.append(point * 0.62)
+				draw_colored_polygon(inner, Color(1.0, 0.878, 0.541))
+				var core := PackedVector2Array()
+				for point in star:
+					core.append(point * 0.3)
+				draw_colored_polygon(core, Color.WHITE)
+			_draw_glyph_disc(Vector2(14.0, -15.0), 3.2, Color(0.749, 0.878, 1.0), ink, 1.6, shadow)
+		"blocked":
+			draw_arc(Vector2.ZERO, 14.0, 0.0, TAU, 40, ink, 8.0, true)
+			draw_line(Vector2(-9.5, 9.5), Vector2(9.5, -9.5), ink, 8.0, true)
+			if not shadow:
+				draw_arc(Vector2.ZERO, 14.0, 0.0, TAU, 40, FIELD_CURSOR_BLOCKED, 4.4, true)
+				draw_line(Vector2(-9.5, 9.5), Vector2(9.5, -9.5), FIELD_CURSOR_BLOCKED, 4.4, true)
+
+## A filled glyph part with a dark outline; as shadow, its silhouette only.
+func _draw_glyph_shape(points: PackedVector2Array, fill: Color, ink: Color, outline: float, shadow: bool) -> void:
+	if shadow:
+		draw_colored_polygon(points, ink)
+		draw_polyline(_closed_points(points), ink, outline, true)
+		return
+	draw_colored_polygon(points, fill)
+	draw_polyline(_closed_points(points), ink, outline, true)
+
+func _draw_glyph_disc(center: Vector2, radius: float, fill: Color, ink: Color, outline: float, shadow: bool) -> void:
+	draw_circle(center, radius, ink if shadow else fill)
+	draw_arc(center, radius, 0.0, TAU, 20, ink, outline, true)
+
+## A bar from top_left to bottom_right with round ends.
+func _rounded_bar(top_left: Vector2, bottom_right: Vector2) -> PackedVector2Array:
+	var radius := (bottom_right.y - top_left.y) * 0.5
+	var middle_y := (top_left.y + bottom_right.y) * 0.5
+	var points := PackedVector2Array()
+	for index in range(7):
+		points.append(Vector2(bottom_right.x - radius, middle_y) + Vector2.from_angle(-PI * 0.5 + PI * float(index) / 6.0) * radius)
+	for index in range(7):
+		points.append(Vector2(top_left.x + radius, middle_y) + Vector2.from_angle(PI * 0.5 + PI * float(index) / 6.0) * radius)
+	return points

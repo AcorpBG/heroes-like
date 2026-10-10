@@ -267,6 +267,7 @@ func _ready() -> void:
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
 	_battle_board_view.stack_focus_requested.connect(_on_board_stack_focus_requested)
+	_battle_board_view.stack_order_requested.connect(_on_board_stack_order_requested)
 	_battle_board_view.hex_destination_requested.connect(_on_board_hex_destination_requested)
 	_battle_board_view.controller_navigation_cancelled.connect(_on_board_controller_navigation_cancelled)
 	_battle_board_view.hero_figure_pressed.connect(_on_hero_figure_pressed)
@@ -523,7 +524,8 @@ func _modal_window_open() -> bool:
 ## Esc and the battle hotkeys, before the focused control sees them. Esc
 ## cancels a spell's targeting, else closes a popover, else opens Options.
 ## S or C opens the spellbook, W waits, D (or Space on the field) defends,
-## A toggles auto battle and R asks to retreat.
+## A toggles auto battle, R asks to retreat, and Q and E turn the side the
+## pointed-at enemy is struck from.
 func _input(event: InputEvent) -> void:
 	if _session == null or not is_inside_tree():
 		return
@@ -577,6 +579,11 @@ func _input(event: InputEvent) -> void:
 		KEY_R:
 			if not _any_popover_open():
 				_press_command(_retreat_button, _on_retreat_pressed)
+				handled = true
+		KEY_Q, KEY_E:
+			if not _any_popover_open():
+				if not _battle_board_view.cycle_approach(1 if key_event.keycode == KEY_E else -1):
+					_set_command_hint("Point at an enemy you can strike, then Q and E turn the side your stack strikes from.")
 				handled = true
 	if handled:
 		get_viewport().set_input_as_handled()
@@ -647,6 +654,20 @@ func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
 	return _commit_board_stack_focus_requested(battle_id)
 
 
+## A click (or Enter) on an enemy with the order its cursor showed: a strike
+## from the hex the player chose, or a shot.
+func _on_board_stack_order_requested(battle_id: String, order: Dictionary) -> Dictionary:
+	if _action_playback_in_progress: return _action_playback_block_result()
+	if _battle_over or _battle_exit_handoff_in_progress or _active_exclusive_confirmation_dialog() != null:
+		return _return_board_cursor_action_result({"ok": false, "committed": false})
+	if _session == null or _session.battle.is_empty() or not _battle_resolution_checkpoint_pending.is_empty():
+		return _return_board_cursor_action_result({"ok": false, "committed": false})
+	if _spell_targeting_id != "":
+		return _cast_targeted_spell(battle_id)
+	_stop_auto_battle()
+	return _commit_board_stack_focus_requested(battle_id, order)
+
+
 func _cast_targeted_spell(battle_id: String) -> Dictionary:
 	var spell_id := _spell_targeting_id
 	if _spell_targeting_hash != hash(_session.battle):
@@ -677,7 +698,9 @@ func _reject_order(message: String, extra_fields: Dictionary = {}) -> Dictionary
 	return _return_board_cursor_action_result(response)
 
 
-func _commit_board_stack_focus_requested(battle_id: String) -> Dictionary:
+## order is what the cursor showed ({"action", "approach"}); without one the
+## click takes the board's default order for that enemy.
+func _commit_board_stack_focus_requested(battle_id: String, order: Dictionary = {}) -> Dictionary:
 	if _action_playback_in_progress: return _action_playback_block_result()
 	if not _battle_resolution_checkpoint_pending.is_empty():
 		return _return_board_cursor_action_result(_battle_resolution_checkpoint_block_result("board_target"))
@@ -701,9 +724,18 @@ func _commit_board_stack_focus_requested(battle_id: String) -> Dictionary:
 		)
 	var board_intent := BattleRules.board_click_attack_intent_for_target(_session.battle, battle_id)
 	var board_action := String(board_intent.get("action", ""))
+	var approach := {}
+	match String(order.get("action", "")):
+		"strike":
+			if battle_id in BattleRules.legal_attack_targets_for_active_stack(_session.battle, false):
+				board_action = "strike"
+				approach = order.get("approach", {}) if order.get("approach", {}) is Dictionary else {}
+		"shoot":
+			if battle_id in BattleRules.legal_attack_targets_for_active_stack(_session.battle, true):
+				board_action = "shoot"
 	if board_action != "":
 		var recap_context := BattleRules.post_action_recap_context(_session, board_action)
-		var result := BattleRules.perform_presented_action(_session, board_action)
+		var result := BattleRules.perform_presented_action(_session, board_action, approach)
 		_last_message = String(result.get("message", ""))
 		_record_action_recap(board_action, result, recap_context)
 		if bool(result.get("ok", false)):
@@ -2619,7 +2651,10 @@ func _idle_log_text() -> String:
 	if active.is_empty():
 		return "The battle begins."
 	if String(active.get("side", "")) == "player":
-		return "%s: click an enemy to attack, or a hex to move." % String(active.get("name", "Your stack"))
+		var stack_name := String(active.get("name", "Your stack"))
+		if bool(active.get("ranged", false)) and int(active.get("shots_remaining", 0)) > 0:
+			return "%s: click an enemy to shoot (Ctrl: strike), or a hex to move." % stack_name
+		return "%s: click an enemy to attack, or a hex to move." % stack_name
 	return "The enemy's %s acts." % String(active.get("name", "stack"))
 
 
