@@ -10184,7 +10184,9 @@ static func _prepare_round(battle: Dictionary, round_number: int) -> void:
 		if round_number > 1:
 			stack["momentum"] = max(0, int(stack.get("momentum", 0)) - 1)
 		stacks[index] = stack
-		if expired_effect_count > 0:
+		# A fallen stack's effects end unannounced: the event would stand it
+		# up on the field again for its effect's end.
+		if expired_effect_count > 0 and _alive_count(stack) > 0:
 			_mark_stack_animation_event(battle, String(stack.get("battle_id", "")), "battle_status_expired")
 	battle["stacks"] = stacks
 	_apply_foundry_aura_round_repair(battle)

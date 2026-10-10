@@ -11,7 +11,7 @@ This slice makes status removal visible in the event-driven battle presentation 
 
 - `BattleRules` maps `battle_status_expired` to `status_expired`.
 - `BattleRules.cast_player_spell(...)` and enemy spell casting preserve the concrete cleanse count from `cleanse_effect` resolution and emit `battle_status_expired` when an effect was actually removed.
-- Round preparation counts effects that expire before the new round, purges them through `SpellRules.purge_expired_stack_effects(...)`, and emits `battle_status_expired` for the affected stack.
+- Round preparation counts effects that expire before the new round, purges them through `SpellRules.purge_expired_stack_effects(...)`, and emits `battle_status_expired` for the affected stack. A fallen stack's effects are purged without the event (2026-10-10): its playback frame stood the dead stack up on the field again.
 - `BattleBoardView` presents the event through `status_clear` token motion, `vfx_placeholder_status_clear`, `audio_placeholder_status_clear`, and status camera focus/shake records.
 - `tests/battle_event_animation_state_report.gd` now proves both a real `spell_prism_bastion` cleanse and a round-expiry purge.
 

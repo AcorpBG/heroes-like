@@ -8,7 +8,8 @@ extends Node
 ## shots left fights as melee; the AI weighs each stack's own contact, not the
 ## closest pair on the field; bracing loses its worth as the battle clock runs
 ## out; a hero's buff is worth more on the stack about to act, and haste most
-## when it lets that stack reach an enemy this turn. The stacks come from a
+## when it lets that stack reach an enemy this turn. A fallen stack's effects
+## end without an event when the next round begins. The stacks come from a
 ## battle on a generated small map.
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
@@ -47,6 +48,7 @@ func _run() -> void:
 		_check_own_contact()
 		_check_clock_pressure()
 		_check_buff_timing()
+		_check_fallen_stack_effects()
 		await _check_auto_battle()
 		# Last: resolving the battle ends the session's battle for good.
 		_check_quick_resolve_generated()
@@ -395,6 +397,42 @@ func _check_buff_timing() -> void:
 	var near_acting := BattleAiRules._buff_spell_score(reached, near_runner, near_runner, near_targets, haste)
 	var near_other := BattleAiRules._buff_spell_score(reached, _stack(reached, "other"), near_runner, near_targets, haste)
 	_check(is_equal_approx(near_acting - near_other, 1.0), "on the acting stack a buff is worth 1 more (%.2f, %.2f)" % [near_acting, near_other])
+
+
+# --- Round start ---------------------------------------------------------------
+
+## When a round begins, a fallen stack's effect ends without an event: the
+## event would stand the stack up on the field again. A living stack's effect
+## still ends with one. The strike that ends round 1 kills "struck"; "fallen"
+## fell earlier.
+func _check_fallen_stack_effects() -> void:
+	var board := _board([
+		{"id": "actor", "side": "player", "hex": _cell(4, 4)},
+		{"id": "struck", "side": "enemy", "hex": _cell(5, 4)},
+		{"id": "fallen", "side": "enemy", "hex": _cell(7, 2)},
+		{"id": "other", "side": "enemy", "hex": _cell(10, 8)},
+	], ["other", "struck", "actor"])
+	board["turn_index"] = 2
+	board["active_stack_id"] = "actor"
+	board["selected_target_id"] = "struck"
+	_stack(board, "struck")["total_health"] = 1
+	_stack(board, "fallen")["total_health"] = 0
+	for id in ["struck", "fallen", "other"]:
+		_stack(board, id)["effects"] = [SpellRules.build_battle_effect("status_harried", "Harried", {}, 1, board, "ability", "harry")]
+	BattleRules._sync_occupied_hexes(board)
+	var result := BattleRules.perform_presented_action(_base_session, "strike", _cell(4, 4))
+	var battle: Dictionary = _base_session.battle
+	_check(int(battle.get("round", 1)) == 2 and BattleRules._alive_count(_stack(battle, "struck")) <= 0, "round start: the strike kills its target and ends the round: %s" % result.get("message", ""))
+	var ended := []
+	for frame in result.get("playback_frames", []):
+		var event: Dictionary = frame.get("playback_event", {})
+		if String(event.get("event_id", "")) == "battle_status_expired":
+			ended.append(String(event.get("battle_id", "")))
+	for event in BattleRules.animation_event_queue(battle):
+		if String(event.get("event_id", "")) == "battle_status_expired":
+			ended.append("queued " + String(event.get("battle_id", "")))
+	_check(ended.has("other") and not ended.has("struck") and not ended.has("fallen") and not ended.has("queued struck") and not ended.has("queued fallen"), "round start: only the living stack's effect ends with an event: %s" % [ended])
+	_check((_stack(battle, "struck").get("effects", []) as Array).is_empty() and (_stack(battle, "fallen").get("effects", []) as Array).is_empty(), "round start: the fallen stacks' effects are gone")
 
 
 # --- Quick Resolve and Auto battle ---------------------------------------------

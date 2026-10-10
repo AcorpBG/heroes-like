@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "tests-validation-budget-20261010",
-  "currentSliceId": "tests-validation-budget-20261010",
-  "currentSliceNotes": "COMPLETED 2026-10-10. See plannedSlices tests-validation-budget-20261010.",
+  "currentSlice": "bugfix-battle-fallen-stack-effect-expiry-20261010",
+  "currentSliceId": "bugfix-battle-fallen-stack-effect-expiry-20261010",
+  "currentSliceNotes": "COMPLETED 2026-10-10. See plannedSlices bugfix-battle-fallen-stack-effect-expiry-20261010.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Validation budget, core suite, authored-scenario test deletion",
-  "currentSliceUpdatedAt": "2026-10-10T13:46:00Z",
+  "currentSliceTitle": "A fallen stack's status ends without standing it up again",
+  "currentSliceUpdatedAt": "2026-10-10T17:50:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -115032,6 +115032,22 @@
       "startedAt": "2026-10-10T10:47:00Z",
       "updatedAt": "2026-10-10T15:30:00Z",
       "completedAt": "2026-10-10T15:30:00Z"
+    },
+    {
+      "id": "bugfix-battle-fallen-stack-effect-expiry-20261010",
+      "title": "A fallen stack's status ends without standing it up again",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "bugfix_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/battle-rework.md",
+        "docs/battle-status-clear-animation-presentation-report.md"
+      ],
+      "notes": "Owner report 2026-10-10 (present before the battle rework): when a stack with a status effect dies, the effect still expires on a later turn and the death plays again. Cause: BattleRules._prepare_round purged round-based statuses (status_harried, staggered, rooted, pinned...) from every stack and marked battle_status_expired for dead ones too. BattleActionPlayback captured a frame for that event with the dead stack active, so BattleBoardView drew it standing in its idle pose with 'Effect ends' in the log, then snapped back to its corpse. A stack that fell in an earlier action also got the event queued. Fix: the event (frame, log line, cue) is marked only for living stacks; a fallen stack's expired effects are still purged. Turn-counted spell effects tick in spend_effect_turns without an event and were not affected. Core test battle_ai_flow_report: _check_fallen_stack_effects (a strike that ends round 1 kills one harried stack, a second lay dead already, a third lives) passes 47 checks; the unfixed code fails it with struck, fallen and queued fallen events. Left as is: effects stay on a dead stack until they expire, so a Beacon Muster ward prepared by a stack that falls can still be consumed for its allies.",
+      "startedAt": "2026-10-10T17:50:00Z",
+      "updatedAt": "2026-10-10T17:50:00Z",
+      "completedAt": "2026-10-10T17:50:00Z"
     }
   ],
   "project": "heroes-like",
