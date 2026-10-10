@@ -3,19 +3,6 @@
 # See docs/rmg-evidence-storage.md before cleaning .artifacts/ or tmp/.
 .artifacts/
 .godot/
-*.uid
-*.import
-!art/towns/runtime/backdrops/*.png.import
-!art/towns/runtime/backdrops/third_hearths/*.png.import
-!art/towns/runtime/backdrops/complete_identities/*.png.import
-!art/towns/runtime/backdrops/development_scenes/*.png.import
-!art/towns/runtime/scene_layers/**/*.png.import
-!art/ui/main_menu_nano_banana_backdrop.png.import
-!art/results/runtime/backdrops/outcome_victory.png.import
-!art/results/runtime/backdrops/outcome_defeat.png.import
-!art/overworld/runtime/objects/towns/biome_fit/*.png.import
-!art/battle/runtime/battlefields/*.png.import
-!art/battle/runtime/obstacles/*/*.png.import
 bin/*.so
 bin/*.dll.a
 # MSVC link and debug byproducts of the Windows native build.
@@ -63,6 +50,13 @@ art/overworld/runtime/homm3_local_prototype/
 !/art/towns/source/buildings/curated/**/*.png
 !/art/campaigns/source/generated/emblems/**/*.png
 !/art/campaigns/source/generated/chapter_seals/**/*.png
+# Godot's .import/.uid sidecars are tracked (import settings and stable ids);
+# those of archived source media stay out with the media.
+/art/*/source/**/*.import
+/art/*/source/**/*.uid
+!/art/towns/source/buildings/curated/**/*.png.import
+!/art/campaigns/source/generated/emblems/**/*.png.import
+!/art/campaigns/source/generated/chapter_seals/**/*.png.import
 
 # Python bytecode from tools, tests and per-unit recipe scripts.
 __pycache__/

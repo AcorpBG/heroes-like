@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://coii7nk8p5ife"
+
+[deps]
+
+files=["res://docs/audio-generation/content-coverage.content.translation", "res://docs/audio-generation/content-coverage.name.translation", "res://docs/audio-generation/content-coverage.source.translation", "res://docs/audio-generation/content-coverage.current.translation", "res://docs/audio-generation/content-coverage.proposed.translation", "res://docs/audio-generation/content-coverage.disposition.translation"]
+
+source_file="res://docs/audio-generation/content-coverage.csv"
+dest_files=["res://docs/audio-generation/content-coverage.content.translation", "res://docs/audio-generation/content-coverage.name.translation", "res://docs/audio-generation/content-coverage.source.translation", "res://docs/audio-generation/content-coverage.current.translation", "res://docs/audio-generation/content-coverage.proposed.translation", "res://docs/audio-generation/content-coverage.disposition.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://b67xyyljvpxeo"
+
+[deps]
+
+files=["res://docs/audio-generation/generation-queue.category.translation", "res://docs/audio-generation/generation-queue.title.translation", "res://docs/audio-generation/generation-queue.priority.translation", "res://docs/audio-generation/generation-queue.current.translation", "res://docs/audio-generation/generation-queue.target.translation", "res://docs/audio-generation/generation-queue.edited.translation", "res://docs/audio-generation/generation-queue.approved.translation", "res://docs/audio-generation/generation-queue.planned.translation", "res://docs/audio-generation/generation-queue.loop.translation", "res://docs/audio-generation/generation-queue.generation.translation", "res://docs/audio-generation/generation-queue.sound.translation", "res://docs/audio-generation/generation-queue.integration.translation", "res://docs/audio-generation/generation-queue.source.translation", "res://docs/audio-generation/generation-queue.generation.translation"]
+
+source_file="res://docs/audio-generation/generation-queue.csv"
+dest_files=["res://docs/audio-generation/generation-queue.category.translation", "res://docs/audio-generation/generation-queue.title.translation", "res://docs/audio-generation/generation-queue.priority.translation", "res://docs/audio-generation/generation-queue.current.translation", "res://docs/audio-generation/generation-queue.target.translation", "res://docs/audio-generation/generation-queue.edited.translation", "res://docs/audio-generation/generation-queue.approved.translation", "res://docs/audio-generation/generation-queue.planned.translation", "res://docs/audio-generation/generation-queue.loop.translation", "res://docs/audio-generation/generation-queue.generation.translation", "res://docs/audio-generation/generation-queue.sound.translation", "res://docs/audio-generation/generation-queue.integration.translation", "res://docs/audio-generation/generation-queue.source.translation", "res://docs/audio-generation/generation-queue.generation.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

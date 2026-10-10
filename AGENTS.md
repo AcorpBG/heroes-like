@@ -55,6 +55,7 @@ Owner decision, 2026-10-10. Testing had grown to about half of all agent time, m
 - Default engine assumption: Godot 4 unless a documented decision in `project.md` changes it.
 - Mandatory platform target: the game is both Windows and Linux, not Linux-only. Any engine, native/GDExtension, build, packaging, file-path, save/load, tooling, or validation work must consider both platforms up front. Code must work on both; running tests on both is required only for the change types listed under "Validation budget".
 - For native/GDExtension work, keep Linux and Windows build outputs, `.gdextension` library entries, helper scripts, docs, and validation expectations in sync. Do not land Linux-only native changes unless the slice explicitly records a temporary Windows blocker and follow-up.
+- Godot's `.import` and `.uid` sidecars are tracked (owner decision, 2026-10-10): they hold each asset's import settings and stable id. Commit new art, audio and scripts together with their sidecars; if Godot has not written them yet, run a headless import (`godot --headless --path . --import`) first. Sidecars of archived source media under `art/*/source/` stay ignored with the media. Only the `.godot/` cache stays out of Git.
 - Prefer data-driven content for factions, heroes, units, spells, map objects, resources, towns, and campaign metadata.
 - Keep core systems modular: overworld, combat, AI, economy, save/load, UI, content pipeline.
 - Avoid direct cloning of copyrighted names, assets, maps, factions, unit art, music, or text.
@@ -65,7 +66,6 @@ Owner decision, 2026-10-10. Testing had grown to about half of all agent time, m
   - It must be on the default branch with no local-only commits (`git rev-list --count origin/main..HEAD` is 0).
   - Incoming files must not overlap the owner's uncommitted changes in `git status --short`. Never stash, reset, checkout or discard the owner's local edits or deletions.
   - Update with `git merge --ff-only origin/main`. If it cannot fast-forward, stop and report it instead of forcing.
-  - Copy the ignored `*.import` files for any new art from the worktree into the checkout, so Godot loads it without a re-import.
   - Tell the owner to restart Godot or the running game.
 
 ## Screen composition hard rules

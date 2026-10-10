@@ -2,6 +2,7 @@
 # editor re-saves and re-imports on Windows do not appear as modified files.
 # Later path-specific -text rules still win for hash-bound provenance.
 *.import text eol=lf
+*.uid text eol=lf
 *.tscn text eol=lf
 *.tres text eol=lf
 *.godot text eol=lf

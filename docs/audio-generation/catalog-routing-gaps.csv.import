@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://de12wmcx4o0x4"
+
+[deps]
+
+files=["res://docs/audio-generation/catalog-routing-gaps.cue.translation", "res://docs/audio-generation/catalog-routing-gaps.source.translation", "res://docs/audio-generation/catalog-routing-gaps.disposition.translation"]
+
+source_file="res://docs/audio-generation/catalog-routing-gaps.csv"
+dest_files=["res://docs/audio-generation/catalog-routing-gaps.cue.translation", "res://docs/audio-generation/catalog-routing-gaps.source.translation", "res://docs/audio-generation/catalog-routing-gaps.disposition.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://8ynrpvyni7r5"
+
+[deps]
+
+files=["res://docs/audio-generation/current-cue-inventory.cue.translation", "res://docs/audio-generation/current-cue-inventory.path.translation", "res://docs/audio-generation/current-cue-inventory.role.translation", "res://docs/audio-generation/current-cue-inventory.manifest.translation", "res://docs/audio-generation/current-cue-inventory.volume.translation", "res://docs/audio-generation/current-cue-inventory.event.translation", "res://docs/audio-generation/current-cue-inventory.declared.translation", "res://docs/audio-generation/current-cue-inventory.exists.translation", "res://docs/audio-generation/current-cue-inventory.bytes.translation", "res://docs/audio-generation/current-cue-inventory.seconds.translation", "res://docs/audio-generation/current-cue-inventory.sample.translation", "res://docs/audio-generation/current-cue-inventory.channels.translation", "res://docs/audio-generation/current-cue-inventory.peak.translation", "res://docs/audio-generation/current-cue-inventory.rms.translation", "res://docs/audio-generation/current-cue-inventory.finite.translation", "res://docs/audio-generation/current-cue-inventory.sha256.translation", "res://docs/audio-generation/current-cue-inventory.disposition.translation", "res://docs/audio-generation/current-cue-inventory.shared.translation"]
+
+source_file="res://docs/audio-generation/current-cue-inventory.csv"
+dest_files=["res://docs/audio-generation/current-cue-inventory.cue.translation", "res://docs/audio-generation/current-cue-inventory.path.translation", "res://docs/audio-generation/current-cue-inventory.role.translation", "res://docs/audio-generation/current-cue-inventory.manifest.translation", "res://docs/audio-generation/current-cue-inventory.volume.translation", "res://docs/audio-generation/current-cue-inventory.event.translation", "res://docs/audio-generation/current-cue-inventory.declared.translation", "res://docs/audio-generation/current-cue-inventory.exists.translation", "res://docs/audio-generation/current-cue-inventory.bytes.translation", "res://docs/audio-generation/current-cue-inventory.seconds.translation", "res://docs/audio-generation/current-cue-inventory.sample.translation", "res://docs/audio-generation/current-cue-inventory.channels.translation", "res://docs/audio-generation/current-cue-inventory.peak.translation", "res://docs/audio-generation/current-cue-inventory.rms.translation", "res://docs/audio-generation/current-cue-inventory.finite.translation", "res://docs/audio-generation/current-cue-inventory.sha256.translation", "res://docs/audio-generation/current-cue-inventory.disposition.translation", "res://docs/audio-generation/current-cue-inventory.shared.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

@@ -65,7 +65,7 @@ python tests/validate_repo.py
 python -m unittest discover -s tests -p "test_*.py"
 ```
 
-The Godot import step regenerates the `.import` files that `.gitignore` keeps out of Git (`*.import` with exceptions); the validator checks that runtime textures have them. The extracted HoMM3 prototype tiles are a local-only reference and are checked only on a machine that has them.
+Since 2026-10-10 the `.import` and `.uid` sidecars are tracked, apart from those of archived source media under `art/*/source/`, which `.gitignore` keeps out with the media (the 299 editor-required sources keep theirs). The extracted HoMM3 prototype tiles are a local-only reference and are checked only on a machine that has them.
 
 The art-regeneration tools (`tools/prepare_overworld_*_cutouts.py`, `tools/prepare_spell_variety_assets.py` and similar) still need their sources when someone deliberately rebuilds art. Restore exactly what a rebuild needs (dry-run without `--apply`). Every payload is verified against the archive SHA-256 and a differing local file is never overwritten:
 
