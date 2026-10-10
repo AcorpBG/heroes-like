@@ -1,0 +1,4 @@
+# Core tests that fail for a reason the current change did not cause.
+# tools/core_suite.py reports these as KNOWN instead of failing the run.
+# One line each:  test_name  # what fails, YYYY-MM-DD
+# Remove the line when the test passes again (the runner says so).

@@ -16,7 +16,7 @@ Do not load all of `ops/progress.json` by default. It is an operations tracker, 
 ## Authored maps, scenarios and campaigns are archived
 - Owner decision, 2026-10-05: every authored map, scenario and campaign is obsolete and will be redone completely. Until the owner selects that rework, put no effort into them: do not add, fix, retune, rebalance or re-validate them, and do not select them as a slice.
 - Owner decision, 2026-10-08: they are archived in `archive/authored-scenarios-2026-10-08/` (`scenarios.json`, `campaigns.json`, `terrain_layers.json`, `tools/author_*.py`; see its README). The game offers none of them (archived `domain_status`; the main menu shows Campaign as "Coming soon"), but `ContentService` still loads them by id, so tests keep using them as hidden setups. Do not make them playable again before the rework.
-- Do not chase failures in the authored-scenario tests and `tests/validate_repo.py` checks listed in `docs/authored-scenarios-obsolete.md`, and do not use authored-scenario tests to verify new work: use generated maps.
+- Owner decision, 2026-10-10: the tests and `tests/validate_repo.py` checks about authored scenarios and campaigns are deleted (see `docs/authored-scenarios-obsolete.md`). The other tests that load an authored scenario only as a harness are quarantined: do not run them, fix them or use them to verify new work. Use generated maps.
 - Generated maps, shared content definitions and the scenario/campaign runtime code are not covered and stay live. Plan ids: `content-authored-scenarios-obsolete-20261005`, `content-authored-scenarios-archived-20261008`.
 
 ## Planning document roles
@@ -34,13 +34,26 @@ Do not load all of `ops/progress.json` by default. It is an operations tracker, 
 - Real implementation progress means one of these changed in the repo: live game behavior, native/runtime behavior, shipped content, production tooling required by the selected slice, or a source-backed recovery artifact that directly unblocks a named implementation step.
 - Contracts, diagnostics, reports, gates, audits, metadata surfaces, verifier wiring, snapshots, comparison tables, and progress-file edits are not implementation progress by themselves. They are support work only.
 - Do not spend a turn creating new evidence surfaces when the selected work needs runtime/native implementation, unless the user explicitly asks for an audit/report or the evidence is required to validate a same-slice behavior change.
-- Do not mark a gameplay, AI, balance, native RMG, save/load, UI, content, or packaging slice complete unless the implemented behavior is present and the relevant validation has passed. If only a diagnostic changed, the slice is still pending or blocked.
+- Do not mark a gameplay, AI, balance, native RMG, save/load, UI, content, or packaging slice complete unless the implemented behavior is present and the relevant validation has passed (as defined in "Validation budget" below). If only a diagnostic changed, the slice is still pending or blocked.
 - If implementation is blocked, state the exact missing function, data structure, runtime behavior, source file, or recovered-state proof. Do not describe being "closer", "green", "wired", or "done" when the actual behavior still does not exist.
 - For native RMG specifically, checkpoint progress requires native generated state or final map payload behavior to match the recovered H3MapEd private-state/final-writeout comparison for the selected phase. New checkers, exporters, contracts, snapshots, and reports do not count as checkpoint progress unless they accompany that behavior change.
 
+## Validation budget
+Owner decision, 2026-10-10. Testing had grown to about half of all agent time, mostly re-running stale tests, and agents wrote more test and probe code than game code. Test the durable behavior, verify your own change, and stop.
+- **While working:** run only the one or two tests that cover what you changed. Re-run a test only after changing code it covers.
+- **Before pushing to main:** run `python tools/core_suite.py` (Windows, a few minutes). It must pass, apart from entries in `tests/known_failures.txt`. The core suite plus your focused tests is the whole validation for a normal change.
+- **A failure your change did not cause:** do not fix it, bisect it, or compare against older commits. If it is a core test, add one line to `tests/known_failures.txt` (`test_name  # what fails, date`). Mention it in the handoff and move on.
+- **Linux runs:** only when the change touches native/GDExtension code, file paths, the save format, RNG/determinism, the build or packaging. In those cases run `tools/core_suite.py` on Linux once. Otherwise Windows is enough.
+- **AI-vs-AI matches, full-match quality runs, performance profiles and balance sweeps:** only when the owner asks. They are evaluation tools, not regression tests.
+- **`tests/validate_repo.py`:** not a per-change gate. Many of its checks pin source or doc text and it already fails on old checks. Run it only when you change content JSON, and only act on errors about what you changed.
+- **New tests:** do not add a test file for every change. A bug fix in a core area adds a case to the core test that covers it. If no core test covers that area, add one and list it in `CORE_TESTS` in `tools/core_suite.py`. Check feature and UI work by running the game once (with a screenshot for visual work), not with a permanent report scene.
+- **What a test may assert:** behavior that rarely changes and breaks the game when wrong. Examples are scripts compiling, boot, deterministic generation and battles, a generated game launching, save/load, elimination and victory, economy and town rules, and content schemas. Never assert exact UI strings, layout coordinates, balance numbers designers tune, or the source text of other files.
+- **Probes and match runners:** write them only to debug a specific failure. Keep them in the scratchpad and delete them at the end.
+- **Unchanged:** native RMG parity checks per `docs/lessons-learned.md`, and full export/packaging validation on both platforms for release candidates.
+
 ## Engineering rules
 - Default engine assumption: Godot 4 unless a documented decision in `project.md` changes it.
-- Mandatory platform target: the game is both Windows and Linux, not Linux-only. Any engine, native/GDExtension, build, packaging, file-path, save/load, tooling, or validation work must consider both platforms up front.
+- Mandatory platform target: the game is both Windows and Linux, not Linux-only. Any engine, native/GDExtension, build, packaging, file-path, save/load, tooling, or validation work must consider both platforms up front. Code must work on both; running tests on both is required only for the change types listed under "Validation budget".
 - For native/GDExtension work, keep Linux and Windows build outputs, `.gdextension` library entries, helper scripts, docs, and validation expectations in sync. Do not land Linux-only native changes unless the slice explicitly records a temporary Windows blocker and follow-up.
 - Prefer data-driven content for factions, heroes, units, spells, map objects, resources, towns, and campaign metadata.
 - Keep core systems modular: overworld, combat, AI, economy, save/load, UI, content pipeline.

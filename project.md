@@ -52,7 +52,7 @@ Locked stack for the current production foundation:
 - Authored content: JSON files under `content/` until a selected migration replaces specific domains.
 - Runtime saves: versioned JSON snapshots and campaign progression under `user://saves/` until a selected migration introduces asset-reference saves plus compact deltas.
 - Manual save UX is named-file based, not limited to numbered slots. Keep legacy slot files loadable, autosave separate, Linux/Windows filename identity consistent, and replacements transactionally verified with explicit overwrite consent.
-- Validation: Python repository checks plus focused runtime smoke coverage where engine execution is required.
+- Validation: a short core regression suite (`tools/core_suite.py`, durable checks on generated maps) before every push, plus focused tests for the change. Evaluation runs (AI-vs-AI batches, full-match quality, profiles) are owner-requested, not gates. See AGENTS.md "Validation budget" (owner decision, 2026-10-10).
 - Release packages have no fixed content-size budget. Report their measured sizes without rejecting legitimate content for exceeding an arbitrary ceiling. Preserve asset completeness, source-art exclusion, corruption checks and bounded parsing of untrusted inputs.
 - Native extension candidate: Phase 2 map/scenario persistence may introduce a Godot GDExtension written in C++ for typed map documents, durable map packages, validation, save/load, and migration.
 

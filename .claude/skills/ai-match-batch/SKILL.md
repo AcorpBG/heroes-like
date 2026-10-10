@@ -1,6 +1,6 @@
 ---
 name: ai-match-batch
-description: Run a batch of headless AI-vs-AI matches on random generated maps, one cheap subagent per match running in parallel, and report the results as one comparison table. Use when the owner asks to "run N AI matches", "test the AI on medium/large maps", "AI vs AI with 3/4 players", or wants to see how the computer players do after an AI, balance or content change.
+description: Owner-requested evaluation only. Runs a batch of headless AI-vs-AI matches on random generated maps (one cheap subagent per match, in parallel) and reports one comparison table. Use only when the owner explicitly asks for AI matches in this conversation, e.g. "run N AI matches", "test the AI on medium/large maps", "AI vs AI with 3/4 players", "how does the AI do now". Never use it on your own initiative to validate a code, AI, balance or content change; that is what tools/core_suite.py is for.
 ---
 
 # AI match batch
@@ -9,6 +9,20 @@ Plays several complete AI-vs-AI games at once with `tests/ai_versus_ai_match_rep
 compares them. Every game gets its own random map; faction line-ups differ between matches unless
 the owner asks otherwise. One subagent per match runs the game and returns a fixed JSON summary;
 you collect the summaries and report.
+
+## When to use it
+
+- **Only when the owner asks for AI matches.** A batch costs 5–60 minutes and one subagent per
+  match. It is an evaluation tool for the owner to see how the computer players behave, not a
+  regression test (owner decision, 2026-10-10; AGENTS.md "Validation budget").
+- **Not as validation.** Do not run it, `run_match.sh` or `tests/ai_versus_ai_match_report.tscn`
+  to check your own change, including AI, balance or content changes. Verify those with the focused
+  tests for the code you touched and `python tools/core_suite.py`. If you think a batch would
+  tell the owner something useful, say so in one line and let them decide.
+- **Not repeatedly.** Run the batch the owner asked for, once, and report. Rerun only if the owner
+  asks, for example after a fix they want to compare.
+- Debugging one specific stuck or odd match the owner pointed at may replay that seed (see the
+  end of section 4). That is not a new batch.
 
 ## 1. Settle the parameters
 

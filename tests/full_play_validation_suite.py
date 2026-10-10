@@ -60,19 +60,8 @@ SCENES = [
     "four_elder_wild_recruitment_sanctuaries_smoke",
 ]
 RENDERED_SCENES = ["active_play_keyboard_focus_smoke", "custom_mouse_cursor_runtime_report"]
-SCRIPTED_REWARD_SCENES = [
-    "stonewake_watch_chapter_one_sequential_viability_report",
-    "reedbarrow_ferry_chapter_two_sequential_viability_report",
-    "reedbarrow_ferry_murkward_veteran_garrison_report",
-    "battle_causeway_reed_camp_production_line_report",
-    "charterless_compact_campaign_smoke",
-    "six_sealed_companies_campaign_smoke",
-    "wild_atlas_accord_campaign_smoke",
-    "final_nine_faction_campaigns_smoke",
-    "uncrowned_circuit_campaign_smoke",
-]
 # These reports observe an actual drawn frame, not a headless timing surrogate.
-REQUIRES_RENDERED = {"final_nine_faction_campaigns_smoke", "active_play_load_resumed_cue_playback_report", "scenario_outcome_new_session_confirmation_safe_cancel_regression", "scenario_outcome_normal_entry_focus_regression"}
+REQUIRES_RENDERED = {"active_play_load_resumed_cue_playback_report", "scenario_outcome_new_session_confirmation_safe_cancel_regression", "scenario_outcome_normal_entry_focus_regression"}
 RMG_SCENES = [
     "native_rmg_end_to_end_runtime_boundary_report",
     "native_random_map_homm3_re_object_table_proxy_report",
@@ -244,8 +233,7 @@ func _canonical_summary_cache_snapshot() -> Dictionary:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--label", required=True)
-    parser.add_argument("--only", nargs="+", choices=SCENES + RENDERED_SCENES + RMG_SCENES + SCRIPTED_REWARD_SCENES)
-    parser.add_argument("--scripted-rewards", action="store_true", help="Run affected authored reward/campaign reports, rendering where the existing report requires it.")
+    parser.add_argument("--only", nargs="+", choices=SCENES + RENDERED_SCENES + RMG_SCENES)
     parser.add_argument("--rmg", action="store_true", help="Run the integrated native/adoption/content/AI correction regressions.")
     parser.add_argument("--rendered", action="store_true")
     parser.add_argument("--accessibility", choices=["auto", "disabled"], default="auto", help="Record explicitly if isolating an engine AT-SPI backend failure; production defaults never change.")
@@ -253,7 +241,7 @@ def main() -> int:
     args = parser.parse_args()
     if not args.label or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789_-" for c in args.label):
         parser.error("invalid label")
-    selected = args.only or (SCRIPTED_REWARD_SCENES if args.scripted_rewards else RMG_SCENES if args.rmg else RENDERED_SCENES if args.rendered else SCENES)
+    selected = args.only or (RMG_SCENES if args.rmg else RENDERED_SCENES if args.rendered else SCENES)
     for name in selected:
         if not all((ROOT / "tests" / (name + suffix)).is_file() for suffix in (".gd", ".tscn")):
             parser.error("missing runtime test source or scene: " + name)

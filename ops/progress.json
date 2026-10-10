@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "bugfix-start-hero-growth-seed-20261010",
-  "currentSliceId": "bugfix-start-hero-growth-seed-20261010",
-  "currentSliceNotes": "COMPLETED 2026-10-10. See plannedSlices bugfix-start-hero-growth-seed-20261010.",
+  "currentSlice": "tests-validation-budget-20261010",
+  "currentSliceId": "tests-validation-budget-20261010",
+  "currentSliceNotes": "COMPLETED 2026-10-10. See plannedSlices tests-validation-budget-20261010.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "A new game's start hero takes its growth seed from the session",
-  "currentSliceUpdatedAt": "2026-10-10T18:00:00Z",
+  "currentSliceTitle": "Validation budget, core suite, authored-scenario test deletion",
+  "currentSliceUpdatedAt": "2026-10-10T13:46:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -115016,6 +115016,22 @@
       "startedAt": "2026-10-10T09:00:00Z",
       "updatedAt": "2026-10-10T18:00:00Z",
       "completedAt": "2026-10-10T18:00:00Z"
+    },
+    {
+      "id": "tests-validation-budget-20261010",
+      "title": "Validation budget, core suite, authored-scenario test deletion",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "tooling_process_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "AGENTS.md",
+        "docs/authored-scenarios-obsolete.md"
+      ],
+      "notes": "Owner decision 2026-10-10 after a transcript audit of 29 sessions and 53 subagents (2026-10-05..10): 53% of 87 agent-hours went to running, reading and fixing tests; 78% of test runs repeated a test already run in the same session; 19% of code written was game code, 28% tests, 46% throwaway probes and runners; AI-vs-AI matches and Linux server runs were used as routine validation. Changes: AGENTS.md 'Validation budget' (focused tests, then tools/core_suite.py before push; Linux only for native/file-path/save-format/RNG/build/packaging; AI matches, full-match quality and profiles only on owner request; validate_repo not a per-change gate; no test file per change; no assertions on UI strings, layout, tuned numbers or other files' source text). tools/core_suite.py runs 14 durable generated-map checks in parallel with throwaway profiles (APPDATA/XDG_DATA_HOME) and removes the map packages its tests write; tests/core_script_compile_check loads every script under scripts/ and scenes/ (verified to catch a planted parse error); tests/known_failures.txt. ai-match-batch skill restricted to explicit owner requests. Deleted 127 authored-roster tests with their .tscn runners and 31 Python wrappers, tests/test_validation_artifact_lifecycle.py, 88 validate_repo functions plus their constants/helpers, live validate_repo checks that read deleted tests, and their entries in full_play_validation_suite.py and run_headless_balance_harness.py. validate_repo.py 79,537 -> about 67,970 lines; on the same worktree 885 errors at HEAD -> 128 after, no new errors. Validation: core suite 14/14 in 55 s on Windows; owner profile timestamps unchanged.",
+      "startedAt": "2026-10-10T10:47:00Z",
+      "updatedAt": "2026-10-10T13:46:00Z",
+      "completedAt": "2026-10-10T13:46:00Z"
     }
   ],
   "project": "heroes-like",

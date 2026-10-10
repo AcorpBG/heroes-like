@@ -24,12 +24,6 @@ SUITES = {
             "timeout": 180,
         },
         {
-            "id": "battle_autoplay_active_scenario_breadth",
-            "marker": "BATTLE_AUTOPLAY_ACTIVE_SCENARIO_BREADTH_REPORT",
-            "scene": "res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
-            "timeout": 360,
-        },
-        {
             "id": "balance_regression_suite",
             "marker": "BALANCE_REGRESSION_REPORT_SUITE",
             "scene": "res://tests/balance_regression_report_suite.tscn",
@@ -50,12 +44,6 @@ SUITES = {
             "timeout": 180,
         },
         {
-            "id": "battle_autoplay_active_scenario_breadth",
-            "marker": "BATTLE_AUTOPLAY_ACTIVE_SCENARIO_BREADTH_REPORT",
-            "scene": "res://tests/battle_autoplay_active_scenario_breadth_report.tscn",
-            "timeout": 360,
-        },
-        {
             "id": "battle_autoplay_difficulty_sweep",
             "marker": "BATTLE_AUTOPLAY_DIFFICULTY_SWEEP_REPORT",
             "scene": "res://tests/battle_autoplay_difficulty_sweep_report.tscn",
@@ -65,12 +53,6 @@ SUITES = {
             "id": "battle_autoplay_runtime_consequence_matrix",
             "marker": "BATTLE_AUTOPLAY_RUNTIME_CONSEQUENCE_MATRIX_REPORT",
             "scene": "res://tests/battle_autoplay_runtime_consequence_matrix_report.tscn",
-            "timeout": 180,
-        },
-        {
-            "id": "battle_autoplay_tuning_queue",
-            "marker": "BATTLE_AUTOPLAY_BALANCE_TUNING_QUEUE_REPORT",
-            "scene": "res://tests/battle_autoplay_balance_tuning_queue_report.tscn",
             "timeout": 180,
         },
         {
