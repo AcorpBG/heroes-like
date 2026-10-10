@@ -6,7 +6,10 @@ const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
 const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 
-const DEFAULT_STEP_LIMIT := 72
+## A loop guard: the battle clock ends every battle first. Each of up to seven
+## stacks a side may wait and then act in each of twelve rounds, and the hero
+## casts once a round.
+const DEFAULT_STEP_LIMIT := 240
 const PLAYER_EXIT_ACTIONS := ["retreat", "surrender"]
 const TERMINAL_STATES := [
 	"victory",
@@ -21,7 +24,9 @@ const TERMINAL_STATES := [
 
 ## The next order on a player stack's turn: the hero's free cast when it
 ## should cast now, else the stack's own order. allow_hero_cast false asks for
-## the stack's order only.
+## the stack's order only. An advance is carried out as the enemy's is
+## (BattleRules.ai_advance_plan): a strike on the best enemy in reach, a wait
+## while enemies still close in, else the walk.
 static func player_autoplay_decision(
 	session: SessionStateStoreScript.SessionData,
 	apply_selection: bool = false,
@@ -60,6 +65,12 @@ static func player_autoplay_decision(
 			"no_scored_tactical_order",
 			apply_selection
 		)
+	if String(decision.get("action", "")) == "advance":
+		var plan: Dictionary = BattleRulesScript.ai_advance_plan(session.battle, active_stack)
+		if String(plan.get("action", "advance")) != "advance":
+			decision["advance_plan"] = plan.duplicate(true)
+			decision["action"] = String(plan.get("action", "advance"))
+			decision["target_battle_id"] = String(plan.get("target_battle_id", ""))
 	var target_id := String(decision.get("target_battle_id", ""))
 	var action := String(decision.get("action", "defend"))
 	if action in PLAYER_EXIT_ACTIONS:

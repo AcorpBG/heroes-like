@@ -22,6 +22,8 @@ const BATTLE_HEX_ROWS := 9
 const DECISIVE_ATTACK_TARGET_SIDE_HEALTH_RATIO_MAX := 0.4
 const DECISIVE_ATTACK_ACTING_SIDE_HEALTH_RATIO_MIN := 0.5
 const DECISIVE_ATTACK_MAX_DEFEND_SCORE_GAP := 2.0
+## The last rounds before stalemate, in which defending loses its worth.
+const CLOCK_PRESSURE_ROUNDS := 3
 
 static func _opposing_side(side: String) -> String:
 	if side == "player":
@@ -29,6 +31,46 @@ static func _opposing_side(side: String) -> String:
 	if side == "enemy":
 		return "player"
 	return ""
+
+## BattleRules, loaded when needed: it preloads this script, so this script
+## cannot preload it back.
+static func _battle_rules() -> Script:
+	return load("res://scripts/core/BattleRules.gd")
+
+## Whether the stack fights hand to hand: a melee stack, or a shooter with no
+## shots left.
+static func _fights_in_melee(stack: Dictionary) -> bool:
+	return not bool(stack.get("ranged", false)) or int(stack.get("shots_remaining", 0)) <= 0
+
+## The old distance band read for one stack: 0 next to a living enemy, 1 up to
+## five hexes from the nearest, else 2. The AI weighs the acting stack's own
+## contact by it, not the closest pair anywhere on the field
+## (battle["distance"], which field objectives still read).
+static func _stack_contact_band(stack: Dictionary, battle: Dictionary) -> int:
+	var nearest := 999
+	for enemy in _alive_stacks_for_side(battle, _opposing_side(String(stack.get("side", "")))):
+		nearest = mini(nearest, _stack_hex_distance(stack, enemy))
+	if nearest >= 999:
+		return int(battle.get("distance", 1))
+	return _distance_band_from_hex_distance(nearest)
+
+## How hard the battle clock pushes for a decision: 0 until the last
+## CLOCK_PRESSURE_ROUNDS rounds before stalemate, then 1, 2 and 3.
+static func _clock_pressure(battle: Dictionary) -> int:
+	var rounds_left := int(battle.get("max_rounds", 12)) - int(battle.get("round", 1)) + 1
+	return clampi(CLOCK_PRESSURE_ROUNDS + 1 - rounds_left, 0, CLOCK_PRESSURE_ROUNDS)
+
+## The stack standing on cell instead of its own hex, and a shallow copy of
+## battle that holds it there, for scoring an order given from that hex.
+static func _projected_on_cell(battle: Dictionary, stack: Dictionary, cell: Dictionary) -> Array:
+	var projected := stack.duplicate()
+	projected[STACK_HEX_KEY] = {"q": int(cell.get("q", -1)), "r": int(cell.get("r", -1))}
+	var projected_battle := battle.duplicate()
+	var stacks: Array = []
+	for other in battle.get("stacks", []):
+		stacks.append(projected if other is Dictionary and String(other.get("battle_id", "")) == String(stack.get("battle_id", "")) else other)
+	projected_battle["stacks"] = stacks
+	return [projected, projected_battle]
 
 static func _field_objectives(battle: Dictionary) -> Array:
 	var objectives = battle.get(FIELD_OBJECTIVES_KEY, [])
@@ -206,11 +248,14 @@ static func _stack_can_breach_obstruction(stack: Dictionary, battle: Dictionary)
 		return true
 	return int(stack.get("speed", 0)) >= 5
 
+## Whether an advance brings the stack closer: not once it stands next to an
+## enemy, nor while the enemy's obstruction line holds a stack that cannot
+## breach it, until the lines meet somewhere (BattleRules._advance_stalled_by_obstruction).
 static func _advance_distance_delta(stack: Dictionary, battle: Dictionary) -> int:
-	if stack.is_empty() or int(battle.get("distance", 1)) <= 0:
+	if stack.is_empty() or _stack_contact_band(stack, battle) <= 0:
 		return 0
 	var opposing_side := _opposing_side(String(stack.get("side", "")))
-	if _side_controls_field_objective_type(battle, opposing_side, "obstruction_line") and not _stack_can_breach_obstruction(stack, battle):
+	if int(battle.get("distance", 1)) > 0 and _side_controls_field_objective_type(battle, opposing_side, "obstruction_line") and not _stack_can_breach_obstruction(stack, battle):
 		return 0
 	return 1
 
@@ -423,24 +468,13 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 		return {}
 
 	var best_spell := _best_spell_action(scoring_battle, active_stack, resolved_enemy_hero, targets) if allow_hero_cast else {}
-	var best_attack := _best_attack_action(scoring_battle, active_stack, targets)
-	var lethal_attack_available := _candidate_is_lethal_attack(best_attack, scoring_battle, active_stack)
+	var choice := _stack_order_choice(scoring_battle, active_stack, targets)
+	var best: Dictionary = choice.get("best", {})
+	var best_attack: Dictionary = choice.get("best_attack", {})
+	var lethal_attack_available := bool(choice.get("lethal_attack_available", false))
 	var lethal_spell_available := _candidate_is_lethal_damage_spell(best_spell, scoring_battle, resolved_enemy_hero)
-	var defend_score := _defend_score(scoring_battle, active_stack, targets)
-	var advance_score := _advance_score(scoring_battle, active_stack, targets)
-	var distance := int(scoring_battle.get("distance", 1))
-	var force_engaged_attack := _must_force_engaged_attack(active_stack, scoring_battle, targets, best_attack)
-	var best := best_attack if force_engaged_attack and not best_attack.is_empty() else {"action": "defend", "score": defend_score}
-	if not force_engaged_attack and not best_attack.is_empty() and _candidate_beats(best_attack, best):
-		best = best_attack
-	if (distance > 0 or best_attack.is_empty()) and not lethal_attack_available and not _stack_is_rooted(active_stack, scoring_battle):
-		var advance_candidate := {"action": "advance", "score": advance_score}
-		if _candidate_beats(advance_candidate, best):
-			best = advance_candidate
-	if String(best.get("action", "")) == "advance" and not _should_close_distance(active_stack) and not best_attack.is_empty():
-		var best_attack_score := float(best_attack.get("score", -9999.0))
-		if best_attack_score >= float(best.get("score", -9999.0)) - 0.25:
-			best = best_attack
+	var defend_score := float(choice.get("defend_score", 0.0))
+	var advance_score := float(choice.get("advance_score", 0.0))
 	var withdrawal_candidate := _enemy_withdrawal_action(scoring_battle, active_stack, targets, best)
 	if not withdrawal_candidate.is_empty() and _candidate_beats(withdrawal_candidate, best):
 		best = withdrawal_candidate
@@ -473,14 +507,76 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 		report["scoring_policy"] = ENEMY_WITHDRAWAL_SCORING_POLICY
 	return report
 
+## The acting stack's own order, the same for the enemy's turns and the side
+## Quick Resolve plays: its best attack (a shot, a strike from where it stands
+## or after a walk), an advance or a defend. An engaged stack attacks, as does
+## one pressing a decisive attack. A stack that fights hand to hand and can
+## reach an enemy this turn gives the strike instead of the advance, so an
+## advance always means that no enemy is in reach. Returns the order with the
+## scores weighed.
+static func _stack_order_choice(scoring_battle: Dictionary, active_stack: Dictionary, targets: Array) -> Dictionary:
+	# Each target's strike reads the same reachable hexes; read them once.
+	_battle_rules().begin_board_read_scope(scoring_battle)
+	var best_attack := _best_attack_action(scoring_battle, active_stack, targets)
+	var lethal_attack_available := _candidate_is_lethal_attack(best_attack, scoring_battle, active_stack)
+	var defend_score := _defend_score(scoring_battle, active_stack, targets)
+	var advance_score := _advance_score(scoring_battle, active_stack, targets)
+	var contact := _stack_contact_band(active_stack, scoring_battle)
+	var force_attack := (
+		_must_force_engaged_attack(active_stack, scoring_battle, targets, best_attack)
+		or _should_press_decisive_attack(scoring_battle, active_stack, best_attack, defend_score)
+	)
+	var best := best_attack if force_attack and not best_attack.is_empty() else {"action": "defend", "score": defend_score}
+	if not force_attack and not best_attack.is_empty() and _candidate_beats(best_attack, best):
+		best = best_attack
+	if (contact > 0 or best_attack.is_empty()) and not lethal_attack_available and not _stack_is_rooted(active_stack, scoring_battle):
+		var advance_candidate := {"action": "advance", "score": advance_score}
+		if _candidate_beats(advance_candidate, best):
+			best = advance_candidate
+	if String(best.get("action", "")) == "advance" and not best_attack.is_empty():
+		if String(best_attack.get("action", "")) == "strike" and _fights_in_melee(active_stack):
+			best = best_attack
+		elif not _should_close_distance(active_stack):
+			var best_attack_score := float(best_attack.get("score", -9999.0))
+			if best_attack_score >= float(best.get("score", -9999.0)) - 0.25:
+				best = best_attack
+	_battle_rules().end_board_read_scope()
+	return {
+		"best": best,
+		"best_attack": best_attack,
+		"lethal_attack_available": lethal_attack_available,
+		"defend_score": defend_score,
+		"advance_score": advance_score,
+	}
+
+## The best strike the stack can make this turn, from where it stands or after
+## walking to the hex the AI picks, for a stack that fights hand to hand:
+## {"action": "strike", "target_battle_id", "score"}, with "approach" when it
+## walks first. {} when no enemy is in reach. BattleRules.ai_advance_plan
+## carries out an advance order with it.
+static func best_reachable_strike(battle: Dictionary, active_stack: Dictionary) -> Dictionary:
+	if active_stack.is_empty() or _alive_count(active_stack) <= 0 or not _fights_in_melee(active_stack):
+		return {}
+	var side := String(active_stack.get("side", ""))
+	var scoring_battle := _battle_with_side_hero_payload(battle, side, _side_commander_state_for_ai(battle, side, {}))
+	var best := {}
+	_battle_rules().begin_board_read_scope(scoring_battle)
+	for target in _alive_stacks_for_side(scoring_battle, _opposing_side(side)):
+		var candidate := _strike_candidate(scoring_battle, active_stack, target)
+		if not candidate.is_empty() and _candidate_beats(candidate, best):
+			best = candidate
+	_battle_rules().end_board_read_scope()
+	return best
+
 ## A melee stack that cannot reach an enemy this turn waits while enemies
-## still have to act this round: they close in, and it strikes first.
+## still have to act this round: they close in, and it strikes first. A
+## shooter with no shots left counts as melee.
 static func should_wait_for_contact(battle: Dictionary, active_stack: Dictionary, can_wait: bool, opposing_stacks_still_to_act: int) -> bool:
 	if not can_wait or opposing_stacks_still_to_act <= 0:
 		return false
 	if active_stack.is_empty() or _alive_count(active_stack) <= 0:
 		return false
-	if bool(active_stack.get("ranged", false)) and int(active_stack.get("shots_remaining", 0)) > 0:
+	if not _fights_in_melee(active_stack):
 		return false
 	return not _can_make_melee_attack(active_stack, battle)
 
@@ -504,13 +600,9 @@ static func choose_melee_approach(battle: Dictionary, stack: Dictionary, target:
 	return best
 
 static func _melee_approach_score(battle: Dictionary, stack: Dictionary, target: Dictionary, cell: Dictionary) -> float:
-	var projected := stack.duplicate()
-	projected["hex"] = {"q": int(cell.get("q", -1)), "r": int(cell.get("r", -1))}
-	var projected_battle := battle.duplicate()
-	var stacks: Array = []
-	for other in battle.get("stacks", []):
-		stacks.append(projected if other is Dictionary and String(other.get("battle_id", "")) == String(stack.get("battle_id", "")) else other)
-	projected_battle["stacks"] = stacks
+	var projection := _projected_on_cell(battle, stack, cell)
+	var projected: Dictionary = projection[0]
+	var projected_battle: Dictionary = projection[1]
 	var attack_distance := _attack_distance_for_action(projected, target, projected_battle, false)
 	var target_health := maxi(1, int(target.get("total_health", 0)))
 	var damage := mini(_estimate_damage(projected, target, projected_battle, false, false, attack_distance), target_health)
@@ -721,8 +813,15 @@ static func _candidate_is_lethal_attack(candidate: Dictionary, battle: Dictionar
 	if target.is_empty() or _alive_count(target) <= 0:
 		return false
 	var is_ranged := action == "shoot"
-	var attack_distance := _attack_distance_for_action(active_stack, target, battle, is_ranged)
-	var projected_damage := _estimate_damage(active_stack, target, battle, is_ranged, false, attack_distance)
+	var attacker := active_stack
+	var attack_battle := battle
+	var approach: Dictionary = candidate.get("approach", {}) if candidate.get("approach", {}) is Dictionary else {}
+	if not approach.is_empty():
+		var projection := _projected_on_cell(battle, active_stack, approach)
+		attacker = projection[0]
+		attack_battle = projection[1]
+	var attack_distance := _attack_distance_for_action(attacker, target, attack_battle, is_ranged)
+	var projected_damage := _estimate_damage(attacker, target, attack_battle, is_ranged, false, attack_distance)
 	return projected_damage >= int(target.get("total_health", 0))
 
 static func _candidate_is_lethal_damage_spell(candidate: Dictionary, battle: Dictionary, enemy_hero: Dictionary) -> bool:
@@ -763,25 +862,13 @@ static func choose_stack_tactical_order(battle: Dictionary, active_stack: Dictio
 		return {}
 
 	var best_spell := _best_spell_action(scoring_battle, active_stack, resolved_commander_payload, targets) if allow_hero_cast else {}
-	var best_attack := _best_attack_action(scoring_battle, active_stack, targets)
-	var lethal_attack_available := _candidate_is_lethal_attack(best_attack, scoring_battle, active_stack)
+	var choice := _stack_order_choice(scoring_battle, active_stack, targets)
+	var best: Dictionary = choice.get("best", {})
+	var best_attack: Dictionary = choice.get("best_attack", {})
+	var lethal_attack_available := bool(choice.get("lethal_attack_available", false))
 	var lethal_spell_available := _candidate_is_lethal_damage_spell(best_spell, scoring_battle, resolved_commander_payload)
-	var defend_score := _defend_score(scoring_battle, active_stack, targets)
-	var advance_score := _advance_score(scoring_battle, active_stack, targets)
-	var force_engaged_attack := _must_force_engaged_attack(active_stack, scoring_battle, targets, best_attack)
-	var press_decisive_attack := _should_press_decisive_attack(scoring_battle, active_stack, best_attack, defend_score)
-	var force_attack := force_engaged_attack or press_decisive_attack
-	var best := best_attack if force_attack and not best_attack.is_empty() else {"action": "defend", "score": defend_score}
-	if not force_attack and not best_attack.is_empty() and _candidate_beats(best_attack, best):
-		best = best_attack
-	if (int(scoring_battle.get("distance", 1)) > 0 or best_attack.is_empty()) and not lethal_attack_available and not _stack_is_rooted(active_stack, scoring_battle):
-		var advance_candidate := {"action": "advance", "score": advance_score}
-		if _candidate_beats(advance_candidate, best):
-			best = advance_candidate
-	if String(best.get("action", "")) == "advance" and not _should_close_distance(active_stack) and not best_attack.is_empty():
-		var best_attack_score := float(best_attack.get("score", -9999.0))
-		if best_attack_score >= float(best.get("score", -9999.0)) - 0.25:
-			best = best_attack
+	var defend_score := float(choice.get("defend_score", 0.0))
+	var advance_score := float(choice.get("advance_score", 0.0))
 	if _hero_cast_worthwhile(
 		best_spell,
 		best_attack,
@@ -930,9 +1017,9 @@ static func _must_force_engaged_attack(
 	targets: Array,
 	best_attack: Dictionary
 ) -> bool:
-	if best_attack.is_empty() or int(battle.get("distance", 1)) > 0:
+	if best_attack.is_empty() or _stack_contact_band(active_stack, battle) > 0:
 		return false
-	if bool(active_stack.get("ranged", false)) and int(active_stack.get("shots_remaining", 0)) > 0:
+	if not _fights_in_melee(active_stack):
 		return false
 	if _has_hostile_ranged_pressure(targets):
 		return false
@@ -944,7 +1031,8 @@ static func _should_press_decisive_attack(
 	best_attack: Dictionary,
 	defend_score: float
 ) -> bool:
-	if String(best_attack.get("action", "")) != "strike" or int(battle.get("distance", 1)) > 0:
+	# A strike candidate is one the stack can make this turn, walking first or not.
+	if String(best_attack.get("action", "")) != "strike":
 		return false
 	var acting_side := String(active_stack.get("side", ""))
 	if acting_side == "" or _side_health_ratio(battle, acting_side) < DECISIVE_ATTACK_ACTING_SIDE_HEALTH_RATIO_MIN:
@@ -1136,6 +1224,9 @@ static func _allied_spell_candidate_suppressed_by_active_buff(
 		_:
 			return true
 
+## The best attack open to the stack this turn: a shot, a strike from where it
+## stands, or for a stack that fights hand to hand a strike after walking to the
+## hex the AI picks (see _strike_candidate).
 static func _best_attack_action(battle: Dictionary, active_stack: Dictionary, targets: Array) -> Dictionary:
 	var best := {}
 	if bool(active_stack.get("ranged", false)) and int(active_stack.get("shots_remaining", 0)) > 0:
@@ -1155,17 +1246,32 @@ static func _best_attack_action(battle: Dictionary, active_stack: Dictionary, ta
 	for target in targets:
 		if not (target is Dictionary):
 			continue
-		if not _can_make_melee_attack(active_stack, battle, target):
-			continue
-		var melee_candidate := {
-			"action": "strike",
-			"target_battle_id": String(target.get("battle_id", "")),
-			"score": _attack_score(active_stack, target, battle, false),
-		}
-		if _candidate_beats(melee_candidate, best):
+		var melee_candidate := _strike_candidate(battle, active_stack, target)
+		if not melee_candidate.is_empty() and _candidate_beats(melee_candidate, best):
 			best = melee_candidate
 
 	return best
+
+## The stack's strike on target this turn: from where it stands when it can
+## strike from there, else, for a stack that fights hand to hand, from the hex
+## it walks to (BattleRules.ai_melee_approach), scored as given from that hex
+## and kept as "approach". {} when target is out of reach.
+static func _strike_candidate(battle: Dictionary, active_stack: Dictionary, target: Dictionary) -> Dictionary:
+	var target_id := String(target.get("battle_id", ""))
+	if _can_make_melee_attack(active_stack, battle, target):
+		return {"action": "strike", "target_battle_id": target_id, "score": _attack_score(active_stack, target, battle, false)}
+	if not _fights_in_melee(active_stack) or _stack_is_rooted(active_stack, battle):
+		return {}
+	var approach: Dictionary = _battle_rules().ai_melee_approach(battle, active_stack, target)
+	if approach.is_empty():
+		return {}
+	var projection := _projected_on_cell(battle, active_stack, approach)
+	return {
+		"action": "strike",
+		"target_battle_id": target_id,
+		"score": _attack_score(projection[0], target, projection[1], false),
+		"approach": {"q": int(approach.get("q", -1)), "r": int(approach.get("r", -1)), "steps": int(approach.get("steps", 0))},
+	}
 
 static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> float:
 	var attack_distance := _attack_distance_for_action(attacker, target, battle, is_ranged)
@@ -1195,17 +1301,19 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 		score += 1.5
 	if _stack_cohesion_total(attacker, battle) <= 4:
 		score -= 1.5
-	if is_ranged and int(battle.get("distance", 1)) > 0:
+	# A shooter next to an enemy shoots at x0.6 (_stack_is_engaged).
+	var point_blank := is_ranged and _stack_is_engaged(attacker, battle)
+	if is_ranged and not point_blank:
 		score += 2.0
-	if is_ranged and int(battle.get("distance", 1)) == 0:
+	if point_blank:
 		score -= 1.5
-	if is_ranged and int(battle.get("distance", 1)) > 0 and _side_controls_field_objective_type(battle, String(target.get("side", "")), "cover_line"):
+	if is_ranged and attack_distance > 0 and _side_controls_field_objective_type(battle, String(target.get("side", "")), "cover_line"):
 		score -= 2.5 if _stack_is_cover_screened(target, battle) else 1.0
 	if _side_controls_field_objective_type(battle, String(target.get("side", "")), "cover_line") and _stack_is_cover_screened(target, battle):
 		score += 1.25
 	if _battle_has_tag(battle, "elevated_fire") and is_ranged:
 		score += 2.0
-	if _battle_has_tag(battle, "fog_bank") and is_ranged and int(battle.get("distance", 1)) > 0:
+	if _battle_has_tag(battle, "fog_bank") and is_ranged and attack_distance > 0:
 		score -= 2.0
 	if _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not is_ranged:
 		score += 1.5
@@ -1530,7 +1638,7 @@ static func _recovery_spell_score_for_target(
 	var useful_restore: int = min(missing_health, restore_amount)
 	var score := 1.5 + (float(useful_restore) / float(unit_hp)) * 1.15
 	score += (1.0 - _health_ratio(target_stack)) * 5.0
-	if int(battle.get("distance", 1)) <= 0:
+	if _stack_contact_band(target_stack, battle) <= 0:
 		score += 1.0
 	if _stack_is_anchor_side(target_stack, battle) or _stack_is_assault_side(target_stack, battle):
 		score += 0.75
@@ -1649,9 +1757,9 @@ static func _buff_spell_score(
 	if defense_bonus > 0:
 		score += float(defense_bonus) * 1.2
 		score += (1.0 - _health_ratio(target_stack)) * 4.0
-		if int(battle.get("distance", 1)) == 0:
+		if _stack_contact_band(target_stack, battle) == 0:
 			score += 2.5
-		elif not bool(target_stack.get("ranged", false)):
+		elif _fights_in_melee(target_stack):
 			score += 1.5
 		if _has_hostile_ranged_pressure(targets):
 			score += 1.0
@@ -1670,7 +1778,7 @@ static func _buff_spell_score(
 		score += float(initiative_bonus) * 1.1
 		if int(battle.get("round", 1)) <= 2:
 			score += 1.5
-		if int(battle.get("distance", 1)) > 0 and not bool(target_stack.get("ranged", false)):
+		if _stack_contact_band(target_stack, battle) > 0 and _fights_in_melee(target_stack):
 			score += 2.0
 		if _battle_has_any_tags(battle, ["ambush_cover", "open_lane"]) and int(battle.get("round", 1)) <= 2:
 			score += 1.0
@@ -1678,10 +1786,13 @@ static func _buff_spell_score(
 			score += 1.5
 		if String(target_stack.get("faction_id", "")) == "faction_sunvault" and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
 			score += 1.0
-	# Haste's speed matters to a melee stack that still has to close in.
+	# Haste's speed matters to a melee stack that still has to close in, most
+	# of all to the acting stack when it then reaches an enemy this turn.
 	var speed_bonus := int(modifiers.get("speed", 0))
-	if speed_bonus > 0 and not bool(target_stack.get("ranged", false)) and not _can_make_melee_attack(target_stack, battle):
+	if speed_bonus > 0 and _fights_in_melee(target_stack) and not _can_make_melee_attack(target_stack, battle):
 		score += 1.5 + float(speed_bonus) * 1.0
+		if _is_same_stack(target_stack, active_stack) and _battle_rules().extra_speed_reaches_strike(battle, target_stack, speed_bonus):
+			score += 2.5
 	var attack_bonus := int(modifiers.get("attack", 0))
 	if attack_bonus > 0:
 		score += float(attack_bonus) * 1.35
@@ -1743,10 +1854,17 @@ static func _buff_spell_score(
 				score += 1.0
 	if String(target_stack.get("faction_id", "")) == "faction_sunvault" and not _stack_has_positive_effect(target_stack, battle):
 		score += 1.5
+	# The hero casts as the acting stack's turn starts, and an effect on the
+	# acting stack does not spend that turn: it serves one turn more.
+	if _is_same_stack(target_stack, active_stack):
+		score += 1.0
 	score += _stack_spell_target_value(target_stack, battle)
 	score += _objective_action_score(battle, String(active_stack.get("side", "")), "cast_spell", active_stack, target_stack)
 	score -= float(int(spell.get("mana_cost", 0))) * 0.2
 	return score
+
+static func _is_same_stack(lhs: Dictionary, rhs: Dictionary) -> bool:
+	return not lhs.is_empty() and String(lhs.get("battle_id", "")) != "" and String(lhs.get("battle_id", "")) == String(rhs.get("battle_id", ""))
 
 static func _buff_spell_offense_payoff(stack: Dictionary) -> float:
 	var average_damage := (float(int(stack.get("min_damage", 1))) + float(int(stack.get("max_damage", 1)))) / 2.0
@@ -1767,15 +1885,19 @@ static func _stack_spell_target_value(stack: Dictionary, battle: Dictionary) -> 
 		role_value += 0.2
 	return tier_value + offense_value + role_value
 
+## What bracing is worth to the stack this turn. The stack's own contact
+## counts, not the closest pair on the field, and in the last rounds before
+## stalemate (_clock_pressure) bracing loses its worth.
 static func _defend_score(battle: Dictionary, active_stack: Dictionary, targets: Array) -> float:
 	var score := 2.0 + ((1.0 - _health_ratio(active_stack)) * 5.0)
 	var round_number := int(battle.get("round", 1))
+	var contact := _stack_contact_band(active_stack, battle)
 	score += (1.0 - (float(_stack_cohesion_total(active_stack, battle)) / float(COHESION_MAX))) * 5.0
 	if bool(active_stack.get("ranged", false)) and int(active_stack.get("shots_remaining", 0)) > 0:
 		score -= 3.0
-	if int(battle.get("distance", 1)) > 0 and not bool(active_stack.get("ranged", false)):
+	if contact > 0 and _fights_in_melee(active_stack):
 		score -= 2.0
-	if (_brace_available(active_stack, battle) or _bramble_ground_available(active_stack, battle)) and int(battle.get("distance", 1)) <= 1:
+	if (_brace_available(active_stack, battle) or _bramble_ground_available(active_stack, battle)) and contact <= 1:
 		score += 3.0
 	var charter_aura := _charter_retaliation_aura_context(active_stack, battle)
 	if not charter_aura.is_empty() and _has_ability(active_stack, "brace"):
@@ -1792,17 +1914,18 @@ static func _defend_score(battle: Dictionary, active_stack: Dictionary, targets:
 		score += 1.5
 	if _battle_has_tag(battle, "battery_nest") and _stack_is_anchor_side(active_stack, battle) and bool(active_stack.get("ranged", false)) and _stack_has_positive_effect(active_stack, battle):
 		score += 1.0
-	if _side_controls_field_objective_type(battle, String(active_stack.get("side", "")), "cover_line") and bool(active_stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0:
+	if _side_controls_field_objective_type(battle, String(active_stack.get("side", "")), "cover_line") and bool(active_stack.get("ranged", false)) and contact > 0:
 		score += 2.0
 	if _side_controls_field_objective_type(battle, String(active_stack.get("side", "")), "obstruction_line") and _stack_can_breach_obstruction(active_stack, battle) and int(battle.get("distance", 1)) > 0:
 		score += 2.0
-	if int(battle.get("distance", 1)) == 0 and _has_hostile_ranged_pressure(targets):
+	if contact == 0 and _has_hostile_ranged_pressure(targets):
 		score += 1.0
 	if _stack_is_isolated(battle, active_stack):
 		score += 2.0
 	if _hero_has_trait(battle, String(active_stack.get("side", "")), "linekeeper"):
 		score += 1.0
 	score += _objective_action_score(battle, String(active_stack.get("side", "")), "defend", active_stack, active_stack)
+	score -= 2.5 * float(_clock_pressure(battle))
 	return score
 
 static func _advance_score(battle: Dictionary, active_stack: Dictionary, targets: Array) -> float:
@@ -1810,10 +1933,11 @@ static func _advance_score(battle: Dictionary, active_stack: Dictionary, targets
 	# or repositioning is not an order it can be given.
 	if _stack_is_rooted(active_stack, battle):
 		return -9999.0
-	var current_distance := int(battle.get("distance", 1))
+	var current_distance := _stack_contact_band(active_stack, battle)
 	var side := String(active_stack.get("side", ""))
 	var round_number := int(battle.get("round", 1))
-	var ranged := bool(active_stack.get("ranged", false))
+	# A shooter with no shots left closes in like a melee stack.
+	var ranged := not _fights_in_melee(active_stack)
 	if current_distance <= 0:
 		if _can_make_melee_attack(active_stack, battle) or (ranged and _can_make_any_ranged_attack(active_stack, battle, targets)):
 			return -9999.0
@@ -1836,9 +1960,9 @@ static func _advance_score(battle: Dictionary, active_stack: Dictionary, targets
 			score += 4.0
 			if _has_hostile_ranged_pressure(targets):
 				score += 1.5
-		if int(battle.get("distance", 1)) >= 2:
+		if current_distance >= 2:
 			score += 0.75
-	elif int(active_stack.get("shots_remaining", 0)) > 0:
+	else:
 		score -= 1.5
 	if _has_hostile_ranged_pressure(targets) and not ranged:
 		score += 1.0
@@ -1864,6 +1988,8 @@ static func _advance_score(battle: Dictionary, active_stack: Dictionary, targets
 	if _hero_has_trait(battle, side, "packhunter") and _enemy_wounded_count(battle, side) > 0 and not ranged:
 		score += 0.75
 	score += _objective_action_score(battle, side, "advance", active_stack)
+	if not ranged:
+		score += float(_clock_pressure(battle))
 	return score
 
 static func _enemy_withdrawal_action(

@@ -338,10 +338,11 @@ func _check_ai_shooter(session, battle: Dictionary) -> void:
 	_check(not _cells_by_key(BattleRules.melee_approach_cells(board, _stack(board, "report_attacker"), _stack(board, "report_target"))).get(_key(choice), {}).is_empty(), "the AI's hex is a legal one")
 	_check(_key(BattleRules.ai_melee_approach(board, _stack(board, "report_attacker"), _stack(board, "report_target"))) == _key(choice), "the AI's choice is the same each time")
 
-## The computer's stack takes its strike and advance orders against the
-## player's melee stack: it strikes from a side that also stands next to the
-## player's shooter. (Which order it gives is the tactical AI's choice, not
-## this slice's.)
+## The computer's stack takes its strike order against the player's melee
+## stack from a side that also stands next to the player's shooter. Its
+## advance strikes the best stack in its reach (BattleRules.ai_advance_plan):
+## the player's shooter, not the melee stack beside it. (Which order it gives
+## is the tactical AI's choice.)
 func _check_enemy_turn(session, battle: Dictionary) -> void:
 	var shooter_at := _cell(6, 2)
 	var board := _enemy_board(session, battle, _cell(5, 4), _cell(6, 4), shooter_at)
@@ -352,9 +353,13 @@ func _check_enemy_turn(session, battle: Dictionary) -> void:
 	shooter_at = _cell(4, 4)
 	board = _enemy_board(session, battle, _cell(5, 4), _cell(8, 4), shooter_at)
 	_check(_shooter_side_exists(board, shooter_at), "a side of the player's stack next to its shooter is in the enemy's reach")
-	player_before = int(_stack(board, "report_attacker").get("total_health", 0))
+	var plan := BattleRules.ai_advance_plan(board, _stack(board, "report_target"))
+	_check(String(plan.get("action", "")) == "strike" and String(plan.get("target_battle_id", "")) == "report_extra_0", "the enemy's advance aims at the player's shooter, the best stack in its reach: %s" % [plan])
+	var shooter_before := int(_stack(board, "report_extra_0").get("total_health", 0))
 	result = BattleRules._run_enemy_stack_order(session, _stack(board, "report_target"), {"action": "advance"})
-	_check_enemy_struck(session, result, player_before, shooter_at, "advance")
+	var enemy := _stack(session.battle, "report_target")
+	_check(bool(result.get("ok", false)) and int(_stack(session.battle, "report_extra_0").get("total_health", 0)) < shooter_before, "the enemy's advance strikes the player's shooter: %s" % result.get("message", ""))
+	_check(_key(enemy.get("hex", {})) == _key(plan.get("approach", {})) and BattleRules._hex_distance(enemy.get("hex", {}), shooter_at) == 1, "it strikes from the hex the plan picked, beside the shooter: %s" % [enemy.get("hex", {})])
 
 ## The board with the enemy's stack to act against the player's melee stack.
 func _enemy_board(session, battle: Dictionary, player_cell: Dictionary, enemy_cell: Dictionary, shooter_cell: Dictionary) -> Dictionary:

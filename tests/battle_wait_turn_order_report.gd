@@ -209,8 +209,7 @@ func _check_enemy_wait(session, battle: Dictionary) -> void:
 	battle["active_stack_id"] = enemy_id
 	session.battle = battle
 	var active := BattleRules.get_active_stack(battle)
-	var target := BattleRules._nearest_opposing_stack(battle, active)
-	_check(BattleRules.melee_approach_destination(battle, active, target).is_empty() and not BattleAiRules._can_make_melee_attack(active, battle), "the enemy stack is out of reach (%s at %s, %s at %s)" % [enemy_id, active.get("hex", {}), String(target.get("battle_id", "")), target.get("hex", {})])
+	_check(BattleAiRules.best_reachable_strike(battle, active).is_empty() and not BattleAiRules._can_make_melee_attack(active, battle), "the enemy stack is out of reach of every player stack (%s at %s)" % [enemy_id, active.get("hex", {})])
 	var hex_before: Dictionary = active.get("hex", {}).duplicate()
 	var result: Dictionary = BattleRules._run_enemy_turn(session, active)
 	_check(BattleRules.stack_has_waited(battle, enemy_id), "the out-of-reach melee stack waits: %s" % [result])

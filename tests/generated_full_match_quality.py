@@ -493,6 +493,34 @@ func target_progress_state() -> Dictionary:
 				claimed[bucket + ":" + id] = true
 	return {"explored":int(session.overworld.get("fog",{}).get("explored_count",0)),"resolved":session.overworld.get("resolved_encounters",[]).size(),"claimed":claimed}
 
+func answer_level_up() -> bool:
+	# A level-up opens its dialog over the field once battle playback and other
+	# overlays are done, and it holds every field order until it is answered.
+	# Answer it as a player does: the first specialty offered, else Continue.
+	if OverworldRules.get_level_up_prompt(session).is_empty():
+		return false
+	var scene = get_tree().current_scene
+	var waited := Time.get_ticks_msec()
+	while not (is_instance_valid(scene._hero_level_up_dialog) and scene._hero_level_up_dialog.visible) and Time.get_ticks_msec() - waited < 2000:
+		await get_tree().process_frame
+	var dialog = scene._hero_level_up_dialog
+	if not is_instance_valid(dialog) or not dialog.visible:
+		return false
+	var started := Time.get_ticks_usec()
+	var specialty := ""
+	var options: Array = dialog.find_children("Specialty_*", "Button", true, false)
+	if options.is_empty():
+		dialog.get_ok_button().pressed.emit()
+	else:
+		specialty = String(options[0].name).trim_prefix("Specialty_")
+		options[0].pressed.emit()
+	await settle()
+	var answered: bool = not (is_instance_valid(dialog) and dialog.visible)
+	record("level_up",started,{"specialty":specialty,"answered":answered,"message":scene.get("_last_message")})
+	if not answered:
+		failures.append("hero level-up dialog did not close")
+	return true
+
 func record_target_progress(before: Dictionary, routed: bool) -> void:
 	var after := target_progress_state()
 	var newly_claimed: bool = after.claimed.keys().any(func(id): return not before.claimed.has(id))
@@ -633,6 +661,8 @@ func run_match() -> void:
 			if not scene_path().ends_with("OverworldShell.tscn"):
 				failures.append("unexpected nonterminal scene: " + scene_path())
 				break
+			if await answer_level_up():
+				continue
 			var target := choose_target()
 			if target.is_empty() or int(session.overworld.get("movement",{}).get("current",0)) <= 0:
 				break
@@ -814,8 +844,8 @@ def main(*, background_entrypoint: Path | None = None) -> int:
         work = Path(temporary)
         (work/'driver.gd').write_text(SCRIPT)
         scene = work/'driver.tscn'
-        scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="GeneratedFullMatch" type="Node"]\nscript = ExtResource("1")\n' % (work/'driver.gd').relative_to(ROOT))
-        cmd = ['godot4', '--path', str(ROOT), '--audio-driver', 'Dummy', '--accessibility', args.accessibility, '--resolution', args.resolution, 'res://'+str(scene.relative_to(ROOT))]
+        scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://%s" id="1"]\n[node name="GeneratedFullMatch" type="Node"]\nscript = ExtResource("1")\n' % (work/'driver.gd').relative_to(ROOT).as_posix())
+        cmd = ['godot4', '--path', str(ROOT), '--audio-driver', 'Dummy', '--accessibility', args.accessibility, '--resolution', args.resolution, 'res://'+scene.relative_to(ROOT).as_posix()]
         cmd = ['dbus-run-session','--','xvfb-run','-a','-s','-screen 0 2200x1200x24']+cmd if args.rendered else cmd+['--headless']
         with (out/'runtime.log').open('w') as log:
             process = subprocess.Popen(cmd, cwd=ROOT, env=env, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)

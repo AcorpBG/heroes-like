@@ -26839,7 +26839,7 @@ def validate_battle_quick_resolve_runtime(errors: list[str]) -> None:
     helper_text = BATTLE_AUTO_RESOLVE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
         "class_name BattleAutoResolveRules",
-        "const DEFAULT_STEP_LIMIT := 72",
+        "const DEFAULT_STEP_LIMIT := 240",
         "func player_autoplay_decision(",
         "func resolve_active_battle(",
         "func is_terminal_state(",
