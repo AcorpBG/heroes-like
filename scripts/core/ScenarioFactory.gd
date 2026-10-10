@@ -93,6 +93,7 @@ static func create_session(
 		normalized_difficulty,
 		launch_mode
 	)
+	HeroCommandRulesScript.seed_start_heroes_from_session(session)
 	session.game_state = "overworld"
 	session.scenario_status = "in_progress"
 	session.scenario_summary = ""

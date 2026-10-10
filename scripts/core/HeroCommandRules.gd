@@ -342,6 +342,20 @@ static func new_growth_seed(hero_id: String, session_source: Variant = null) -> 
 	rng.randomize()
 	return "%08x%08x" % [rng.randi(), rng.randi()]
 
+## A new game's start hero is built before its session exists, so it drew a
+## random growth seed. The session's creator calls this once the session is
+## made, so the start hero is seeded from it like every later hire and two new
+## games on the same map and seed level it up alike. Never called on load: a
+## saved hero keeps the seed it was saved with.
+static func seed_start_heroes_from_session(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
+	# The active hero mirror can be a separate copy of its roster entry.
+	for hero in heroes + [session.overworld.get("hero", {})]:
+		if hero is Dictionary and String(hero.get("id", "")) != "":
+			hero["growth_seed"] = new_growth_seed(String(hero.get("id", "")), session)
+
 static func movement_max_for_hero(hero_state: Dictionary, movement_source: Variant = null) -> int:
 	var artifact_bonuses = ArtifactRulesScript.aggregate_bonuses(hero_state)
 	var specialty_bonuses = HeroProgressionRulesScript.aggregate_bonuses(hero_state)

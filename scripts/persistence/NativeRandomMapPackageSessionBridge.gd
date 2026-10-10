@@ -178,6 +178,9 @@ static func build_session_from_adoption(
 		difficulty,
 		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
 	)
+	# A game generated from a seed takes its session id from the map
+	# (native_rmg_session_<map id>), so the same seed rolls the same level-ups.
+	HeroCommandRulesScript.seed_start_heroes_from_session(session)
 	session.save_version = SessionStateStoreScript.SAVE_VERSION
 	session.game_state = "overworld"
 	session.scenario_status = "in_progress"

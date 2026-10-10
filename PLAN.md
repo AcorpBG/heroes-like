@@ -145,6 +145,8 @@ Rules:
 
 `battle-stat-scaling-20261008` (completed, owner review): attack against defense no longer stops at ±8 points: +5% per point of attack lead up to +300%, -2.5% per point of defense lead down to -70%. Level-ups roll one stat weighted by the hero's might or magic command path (40/40/10/10 toward attack and defense or power and knowledge), seeded per hero so saves never re-roll; damage spells gain 2.5x as much per point of power, and every 4 power adds a round to spell buffs, debuffs and riders (up to 3). A hit's cohesion loss goes by the share of the stack it took, not by creatures killed, so big stacks no longer lose 2 cohesion to every hit. See `docs/battle-stat-scaling.md`.
 
+`bugfix-start-hero-growth-seed-20261010` (completed, owner report): a new game's start hero was built before its session and drew a random growth seed, so two games on the same generated seed levelled it differently and the Windows and Linux `quality_medium` matches parted on day 28. The session's creator now seeds it from the session like every later hire (`HeroCommandRules.seed_start_heroes_from_session`); a seed-generated game's session id comes from its map, so the same seed gives the same level-ups. Saved seeds load unchanged. Maps-folder launches and `ScenarioFactory` starts still draw a per-launch session id.
+
 `ux-hero-level-up-roll-display-20261008` (completed, owner request): the level-up popup shows what the hero rolled above the specialty choices: a "Rolled +1 Spell power" headline, the four command stats with their new values (rolled ones lit gold with their gain, a short pulse unless reduced motion is on), the path's odds and, for several levels at once, each level's roll. See `docs/hero-level-up-popup.md`.
 
 ### Battle spell effects
