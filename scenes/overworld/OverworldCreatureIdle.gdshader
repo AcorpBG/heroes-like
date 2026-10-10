@@ -12,26 +12,33 @@ varying vec4 paint_tint;
 
 void vertex() { paint_tint = COLOR; }
 
-vec4 pose_pixel(vec2 uv, float frame, vec2 pixel_size, sampler2D sheet) {
+// The built-in TEXTURE is sampled only in fragment(): Godot cannot pass it into a
+// user function on every renderer (the headless one reports a missing sampler).
+vec2 pose_uv(vec2 uv, float frame, vec2 pixel_size) {
 	vec2 half_pixel = pixel_size * vec2(frame_count, 1.0) * 0.5;
 	vec2 sample_uv = clamp(uv, half_pixel, vec2(1.0) - half_pixel);
 	sample_uv.x = (sample_uv.x + frame) / frame_count;
-	vec4 pixel = texture(sheet, sample_uv);
-	pixel.a *= step(0.0, uv.x) * step(0.0, uv.y) * step(uv.x, 1.0) * step(uv.y, 1.0);
-	return pixel;
+	return sample_uv;
+}
+
+float pose_inside(vec2 uv) {
+	return step(0.0, uv.x) * step(0.0, uv.y) * step(uv.x, 1.0) * step(uv.y, 1.0);
 }
 
 void fragment() {
 	float clock = (clock_override >= 0.0 ? clock_override : TIME) + phase;
 	float frame = motion_enabled ? mod(floor(clock / frame_seconds), frame_count) : static_frame;
-	vec4 body = pose_pixel(UV, frame, TEXTURE_PIXEL_SIZE, TEXTURE);
+	vec4 body = texture(TEXTURE, pose_uv(UV, frame, TEXTURE_PIXEL_SIZE));
+	body.a *= pose_inside(UV);
 	float outer = body.a;
 	float inner = body.a;
 	for (int i = 0; i < 8; i++) {
 		float angle = float(i) * 0.785398163;
 		vec2 offset = vec2(cos(angle), sin(angle)) * edge_uv;
-		outer = max(outer, pose_pixel(UV + offset, frame, TEXTURE_PIXEL_SIZE, TEXTURE).a);
-		inner = max(inner, pose_pixel(UV + offset * 0.5, frame, TEXTURE_PIXEL_SIZE, TEXTURE).a);
+		vec2 outer_uv = UV + offset;
+		vec2 inner_uv = UV + offset * 0.5;
+		outer = max(outer, texture(TEXTURE, pose_uv(outer_uv, frame, TEXTURE_PIXEL_SIZE)).a * pose_inside(outer_uv));
+		inner = max(inner, texture(TEXTURE, pose_uv(inner_uv, frame, TEXTURE_PIXEL_SIZE)).a * pose_inside(inner_uv));
 	}
 	// Same restrained alpha-following contrast as the static overworld actors.
 	float dark_alpha = outer * 0.82;
