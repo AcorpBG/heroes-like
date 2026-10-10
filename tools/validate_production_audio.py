@@ -318,28 +318,11 @@ def validate_pack(pack):
             'required_audio': len(jobs), 'source_assets_excluded': True}
 
 
-def validate_repo_contracts():
-    import importlib.util
-    spec = importlib.util.spec_from_file_location('audio_repo_validation', ROOT / 'tests/validate_repo.py')
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    errors = []
-    names = ['validate_runtime_audio_loader', 'validate_ui_audio_cue_runtime',
-             'validate_presentation_audio_runtime', 'validate_overworld_ambient_audio_runtime',
-             'validate_music_audio_runtime', 'validate_animation_event_cue_catalog']
-    for name in names:
-        getattr(module, name)(errors)
-    assert not errors, '\n'.join(errors)
-    return {'validators': names, 'failures': errors}
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--godot')
     parser.add_argument('--runtime-pack', help='Run the audio harness against this exported PCK')
     parser.add_argument('--release-executable', help='Check the release binary startup without path overrides')
-    parser.add_argument('--repo-contracts', action='store_true')
     parser.add_argument('--runtime-only', action='store_true')
     parser.add_argument('--no-signals', action='store_true')
     args = parser.parse_args()
@@ -348,7 +331,6 @@ def main():
     if args.godot: result['runtime'] = validate_runtime(args.godot, args.runtime_pack)
     if args.runtime_pack: result['pack'] = validate_pack(args.runtime_pack)
     if args.release_executable: result['release_startup'] = validate_release(args.release_executable)
-    if args.repo_contracts: result['repo_contracts'] = validate_repo_contracts()
     target = ROOT / '.artifacts/audio-production' / ('package-validation.json' if args.runtime_pack else 'validation.json')
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')

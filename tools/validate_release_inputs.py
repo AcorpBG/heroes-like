@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Validate a release checkout without needing archived art-authoring masters.
 
-The complete development/source-art audit remains tests/validate_repo.py.
+The content check is tests/validate_repo.py.
 This focused check verifies referenced runtime art, required editor sources, and
-matching Linux/Windows export filters. It does not replace the complete audit or
-claim that a release build passed. Godot parsing, native selftests, and complete
-development validation remain required by the existing release builder.
+matching Linux/Windows export filters. It does not claim that a release build
+passed. Godot parsing, native selftests, and the content check remain required by
+the existing release builder.
 """
 from __future__ import annotations
 

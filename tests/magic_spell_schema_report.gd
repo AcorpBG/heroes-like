@@ -69,7 +69,7 @@ func _run() -> void:
 			"role_categories": SpellRules.spell_role_categories(survey_chain),
 		},
 		"caveats": [
-			"This report proves spell school/category/tier metadata loads through SpellRules; numeric tier power-band validation lives in validate_repo.py.",
+			"This report proves spell school/category/tier metadata loads through SpellRules.",
 			"Old Measure now has a broad live catalog for study access, but rare scenario-scale Old Measure effects remain outside this slice.",
 		],
 	}

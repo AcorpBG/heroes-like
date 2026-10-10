@@ -3,7 +3,7 @@
 
 Run before pushing to main:
 
-    python tools/core_suite.py            # all core tests, in parallel
+    python tools/core_suite.py            # content check, then all core tests in parallel
     python tools/core_suite.py --only battle_deterministic_rng_state_report
     python tools/core_suite.py --list
 
@@ -11,6 +11,7 @@ Windows and Linux. Godot comes from --godot, $GODOT_BIN, `godot4`/`godot` on PAT
 or the owner's Windows install. Every test gets a throwaway user profile (APPDATA on
 Windows, XDG_DATA_HOME on Linux), so the real saves and settings are never touched.
 
+The content check (tests/validate_repo.py, a few seconds) runs first and needs no Godot.
 A failing test listed in tests/known_failures.txt is reported as KNOWN and does not fail
 the run. See AGENTS.md "Validation budget" for what belongs here and what does not.
 """
@@ -56,6 +57,8 @@ CORE_TESTS: list[tuple[str, int, str]] = [
 # hero_specialty_catalog_report (exact specialty count), random_map_scenario_load_smoke and
 # main_menu_lean_boot_save_guard (authored domain / pre-existing saves).
 
+CONTENT_CHECK = "validate_repo"
+
 FAILURE_TEXT = re.compile(r"^(SCRIPT ERROR|Parse Error|ERROR: Failed to load script)", re.M)
 
 
@@ -78,6 +81,13 @@ def load_known_failures() -> dict[str, str]:
             name, _, reason = line.partition("#")
             known[name.strip()] = reason.strip()
     return known
+
+
+def run_content_check() -> tuple[str, bool, float, str]:
+    started = time.monotonic()
+    cmd = [sys.executable, str(ROOT / "tests" / "validate_repo.py")]
+    proc = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=300)
+    return CONTENT_CHECK, proc.returncode == 0, time.monotonic() - started, proc.stdout + proc.stderr
 
 
 def run_test(godot: str, name: str, timeout: int) -> tuple[str, bool, float, str]:
@@ -110,28 +120,36 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.list:
+        print(f"{CONTENT_CHECK:55s} content parses, ids and references resolve, runtime files exist")
         for name, timeout, why in CORE_TESTS:
             print(f"{name:55s} {why}")
         return 0
     tests = CORE_TESTS
+    content_check = True
     if args.only:
-        unknown = set(args.only) - {t[0] for t in CORE_TESTS}
+        unknown = set(args.only) - {t[0] for t in CORE_TESTS} - {CONTENT_CHECK}
         if unknown:
             sys.exit(f"Not core tests: {', '.join(sorted(unknown))}")
         tests = [t for t in CORE_TESTS if t[0] in args.only]
+        content_check = CONTENT_CHECK in args.only
 
-    godot = find_godot(args.godot)
     known = load_known_failures()
     started = time.monotonic()
-    maps_before = set(MAPS_DIR.iterdir()) if MAPS_DIR.is_dir() else set()
-    run_started_at = time.time()
     failed: list[str] = []
-    try:
-        failed = run_all(godot, tests, known, args.jobs)
-    finally:
-        removed = remove_new_maps(maps_before, run_started_at)
-    note = f"; removed {removed} generated map files the tests wrote" if removed else ""
-    print(f"\n{len(tests) - len(failed)}/{len(tests)} core tests passed in {time.monotonic() - started:.0f}s{note}")
+    if content_check:
+        failed += report(*run_content_check(), known)
+    note = ""
+    if tests:
+        godot = find_godot(args.godot)
+        maps_before = set(MAPS_DIR.iterdir()) if MAPS_DIR.is_dir() else set()
+        run_started_at = time.time()
+        try:
+            failed += run_all(godot, tests, known, args.jobs)
+        finally:
+            removed = remove_new_maps(maps_before, run_started_at)
+        note = f"; removed {removed} generated map files the tests wrote" if removed else ""
+    total = len(tests) + (1 if content_check else 0)
+    print(f"\n{total - len(failed)}/{total} core tests passed in {time.monotonic() - started:.0f}s{note}")
     return 1 if failed else 0
 
 
@@ -155,19 +173,23 @@ def run_all(godot: str, tests: list[tuple[str, int, str]], known: dict[str, str]
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as pool:
         futures = [pool.submit(run_test, godot, name, timeout) for name, timeout, _ in tests]
         for future in concurrent.futures.as_completed(futures):
-            name, ok, seconds, output = future.result()
-            if ok:
-                status = "PASS (listed as known failure: remove it)" if name in known else "PASS"
-            elif name in known:
-                status = f"KNOWN ({known[name]})"
-            else:
-                status = "FAIL"
-                failed.append(name)
-            print(f"{status:6s} {seconds:6.1f}s  {name}", flush=True)
-            if status == "FAIL":
-                tail = "\n".join(output.strip().splitlines()[-30:])
-                print("    " + tail.replace("\n", "\n    "), flush=True)
+            failed += report(*future.result(), known)
     return failed
+
+
+def report(name: str, ok: bool, seconds: float, output: str, known: dict[str, str]) -> list[str]:
+    if ok:
+        status = "PASS (listed as known failure: remove it)" if name in known else "PASS"
+    elif name in known:
+        status = f"KNOWN ({known[name]})"
+    else:
+        status = "FAIL"
+    print(f"{status:6s} {seconds:6.1f}s  {name}", flush=True)
+    if status != "FAIL":
+        return []
+    tail = "\n".join(output.strip().splitlines()[-30:])
+    print("    " + tail.replace("\n", "\n    "), flush=True)
+    return [name]
 
 
 if __name__ == "__main__":

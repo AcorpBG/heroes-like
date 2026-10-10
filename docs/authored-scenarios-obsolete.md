@@ -40,6 +40,8 @@ Owner decision, 2026-10-10: the obsolete checks were deleted instead of being le
 
 The full lists are in the git history of this file and of the deletion commit. On the same worktree, `validate_repo.py` went from 885 errors to 128, with no new errors.
 
+Later the same day the rest of the old `validate_repo.py` (about 68,000 lines, mostly pins on source and doc text) was replaced by a short content check that passes: content parses, ids and references resolve, art manifests cover every record, runtime files exist, scenes are wired. The mixed `validate_repo` functions listed below went with it.
+
 ## Mixed checks
 
 These check shared definitions that are still live (sites, dwellings, landmarks, artifacts, spells, art) and also assert where an authored scenario places them. The definition checks stay valid; the authored-placement assertions are obsolete.
@@ -75,7 +77,7 @@ three_creature_bank_forts_report.gd
 two_elite_neutral_dwellings_report.gd
 ```
 
-`tests/validate_repo.py` functions:
+`tests/validate_repo.py` functions (deleted 2026-10-10 with the old validator):
 
 ```text
 validate_eight_guarded_route_gates

@@ -1,5 +1,7 @@
 # Production content validator reconciliation
 
+Historical. On 2026-10-10 the checks described here were removed with the old `tests/validate_repo.py`, and `tests/production_content_validator_regression.py` was deleted. The current content check is described in AGENTS.md "Validation budget".
+
 The 931 reported blocker/audio failures are resolved. The accepted game art and audio are unchanged; the validator now enforces their documented production contracts rather than obsolete synthesizer/atlas assumptions.
 
 - 912 blockers: twelve retained 1254px original PNGs imported at 256px, and 900 baked 256px PNGs. Validate source/recipe identity, runtime hashes, alpha format, exact dimensions, biome counts, palette registration, and import settings. Unknown or corrupted assets still fail.
