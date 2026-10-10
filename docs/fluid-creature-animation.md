@@ -5,7 +5,7 @@ Owner request, 2026-09-23: expand the animation improvement to every live unit t
 ## Completion standard
 
 - Idle: 8-12 distinct coherent poses with visible articulated breathing, arms/equipment or anatomy-appropriate movement. Eight existing poses alone do not establish visual acceptance.
-- Movement: at least eight poses with a readable gait, flight, crawl or other suitable locomotion, stable ground/body reference and no teleporting limbs.
+- Movement: at least eight poses with a readable gait, flight, crawl or other suitable locomotion, stable ground/body reference and no teleporting limbs. Cut a walk clip to one clean gait cycle. The board sets the travel pace, not the clip: every unit crosses a hex in 600 ms at Normal speed (`STACK_MOVE_HEX_MSEC`), and the walk clip loops underneath at 1.25 times its authored timing (owner report, 2026-10-10: clips cut from 0.5 to 5.2 seconds of video had made units cross a hex in 0.5 to 5.2 seconds).
 - Attack and relevant ranged/cast/support actions: 8-12 poses with anticipation, contact/release and recovery, preserving equipment and matching the actual attack type. A noncaster's support cue must remain a physical gesture rather than invented spellcasting. A melee-only unit does not require an invented ranged weapon.
 - Hit: 4-6 distinct recoil/recovery poses. Defense: at least four dedicated guard/brace transition poses.
 - Death: 8-12 poses forming a continuous collapse, ending in a grounded persistent corpse. The corpse may reuse the last death frame; death must not reuse the hit clip as its entire sequence.

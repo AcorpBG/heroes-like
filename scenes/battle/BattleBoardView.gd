@@ -229,6 +229,11 @@ const OBSTACLE_SHADOW_COLOR := Color(0.02, 0.025, 0.02, 0.34)
 const TERRAIN_HEX_FALLBACK_INSET := 0.975
 const STACK_ANIMATION_EVENT_PLAYBACK_MSEC := 760
 const STACK_ANIMATION_REACTION_DELAY_MSEC := 70
+# Every unit crosses a hex in the same time at Normal speed. Its walk clip
+# loops underneath, a little faster than authored so a typical gait cycle
+# covers about one and a third hexes, a natural stride at standee size.
+const STACK_MOVE_HEX_MSEC := 600
+const STACK_WALK_CLIP_RATE := 1.25
 const BATTLE_VFX_PROJECTILE_COLOR := Color(0.94, 0.96, 0.74, 0.88)
 const BATTLE_VFX_STATUS_COLOR := Color(0.50, 0.86, 0.74, 0.76)
 const BATTLE_VFX_DAMAGE_COLOR := Color(1.0, 0.55, 0.32, 0.82)
@@ -2626,6 +2631,8 @@ func _animation_frame_region_for_stack(stack: Dictionary) -> Rect2:
 		var elapsed := BattleUnitPose.elapsed_msec({} if waiting else record, now)
 		if (record.is_empty() or waiting) and state_name in ["idle_hold", "ready_active"]:
 			elapsed = BattleUnitPose.idle_elapsed_msec(animation, now, String(stack.get("unit_id", "")) + "/" + battle_id)
+		if BattleUnitPose.clip_name(state_name) == "move" and not (record.is_empty() or waiting):
+			elapsed = int(float(elapsed) * STACK_WALK_CLIP_RATE)
 		var progress := 1.0 if waiting else _stack_presentation_progress(battle_id)
 		return BattleUnitPose.region(animation, state_name, progress, elapsed, reduced)
 	var row := _animation_state_row_for_unit(String(stack.get("unit_id", "")), state_name)
@@ -2704,13 +2711,19 @@ func _sync_animation_playback_records() -> void:
 		# Ready/status events fall back to idle artwork, but are not idle cycles.
 		# Likewise an unupgraded action alias must not acquire an idle duration.
 		var authored_action: bool = pose_name != "idle" and animation.get("pose_clips", {}).has(pose_name) and bool(pose_spec.get("authored_timing", false))
+		var is_move := String(event.get("event_id", "")) == "battle_unit_move"
 		if authored_action:
 			base_duration_msec = BattleUnitPose.clip_duration_msec(pose_spec)
-			if String(event.get("event_id", "")) == "battle_unit_move":
-				var walk_path: Array = _battle.get("playback_event", {}).get("walk_path", event.get("walk_path", []))
-				base_duration_msec *= maxi(1, walk_path.size() - 1)
-			if SettingsService.reduced_motion_enabled():
-				base_duration_msec = mini(base_duration_msec, 260)
+		# A walk clip's length is how its source video was cut, from half a
+		# second to five; it must not set how fast the unit travels.
+		if is_move:
+			var walk_path: Array = _battle.get("playback_event", {}).get("walk_path", event.get("walk_path", []))
+			base_duration_msec = STACK_MOVE_HEX_MSEC * maxi(1, walk_path.size() - 1)
+		elif authored_action and pose_name == "move":
+			# A retreat steps back in its walk for the time of two hexes.
+			base_duration_msec = STACK_MOVE_HEX_MSEC * 2
+		if (authored_action or is_move) and SettingsService.reduced_motion_enabled():
+			base_duration_msec = mini(base_duration_msec, 260)
 		var duration_msec: int = _presentation_duration_msec(base_duration_msec)
 		var started_at_msec := now + sequence_delay_msec
 		var expires_at_msec: int = started_at_msec + max(1, duration_msec)
