@@ -201,7 +201,7 @@ size_flags_vertical = 4
 unique_name_in_owner = true
 custom_minimum_size = Vector2(46, 46)
 layout_mode = 2
-tooltip_text = "Options: battle speed, save, settings and the main menu. Esc"
+tooltip_text = "Options: battle speed, hex grid, save, settings and the main menu. Esc"
 accessibility_name = "Options"
 script = ExtResource("7_command_button")
 glyph = "gear"
@@ -333,6 +333,34 @@ text = "Fast"
 unique_name_in_owner = true
 layout_mode = 2
 text = "Instant"
+
+[node name="GridRow" type="HBoxContainer" parent="Hud/OptionsPopover/OptionsBox"]
+layout_mode = 2
+
+[node name="GridLabel" type="Label" parent="Hud/OptionsPopover/OptionsBox/GridRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Hex grid"
+
+[node name="GridBar" type="HBoxContainer" parent="Hud/OptionsPopover/OptionsBox/GridRow"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GridFull" type="Button" parent="Hud/OptionsPopover/OptionsBox/GridRow/GridBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Full"
+
+[node name="GridRange" type="Button" parent="Hud/OptionsPopover/OptionsBox/GridRow/GridBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Range only"
+
+[node name="GridOff" type="Button" parent="Hud/OptionsPopover/OptionsBox/GridRow/GridBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Off"
 
 [node name="SystemBody" type="Label" parent="Hud/OptionsPopover/OptionsBox"]
 unique_name_in_owner = true
@@ -563,6 +591,9 @@ unique_name_in_owner = true
 [connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/SpeedRow/SpeedBar/SpeedNormal" to="." method="_on_speed_normal_pressed"]
 [connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/SpeedRow/SpeedBar/SpeedFast" to="." method="_on_speed_fast_pressed"]
 [connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/SpeedRow/SpeedBar/SpeedInstant" to="." method="_on_speed_instant_pressed"]
+[connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/GridRow/GridBar/GridFull" to="." method="_on_grid_full_pressed"]
+[connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/GridRow/GridBar/GridRange" to="." method="_on_grid_range_pressed"]
+[connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/GridRow/GridBar/GridOff" to="." method="_on_grid_off_pressed"]
 [connection signal="item_selected" from="Hud/OptionsPopover/OptionsBox/SystemActions/SaveSlot" to="." method="_on_save_slot_selected"]
 [connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/SystemActions/Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/SystemActions/Settings" to="." method="_on_settings_pressed"]

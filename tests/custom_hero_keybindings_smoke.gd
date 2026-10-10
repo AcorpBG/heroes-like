@@ -138,7 +138,7 @@ func _check_custom_bindings() -> void:
 
 	SettingsService.settings = {}
 	SettingsService.load_settings()
-	_expect(SettingsService.SETTINGS_VERSION == 14, "Custom keybindings must use current device settings schema 14.")
+	_expect(SettingsService.SETTINGS_VERSION == 15, "Custom keybindings must use current device settings schema 15.")
 	_expect(SettingsService.hero_movement_keycode(live_action) == KEY_P, "Custom movement key did not survive SettingsService reload.")
 	_expect(_action_has_key(live_action, KEY_P) and not _action_has_key(live_action, preset_key), "Reloaded InputMap did not replace the selected preset key.")
 

@@ -7,7 +7,7 @@ signal settings_changed(settings: Dictionary)
 signal settings_commit_failed(result: Dictionary)
 signal display_change_state_changed(snapshot: Dictionary)
 
-const SETTINGS_VERSION := 14
+const SETTINGS_VERSION := 15
 const SETTINGS_DIR := "user://config"
 const SETTINGS_FILE := "%s/settings.cfg" % SETTINGS_DIR
 const SETTINGS_CANDIDATE_FILE := "%s.candidate" % SETTINGS_FILE
@@ -46,6 +46,9 @@ const BATTLE_CAMERA_SHAKE_OFF := "off"
 const BATTLE_PLAYBACK_SPEED_NORMAL := "normal"
 const BATTLE_PLAYBACK_SPEED_FAST := "fast"
 const BATTLE_PLAYBACK_SPEED_INSTANT := "instant"
+const BATTLE_HEX_GRID_FULL := "full"
+const BATTLE_HEX_GRID_RANGE := "range"
+const BATTLE_HEX_GRID_OFF := "off"
 const KEYBOARD_NAVIGATION_LAYOUT_WASD := "wasd"
 const KEYBOARD_NAVIGATION_LAYOUT_IJKL := "ijkl"
 const KEYBOARD_NAVIGATION_LAYOUT_ARROWS := "arrows"
@@ -139,6 +142,12 @@ const BATTLE_PLAYBACK_SPEED_OPTIONS := [
 	{"id": BATTLE_PLAYBACK_SPEED_NORMAL, "label": "Normal"},
 	{"id": BATTLE_PLAYBACK_SPEED_FAST, "label": "Fast"},
 	{"id": BATTLE_PLAYBACK_SPEED_INSTANT, "label": "Instant"},
+]
+# The battle's hex grid: every hex, only the hexes the acting stack can reach, or none.
+const BATTLE_HEX_GRID_OPTIONS := [
+	{"id": BATTLE_HEX_GRID_FULL, "label": "Full"},
+	{"id": BATTLE_HEX_GRID_RANGE, "label": "Range only"},
+	{"id": BATTLE_HEX_GRID_OFF, "label": "Off"},
 ]
 
 const KEYBOARD_NAVIGATION_LAYOUT_OPTIONS := [
@@ -316,6 +325,7 @@ func build_default_settings() -> Dictionary:
 		},
 		"gameplay": {
 			"battle_playback_speed": BATTLE_PLAYBACK_SPEED_NORMAL,
+			"battle_hex_grid": BATTLE_HEX_GRID_FULL,
 			"keyboard_navigation_layout": KEYBOARD_NAVIGATION_LAYOUT_WASD,
 			"hero_movement_bindings": {},
 		},
@@ -490,6 +500,17 @@ func build_battle_camera_shake_options() -> Array:
 		})
 	return options
 
+func build_battle_hex_grid_options() -> Array:
+	var selected_mode := battle_hex_grid_mode_id()
+	var options := []
+	for option in BATTLE_HEX_GRID_OPTIONS:
+		options.append({
+			"id": String(option.get("id", BATTLE_HEX_GRID_FULL)),
+			"label": String(option.get("label", "Full")),
+			"selected": String(option.get("id", BATTLE_HEX_GRID_FULL)) == selected_mode,
+		})
+	return options
+
 func build_battle_playback_speed_options() -> Array:
 	var selected_speed := battle_playback_speed_id()
 	var options := []
@@ -567,6 +588,15 @@ func battle_playback_speed_label() -> String:
 		if String(option.get("id", "")) == battle_playback_speed_id():
 			return String(option.get("label", "Normal"))
 	return "Normal"
+
+func battle_hex_grid_mode_id() -> String:
+	return _normalize_battle_hex_grid(String(ensure_settings().get("gameplay", {}).get("battle_hex_grid", BATTLE_HEX_GRID_FULL)))
+
+func battle_hex_grid_label() -> String:
+	for option in BATTLE_HEX_GRID_OPTIONS:
+		if String(option.get("id", "")) == battle_hex_grid_mode_id():
+			return String(option.get("label", "Full"))
+	return "Full"
 
 func keyboard_navigation_layout_id() -> String:
 	return _normalize_keyboard_navigation_layout(String(ensure_settings().get("gameplay", {}).get("keyboard_navigation_layout", KEYBOARD_NAVIGATION_LAYOUT_WASD)))
@@ -953,6 +983,11 @@ func set_battle_playback_speed_id(speed_id: String) -> Dictionary:
 	settings["gameplay"]["battle_playback_speed"] = _normalize_battle_playback_speed(speed_id)
 	return _commit_settings(SETTINGS_APPLY_NONE)
 
+func set_battle_hex_grid_mode_id(mode_id: String) -> Dictionary:
+	ensure_settings()
+	settings["gameplay"]["battle_hex_grid"] = _normalize_battle_hex_grid(mode_id)
+	return _commit_settings(SETTINGS_APPLY_NONE)
+
 func set_keyboard_navigation_layout_id(layout_id: String) -> Dictionary:
 	ensure_settings()
 	settings["gameplay"]["keyboard_navigation_layout"] = _normalize_keyboard_navigation_layout(layout_id)
@@ -1073,7 +1108,7 @@ func describe_settings() -> String:
 		[
 			"Presentation: %s | %s | %s quality | VSync %s | %s" % [presentation_mode_label(presentation_mode_id()), presentation_resolution_label(presentation_resolution_id()), render_quality_label(), "On" if vsync_enabled() else "Off", frame_rate_limit_label()],
 			"Audio: Master %d%% | Music %d%% | Effects %d%%" % [master_volume_percent(), music_volume_percent(), effects_volume_percent()],
-			"Gameplay: Battle playback %s | Navigation %s" % [battle_playback_speed_label(), keyboard_navigation_layout_label()],
+			"Gameplay: Battle playback %s | Hex grid %s | Navigation %s" % [battle_playback_speed_label(), battle_hex_grid_label(), keyboard_navigation_layout_label()],
 			"Accessibility: %s" % " | ".join(accessibility_parts),
 			describe_settings_persistence_check(),
 		]
@@ -1473,6 +1508,13 @@ func _normalize_battle_playback_speed(speed_id: String) -> String:
 			return normalized
 	return BATTLE_PLAYBACK_SPEED_NORMAL
 
+func _normalize_battle_hex_grid(mode_id: String) -> String:
+	var normalized := mode_id.strip_edges().to_lower()
+	for option in BATTLE_HEX_GRID_OPTIONS:
+		if String(option.get("id", BATTLE_HEX_GRID_FULL)) == normalized:
+			return normalized
+	return BATTLE_HEX_GRID_FULL
+
 func _normalize_keyboard_navigation_layout(layout_id: String) -> String:
 	var normalized := layout_id.strip_edges().to_lower()
 	for option in KEYBOARD_NAVIGATION_LAYOUT_OPTIONS:
@@ -1748,6 +1790,7 @@ func _settings_config_semantic_report(config: ConfigFile) -> Dictionary:
 		[12, "accessibility", "battle_camera_shake", TYPE_STRING],
 		[13, "accessibility", "reduce_flashes", TYPE_BOOL],
 		[14, "accessibility", "reduce_repetitive_sounds", TYPE_BOOL],
+		[15, "gameplay", "battle_hex_grid", TYPE_STRING],
 	]
 	for requirement in required:
 		if version < int(requirement[0]):
@@ -1773,6 +1816,7 @@ func _settings_from_config(config: ConfigFile) -> Dictionary:
 	loaded["presentation"]["vsync_enabled"] = bool(config.get_value("presentation", "vsync_enabled", defaults["presentation"]["vsync_enabled"]))
 	loaded["presentation"]["frame_rate_limit"] = _normalize_frame_rate_limit(int(config.get_value("presentation", "frame_rate_limit", defaults["presentation"]["frame_rate_limit"])))
 	loaded["gameplay"]["battle_playback_speed"] = _normalize_battle_playback_speed(String(config.get_value("gameplay", "battle_playback_speed", defaults["gameplay"]["battle_playback_speed"])))
+	loaded["gameplay"]["battle_hex_grid"] = _normalize_battle_hex_grid(String(config.get_value("gameplay", "battle_hex_grid", defaults["gameplay"]["battle_hex_grid"])))
 	loaded["gameplay"]["keyboard_navigation_layout"] = _normalize_keyboard_navigation_layout(String(config.get_value("gameplay", "keyboard_navigation_layout", defaults["gameplay"]["keyboard_navigation_layout"])))
 	loaded["gameplay"]["hero_movement_bindings"] = _normalize_hero_movement_bindings(config.get_value("gameplay", "hero_movement_bindings", defaults["gameplay"]["hero_movement_bindings"]))
 	var legacy_large_text := bool(config.get_value("accessibility", "large_ui_text", defaults["accessibility"]["large_ui_text"]))
@@ -1822,6 +1866,7 @@ func _settings_config_unchecked(value: Dictionary) -> ConfigFile:
 	config.set_value("presentation", "vsync_enabled", bool(presentation.get("vsync_enabled", defaults["presentation"]["vsync_enabled"])))
 	config.set_value("presentation", "frame_rate_limit", _normalize_frame_rate_limit(int(presentation.get("frame_rate_limit", defaults["presentation"]["frame_rate_limit"]))))
 	config.set_value("gameplay", "battle_playback_speed", _normalize_battle_playback_speed(String(gameplay.get("battle_playback_speed", defaults["gameplay"]["battle_playback_speed"]))))
+	config.set_value("gameplay", "battle_hex_grid", _normalize_battle_hex_grid(String(gameplay.get("battle_hex_grid", defaults["gameplay"]["battle_hex_grid"]))))
 	config.set_value("gameplay", "keyboard_navigation_layout", _normalize_keyboard_navigation_layout(String(gameplay.get("keyboard_navigation_layout", defaults["gameplay"]["keyboard_navigation_layout"]))))
 	config.set_value("gameplay", "hero_movement_bindings", _normalize_hero_movement_bindings(gameplay.get("hero_movement_bindings", defaults["gameplay"]["hero_movement_bindings"])))
 	var scale := _normalize_ui_scale_percent(int(accessibility.get("ui_scale_percent", defaults["accessibility"]["ui_scale_percent"])))

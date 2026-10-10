@@ -162,9 +162,31 @@ const LEGAL_RANGED_COLOR := Color(0.72, 0.88, 1.0, 0.82)
 const CONTROLLER_CURSOR_COLOR := Color(1.0, 0.92, 0.58, 1.0)
 const CONTROLLER_CURSOR_BLOCKED_COLOR := Color(0.94, 0.48, 0.32, 1.0)
 const SHADOW_COLOR := Color(0.025, 0.028, 0.031, 0.32)
+# Each battle terrain is fought on one of the painted battlefields, with that
+# battlefield's props (tools/build_battlefield_art.py); a terrain without its
+# own painting uses the nearest one, and an unknown terrain the meadow.
+const BATTLEFIELD_FAMILIES := {
+	"plains": "grass",
+	"grass": "grass",
+	"forest": "forest",
+	"swamp": "swamp",
+	"marsh": "swamp",
+	"mire": "mire",
+	"rough": "rough",
+	"hills": "rough",
+	"highland": "rough",
+	"badlands": "rough",
+	"road": "road",
+	"snow": "snow",
+	"coast": "coast",
+	"sand": "sand",
+	"lava": "lava",
+	"underground": "underground",
+}
+const BATTLEFIELD_ART_ROOT := "res://art/battle/runtime/battlefields"
+# The ground colour under the painting, and the hexes' colour without one.
 const TERRAIN_COLORS := {
 	"grass": Color(0.31, 0.40, 0.24, 1.0),
-	"plains": Color(0.30, 0.38, 0.24, 1.0),
 	"forest": Color(0.18, 0.31, 0.22, 1.0),
 	"swamp": Color(0.24, 0.29, 0.22, 1.0),
 	"rough": Color(0.37, 0.32, 0.24, 1.0),
@@ -172,41 +194,10 @@ const TERRAIN_COLORS := {
 	"mire": Color(0.21, 0.27, 0.22, 1.0),
 	"snow": Color(0.58, 0.66, 0.69, 1.0),
 	"coast": Color(0.31, 0.48, 0.49, 1.0),
-	"sand": Color(0.42, 0.45, 0.37, 1.0),
+	"sand": Color(0.62, 0.52, 0.34, 1.0),
 	"lava": Color(0.28, 0.20, 0.17, 1.0),
 	"underground": Color(0.20, 0.27, 0.29, 1.0),
 }
-const TERRAIN_TEXTURE_ALIASES := {
-	"plains": "grass",
-	"grass": "grass",
-	"forest": "forest",
-	"swamp": "swamp",
-	"rough": "rough",
-	"road": "road",
-	"mire": "mire",
-	"snow": "snow",
-	"coast": "coast",
-	"sand": "coast",
-	"lava": "lava",
-	"underground": "underground",
-}
-const TERRAIN_TEXTURE_PATHS := {
-	"grass": "res://art/battle/terrain/grass.png",
-	"forest": "res://art/battle/terrain/forest.png",
-	"swamp": "res://art/battle/terrain/swamp.png",
-	"rough": "res://art/battle/terrain/hills.png",
-	"road": "res://art/battle/terrain/road.png",
-	"mire": "res://art/battle/terrain/mire.png",
-	"snow": "res://art/battle/terrain/snow.png",
-	"coast": "res://art/battle/terrain/coast.png",
-	"lava": "res://art/battle/terrain/lava.png",
-	"underground": "res://art/battle/terrain/underground.png",
-}
-const TERRAIN_TEXTURE_MODULATE := Color(0.84, 0.86, 0.80, 0.24)
-const TERRAIN_TEXTURE_READABILITY_WASH := Color(0.02, 0.025, 0.022, 0.045)
-const TERRAIN_CONTEXT_TEXTURE_MODULATE := Color(0.78, 0.81, 0.75, 0.92)
-const TERRAIN_CONTEXT_READABILITY_WASH := Color(0.015, 0.020, 0.018, 0.10)
-const TERRAIN_CONTEXT_MODEL := "continuous_primary_field_with_subordinate_hex_variation"
 const TERRAIN_AMBIENT_MODEL := "deterministic_terrain_specific_passive_motes"
 const TERRAIN_AMBIENT_DRAW_ORDER := ["terrain", "ambient_motes", "hero_figures", "hex_grid", "objectives", "movement_affordances", "controller_cursor", "battle_vfx", "stack_tokens", "turn_ribbon", "hover_forecast"]
 const TERRAIN_AMBIENT_PHASE_SPEED := 0.52
@@ -220,37 +211,22 @@ const TERRAIN_AMBIENT_PROFILES := {
 	"mire": {"id": "mire_wisps", "kind": "wisp", "count": 12, "color": Color(0.50, 0.78, 0.69, 1.0), "alpha": 0.18, "radius_factor": 0.0027, "drift": Vector2(0.011, 0.009)},
 	"snow": {"id": "snow_spindrift", "kind": "flake", "count": 10, "color": Color(0.86, 0.94, 1.0, 1.0), "alpha": 0.16, "radius_factor": 0.0022, "drift": Vector2(0.015, 0.010)},
 	"coast": {"id": "coastal_spray", "kind": "spray", "count": 10, "color": Color(0.66, 0.91, 0.91, 1.0), "alpha": 0.15, "radius_factor": 0.0023, "drift": Vector2(0.014, 0.007)},
+	"sand": {"id": "desert_dust", "kind": "dust", "count": 10, "color": Color(0.96, 0.84, 0.58, 1.0), "alpha": 0.12, "radius_factor": 0.0022, "drift": Vector2(0.017, 0.005)},
 	"lava": {"id": "ember_drift", "kind": "ember", "count": 9, "color": Color(1.0, 0.54, 0.26, 1.0), "alpha": 0.18, "radius_factor": 0.0022, "drift": Vector2(0.008, -0.013)},
 	"underground": {"id": "glasscap_motes", "kind": "spore", "count": 11, "color": Color(0.43, 0.88, 0.86, 1.0), "alpha": 0.17, "radius_factor": 0.0024, "drift": Vector2(0.009, 0.008)},
 }
-const TERRAIN_HEX_TEXTURE_INSET := 1.0
-const OBSTACLE_ART_ROOT := "res://art/overworld/runtime/objects/decorations/biome_components_20260919"
-const OBSTACLE_ART_BIOMES := {
-	"grass": "grasslands",
-	"road": "grasslands",
-	"forest": "deep_forest",
-	"swamp": "mire_fen",
-	"mire": "mire_fen",
-	"rough": "rough_badlands",
-	"snow": "snow_frost_marches",
-	"coast": "coast_archipelago",
-	"lava": "ash_lava_wastes",
-	"underground": "subterranean_underways",
-}
-# Props are anchored by the bottom of their painted content (about 0.93 of the
-# 256 px sheet) a little below the cell centre, and span about one hex per cell.
-const OBSTACLE_ART_CONTENT_BOTTOM := 0.93
-const OBSTACLE_ART_BASE_OFFSET := 0.45
-const OBSTACLE_ART_WIDTH_PER_CELL := 1.12
-# A lone prop is drawn a little larger so thin deadwood still reads as a blocked hex.
-const OBSTACLE_ART_SINGLE_SCALE := 1.18
-const OBSTACLE_SHADOW_COLOR := Color(0.02, 0.025, 0.02, 0.38)
-const OBSTACLE_FALLBACK_STONE := Color(0.42, 0.40, 0.36, 0.96)
+# Each battlefield has its own props: of each kind, three one-hex and two
+# two-hex ones, which the obstacle's variant picks from. A prop's canvas has
+# OBSTACLE_ART_PIXELS_PER_HEX pixels per hex width and the centre of its ground
+# tuft halfway across at OBSTACLE_ART_ANCHOR_Y; that point stands on the hex
+# centre, or on the seam of a two-hex obstacle (tools/build_battlefield_art.py).
+const OBSTACLE_ART_ROOT := "res://art/battle/runtime/obstacles"
+const OBSTACLE_ART_VARIANTS := {1: 3, 2: 2}
+const OBSTACLE_ART_CANVAS := {1: Vector2(288.0, 352.0), 2: Vector2(512.0, 352.0)}
+const OBSTACLE_ART_PIXELS_PER_HEX := 216.0
+const OBSTACLE_ART_ANCHOR_Y := 256.0
+const OBSTACLE_SHADOW_COLOR := Color(0.02, 0.025, 0.02, 0.34)
 const TERRAIN_HEX_FALLBACK_INSET := 0.975
-const TEXTURED_DEPLOYMENT_FILL_ALPHA := 0.035
-const TEXTURED_CENTER_FILL_ALPHA := 0.045
-const TEXTURED_MID_LANE_FILL_ALPHA := 0.018
-const TEXTURED_GRID_MAX_CELL_FILL_ALPHA := 0.05
 const STACK_ANIMATION_EVENT_PLAYBACK_MSEC := 760
 const STACK_ANIMATION_REACTION_DELAY_MSEC := 70
 const BATTLE_VFX_PROJECTILE_COLOR := Color(0.94, 0.96, 0.74, 0.88)
@@ -303,10 +279,10 @@ var _consequence_hover_key := ""
 var _controller_cursor_cell := Vector2i(-1, -1)
 # Keys or a controller are steering the board (see _input()).
 var _keyboard_cursor_active := false
-var _terrain_textures: Dictionary = {}
+# Loaded battlefield paintings by path; null for one that failed to load.
+var _battlefield_textures: Dictionary = {}
 var _obstacle_textures: Dictionary = {}
 var _obstacle_texture_missing: Dictionary = {}
-var _terrain_texture_missing: Dictionary = {}
 var _unit_battle_icon_textures: Dictionary = {}
 var _unit_battle_icon_missing: Dictionary = {}
 var _unit_battle_standee_textures: Dictionary = {}
@@ -1238,9 +1214,6 @@ func validation_hex_layout_summary() -> Dictionary:
 	var layout := _current_hex_layout()
 	var hex_radius := float(layout.get("radius", 1.0))
 	var terrain_id := _battle_terrain_id()
-	var terrain_texture_id := _terrain_texture_id(terrain_id)
-	var terrain_texture = _terrain_texture_for(terrain_id)
-	var terrain_sampling_summary := _terrain_texture_sampling_summary(terrain_texture)
 	var player_input_active := String(_active_stack.get("side", "")) == "player" and not _battle.has("playback_event")
 	var legal_destinations: Array = hex_state.get("legal_destinations", []) if hex_state.get("legal_destinations", []) is Array else []
 	var legal_melee_targets: Array = hex_state.get("legal_melee_targets", []) if hex_state.get("legal_melee_targets", []) is Array else []
@@ -1346,6 +1319,7 @@ func validation_hex_layout_summary() -> Dictionary:
 			"art_path": obstacle_path,
 			"art_loaded": _obstacle_texture(obstacle_path) != null,
 			"art_rect": _obstacle_art_rect(obstacle, layout),
+			"art_anchor": _obstacle_center(obstacle, layout),
 		})
 
 	return {
@@ -1359,23 +1333,10 @@ func validation_hex_layout_summary() -> Dictionary:
 		"stack_hit_shape_radius": _stack_hit_shape_radius(hex_radius),
 		"neighboring_stack_hit_shape_overlap_possible": _neighboring_stack_hit_shape_overlap_possible(hex_radius),
 		"terrain": terrain_id,
-		"terrain_texture_id": terrain_texture_id,
-		"terrain_texture_path": _terrain_texture_path_for(terrain_texture_id),
-		"terrain_texture_loaded": terrain_texture != null,
-		"terrain_texture_fallback": terrain_texture == null,
-		"terrain_rendering_mode": _terrain_rendering_mode(terrain_texture != null),
-		"terrain_hex_snapped": true,
-		"terrain_hex_tile_count": _terrain_hex_tile_count(),
-		"terrain_single_board_backdrop": terrain_texture != null,
-		"terrain_texture_visible": _terrain_texture_visible(terrain_texture != null),
-		"terrain_grid_fill_mode": _terrain_grid_fill_mode(terrain_texture != null),
-		"terrain_grid_max_fill_alpha": _terrain_grid_max_fill_alpha(terrain_texture != null),
-		"terrain_grid_border_mode": _terrain_grid_border_mode(terrain_texture != null),
-		"terrain_grid_repaints_texture_cells": _terrain_grid_repaints_texture_cells(terrain_texture != null),
-		"terrain_texture_uv_space": String(terrain_sampling_summary.get("texture_uv_space", "")),
-		"terrain_texture_uv_within_0_1": bool(terrain_sampling_summary.get("texture_uv_within_0_1", false)),
-		"terrain_texture_source_within_texture": bool(terrain_sampling_summary.get("texture_source_within_texture", false)),
-		"terrain_texture_source_sample_count": int(terrain_sampling_summary.get("texture_source_sample_count", 0)),
+		"battlefield_family": battlefield_family(terrain_id),
+		"battlefield_path": battlefield_art_path(terrain_id),
+		"battlefield_loaded": _battlefield_texture() != null,
+		"hex_grid_mode": SettingsService.battle_hex_grid_mode_id(),
 		"distance": int(_battle.get("distance", 1)),
 		"player_stack_count": _player_stacks.size(),
 		"enemy_stack_count": _enemy_stacks.size(),
@@ -1400,7 +1361,7 @@ func validation_hex_layout_summary() -> Dictionary:
 		"movement_range_pip_radius_factor": MOVE_RANGE_PIP_RADIUS_FACTOR,
 		"movement_range_pip_alpha": MOVE_RANGE_PIP_ALPHA,
 		"movement_range_complete_cell_outlines": false,
-		"movement_range_all_legal_cells_drawn": true,
+		"movement_range_all_legal_cells_drawn": _movement_range_shown(),
 		"movement_range_hover_only": false,
 		"movement_range_below_active_targets_and_stacks": true,
 		"movement_range_action_authority": "legal_destinations_for_active_stack",
@@ -1440,8 +1401,46 @@ func validation_hex_layout_summary() -> Dictionary:
 		"has_selected_target_cell": _stack_has_cell(selected_target_id, stack_cells),
 	}
 
-func validation_terrain_backdrop_summary() -> Dictionary:
-	return validation_terrain_rendering_summary()
+## What the board draws under the stacks: the battlefield painting and the part
+## of it that fills the window, the props, and the grid the Options ask for.
+func validation_battlefield_summary() -> Dictionary:
+	var terrain_id := _battle_terrain_id()
+	var texture := _battlefield_texture()
+	var board_rect := Rect2(Vector2.ZERO, size)
+	var layout := _current_hex_layout()
+	var props := []
+	for obstacle in BattleRulesScript.battle_obstacles(_battle):
+		var path := obstacle_art_path(terrain_id, obstacle)
+		var cell_centers := []
+		for cell in obstacle.get("cells", []):
+			if cell is Dictionary:
+				cell_centers.append(_hex_center(Vector2i(int(cell.get("q", 0)), int(cell.get("r", 0))), layout))
+		props.append({
+			"id": String(obstacle.get("id", "")),
+			"kind": String(obstacle.get("kind", "")),
+			"size": int(obstacle.get("size", 1)),
+			"path": path,
+			"loaded": _obstacle_texture(path) != null,
+			"texture_size": _obstacle_texture(path).get_size() if _obstacle_texture(path) != null else Vector2.ZERO,
+			"rect": _obstacle_art_rect(obstacle, layout),
+			"anchor": _obstacle_center(obstacle, layout),
+			"cell_centers": cell_centers,
+		})
+	return {
+		"terrain": terrain_id,
+		"family": battlefield_family(terrain_id),
+		"path": battlefield_art_path(terrain_id),
+		"loaded": texture != null,
+		"texture_size": texture.get_size() if texture != null else Vector2.ZERO,
+		"board_rect": board_rect,
+		"cover_region": _cover_region(texture.get_size(), board_rect.size) if texture != null else Rect2(),
+		"hex_width": float(layout.get("hex_width", 0.0)),
+		"props": props,
+		"hex_grid_mode": SettingsService.battle_hex_grid_mode_id(),
+		"hex_grid_cells": _hex_grid_cells().size(),
+		"movement_range_shown": _movement_range_shown(),
+		"ambient_profile": String(_terrain_ambient_profile().get("id", "")),
+	}
 
 func validation_terrain_ambient_summary() -> Dictionary:
 	var profile := _terrain_ambient_profile()
@@ -1469,7 +1468,7 @@ func validation_terrain_ambient_summary() -> Dictionary:
 		"model": TERRAIN_AMBIENT_MODEL,
 		"draw_order": TERRAIN_AMBIENT_DRAW_ORDER.duplicate(),
 		"terrain": _battle_terrain_id(),
-		"terrain_profile_key": _terrain_texture_id(_battle_terrain_id()),
+		"terrain_profile_key": battlefield_family(_battle_terrain_id()),
 		"profile_id": String(profile.get("id", "")),
 		"kind": String(profile.get("kind", "")),
 		"profile_count": int(profile.get("count", 0)),
@@ -1965,66 +1964,6 @@ func validation_camera_playback_summary() -> Dictionary:
 		"records": records,
 	}
 
-func validation_terrain_rendering_summary() -> Dictionary:
-	var terrain_id := _battle_terrain_id()
-	var texture_id := _terrain_texture_id(terrain_id)
-	var texture_path := _terrain_texture_path_for(texture_id)
-	var texture = _terrain_texture_for(terrain_id)
-	var sampling_summary := _terrain_texture_sampling_summary(texture)
-	var texture_size := Vector2.ZERO
-	var source_size := Vector2.ZERO
-	var field_rect := _current_field_rect()
-	if texture != null:
-		texture_size = texture.get_size()
-		source_size = _terrain_hex_texture_source_size(texture_size)
-	return {
-		"terrain": terrain_id,
-		"texture_id": texture_id,
-		"texture_path": texture_path,
-		"texture_loaded": texture != null,
-		"fallback": texture == null,
-		"mapped": terrain_id != texture_id,
-		"texture_width": texture_size.x,
-		"texture_height": texture_size.y,
-		"rendering_mode": _terrain_rendering_mode(texture != null),
-		"hex_snapped": true,
-		"single_board_backdrop": texture != null,
-		"hex_tile_count": _terrain_hex_tile_count(),
-		"texture_sample_mode": "cover_region" if texture != null else "",
-		"source_tile_width": source_size.x,
-		"source_tile_height": source_size.y,
-		"texture_modulate_alpha": TERRAIN_TEXTURE_MODULATE.a if texture != null else 0.0,
-		"texture_readability_wash_alpha": TERRAIN_TEXTURE_READABILITY_WASH.a if texture != null else 0.0,
-		"terrain_context_underlay_enabled": texture != null,
-		"terrain_context_model": TERRAIN_CONTEXT_MODEL if texture != null else "disabled_for_texture_fallback",
-		"terrain_context_rect": {"x": field_rect.position.x, "y": field_rect.position.y, "width": field_rect.size.x, "height": field_rect.size.y} if texture != null else {},
-		"terrain_context_covers_full_field": texture != null and field_rect.size.x > 0.0 and field_rect.size.y > 0.0,
-		"terrain_context_texture_modulate_alpha": TERRAIN_CONTEXT_TEXTURE_MODULATE.a if texture != null else 0.0,
-		"terrain_context_readability_wash_alpha": TERRAIN_CONTEXT_READABILITY_WASH.a if texture != null else 0.0,
-		"terrain_context_primary": texture != null and TERRAIN_CONTEXT_TEXTURE_MODULATE.a > TERRAIN_TEXTURE_MODULATE.a,
-		"terrain_hex_variation_subordinate": texture != null and TERRAIN_TEXTURE_MODULATE.a >= 0.18 and TERRAIN_TEXTURE_MODULATE.a <= 0.30,
-		"terrain_context_preserves_hex_authority": texture != null and int(sampling_summary.get("texture_source_sample_count", 0)) == _terrain_hex_tile_count(),
-		"texture_hex_inset": TERRAIN_HEX_TEXTURE_INSET if texture != null else TERRAIN_HEX_FALLBACK_INSET,
-		"texture_visible": _terrain_texture_visible(texture != null),
-		"grid_fill_mode": _terrain_grid_fill_mode(texture != null),
-		"grid_max_fill_alpha": _terrain_grid_max_fill_alpha(texture != null),
-		"grid_border_mode": _terrain_grid_border_mode(texture != null),
-		"grid_border_deduplicated": _terrain_grid_border_deduplicated(texture != null),
-		"grid_repaints_texture_cells": _terrain_grid_repaints_texture_cells(texture != null),
-		"texture_uv_space": String(sampling_summary.get("texture_uv_space", "")),
-		"texture_uv_min_x": float(sampling_summary.get("texture_uv_min_x", 0.0)),
-		"texture_uv_min_y": float(sampling_summary.get("texture_uv_min_y", 0.0)),
-		"texture_uv_max_x": float(sampling_summary.get("texture_uv_max_x", 0.0)),
-		"texture_uv_max_y": float(sampling_summary.get("texture_uv_max_y", 0.0)),
-		"texture_uv_within_0_1": bool(sampling_summary.get("texture_uv_within_0_1", false)),
-		"texture_source_min_x": float(sampling_summary.get("texture_source_min_x", 0.0)),
-		"texture_source_min_y": float(sampling_summary.get("texture_source_min_y", 0.0)),
-		"texture_source_max_x": float(sampling_summary.get("texture_source_max_x", 0.0)),
-		"texture_source_max_y": float(sampling_summary.get("texture_source_max_y", 0.0)),
-		"texture_source_within_texture": bool(sampling_summary.get("texture_source_within_texture", false)),
-		"texture_source_sample_count": int(sampling_summary.get("texture_source_sample_count", 0)),
-	}
-
 func validation_preview_hex_destination(q: int, r: int) -> Dictionary:
 	var cell := Vector2i(q, r)
 	if _is_legal_destination_cell(cell):
@@ -2340,10 +2279,10 @@ func _draw_board() -> void:
 	var hex_field_rect := _hex_field_rect(field_rect)
 	var hex_layout := _hex_layout(hex_field_rect)
 	hex_layout = _camera_adjusted_hex_layout(hex_layout)
-	var terrain_texture_loaded := _draw_terrain(field_rect, hex_layout)
+	_draw_terrain(hex_layout)
 	_draw_terrain_ambient(field_rect)
 	_draw_hero_figures(hex_layout)
-	_draw_hex_grid(hex_layout, terrain_texture_loaded)
+	_draw_hex_grid(hex_layout)
 	_draw_field_objectives(hex_layout)
 	var stack_cells := _stack_cells()
 	_draw_tactical_affordances(hex_layout, stack_cells)
@@ -2366,17 +2305,16 @@ func _draw_board() -> void:
 
 ## The painted battlefield fills the window behind the field, darkened
 ## towards the edges. Without a painting the hexes get their terrain colours.
-func _draw_terrain(_field_rect: Rect2, hex_layout: Dictionary) -> bool:
+func _draw_terrain(hex_layout: Dictionary) -> void:
 	var terrain := _battle_terrain_id()
 	var board_rect := Rect2(Vector2.ZERO, size)
 	draw_rect(board_rect, _terrain_color_for(terrain), true)
-	var terrain_texture = _terrain_texture_for(terrain)
-	if terrain_texture != null:
-		draw_texture_rect_region(terrain_texture, board_rect, _cover_region(terrain_texture.get_size(), board_rect.size))
+	var battlefield := _battlefield_texture()
+	if battlefield != null:
+		draw_texture_rect_region(battlefield, board_rect, _cover_region(battlefield.get_size(), board_rect.size))
 	else:
 		_draw_hex_snapped_procedural_terrain(hex_layout, terrain)
 	draw_texture_rect(_vignette(), board_rect, false, BATTLEFIELD_VIGNETTE_COLOR)
-	return terrain_texture != null
 
 ## The part of a texture that covers target_size without stretching it.
 func _cover_region(texture_size: Vector2, target_size: Vector2) -> Rect2:
@@ -2415,7 +2353,7 @@ func _soft_glow() -> Texture2D:
 	return _soft_glow_texture
 
 func _terrain_ambient_profile() -> Dictionary:
-	var profile_value: Variant = TERRAIN_AMBIENT_PROFILES.get(_terrain_texture_id(_battle_terrain_id()), {})
+	var profile_value: Variant = TERRAIN_AMBIENT_PROFILES.get(battlefield_family(_battle_terrain_id()), {})
 	return profile_value if profile_value is Dictionary else {}
 
 func _terrain_ambient_available() -> bool:
@@ -2528,41 +2466,30 @@ func _draw_hex_procedural_detail(center: Vector2, radius: float, terrain: String
 			if detail_roll > 0.48:
 				draw_line(center + Vector2(-radius * 0.26, radius * 0.22), center + Vector2(radius * 0.18, radius * 0.02), Color(0.16, 0.23, 0.12, 0.24), 1.6, true)
 
-func _load_terrain_texture(terrain_id: String) -> void:
-	if _terrain_textures.has(terrain_id) or _terrain_texture_missing.has(terrain_id):
-		return
-	var texture_path := _terrain_texture_path_for(terrain_id)
-	if texture_path == "":
-		_terrain_texture_missing[terrain_id] = texture_path
-		return
-	if ResourceLoader.exists(texture_path):
-		var resource = load(texture_path)
+## This battle's painting, loaded once; null when it is missing.
+func _battlefield_texture() -> Texture2D:
+	var path := battlefield_art_path(_battle_terrain_id())
+	if _battlefield_textures.has(path):
+		return _battlefield_textures[path]
+	var texture: Texture2D = null
+	if ResourceLoader.exists(path):
+		var resource = load(path)
 		if resource is Texture2D:
-			_terrain_textures[terrain_id] = resource
-			return
-	if FileAccess.file_exists(texture_path):
+			texture = resource
+	elif FileAccess.file_exists(path):
 		var image := Image.new()
-		var load_result := image.load(texture_path)
-		if load_result == OK:
-			_terrain_textures[terrain_id] = ImageTexture.create_from_image(image)
-			return
-	_terrain_texture_missing[terrain_id] = texture_path
+		if image.load(path) == OK:
+			texture = ImageTexture.create_from_image(image)
+	_battlefield_textures[path] = texture
+	return texture
 
-func _terrain_texture_for(terrain_id: String):
-	var texture_id := _terrain_texture_id(terrain_id)
-	if texture_id == "":
-		return null
-	_load_terrain_texture(texture_id)
-	return _terrain_textures.get(texture_id, null)
-
-func _terrain_texture_id(terrain_id: String) -> String:
+## The painted battlefield (and prop set) a battle terrain is fought on.
+static func battlefield_family(terrain_id: String) -> String:
 	var normalized := terrain_id.strip_edges().to_lower()
-	if normalized == "":
-		normalized = "plains"
-	return String(TERRAIN_TEXTURE_ALIASES.get(normalized, normalized))
+	return String(BATTLEFIELD_FAMILIES.get(normalized if normalized != "" else "plains", "grass"))
 
-func _terrain_texture_path_for(texture_id: String) -> String:
-	return String(TERRAIN_TEXTURE_PATHS.get(texture_id, ""))
+static func battlefield_art_path(terrain_id: String) -> String:
+	return "%s/%s.png" % [BATTLEFIELD_ART_ROOT, battlefield_family(terrain_id)]
 
 ## Every texture the board loads for this battle's terrain and stacks, so the
 ## entry can load them in the background before the first board draw.
@@ -2570,12 +2497,8 @@ static func art_texture_paths_for_battle(battle: Dictionary) -> PackedStringArra
 	var paths := PackedStringArray()
 	if battle.is_empty():
 		return paths
-	var terrain_id := String(battle.get("terrain", "plains")).strip_edges().to_lower()
-	if terrain_id == "":
-		terrain_id = "plains"
-	var terrain_path := String(TERRAIN_TEXTURE_PATHS.get(String(TERRAIN_TEXTURE_ALIASES.get(terrain_id, terrain_id)), ""))
-	if terrain_path != "":
-		paths.append(terrain_path)
+	var terrain_id := String(battle.get("terrain", "plains"))
+	paths.append(battlefield_art_path(terrain_id))
 	for obstacle in BattleRulesScript.battle_obstacles(battle):
 		var obstacle_path := obstacle_art_path(terrain_id, obstacle)
 		if obstacle_path != "" and not paths.has(obstacle_path):
@@ -3000,19 +2923,38 @@ func _battle_terrain_id() -> String:
 	return terrain_id if terrain_id != "" else "plains"
 
 func _terrain_color_for(terrain_id: String) -> Color:
-	if TERRAIN_COLORS.has(terrain_id):
-		return TERRAIN_COLORS[terrain_id]
-	var texture_id := _terrain_texture_id(terrain_id)
-	return TERRAIN_COLORS.get(texture_id, TERRAIN_COLORS["plains"])
+	return TERRAIN_COLORS.get(battlefield_family(terrain_id), TERRAIN_COLORS["grass"])
 
-## Thin lines over the painted field, with a faint shadow under them.
-func _draw_hex_grid(hex_layout: Dictionary, _terrain_texture_loaded: bool) -> void:
+## Thin lines over the painted field, with a faint shadow under them, around
+## the hexes the Options' hex grid asks for.
+func _draw_hex_grid(hex_layout: Dictionary) -> void:
+	var cells := _hex_grid_cells()
+	if cells.is_empty():
+		return
 	var k := float(hex_layout.get("radius", 1.0)) / REFERENCE_HEX_RADIUS
 	var line := Color(0.98, 0.89, 0.62, 0.5) if FrontierVisualKitScript.high_contrast_enabled() else BATTLEFIELD_GRID_LINE
 	draw_set_transform(Vector2(0.0, 1.3 * k), 0.0, Vector2.ONE)
-	_draw_unique_hex_grid_lines(hex_layout, BATTLEFIELD_GRID_SHADOW, maxf(1.0, 2.2 * k), 1.0)
+	_draw_unique_hex_grid_lines(hex_layout, cells, BATTLEFIELD_GRID_SHADOW, maxf(1.0, 2.2 * k), 1.0)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-	_draw_unique_hex_grid_lines(hex_layout, line, maxf(1.0, 1.3 * k), 1.0)
+	_draw_unique_hex_grid_lines(hex_layout, cells, line, maxf(1.0, 1.3 * k), 1.0)
+
+## Full: every hex. Range only: the hexes the player's stack can move to, while
+## it acts. Off: none.
+func _hex_grid_cells() -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
+	match SettingsService.battle_hex_grid_mode_id():
+		SettingsService.BATTLE_HEX_GRID_FULL:
+			for row in range(HEX_ROWS):
+				for column in range(HEX_COLUMNS):
+					cells.append(Vector2i(column, row))
+		SettingsService.BATTLE_HEX_GRID_RANGE:
+			if not _spell_target_mode and String(_active_stack.get("side", "")) == "player":
+				cells.assign(_movement_range_region().get("cells", []))
+	return cells
+
+## The player's stack shows where it can move unless the hex grid is off.
+func _movement_range_shown() -> bool:
+	return SettingsService.battle_hex_grid_mode_id() != SettingsService.BATTLE_HEX_GRID_OFF
 
 func _draw_field_objectives(hex_layout: Dictionary) -> void:
 	var marker_count: int = mini(_field_objectives.size(), 5)
@@ -3053,7 +2995,7 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 	var radius := float(hex_layout.get("radius", 1.0))
 	var player_input_active := String(_active_stack.get("side", "")) == "player"
 
-	if player_input_active:
+	if player_input_active and _movement_range_shown():
 		var legal_destinations: Array = _legal_destinations()
 		var movement_range_region := _movement_range_region()
 		var legal_cell_keys: Dictionary = movement_range_region.get("cell_keys", {})
@@ -3196,15 +3138,15 @@ func _draw_controller_cursor(hex_layout: Dictionary) -> void:
 	_draw_hex_outline(center, radius * 1.13, color, 3.6)
 	draw_circle(center, clampf(radius * 0.09, 2.5, 4.5), color)
 
+## The battlefield's prop for an obstacle: its kind and size, and one of that
+## set picked by its variant.
 static func obstacle_art_path(terrain_id: String, obstacle: Dictionary) -> String:
-	var normalized := terrain_id.strip_edges().to_lower()
-	var texture_id := String(TERRAIN_TEXTURE_ALIASES.get(normalized if normalized != "" else "plains", normalized))
-	var biome := String(OBSTACLE_ART_BIOMES.get(texture_id, "grasslands"))
 	var kind := String(obstacle.get("kind", "rock"))
 	if kind not in BattleRulesScript.OBSTACLE_KINDS:
 		kind = BattleRulesScript.OBSTACLE_KINDS[0]
-	var sheet := ("cluster_" if int(obstacle.get("size", 1)) >= 2 else "") + kind
-	return "%s/%s/%s_%02d.png" % [OBSTACLE_ART_ROOT, biome, sheet, clampi(int(obstacle.get("variant", 0)), 0, BattleRulesScript.OBSTACLE_VARIANT_COUNT - 1)]
+	var size := 2 if int(obstacle.get("size", 1)) >= 2 else 1
+	var variant := clampi(int(obstacle.get("variant", 0)), 0, BattleRulesScript.OBSTACLE_VARIANT_COUNT - 1)
+	return "%s/%s/%s_%d_%d.png" % [OBSTACLE_ART_ROOT, battlefield_family(terrain_id), kind, size, variant % int(OBSTACLE_ART_VARIANTS[size])]
 
 func _obstacle_texture(path: String) -> Texture2D:
 	if _obstacle_textures.has(path):
@@ -3232,25 +3174,23 @@ func _obstacle_center(obstacle: Dictionary, hex_layout: Dictionary) -> Vector2:
 			count += 1
 	return total / float(count) if count > 0 else Vector2.ZERO
 
+## The prop's canvas, scaled to the hexes, with its anchor on the obstacle's
+## centre.
 func _obstacle_art_rect(obstacle: Dictionary, hex_layout: Dictionary) -> Rect2:
-	var radius := float(hex_layout.get("radius", 1.0))
-	var hex_width := float(hex_layout.get("hex_width", SQRT_3 * radius))
-	var cell_count := maxi(1, obstacle.get("cells", []).size())
-	var width := hex_width * OBSTACLE_ART_WIDTH_PER_CELL * float(cell_count) * (OBSTACLE_ART_SINGLE_SCALE if cell_count == 1 else 1.0)
-	var center := _obstacle_center(obstacle, hex_layout)
-	var base_y := center.y + radius * OBSTACLE_ART_BASE_OFFSET
-	return Rect2(Vector2(center.x - width * 0.5, base_y - width * OBSTACLE_ART_CONTENT_BOTTOM), Vector2(width, width))
+	var hex_width := float(hex_layout.get("hex_width", SQRT_3 * float(hex_layout.get("radius", 1.0))))
+	var scale := hex_width / OBSTACLE_ART_PIXELS_PER_HEX
+	var canvas: Vector2 = OBSTACLE_ART_CANVAS[2 if obstacle.get("cells", []).size() >= 2 else 1] * scale
+	var anchor := _obstacle_center(obstacle, hex_layout)
+	return Rect2(anchor - Vector2(canvas.x * 0.5, OBSTACLE_ART_ANCHOR_Y * scale), canvas)
 
 func _draw_battle_obstacle(obstacle: Dictionary, hex_layout: Dictionary) -> void:
 	var radius := float(hex_layout.get("radius", 1.0))
 	var hex_width := float(hex_layout.get("hex_width", SQRT_3 * radius))
-	for cell in obstacle.get("cells", []):
-		if not (cell is Dictionary):
-			continue
-		var base := _hex_center(Vector2i(int(cell.get("q", 0)), int(cell.get("r", 0))), hex_layout) + Vector2(0.0, radius * (OBSTACLE_ART_BASE_OFFSET - 0.1))
-		draw_set_transform(base, 0.0, Vector2(1.0, 0.36))
-		draw_circle(Vector2.ZERO, hex_width * 0.44, OBSTACLE_SHADOW_COLOR)
-		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	# A soft shadow under the prop's ground, cast down and right from the light.
+	var cell_count := maxi(1, obstacle.get("cells", []).size())
+	var shadow_size := Vector2(hex_width * (float(cell_count) + 0.15), hex_width * 0.46)
+	var shadow_center := _obstacle_center(obstacle, hex_layout) + Vector2(hex_width * 0.05, hex_width * 0.08)
+	draw_texture_rect(_soft_glow(), Rect2(shadow_center - shadow_size * 0.5, shadow_size), false, OBSTACLE_SHADOW_COLOR)
 	var texture := _obstacle_texture(obstacle_art_path(_battle_terrain_id(), obstacle))
 	if texture != null:
 		draw_texture_rect(texture, _obstacle_art_rect(obstacle, hex_layout), false)
@@ -5322,21 +5262,20 @@ func _draw_hex(center: Vector2, radius: float, fill: Color, stroke: Color, width
 func _draw_hex_outline(center: Vector2, radius: float, stroke: Color, width: float) -> void:
 	draw_polyline(_closed_points(_hex_points(center, radius)), stroke, width, true)
 
-func _draw_unique_hex_grid_lines(hex_layout: Dictionary, stroke: Color, width: float, radius_scale: float) -> void:
+## Each edge of the cells once, so shared edges are not drawn twice as dark.
+func _draw_unique_hex_grid_lines(hex_layout: Dictionary, cells: Array[Vector2i], stroke: Color, width: float, radius_scale: float) -> void:
 	var radius := float(hex_layout.get("radius", 1.0)) * radius_scale
 	var drawn_edges := {}
-	for row in range(HEX_ROWS):
-		for column in range(HEX_COLUMNS):
-			var cell := Vector2i(column, row)
-			var points := _hex_points(_hex_center(cell, hex_layout), radius)
-			for index in range(points.size()):
-				var start := points[index]
-				var end := points[(index + 1) % points.size()]
-				var edge_key := _edge_key(start, end)
-				if drawn_edges.has(edge_key):
-					continue
-				drawn_edges[edge_key] = true
-				draw_line(start, end, stroke, width, true)
+	for cell in cells:
+		var points := _hex_points(_hex_center(cell, hex_layout), radius)
+		for index in range(points.size()):
+			var start := points[index]
+			var end := points[(index + 1) % points.size()]
+			var edge_key := _edge_key(start, end)
+			if drawn_edges.has(edge_key):
+				continue
+			drawn_edges[edge_key] = true
+			draw_line(start, end, stroke, width, true)
 
 func _hex_points(center: Vector2, radius: float) -> PackedVector2Array:
 	var points := PackedVector2Array()
@@ -5379,97 +5318,9 @@ func _edge_key(start: Vector2, end: Vector2) -> String:
 func _point_grid_key(point: Vector2) -> Vector2i:
 	return Vector2i(roundi(point.x * 10.0), roundi(point.y * 10.0))
 
-func _terrain_hex_texture_source_size(texture_size: Vector2) -> Vector2:
-	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
-		return Vector2.ZERO
-	var source_height: float = clampf(texture_size.y * 0.24, 48.0, texture_size.y)
-	var source_width: float = clampf(source_height * 0.92, 48.0, texture_size.x)
-	return Vector2(source_width, source_height)
-
-func _terrain_hex_texture_source_position(cell: Vector2i, texture_size: Vector2, source_size: Vector2) -> Vector2:
-	var usable := Vector2(maxf(0.0, texture_size.x - source_size.x), maxf(0.0, texture_size.y - source_size.y))
-	return Vector2(
-		floor(usable.x * _hex_variation(cell, 3.0)),
-		floor(usable.y * _hex_variation(cell, 17.0))
-	)
-
-func _terrain_texture_normalized_uv(source_point: Vector2, texture_size: Vector2) -> Vector2:
-	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
-		return Vector2.ZERO
-	return Vector2(
-		clampf(source_point.x / texture_size.x, 0.0, 1.0),
-		clampf(source_point.y / texture_size.y, 0.0, 1.0)
-	)
-
-func _terrain_texture_sampling_summary(texture) -> Dictionary:
-	var empty_summary := {
-		"texture_uv_space": "",
-		"texture_uv_min_x": 0.0,
-		"texture_uv_min_y": 0.0,
-		"texture_uv_max_x": 0.0,
-		"texture_uv_max_y": 0.0,
-		"texture_uv_within_0_1": false,
-		"texture_source_min_x": 0.0,
-		"texture_source_min_y": 0.0,
-		"texture_source_max_x": 0.0,
-		"texture_source_max_y": 0.0,
-		"texture_source_within_texture": false,
-		"texture_source_sample_count": 0,
-	}
-	if texture == null:
-		return empty_summary
-	var texture_size: Vector2 = texture.get_size()
-	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
-		return empty_summary
-	var source_size := _terrain_hex_texture_source_size(texture_size)
-	if source_size.x <= 0.0 or source_size.y <= 0.0:
-		return empty_summary
-	var min_source := texture_size
-	var max_source := Vector2.ZERO
-	var min_uv := Vector2(1.0, 1.0)
-	var max_uv := Vector2.ZERO
-	var sample_count := 0
-	for row in range(HEX_ROWS):
-		for column in range(HEX_COLUMNS):
-			var cell := Vector2i(column, row)
-			var source_rect := Rect2(_terrain_hex_texture_source_position(cell, texture_size, source_size), source_size)
-			var source_min := source_rect.position
-			var source_max := source_rect.position + source_rect.size
-			var uv_min := _terrain_texture_normalized_uv(source_min, texture_size)
-			var uv_max := _terrain_texture_normalized_uv(source_max, texture_size)
-			min_source.x = minf(min_source.x, source_min.x)
-			min_source.y = minf(min_source.y, source_min.y)
-			max_source.x = maxf(max_source.x, source_max.x)
-			max_source.y = maxf(max_source.y, source_max.y)
-			min_uv.x = minf(min_uv.x, uv_min.x)
-			min_uv.y = minf(min_uv.y, uv_min.y)
-			max_uv.x = maxf(max_uv.x, uv_max.x)
-			max_uv.y = maxf(max_uv.y, uv_max.y)
-			sample_count += 1
-	return {
-		"texture_uv_space": "normalized_0_1",
-		"texture_uv_min_x": min_uv.x,
-		"texture_uv_min_y": min_uv.y,
-		"texture_uv_max_x": max_uv.x,
-		"texture_uv_max_y": max_uv.y,
-		"texture_uv_within_0_1": min_uv.x >= 0.0 and min_uv.y >= 0.0 and max_uv.x <= 1.0 and max_uv.y <= 1.0,
-		"texture_source_min_x": min_source.x,
-		"texture_source_min_y": min_source.y,
-		"texture_source_max_x": max_source.x,
-		"texture_source_max_y": max_source.y,
-		"texture_source_within_texture": min_source.x >= 0.0 and min_source.y >= 0.0 and max_source.x <= texture_size.x and max_source.y <= texture_size.y,
-		"texture_source_sample_count": sample_count,
-	}
-
 func _hex_variation(cell: Vector2i, salt: float) -> float:
 	var value := sin(float(cell.x) * 12.9898 + float(cell.y) * 78.233 + salt) * 43758.5453
 	return value - floor(value)
-
-func _terrain_hex_tile_count() -> int:
-	return HEX_COLUMNS * HEX_ROWS
-
-func _terrain_rendering_mode(texture_loaded: bool) -> String:
-	return "painted_battlefield_cover" if texture_loaded else "hex_snapped_color_fallback"
 
 func _hex_field_rect(field_rect: Rect2) -> Rect2:
 	return field_rect
@@ -5506,56 +5357,6 @@ func _hex_center(cell: Vector2i, layout: Dictionary) -> Vector2:
 		radius * HEX_VERTICAL_SCALE * (1.5 * float(cell.y) + 1.0)
 	)
 
-func _cell_fill_color(column: int, player_front: int, enemy_front: int, terrain_texture_loaded: bool = false) -> Color:
-	if terrain_texture_loaded:
-		if column < player_front:
-			return Color(0.13, 0.25, 0.31, TEXTURED_DEPLOYMENT_FILL_ALPHA)
-		if column > enemy_front:
-			return Color(0.34, 0.13, 0.12, TEXTURED_DEPLOYMENT_FILL_ALPHA)
-		if column == int(HEX_COLUMNS / 2):
-			return Color(0.50, 0.38, 0.18, TEXTURED_CENTER_FILL_ALPHA)
-		return Color(0.09, 0.12, 0.10, 0.0)
-	if column < player_front:
-		return Color(0.13, 0.25, 0.31, 0.22)
-	if column > enemy_front:
-		return Color(0.34, 0.13, 0.12, 0.22)
-	if column == int(HEX_COLUMNS / 2):
-		return Color(0.50, 0.38, 0.18, 0.18)
-	return Color(0.09, 0.12, 0.10, 0.12)
-
-func _terrain_texture_visible(texture_loaded: bool) -> bool:
-	return texture_loaded \
-		and not _terrain_grid_repaints_texture_cells(texture_loaded) \
-		and TERRAIN_CONTEXT_TEXTURE_MODULATE.a >= 0.88 \
-		and TERRAIN_TEXTURE_MODULATE.a >= 0.18 \
-		and TERRAIN_TEXTURE_MODULATE.a <= 0.30 \
-		and TERRAIN_CONTEXT_TEXTURE_MODULATE.a > TERRAIN_TEXTURE_MODULATE.a \
-		and TERRAIN_TEXTURE_READABILITY_WASH.a <= 0.08 \
-		and TERRAIN_HEX_TEXTURE_INSET >= 0.995
-
-func _terrain_grid_fill_mode(texture_loaded: bool) -> String:
-	return "texture_transparent_tactical_tint" if texture_loaded else "fallback_readability_fill"
-
-func _terrain_grid_border_mode(texture_loaded: bool) -> String:
-	return "deduplicated_texture_grid" if texture_loaded else "per_cell_fallback_grid"
-
-func _terrain_grid_border_deduplicated(texture_loaded: bool) -> bool:
-	return texture_loaded
-
-func _terrain_grid_repaints_texture_cells(texture_loaded: bool) -> bool:
-	return texture_loaded and _terrain_grid_max_fill_alpha(texture_loaded) > TEXTURED_GRID_MAX_CELL_FILL_ALPHA
-
-func _terrain_grid_max_fill_alpha(texture_loaded: bool) -> float:
-	var player_front := _deployment_zone_front("player")
-	var enemy_front := _deployment_zone_front("enemy")
-	var max_alpha := 0.0
-	for column in range(HEX_COLUMNS):
-		var fill := _cell_fill_color(column, player_front, enemy_front, texture_loaded)
-		max_alpha = maxf(max_alpha, fill.a)
-		if column >= player_front and column <= enemy_front:
-			max_alpha = maxf(max_alpha, TEXTURED_MID_LANE_FILL_ALPHA if texture_loaded else 0.035)
-	return max_alpha
-
 func _stack_cells() -> Dictionary:
 	var cells := {}
 	_assign_stack_cells(cells, _visible_stack_list(_player_stacks), "player")
@@ -5573,12 +5374,6 @@ func _assign_stack_cells(cells: Dictionary, stacks: Array, side: String) -> void
 			var deployment := BattleRulesScript.default_deployment_hex(side, index, stacks.size(), stack)
 			hex = Vector2i(int(deployment.get("q", 0)), int(deployment.get("r", 0)))
 		cells[String(stack.get("battle_id", ""))] = hex
-
-## The first column past an army's deployment edge; the columns behind it are
-## tinted as that army's ground.
-func _deployment_zone_front(side: String) -> int:
-	var clear := BattleRulesScript.OBSTACLE_EDGE_CLEAR_COLUMNS
-	return clear if side == "player" else HEX_COLUMNS - 1 - clear
 
 func _objective_cell(index: int, objective_type: String) -> Vector2i:
 	var cell := _objective_anchor_cell(index, objective_type)

@@ -363,6 +363,7 @@ func _support_settings_snapshot(value: Dictionary) -> Dictionary:
 		},
 		"gameplay": {
 			"battle_playback_speed": _bounded_text(String(gameplay.get("battle_playback_speed", "")), 32),
+			"battle_hex_grid": _bounded_text(String(gameplay.get("battle_hex_grid", "")), 32),
 			"keyboard_navigation_layout": _bounded_text(String(gameplay.get("keyboard_navigation_layout", "")), 32),
 			"custom_hero_movement_bindings": not (gameplay.get("hero_movement_bindings", {}) as Dictionary).is_empty() if gameplay.get("hero_movement_bindings", {}) is Dictionary else false,
 		},

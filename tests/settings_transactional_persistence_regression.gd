@@ -294,7 +294,7 @@ func _validate_success_reload(fixture: Dictionary) -> bool:
 	if not _expect(_artifacts_absent(), "Successful settings commits left transaction residue"):
 		return false
 	var config := ConfigFile.new()
-	if not _expect(config.load(SettingsService.SETTINGS_FILE) == OK and int(config.get_value("meta", "version", 0)) == 14, "Successful settings commit did not persist version 14"):
+	if not _expect(config.load(SettingsService.SETTINGS_FILE) == OK and int(config.get_value("meta", "version", 0)) == 15, "Successful settings commit did not persist version 15"):
 		return false
 	SettingsService.settings = {}
 	SettingsService.load_settings()

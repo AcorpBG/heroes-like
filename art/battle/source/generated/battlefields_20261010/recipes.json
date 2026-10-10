@@ -1,0 +1,3098 @@
+{
+  "schema": "battle_battlefield_art_recipes_v1",
+  "production": "res://art/battle/source/generated/battlefields_20261010/production.json",
+  "battlefield_size": [
+    1920,
+    1080
+  ],
+  "obstacle_canvas": {
+    "1": [
+      288,
+      352
+    ],
+    "2": [
+      512,
+      352
+    ]
+  },
+  "obstacle_anchor_y": 256,
+  "obstacle_pixels_per_hex": 216.0,
+  "battlefields": [
+    {
+      "family": "grass",
+      "terrains": [
+        "grass",
+        "plains"
+      ],
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_grass.png",
+      "crop": [
+        24,
+        0,
+        1672,
+        927
+      ],
+      "runtime_path": "res://art/battle/runtime/battlefields/grass.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "38d6296ed301658ae747624aa93ac02c2631691ed429b93e2e9795872a5bd80d"
+    },
+    {
+      "family": "forest",
+      "terrains": [
+        "forest"
+      ],
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_forest.png",
+      "crop": [
+        0,
+        0,
+        1672,
+        940
+      ],
+      "runtime_path": "res://art/battle/runtime/battlefields/forest.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "4160150d7d615fd14a22c989939c13df7b35d926272176476ff5735b12106b05"
+    },
+    {
+      "family": "swamp",
+      "terrains": [
+        "swamp",
+        "marsh"
+      ],
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_swamp.png",
+      "crop": [
+        0,
+        0,
+        1672,
+        940
+      ],
+      "runtime_path": "res://art/battle/runtime/battlefields/swamp.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "6310f8c09eedb93975c9ea450d748452db1a62ae5294e7d7a7b9e6ae0c1e1e58"
+    },
+    {
+      "family": "mire",
+      "terrains": [
+        "mire"
+      ],
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_mire.png",
+      "crop": [
+        0,
+        0,
+        1672,
+        940
+      ],
+      "runtime_path": "res://art/battle/runtime/battlefields/mire.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "bc913907bdc8214f71094d0f46940f3dcd0ef665672db2ef50c36cf44136452e"
+    },
+    {
+      "family": "rough",
+      "terrains": [
+        "rough",
+        "hills",
+        "highland",
+        "badlands"
+      ],
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_rough.png",
+      "crop": [
+        0,
+        0,
+        1672,
+        940
+      ],
+      "runtime_path": "res://art/battle/runtime/battlefields/rough.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "fb4f8e20b8c5e55c54fb42ef4ee899dbf0292baa360f628d50e4899f939653ef"
+    },
+    {
+      "family": "road",
+      "terrains": [
+        "road"
+      ],
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_road.png",
+      "crop": [
+        26,
+        0,
+        1672,
+        926
+      ],
+      "runtime_path": "res://art/battle/runtime/battlefields/road.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "82a53c7e1d4082fb6689d75ba08429efc1531d8e18b7b0f8b51a4c504d279c51"
+    },
+    {
+      "family": "snow",
+      "terrains": [
+        "snow"
+      ],
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_snow.png",
+      "crop": [
+        0,
+        0,
+        1672,
+        940
+      ],
+      "runtime_path": "res://art/battle/runtime/battlefields/snow.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "7efb25904662925525d6fc38ec576459913ebb88b9869c4e38540e3f3a92c000"
+    },
+    {
+      "family": "coast",
+      "terrains": [
+        "coast"
+      ],
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_coast.png",
+      "crop": [
+        0,
+        0,
+        1672,
+        940
+      ],
+      "runtime_path": "res://art/battle/runtime/battlefields/coast.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "124e7ab0edbba3d0deb23891b7c929962a4d41b04b59cbea4bed0e881aea74b8"
+    },
+    {
+      "family": "sand",
+      "terrains": [
+        "sand"
+      ],
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_sand.png",
+      "crop": [
+        24,
+        0,
+        1672,
+        927
+      ],
+      "runtime_path": "res://art/battle/runtime/battlefields/sand.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "5054c74b5a69fa01c2796360edaf3bdee544bce48f22e548213ff438b21f6d47"
+    },
+    {
+      "family": "lava",
+      "terrains": [
+        "lava"
+      ],
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_lava.png",
+      "crop": [
+        0,
+        0,
+        1672,
+        940
+      ],
+      "runtime_path": "res://art/battle/runtime/battlefields/lava.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "6e4e6dc53256096b21b12ff581f2dc72d35189680aa101de9b6a3f4c483ea393"
+    },
+    {
+      "family": "underground",
+      "terrains": [
+        "underground"
+      ],
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_underground.png",
+      "crop": [
+        26,
+        0,
+        1672,
+        926
+      ],
+      "runtime_path": "res://art/battle/runtime/battlefields/underground.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "732584be84cb7d6dd2d16feaf18b1ca07249485a0201a48f26ed44e5b8f3152e"
+    }
+  ],
+  "obstacles": [
+    {
+      "family": "grass",
+      "kind": "rock",
+      "size": 1,
+      "index": 0,
+      "name": "a rounded grey granite boulder with patches of moss and lichen",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_grass_rock.png",
+      "source_box": [
+        61,
+        125,
+        546,
+        474
+      ],
+      "tuft_center": [
+        316.5,
+        341.5
+      ],
+      "tuft_width": 451,
+      "scale": 0.4885,
+      "runtime_path": "res://art/battle/runtime/obstacles/grass/rock_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "d17ae92df8aef67b9d58e436f3b23471d0d20f64fc789f3ffa8081989d71d256"
+    },
+    {
+      "family": "grass",
+      "kind": "rock",
+      "size": 1,
+      "index": 1,
+      "name": "a cluster of three weathered grey stones with grass tufts between them",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_grass_rock.png",
+      "source_box": [
+        613,
+        131,
+        1107,
+        472
+      ],
+      "tuft_center": [
+        862.5,
+        343.0
+      ],
+      "tuft_width": 490,
+      "scale": 0.4496,
+      "runtime_path": "res://art/battle/runtime/obstacles/grass/rock_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "a7bec01d9eea3471fd493a62b5b26c74cd89e332410d9484de3188ec1c12c6d8"
+    },
+    {
+      "family": "grass",
+      "kind": "rock",
+      "size": 1,
+      "index": 2,
+      "name": "a single weathered standing stone, taller than it is wide",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_grass_rock.png",
+      "source_box": [
+        1208,
+        78,
+        1643,
+        490
+      ],
+      "tuft_center": [
+        1434.0,
+        332.0
+      ],
+      "tuft_width": 425,
+      "scale": 0.5184,
+      "runtime_path": "res://art/battle/runtime/obstacles/grass/rock_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "96c1fd0ff71ed789cad9004ffd9c8eb0ed6bb83fad999a1132bec6a0bc0c7de9"
+    },
+    {
+      "family": "grass",
+      "kind": "rock",
+      "size": 2,
+      "index": 0,
+      "name": "a low, long ridge of lichen-covered grey rocks",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_grass_rock.png",
+      "source_box": [
+        31,
+        549,
+        919,
+        874
+      ],
+      "tuft_center": [
+        471.5,
+        739.0
+      ],
+      "tuft_width": 886,
+      "scale": 0.4973,
+      "runtime_path": "res://art/battle/runtime/obstacles/grass/rock_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "f5572f185e5cfc172b9b40978060d38188e28fedc200710f93a237572dabcc05"
+    },
+    {
+      "family": "grass",
+      "kind": "rock",
+      "size": 2,
+      "index": 1,
+      "name": "two large mossy boulders side by side with grass between them",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_grass_rock.png",
+      "source_box": [
+        923,
+        511,
+        1667,
+        880
+      ],
+      "tuft_center": [
+        1297.0,
+        752.0
+      ],
+      "tuft_width": 726,
+      "scale": 0.6069,
+      "runtime_path": "res://art/battle/runtime/obstacles/grass/rock_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "32018437cb25b38be8f890f48cf1ff622a2da84c9992d30ad4cd102fa17611d8"
+    },
+    {
+      "family": "grass",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 0,
+      "name": "a broken oak stump with spreading roots",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_grass_deadwood.png",
+      "source_box": [
+        69,
+        113,
+        552,
+        557
+      ],
+      "tuft_center": [
+        300.5,
+        438.0
+      ],
+      "tuft_width": 473,
+      "scale": 0.4658,
+      "runtime_path": "res://art/battle/runtime/obstacles/grass/deadwood_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "65732466786d920fb3eacb36dc154cfe8913b23829ac48f2c96f719c1d0897cd"
+    },
+    {
+      "family": "grass",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 1,
+      "name": "a small dead tree with bare, twisted branches",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_grass_deadwood.png",
+      "source_box": [
+        615,
+        15,
+        1063,
+        541
+      ],
+      "tuft_center": [
+        831.2,
+        425.5
+      ],
+      "tuft_width": 434,
+      "scale": 0.5076,
+      "runtime_path": "res://art/battle/runtime/obstacles/grass/deadwood_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "e95e51f7c9816e3f6bd413eed5d4522226b9d3ca67fc3e7be15d91d1ba48dd0f"
+    },
+    {
+      "family": "grass",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 2,
+      "name": "a dense bramble bush with thorny stems",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_grass_deadwood.png",
+      "source_box": [
+        1146,
+        144,
+        1633,
+        545
+      ],
+      "tuft_center": [
+        1390.0,
+        384.5
+      ],
+      "tuft_width": 482,
+      "scale": 0.4571,
+      "runtime_path": "res://art/battle/runtime/obstacles/grass/deadwood_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "a239f351a41493822a4284923df3955e108ad23857b2cb6dc83750fbd68a72ff"
+    },
+    {
+      "family": "grass",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 0,
+      "name": "a long fallen oak log with stubs of broken branches",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_grass_deadwood.png",
+      "source_box": [
+        0,
+        574,
+        872,
+        915
+      ],
+      "tuft_center": [
+        431.0,
+        774.0
+      ],
+      "tuft_width": 854,
+      "scale": 0.516,
+      "runtime_path": "res://art/battle/runtime/obstacles/grass/deadwood_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "2839c2c341be099b9c3bb73a18bee2b248b94a44e3c03e2b10144d209bc5fd05"
+    },
+    {
+      "family": "grass",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 1,
+      "name": "a fallen dead tree lying on its side with its branches spread",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_grass_deadwood.png",
+      "source_box": [
+        871,
+        526,
+        1696,
+        917
+      ],
+      "tuft_center": [
+        1288.0,
+        800.5
+      ],
+      "tuft_width": 825,
+      "scale": 0.5341,
+      "runtime_path": "res://art/battle/runtime/obstacles/grass/deadwood_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "51196bfdd42bc980e74a350277c9c6b8c306c1d3f0c418b6e374593431e95d6d"
+    },
+    {
+      "family": "forest",
+      "kind": "rock",
+      "size": 1,
+      "index": 0,
+      "name": "a moss-covered boulder with ferns at its foot",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_forest_rock.png",
+      "source_box": [
+        73,
+        78,
+        555,
+        450
+      ],
+      "tuft_center": [
+        304.0,
+        313.5
+      ],
+      "tuft_width": 456,
+      "scale": 0.4832,
+      "runtime_path": "res://art/battle/runtime/obstacles/forest/rock_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "42538bde12509bed75c3a8bb8cc5b7abce69332d2be858188d53995e86e9c517"
+    },
+    {
+      "family": "forest",
+      "kind": "rock",
+      "size": 1,
+      "index": 1,
+      "name": "a stack of flat mossy stones",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_forest_rock.png",
+      "source_box": [
+        624,
+        110,
+        1064,
+        454
+      ],
+      "tuft_center": [
+        837.0,
+        320.0
+      ],
+      "tuft_width": 427,
+      "scale": 0.516,
+      "runtime_path": "res://art/battle/runtime/obstacles/forest/rock_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "8d1d91e0c4c81639c8c3020f9750fd95a6b51259fed5b3d01175e4a1dc9484a0"
+    },
+    {
+      "family": "forest",
+      "kind": "rock",
+      "size": 1,
+      "index": 2,
+      "name": "a lichen-covered boulder with a cluster of small brown mushrooms",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_forest_rock.png",
+      "source_box": [
+        1152,
+        86,
+        1608,
+        470
+      ],
+      "tuft_center": [
+        1378.0,
+        325.0
+      ],
+      "tuft_width": 449,
+      "scale": 0.4907,
+      "runtime_path": "res://art/battle/runtime/obstacles/forest/rock_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "dc2e67fa14aed32076faf08cb114371623821d9fcd5ab4a42e15f90eb29de497"
+    },
+    {
+      "family": "forest",
+      "kind": "rock",
+      "size": 2,
+      "index": 0,
+      "name": "a low mossy rock shelf",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_forest_rock.png",
+      "source_box": [
+        45,
+        506,
+        856,
+        850
+      ],
+      "tuft_center": [
+        453.0,
+        727.5
+      ],
+      "tuft_width": 808,
+      "scale": 0.5453,
+      "runtime_path": "res://art/battle/runtime/obstacles/forest/rock_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "55c85f827e5f6b6f768d8cd4ee114971c741cba7073e32191c34d2fd0cf426c4"
+    },
+    {
+      "family": "forest",
+      "kind": "rock",
+      "size": 2,
+      "index": 1,
+      "name": "two moss-covered boulders side by side with ferns",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_forest_rock.png",
+      "source_box": [
+        881,
+        475,
+        1626,
+        874
+      ],
+      "tuft_center": [
+        1254.5,
+        733.0
+      ],
+      "tuft_width": 745,
+      "scale": 0.5915,
+      "runtime_path": "res://art/battle/runtime/obstacles/forest/rock_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "8df0f781e79e0fabcc595bdb3dfd2414acda0d83b7bdc1f009e72845917b1453"
+    },
+    {
+      "family": "forest",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 0,
+      "name": "a hollow tree stump with bracket fungi",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_forest_deadwood.png",
+      "source_box": [
+        41,
+        60,
+        555,
+        479
+      ],
+      "tuft_center": [
+        301.5,
+        310.5
+      ],
+      "tuft_width": 508,
+      "scale": 0.4337,
+      "runtime_path": "res://art/battle/runtime/obstacles/forest/deadwood_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "c71aed5a481e5c4372f169ee747f06705d67cdd930605ecc7cd8873402097938"
+    },
+    {
+      "family": "forest",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 1,
+      "name": "a tangle of exposed gnarled roots",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_forest_deadwood.png",
+      "source_box": [
+        590,
+        56,
+        1091,
+        489
+      ],
+      "tuft_center": [
+        837.0,
+        347.5
+      ],
+      "tuft_width": 486,
+      "scale": 0.4533,
+      "runtime_path": "res://art/battle/runtime/obstacles/forest/deadwood_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "288b990a8f96cc95dd5a6afe6afe94d31d6b0d39691e4a52e6443746b2ae391f"
+    },
+    {
+      "family": "forest",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 2,
+      "name": "the upturned root plate of a fallen tree",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_forest_deadwood.png",
+      "source_box": [
+        1134,
+        18,
+        1640,
+        489
+      ],
+      "tuft_center": [
+        1388.0,
+        343.0
+      ],
+      "tuft_width": 504,
+      "scale": 0.4371,
+      "runtime_path": "res://art/battle/runtime/obstacles/forest/deadwood_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "5ff3f1c88492de9f28c404e4e87bad6e3916243c9b0e63165d510bdbbb4d6c9a"
+    },
+    {
+      "family": "forest",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 0,
+      "name": "a huge fallen trunk covered in moss and bracket fungi",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_forest_deadwood.png",
+      "source_box": [
+        21,
+        494,
+        971,
+        918
+      ],
+      "tuft_center": [
+        491.0,
+        751.0
+      ],
+      "tuft_width": 938,
+      "scale": 0.4698,
+      "runtime_path": "res://art/battle/runtime/obstacles/forest/deadwood_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "aa454c6d397ae130980f0373160dfe3f4aaab5d205b3794f4767f445927bece9"
+    },
+    {
+      "family": "forest",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 1,
+      "name": "a heap of fallen branches around a broken trunk",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_forest_deadwood.png",
+      "source_box": [
+        969,
+        484,
+        1660,
+        925
+      ],
+      "tuft_center": [
+        1316.5,
+        788.5
+      ],
+      "tuft_width": 689,
+      "scale": 0.6395,
+      "runtime_path": "res://art/battle/runtime/obstacles/forest/deadwood_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "59a24403408985e774e4119ac577b580e20383256da5905d67ae75e731de55f2"
+    },
+    {
+      "family": "swamp",
+      "kind": "rock",
+      "size": 1,
+      "index": 0,
+      "name": "a dark, slimy boulder draped in moss",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_swamp_rock.png",
+      "source_box": [
+        43,
+        67,
+        527,
+        475
+      ],
+      "tuft_center": [
+        278.2,
+        301.5
+      ],
+      "tuft_width": 472,
+      "scale": 0.4668,
+      "runtime_path": "res://art/battle/runtime/obstacles/swamp/rock_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "d46ba8c94d99b0769ed6c3fe3ae089bebb13aac7c301f7681fa14342615287e6"
+    },
+    {
+      "family": "swamp",
+      "kind": "rock",
+      "size": 1,
+      "index": 1,
+      "name": "a half-sunken, moss-covered stone slab",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_swamp_rock.png",
+      "source_box": [
+        576,
+        129,
+        1099,
+        481
+      ],
+      "tuft_center": [
+        852.5,
+        334.0
+      ],
+      "tuft_width": 490,
+      "scale": 0.4496,
+      "runtime_path": "res://art/battle/runtime/obstacles/swamp/rock_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "aa2b5d10f40c83fd1697597f2bb6b2cdab3cdbb7e72deb5851c016d37b8a1ec7"
+    },
+    {
+      "family": "swamp",
+      "kind": "rock",
+      "size": 1,
+      "index": 2,
+      "name": "a mound of mud and roots with a tuft of reeds",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_swamp_rock.png",
+      "source_box": [
+        1166,
+        49,
+        1640,
+        507
+      ],
+      "tuft_center": [
+        1395.5,
+        347.0
+      ],
+      "tuft_width": 455,
+      "scale": 0.4842,
+      "runtime_path": "res://art/battle/runtime/obstacles/swamp/rock_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "4fcaad1618ad88fcbd8e6703a5e064738e4518d92e37cb6b1810c9b585372c85"
+    },
+    {
+      "family": "swamp",
+      "kind": "rock",
+      "size": 2,
+      "index": 0,
+      "name": "a low mossy rock outcrop",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_swamp_rock.png",
+      "source_box": [
+        25,
+        512,
+        830,
+        890
+      ],
+      "tuft_center": [
+        429.5,
+        749.0
+      ],
+      "tuft_width": 781,
+      "scale": 0.5642,
+      "runtime_path": "res://art/battle/runtime/obstacles/swamp/rock_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "d67500cca94cf9840db765c14b4fae24bafaf7d167a884698f3cba69f4e0c59a"
+    },
+    {
+      "family": "swamp",
+      "kind": "rock",
+      "size": 2,
+      "index": 1,
+      "name": "a crumbled, moss-covered stretch of an ancient stone wall",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_swamp_rock.png",
+      "source_box": [
+        853,
+        488,
+        1645,
+        886
+      ],
+      "tuft_center": [
+        1261.0,
+        741.5
+      ],
+      "tuft_width": 774,
+      "scale": 0.5693,
+      "runtime_path": "res://art/battle/runtime/obstacles/swamp/rock_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "297217ebe17c9b2a4a5c753691658992586f8366799fae9fa8ad75f75f8beaa9"
+    },
+    {
+      "family": "swamp",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 0,
+      "name": "a rotten stump with hanging grey moss",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_swamp_deadwood.png",
+      "source_box": [
+        47,
+        39,
+        540,
+        519
+      ],
+      "tuft_center": [
+        294.0,
+        315.0
+      ],
+      "tuft_width": 492,
+      "scale": 0.4478,
+      "runtime_path": "res://art/battle/runtime/obstacles/swamp/deadwood_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "3d37cb1328789f103e51be95c0842f7c71bbb692629a46655012411ec95c40bb"
+    },
+    {
+      "family": "swamp",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 1,
+      "name": "a dead swamp tree with knobbly knees around its base",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_swamp_deadwood.png",
+      "source_box": [
+        578,
+        16,
+        1095,
+        506
+      ],
+      "tuft_center": [
+        838.5,
+        337.0
+      ],
+      "tuft_width": 515,
+      "scale": 0.4278,
+      "runtime_path": "res://art/battle/runtime/obstacles/swamp/deadwood_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "aae74ea0413f8c4f27da12881b7136589296557de5dd13fc6f3da97e8cda1bfd"
+    },
+    {
+      "family": "swamp",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 2,
+      "name": "a tangle of arching mangrove-like roots",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_swamp_deadwood.png",
+      "source_box": [
+        1102,
+        67,
+        1642,
+        511
+      ],
+      "tuft_center": [
+        1373.0,
+        327.5
+      ],
+      "tuft_width": 520,
+      "scale": 0.4237,
+      "runtime_path": "res://art/battle/runtime/obstacles/swamp/deadwood_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "7b4b3fe9848a5f38e48e925f8ef7db9e03a5d0ac37fd478eedd2e29e269658ec"
+    },
+    {
+      "family": "swamp",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 0,
+      "name": "a long rotting log among reeds",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_swamp_deadwood.png",
+      "source_box": [
+        27,
+        541,
+        850,
+        915
+      ],
+      "tuft_center": [
+        432.5,
+        773.0
+      ],
+      "tuft_width": 811,
+      "scale": 0.5433,
+      "runtime_path": "res://art/battle/runtime/obstacles/swamp/deadwood_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "8f316a1da3a7c3545e796ae458ca125bd2c07e696783f325142caf6b80ca1807"
+    },
+    {
+      "family": "swamp",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 1,
+      "name": "a fallen dead tree draped in hanging moss",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_swamp_deadwood.png",
+      "source_box": [
+        865,
+        483,
+        1643,
+        926
+      ],
+      "tuft_center": [
+        1245.0,
+        781.0
+      ],
+      "tuft_width": 759,
+      "scale": 0.5806,
+      "runtime_path": "res://art/battle/runtime/obstacles/swamp/deadwood_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "46c305854ae3a6c62874bd896399ec229759ba4932d7632a848120cadcecfeab"
+    },
+    {
+      "family": "mire",
+      "kind": "rock",
+      "size": 1,
+      "index": 0,
+      "name": "a pale lichen-covered boulder in sedge",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_mire_rock.png",
+      "source_box": [
+        55,
+        92,
+        562,
+        465
+      ],
+      "tuft_center": [
+        308.0,
+        316.0
+      ],
+      "tuft_width": 505,
+      "scale": 0.4363,
+      "runtime_path": "res://art/battle/runtime/obstacles/mire/rock_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "db0c34091d5fa5a188ecc963b316b36e90c221dadb9d798ba5a3b4dd2da7d493"
+    },
+    {
+      "family": "mire",
+      "kind": "rock",
+      "size": 1,
+      "index": 1,
+      "name": "a small cairn of flat grey stones",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_mire_rock.png",
+      "source_box": [
+        612,
+        103,
+        1061,
+        455
+      ],
+      "tuft_center": [
+        833.0,
+        330.0
+      ],
+      "tuft_width": 449,
+      "scale": 0.4907,
+      "runtime_path": "res://art/battle/runtime/obstacles/mire/rock_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "ce177989f05b9bb4c8339bad2a53000d416003192b6be079a130a2cb6643cbca"
+    },
+    {
+      "family": "mire",
+      "kind": "rock",
+      "size": 1,
+      "index": 2,
+      "name": "a peat hummock topped with cotton grass",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_mire_rock.png",
+      "source_box": [
+        1112,
+        76,
+        1630,
+        462
+      ],
+      "tuft_center": [
+        1375.5,
+        322.0
+      ],
+      "tuft_width": 506,
+      "scale": 0.4354,
+      "runtime_path": "res://art/battle/runtime/obstacles/mire/rock_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "6b626a0303fa8b82587faf26bdbad5d7b00ad4007f26f94dbbbe2fef1bf84edb"
+    },
+    {
+      "family": "mire",
+      "kind": "rock",
+      "size": 2,
+      "index": 0,
+      "name": "a low ridge of pale stones and sedge",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_mire_rock.png",
+      "source_box": [
+        15,
+        533,
+        854,
+        878
+      ],
+      "tuft_center": [
+        439.0,
+        733.0
+      ],
+      "tuft_width": 835,
+      "scale": 0.5277,
+      "runtime_path": "res://art/battle/runtime/obstacles/mire/rock_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "f5d6c3d5370e562484ff6cb6d4b38f1b8d646b958a45aa7a77e16dd377247de5"
+    },
+    {
+      "family": "mire",
+      "kind": "rock",
+      "size": 2,
+      "index": 1,
+      "name": "two peat hummocks with cotton grass and heather",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_mire_rock.png",
+      "source_box": [
+        841,
+        497,
+        1658,
+        884
+      ],
+      "tuft_center": [
+        1248.0,
+        748.0
+      ],
+      "tuft_width": 805,
+      "scale": 0.5474,
+      "runtime_path": "res://art/battle/runtime/obstacles/mire/rock_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "c9e14400c9439d5069cc2db81681036a0cbf0d3368ad049608ab0bbef7a58cf2"
+    },
+    {
+      "family": "mire",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 0,
+      "name": "a twisted black bog-oak stump",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_mire_deadwood.png",
+      "source_box": [
+        73,
+        107,
+        570,
+        562
+      ],
+      "tuft_center": [
+        321.5,
+        448.5
+      ],
+      "tuft_width": 497,
+      "scale": 0.4433,
+      "runtime_path": "res://art/battle/runtime/obstacles/mire/deadwood_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "1975e1f42d89a993f4f7183e39ebbf195a304442ee3ea285174aefb72a5e311b"
+    },
+    {
+      "family": "mire",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 1,
+      "name": "a dead birch with peeling white bark",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_mire_deadwood.png",
+      "source_box": [
+        623,
+        11,
+        1043,
+        558
+      ],
+      "tuft_center": [
+        832.0,
+        394.0
+      ],
+      "tuft_width": 420,
+      "scale": 0.5246,
+      "runtime_path": "res://art/battle/runtime/obstacles/mire/deadwood_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "99a22ebf7b17c4f0fe865db81467d036a4a1ae9d385e7fef16c75c4143aa02e0"
+    },
+    {
+      "family": "mire",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 2,
+      "name": "a thicket of willow and rushes",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_mire_deadwood.png",
+      "source_box": [
+        1062,
+        110,
+        1642,
+        562
+      ],
+      "tuft_center": [
+        1352.0,
+        430.0
+      ],
+      "tuft_width": 576,
+      "scale": 0.3825,
+      "runtime_path": "res://art/battle/runtime/obstacles/mire/deadwood_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "fe7f610b8847ffb41f438dd2ecc9670bb40ea1a057dfb69b1ed2635bb271755d"
+    },
+    {
+      "family": "mire",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 0,
+      "name": "a long blackened bog-oak trunk",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_mire_deadwood.png",
+      "source_box": [
+        15,
+        567,
+        856,
+        925
+      ],
+      "tuft_center": [
+        434.5,
+        796.5
+      ],
+      "tuft_width": 828,
+      "scale": 0.5322,
+      "runtime_path": "res://art/battle/runtime/obstacles/mire/deadwood_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "b62f43bd6a1385a9eb205be1b05efd516d60c981d071606011a7f21060d7c628"
+    },
+    {
+      "family": "mire",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 1,
+      "name": "a fallen birch with peeling bark and broken branches",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_mire_deadwood.png",
+      "source_box": [
+        849,
+        559,
+        1648,
+        915
+      ],
+      "tuft_center": [
+        1251.0,
+        802.0
+      ],
+      "tuft_width": 792,
+      "scale": 0.5564,
+      "runtime_path": "res://art/battle/runtime/obstacles/mire/deadwood_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "dfb6ed92e9c020ee84143042e482ad34a83d4e4bd2318da6840d70a6014de0a5"
+    },
+    {
+      "family": "rough",
+      "kind": "rock",
+      "size": 1,
+      "index": 0,
+      "name": "a rounded red sandstone boulder",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_rough_rock.png",
+      "source_box": [
+        31,
+        129,
+        532,
+        504
+      ],
+      "tuft_center": [
+        281.0,
+        345.0
+      ],
+      "tuft_width": 500,
+      "scale": 0.4406,
+      "runtime_path": "res://art/battle/runtime/obstacles/rough/rock_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "00e71b41f60158f9a1e841e0818effe19c094ef32a9bb442ed1bb7eadc6bd22d"
+    },
+    {
+      "family": "rough",
+      "kind": "rock",
+      "size": 1,
+      "index": 1,
+      "name": "a pile of broken sandstone slabs",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_rough_rock.png",
+      "source_box": [
+        587,
+        153,
+        1043,
+        498
+      ],
+      "tuft_center": [
+        814.5,
+        363.5
+      ],
+      "tuft_width": 453,
+      "scale": 0.4864,
+      "runtime_path": "res://art/battle/runtime/obstacles/rough/rock_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "bbd97bb137cac58c3020e409d2db7652caf51b0991e4a4aaf60ac1ed8afa9b98"
+    },
+    {
+      "family": "rough",
+      "kind": "rock",
+      "size": 1,
+      "index": 2,
+      "name": "a weathered red rock spire",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_rough_rock.png",
+      "source_box": [
+        1123,
+        47,
+        1506,
+        514
+      ],
+      "tuft_center": [
+        1318.2,
+        366.5
+      ],
+      "tuft_width": 379,
+      "scale": 0.5813,
+      "runtime_path": "res://art/battle/runtime/obstacles/rough/rock_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "9f84c706c7c8168ff2dba5410c7541d91b29c0814d7eef722203abc3567c723a"
+    },
+    {
+      "family": "rough",
+      "kind": "rock",
+      "size": 2,
+      "index": 0,
+      "name": "a low layered sandstone ledge",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_rough_rock.png",
+      "source_box": [
+        32,
+        583,
+        795,
+        932
+      ],
+      "tuft_center": [
+        418.0,
+        792.0
+      ],
+      "tuft_width": 753,
+      "scale": 0.5852,
+      "runtime_path": "res://art/battle/runtime/obstacles/rough/rock_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "ae686ec2e5485cc53587ded93cb24eb186b8791ff8096af429edd5dfadf1e98f"
+    },
+    {
+      "family": "rough",
+      "kind": "rock",
+      "size": 2,
+      "index": 1,
+      "name": "two eroded red boulders side by side",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_rough_rock.png",
+      "source_box": [
+        792,
+        545,
+        1510,
+        926
+      ],
+      "tuft_center": [
+        1152.0,
+        786.0
+      ],
+      "tuft_width": 715,
+      "scale": 0.6163,
+      "runtime_path": "res://art/battle/runtime/obstacles/rough/rock_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "a5cc0e5aa6053cf68abf85137f1a24ed57660f518af56970a9ba60e1f83b3057"
+    },
+    {
+      "family": "rough",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 0,
+      "name": "a dead, twisted juniper",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_rough_deadwood.png",
+      "source_box": [
+        51,
+        31,
+        585,
+        483
+      ],
+      "tuft_center": [
+        294.5,
+        358.0
+      ],
+      "tuft_width": 447,
+      "scale": 0.4929,
+      "runtime_path": "res://art/battle/runtime/obstacles/rough/deadwood_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "beb8292b6ac1fdc0462165d4a0788cefed4600739a59b593a90edd66584ad820"
+    },
+    {
+      "family": "rough",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 1,
+      "name": "a dry, thorny scrub bush",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_rough_deadwood.png",
+      "source_box": [
+        616,
+        101,
+        1075,
+        473
+      ],
+      "tuft_center": [
+        841.0,
+        342.0
+      ],
+      "tuft_width": 451,
+      "scale": 0.4885,
+      "runtime_path": "res://art/battle/runtime/obstacles/rough/deadwood_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "8afb4ed0ca8c1bf27319768acc7deadcfb935256b2520a4a0bb91ce79c992a26"
+    },
+    {
+      "family": "rough",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 2,
+      "name": "a sun-bleached tree stump",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_rough_deadwood.png",
+      "source_box": [
+        1150,
+        119,
+        1618,
+        475
+      ],
+      "tuft_center": [
+        1384.5,
+        352.0
+      ],
+      "tuft_width": 460,
+      "scale": 0.479,
+      "runtime_path": "res://art/battle/runtime/obstacles/rough/deadwood_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "d1f831408bade7756559e2a48bb0fa726f662c6777f9af2023488fc4e691accc"
+    },
+    {
+      "family": "rough",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 0,
+      "name": "a long fallen dead juniper trunk",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_rough_deadwood.png",
+      "source_box": [
+        31,
+        527,
+        852,
+        894
+      ],
+      "tuft_center": [
+        434.0,
+        766.0
+      ],
+      "tuft_width": 807,
+      "scale": 0.546,
+      "runtime_path": "res://art/battle/runtime/obstacles/rough/deadwood_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "2cdcae797ec009e37c94f0ac3331e7e6da3dc8495e42f712af8a1173d54878bb"
+    },
+    {
+      "family": "rough",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 1,
+      "name": "a tangle of dry thornbrush",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_rough_deadwood.png",
+      "source_box": [
+        849,
+        542,
+        1658,
+        892
+      ],
+      "tuft_center": [
+        1253.5,
+        757.0
+      ],
+      "tuft_width": 805,
+      "scale": 0.5474,
+      "runtime_path": "res://art/battle/runtime/obstacles/rough/deadwood_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "9dc30765d623e5aadba00f1956d9e1b78d50205141359a3e21c29280d74a9b24"
+    },
+    {
+      "family": "road",
+      "kind": "rock",
+      "size": 1,
+      "index": 0,
+      "name": "a weathered stone milestone with moss",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_road_rock.png",
+      "source_box": [
+        95,
+        86,
+        523,
+        457
+      ],
+      "tuft_center": [
+        306.5,
+        315.0
+      ],
+      "tuft_width": 420,
+      "scale": 0.5246,
+      "runtime_path": "res://art/battle/runtime/obstacles/road/rock_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "02397016a7a1032006795c1b547bc87fbc576093098f887eae02d6122d2adecc"
+    },
+    {
+      "family": "road",
+      "kind": "rock",
+      "size": 1,
+      "index": 1,
+      "name": "a pile of gathered field stones",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_road_rock.png",
+      "source_box": [
+        602,
+        115,
+        1070,
+        453
+      ],
+      "tuft_center": [
+        843.5,
+        345.0
+      ],
+      "tuft_width": 447,
+      "scale": 0.4929,
+      "runtime_path": "res://art/battle/runtime/obstacles/road/rock_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "d91b2529b546cbed9fad00e54c0ec2fef34ce17ca39c441e6e9c668246575d9a"
+    },
+    {
+      "family": "road",
+      "kind": "rock",
+      "size": 1,
+      "index": 2,
+      "name": "a large roadside boulder",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_road_rock.png",
+      "source_box": [
+        1129,
+        103,
+        1623,
+        467
+      ],
+      "tuft_center": [
+        1371.2,
+        310.5
+      ],
+      "tuft_width": 483,
+      "scale": 0.4561,
+      "runtime_path": "res://art/battle/runtime/obstacles/road/rock_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "794f1fc5c8350e2e38390f9a5063632a5311ea53054bded1f1a377856f7b1c4b"
+    },
+    {
+      "family": "road",
+      "kind": "rock",
+      "size": 2,
+      "index": 0,
+      "name": "a broken section of low dry-stone wall",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_road_rock.png",
+      "source_box": [
+        28,
+        511,
+        882,
+        849
+      ],
+      "tuft_center": [
+        452.0,
+        706.5
+      ],
+      "tuft_width": 851,
+      "scale": 0.5178,
+      "runtime_path": "res://art/battle/runtime/obstacles/road/rock_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "f6f4366d6cd1a938025f777aba89c560e2864590c0127b297b93c44e05a413ba"
+    },
+    {
+      "family": "road",
+      "kind": "rock",
+      "size": 2,
+      "index": 1,
+      "name": "a heap of quarried stone blocks",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_road_rock.png",
+      "source_box": [
+        890,
+        516,
+        1673,
+        869
+      ],
+      "tuft_center": [
+        1283.0,
+        736.5
+      ],
+      "tuft_width": 777,
+      "scale": 0.5671,
+      "runtime_path": "res://art/battle/runtime/obstacles/road/rock_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "a56284f265320d94ed2fecf6aab87a0f8a8d97b16570c770efe8c7c8ebdd4e4b"
+    },
+    {
+      "family": "road",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 0,
+      "name": "a stack of split firewood logs",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_road_deadwood.png",
+      "source_box": [
+        43,
+        52,
+        535,
+        443
+      ],
+      "tuft_center": [
+        279.5,
+        317.5
+      ],
+      "tuft_width": 478,
+      "scale": 0.4609,
+      "runtime_path": "res://art/battle/runtime/obstacles/road/deadwood_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "68d50163dfc739a384ff733e3bab52dd11d48292daef56cbed2a5e94385858b0"
+    },
+    {
+      "family": "road",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 1,
+      "name": "a broken wooden cart wheel leaning against a wooden crate",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_road_deadwood.png",
+      "source_box": [
+        602,
+        33,
+        1100,
+        437
+      ],
+      "tuft_center": [
+        842.5,
+        305.0
+      ],
+      "tuft_width": 478,
+      "scale": 0.4609,
+      "runtime_path": "res://art/battle/runtime/obstacles/road/deadwood_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "61121b3061b817e3adb05728ee989e0bd4c01c54f3dfa7701f77651e087b0223"
+    },
+    {
+      "family": "road",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 2,
+      "name": "a round hay bale",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_road_deadwood.png",
+      "source_box": [
+        1163,
+        51,
+        1651,
+        449
+      ],
+      "tuft_center": [
+        1401.0,
+        303.5
+      ],
+      "tuft_width": 473,
+      "scale": 0.4658,
+      "runtime_path": "res://art/battle/runtime/obstacles/road/deadwood_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "f524ac3ee3bf68673c025f7e30ea0c47b290233f25080c148d30f96d374b2a42"
+    },
+    {
+      "family": "road",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 0,
+      "name": "an overturned, broken wooden farm cart",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_road_deadwood.png",
+      "source_box": [
+        47,
+        446,
+        846,
+        865
+      ],
+      "tuft_center": [
+        444.5,
+        725.0
+      ],
+      "tuft_width": 785,
+      "scale": 0.5613,
+      "runtime_path": "res://art/battle/runtime/obstacles/road/deadwood_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "fbf4d6f0ded9ea1100192489a6a2dc5ec966519022943a424645dc76d3dd8c25"
+    },
+    {
+      "family": "road",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 1,
+      "name": "a section of broken wooden rail fence",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_road_deadwood.png",
+      "source_box": [
+        846,
+        511,
+        1669,
+        877
+      ],
+      "tuft_center": [
+        1261.0,
+        732.5
+      ],
+      "tuft_width": 805,
+      "scale": 0.5474,
+      "runtime_path": "res://art/battle/runtime/obstacles/road/deadwood_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "3f79aec912e08a0a9dff0217d4e137a6a55d0af4cd67f1e5810a9442b10dc8b7"
+    },
+    {
+      "family": "snow",
+      "kind": "rock",
+      "size": 1,
+      "index": 0,
+      "name": "a snow-capped granite boulder",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_snow_rock.png",
+      "source_box": [
+        63,
+        110,
+        571,
+        468
+      ],
+      "tuft_center": [
+        315.5,
+        331.5
+      ],
+      "tuft_width": 506,
+      "scale": 0.4354,
+      "runtime_path": "res://art/battle/runtime/obstacles/snow/rock_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "2656fa027da081e06ffd39fb5e2d8019e738bdd0b661907911b08962420364e0"
+    },
+    {
+      "family": "snow",
+      "kind": "rock",
+      "size": 1,
+      "index": 1,
+      "name": "a jagged block of blue glacial ice",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_snow_rock.png",
+      "source_box": [
+        602,
+        39,
+        1051,
+        463
+      ],
+      "tuft_center": [
+        815.5,
+        330.0
+      ],
+      "tuft_width": 434,
+      "scale": 0.5076,
+      "runtime_path": "res://art/battle/runtime/obstacles/snow/rock_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "353c7e0862f9247707753d9506615b45632c76a6309aa619b00189cd8146d7af"
+    },
+    {
+      "family": "snow",
+      "kind": "rock",
+      "size": 1,
+      "index": 2,
+      "name": "a cluster of frosted dark stones",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_snow_rock.png",
+      "source_box": [
+        1109,
+        112,
+        1590,
+        471
+      ],
+      "tuft_center": [
+        1352.0,
+        341.0
+      ],
+      "tuft_width": 471,
+      "scale": 0.4678,
+      "runtime_path": "res://art/battle/runtime/obstacles/snow/rock_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "14c4060c78974eb1fe560dcfb49370b76d5fcf0e3f90f7154858ec4dc5d5df81"
+    },
+    {
+      "family": "snow",
+      "kind": "rock",
+      "size": 2,
+      "index": 0,
+      "name": "a long snow-covered rock ridge",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_snow_rock.png",
+      "source_box": [
+        17,
+        500,
+        862,
+        888
+      ],
+      "tuft_center": [
+        453.5,
+        741.0
+      ],
+      "tuft_width": 791,
+      "scale": 0.5571,
+      "runtime_path": "res://art/battle/runtime/obstacles/snow/rock_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "218bab25d0e147aec113e2d6f8b4754d9f3e127bb77a2f910db386c161a688bf"
+    },
+    {
+      "family": "snow",
+      "kind": "rock",
+      "size": 2,
+      "index": 1,
+      "name": "two snow-capped boulders side by side",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_snow_rock.png",
+      "source_box": [
+        846,
+        502,
+        1642,
+        873
+      ],
+      "tuft_center": [
+        1245.2,
+        742.5
+      ],
+      "tuft_width": 796,
+      "scale": 0.5536,
+      "runtime_path": "res://art/battle/runtime/obstacles/snow/rock_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "45a72d948e8773edd22b58f956b2cd62787eb6b161a905fffb2f9ca14ad7c9a9"
+    },
+    {
+      "family": "snow",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 0,
+      "name": "a frozen dead pine tree",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_snow_deadwood.png",
+      "source_box": [
+        138,
+        27,
+        531,
+        545
+      ],
+      "tuft_center": [
+        335.0,
+        422.5
+      ],
+      "tuft_width": 389,
+      "scale": 0.5664,
+      "runtime_path": "res://art/battle/runtime/obstacles/snow/deadwood_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "e087cae69da7ce52364801ce46eb26764502e63578fbee5ff87aea55f65df629"
+    },
+    {
+      "family": "snow",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 1,
+      "name": "a snow-covered tree stump",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_snow_deadwood.png",
+      "source_box": [
+        632,
+        216,
+        1052,
+        545
+      ],
+      "tuft_center": [
+        844.5,
+        413.0
+      ],
+      "tuft_width": 415,
+      "scale": 0.5309,
+      "runtime_path": "res://art/battle/runtime/obstacles/snow/deadwood_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "d8d0107dd3462210eac72c1d57e53c7b4cd9fbed051096525589cf6b27952064"
+    },
+    {
+      "family": "snow",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 2,
+      "name": "a frosted bare bush",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_snow_deadwood.png",
+      "source_box": [
+        1108,
+        150,
+        1545,
+        546
+      ],
+      "tuft_center": [
+        1340.8,
+        449.5
+      ],
+      "tuft_width": 387,
+      "scale": 0.5693,
+      "runtime_path": "res://art/battle/runtime/obstacles/snow/deadwood_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "43ae64167e2e8a47597c4b82cd0c1e2bb048d3a1c26fa554ad316531e5e37d64"
+    },
+    {
+      "family": "snow",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 0,
+      "name": "a fallen snow-covered pine trunk",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_snow_deadwood.png",
+      "source_box": [
+        39,
+        575,
+        838,
+        916
+      ],
+      "tuft_center": [
+        437.0,
+        795.0
+      ],
+      "tuft_width": 793,
+      "scale": 0.5557,
+      "runtime_path": "res://art/battle/runtime/obstacles/snow/deadwood_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "810aba81837c792e3fa1e0d594222cccc1cd0cfd6b220246c58cf3d5c8a0555d"
+    },
+    {
+      "family": "snow",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 1,
+      "name": "a toppled frozen tree with icy branches",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_snow_deadwood.png",
+      "source_box": [
+        837,
+        529,
+        1658,
+        916
+      ],
+      "tuft_center": [
+        1237.5,
+        779.0
+      ],
+      "tuft_width": 803,
+      "scale": 0.5487,
+      "runtime_path": "res://art/battle/runtime/obstacles/snow/deadwood_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "44b749709b5e790ec4ddf81a8a615dca9822887b8b264ce3f5c4d7ea0d61834b"
+    },
+    {
+      "family": "coast",
+      "kind": "rock",
+      "size": 1,
+      "index": 0,
+      "name": "a barnacle-crusted rock draped with seaweed",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_coast_rock.png",
+      "source_box": [
+        29,
+        81,
+        510,
+        502
+      ],
+      "tuft_center": [
+        267.0,
+        343.0
+      ],
+      "tuft_width": 478,
+      "scale": 0.4609,
+      "runtime_path": "res://art/battle/runtime/obstacles/coast/rock_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "55c71329fa668ca7979e6ed063e05e8b8eab5b24e7e177ceb9e0a2cad60d1c2b"
+    },
+    {
+      "family": "coast",
+      "kind": "rock",
+      "size": 1,
+      "index": 1,
+      "name": "a cluster of smooth grey sea stones",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_coast_rock.png",
+      "source_box": [
+        543,
+        139,
+        1026,
+        492
+      ],
+      "tuft_center": [
+        777.0,
+        344.0
+      ],
+      "tuft_width": 463,
+      "scale": 0.4759,
+      "runtime_path": "res://art/battle/runtime/obstacles/coast/rock_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "885f3fa7a9ff5f44f4750eda3a56ef5b0a5d77e6118c1deada9b169634afd45f"
+    },
+    {
+      "family": "coast",
+      "kind": "rock",
+      "size": 1,
+      "index": 2,
+      "name": "a small weathered sea stack",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_coast_rock.png",
+      "source_box": [
+        1037,
+        62,
+        1508,
+        519
+      ],
+      "tuft_center": [
+        1275.0,
+        374.5
+      ],
+      "tuft_width": 465,
+      "scale": 0.4738,
+      "runtime_path": "res://art/battle/runtime/obstacles/coast/rock_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "2b30cb9b1ba17a00a8d7a39966bc583a27dbcdd845f138f28eca0d7f47a10b9a"
+    },
+    {
+      "family": "coast",
+      "kind": "rock",
+      "size": 2,
+      "index": 0,
+      "name": "a low rocky reef ledge with seaweed",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_coast_rock.png",
+      "source_box": [
+        19,
+        590,
+        831,
+        938
+      ],
+      "tuft_center": [
+        427.0,
+        796.0
+      ],
+      "tuft_width": 802,
+      "scale": 0.5494,
+      "runtime_path": "res://art/battle/runtime/obstacles/coast/rock_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "a7bcdf9332477d89395614c9459d86530f5c03d98f0c828c2078bc9d446708d9"
+    },
+    {
+      "family": "coast",
+      "kind": "rock",
+      "size": 2,
+      "index": 1,
+      "name": "two barnacled boulders side by side",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_coast_rock.png",
+      "source_box": [
+        830,
+        556,
+        1506,
+        958
+      ],
+      "tuft_center": [
+        1172.2,
+        812.5
+      ],
+      "tuft_width": 675,
+      "scale": 0.6528,
+      "runtime_path": "res://art/battle/runtime/obstacles/coast/rock_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "13703503f45c0369a15d67d21de38f9bd66a58561f0b029103feb5670ebcf480"
+    },
+    {
+      "family": "coast",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 0,
+      "name": "a bleached driftwood stump with roots",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_coast_deadwood.png",
+      "source_box": [
+        39,
+        127,
+        548,
+        556
+      ],
+      "tuft_center": [
+        290.0,
+        411.0
+      ],
+      "tuft_width": 501,
+      "scale": 0.4398,
+      "runtime_path": "res://art/battle/runtime/obstacles/coast/deadwood_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "0f7688bc10e122f8849408587ea392dc938c33a7411a09f0cc61768e1543ccbc"
+    },
+    {
+      "family": "coast",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 1,
+      "name": "a broken ship's mast stub wrapped in old rope",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_coast_deadwood.png",
+      "source_box": [
+        586,
+        61,
+        979,
+        535
+      ],
+      "tuft_center": [
+        782.0,
+        430.0
+      ],
+      "tuft_width": 393,
+      "scale": 0.5606,
+      "runtime_path": "res://art/battle/runtime/obstacles/coast/deadwood_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "577abfec25d774a1a766f615ed0bed93dcb0fff8d4aacb2450925f329b1b82ba"
+    },
+    {
+      "family": "coast",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 2,
+      "name": "a tangle of silver driftwood",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_coast_deadwood.png",
+      "source_box": [
+        1033,
+        113,
+        1500,
+        551
+      ],
+      "tuft_center": [
+        1263.5,
+        430.0
+      ],
+      "tuft_width": 463,
+      "scale": 0.4759,
+      "runtime_path": "res://art/battle/runtime/obstacles/coast/deadwood_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "1a8a4202e3ef131fee8412edf5710130a4633515f35da0dec648f491fa4568d1"
+    },
+    {
+      "family": "coast",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 0,
+      "name": "a long silver driftwood log",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_coast_deadwood.png",
+      "source_box": [
+        19,
+        623,
+        842,
+        985
+      ],
+      "tuft_center": [
+        438.5,
+        846.0
+      ],
+      "tuft_width": 780,
+      "scale": 0.5649,
+      "runtime_path": "res://art/battle/runtime/obstacles/coast/deadwood_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "c132de1b3a498f3774f9574d0234e4836ac0beefb6443d6a9409f7b12ecac6f0"
+    },
+    {
+      "family": "coast",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 1,
+      "name": "the broken ribs of a small wrecked wooden boat",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_coast_deadwood.png",
+      "source_box": [
+        827,
+        586,
+        1533,
+        981
+      ],
+      "tuft_center": [
+        1180.5,
+        844.0
+      ],
+      "tuft_width": 690,
+      "scale": 0.6386,
+      "runtime_path": "res://art/battle/runtime/obstacles/coast/deadwood_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "ff96ea3b9cdc5f3c7c8b0be565d53e4daac740d6a54e4b808c1cee753462186b"
+    },
+    {
+      "family": "sand",
+      "kind": "rock",
+      "size": 1,
+      "index": 0,
+      "name": "a wind-carved sandstone pillar",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_sand_rock.png",
+      "source_box": [
+        39,
+        85,
+        498,
+        554
+      ],
+      "tuft_center": [
+        265.0,
+        413.0
+      ],
+      "tuft_width": 455,
+      "scale": 0.4842,
+      "runtime_path": "res://art/battle/runtime/obstacles/sand/rock_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "fa846181a16669716b65c84ae23e41b2f992e7410ac103d74deac6d576050ea6"
+    },
+    {
+      "family": "sand",
+      "kind": "rock",
+      "size": 1,
+      "index": 1,
+      "name": "a pile of sun-bleached sandstone blocks",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_sand_rock.png",
+      "source_box": [
+        521,
+        173,
+        1024,
+        538
+      ],
+      "tuft_center": [
+        766.0,
+        392.5
+      ],
+      "tuft_width": 490,
+      "scale": 0.4496,
+      "runtime_path": "res://art/battle/runtime/obstacles/sand/rock_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "a520f5304ffd4b2a0d93558cb16644a3e28e1466b01d1a58a6bdd1d217829a41"
+    },
+    {
+      "family": "sand",
+      "kind": "rock",
+      "size": 1,
+      "index": 2,
+      "name": "a rounded desert boulder",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_sand_rock.png",
+      "source_box": [
+        1041,
+        189,
+        1520,
+        536
+      ],
+      "tuft_center": [
+        1277.0,
+        395.5
+      ],
+      "tuft_width": 470,
+      "scale": 0.4688,
+      "runtime_path": "res://art/battle/runtime/obstacles/sand/rock_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "a502812d72c305e0835d60155e81625f423f09ca6dbf7241e1e4d13766cd5325"
+    },
+    {
+      "family": "sand",
+      "kind": "rock",
+      "size": 2,
+      "index": 0,
+      "name": "a low wind-carved sandstone ledge",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_sand_rock.png",
+      "source_box": [
+        0,
+        553,
+        808,
+        968
+      ],
+      "tuft_center": [
+        414.5,
+        801.0
+      ],
+      "tuft_width": 795,
+      "scale": 0.5543,
+      "runtime_path": "res://art/battle/runtime/obstacles/sand/rock_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "19d5d7581375a4e120da2374dacc7d956420767265d314d9957323bfc8005c0f"
+    },
+    {
+      "family": "sand",
+      "kind": "rock",
+      "size": 2,
+      "index": 1,
+      "name": "a fallen ancient stone column half buried in sand",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_sand_rock.png",
+      "source_box": [
+        802,
+        584,
+        1524,
+        946
+      ],
+      "tuft_center": [
+        1158.5,
+        809.0
+      ],
+      "tuft_width": 715,
+      "scale": 0.6163,
+      "runtime_path": "res://art/battle/runtime/obstacles/sand/rock_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "bbc1cbf33af2084ac9f3ff8b3b9dbd95fad05f2cf64e27ff1a8e3c3008a6434b"
+    },
+    {
+      "family": "sand",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 0,
+      "name": "a dead, flat-topped desert tree",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_sand_deadwood.png",
+      "source_box": [
+        49,
+        53,
+        518,
+        550
+      ],
+      "tuft_center": [
+        285.0,
+        404.0
+      ],
+      "tuft_width": 468,
+      "scale": 0.4708,
+      "runtime_path": "res://art/battle/runtime/obstacles/sand/deadwood_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "786709240d5621ecf69aed44c89cf0ef173bb3773475359c6c65d92b6da61665"
+    },
+    {
+      "family": "sand",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 1,
+      "name": "a tall cluster of desert cactus",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_sand_deadwood.png",
+      "source_box": [
+        552,
+        59,
+        989,
+        541
+      ],
+      "tuft_center": [
+        769.5,
+        404.0
+      ],
+      "tuft_width": 436,
+      "scale": 0.5053,
+      "runtime_path": "res://art/battle/runtime/obstacles/sand/deadwood_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "c25dc54f2f1530fc6dbfcc7881f8631cf390afce48dba7c38c6e35a6f902f757"
+    },
+    {
+      "family": "sand",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 2,
+      "name": "a dry, thorny desert shrub",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_sand_deadwood.png",
+      "source_box": [
+        1029,
+        151,
+        1499,
+        551
+      ],
+      "tuft_center": [
+        1262.0,
+        411.5
+      ],
+      "tuft_width": 470,
+      "scale": 0.4688,
+      "runtime_path": "res://art/battle/runtime/obstacles/sand/deadwood_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "ed9fbff51890a3ac8200a50c25ac682b173e7040ec842a91bda660e2bed0df41"
+    },
+    {
+      "family": "sand",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 0,
+      "name": "a fallen sun-bleached tree trunk",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_sand_deadwood.png",
+      "source_box": [
+        21,
+        589,
+        762,
+        976
+      ],
+      "tuft_center": [
+        391.0,
+        820.0
+      ],
+      "tuft_width": 741,
+      "scale": 0.5947,
+      "runtime_path": "res://art/battle/runtime/obstacles/sand/deadwood_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "131eef471a4c027270e634e6aa23627e4ceaa83c70264676628f47b17bc6e4dc"
+    },
+    {
+      "family": "sand",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 1,
+      "name": "the half-buried ribcage of a giant beast",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_sand_deadwood.png",
+      "source_box": [
+        772,
+        616,
+        1524,
+        969
+      ],
+      "tuft_center": [
+        1147.5,
+        825.5
+      ],
+      "tuft_width": 747,
+      "scale": 0.5899,
+      "runtime_path": "res://art/battle/runtime/obstacles/sand/deadwood_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "86c88f1ae13a43dbe24e4b5915185530e675a967b79b6bc3c756287dd92d27e7"
+    },
+    {
+      "family": "lava",
+      "kind": "rock",
+      "size": 1,
+      "index": 0,
+      "name": "a jagged black obsidian spire",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_lava_rock.png",
+      "source_box": [
+        79,
+        43,
+        547,
+        532
+      ],
+      "tuft_center": [
+        311.5,
+        391.0
+      ],
+      "tuft_width": 468,
+      "scale": 0.4708,
+      "runtime_path": "res://art/battle/runtime/obstacles/lava/rock_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "7c3a319a3eb1a0529e2fe6e2a60c76d7885580d2c7952e9d48f3c49e2f0b3387"
+    },
+    {
+      "family": "lava",
+      "kind": "rock",
+      "size": 1,
+      "index": 1,
+      "name": "a cracked basalt boulder with faintly glowing seams",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_lava_rock.png",
+      "source_box": [
+        596,
+        159,
+        1083,
+        523
+      ],
+      "tuft_center": [
+        832.2,
+        383.5
+      ],
+      "tuft_width": 467,
+      "scale": 0.4718,
+      "runtime_path": "res://art/battle/runtime/obstacles/lava/rock_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "72fe1ea7a488ecec768f2f17f033d8030ea4c94f657af0f0dc4867cdfa6cf44a"
+    },
+    {
+      "family": "lava",
+      "kind": "rock",
+      "size": 1,
+      "index": 2,
+      "name": "a cluster of black volcanic rocks",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_lava_rock.png",
+      "source_box": [
+        1102,
+        192,
+        1612,
+        541
+      ],
+      "tuft_center": [
+        1351.5,
+        394.0
+      ],
+      "tuft_width": 496,
+      "scale": 0.4442,
+      "runtime_path": "res://art/battle/runtime/obstacles/lava/rock_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "89afb7b001a326efb9b5b7290ea45c9693f3475dd02bb1187bf5c72fc243f5f2"
+    },
+    {
+      "family": "lava",
+      "kind": "rock",
+      "size": 2,
+      "index": 0,
+      "name": "a ridge of cooled lava with faintly glowing cracks",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_lava_rock.png",
+      "source_box": [
+        15,
+        551,
+        882,
+        915
+      ],
+      "tuft_center": [
+        441.0,
+        766.5
+      ],
+      "tuft_width": 864,
+      "scale": 0.51,
+      "runtime_path": "res://art/battle/runtime/obstacles/lava/rock_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "0adf48eccfb7d08fa3cbb97d87a52aee0b9e92c92d2c98f69fa54a5e506d1050"
+    },
+    {
+      "family": "lava",
+      "kind": "rock",
+      "size": 2,
+      "index": 1,
+      "name": "two fallen hexagonal basalt columns",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_lava_rock.png",
+      "source_box": [
+        885,
+        583,
+        1652,
+        911
+      ],
+      "tuft_center": [
+        1270.0,
+        773.0
+      ],
+      "tuft_width": 766,
+      "scale": 0.5752,
+      "runtime_path": "res://art/battle/runtime/obstacles/lava/rock_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "ab47c8ff9ec53176ad11c0e10e30c84ba467a5ad77fa0251e580ee53a0bbfddc"
+    },
+    {
+      "family": "lava",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 0,
+      "name": "a charred dead tree",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_lava_deadwood.png",
+      "source_box": [
+        47,
+        29,
+        532,
+        597
+      ],
+      "tuft_center": [
+        267.0,
+        474.0
+      ],
+      "tuft_width": 434,
+      "scale": 0.5076,
+      "runtime_path": "res://art/battle/runtime/obstacles/lava/deadwood_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "664a46b6bc2795c537f345c87b1bd5ed80598cdc41695b12345252c7d86b4af5"
+    },
+    {
+      "family": "lava",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 1,
+      "name": "a smouldering burnt stump with embers",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_lava_deadwood.png",
+      "source_box": [
+        555,
+        203,
+        1016,
+        597
+      ],
+      "tuft_center": [
+        771.0,
+        486.0
+      ],
+      "tuft_width": 434,
+      "scale": 0.5076,
+      "runtime_path": "res://art/battle/runtime/obstacles/lava/deadwood_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "c98b6c4f567199ef491e9c07972b193eb9cd5a51c70cd331bc07eb3b3185b73d"
+    },
+    {
+      "family": "lava",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 2,
+      "name": "a blackened thorn bush",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_lava_deadwood.png",
+      "source_box": [
+        1071,
+        209,
+        1521,
+        594
+      ],
+      "tuft_center": [
+        1299.2,
+        491.5
+      ],
+      "tuft_width": 436,
+      "scale": 0.5053,
+      "runtime_path": "res://art/battle/runtime/obstacles/lava/deadwood_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "526c51a82baeeea8816f8c60d3ee9d9bfe9e5207589f10d25abf2924ee9152b7"
+    },
+    {
+      "family": "lava",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 0,
+      "name": "a long charred fallen trunk with glowing embers",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_lava_deadwood.png",
+      "source_box": [
+        0,
+        581,
+        776,
+        972
+      ],
+      "tuft_center": [
+        391.5,
+        822.0
+      ],
+      "tuft_width": 757,
+      "scale": 0.5821,
+      "runtime_path": "res://art/battle/runtime/obstacles/lava/deadwood_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "5dc17d3bc8d47a0388e0e596fdb3e92d6a034073faf1814f6c3c9341e170b8ca"
+    },
+    {
+      "family": "lava",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 1,
+      "name": "a tangle of burnt, blackened branches",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_lava_deadwood.png",
+      "source_box": [
+        775,
+        607,
+        1520,
+        968
+      ],
+      "tuft_center": [
+        1144.0,
+        843.0
+      ],
+      "tuft_width": 738,
+      "scale": 0.5971,
+      "runtime_path": "res://art/battle/runtime/obstacles/lava/deadwood_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "07b903d3805c456c0d5a400cea23ce2ebb2aaf2b375a151da00821c3ea39c941"
+    },
+    {
+      "family": "underground",
+      "kind": "rock",
+      "size": 1,
+      "index": 0,
+      "name": "a tall stalagmite",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_underground_rock.png",
+      "source_box": [
+        79,
+        50,
+        526,
+        564
+      ],
+      "tuft_center": [
+        302.0,
+        392.0
+      ],
+      "tuft_width": 443,
+      "scale": 0.4973,
+      "runtime_path": "res://art/battle/runtime/obstacles/underground/rock_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "c697510008286ddec3c07b7bfa3fbfd60b6e5b734e920c7d08ef641b4959a4ca"
+    },
+    {
+      "family": "underground",
+      "kind": "rock",
+      "size": 1,
+      "index": 1,
+      "name": "a cluster of softly glowing teal crystals",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_underground_rock.png",
+      "source_box": [
+        561,
+        147,
+        984,
+        554
+      ],
+      "tuft_center": [
+        773.5,
+        426.0
+      ],
+      "tuft_width": 403,
+      "scale": 0.5467,
+      "runtime_path": "res://art/battle/runtime/obstacles/underground/rock_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "a38d8b46fa1dfbb3e286ad636ec3e153f103d13fc3635f04a80af652f45f7f36"
+    },
+    {
+      "family": "underground",
+      "kind": "rock",
+      "size": 1,
+      "index": 2,
+      "name": "a cave boulder with pale lichen",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_underground_rock.png",
+      "source_box": [
+        1048,
+        151,
+        1476,
+        546
+      ],
+      "tuft_center": [
+        1262.0,
+        406.0
+      ],
+      "tuft_width": 424,
+      "scale": 0.5196,
+      "runtime_path": "res://art/battle/runtime/obstacles/underground/rock_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "47098fb2020416965517cdd7b1bf8ddcabe764b711c2e5f8e30937c3b0c23e14"
+    },
+    {
+      "family": "underground",
+      "kind": "rock",
+      "size": 2,
+      "index": 0,
+      "name": "a row of stalagmites of different heights",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_underground_rock.png",
+      "source_box": [
+        31,
+        563,
+        754,
+        982
+      ],
+      "tuft_center": [
+        393.2,
+        863.5
+      ],
+      "tuft_width": 722,
+      "scale": 0.6103,
+      "runtime_path": "res://art/battle/runtime/obstacles/underground/rock_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "83da30ae0ef3957d1c3e3309b44c25b233ffcd2af5c0038b7ed0044046081670"
+    },
+    {
+      "family": "underground",
+      "kind": "rock",
+      "size": 2,
+      "index": 1,
+      "name": "a low rock ledge studded with glowing crystals",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_underground_rock.png",
+      "source_box": [
+        775,
+        638,
+        1514,
+        985
+      ],
+      "tuft_center": [
+        1145.5,
+        852.5
+      ],
+      "tuft_width": 730,
+      "scale": 0.6036,
+      "runtime_path": "res://art/battle/runtime/obstacles/underground/rock_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "18a3ed018446f0a6ed84165f9b194bdf79f1de123675e91e8f8fa9c9180fff21"
+    },
+    {
+      "family": "underground",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 0,
+      "name": "a giant cave mushroom with a softly glowing cap",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_underground_deadwood.png",
+      "source_box": [
+        141,
+        80,
+        559,
+        534
+      ],
+      "tuft_center": [
+        343.5,
+        409.5
+      ],
+      "tuft_width": 410,
+      "scale": 0.5374,
+      "runtime_path": "res://art/battle/runtime/obstacles/underground/deadwood_1_0.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "045a543fd53f6ea1d878cf81049ffa5f5b49de47c2796f973163b4d7d52dd80e"
+    },
+    {
+      "family": "underground",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 1,
+      "name": "a cluster of tall pale cave mushrooms",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_underground_deadwood.png",
+      "source_box": [
+        640,
+        63,
+        1045,
+        534
+      ],
+      "tuft_center": [
+        842.5,
+        391.0
+      ],
+      "tuft_width": 402,
+      "scale": 0.5481,
+      "runtime_path": "res://art/battle/runtime/obstacles/underground/deadwood_1_1.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "e7b5a94ff55237b6621f48888cbc6bad66fe929036c3621022a36db651c9130b"
+    },
+    {
+      "family": "underground",
+      "kind": "deadwood",
+      "size": 1,
+      "index": 2,
+      "name": "a petrified root column",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_underground_deadwood.png",
+      "source_box": [
+        1149,
+        64,
+        1595,
+        532
+      ],
+      "tuft_center": [
+        1369.5,
+        399.0
+      ],
+      "tuft_width": 434,
+      "scale": 0.5076,
+      "runtime_path": "res://art/battle/runtime/obstacles/underground/deadwood_1_2.png",
+      "size_px": [
+        288,
+        352
+      ],
+      "sha256": "a4e5fc50f9986f036d7ea5b56d642f344ec4a06c1c36700192f25aba1376de0b"
+    },
+    {
+      "family": "underground",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 0,
+      "name": "a fallen giant mushroom stalk",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_underground_deadwood.png",
+      "source_box": [
+        29,
+        523,
+        864,
+        891
+      ],
+      "tuft_center": [
+        454.5,
+        770.0
+      ],
+      "tuft_width": 820,
+      "scale": 0.5374,
+      "runtime_path": "res://art/battle/runtime/obstacles/underground/deadwood_2_0.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "0d55a627152cd134f68e7cc207706d2a70cbdd3bd20979398b7d00aa1d9d538e"
+    },
+    {
+      "family": "underground",
+      "kind": "deadwood",
+      "size": 2,
+      "index": 1,
+      "name": "a tangle of pale cave roots",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_underground_deadwood.png",
+      "source_box": [
+        863,
+        554,
+        1666,
+        890
+      ],
+      "tuft_center": [
+        1260.0,
+        779.0
+      ],
+      "tuft_width": 802,
+      "scale": 0.5494,
+      "runtime_path": "res://art/battle/runtime/obstacles/underground/deadwood_2_1.png",
+      "size_px": [
+        512,
+        352
+      ],
+      "sha256": "6cf314ef4703691d8d38f87023756b80f3b5ff737dfb363515d2b470cbd3d74e"
+    }
+  ]
+}

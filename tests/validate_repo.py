@@ -27879,28 +27879,76 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
         return match.group(0) if match else ""
 
     board_text = BATTLE_BOARD_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    # Every battle terrain is fought on one painted battlefield with its own
+    # props, derived from generated masters by tools/build_battlefield_art.py.
     for required_token in (
-        'const TERRAIN_TEXTURE_MODULATE := Color(0.84, 0.86, 0.80, 0.24)',
-        'const TERRAIN_CONTEXT_TEXTURE_MODULATE := Color(0.78, 0.81, 0.75, 0.92)',
-        'const TERRAIN_CONTEXT_READABILITY_WASH := Color(0.015, 0.020, 0.018, 0.10)',
-        'const TERRAIN_CONTEXT_MODEL := "continuous_primary_field_with_subordinate_hex_variation"',
-        '"terrain_context_underlay_enabled": texture != null',
-        '"terrain_context_covers_full_field": texture != null and field_rect.size.x > 0.0 and field_rect.size.y > 0.0',
-        '"terrain_context_preserves_hex_authority": texture != null and int(sampling_summary.get("texture_source_sample_count", 0)) == _terrain_hex_tile_count()',
-        '"terrain_context_primary": texture != null and TERRAIN_CONTEXT_TEXTURE_MODULATE.a > TERRAIN_TEXTURE_MODULATE.a',
-        '"terrain_hex_variation_subordinate": texture != null and TERRAIN_TEXTURE_MODULATE.a >= 0.18 and TERRAIN_TEXTURE_MODULATE.a <= 0.30',
-        '"single_board_backdrop": texture != null',
-        '"terrain_single_board_backdrop": terrain_texture != null',
-        '"texture_sample_mode": "cover_region" if texture != null else ""',
+        'const BATTLEFIELD_ART_ROOT := "res://art/battle/runtime/battlefields"',
+        'const OBSTACLE_ART_ROOT := "res://art/battle/runtime/obstacles"',
+        'const OBSTACLE_ART_VARIANTS := {1: 3, 2: 2}',
+        'const OBSTACLE_ART_CANVAS := {1: Vector2(288.0, 352.0), 2: Vector2(512.0, 352.0)}',
+        'const OBSTACLE_ART_PIXELS_PER_HEX := 216.0',
+        'const OBSTACLE_ART_ANCHOR_Y := 256.0',
+        'func validation_battlefield_summary() -> Dictionary:',
+        'return String(BATTLEFIELD_FAMILIES.get(normalized if normalized != "" else "plains", "grass"))',
+        'return "%s/%s.png" % [BATTLEFIELD_ART_ROOT, battlefield_family(terrain_id)]',
+        'return "%s/%s/%s_%d_%d.png" % [OBSTACLE_ART_ROOT, battlefield_family(terrain_id), kind, size, variant % int(OBSTACLE_ART_VARIANTS[size])]',
+        'return Rect2(anchor - Vector2(canvas.x * 0.5, OBSTACLE_ART_ANCHOR_Y * scale), canvas)',
+        "paths.append(battlefield_art_path(terrain_id))",
+        "return TERRAIN_COLORS.get(battlefield_family(terrain_id), TERRAIN_COLORS[\"grass\"])",
     ):
-        ensure(required_token in board_text, errors, f"BattleBoardView terrain context is missing exact authority token: {required_token}")
-    for rejected_token in (
-        'const TERRAIN_TEXTURE_MODULATE := Color(0.98, 0.99, 0.95, 0.98)',
-        'const TERRAIN_CONTEXT_TEXTURE_MODULATE := Color(0.56, 0.60, 0.52, 0.72)',
-        'const TERRAIN_CONTEXT_MODEL := "subdued_full_field_underlay_beneath_authoritative_hex_grid"',
-        '"texture_sample_mode": "per_hex_clipped" if texture != null else ""',
+        ensure(required_token in board_text, errors, f"BattleBoardView painted battlefield is missing token: {required_token}")
+    for retired_token in (
+        "res://art/battle/terrain/",
+        "biome_components",
+        "TERRAIN_TEXTURE_PATHS",
+        "TERRAIN_TEXTURE_MODULATE",
+        "TERRAIN_CONTEXT_",
+        "TERRAIN_EDGE_CONTEXT",
+        "_terrain_rendering_mode",
+        "_terrain_texture_visible",
+        "validation_terrain_rendering_summary",
+        "validation_terrain_backdrop_summary",
     ):
-        ensure(rejected_token not in board_text, errors, f"BattleBoardView must not retain the rejected disconnected terrain blend: {rejected_token}")
+        ensure(retired_token not in board_text, errors, f"BattleBoardView must not keep the retired tiled-terrain model: {retired_token}")
+    families_block = re.search(r"^const BATTLEFIELD_FAMILIES := \{\n([\s\S]*?)^\}", board_text, re.MULTILINE)
+    battlefield_families = dict(re.findall(r'^\t"([a-z_]+)": "([a-z_]+)",$', families_block.group(1), re.MULTILINE)) if families_block else {}
+    ensure(bool(battlefield_families), errors, "Could not read BattleBoardView BATTLEFIELD_FAMILIES")
+    encounter_rows = load_json(CONTENT_DIR / "encounters.json").get("items", []) + load_json(CONTENT_DIR / "generated_neutral_companies.json").get("encounters", [])
+    encounter_terrains = {str(encounter.get("terrain", "plains")) for encounter in encounter_rows if isinstance(encounter, dict)}
+    for terrain in sorted(encounter_terrains | {"plains"}):
+        ensure(terrain in battlefield_families, errors, f"Battle terrain {terrain} must name its painted battlefield in BATTLEFIELD_FAMILIES")
+    families = sorted(set(battlefield_families.values()))
+    art_source = ROOT / "art/battle/source/generated/battlefields_20261010"
+    production_path = art_source / "production.json"
+    recipes_path = art_source / "recipes.json"
+    ensure(production_path.exists() and recipes_path.exists() and (art_source / ".gdignore").exists(), errors, "Battlefield art must keep its production record, recipes and .gdignore")
+    if production_path.exists() and recipes_path.exists():
+        production = load_json(production_path)
+        recipes = load_json(recipes_path)
+        ensure(production.get("schema") == "battle_battlefield_art_production_v1" and production.get("generation_mode") == "built_in_image_gen", errors, "Battlefield art production record must name its schema and generation mode")
+        ensure(sorted(str(entry.get("family", "")) for entry in production.get("battlefields", [])) == families, errors, "Every battlefield family must have exactly one generated battlefield master")
+        ensure(sorted((str(entry.get("family", "")), str(entry.get("kind", ""))) for entry in production.get("prop_sheets", [])) == sorted((family, kind) for family in families for kind in ("deadwood", "rock")), errors, "Every battlefield family must have one rock and one deadwood prop sheet")
+        for entry in production.get("battlefields", []) + production.get("prop_sheets", []):
+            ensure(bool(entry.get("prompt")) and bool(entry.get("generation_original")) and len(str(entry.get("source_sha256", ""))) == 64, errors, f"Battlefield art master {entry.get('source_path')} must record its prompt, generation original and sha256")
+        ensure(recipes.get("schema") == "battle_battlefield_art_recipes_v1" and recipes.get("obstacle_pixels_per_hex") == 216.0 and recipes.get("obstacle_anchor_y") == 256, errors, "Battlefield art recipes must keep the board's prop density and anchor")
+        expected_paths = {f"res://art/battle/runtime/battlefields/{family}.png" for family in families}
+        expected_paths |= {f"res://art/battle/runtime/obstacles/{family}/{kind}_{size}_{index}.png" for family in families for kind in ("rock", "deadwood") for size, count in ((1, 3), (2, 2)) for index in range(count)}
+        runtime_rows = [(entry, (1920, 1080), "0.82") for entry in recipes.get("battlefields", [])]
+        runtime_rows += [(entry, tuple(recipes.get("obstacle_canvas", {}).get(str(entry.get("size", 0)), [0, 0])), "0.85") for entry in recipes.get("obstacles", [])]
+        ensure({str(entry.get("runtime_path", "")) for entry, _size, _quality in runtime_rows} == expected_paths and len(runtime_rows) == len(expected_paths), errors, "Battlefield art recipes must list one battlefield and ten props for every battlefield family")
+        for entry, expected_size, quality in runtime_rows:
+            runtime_path = ROOT / str(entry.get("runtime_path", "")).removeprefix("res://")
+            import_path = runtime_path.with_name(runtime_path.name + ".import")
+            if not runtime_path.exists() or not import_path.exists():
+                fail(errors, f"Missing battlefield runtime art or its import settings: {entry.get('runtime_path')}")
+                continue
+            ensure(hashlib.sha256(runtime_path.read_bytes()).hexdigest() == entry.get("sha256"), errors, f"Battlefield runtime art no longer matches its recipe: {entry.get('runtime_path')}")
+            ensure(png_size(runtime_path) == expected_size, errors, f"Battlefield runtime art has the wrong size: {entry.get('runtime_path')}")
+            import_text = import_path.read_text(encoding="utf-8")
+            ensure("compress/mode=1" in import_text and f"compress/lossy_quality={quality}" in import_text and "mipmaps/generate=false" in import_text and "process/size_limit=0" in import_text, errors, f"Battlefield runtime art must import lossy at {quality} without mipmaps: {entry.get('runtime_path')}")
+    gitignore_text = (ROOT / ".gitignore").read_text(encoding="utf-8")
+    for exception in ("!art/battle/runtime/battlefields/*.png.import", "!art/battle/runtime/obstacles/*/*.png.import"):
+        ensure(exception in gitignore_text.splitlines(), errors, f".gitignore must track the battlefield art's import settings: {exception}")
     draw_terrain = gdscript_function_block(board_text, "_draw_terrain")
     ensure(draw_terrain != "", errors, "Could not isolate BattleBoardView _draw_terrain")
     if draw_terrain:
@@ -27908,8 +27956,9 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
         # missing painting falls back to per-hex terrain colours.
         terrain_order = tuple(draw_terrain.find(token) for token in (
             "var board_rect := Rect2(Vector2.ZERO, size)",
-            "if terrain_texture != null:",
-            "draw_texture_rect_region(terrain_texture, board_rect, _cover_region(terrain_texture.get_size(), board_rect.size))",
+            "var battlefield := _battlefield_texture()",
+            "if battlefield != null:",
+            "draw_texture_rect_region(battlefield, board_rect, _cover_region(battlefield.get_size(), board_rect.size))",
             "else:",
             "_draw_hex_snapped_procedural_terrain(hex_layout, terrain)",
             "draw_texture_rect(_vignette(), board_rect, false, BATTLEFIELD_VIGNETTE_COLOR)",
@@ -27924,18 +27973,36 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
         "return Rect2((texture_size - source_size) * 0.5, source_size)",
     ):
         ensure(required_token in cover_region, errors, f"Battle battlefield cover must keep the painting's aspect and centre: {required_token}")
-    for obsolete_token in ("TERRAIN_EDGE_CONTEXT", "_draw_terrain_edge_context", "_terrain_edge_context_rects", "_terrain_edge_source_rect"):
-        ensure(obsolete_token not in board_text, errors, f"BattleBoardView must not retain the incomplete rectangular-edge terrain model: {obsolete_token}")
-    rendering_mode = gdscript_function_block(board_text, "_terrain_rendering_mode")
-    ensure('return "painted_battlefield_cover" if texture_loaded else "hex_snapped_color_fallback"' in rendering_mode, errors, "Battle terrain rendering mode must distinguish the painted battlefield cover from the procedural fallback")
-    texture_visible = gdscript_function_block(board_text, "_terrain_texture_visible")
+    # The Options' hex grid: Full outlines every hex, Range only the hexes the
+    # player's stack can move to, and Off shows no grid and no movement range.
+    grid_cells = gdscript_function_block(board_text, "_hex_grid_cells")
     for required_token in (
-        "TERRAIN_CONTEXT_TEXTURE_MODULATE.a >= 0.88",
-        "TERRAIN_TEXTURE_MODULATE.a >= 0.18",
-        "TERRAIN_TEXTURE_MODULATE.a <= 0.30",
-        "TERRAIN_CONTEXT_TEXTURE_MODULATE.a > TERRAIN_TEXTURE_MODULATE.a",
+        "match SettingsService.battle_hex_grid_mode_id():",
+        "SettingsService.BATTLE_HEX_GRID_FULL:",
+        "for row in range(HEX_ROWS):",
+        "SettingsService.BATTLE_HEX_GRID_RANGE:",
+        'if not _spell_target_mode and String(_active_stack.get("side", "")) == "player":',
+        'cells.assign(_movement_range_region().get("cells", []))',
     ):
-        ensure(required_token in texture_visible, errors, f"Battle cohesive terrain visibility guard is missing exact blend bound: {required_token}")
+        ensure(required_token in grid_cells, errors, f"Battle hex grid modes are missing token: {required_token}")
+    ensure("return SettingsService.battle_hex_grid_mode_id() != SettingsService.BATTLE_HEX_GRID_OFF" in gdscript_function_block(board_text, "_movement_range_shown"), errors, "Battle hex grid Off must also hide the movement range")
+    shell_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8") if BATTLE_SCENE_PATH.exists() else ""
+    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for button, handler in (("GridFull", "_on_grid_full_pressed"), ("GridRange", "_on_grid_range_pressed"), ("GridOff", "_on_grid_off_pressed")):
+        ensure(f'[node name="{button}" type="Button" parent="Hud/OptionsPopover/OptionsBox/GridRow/GridBar"]' in shell_scene_text, errors, f"Battle Options must offer the hex grid button {button}")
+        ensure(f'[connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/GridRow/GridBar/{button}" to="." method="{handler}"]' in shell_scene_text and f"func {handler}() -> void:" in shell_text, errors, f"Battle Options hex grid button {button} must call {handler}")
+    set_grid = gdscript_function_block(shell_text, "_set_battle_hex_grid")
+    for required_token in ("SettingsService.set_battle_hex_grid_mode_id(mode_id)", "_battle_board_view.queue_redraw()", "_refresh_grid_buttons()"):
+        ensure(required_token in set_grid, errors, f"Battle Options hex grid must save the setting and redraw the field: {required_token}")
+    settings_text = SETTINGS_SERVICE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const BATTLE_HEX_GRID_FULL := "full"',
+        'const BATTLE_HEX_GRID_RANGE := "range"',
+        'const BATTLE_HEX_GRID_OFF := "off"',
+        '"battle_hex_grid": BATTLE_HEX_GRID_FULL',
+        '[15, "gameplay", "battle_hex_grid", TYPE_STRING]',
+    ):
+        ensure(required_token in settings_text, errors, f"SettingsService battle hex grid is missing token: {required_token}")
 
     for required_token in (
         'const TERRAIN_AMBIENT_MODEL := "deterministic_terrain_specific_passive_motes"',
@@ -27959,10 +28026,10 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
         ensure(required_token in board_text, errors, f"Battle terrain ambience is missing exact presentation ownership: {required_token}")
     battle_draw = gdscript_function_block(board_text, "_draw_board")
     ambient_draw_order = [battle_draw.find(token) for token in (
-        "_draw_terrain(field_rect, hex_layout)",
+        "_draw_terrain(hex_layout)",
         "_draw_terrain_ambient(field_rect)",
         "_draw_hero_figures(hex_layout)",
-        "_draw_hex_grid(hex_layout, terrain_texture_loaded)",
+        "_draw_hex_grid(hex_layout)",
         "_draw_field_objectives(hex_layout)",
         "_draw_tactical_affordances(hex_layout, stack_cells)",
         "_draw_controller_cursor(hex_layout)",
@@ -27986,10 +28053,10 @@ def validate_battle_terrain_context_and_system_frame(errors: list[str]) -> None:
     ambient_draw = gdscript_function_block(board_text, "_draw_terrain_ambient")
     ambient_summary = gdscript_function_block(board_text, "validation_terrain_ambient_summary")
     for required_token in (
-        "TERRAIN_AMBIENT_PROFILES.get(_terrain_texture_id(_battle_terrain_id()), {})",
+        "TERRAIN_AMBIENT_PROFILES.get(battlefield_family(_battle_terrain_id()), {})",
         "return profile_value if profile_value is Dictionary else {}",
     ):
-        ensure(required_token in ambient_profile, errors, f"Battle terrain ambience must resolve only through the authored terrain alias/profile table: {required_token}")
+        ensure(required_token in ambient_profile, errors, f"Battle terrain ambience must resolve only through the battlefield family's profile: {required_token}")
     for required_token in (
         "not _battle.is_empty()",
         "not _terrain_ambient_profile().is_empty()",
@@ -33627,7 +33694,7 @@ def validate_battle_movement_range_perimeter_contour(errors: list[str]) -> None:
     ensure(affordance and cue_draw and contour_summary and neighbor_for_edge and summary, errors, "Could not isolate Battle movement-range cue/perimeter/summary ownership")
     if affordance:
         draw_order = tuple(affordance.find(token) for token in (
-            "if player_input_active:",
+            "if player_input_active and _movement_range_shown():",
             "var legal_destinations: Array = _legal_destinations()",
             "var movement_range_region := _movement_range_region()",
             'var legal_cell_keys: Dictionary = movement_range_region.get("cell_keys", {})',
@@ -33724,7 +33791,7 @@ def validate_battle_movement_range_perimeter_contour(errors: list[str]) -> None:
             '"movement_range_pip_radius_factor": MOVE_RANGE_PIP_RADIUS_FACTOR',
             '"movement_range_pip_alpha": MOVE_RANGE_PIP_ALPHA',
             '"movement_range_complete_cell_outlines": false',
-            '"movement_range_all_legal_cells_drawn": true',
+            '"movement_range_all_legal_cells_drawn": _movement_range_shown()',
             '"movement_range_hover_only": false',
             '"movement_range_below_active_targets_and_stacks": true',
             '"movement_range_action_authority": "legal_destinations_for_active_stack"',
@@ -67212,7 +67279,7 @@ def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
             "invalid_backup_fails_closed",
             "live_not_regular_file",
             "full_input_map_rollback",
-            'config.get_value("meta", "version", 0)) == 14',
+            'config.get_value("meta", "version", 0)) == 15',
         ):
             ensure(required_token in transaction_regression_text, errors, f"Settings transactional-persistence regression is missing token: {required_token}")
 

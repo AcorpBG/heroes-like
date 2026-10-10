@@ -14,6 +14,8 @@
 !art/results/runtime/backdrops/outcome_victory.png.import
 !art/results/runtime/backdrops/outcome_defeat.png.import
 !art/overworld/runtime/objects/towns/biome_fit/*.png.import
+!art/battle/runtime/battlefields/*.png.import
+!art/battle/runtime/obstacles/*/*.png.import
 bin/*.so
 bin/*.dll.a
 # MSVC link and debug byproducts of the Windows native build.

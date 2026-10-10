@@ -111,6 +111,11 @@ const AUTO_BATTLE_DELAY_SECONDS := 0.3
 @onready var _speed_normal_button: Button = %SpeedNormal
 @onready var _speed_fast_button: Button = %SpeedFast
 @onready var _speed_instant_button: Button = %SpeedInstant
+@onready var _grid_label: Label = %GridLabel
+@onready var _grid_bar: HBoxContainer = %GridBar
+@onready var _grid_full_button: Button = %GridFull
+@onready var _grid_range_button: Button = %GridRange
+@onready var _grid_off_button: Button = %GridOff
 @onready var _system_body_label: Label = %SystemBody
 @onready var _save_slot_picker: OptionButton = %SaveSlot
 @onready var _save_button: Button = %Save
@@ -1861,6 +1866,7 @@ func _open_popover(popover: PanelContainer) -> void:
 	if popover == _options_popover:
 		_build_save_details()
 		_refresh_speed_buttons()
+		_refresh_grid_buttons()
 	elif popover == _spellbook_popover:
 		_rebuild_spellbook()
 	elif popover == _log_popover:
@@ -2050,6 +2056,65 @@ func _refresh_speed_buttons() -> void:
 			if selected
 			else "Switch battle playback speed to %s." % String(speed_id).capitalize()
 		)
+		button.add_theme_color_override("font_disabled_color", BattleCommandButtonScript.ACTIVE if selected else DIM)
+
+
+func _on_grid_full_pressed() -> void:
+	_set_battle_hex_grid(SettingsService.BATTLE_HEX_GRID_FULL)
+
+
+func _on_grid_range_pressed() -> void:
+	_set_battle_hex_grid(SettingsService.BATTLE_HEX_GRID_RANGE)
+
+
+func _on_grid_off_pressed() -> void:
+	_set_battle_hex_grid(SettingsService.BATTLE_HEX_GRID_OFF)
+
+
+## Saves the hex grid with the settings and redraws the field with it.
+func _set_battle_hex_grid(mode_id: String) -> Dictionary:
+	var requesting_button := _hex_grid_button(mode_id)
+	var had_focus := requesting_button.has_focus()
+	var result: Dictionary = SettingsService.set_battle_hex_grid_mode_id(mode_id)
+	if not bool(result.get("ok", false)):
+		_last_message = "The hex grid setting could not be saved."
+		_set_command_hint(_last_message)
+	_battle_board_view.queue_redraw()
+	_refresh_grid_buttons()
+	if had_focus:
+		_restore_battle_presentation_speed_focus(_first_enabled_grid_button())
+	return result
+
+
+func _hex_grid_button(mode_id: String) -> Button:
+	match mode_id:
+		SettingsService.BATTLE_HEX_GRID_RANGE:
+			return _grid_range_button
+		SettingsService.BATTLE_HEX_GRID_OFF:
+			return _grid_off_button
+	return _grid_full_button
+
+
+func _first_enabled_grid_button() -> Button:
+	for button in [_grid_full_button, _grid_range_button, _grid_off_button]:
+		if not button.disabled:
+			return button
+	return null
+
+
+## The selected grid reads as pressed, like the speed.
+func _refresh_grid_buttons() -> void:
+	var mode := SettingsService.battle_hex_grid_mode_id()
+	for option in SettingsService.BATTLE_HEX_GRID_OPTIONS:
+		var mode_id := String(option.get("id", ""))
+		var button := _hex_grid_button(mode_id)
+		var selected := mode_id == mode
+		button.disabled = selected
+		button.tooltip_text = {
+			SettingsService.BATTLE_HEX_GRID_FULL: "Outline every hex of the field.",
+			SettingsService.BATTLE_HEX_GRID_RANGE: "Outline only the hexes your stack can move to.",
+			SettingsService.BATTLE_HEX_GRID_OFF: "No grid, and no movement range.",
+		}[mode_id]
 		button.add_theme_color_override("font_disabled_color", BattleCommandButtonScript.ACTIVE if selected else DIM)
 
 
@@ -2625,6 +2690,7 @@ func _refresh() -> void:
 	section_started = ProfileLogScript.begin_usec()
 	_refresh_command_bar()
 	_refresh_speed_buttons()
+	_refresh_grid_buttons()
 	buckets["actions"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
 	_refresh_save_bar_status()
@@ -3014,11 +3080,13 @@ func _apply_hud_scale(k: float) -> void:
 	_spellbook_note.add_theme_font_size_override("font_size", _font_size(13.0))
 	(_spellbook_portrait.get_parent() as HBoxContainer).add_theme_constant_override("separation", int(round(12.0 * k)))
 	_spell_list.add_theme_constant_override("separation", int(round(6.0 * k)))
-	_speed_label.add_theme_font_size_override("font_size", _font_size(13.5))
-	_speed_label.add_theme_color_override("font_color", CREAM)
-	for button in [_speed_normal_button, _speed_fast_button, _speed_instant_button]:
+	for label in [_speed_label, _grid_label]:
+		label.add_theme_font_size_override("font_size", _font_size(13.5))
+		label.add_theme_color_override("font_color", CREAM)
+	for button in [_speed_normal_button, _speed_fast_button, _speed_instant_button, _grid_full_button, _grid_range_button, _grid_off_button]:
 		_style_popover_button(button, Vector2(72.0, 32.0) * k, k)
-	_speed_bar.add_theme_constant_override("separation", int(round(4.0 * k)))
+	for bar in [_speed_bar, _grid_bar]:
+		bar.add_theme_constant_override("separation", int(round(4.0 * k)))
 	for button in [_save_button, _settings_button, _menu_button]:
 		_style_popover_button(button, Vector2(96.0, 36.0) * k, k)
 	(_save_button.get_parent() as HBoxContainer).add_theme_constant_override("separation", int(round(8.0 * k)))

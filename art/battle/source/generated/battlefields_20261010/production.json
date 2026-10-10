@@ -1,0 +1,656 @@
+{
+  "schema": "battle_battlefield_art_production_v1",
+  "content_slice_id": "battle-rework-battlefield-art-20261009",
+  "generation_mode": "built_in_image_gen",
+  "asset_policy": "original_generated_battlefield_art_no_homm_art_import",
+  "tool": "Codex CLI built-in image generation through the imggen skill; transparent requests for the prop sheets",
+  "battlefield_prompt_template": "Painted fantasy battlefield background for a turn-based hex strategy game. Wide 16:9 landscape image, seen from a high three-quarter top-down angle (about 55 degrees down), in the tradition of classic 1990s fantasy strategy battle screens, but painted with modern detail. Match the camera angle, the layout, the lighting softness and the painterly rendering of the {REFROLE}.\n\nComposition:\n- The central 75% of the image is one open, flat, calm {FIELD}. Keep it low in contrast and evenly lit so that small painted figures and a thin hex grid stay readable on top of it. No {FORBIDDEN} or objects anywhere in this central field.\n- Along the top edge, a narrow band (about the top 14% of the image) showing {TOP}, seen at a slight angle and fading into light haze.\n- On the far left and far right edges (outer 12% on each side), {SIDES}, where an army commander could stand.\n- The bottom edge darkens a little with {BOTTOM} in the near foreground.\n\nLight: {LIGHT}\n\nStyle: painterly digital illustration with visible fine brush texture, rich but natural colours{PALETTE}.\n\nNo people, no animals, no creatures, no buildings, no text, no UI, no hex grid lines, no border.",
+  "prop_prompt_template": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that {FAMILY} battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: {S1}; {S2}; {S3}.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: {D1}; {D2}.\n\nEach prop sits on a small, irregular tuft of its own ground ({BASE}) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+  "notes": "The grass battlefield is the painted meadow of the signed-off battle mockup (2026-10-09). Every other battlefield takes its camera, layout and rendering from it and its palette from the family's earlier ground texture; each prop sheet takes its colours and light from its family's battlefield. Masters stay out of Git; tools/build_battlefield_art.py derives the runtime art from them.",
+  "battlefields": [
+    {
+      "family": "grass",
+      "terrains": [
+        "grass",
+        "plains"
+      ],
+      "prompt": "Painted fantasy battlefield background for a turn-based hex strategy game. Wide landscape image, seen from a high three-quarter top-down angle (about 55 degrees down), in the tradition of classic 1990s fantasy strategy battle screens, but painted with modern detail.\n\nComposition:\n- The central 75% of the image is one open, flat, calm summer meadow: short grass in soft olive, sage and warm yellow-green, with gentle broad patches of lighter dry grass and a few faint trampled bare-earth spots. Keep it low in contrast and evenly lit so that small painted figures and a thin hex grid stay readable on top of it. No rocks, trees, logs, paths, water, flowers clumps or objects anywhere in this central field.\n- Along the top edge, a narrow band (about the top 14% of the image) showing the edge of a distant mixed forest and soft blue-green rolling hills under a pale sky, seen at a slight angle and fading into light haze.\n- On the far left and far right edges (outer 12% on each side), slightly raised grassy knolls with a few small wildflowers and a scatter of pebbles, where an army commander could stand.\n- The bottom edge darkens a little with taller grass tufts in the near foreground.\n\nLight: soft late-afternoon sunlight from the upper left, long gentle shadows only at the edges.\n\nStyle: painterly digital illustration with visible fine brush texture, rich but natural colours, matching the painted grass texture and palette of the first reference image and the hand-painted rendering of the second reference image.\n\nNo people, no animals, no creatures, no buildings, no text, no UI, no hex grid lines, no border.",
+      "references": [
+        "res://art/battle/terrain/grass.png",
+        "res://art/overworld/runtime/actors_20260918/hero_signature_lyra.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12100-12f8-79c2-9afe-1af48d0367e5/exec-2728d3d3-c790-4ea0-8d38-4591182e85fa.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_grass.png",
+      "source_sha256": "0be8a4d9c5f1a16dc395557d065d80ad789af0b56c452772c84e631f3f12388c"
+    },
+    {
+      "family": "forest",
+      "terrains": [
+        "forest"
+      ],
+      "prompt": "Painted fantasy battlefield background for a turn-based hex strategy game. Wide 16:9 landscape image, seen from a high three-quarter top-down angle (about 55 degrees down), in the tradition of classic 1990s fantasy strategy battle screens, but painted with modern detail. Match the camera angle, the layout, the lighting softness and the painterly rendering of the second reference image (an approved battlefield from the same game).\n\nComposition:\n- The central 75% of the image is one open, flat, calm forest clearing floor: short soft grass mixed with moss, a light scatter of fallen leaves and pine needles in muted greens and warm browns, with gentle broad patches of darker moss and a few faint bare-earth spots. Keep it low in contrast and evenly lit so that small painted figures and a thin hex grid stay readable on top of it. No rocks, trees, stumps, logs, roots, paths, water or objects anywhere in this central field.\n- Along the top edge, a narrow band (about the top 14% of the image) showing the edge of an old deep forest: tall dark trunks, a layered green canopy and ferns in the shade, seen at a slight angle and fading into light haze.\n- On the far left and far right edges (outer 12% on each side), slightly raised mossy banks with ferns, a few exposed roots and small mushrooms, with large old tree trunks only at the very corners, where an army commander could stand.\n- The bottom edge darkens a little with ferns and tall shade grass in the near foreground.\n\nLight: soft green-gold daylight filtering through the canopy from the upper left, dappled only at the edges.\n\nStyle: painterly digital illustration with visible fine brush texture, rich but natural colours, taking the ground materials and palette from the first reference image.\n\nNo people, no animals, no creatures, no buildings, no text, no UI, no hex grid lines, no border.",
+      "references": [
+        "res://art/battle/terrain/forest.png",
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_grass.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12381-45cf-7de0-b652-881cab38a895/exec-92609e1e-57e0-4ee9-a47e-40fcf39ebf68.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_forest.png",
+      "source_sha256": "b2d729a9b37163eccaf92b6ed01d704f5f5b28a875d0c3afc8b16cb51859a575"
+    },
+    {
+      "family": "swamp",
+      "terrains": [
+        "swamp",
+        "marsh"
+      ],
+      "prompt": "Painted fantasy battlefield background for a turn-based hex strategy game. Wide 16:9 landscape image, seen from a high three-quarter top-down angle (about 55 degrees down), in the tradition of classic 1990s fantasy strategy battle screens, but painted with modern detail. Match the camera angle, the layout, the lighting softness and the painterly rendering of the second reference image (an approved battlefield from the same game).\n\nComposition:\n- The central 75% of the image is one open, flat, calm swamp ground of firm dark peat and wet moss with short marsh grass in deep olive and murky green, with a few small, flat, shallow puddles reflecting the sky. Keep it low in contrast and evenly lit so that small painted figures and a thin hex grid stay readable on top of it. No rocks, trees, stumps, logs, reed clumps, deep water or objects anywhere in this central field.\n- Along the top edge, a narrow band (about the top 14% of the image) showing murky swamp water with drowned dead trees, hanging moss and low mist, seen at a slight angle and fading into light haze.\n- On the far left and far right edges (outer 12% on each side), low muddy banks with reed beds, cattails and lily pads in small pools, where an army commander could stand.\n- The bottom edge darkens a little with reeds, cattails and dark water in the near foreground.\n\nLight: overcast, humid light with a faint green tint, mist lingering at the edges.\n\nStyle: painterly digital illustration with visible fine brush texture, rich but natural colours, taking the ground materials and palette from the first reference image.\n\nNo people, no animals, no creatures, no buildings, no text, no UI, no hex grid lines, no border.",
+      "references": [
+        "res://art/battle/terrain/swamp.png",
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_grass.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12381-45dd-7833-93d4-0dbad0bb3fb8/exec-af060ead-40d8-4a55-a1da-43c318602fcf.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_swamp.png",
+      "source_sha256": "3b12fa76bf112a14866597bfa67fb52fbe578dda12286a6327ea34b5033408a7"
+    },
+    {
+      "family": "mire",
+      "terrains": [
+        "mire"
+      ],
+      "prompt": "Painted fantasy battlefield background for a turn-based hex strategy game. Wide 16:9 landscape image, seen from a high three-quarter top-down angle (about 55 degrees down), in the tradition of classic 1990s fantasy strategy battle screens, but painted with modern detail. Match the camera angle, the layout, the lighting softness and the painterly rendering of the second reference image (an approved battlefield from the same game).\n\nComposition:\n- The central 75% of the image is one open, flat, calm open fen: firm sedge, peat moss and cotton grass in pale olive, rust and straw tones, with a few small flat silvery pools of shallow water. Keep it low in contrast and evenly lit so that small painted figures and a thin hex grid stay readable on top of it. No rocks, trees, stumps, logs, deep water or objects anywhere in this central field.\n- Along the top edge, a narrow band (about the top 14% of the image) showing a misty bog with dark pools, scattered thin birches and low hills beyond, seen at a slight angle and fading into light haze.\n- On the far left and far right edges (outer 12% on each side), tussocky peat banks with cotton grass and heather, where an army commander could stand.\n- The bottom edge darkens a little with tall sedge and rushes in the near foreground.\n\nLight: cool, soft morning light from the upper left with thin mist at the edges.\n\nStyle: painterly digital illustration with visible fine brush texture, rich but natural colours, taking the ground materials and palette from the first reference image.\n\nNo people, no animals, no creatures, no buildings, no text, no UI, no hex grid lines, no border.",
+      "references": [
+        "res://art/battle/terrain/mire.png",
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_grass.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12381-45dd-72f2-a099-4ede73c2ed3c/exec-7acf8c24-fa4f-4813-83c5-4a05e8825d57.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_mire.png",
+      "source_sha256": "0d5592d381ec6cd53d297987ee44a3d0154dbde02d2e5f9ca1e0e61a874acadb"
+    },
+    {
+      "family": "rough",
+      "terrains": [
+        "rough",
+        "hills",
+        "highland",
+        "badlands"
+      ],
+      "prompt": "Painted fantasy battlefield background for a turn-based hex strategy game. Wide 16:9 landscape image, seen from a high three-quarter top-down angle (about 55 degrees down), in the tradition of classic 1990s fantasy strategy battle screens, but painted with modern detail. Match the camera angle, the layout, the lighting softness and the painterly rendering of the second reference image (an approved battlefield from the same game).\n\nComposition:\n- The central 75% of the image is one open, flat, calm rough badland plateau: firm reddish-brown earth with sparse dry grass, fine gravel and faint cracks in ochre, rust and dusty sage. Keep it low in contrast and evenly lit so that small painted figures and a thin hex grid stay readable on top of it. No rocks, boulders, bushes, trees, gullies, paths or objects anywhere in this central field.\n- Along the top edge, a narrow band (about the top 14% of the image) showing eroded red sandstone cliffs and mesas with scrub on the ledges under a pale dusty sky, seen at a slight angle and fading into light haze.\n- On the far left and far right edges (outer 12% on each side), slightly raised stony slopes with dry scrub, tufts of tough grass and loose stones, where an army commander could stand.\n- The bottom edge darkens a little with dry grass tufts and pebbles in the near foreground.\n\nLight: warm, dry afternoon sunlight from the upper left.\n\nStyle: painterly digital illustration with visible fine brush texture, rich but natural colours, taking the ground materials and palette from the first reference image.\n\nNo people, no animals, no creatures, no buildings, no text, no UI, no hex grid lines, no border.",
+      "references": [
+        "res://art/battle/terrain/hills.png",
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_grass.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12381-45ea-7372-b79f-4db59aed4343/exec-24f16dc9-4827-42e6-ba7e-9db92751275d.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_rough.png",
+      "source_sha256": "b4a19b4eb62d0bf38dec74e2ae2956b48ebfcb817061e8372d758e6a88f85634"
+    },
+    {
+      "family": "road",
+      "terrains": [
+        "road"
+      ],
+      "prompt": "Painted fantasy battlefield background for a turn-based hex strategy game. Wide 16:9 landscape image, seen from a high three-quarter top-down angle (about 55 degrees down), in the tradition of classic 1990s fantasy strategy battle screens, but painted with modern detail. Match the camera angle, the layout, the lighting softness and the painterly rendering of the second reference image (an approved battlefield from the same game).\n\nComposition:\n- The central 75% of the image is one open, flat, calm grassy field crossed from left to right through its middle by a broad, worn, flat dirt road with faint wheel ruts; the grass on both sides of the road is short and even in olive and yellow-green. Keep it low in contrast and evenly lit so that small painted figures and a thin hex grid stay readable on top of it. No rocks, trees, fences, carts, signposts, water or objects anywhere in this central field.\n- Along the top edge, a narrow band (about the top 14% of the image) showing a hedgerow and a weathered wooden fence along farmland, with distant fields and a line of trees, seen at a slight angle and fading into light haze.\n- On the far left and far right edges (outer 12% on each side), slightly raised grassy verges with wildflowers and a few stones above and below the road, where an army commander could stand.\n- The bottom edge darkens a little with taller grass and wildflowers in the near foreground.\n\nLight: clear late-morning sunlight from the upper left.\n\nStyle: painterly digital illustration with visible fine brush texture, rich but natural colours, taking the ground materials and palette from the first reference image.\n\nNo people, no animals, no creatures, no buildings, no text, no UI, no hex grid lines, no border.",
+      "references": [
+        "res://art/battle/terrain/road.png",
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_grass.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12381-45dd-7c33-8d9c-16d67d24b361/exec-17390469-a095-4ce9-bc23-0b31b8998c96.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_road.png",
+      "source_sha256": "570520652054d7e233ac769ce7b56b24597fda95b7ca01d114f5ed03748a9abd"
+    },
+    {
+      "family": "snow",
+      "terrains": [
+        "snow"
+      ],
+      "prompt": "Painted fantasy battlefield background for a turn-based hex strategy game. Wide 16:9 landscape image, seen from a high three-quarter top-down angle (about 55 degrees down), in the tradition of classic 1990s fantasy strategy battle screens, but painted with modern detail. Match the camera angle, the layout, the lighting softness and the painterly rendering of the second reference image (an approved battlefield from the same game).\n\nComposition:\n- The central 75% of the image is one open, flat, calm snowfield: wind-packed, even snow in soft white with pale blue and lilac shadows, faint wind ripples and a few tips of dry grass poking through. Keep it low in contrast and evenly lit so that small painted figures and a thin hex grid stay readable on top of it. No rocks, trees, ice blocks, animal tracks, water or objects anywhere in this central field.\n- Along the top edge, a narrow band (about the top 14% of the image) showing a snow-laden pine forest and distant white mountains under a pale winter sky, seen at a slight angle and fading into light haze.\n- On the far left and far right edges (outer 12% on each side), slightly raised snowy knolls with a few dark rocks and frosted dry grass, where an army commander could stand.\n- The bottom edge darkens a little with snow drifts and frosted grass in the near foreground.\n\nLight: low winter sun from the upper left, crisp and cool, long soft shadows only at the edges.\n\nStyle: painterly digital illustration with visible fine brush texture, rich but natural colours, taking the ground materials and palette from the first reference image.\n\nNo people, no animals, no creatures, no buildings, no text, no UI, no hex grid lines, no border.",
+      "references": [
+        "res://art/battle/terrain/snow.png",
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_grass.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12381-d944-7a22-8771-68682b162dc2/exec-43977bf7-8cef-4110-8827-6fe30eaca9f4.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_snow.png",
+      "source_sha256": "108a4bccbdfdb48bfd770fffbc5c2d7a971d383237d866696459f662e964009f"
+    },
+    {
+      "family": "coast",
+      "terrains": [
+        "coast"
+      ],
+      "prompt": "Painted fantasy battlefield background for a turn-based hex strategy game. Wide 16:9 landscape image, seen from a high three-quarter top-down angle (about 55 degrees down), in the tradition of classic 1990s fantasy strategy battle screens, but painted with modern detail. Match the camera angle, the layout, the lighting softness and the painterly rendering of the second reference image (an approved battlefield from the same game).\n\nComposition:\n- The central 75% of the image is one open, flat, calm wide sandy shore: firm, damp, flat sand in warm beige and grey with faint ripple marks and a light scatter of tiny shells and pebbles. Keep it low in contrast and evenly lit so that small painted figures and a thin hex grid stay readable on top of it. No rocks, driftwood, tide pools, seaweed piles, water or objects anywhere in this central field.\n- Along the top edge, a narrow band (about the top 14% of the image) showing the sea with gentle surf and foam breaking on the beach, a rocky headland on one side, under a bright sky, seen at a slight angle and fading into light haze.\n- On the far left and far right edges (outer 12% on each side), low dunes with marram grass and a few smooth stones, where an army commander could stand.\n- The bottom edge darkens a little with dune grass and dry sand in the near foreground.\n\nLight: bright, breezy midday light from the upper left.\n\nStyle: painterly digital illustration with visible fine brush texture, rich but natural colours, taking the ground materials and palette from the first reference image.\n\nNo people, no animals, no creatures, no buildings, no text, no UI, no hex grid lines, no border.",
+      "references": [
+        "res://art/battle/terrain/coast.png",
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_grass.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12381-dcbf-7d62-b447-3a0222031804/exec-9e026a3e-c114-4374-afcf-fadc1b5b3047.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_coast.png",
+      "source_sha256": "901f85bf7d494b61004d7fef2aec660bb6f8d36e596bdd80c49cd22a7d50119e"
+    },
+    {
+      "family": "sand",
+      "terrains": [
+        "sand"
+      ],
+      "prompt": "Painted fantasy battlefield background for a turn-based hex strategy game. Wide 16:9 landscape image, seen from a high three-quarter top-down angle (about 55 degrees down), in the tradition of classic 1990s fantasy strategy battle screens, but painted with modern detail. Match the camera angle, the layout, the lighting softness and the painterly rendering of the reference image (an approved battlefield from the same game).\n\nComposition:\n- The central 75% of the image is one open, flat, calm desert flat: firm, pale golden sand with soft wind ripples and a few faint darker gravel patches. Keep it low in contrast and evenly lit so that small painted figures and a thin hex grid stay readable on top of it. No rocks, dunes, plants, bones, ruins, water or objects anywhere in this central field.\n- Along the top edge, a narrow band (about the top 14% of the image) showing rolling dunes and distant sandstone mesas shimmering in heat haze under a bright sky, seen at a slight angle and fading into light haze.\n- On the far left and far right edges (outer 12% on each side), slightly raised sandy rises with sparse dry grass and a few sun-bleached stones, where an army commander could stand.\n- The bottom edge darkens a little with rippled sand and dry grass tufts in the near foreground.\n\nLight: strong, warm sunlight from the upper left, gentle shadows.\n\nStyle: painterly digital illustration with visible fine brush texture, rich but natural colours.\n\nNo people, no animals, no creatures, no buildings, no text, no UI, no hex grid lines, no border.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_grass.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12381-e9cd-7cb2-a4d5-fd0c6519aa93/exec-89e4ebaf-acc2-480b-98d7-f141fc73ab3d.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_sand.png",
+      "source_sha256": "7f22220ecb022d3352686466a29d99d4f163d8fb3f6707c8e7f45777d369afdf"
+    },
+    {
+      "family": "lava",
+      "terrains": [
+        "lava"
+      ],
+      "prompt": "Painted fantasy battlefield background for a turn-based hex strategy game. Wide 16:9 landscape image, seen from a high three-quarter top-down angle (about 55 degrees down), in the tradition of classic 1990s fantasy strategy battle screens, but painted with modern detail. Match the camera angle, the layout, the lighting softness and the painterly rendering of the second reference image (an approved battlefield from the same game).\n\nComposition:\n- The central 75% of the image is one open, flat, calm volcanic waste: flat, cooled grey-black ash and smooth basalt with a few faint, tiny ember glints, in charcoal, slate and dull rust. Keep it low in contrast and evenly lit so that small painted figures and a thin hex grid stay readable on top of it. No rocks, spires, lava rivers, glowing cracks, trees or objects anywhere in this central field.\n- Along the top edge, a narrow band (about the top 14% of the image) showing a distant smoking volcano and rivers of glowing lava between jagged black rocks, under a smoky orange-tinged sky, seen at a slight angle and fading into light haze.\n- On the far left and far right edges (outer 12% on each side), slightly raised cracked basalt shelves with thin glowing lava seams at the very outer edges and drifting ash, where an army commander could stand.\n- The bottom edge darkens a little with ash drifts and dark cinders in the near foreground.\n\nLight: dim, smoky light with a warm orange glow from the lava at the top and the edges; the open floor stays evenly lit.\n\nStyle: painterly digital illustration with visible fine brush texture, rich but natural colours, taking the ground materials and palette from the first reference image.\n\nNo people, no animals, no creatures, no buildings, no text, no UI, no hex grid lines, no border.",
+      "references": [
+        "res://art/battle/terrain/lava.png",
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_grass.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12381-e9e3-7432-ad87-af543d851de4/exec-0cbaa71e-da95-4109-84c7-37e8a8daa742.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_lava.png",
+      "source_sha256": "562fdddb78ed81f6fcb81655717fbb041d1bd8094ff35f228cfcadd2817a33ec"
+    },
+    {
+      "family": "underground",
+      "terrains": [
+        "underground"
+      ],
+      "prompt": "Painted fantasy battlefield background for a turn-based hex strategy game. Wide 16:9 landscape image, seen from a high three-quarter top-down angle (about 55 degrees down), in the tradition of classic 1990s fantasy strategy battle screens, but painted with modern detail. Match the camera angle, the layout, the lighting softness and the painterly rendering of the second reference image (an approved battlefield from the same game).\n\nComposition:\n- The central 75% of the image is one open, flat, calm vast cavern floor: flat packed earth and smooth dark stone in slate blue and umber, with faint specks of glowing teal moss. Keep it low in contrast and evenly lit so that small painted figures and a thin hex grid stay readable on top of it. No rocks, stalagmites, crystals, mushrooms, chasms, water or objects anywhere in this central field.\n- Along the top edge, a narrow band (about the top 14% of the image) showing the far cavern wall with hanging stalactites, stone columns and clusters of softly glowing teal crystals, fading into darkness, seen at a slight angle and fading into light haze.\n- On the far left and far right edges (outer 12% on each side), slightly raised stone shelves with small glowing mushrooms and crystals, where an army commander could stand.\n- The bottom edge darkens a little with loose stones and glowing moss in the near foreground.\n\nLight: a soft teal glow from crystals and fungi, with a gentle warm light from above lighting the open floor evenly.\n\nStyle: painterly digital illustration with visible fine brush texture, rich but natural colours, taking the ground materials and palette from the first reference image.\n\nNo people, no animals, no creatures, no buildings, no text, no UI, no hex grid lines, no border.",
+      "references": [
+        "res://art/battle/terrain/underground.png",
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_grass.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12381-fbe1-7dd1-a4f7-29cfee4a769c/exec-64a0c466-01da-43c7-98c8-af54515abe4b.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/battlefield_underground.png",
+      "source_sha256": "662103a1ccdc21290b8107ab33f9676c065567f029802155cb49db00face44fa"
+    }
+  ],
+  "prop_sheets": [
+    {
+      "family": "grass",
+      "kind": "rock",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that summer meadow battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a rounded grey granite boulder with patches of moss and lichen; a cluster of three weathered grey stones with grass tufts between them; a single weathered standing stone, taller than it is wide.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a low, long ridge of lichen-covered grey rocks; two large mossy boulders side by side with grass between them.\n\nEach prop sits on a small, irregular tuft of its own ground (short meadow grass and a few wildflowers) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_grass.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12383-cf70-75b0-92a2-35b89ee58044/exec-6c365ce4-156c-43c0-9fba-124684ab64e1.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_grass_rock.png",
+      "source_sha256": "84d40e4eacc9707faec36dc3b540c4adfd43a4a9db37d15a8241cd0f35805313",
+      "subjects": {
+        "1": [
+          "a rounded grey granite boulder with patches of moss and lichen",
+          "a cluster of three weathered grey stones with grass tufts between them",
+          "a single weathered standing stone, taller than it is wide"
+        ],
+        "2": [
+          "a low, long ridge of lichen-covered grey rocks",
+          "two large mossy boulders side by side with grass between them"
+        ]
+      }
+    },
+    {
+      "family": "grass",
+      "kind": "deadwood",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that summer meadow battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a broken oak stump with spreading roots; a small dead tree with bare, twisted branches; a dense bramble bush with thorny stems.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a long fallen oak log with stubs of broken branches; a fallen dead tree lying on its side with its branches spread.\n\nEach prop sits on a small, irregular tuft of its own ground (short meadow grass) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_grass.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12384-e30e-7271-9d6a-f0e7329e265e/exec-bd38008c-6023-411c-87b1-c5b23c80b31b.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_grass_deadwood.png",
+      "source_sha256": "b9eebe2d9e5af374777d2dfee56c57eb6ab83e20e1145adaab520ae67abed9be",
+      "subjects": {
+        "1": [
+          "a broken oak stump with spreading roots",
+          "a small dead tree with bare, twisted branches",
+          "a dense bramble bush with thorny stems"
+        ],
+        "2": [
+          "a long fallen oak log with stubs of broken branches",
+          "a fallen dead tree lying on its side with its branches spread"
+        ]
+      }
+    },
+    {
+      "family": "forest",
+      "kind": "rock",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that forest clearing battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a moss-covered boulder with ferns at its foot; a stack of flat mossy stones; a lichen-covered boulder with a cluster of small brown mushrooms.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a low mossy rock shelf; two moss-covered boulders side by side with ferns.\n\nEach prop sits on a small, irregular tuft of its own ground (moss, ferns and fallen leaves) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_forest.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12384-e324-7d11-afaf-eb00172be620/exec-145b722b-2c7e-42e4-a9c5-9137cdd84ff7.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_forest_rock.png",
+      "source_sha256": "aac660bb9be5c4b646131a3b1de0673674ef35924fb39a25ca9d90906f8e52cb",
+      "subjects": {
+        "1": [
+          "a moss-covered boulder with ferns at its foot",
+          "a stack of flat mossy stones",
+          "a lichen-covered boulder with a cluster of small brown mushrooms"
+        ],
+        "2": [
+          "a low mossy rock shelf",
+          "two moss-covered boulders side by side with ferns"
+        ]
+      }
+    },
+    {
+      "family": "forest",
+      "kind": "deadwood",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that forest clearing battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a hollow tree stump with bracket fungi; a tangle of exposed gnarled roots; the upturned root plate of a fallen tree.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a huge fallen trunk covered in moss and bracket fungi; a heap of fallen branches around a broken trunk.\n\nEach prop sits on a small, irregular tuft of its own ground (moss and fallen leaves) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_forest.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12384-e325-7641-aaba-d064a1e7e6f3/exec-e883a0b1-b9d5-40c5-8407-f22be2b1e1df.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_forest_deadwood.png",
+      "source_sha256": "325cf02ce05b6005465e738182aeeb1f1573e05af3c53945537be6432aedc170",
+      "subjects": {
+        "1": [
+          "a hollow tree stump with bracket fungi",
+          "a tangle of exposed gnarled roots",
+          "the upturned root plate of a fallen tree"
+        ],
+        "2": [
+          "a huge fallen trunk covered in moss and bracket fungi",
+          "a heap of fallen branches around a broken trunk"
+        ]
+      }
+    },
+    {
+      "family": "swamp",
+      "kind": "rock",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that swamp battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a dark, slimy boulder draped in moss; a half-sunken, moss-covered stone slab; a mound of mud and roots with a tuft of reeds.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a low mossy rock outcrop; a crumbled, moss-covered stretch of an ancient stone wall.\n\nEach prop sits on a small, irregular tuft of its own ground (dark mud and moss) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_swamp.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12384-e30b-7bf2-9d21-19e63c9572df/exec-9cad735a-88d3-4c37-8703-e12c1bf364e7.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_swamp_rock.png",
+      "source_sha256": "9de8ac5693368e00b99651853ba6d25ba8d25fd7cefebf85559bd675b3a239f0",
+      "subjects": {
+        "1": [
+          "a dark, slimy boulder draped in moss",
+          "a half-sunken, moss-covered stone slab",
+          "a mound of mud and roots with a tuft of reeds"
+        ],
+        "2": [
+          "a low mossy rock outcrop",
+          "a crumbled, moss-covered stretch of an ancient stone wall"
+        ]
+      }
+    },
+    {
+      "family": "swamp",
+      "kind": "deadwood",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that swamp battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a rotten stump with hanging grey moss; a dead swamp tree with knobbly knees around its base; a tangle of arching mangrove-like roots.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a long rotting log among reeds; a fallen dead tree draped in hanging moss.\n\nEach prop sits on a small, irregular tuft of its own ground (dark mud, reeds and moss) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_swamp.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12384-e324-7092-98a0-6ba63f018bf8/exec-00c51295-1bf4-4bbe-ab9d-dfb6d5e9b2af.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_swamp_deadwood.png",
+      "source_sha256": "88d615272723598d8f8a10173c797fde7739bc1060182cfd379a9baeaf8d3c65",
+      "subjects": {
+        "1": [
+          "a rotten stump with hanging grey moss",
+          "a dead swamp tree with knobbly knees around its base",
+          "a tangle of arching mangrove-like roots"
+        ],
+        "2": [
+          "a long rotting log among reeds",
+          "a fallen dead tree draped in hanging moss"
+        ]
+      }
+    },
+    {
+      "family": "mire",
+      "kind": "rock",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that fen battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a pale lichen-covered boulder in sedge; a small cairn of flat grey stones; a peat hummock topped with cotton grass.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a low ridge of pale stones and sedge; two peat hummocks with cotton grass and heather.\n\nEach prop sits on a small, irregular tuft of its own ground (sedge, peat moss and cotton grass) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_mire.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12385-a8c0-7350-95cf-7b65a6e2e8bd/exec-745c0530-9ecd-4b19-9653-1db0d0f47bcb.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_mire_rock.png",
+      "source_sha256": "ad36602df146cfb2895be7a5784b288710cca0b7b3034a15693e8a4c27eaccd2",
+      "subjects": {
+        "1": [
+          "a pale lichen-covered boulder in sedge",
+          "a small cairn of flat grey stones",
+          "a peat hummock topped with cotton grass"
+        ],
+        "2": [
+          "a low ridge of pale stones and sedge",
+          "two peat hummocks with cotton grass and heather"
+        ]
+      }
+    },
+    {
+      "family": "mire",
+      "kind": "deadwood",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that fen battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a twisted black bog-oak stump; a dead birch with peeling white bark; a thicket of willow and rushes.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a long blackened bog-oak trunk; a fallen birch with peeling bark and broken branches.\n\nEach prop sits on a small, irregular tuft of its own ground (sedge and peat moss) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_mire.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12385-aa92-7681-8115-5e9867bb0bc8/exec-4f8fe301-b45e-4e29-8798-b8885a27ddfc.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_mire_deadwood.png",
+      "source_sha256": "a6adaaa6bbe53cbe630c25ec0a5f6a9a7916d087c9e83783edaaaad013bc9610",
+      "subjects": {
+        "1": [
+          "a twisted black bog-oak stump",
+          "a dead birch with peeling white bark",
+          "a thicket of willow and rushes"
+        ],
+        "2": [
+          "a long blackened bog-oak trunk",
+          "a fallen birch with peeling bark and broken branches"
+        ]
+      }
+    },
+    {
+      "family": "rough",
+      "kind": "rock",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that rough badlands battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a rounded red sandstone boulder; a pile of broken sandstone slabs; a weathered red rock spire.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a low layered sandstone ledge; two eroded red boulders side by side.\n\nEach prop sits on a small, irregular tuft of its own ground (dry reddish earth, gravel and dry grass) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_rough.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12385-ab88-7a31-831c-91cca7562217/exec-a7e0cddf-1b44-4c41-ae0c-0d7d000d5aa9.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_rough_rock.png",
+      "source_sha256": "455d609c2eef3231f5da3c04f8c7424cf6271cf97e2853ad97aed1332ed18937",
+      "subjects": {
+        "1": [
+          "a rounded red sandstone boulder",
+          "a pile of broken sandstone slabs",
+          "a weathered red rock spire"
+        ],
+        "2": [
+          "a low layered sandstone ledge",
+          "two eroded red boulders side by side"
+        ]
+      }
+    },
+    {
+      "family": "rough",
+      "kind": "deadwood",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that rough badlands battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a dead, twisted juniper; a dry, thorny scrub bush; a sun-bleached tree stump.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a long fallen dead juniper trunk; a tangle of dry thornbrush.\n\nEach prop sits on a small, irregular tuft of its own ground (dry reddish earth and dry grass) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_rough.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12385-ac89-70f0-a16c-b49bf8746d62/exec-09d8a0cf-c1ce-4dc4-9f77-2258de8d3cc5.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_rough_deadwood.png",
+      "source_sha256": "d194c844140e2d47bac9e798ea23fc61dfa8d27b2f7232f9d8eaaf26d1a3c8fe",
+      "subjects": {
+        "1": [
+          "a dead, twisted juniper",
+          "a dry, thorny scrub bush",
+          "a sun-bleached tree stump"
+        ],
+        "2": [
+          "a long fallen dead juniper trunk",
+          "a tangle of dry thornbrush"
+        ]
+      }
+    },
+    {
+      "family": "road",
+      "kind": "rock",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that roadside field battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a weathered stone milestone with moss; a pile of gathered field stones; a large roadside boulder.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a broken section of low dry-stone wall; a heap of quarried stone blocks.\n\nEach prop sits on a small, irregular tuft of its own ground (short grass and packed dirt) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_road.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12385-b4ea-7ad1-ab13-0ed329faf6fc/exec-331b79b1-e1bf-4664-afcb-59ac8c7575b1.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_road_rock.png",
+      "source_sha256": "94ff848083a3fc0bfee4044bcd1a4cb7c492091a3be2e5eded32c82b0c57718c",
+      "subjects": {
+        "1": [
+          "a weathered stone milestone with moss",
+          "a pile of gathered field stones",
+          "a large roadside boulder"
+        ],
+        "2": [
+          "a broken section of low dry-stone wall",
+          "a heap of quarried stone blocks"
+        ]
+      }
+    },
+    {
+      "family": "road",
+      "kind": "deadwood",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that roadside field battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a stack of split firewood logs; a broken wooden cart wheel leaning against a wooden crate; a round hay bale.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: an overturned, broken wooden farm cart; a section of broken wooden rail fence.\n\nEach prop sits on a small, irregular tuft of its own ground (short grass and packed dirt) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_road.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12386-702c-7c62-9687-3d614d6eb3ab/exec-24edc2e7-4e02-4456-a5c1-ec8049e4a184.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_road_deadwood.png",
+      "source_sha256": "77a8e19f59f4f15c7f03f7013dd08598965b354015221061183468fc77bbadf8",
+      "subjects": {
+        "1": [
+          "a stack of split firewood logs",
+          "a broken wooden cart wheel leaning against a wooden crate",
+          "a round hay bale"
+        ],
+        "2": [
+          "an overturned, broken wooden farm cart",
+          "a section of broken wooden rail fence"
+        ]
+      }
+    },
+    {
+      "family": "snow",
+      "kind": "rock",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that snowfield battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a snow-capped granite boulder; a jagged block of blue glacial ice; a cluster of frosted dark stones.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a long snow-covered rock ridge; two snow-capped boulders side by side.\n\nEach prop sits on a small, irregular tuft of its own ground (packed snow) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_snow.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12386-786e-77f2-8a38-cbaaa4df0d53/exec-2655736a-d73c-427f-9335-fff9fc413500.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_snow_rock.png",
+      "source_sha256": "07c6a088c25c2cf3659f02bcefe3e0fbdff69b9daeaf15a477dd5c963448e40a",
+      "subjects": {
+        "1": [
+          "a snow-capped granite boulder",
+          "a jagged block of blue glacial ice",
+          "a cluster of frosted dark stones"
+        ],
+        "2": [
+          "a long snow-covered rock ridge",
+          "two snow-capped boulders side by side"
+        ]
+      }
+    },
+    {
+      "family": "snow",
+      "kind": "deadwood",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that snowfield battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a frozen dead pine tree; a snow-covered tree stump; a frosted bare bush.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a fallen snow-covered pine trunk; a toppled frozen tree with icy branches.\n\nEach prop sits on a small, irregular tuft of its own ground (packed snow) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_snow.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12386-7db6-7641-bdfb-5fb63c79d03a/exec-d601270d-b9a0-4686-8b5f-67c8e6f5517a.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_snow_deadwood.png",
+      "source_sha256": "f23bcf9934d8bfea6765911b54bdfa2e2d44576ba61df03d94dbabd8bb7e3ca3",
+      "subjects": {
+        "1": [
+          "a frozen dead pine tree",
+          "a snow-covered tree stump",
+          "a frosted bare bush"
+        ],
+        "2": [
+          "a fallen snow-covered pine trunk",
+          "a toppled frozen tree with icy branches"
+        ]
+      }
+    },
+    {
+      "family": "coast",
+      "kind": "rock",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that sandy shore battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a barnacle-crusted rock draped with seaweed; a cluster of smooth grey sea stones; a small weathered sea stack.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a low rocky reef ledge with seaweed; two barnacled boulders side by side.\n\nEach prop sits on a small, irregular tuft of its own ground (damp sand and a few shells) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_coast.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12386-7e38-7a52-83fa-69217c81f878/exec-0325cf43-e456-45e1-acdb-52ddf4dc3c19.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_coast_rock.png",
+      "source_sha256": "a30817952bd496608e6ff277143b039b945f103a61e372e14f454ac2422a704f",
+      "subjects": {
+        "1": [
+          "a barnacle-crusted rock draped with seaweed",
+          "a cluster of smooth grey sea stones",
+          "a small weathered sea stack"
+        ],
+        "2": [
+          "a low rocky reef ledge with seaweed",
+          "two barnacled boulders side by side"
+        ]
+      }
+    },
+    {
+      "family": "coast",
+      "kind": "deadwood",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that sandy shore battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a bleached driftwood stump with roots; a broken ship's mast stub wrapped in old rope; a tangle of silver driftwood.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a long silver driftwood log; the broken ribs of a small wrecked wooden boat.\n\nEach prop sits on a small, irregular tuft of its own ground (damp sand) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_coast.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12386-8463-7503-b3c4-aeab6c5c6beb/exec-8f7cd448-0837-4ecb-918e-4fc1e108a529.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_coast_deadwood.png",
+      "source_sha256": "69e3addc4ed6cf6e41e9c69d1d40be724ee2efa3bea636ec8a7b218c01f9ce5a",
+      "subjects": {
+        "1": [
+          "a bleached driftwood stump with roots",
+          "a broken ship's mast stub wrapped in old rope",
+          "a tangle of silver driftwood"
+        ],
+        "2": [
+          "a long silver driftwood log",
+          "the broken ribs of a small wrecked wooden boat"
+        ]
+      }
+    },
+    {
+      "family": "sand",
+      "kind": "rock",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that desert battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a wind-carved sandstone pillar; a pile of sun-bleached sandstone blocks; a rounded desert boulder.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a low wind-carved sandstone ledge; a fallen ancient stone column half buried in sand.\n\nEach prop sits on a small, irregular tuft of its own ground (pale golden sand) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_sand.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12387-2720-7a31-b368-3f7a69409b2f/exec-cafc89dd-7f8c-4dec-84a1-8d42a77fa18c.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_sand_rock.png",
+      "source_sha256": "18f156fa3c3d0d03c54c821975f53bbd266241c1a5091509d4f2e3f9c93da159",
+      "subjects": {
+        "1": [
+          "a wind-carved sandstone pillar",
+          "a pile of sun-bleached sandstone blocks",
+          "a rounded desert boulder"
+        ],
+        "2": [
+          "a low wind-carved sandstone ledge",
+          "a fallen ancient stone column half buried in sand"
+        ]
+      }
+    },
+    {
+      "family": "sand",
+      "kind": "deadwood",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that desert battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a dead, flat-topped desert tree; a tall cluster of desert cactus; a dry, thorny desert shrub.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a fallen sun-bleached tree trunk; the half-buried ribcage of a giant beast.\n\nEach prop sits on a small, irregular tuft of its own ground (pale golden sand) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_sand.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12387-2889-79b1-b6aa-11457ae2f9d0/exec-7343557d-faee-47bb-b978-4b30d0a1c31e.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_sand_deadwood.png",
+      "source_sha256": "bac2eca4d7473e0e0ef3c8bdfcd3176e5ed529a5b5e40202b501bdae2030d02f",
+      "subjects": {
+        "1": [
+          "a dead, flat-topped desert tree",
+          "a tall cluster of desert cactus",
+          "a dry, thorny desert shrub"
+        ],
+        "2": [
+          "a fallen sun-bleached tree trunk",
+          "the half-buried ribcage of a giant beast"
+        ]
+      }
+    },
+    {
+      "family": "lava",
+      "kind": "rock",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that volcanic waste battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a jagged black obsidian spire; a cracked basalt boulder with faintly glowing seams; a cluster of black volcanic rocks.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a ridge of cooled lava with faintly glowing cracks; two fallen hexagonal basalt columns.\n\nEach prop sits on a small, irregular tuft of its own ground (grey-black ash and cinders) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_lava.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12387-3ebf-7172-a166-0c33500411a8/exec-d22281b7-71be-498e-ba59-c46eabdf6f12.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_lava_rock.png",
+      "source_sha256": "bc4334bd8927a109117112a2a26dc9a00e8e3d3238e613844054cc4a02eec5f3",
+      "subjects": {
+        "1": [
+          "a jagged black obsidian spire",
+          "a cracked basalt boulder with faintly glowing seams",
+          "a cluster of black volcanic rocks"
+        ],
+        "2": [
+          "a ridge of cooled lava with faintly glowing cracks",
+          "two fallen hexagonal basalt columns"
+        ]
+      }
+    },
+    {
+      "family": "lava",
+      "kind": "deadwood",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that volcanic waste battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a charred dead tree; a smouldering burnt stump with embers; a blackened thorn bush.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a long charred fallen trunk with glowing embers; a tangle of burnt, blackened branches.\n\nEach prop sits on a small, irregular tuft of its own ground (grey-black ash) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_lava.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12387-44b3-7ff1-baea-fb2bdd22f99e/exec-5c967023-86c1-4476-899b-0d3b52becfe4.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_lava_deadwood.png",
+      "source_sha256": "75943f9f5806f7f0153437daba43c48b1d89e9f397681847d69196a96af5aa88",
+      "subjects": {
+        "1": [
+          "a charred dead tree",
+          "a smouldering burnt stump with embers",
+          "a blackened thorn bush"
+        ],
+        "2": [
+          "a long charred fallen trunk with glowing embers",
+          "a tangle of burnt, blackened branches"
+        ]
+      }
+    },
+    {
+      "family": "underground",
+      "kind": "rock",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that cavern battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a tall stalagmite; a cluster of softly glowing teal crystals; a cave boulder with pale lichen.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a row of stalagmites of different heights; a low rock ledge studded with glowing crystals.\n\nEach prop sits on a small, irregular tuft of its own ground (dark packed earth and loose stones) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_underground.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12387-46fa-7a71-8066-ff0876840f28/exec-66bc74af-0941-4be1-9aec-7f90f87cd063.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_underground_rock.png",
+      "source_sha256": "e91fbd95187321e8c8c5c648193c01313eff8857abbb32aaeb44742a71a3aad3",
+      "subjects": {
+        "1": [
+          "a tall stalagmite",
+          "a cluster of softly glowing teal crystals",
+          "a cave boulder with pale lichen"
+        ],
+        "2": [
+          "a row of stalagmites of different heights",
+          "a low rock ledge studded with glowing crystals"
+        ]
+      }
+    },
+    {
+      "family": "underground",
+      "kind": "deadwood",
+      "prompt": "A sheet of five separate hand-painted obstacle props for the battlefield of a turn-based fantasy hex strategy game, on a genuinely transparent background. Every prop stands alone with wide empty transparent space around it; nothing touches or overlaps, and nothing is cut off by the image edge. All props are seen from the same high three-quarter top-down angle (about 55 degrees down) as the battlefield in the reference image, lit softly from the upper left, in a painterly style with visible fine brush texture and rich natural colours that match that cavern battlefield. Do not paint the battlefield itself.\n\nTop row, three compact props, each sized to fill one hexagonal tile and about as wide as it is deep: a giant cave mushroom with a softly glowing cap; a cluster of tall pale cave mushrooms; a petrified root column.\nBottom row, two wide props, each about twice as wide as it is deep, sized to stretch across two hexagonal tiles side by side: a fallen giant mushroom stalk; a tangle of pale cave roots.\n\nEach prop sits on a small, irregular tuft of its own ground (dark packed earth and glowing moss) that fades out at its rim. No ground plane between the props, no cast shadows on the background, no frame, no labels, no text, no people and no creatures.",
+      "references": [
+        "res://art/battle/source/generated/battlefields_20261010/battlefield_underground.png"
+      ],
+      "generation_original": "C:/Users/acorp/.codex/generated_images/01a12383-cf6f-7a83-b01f-38d39d2b440c/exec-755e7657-a4b6-46e2-936b-b574b77eaf0e.png",
+      "source_path": "res://art/battle/source/generated/battlefields_20261010/props_underground_deadwood.png",
+      "source_sha256": "8e400fb96524d51d09831d344b8e533d86373fbd65190264ba100a4d490d072f",
+      "subjects": {
+        "1": [
+          "a giant cave mushroom with a softly glowing cap",
+          "a cluster of tall pale cave mushrooms",
+          "a petrified root column"
+        ],
+        "2": [
+          "a fallen giant mushroom stalk",
+          "a tangle of pale cave roots"
+        ]
+      }
+    }
+  ]
+}
