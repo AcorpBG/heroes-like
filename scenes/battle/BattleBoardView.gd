@@ -7,12 +7,19 @@ signal stack_order_requested(battle_id: String, order: Dictionary)
 signal hex_destination_requested(q: int, r: int)
 signal controller_navigation_cancelled
 signal hero_figure_pressed(side: String)
+# The right button went down over a stack on the field ("stack"), its ribbon
+# chip ("chip": id is the stack's) or a hero ("hero": id is its side), with
+# the rect the details card stands beside; kind is "" over anything else.
+# details_released follows when the button comes up.
+signal details_pressed(kind: String, id: String, anchor: Rect2)
+signal details_released
 
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
 const AnimationCueCatalogScript = preload("res://scripts/core/AnimationCueCatalog.gd")
 const AudioPaletteScript = preload("res://scripts/audio/AudioPalette.gd")
 const RuntimeAudioLoaderScript = preload("res://scripts/audio/RuntimeAudioLoader.gd")
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
+const BattleGlyphsScript = preload("res://scripts/ui/BattleGlyphs.gd")
 
 const HEX_COLUMNS := BattleRulesScript.BATTLE_HEX_COLUMNS
 const HEX_ROWS := BattleRulesScript.BATTLE_HEX_ROWS
@@ -90,6 +97,23 @@ const FORECAST_HEAD := Color(1.0, 0.902, 0.651)
 const FORECAST_LOSS := Color(0.957, 0.706, 0.647)
 const FORECAST_GOOD := Color(0.624, 0.863, 0.573)
 const FORECAST_WARN := Color(1.0, 0.761, 0.478)
+# Stack plates: the fill of each side, the ink of the count and glyphs, the
+# shots, a strike-back pip still to use and one spent, and the flags.
+const PLATE_PLAYER_FILL := Color(0.153, 0.302, 0.459)
+const PLATE_ENEMY_FILL := Color(0.451, 0.173, 0.141)
+const PLATE_INK := Color(1.0, 0.98, 0.941)
+const PLATE_GLYPH := Color(1.0, 0.925, 0.8)
+const PLATE_SHOTS := Color(1.0, 0.886, 0.627)
+const PLATE_PIP := Color(1.0, 0.851, 0.541)
+const PLATE_PIP_EDGE := Color(0.361, 0.247, 0.071)
+const PLATE_PIP_SPENT := Color(1.0, 0.925, 0.784, 0.55)
+const PLATE_FLAG := Color(1.0, 0.945, 0.812)
+# Each effect icon on a plate takes this many icon widths, its foundation's.
+const PLATE_EFFECT_STEP := 1.36
+# The first hovers over a stack, a chip or a hero say how to see its details;
+# hovering the enemy's hero always does, as a click on it does nothing.
+const DETAILS_HINT_HOVERS := 6
+const DETAILS_HINT_TEXT := "Hold the right button for details"
 const BATTLE_BOARD_CURSOR_SEMANTIC_MAX_CHARS := 320
 const BATTLE_BOARD_CURSOR_SEMANTIC_DEBOUNCE_SECONDS := 0.42
 const BATTLE_BOARD_CURSOR_RESULT_VISIBLE_SECONDS := 1.20
@@ -353,6 +377,17 @@ var _hover_order: Dictionary = {}
 var _approach_choice: Dictionary = {}
 # Ctrl is held: a shooter strikes the enemy it points at instead of shooting.
 var _strike_forced := false
+# What the screen's details card shows while the right button is held
+# ({"kind": "stack" or "hero", "id"}), or {} while it is closed.
+var _details_subject: Dictionary = {}
+# The thing the pointer last hovered that the details hint names, and how
+# many such hovers there have been.
+var _details_hint_subject := ""
+var _details_hint_hovers := 0
+# Each plate as last drawn ({"rect", "model"} by battle id), for checks.
+var _stack_plate_records: Dictionary = {}
+var _plate_icon_textures: Dictionary = {}
+var _plate_font_variation: FontVariation = null
 static var _blank_cursor: ImageTexture = null
 # The ribbon's layout for one battle state and board size (_turn_ribbon_layout).
 var _ribbon_cache: Dictionary = {}
@@ -486,10 +521,20 @@ func _gui_input(event: InputEvent) -> void:
 		if hovered_cell != _hover_destination_cell:
 			_hover_destination_cell = hovered_cell
 			queue_redraw()
+		_note_details_hint_subject()
 		return
 	if not (event is InputEventMouseButton):
 		return
 	var mouse_event := event as InputEventMouseButton
+	# Holding the right button shows the details of what it went down on.
+	if mouse_event.button_index == MOUSE_BUTTON_RIGHT:
+		if mouse_event.pressed:
+			var subject := _details_subject_at_position(mouse_event.position)
+			details_pressed.emit(String(subject.get("kind", "")), String(subject.get("id", "")), Rect2(subject.get("anchor", Rect2())))
+		else:
+			details_released.emit()
+		accept_event()
+		return
 	if mouse_event.button_index != MOUSE_BUTTON_LEFT or not mouse_event.pressed:
 		return
 	var hero_side := _hero_side_at_position(mouse_event.position)
@@ -2281,6 +2326,7 @@ func validation_turn_strip_identity_surface() -> Dictionary:
 
 func _draw() -> void:
 	_stack_hit_shapes = []
+	_stack_plate_records = {}
 	draw_rect(Rect2(Vector2.ZERO, size), FRAME_FILL, true)
 	if _battle.is_empty():
 		return
@@ -3308,7 +3354,6 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		var token_radius: float = _stack_token_radius(radius)
 		var side := String(stack.get("side", ""))
 		_draw_stack_side_cue(center, token_radius, side)
-		_draw_stack_status_effect_badges(center, radius, token_radius, stack)
 		_draw_count_badge(center, radius, stack)
 		_stack_hit_shapes.append(
 			{
@@ -3411,47 +3456,66 @@ func _stack_status_effect_badge_summary(stack: Dictionary) -> Dictionary:
 		"profiles": profiles,
 	}
 
-func _draw_stack_status_effect_badges(center: Vector2, hex_radius: float, token_radius: float, stack: Dictionary) -> void:
-	var mapped := _active_mapped_status_effects(stack)
-	if mapped.is_empty():
-		return
-	var render_spec: Dictionary = _battle_status_effect_art_manifest.get("render", {}) if _battle_status_effect_art_manifest.get("render", {}) is Dictionary else {}
-	var max_visible := clampi(int(render_spec.get("max_visible_badges", 2)), 1, 2)
-	var visible_count := mini(mapped.size(), max_visible)
-	var icon_size := clampf(
-		hex_radius * float(render_spec.get("icon_size_factor", 0.42)),
-		float(render_spec.get("icon_size_min", 14.0)),
-		float(render_spec.get("icon_size_max", 18.0))
-	)
-	var badge_centers := _stack_status_effect_badge_centers(center, token_radius, visible_count)
-	for index in range(visible_count):
-		var effect: Dictionary = mapped[index] if mapped[index] is Dictionary else {}
+## The effects a plate shows: each mapped status with its badge art (soonest
+## to end first), then each spell's effect with the spell's icon, on the
+## foundation of its polarity ({"id", "texture", "foundation", "mark"}).
+func _plate_effect_icons(stack: Dictionary) -> Array:
+	var icons: Array = []
+	for effect in _active_mapped_status_effects(stack):
 		var status_id := String(effect.get("effect_id", ""))
 		var profile := _battle_status_effect_art_profile(status_id)
-		var badge_center: Vector2 = badge_centers[index]
-		_draw_status_effect_polarity_foundation(badge_center, icon_size, String(profile.get("polarity_foundation", "broken_diamond")))
-		var art_path := String(profile.get("art_path", ""))
-		var texture: Texture2D = _battle_status_effect_art_texture_for_path(art_path) as Texture2D
+		icons.append({
+			"id": status_id,
+			"texture": _battle_status_effect_art_texture_for_path(String(profile.get("art_path", ""))),
+			"foundation": String(profile.get("polarity_foundation", "broken_diamond")),
+			"mark": String(profile.get("fallback_mark", "?")),
+		})
+	for effect in SpellRules.active_effects_for_round(stack, int(_battle.get("round", 1))):
+		var effect_id := String(effect.get("effect_id", ""))
+		var spell_id := String(effect.get("spell_id", ""))
+		if spell_id == "" or not _battle_status_effect_art_spec(effect_id).is_empty():
+			continue
+		var path := effect_icon_path(effect_id, spell_id)
+		if path != "" and not _plate_icon_textures.has(path):
+			_plate_icon_textures[path] = load(path) as Texture2D
+		icons.append({
+			"id": effect_id,
+			"texture": _plate_icon_textures.get(path) if path != "" else null,
+			"foundation": _battle_status_effect_polarity_foundation(BattleRulesScript.effect_polarity(effect)),
+			"mark": String(effect.get("label", "?")).left(1),
+		})
+	return icons
+
+## How many effects fit on a plate before "+N" counts the rest.
+func _plate_effect_max_visible() -> int:
+	_load_battle_status_effect_art_manifest()
+	var render_spec: Dictionary = _battle_status_effect_art_manifest.get("render", {}) if _battle_status_effect_art_manifest.get("render", {}) is Dictionary else {}
+	return clampi(int(render_spec.get("max_visible_badges", 2)), 1, 2)
+
+## The effects on a stack inside its plate, from the slot's left edge: each
+## on the foundation of its polarity (a pentagon for help, a broken diamond
+## for harm, so colour is not the only cue) under its art, or its mark when
+## it has none, then "+N" for the effects that do not fit.
+func _draw_stack_status_effect_badges(slot: Rect2, icons: Array, overflow_count: int) -> void:
+	var render_spec: Dictionary = _battle_status_effect_art_manifest.get("render", {}) if _battle_status_effect_art_manifest.get("render", {}) is Dictionary else {}
+	var icon_size := slot.size.y
+	var step := icon_size * PLATE_EFFECT_STEP
+	for index in range(icons.size()):
+		var icon: Dictionary = icons[index] if icons[index] is Dictionary else {}
+		var badge_center := Vector2(slot.position.x + step * (float(index) + 0.5), slot.get_center().y)
+		_draw_status_effect_polarity_foundation(badge_center, icon_size, String(icon.get("foundation", "broken_diamond")))
+		var texture := icon.get("texture") as Texture2D
 		if texture != null:
 			var texture_rect := Rect2(badge_center - Vector2(icon_size, icon_size) * 0.5, Vector2(icon_size, icon_size))
 			draw_texture_rect(texture, texture_rect, false, Color(1.0, 1.0, 1.0, float(render_spec.get("texture_alpha", 0.98))))
 		else:
-			_draw_centered_text(String(profile.get("fallback_mark", "?")), badge_center + Vector2(0.0, 2.5), TEXT_COLOR, 8)
-	var overflow_count := mapped.size() - visible_count
+			_draw_centered_label(String(icon.get("mark", "?")), badge_center, TEXT_COLOR, maxi(6, int(round(icon_size * 0.62))))
 	if overflow_count > 0:
-		var overflow_center: Vector2 = badge_centers[visible_count - 1] + Vector2(icon_size * 0.39, icon_size * 0.37)
-		var overflow_radius := clampf(icon_size * 0.29, 4.0, 5.2)
-		draw_circle(overflow_center, overflow_radius, Color(0.025, 0.032, 0.038, 0.98))
-		draw_circle(overflow_center, overflow_radius, Color(0.98, 0.88, 0.64, 0.92), false, 1.0)
-		_draw_centered_text("+%d" % overflow_count, overflow_center + Vector2(0.0, 2.0), TEXT_COLOR, 6)
-
-func _stack_status_effect_badge_centers(center: Vector2, token_radius: float, visible_count: int) -> Array:
-	if visible_count <= 1:
-		return [center + Vector2(token_radius * 0.64, -token_radius * 0.62)]
-	return [
-		center + Vector2(0.0, -token_radius * 0.74),
-		center + Vector2(token_radius * 0.92, -token_radius * 0.58),
-	]
+		var font := get_theme_default_font()
+		if font != null:
+			var font_size := maxi(6, int(round(icon_size * 0.72)))
+			var baseline := slot.get_center().y + (font.get_ascent(font_size) - font.get_descent(font_size)) * 0.5
+			draw_string(font, Vector2(slot.position.x + step * float(icons.size()) + icon_size * 0.08, baseline), "+%d" % overflow_count, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, PLATE_FLAG)
 
 func _draw_status_effect_polarity_foundation(center: Vector2, icon_size: float, foundation: String) -> void:
 	var extent := icon_size * 0.67
@@ -5028,26 +5092,199 @@ func _draw_stack_side_cue(center: Vector2, token_radius: float, side: String) ->
 
 ## The stack's count in a pill of its side's colour under its feet, with a
 ## sword or a bow for how it fights.
+## A stack's plate at its feet, in its side's colour: a bow or sword, the
+## count, a ranged stack's shots left, a pip per strike-back (lit while the
+## stack still has it this round), an hourglass while it waits, a shield
+## while it defends, and the effects on it. The acting stack's plate glows
+## gold; the one the pointer, its ribbon chip or the details card points at
+## is ringed white.
 func _draw_count_badge(center: Vector2, radius: float, stack: Dictionary) -> void:
-	var font = get_theme_default_font()
+	var font := _plate_font()
 	if font == null:
 		return
+	var plate := _stack_plate_layout(center, radius, stack, font)
+	var rect: Rect2 = plate.get("rect", Rect2())
+	var k := float(plate.get("k", 1.0))
+	var model: Dictionary = plate.get("model", {})
+	_stack_plate_records[String(model.get("battle_id", ""))] = {"rect": rect, "model": model}
+	var player := String(model.get("side", "")) == "player"
+	var active := bool(model.get("active", false))
+	var highlighted := bool(model.get("highlighted", false))
+	draw_texture_rect(_soft_glow(), Rect2(rect.position + Vector2(-8.0, 1.0) * k, rect.size + Vector2(16.0, 8.0) * k), false, Color(0.0, 0.0, 0.0, 0.5))
+	if active:
+		draw_texture_rect(_soft_glow(), rect.grow(13.0 * k), false, Color(UI_ACTIVE, 0.55))
+	elif highlighted:
+		draw_texture_rect(_soft_glow(), rect.grow(11.0 * k), false, Color(1.0, 1.0, 1.0, 0.3))
+	_draw_rounded_box(rect, PLATE_PLAYER_FILL if player else PLATE_ENEMY_FILL, UI_PLAYER if player else UI_ENEMY, 7.0 * k, maxf(1.0, k))
+	draw_line(rect.position + Vector2(6.0, 1.5) * k, Vector2(rect.end.x - 6.0 * k, rect.position.y + 1.5 * k), Color(1.0, 1.0, 1.0, 0.18), maxf(1.0, k))
+	if active or highlighted:
+		_draw_rounded_box(rect.grow(2.0 * k), Color(0.0, 0.0, 0.0, 0.0), UI_ACTIVE if active else Color.WHITE, 9.0 * k, 2.0 * k)
+	var middle := rect.get_center().y
+	var shots_color := Color(PLATE_SHOTS, 1.0 if int(model.get("shots", 0)) > 0 else 0.45)
+	for part_value in plate.get("parts", []):
+		var part: Dictionary = part_value
+		var left := rect.position.x + float(part.get("x", 0.0))
+		var width := float(part.get("width", 0.0))
+		var part_center := Vector2(left + width * 0.5, middle)
+		match String(part.get("part", "")):
+			"role":
+				_draw_role_glyph(part_center, width, bool(model.get("ranged", false)), PLATE_GLYPH)
+			"count":
+				_draw_plate_text(font, String(part.get("text", "")), left, middle, int(part.get("font_size", 12)), PLATE_INK, k)
+			"divider":
+				draw_line(Vector2(left, rect.position.y + 5.0 * k), Vector2(left, rect.end.y - 5.0 * k), Color(1.0, 1.0, 1.0, 0.3), maxf(1.0, k))
+			"arrow":
+				_draw_shot_glyph(part_center, width, shots_color)
+			"shots":
+				_draw_plate_text(font, String(part.get("text", "")), left, middle, int(part.get("font_size", 12)), shots_color, k)
+			"pip":
+				_draw_strike_back_pip(part_center, width * 0.5, bool(part.get("lit", false)), k)
+			"waiting":
+				_draw_hourglass_glyph(part_center, width, PLATE_FLAG)
+			"defending":
+				_draw_shield_glyph(part_center, width, PLATE_FLAG)
+			"effects":
+				var icon := float(part.get("icon", 14.0 * k))
+				_draw_stack_status_effect_badges(Rect2(Vector2(left, middle - icon * 0.5), Vector2(width, icon)), model.get("effects", []), int(model.get("overflow", 0)))
+
+## What a stack's plate shows: its side and role, the count, a ranged
+## stack's shots left, its strike-backs a round and how many it still has
+## (none while Staggered), whether it waits or defends, the effects on it,
+## and whether it acts now or is pointed at.
+func _stack_plate_model(stack: Dictionary) -> Dictionary:
+	var battle_id := String(stack.get("battle_id", ""))
+	var ranged := bool(stack.get("ranged", false))
+	var strike_backs := BattleRulesScript.stack_strike_backs(_battle, stack)
+	var icons := _plate_effect_icons(stack)
+	var visible := icons.slice(0, _plate_effect_max_visible())
+	var active := battle_id == String(_battle.get("active_stack_id", "")) and not _field_final
+	return {
+		"battle_id": battle_id,
+		"side": String(stack.get("side", "")),
+		"ranged": ranged,
+		"count": _stack_alive_count(stack),
+		"shots": maxi(0, int(stack.get("shots_remaining", 0))) if ranged else -1,
+		"strike_backs": int(strike_backs.get("max", 0)),
+		"strike_backs_left": int(strike_backs.get("left", 0)),
+		"waiting": BattleRulesScript.stack_is_waiting(_battle, battle_id),
+		"defending": bool(stack.get("defending", false)),
+		"effects": visible,
+		"effect_ids": visible.map(func(icon: Dictionary) -> String: return String(icon.get("id", ""))),
+		"overflow": icons.size() - visible.size(),
+		"active": active,
+		"highlighted": not active and battle_id != "" and battle_id == _plate_highlight_id(),
+	}
+
+## The stack whose plate is ringed: the one the details card shows, else the
+## one the pointer, its ribbon chip or the keyboard cursor points at.
+func _plate_highlight_id() -> String:
+	if String(_details_subject.get("kind", "")) == "stack":
+		return String(_details_subject.get("id", ""))
+	if _hover_ribbon_battle_id != "":
+		return _hover_ribbon_battle_id
+	return _pointed_stack_id()
+
+## The plate's box at a stack's feet, sized by what it shows, and where each
+## part goes from its left edge ({"rect", "k", "model", "parts"}).
+func _stack_plate_layout(center: Vector2, radius: float, stack: Dictionary, font: Font) -> Dictionary:
+	var model := _stack_plate_model(stack)
 	var k := clampf(radius / REFERENCE_HEX_RADIUS, 0.55, 1.6)
-	var count_text := str(_stack_alive_count(stack))
-	var font_size := int(round(15.0 * k))
-	var text_width: float = font.get_string_size(count_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x
-	var icon_extent := 15.0 * k
-	var height := 24.0 * k
-	var width := 4.0 * k + icon_extent + 3.0 * k + text_width + 7.0 * k
+	var parts: Array = []
+	var x := 4.0 * k
+	parts.append({"part": "role", "x": x, "width": 15.0 * k})
+	x += 18.0 * k
+	var count_size := int(round(15.0 * k))
+	var count_text := str(int(model.get("count", 0)))
+	var count_width := font.get_string_size(count_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, count_size).x
+	parts.append({"part": "count", "x": x, "width": count_width, "text": count_text, "font_size": count_size})
+	x += count_width
+	if int(model.get("shots", -1)) >= 0:
+		x += 5.0 * k
+		parts.append({"part": "divider", "x": x, "width": 0.0})
+		x += 4.0 * k
+		parts.append({"part": "arrow", "x": x, "width": 11.0 * k})
+		x += 12.0 * k
+		var shots_size := int(round(12.5 * k))
+		var shots_text := str(int(model.get("shots", 0)))
+		var shots_width := font.get_string_size(shots_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, shots_size).x
+		parts.append({"part": "shots", "x": x, "width": shots_width, "text": shots_text, "font_size": shots_size})
+		x += shots_width
+	var pips := int(model.get("strike_backs", 0))
+	if pips > 0:
+		x += 5.0 * k
+		for index in range(pips):
+			parts.append({"part": "pip", "x": x, "width": 8.5 * k, "lit": index < int(model.get("strike_backs_left", 0))})
+			x += 8.5 * k + (2.5 * k if index < pips - 1 else 0.0)
+	for flag in ["waiting", "defending"]:
+		if bool(model.get(flag, false)):
+			x += 4.0 * k
+			parts.append({"part": flag, "x": x, "width": 13.0 * k})
+			x += 13.0 * k
+	var effects: Array = model.get("effects", [])
+	if not effects.is_empty():
+		x += 4.0 * k
+		var icon := 14.0 * k
+		var width := icon * PLATE_EFFECT_STEP * float(effects.size())
+		var overflow := int(model.get("overflow", 0))
+		if overflow > 0:
+			width += icon * 0.08 + font.get_string_size("+%d" % overflow, HORIZONTAL_ALIGNMENT_LEFT, -1.0, maxi(6, int(round(icon * 0.72)))).x
+		parts.append({"part": "effects", "x": x, "width": width, "icon": icon})
+		x += width
+	x += 6.0 * k
 	var ground_y := center.y + radius * STACK_STANDEE_GROUND_OFFSET_FACTOR
-	var pill := Rect2(Vector2(center.x - width * 0.5, ground_y + radius * 0.1 * HEX_VERTICAL_SCALE), Vector2(width, height))
-	var player := String(stack.get("side", "")) == "player"
-	var is_active := String(stack.get("battle_id", "")) == String(_battle.get("active_stack_id", ""))
-	_draw_rounded_box(pill, UI_PLAYER_DEEP if player else UI_ENEMY_DEEP, UI_PLAYER if player else UI_ENEMY, 7.0 * k, maxf(1.0, k))
-	if is_active:
-		_draw_rounded_box(pill.grow(2.0 * k), Color(0.0, 0.0, 0.0, 0.0), UI_ACTIVE, 9.0 * k, 2.0 * k)
-	_draw_role_glyph(Vector2(pill.position.x + 4.0 * k + icon_extent * 0.5, pill.get_center().y), icon_extent, bool(stack.get("ranged", false)), Color(1.0, 0.925, 0.8))
-	draw_string(font, Vector2(pill.position.x + 7.0 * k + icon_extent, pill.get_center().y + float(font_size) * 0.36), count_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, Color.WHITE)
+	var rect := Rect2(Vector2(center.x - x * 0.5, ground_y + radius * 0.1 * HEX_VERTICAL_SCALE), Vector2(x, 24.0 * k))
+	return {"rect": rect, "k": k, "model": model, "parts": parts}
+
+## The plates' bold face: the theme's font, thickened.
+func _plate_font() -> Font:
+	var base := get_theme_default_font()
+	if base == null:
+		return null
+	if _plate_font_variation == null or _plate_font_variation.base_font != base:
+		_plate_font_variation = FontVariation.new()
+		_plate_font_variation.base_font = base
+		_plate_font_variation.variation_embolden = 0.6
+	return _plate_font_variation
+
+## Text on a plate from its left edge, centred on the plate's middle, over a
+## dark shadow.
+func _draw_plate_text(font: Font, text: String, left: float, middle: float, font_size: int, color: Color, k: float) -> void:
+	var baseline := middle + (font.get_ascent(font_size) - font.get_descent(font_size)) * 0.5
+	draw_string(font, Vector2(left, baseline + maxf(1.0, k)), text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, Color(0.0, 0.0, 0.0, 0.85))
+	draw_string(font, Vector2(left, baseline), text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, color)
+
+## A small arrow flying up and to the right, for the shots left.
+func _draw_shot_glyph(center: Vector2, extent: float, color: Color) -> void:
+	BattleGlyphsScript.draw_shot(self, center, extent, color)
+
+## One strike-back: a gold diamond while the stack still has it this round,
+## an empty one once it is spent.
+func _draw_strike_back_pip(center: Vector2, half: float, lit: bool, k: float) -> void:
+	var diamond := PackedVector2Array([center + Vector2(0.0, -half), center + Vector2(half, 0.0), center + Vector2(0.0, half), center + Vector2(-half, 0.0)])
+	if lit:
+		draw_texture_rect(_soft_glow(), Rect2(center - Vector2(half, half) * 2.2, Vector2(half, half) * 4.4), false, Color(PLATE_PIP, 0.55))
+	draw_colored_polygon(diamond, PLATE_PIP if lit else Color(0.0, 0.0, 0.0, 0.3))
+	draw_polyline(_closed_points(diamond), PLATE_PIP_EDGE if lit else PLATE_PIP_SPENT, maxf(1.0, k), true)
+
+## A heater shield, for a stack that defends.
+func _draw_shield_glyph(center: Vector2, extent: float, color: Color) -> void:
+	BattleGlyphsScript.draw_shield(self, center, extent, color)
+
+## The plate a stack showed when last drawn: what it holds and its box ({}
+## for a stack without one).
+func validation_stack_plate(battle_id: String) -> Dictionary:
+	var record: Dictionary = _stack_plate_records.get(battle_id, {})
+	if record.is_empty():
+		return {}
+	var plate: Dictionary = (record.get("model", {}) as Dictionary).duplicate()
+	plate.erase("effects")
+	plate["rect"] = record.get("rect", Rect2())
+	return plate
+
+## The details hint: what the pointer hovers that it names, how many such
+## hovers there have been, and whether it shows now.
+func validation_details_hint() -> Dictionary:
+	return {"subject": _details_hint_subject, "hovers": _details_hint_hovers, "shown": _details_hint_shown()}
 
 func _draw_blocked_target_marker(center: Vector2, radius: float) -> void:
 	var marker_radius: float = clampf(radius * 0.34, 7.0, 14.0)
@@ -6059,6 +6296,7 @@ func _on_pointer_left() -> void:
 	_hover_hero_side = ""
 	_hover_ribbon_battle_id = ""
 	_hover_stack_id = ""
+	_details_hint_subject = ""
 	if not _keyboard_cursor_shown():
 		_hover_destination_cell = Vector2i(-1, -1)
 		_hover_order = {}
@@ -6072,6 +6310,90 @@ func _make_custom_tooltip(_for_text: String) -> Object:
 	var hidden := Control.new()
 	hidden.hide()
 	return hidden
+
+# --- Details under the right button -------------------------------------------
+
+## What the right button shows at a point: a hero, a ribbon chip's stack or a
+## stack on the field, with the rect its card stands beside ({} for none).
+func _details_subject_at_position(position: Vector2) -> Dictionary:
+	if _battle.is_empty():
+		return {}
+	var hero_side := _hero_side_at_position(position)
+	if hero_side != "":
+		return {"kind": "hero", "id": hero_side, "anchor": Rect2(hero_figure_layout(hero_side).get("hit_rect", Rect2()))}
+	var chip := _turn_ribbon_chip_at_position(position)
+	var chip_stack: Dictionary = chip.get("stack", {}) if chip.get("stack", {}) is Dictionary else {}
+	if not chip_stack.is_empty():
+		return {"kind": "chip", "id": String(chip_stack.get("battle_id", "")), "anchor": Rect2(chip.get("rect", Rect2()))}
+	if _ribbon_rect().has_point(position):
+		return {}
+	var stack_id := _stack_id_at_board_position(position, _hex_cell_at_position(position))
+	if stack_id == "":
+		return {}
+	return {"kind": "stack", "id": stack_id, "anchor": _stack_anchor_rect(stack_id)}
+
+## The box over a stack's figure, from the plates last drawn, with its plate.
+func _stack_anchor_rect(battle_id: String) -> Rect2:
+	for shape in _stack_hit_shapes:
+		if shape is Dictionary and String(shape.get("battle_id", "")) == battle_id:
+			var body: Rect2 = shape.get("body_rect", Rect2())
+			var record: Dictionary = _stack_plate_records.get(battle_id, {})
+			return body.merge(Rect2(record.get("rect", body))) if not record.is_empty() else body
+	var cell := _stack_hex_cell(_stack_by_id(battle_id))
+	if not _cell_in_bounds(cell):
+		return Rect2()
+	var layout := _current_hex_layout()
+	var radius := float(layout.get("radius", 1.0))
+	return Rect2(_hex_center(cell, layout) - Vector2(radius, radius), Vector2(radius, radius) * 2.0)
+
+## The screen shows the details card for a stack or a hero while the right
+## button is held ({"kind": "stack" or "hero", "id"}; "" closes it): the
+## drawn cursor and the forecast step aside and the stack's plate is ringed.
+func set_details_subject(kind: String, id: String) -> void:
+	var subject := {} if kind == "" else {"kind": kind, "id": id}
+	if subject == _details_subject:
+		return
+	_details_subject = subject
+	_apply_field_cursor_shape()
+	queue_redraw()
+
+func details_subject() -> Dictionary:
+	return _details_subject.duplicate()
+
+## The turn ribbon's box along the top edge, which the details card keeps below.
+func turn_ribbon_rect() -> Rect2:
+	return _ribbon_rect()
+
+## The icon an effect shows on plates and cards: a status's badge art, else
+## its spell's icon. "" when it has neither.
+func effect_icon_path(effect_id: String, spell_id: String = "") -> String:
+	var spec := _battle_status_effect_art_spec(effect_id)
+	if not spec.is_empty():
+		return String(spec.get("path", ""))
+	var spell_icon := SpellRules.spell_icon_path(spell_id) if spell_id != "" else ""
+	return spell_icon if spell_icon != "" and ResourceLoader.exists(spell_icon) else ""
+
+## Counts the hovers the details hint names: a ribbon chip, a hero, or a
+## stack the cursor gives no order for.
+func _note_details_hint_subject() -> void:
+	var subject := ""
+	if _hover_ribbon_battle_id != "":
+		subject = "chip:" + _hover_ribbon_battle_id
+	elif _hover_hero_side != "":
+		subject = "hero:" + _hover_hero_side
+	elif String(_hover_order.get("kind", "")) == "info":
+		subject = "stack:" + String(_hover_order.get("target_id", ""))
+	if subject == _details_hint_subject:
+		return
+	_details_hint_subject = subject
+	if subject != "":
+		_details_hint_hovers += 1
+	queue_redraw()
+
+func _details_hint_shown() -> bool:
+	if _details_hint_subject == "":
+		return false
+	return _details_hint_subject == "hero:enemy" or _details_hint_hovers <= DETAILS_HINT_HOVERS
 
 # --- Heroes beside their armies ---------------------------------------------
 
@@ -6444,48 +6766,10 @@ func _draw_circle_texture(texture: Texture2D, center: Vector2, radius: float, mo
 
 ## A sword for melee stacks, a bow with an arrow for ranged ones.
 func _draw_role_glyph(center: Vector2, extent: float, ranged: bool, color: Color) -> void:
-	var width := maxf(1.0, extent * 0.12)
-	if ranged:
-		var bow_center := center + Vector2(0.18, 0.0) * extent
-		draw_arc(bow_center, 0.52 * extent, PI * 2.0 / 3.0, PI * 4.0 / 3.0, 12, color, width, true)
-		var top := bow_center + Vector2.from_angle(PI * 2.0 / 3.0) * 0.52 * extent
-		var bottom := bow_center + Vector2.from_angle(PI * 4.0 / 3.0) * 0.52 * extent
-		draw_line(top, bottom, color, maxf(1.0, width * 0.6), true)
-		var tip := center + Vector2(0.5, 0.0) * extent
-		draw_line(center - Vector2(0.5, 0.0) * extent, tip, color, width, true)
-		draw_line(tip, tip + Vector2(-0.2, -0.15) * extent, color, width, true)
-		draw_line(tip, tip + Vector2(-0.2, 0.15) * extent, color, width, true)
-		return
-	var along := Vector2(1.0, -1.0).normalized()
-	var across := Vector2(1.0, 1.0).normalized()
-	var guard := center - along * 0.2 * extent
-	draw_line(guard, center + along * 0.48 * extent, color, width * 1.25, true)
-	draw_line(guard - across * 0.24 * extent, guard + across * 0.24 * extent, color, width, true)
-	draw_line(guard, center - along * 0.42 * extent, color, width, true)
-	draw_circle(center - along * 0.46 * extent, width * 0.75, color)
+	BattleGlyphsScript.draw_role(self, center, extent, ranged, color)
 
 func _draw_hourglass_glyph(center: Vector2, extent: float, color: Color) -> void:
-	var width := maxf(1.0, extent * 0.1)
-	var half := extent * 0.42
-	var top := center.y - half
-	var bottom := center.y + half
-	draw_line(Vector2(center.x - extent * 0.32, top), Vector2(center.x + extent * 0.32, top), color, width, true)
-	draw_line(Vector2(center.x - extent * 0.32, bottom), Vector2(center.x + extent * 0.32, bottom), color, width, true)
-	draw_polyline(PackedVector2Array([
-		Vector2(center.x - extent * 0.26, top),
-		center,
-		Vector2(center.x - extent * 0.26, bottom),
-	]), color, width, true)
-	draw_polyline(PackedVector2Array([
-		Vector2(center.x + extent * 0.26, top),
-		center,
-		Vector2(center.x + extent * 0.26, bottom),
-	]), color, width, true)
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(center.x - extent * 0.17, bottom - extent * 0.06),
-		Vector2(center.x + extent * 0.17, bottom - extent * 0.06),
-		Vector2(center.x, center.y + extent * 0.14),
-	]), color)
+	BattleGlyphsScript.draw_hourglass(self, center, extent, color)
 
 func _draw_rounded_box(rect: Rect2, fill: Color, border: Color, radius: float, border_width: float) -> void:
 	if _box_style == null:
@@ -6534,6 +6818,7 @@ func _hover_forecast() -> Array:
 		if not chip_stack.is_empty():
 			lines.append({"text": "%s ×%d" % [_stack_full_name(chip_stack), _stack_alive_count(chip_stack)]})
 			lines.append({"text": _ribbon_phase_text(_hover_ribbon_battle_id), "role": "note"})
+			_append_details_hint(lines)
 		return lines
 	if not focused and _hover_hero_side != "":
 		var hero := _hero_presentation_for(_hover_hero_side)
@@ -6542,6 +6827,7 @@ func _hover_forecast() -> Array:
 			lines.append({"text": "Already cast a spell this round" if bool(hero.get("cast_this_round", false)) else "Click: spellbook · one spell per round, the stack keeps its turn", "role": "note"})
 		else:
 			lines.append({"text": "Mana %d/%d · %s" % [int(hero.get("mana_current", 0)), int(hero.get("mana_max", 0)), _hero_status_line(hero)], "role": "note"})
+		_append_details_hint(lines)
 		return lines
 	var preview: Dictionary = _hover_order.get("preview", {})
 	var kind := String(_hover_order.get("kind", ""))
@@ -6551,6 +6837,8 @@ func _hover_forecast() -> Array:
 			if not stack.is_empty():
 				lines.append({"text": "%s ×%d" % [_stack_full_name(stack), _stack_alive_count(stack)]})
 				lines.append({"text": "%s · %s" % ["Your stack" if String(stack.get("side", "")) == "player" else "Enemy stack", "Ranged" if bool(stack.get("ranged", false)) else "Melee"], "role": "note"})
+				if not focused:
+					_append_details_hint(lines)
 		"strike", "shoot", "spell":
 			if not bool(preview.get("ok", false)):
 				var refusal := String(preview.get("message", "")).strip_edges().get_slice("\n", 0)
@@ -6573,6 +6861,11 @@ func _hover_forecast() -> Array:
 			if reason != "":
 				lines.append({"text": reason, "role": "note"})
 	return lines
+
+## The first hovers say how to see the details (DETAILS_HINT_HOVERS).
+func _append_details_hint(lines: Array) -> void:
+	if _details_hint_shown():
+		lines.append({"text": DETAILS_HINT_TEXT, "role": "note"})
 
 ## The forecast as plain lines, for checks and the screen reader.
 func _hover_forecast_lines() -> PackedStringArray:
@@ -6608,6 +6901,8 @@ func _forecast_line_role(line: Dictionary, index: int) -> String:
 ## detail in small type), the main consequence coloured by its tone (red for
 ## losses, green for none, amber for a warning), then muted notes.
 func _draw_hover_forecast() -> void:
+	if not _details_subject.is_empty():
+		return
 	var lines := _hover_forecast()
 	if lines.is_empty():
 		return
@@ -6982,9 +7277,11 @@ func validation_pointer_order() -> Dictionary:
 ## player's hero, and is the plain arrow elsewhere.
 func _apply_field_cursor_shape() -> void:
 	var shape := Control.CURSOR_ARROW
-	if String(_hover_order.get("cursor", "")) in FIELD_CURSOR_GLYPHS and not _keyboard_cursor_shown():
+	# The plain pointer while keys steer the board or a details card is open.
+	var pointer_led := not _keyboard_cursor_shown() and _details_subject.is_empty()
+	if pointer_led and String(_hover_order.get("cursor", "")) in FIELD_CURSOR_GLYPHS:
 		shape = FIELD_CURSOR_SHAPE
-	elif _hover_hero_side == "player" and not _keyboard_cursor_shown():
+	elif pointer_led and _hover_hero_side == "player":
 		shape = Control.CURSOR_POINTING_HAND
 	if mouse_default_cursor_shape != shape:
 		mouse_default_cursor_shape = shape
@@ -7042,7 +7339,7 @@ func _strike_ghost(hex_layout: Dictionary) -> Dictionary:
 ## a small info badge beside the system pointer over a stack.
 func _draw_field_cursor() -> void:
 	var glyph := String(_hover_order.get("cursor", ""))
-	if glyph == "" or _battle.has("playback_event"):
+	if glyph == "" or _battle.has("playback_event") or not _details_subject.is_empty():
 		return
 	var anchor := _forecast_anchor()
 	if anchor.x < 0.0:

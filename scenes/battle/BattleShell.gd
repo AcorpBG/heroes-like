@@ -18,6 +18,7 @@ const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemL
 const BattleArtPrewarmScript = preload("res://scripts/ui/BattleArtPrewarm.gd")
 const BattleHeroFigureScript = preload("res://scripts/ui/BattleHeroFigure.gd")
 const BattleCommandButtonScript = preload("res://scripts/ui/BattleCommandButton.gd")
+const BattleDetailsCardScript = preload("res://scripts/ui/BattleDetailsCard.gd")
 
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 const BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE := "Battle resolved, but autosave failed. Press Save to retry the checkpoint."
@@ -138,6 +139,7 @@ const AUTO_BATTLE_DELAY_SECONDS := 0.3
 @onready var _view_field_button: Button = %ViewField
 @onready var _continue_button: Button = %Continue
 @onready var _show_result_button: Button = %ShowResult
+@onready var _details_card: BattleDetailsCardScript = %DetailsCard
 @onready var _quick_resolve_confirmation_dialog: ConfirmationDialog = $QuickResolveConfirmationDialog
 @onready var _withdrawal_confirmation_dialog: ConfirmationDialog = $WithdrawalConfirmationDialog
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
@@ -148,6 +150,12 @@ var _message_log: PanelContainer
 var _last_message := ""
 var _spell_targeting_id := ""
 var _spell_targeting_hash := 0
+# What the details card describes while the right button is held: "stack",
+# "chip" (a stack by its ribbon chip) or "hero", its id, and the rect in the
+# HUD it stands beside.
+var _details_kind := ""
+var _details_id := ""
+var _details_anchor := Rect2()
 var _board_cancel_release_pending := false
 var _last_return_to_menu_result: Dictionary = {}
 var _validation_return_to_menu_request_count := 0
@@ -249,6 +257,7 @@ func _ready() -> void:
 	_message_log.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_message_log.history.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_apply_visual_theme()
+	_details_card.configure(_title_font)
 	_connect_hud_controls()
 	_save_written_cue_presenter = SystemSaveWrittenCuePresenterScript.new()
 	_save_written_cue_presenter.name = "SystemSaveWrittenCuePresenter"
@@ -262,7 +271,7 @@ func _ready() -> void:
 	_configure_withdrawal_confirmation()
 	_configure_confirmation_input_forwarding()
 	resized.connect(_layout_hud)
-	for panel in [_result_panel, _options_popover, _spellbook_popover, _log_popover, _player_plate, _enemy_plate, _show_result_button]:
+	for panel in [_result_panel, _options_popover, _spellbook_popover, _log_popover, _player_plate, _enemy_plate, _show_result_button, _details_card]:
 		panel.minimum_size_changed.connect(_queue_hud_layout)
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
@@ -271,6 +280,8 @@ func _ready() -> void:
 	_battle_board_view.hex_destination_requested.connect(_on_board_hex_destination_requested)
 	_battle_board_view.controller_navigation_cancelled.connect(_on_board_controller_navigation_cancelled)
 	_battle_board_view.hero_figure_pressed.connect(_on_hero_figure_pressed)
+	_battle_board_view.details_pressed.connect(_on_board_details_pressed)
+	_battle_board_view.details_released.connect(_close_details)
 	buckets["connect_board_signals"] = ProfileLogScript.elapsed_ms(phase_started)
 	_session = SessionState.ensure_active_session()
 	if _session.scenario_id == "":
@@ -331,6 +342,13 @@ func _ready() -> void:
 	buckets["first_refresh"] = ProfileLogScript.elapsed_ms(phase_started)
 	ProfileLogScript.emit_general("battle", "entry", "battle_ready", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(true), _session)
 	call_deferred("_configure_battle_keyboard_focus", true)
+
+
+## A card held open by the right button closes when the window loses focus,
+## as the release of the button may never arrive.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_node_ready():
+		_close_details()
 
 
 ## The scene connects the buttons and dialogs; these need bound arguments.
@@ -530,7 +548,11 @@ func _input(event: InputEvent) -> void:
 	if _session == null or not is_inside_tree():
 		return
 	if event is InputEventMouseButton:
-		_close_popovers_on_outside_click(event as InputEventMouseButton)
+		var button_event := event as InputEventMouseButton
+		# The card closes when the right button comes up, wherever it is.
+		if button_event.button_index == MOUSE_BUTTON_RIGHT and not button_event.pressed:
+			_close_details()
+		_close_popovers_on_outside_click(button_event)
 		return
 	if not (event is InputEventKey or event is InputEventJoypadButton):
 		return
@@ -916,17 +938,141 @@ func _on_board_controller_navigation_cancelled() -> void:
 	call_deferred("_configure_battle_keyboard_focus", true)
 
 
-## Clicking the player's hero opens the spellbook. The enemy's hero shows its
-## details with the stack details (plates-details).
+## Clicking the player's hero opens the spellbook; holding the right button
+## on either hero shows its card (_on_board_details_pressed).
 func _on_hero_figure_pressed(side: String) -> void:
 	if side == "player":
 		_on_spellbook_button_pressed()
 
 
 func _on_player_plate_gui_input(event: InputEvent) -> void:
+	if _hero_plate_details_input(event, "player", _player_plate):
+		return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_player_plate.accept_event()
 		_on_spellbook_button_pressed()
+
+
+func _on_enemy_plate_gui_input(event: InputEvent) -> void:
+	_hero_plate_details_input(event, "enemy", _enemy_plate)
+
+
+## Holding the right button on a hero's plate shows the hero's card.
+func _hero_plate_details_input(event: InputEvent, side: String, plate: Control) -> bool:
+	if not (event is InputEventMouseButton) or (event as InputEventMouseButton).button_index != MOUSE_BUTTON_RIGHT:
+		return false
+	plate.accept_event()
+	if not (event as InputEventMouseButton).pressed:
+		_close_details()
+	elif _spell_targeting_id != "":
+		_cancel_spell_targeting(true)
+	else:
+		_open_details("hero", side, Rect2(plate.global_position - _hud.global_position, plate.size))
+	return true
+
+
+# --- Details under the right button ---------------------------------------------
+
+## The right button on the field: while a spell waits for its target it puts
+## the spell away; otherwise the card of the stack or hero it went down on
+## shows until it comes up.
+func _on_board_details_pressed(kind: String, id: String, anchor: Rect2) -> void:
+	if _spell_targeting_id != "":
+		_cancel_spell_targeting(true)
+		return
+	if kind == "":
+		return
+	_open_details(kind, id, Rect2(anchor.position + _battle_board_view.global_position - _hud.global_position, anchor.size))
+
+
+func _open_details(kind: String, id: String, anchor: Rect2) -> void:
+	if _session == null or _session.battle.is_empty() or _battle_over:
+		return
+	if not _fill_details_card(kind, id):
+		_close_details()
+		return
+	_details_kind = kind
+	_details_id = id
+	_details_anchor = anchor
+	_details_card.show()
+	_battle_board_view.set_details_subject("hero" if kind == "hero" else "stack", id)
+	_layout_details_card()
+	_queue_hud_layout()
+
+
+## Fills the card from the rules for what it describes; false when that stack
+## or hero is no longer there.
+func _fill_details_card(kind: String, id: String) -> bool:
+	if kind == "hero":
+		var hero := BattleRules.hero_details(_session.battle, id)
+		if hero.is_empty():
+			return false
+		var portrait_path := BattleHeroFigureScript.portrait_path(String(hero.get("hero_id", "")))
+		if portrait_path == "":
+			portrait_path = BattleHeroFigureScript.crest_path(String(hero.get("faction_id", "")))
+		_details_card.show_hero(hero, load(portrait_path) as Texture2D if portrait_path != "" else null, _hud_scale)
+		return true
+	var stack := BattleRules.stack_details(_session.battle, id)
+	if stack.is_empty() or int(stack.get("count", 0)) <= 0:
+		return false
+	for effect in stack.get("effects", []):
+		effect["icon"] = _battle_board_view.effect_icon_path(String(effect.get("effect_id", "")), String(effect.get("spell_id", "")))
+	var icon_path := String(ContentService.get_unit_art(String(stack.get("unit_id", ""))).get("battle_icon", ""))
+	var icon: Texture2D = load(icon_path) as Texture2D if icon_path != "" and ResourceLoader.exists(icon_path) else null
+	_details_card.show_stack(stack, icon, _hud_scale)
+	return true
+
+
+func _close_details() -> void:
+	if _details_kind == "" and not _details_card.visible:
+		return
+	_details_kind = ""
+	_details_id = ""
+	_details_card.clear()
+	_battle_board_view.set_details_subject("", "")
+
+
+## The card stands beside what it describes: right of a stack on the field
+## (left where the window ends), under its ribbon chip, beside a hero or its
+## plate towards the field; always below the ribbon and above the command bar.
+func _layout_details_card() -> void:
+	if not _details_card.visible:
+		return
+	var k := _hud_scale
+	var view := size
+	_details_card.custom_minimum_size.x = minf(BattleDetailsCardScript.WIDTH * k, view.x - 32.0 * k)
+	_details_card.reset_size()
+	var card := _details_card.size
+	var ribbon: Rect2 = _battle_board_view.turn_ribbon_rect()
+	var top := maxf(8.0 * k, ribbon.end.y + _battle_board_view.global_position.y - _hud.global_position.y + 8.0 * k)
+	var bottom := _command_bar.position.y - 8.0 * k
+	var gap := 12.0 * k
+	var anchor := _details_anchor
+	var x := anchor.end.x + gap
+	var y := anchor.get_center().y - card.y * 0.5
+	match _details_kind:
+		"chip":
+			x = anchor.get_center().x - card.x * 0.5
+			y = anchor.end.y + gap
+		"hero":
+			if _details_id == "enemy":
+				x = anchor.position.x - gap - card.x
+		_:
+			if x + card.x > view.x - 16.0 * k:
+				x = anchor.position.x - gap - card.x
+	x = clampf(x, 16.0 * k, maxf(16.0 * k, view.x - card.x - 16.0 * k))
+	y = clampf(y, top, maxf(top, bottom - card.y))
+	_details_card.position = Vector2(round(x), round(y))
+
+
+## The card keeps up with the battle while it stays open.
+func _refresh_details() -> void:
+	if _details_kind == "":
+		return
+	if not _fill_details_card(_details_kind, _details_id):
+		_close_details()
+		return
+	_layout_details_card()
 
 
 # --- Commands ----------------------------------------------------------------
@@ -2503,6 +2649,7 @@ func _refresh() -> void:
 	_announce_round()
 	if _briefing_consumption_autosave_failure_pending:
 		_apply_briefing_consumption_autosave_failure_surface(false)
+	_refresh_details()
 	_layout_hud()
 	ProfileLogScript.emit_general("battle", "refresh", "battle_refresh", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false), _session)
 	call_deferred("_configure_battle_keyboard_focus", false)
@@ -2611,7 +2758,7 @@ func _refresh_hero_plates() -> void:
 
 func _hero_status_text(side: String, hero: Dictionary, ready: bool) -> String:
 	if bool(hero.get("cast_this_round", false)):
-		return "Cast a spell this round"
+		return "Spell cast this round"
 	var spell_count := int(hero.get("battle_spell_count", 0))
 	if spell_count <= 0:
 		return "Knows no battle spells"
@@ -2736,6 +2883,7 @@ func _layout_hud() -> void:
 	_result_panel.position = ((view - _result_panel.size) * 0.5).round()
 	_show_result_button.reset_size()
 	_show_result_button.position = Vector2(round((view.x - _show_result_button.size.x) * 0.5), round(view.y - BAR_BOTTOM * k - _show_result_button.size.y))
+	_layout_details_card()
 
 
 ## Panels sized by their content settle over a frame as wrapped labels learn
@@ -3036,6 +3184,7 @@ func _show_result_overlay(entry_result: Dictionary = {}) -> void:
 	_stop_auto_battle()
 	_cancel_spell_targeting(false)
 	_close_popovers(false)
+	_close_details()
 	_set_command_hint("")
 	_result_report = BattleRules.pending_battle_report(_session) if _session != null else {}
 	if _result_report.is_empty():
@@ -3704,6 +3853,19 @@ func validation_snapshot() -> Dictionary:
 		"save_status_tooltip_text": _system_body_label.tooltip_text,
 		"focus_owner": _return_to_menu_focus_owner_name(),
 		"focus_cycle_names": _last_battle_keyboard_focus_cycle_names.duplicate(),
+	}
+
+
+## The details card: whether it shows, what for, where, and what it says.
+func validation_details_card() -> Dictionary:
+	return {
+		"visible": _details_card.visible,
+		"kind": _details_kind,
+		"id": _details_id,
+		"rect": Rect2(_details_card.position, _details_card.size),
+		"anchor": _details_anchor,
+		"shown": _details_card.shown.duplicate(true),
+		"board_subject": _battle_board_view.details_subject(),
 	}
 
 

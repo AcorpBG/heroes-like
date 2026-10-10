@@ -6504,6 +6504,215 @@ static func hero_presentation(battle: Dictionary, side: String) -> Dictionary:
 		"cast_this_round": _commander_spell_cast_this_round(battle, side),
 	}
 
+## What a stack's details card shows, from the numbers the battle itself
+## uses: attack and defense with the commanding hero's bonus (and the Defend
+## stance), speed as the hexes the stack may walk this turn, initiative as
+## it orders turns. Each stat carries the unit's own value as "base", so the
+## card can show what changed it. {} for a stack that is not in the battle.
+static func stack_details(battle: Dictionary, battle_id: String) -> Dictionary:
+	var stack := _get_stack_by_id(battle, battle_id)
+	if stack.is_empty():
+		return {}
+	var unit := ContentService.get_unit(String(stack.get("unit_id", "")))
+	var side := String(stack.get("side", ""))
+	var hero := _hero_payload_for_side(battle, side)
+	var count := _alive_count(stack)
+	var unit_hp := maxi(1, int(stack.get("unit_hp", 1)))
+	var stack_health := maxi(0, int(stack.get("total_health", 0)))
+	var defending := bool(stack.get("defending", false))
+	var defend_bonus := 2 + int(hero.get("defend_defense_bonus", 0)) if defending else 0
+	var hero_attack := int(hero.get("attack", 0))
+	var hero_defense := int(hero.get("defense", 0))
+	var ranged := bool(stack.get("ranged", false))
+	var faction_id := String(stack.get("faction_id", ""))
+	var faction_name := String(ContentService.get_faction(faction_id).get("name", "")) if faction_id != "" else ""
+	var min_damage := int(stack.get("min_damage", 1))
+	var shots_left := maxi(0, int(stack.get("shots_remaining", 0)))
+	var abilities := []
+	for ability in stack.get("abilities", []):
+		if ability is Dictionary and String(ability.get("name", "")).strip_edges() != "":
+			abilities.append({
+				"name": String(ability.get("name", "")).strip_edges(),
+				"description": String(ability.get("description", "")).strip_edges(),
+			})
+	return {
+		"battle_id": battle_id,
+		"unit_id": String(stack.get("unit_id", "")),
+		"name": String(stack.get("name", unit.get("name", ""))),
+		"side": side,
+		"faction": faction_name if faction_name != "" else "Neutral",
+		"tier": int(stack.get("tier", 1)),
+		"ranged": ranged,
+		"large": Footprint.width(stack) == 2,
+		"count": count,
+		"unit_health": unit_hp,
+		"top_health": stack_health - (count - 1) * unit_hp if count > 0 else 0,
+		"stack_health": stack_health,
+		"attack": {"base": int(unit.get("attack", stack.get("attack", 0))), "value": _stack_attack_total(stack, battle) + hero_attack},
+		"defense": {"base": int(unit.get("defense", stack.get("defense", 0))), "value": _stack_defense_total(stack, battle) + hero_defense + defend_bonus},
+		"damage": {"min": min_damage, "max": maxi(min_damage, int(stack.get("max_damage", 1)))},
+		"health": {"base": int(unit.get("hp", unit_hp)), "value": unit_hp},
+		"speed": {"base": clampi(int(unit.get("speed", stack.get("speed", 1))), 1, 6), "value": _stack_movement_points(stack, battle)},
+		"initiative": {"base": int(unit.get("initiative", stack.get("initiative", 1))), "value": _stack_initiative_total(stack, battle)},
+		"shots": {"left": shots_left, "max": maxi(shots_left, int(unit.get("shots", shots_left)))} if ranged else {},
+		"strike_backs": stack_strike_backs(battle, stack),
+		"cohesion": {"value": _stack_cohesion_total(stack, battle), "max": COHESION_MAX},
+		"momentum": {"value": _stack_momentum_total(stack, battle), "max": MOMENTUM_MAX},
+		"abilities": abilities,
+		"effects": stack_effect_rows(stack, battle),
+		"defending": defending,
+		"defend_bonus": defend_bonus,
+		"waiting": stack_is_waiting(battle, battle_id),
+		"active": battle_id == String(battle.get("active_stack_id", "")),
+		"hero_name": commander_name(battle, side),
+		"hero_attack": hero_attack,
+		"hero_defense": hero_defense,
+	}
+
+## The strike-backs a stack has this round: "max" a round, "left" of them
+## still to make (none while Staggered, which "blocked" names).
+static func stack_strike_backs(battle: Dictionary, stack: Dictionary) -> Dictionary:
+	var staggered := SpellRulesScript.has_effect_id(stack, battle, STATUS_STAGGERED)
+	return {
+		"left": 0 if staggered else maxi(0, int(stack.get("retaliations_left", 0))),
+		"max": maxi(0, int(stack.get("retaliations", 0))),
+		"blocked": staggered,
+	}
+
+## The stack waited this round and has yet to act: it is in the waiting part
+## of the turn order, after the stacks still to act at their own speed.
+static func stack_is_waiting(battle: Dictionary, battle_id: String) -> bool:
+	var active_id := String(battle.get("active_stack_id", ""))
+	if battle_id == "" or battle_id == active_id or not stack_has_waited(battle, battle_id):
+		return false
+	if _alive_count(_get_stack_by_id(battle, battle_id)) <= 0:
+		return false
+	var turn_order: Array = battle.get("turn_order", []) if battle.get("turn_order", []) is Array else []
+	var start := turn_order.find(active_id)
+	if start < 0:
+		start = clampi(int(battle.get("turn_index", 0)), 0, turn_order.size())
+	return turn_order.find(battle_id) >= start
+
+## The effects on a stack now, one row each: its name, what it does, how long
+## it has left ("turns" of the "unit" "turn", "round" or "battle";
+## "after_this" when the stack is acting and its current turn does not count)
+## and whether it helps or hinders ("polarity").
+static func stack_effect_rows(stack: Dictionary, battle: Dictionary) -> Array:
+	var rows := []
+	var current_round := int(battle.get("round", 1))
+	for effect in SpellRulesScript.active_effects_for_round(stack, current_round):
+		var effect_id := String(effect.get("effect_id", ""))
+		var counted: bool = effect.has("turns_left")
+		var left := maxi(1, int(effect.get("turns_left", 1))) if counted else maxi(1, int(effect.get("expires_after_round", current_round)) - current_round + 1)
+		var unit := "turn" if counted else "round"
+		# A preparation held until it is used outlasts any battle.
+		if not counted and left > int(battle.get("max_rounds", 12)):
+			unit = "battle"
+		var parts := PackedStringArray()
+		var rules := SpellRulesScript.status_rules_text(effect_id)
+		if rules != "":
+			parts.append(rules)
+		var modifiers := _effect_modifier_phrase(effect)
+		if modifiers != "":
+			parts.append(modifiers)
+		rows.append({
+			"effect_id": effect_id,
+			"spell_id": String(effect.get("spell_id", "")),
+			"name": String(effect.get("label", "Effect")),
+			"text": "; ".join(parts),
+			"turns": left,
+			"unit": unit,
+			"after_this": counted and bool(effect.get("skip_current_turn", false)),
+			"polarity": effect_polarity(effect),
+		})
+	return rows
+
+## An effect's changes in words: "+2 defense, -1 initiative", and how much
+## weaker its stack strikes back.
+static func _effect_modifier_phrase(effect: Dictionary) -> String:
+	var modifiers: Dictionary = effect.get("modifiers", {}) if effect.get("modifiers", {}) is Dictionary else {}
+	var parts := PackedStringArray()
+	for key in ["attack", "defense", "speed", "initiative", "cohesion", "momentum"]:
+		var amount := int(modifiers.get(key, 0))
+		if amount != 0:
+			parts.append("%s%d %s" % ["+" if amount > 0 else "", amount, key])
+	var retaliation := int(modifiers.get("retaliation", 0))
+	if retaliation < 0:
+		parts.append("strikes back %d%% weaker" % mini(75, -retaliation))
+	return ", ".join(parts)
+
+## Whether an effect helps its stack ("beneficial") or hinders it
+## ("harmful"): a status with rules beyond its numbers, or any lowered
+## number, hinders; a raised number or a ward against statuses helps.
+static func effect_polarity(effect: Dictionary) -> String:
+	if SpellRulesScript.status_rules_text(String(effect.get("effect_id", ""))) != "":
+		return "harmful"
+	var modifiers: Dictionary = effect.get("modifiers", {}) if effect.get("modifiers", {}) is Dictionary else {}
+	var raised := false
+	for key in modifiers.keys():
+		var amount := int(modifiers[key])
+		if amount < 0:
+			return "harmful"
+		raised = raised or amount > 0
+	if raised:
+		return "beneficial"
+	var wards: Variant = effect.get("blocked_status_ids", [])
+	return "beneficial" if wards is Array and not (wards as Array).is_empty() else "harmful"
+
+## What a hero's details card shows: hero_presentation, its attack and
+## defense as its stacks fight with them, spell power and knowledge, its
+## faction and class, its specialties with their ranks, and its battle
+## spells at what they cost it. {} for a side without a commander.
+static func hero_details(battle: Dictionary, side: String) -> Dictionary:
+	var details := hero_presentation(battle, side)
+	if details.is_empty():
+		return {}
+	var state: Dictionary = _commander_state_for_side(battle, side)
+	var payload := _hero_payload_for_side(battle, side)
+	var command: Dictionary = state.get("command", {}) if state.get("command", {}) is Dictionary else {}
+	var hero_id := String(details.get("hero_id", ""))
+	var template_payload := {"id": hero_id} if hero_id != "" else state
+	details["attack"] = int(payload.get("attack", 0))
+	details["defense"] = int(payload.get("defense", 0))
+	details["power"] = SpellRulesScript.spell_power(state)
+	details["knowledge"] = maxi(0, int(command.get("knowledge", 0)))
+	details["faction"] = HeroCommandRulesScript.hero_faction_label(template_payload, String(details.get("faction_id", "")))
+	details["class"] = HeroCommandRulesScript.hero_role_label(template_payload) if hero_id != "" else String(details.get("role", ""))
+	var specialties := []
+	var seen := {}
+	var specialty_ids: Array = state.get("specialties", []) if state.get("specialties", []) is Array else []
+	for specialty_value in specialty_ids:
+		var specialty_id := String(specialty_value)
+		if seen.has(specialty_id):
+			continue
+		seen[specialty_id] = true
+		var definition := HeroProgressionRulesScript.specialty_definition(specialty_id)
+		if definition.is_empty():
+			continue
+		var rank := HeroProgressionRulesScript.specialty_rank(state, specialty_id)
+		specialties.append({
+			"id": specialty_id,
+			"name": String(definition.get("name", specialty_id)),
+			"rank": rank,
+			"rank_label": HeroProgressionRulesScript.rank_label(rank),
+			"text": HeroProgressionRulesScript.rank_text(specialty_id, rank),
+		})
+	details["specialties"] = specialties
+	var spells := []
+	for spell_value in SpellRulesScript.known_spells(state, "battle"):
+		if not (spell_value is Dictionary):
+			continue
+		var spell: Dictionary = spell_value
+		var spell_id := String(spell.get("id", ""))
+		spells.append({
+			"id": spell_id,
+			"name": String(spell.get("name", spell_id)),
+			"cost": SpellRulesScript.adjusted_spell_mana_cost(state, spell),
+			"icon": SpellRulesScript.spell_icon_path(spell_id),
+		})
+	details["spells"] = spells
+	return details
+
 ## approach names the hex a strike is made from (q, r): one of
 ## melee_approach_cells. Without it the stack strikes from where it stands, or
 ## walks to the nearest hex it can strike from (melee_approach_destination).

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://battle_scene"]
+[gd_scene load_steps=8 format=3 uid="uid://battle_scene"]
 
 [ext_resource type="Script" path="res://scenes/battle/BattleShell.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/battle/BattleBoardView.gd" id="2"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/shared/ActivePlaySettingsDialog.tscn" id="5_active_settings"]
 [ext_resource type="Script" path="res://scenes/ui/HeroPortraitView.gd" id="6_hero_portrait"]
 [ext_resource type="Script" path="res://scripts/ui/BattleCommandButton.gd" id="7_command_button"]
+[ext_resource type="Script" path="res://scripts/ui/BattleDetailsCard.gd" id="8_details_card"]
 
 [node name="BattleShell" type="Control"]
 layout_mode = 3
@@ -424,6 +425,13 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Battle log"
 
+[node name="DetailsCard" type="PanelContainer" parent="Hud"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+mouse_filter = 2
+script = ExtResource("8_details_card")
+
 [node name="ResultOverlay" type="Control" parent="Hud"]
 unique_name_in_owner = true
 visible = false
@@ -551,6 +559,7 @@ unique_name_in_owner = true
 [connection signal="pressed" from="Hud/CommandBar/CommandRow/RightCommands/Wait" to="." method="_on_wait_pressed"]
 [connection signal="pressed" from="Hud/CommandBar/CommandRow/RightCommands/Defend" to="." method="_on_defend_pressed"]
 [connection signal="gui_input" from="Hud/PlayerHeroPlate" to="." method="_on_player_plate_gui_input"]
+[connection signal="gui_input" from="Hud/EnemyHeroPlate" to="." method="_on_enemy_plate_gui_input"]
 [connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/SpeedRow/SpeedBar/SpeedNormal" to="." method="_on_speed_normal_pressed"]
 [connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/SpeedRow/SpeedBar/SpeedFast" to="." method="_on_speed_fast_pressed"]
 [connection signal="pressed" from="Hud/OptionsPopover/OptionsBox/SpeedRow/SpeedBar/SpeedInstant" to="." method="_on_speed_instant_pressed"]

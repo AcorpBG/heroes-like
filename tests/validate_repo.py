@@ -17678,7 +17678,7 @@ def validate_battle_fullscreen_composition(errors: list[str]) -> None:
     ]
     command_indexes = [scene_text.find(header) for header in command_headers]
     ensure(all(index >= 0 for index in command_indexes) and command_indexes == sorted(command_indexes), errors, "Battle command bar must hold Options, Surrender, Retreat, Auto, Quick Resolve, the log line, then Spellbook, Wait and Defend")
-    for overlay in ("OptionsPopover", "SpellbookPopover", "LogPopover", "ResultOverlay"):
+    for overlay in ("OptionsPopover", "SpellbookPopover", "LogPopover", "DetailsCard", "ResultOverlay"):
         header = next((line for line in scene_text.splitlines() if line.startswith(f'[node name="{overlay}" ') and 'parent="Hud"' in line), "")
         body = node_body(scene_text, header) if header else None
         ensure(body is not None and "visible = false" in body, errors, f"Battle {overlay} must start closed so the field stays clear")
@@ -49507,8 +49507,11 @@ def validate_battle_status_effect_badges(errors: list[str]) -> None:
     draw_start = board_text.find("func _draw_stack_tokens")
     draw_end = board_text.find("\nfunc ", draw_start + 1)
     draw_block = board_text[draw_start:draw_end]
-    draw_order = [draw_block.find(token) for token in ("_draw_stack_side_cue", "_draw_stack_status_effect_badges", "_draw_count_badge")]
-    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Battle stack draw order must retain side cue, status badges, then the count plate")
+    draw_order = [draw_block.find(token) for token in ("_draw_stack_side_cue", "_draw_count_badge")]
+    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Battle stack draw order must retain the side cue, then the stack plate")
+    plate_start = board_text.find("func _draw_count_badge")
+    plate_end = board_text.find("\nfunc ", plate_start + 1)
+    ensure(plate_start >= 0 and "_draw_stack_status_effect_badges(" in board_text[plate_start:plate_end], errors, "Battle status badges must sit on the stack plate")
     badge_start = board_text.find("func _draw_stack_status_effect_badges")
     badge_end = board_text.find("\nfunc ", badge_start + 1)
     badge_block = board_text[badge_start:badge_end]
