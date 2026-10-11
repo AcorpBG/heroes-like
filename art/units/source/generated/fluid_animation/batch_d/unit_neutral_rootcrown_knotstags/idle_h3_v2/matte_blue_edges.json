@@ -1,0 +1,39 @@
+{
+  "tool": "tools/rematte_blue_plate.py",
+  "reason": "Blue-plate edges re-solved: the old blue minus max(red, green) matte kept blue in red edges as purple (owner report 2026-10-11); edge pixels now take the nearest clean colour and only their opacity is solved.",
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rootcrown_knotstags/idle_h3_v2/original_lossless.mkv",
+    "sha256": "2b6cc31ab5dbdc4883655a5a021f8e6a1b206f38b21190938881961060cf469d"
+  },
+  "old_matte": "this unit's produce.py process() on the original; every published frame reproduced the archived matte/ frame exactly",
+  "recipe": {
+    "version": 1,
+    "edge_px": 2,
+    "reach_px": 3,
+    "min_plate_distance": 80,
+    "threshold": 24
+  },
+  "threshold_source": "painted idle blue minus green p99.9 = 18.0, plus 6",
+  "opacity_removed_mean": 0.01935,
+  "opacity_removed_max": 0.02123,
+  "rgba_sha256": {
+    "000": "8b6f002bee51303404583faac5e5eb7d1ee2a176c42a7844223a6b8a5d7a8327",
+    "010": "42a674497092f19d1a4011da865e57aa5b848f33d7bb2fab58980ee92be397e2",
+    "016": "79a10c958037e4f90015a392eead1e2e14ec837b837fdf68f072d2d772a35f54",
+    "020": "68fc212e3982f2633d2735e951e69ceaca570912fc94d99a97e4fb645278b8c1",
+    "024": "e35b7e30f171ce15ab03f05794c6256b4bb4909616aed597a080f3e6c5c69f36",
+    "028": "d8eae3cd6751e973d108a380bfec419f878579fef215713d2ddd5d23cd16c2ac",
+    "032": "89a06fe11bfb7aa01238470210bcd4a25405351a9bb16b7b98398525e6d81286",
+    "036": "8a982f0b7c569e6aefaa1dd8850e9c3bc3f4db7ba017606b4a0c0ea93b526d4d",
+    "040": "53a20c44af8d8ca3ce0df59783155dbe4bc6bcad41be1fe0234a77abc25ad979",
+    "052": "a8ddcfd935063f6d2adccad73a5a898e7113ef03f347dd981b4c471730789139",
+    "064": "35e00e11aadb8f8d63ac1ff6bff39b23bb642fa7e828f9983ca8721d9de073b1",
+    "076": "6be204d59f132f3481aa3f3e2868258d5986554330847c303df9a32f690a46a7",
+    "084": "b988d10574783cec55179395b188b367153d0e4b3b3893cbd7790d1fb58cf6a7",
+    "088": "df226875920aec76bd7926b6c12ea7923154be392b644084d8a27ef5074fe3e1",
+    "092": "911743db2c378616310b973173689fd41031fd15f2c5200397289b06647aac2b",
+    "096": "4e6d7f4ee2382d662ee252ca7c93327a948665ee992db5384a7a9f7e6034b010",
+    "104": "8bf5bb90763976d31864682517d651193671951946ca7d568eeed87cf41c830d",
+    "123": "736d26ce23fc075ba17ccecd3fbf46802a9f030244d8be5da28fdcb92aa5b699"
+  }
+}

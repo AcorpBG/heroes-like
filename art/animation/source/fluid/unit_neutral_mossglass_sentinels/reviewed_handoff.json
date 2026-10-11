@@ -7,762 +7,6 @@
       "source_facing": "right",
       "frames": [
         {
-          "name": "move_h3_006",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_006.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 6,
-          "video_time_seconds": 0.25
-        },
-        {
-          "name": "move_h3_007",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_007.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 7,
-          "video_time_seconds": 0.2916666666666667
-        },
-        {
-          "name": "move_h3_008",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_008.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 8,
-          "video_time_seconds": 0.3333333333333333
-        },
-        {
-          "name": "move_h3_009",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_009.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 9,
-          "video_time_seconds": 0.375
-        },
-        {
-          "name": "move_h3_010",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_010.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 10,
-          "video_time_seconds": 0.4166666666666667
-        },
-        {
-          "name": "move_h3_011",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_011.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 11,
-          "video_time_seconds": 0.4583333333333333
-        },
-        {
-          "name": "move_h3_012",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_012.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 12,
-          "video_time_seconds": 0.5
-        },
-        {
-          "name": "move_h3_013",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_013.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 13,
-          "video_time_seconds": 0.5416666666666666
-        },
-        {
-          "name": "move_h3_014",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_014.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 14,
-          "video_time_seconds": 0.5833333333333334
-        },
-        {
-          "name": "move_h3_015",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_015.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 15,
-          "video_time_seconds": 0.625
-        },
-        {
-          "name": "move_h3_016",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_016.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 16,
-          "video_time_seconds": 0.6666666666666666
-        },
-        {
-          "name": "move_h3_017",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_017.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 17,
-          "video_time_seconds": 0.7083333333333334
-        },
-        {
-          "name": "move_h3_018",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_018.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 18,
-          "video_time_seconds": 0.75
-        },
-        {
-          "name": "move_h3_019",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_019.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 19,
-          "video_time_seconds": 0.7916666666666666
-        },
-        {
-          "name": "move_h3_020",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_020.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 20,
-          "video_time_seconds": 0.8333333333333334
-        },
-        {
-          "name": "move_h3_021",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_021.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 21,
-          "video_time_seconds": 0.875
-        },
-        {
-          "name": "move_h3_022",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_022.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 22,
-          "video_time_seconds": 0.9166666666666666
-        },
-        {
-          "name": "move_h3_023",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_023.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 23,
-          "video_time_seconds": 0.9583333333333334
-        },
-        {
-          "name": "move_h3_024",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_024.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 24,
-          "video_time_seconds": 1.0
-        },
-        {
-          "name": "move_h3_025",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_025.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 25,
-          "video_time_seconds": 1.0416666666666667
-        },
-        {
-          "name": "move_h3_026",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_026.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 26,
-          "video_time_seconds": 1.0833333333333333
-        },
-        {
-          "name": "move_h3_027",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_027.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 27,
-          "video_time_seconds": 1.125
-        },
-        {
-          "name": "move_h3_028",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_028.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 28,
-          "video_time_seconds": 1.1666666666666667
-        },
-        {
-          "name": "move_h3_029",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_029.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 29,
-          "video_time_seconds": 1.2083333333333333
-        },
-        {
-          "name": "move_h3_030",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_030.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 30,
-          "video_time_seconds": 1.25
-        },
-        {
-          "name": "move_h3_031",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_031.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 31,
-          "video_time_seconds": 1.2916666666666667
-        },
-        {
-          "name": "move_h3_032",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_032.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 32,
-          "video_time_seconds": 1.3333333333333333
-        },
-        {
-          "name": "move_h3_033",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_033.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 33,
-          "video_time_seconds": 1.375
-        },
-        {
-          "name": "move_h3_034",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_034.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 34,
-          "video_time_seconds": 1.4166666666666667
-        },
-        {
-          "name": "move_h3_035",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_035.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 35,
-          "video_time_seconds": 1.4583333333333333
-        },
-        {
-          "name": "move_h3_036",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_036.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 36,
-          "video_time_seconds": 1.5
-        },
-        {
-          "name": "move_h3_037",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_037.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 37,
-          "video_time_seconds": 1.5416666666666667
-        },
-        {
-          "name": "move_h3_038",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_038.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 38,
-          "video_time_seconds": 1.5833333333333333
-        },
-        {
-          "name": "move_h3_039",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_039.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 39,
-          "video_time_seconds": 1.625
-        },
-        {
-          "name": "move_h3_040",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_040.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 40,
-          "video_time_seconds": 1.6666666666666667
-        },
-        {
-          "name": "move_h3_041",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_041.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 41,
-          "video_time_seconds": 1.7083333333333333
-        },
-        {
           "name": "attack_h3_006",
           "clip": "attack",
           "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/attack_h3_v1/matte/rgba_006.png",
@@ -1501,1749 +745,6 @@
           "name": "attack_h3_123",
           "clip": "attack",
           "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/attack_h3_v1/matte/rgba_123.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 123,
-          "video_time_seconds": 5.125
-        },
-        {
-          "name": "defend_h3_026",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_026.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 26,
-          "video_time_seconds": 1.0833333333333333
-        },
-        {
-          "name": "defend_h3_028",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_028.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 28,
-          "video_time_seconds": 1.1666666666666667
-        },
-        {
-          "name": "defend_h3_030",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_030.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 30,
-          "video_time_seconds": 1.25
-        },
-        {
-          "name": "defend_h3_032",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_032.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 32,
-          "video_time_seconds": 1.3333333333333333
-        },
-        {
-          "name": "defend_h3_034",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_034.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 34,
-          "video_time_seconds": 1.4166666666666667
-        },
-        {
-          "name": "defend_h3_035",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_035.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 35,
-          "video_time_seconds": 1.4583333333333333
-        },
-        {
-          "name": "defend_h3_036",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_036.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 36,
-          "video_time_seconds": 1.5
-        },
-        {
-          "name": "defend_h3_038",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_038.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 38,
-          "video_time_seconds": 1.5833333333333333
-        },
-        {
-          "name": "defend_h3_040",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_040.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 40,
-          "video_time_seconds": 1.6666666666666667
-        },
-        {
-          "name": "defend_h3_042",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_042.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 42,
-          "video_time_seconds": 1.75
-        },
-        {
-          "name": "defend_h3_043",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_043.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 43,
-          "video_time_seconds": 1.7916666666666667
-        },
-        {
-          "name": "defend_h3_044",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_044.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 44,
-          "video_time_seconds": 1.8333333333333333
-        },
-        {
-          "name": "defend_h3_045",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_045.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 45,
-          "video_time_seconds": 1.875
-        },
-        {
-          "name": "defend_h3_046",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_046.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 46,
-          "video_time_seconds": 1.9166666666666667
-        },
-        {
-          "name": "defend_h3_048",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_048.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 48,
-          "video_time_seconds": 2.0
-        },
-        {
-          "name": "defend_h3_050",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_050.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 50,
-          "video_time_seconds": 2.0833333333333335
-        },
-        {
-          "name": "defend_h3_052",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_052.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 52,
-          "video_time_seconds": 2.1666666666666665
-        },
-        {
-          "name": "defend_h3_054",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_054.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 54,
-          "video_time_seconds": 2.25
-        },
-        {
-          "name": "defend_h3_056",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_056.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 56,
-          "video_time_seconds": 2.3333333333333335
-        },
-        {
-          "name": "defend_h3_058",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_058.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 58,
-          "video_time_seconds": 2.4166666666666665
-        },
-        {
-          "name": "defend_h3_060",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_060.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 60,
-          "video_time_seconds": 2.5
-        },
-        {
-          "name": "defend_h3_064",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_064.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 64,
-          "video_time_seconds": 2.6666666666666665
-        },
-        {
-          "name": "defend_h3_076",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_076.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 76,
-          "video_time_seconds": 3.1666666666666665
-        },
-        {
-          "name": "defend_h3_082",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_082.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 82,
-          "video_time_seconds": 3.4166666666666665
-        },
-        {
-          "name": "defend_h3_100",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_100.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 100,
-          "video_time_seconds": 4.166666666666667
-        },
-        {
-          "name": "defend_h3_123",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_123.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 123,
-          "video_time_seconds": 5.125
-        },
-        {
-          "name": "hit_h3_004",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_004.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 4,
-          "video_time_seconds": 0.16666666666666666
-        },
-        {
-          "name": "hit_h3_005",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_005.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 5,
-          "video_time_seconds": 0.20833333333333334
-        },
-        {
-          "name": "hit_h3_008",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_008.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 8,
-          "video_time_seconds": 0.3333333333333333
-        },
-        {
-          "name": "hit_h3_009",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_009.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 9,
-          "video_time_seconds": 0.375
-        },
-        {
-          "name": "hit_h3_010",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_010.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 10,
-          "video_time_seconds": 0.4166666666666667
-        },
-        {
-          "name": "hit_h3_012",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_012.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 12,
-          "video_time_seconds": 0.5
-        },
-        {
-          "name": "hit_h3_014",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_014.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 14,
-          "video_time_seconds": 0.5833333333333334
-        },
-        {
-          "name": "hit_h3_016",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_016.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 16,
-          "video_time_seconds": 0.6666666666666666
-        },
-        {
-          "name": "hit_h3_018",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_018.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 18,
-          "video_time_seconds": 0.75
-        },
-        {
-          "name": "hit_h3_032",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_032.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 32,
-          "video_time_seconds": 1.3333333333333333
-        },
-        {
-          "name": "hit_h3_050",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_050.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 50,
-          "video_time_seconds": 2.0833333333333335
-        },
-        {
-          "name": "hit_h3_052",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_052.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 52,
-          "video_time_seconds": 2.1666666666666665
-        },
-        {
-          "name": "hit_h3_054",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_054.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 54,
-          "video_time_seconds": 2.25
-        },
-        {
-          "name": "hit_h3_056",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_056.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 56,
-          "video_time_seconds": 2.3333333333333335
-        },
-        {
-          "name": "hit_h3_058",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_058.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 58,
-          "video_time_seconds": 2.4166666666666665
-        },
-        {
-          "name": "hit_h3_060",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_060.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 60,
-          "video_time_seconds": 2.5
-        },
-        {
-          "name": "hit_h3_062",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_062.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 62,
-          "video_time_seconds": 2.5833333333333335
-        },
-        {
-          "name": "hit_h3_064",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_064.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 64,
-          "video_time_seconds": 2.6666666666666665
-        },
-        {
-          "name": "hit_h3_066",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_066.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 66,
-          "video_time_seconds": 2.75
-        },
-        {
-          "name": "hit_h3_068",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_068.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 68,
-          "video_time_seconds": 2.8333333333333335
-        },
-        {
-          "name": "hit_h3_072",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_072.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 72,
-          "video_time_seconds": 3.0
-        },
-        {
-          "name": "hit_h3_084",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_084.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 84,
-          "video_time_seconds": 3.5
-        },
-        {
-          "name": "hit_h3_086",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_086.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 86,
-          "video_time_seconds": 3.5833333333333335
-        },
-        {
-          "name": "hit_h3_088",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_088.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 88,
-          "video_time_seconds": 3.6666666666666665
-        },
-        {
-          "name": "hit_h3_090",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_090.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 90,
-          "video_time_seconds": 3.75
-        },
-        {
-          "name": "hit_h3_092",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_092.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 92,
-          "video_time_seconds": 3.8333333333333335
-        },
-        {
-          "name": "hit_h3_094",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_094.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 94,
-          "video_time_seconds": 3.9166666666666665
-        },
-        {
-          "name": "hit_h3_096",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_096.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 96,
-          "video_time_seconds": 4.0
-        },
-        {
-          "name": "hit_h3_098",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_098.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 98,
-          "video_time_seconds": 4.083333333333333
-        },
-        {
-          "name": "hit_h3_108",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_108.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 108,
-          "video_time_seconds": 4.5
-        },
-        {
-          "name": "hit_h3_123",
-          "clip": "hit",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_123.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 123,
-          "video_time_seconds": 5.125
-        },
-        {
-          "name": "cast_h3_028",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_028.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 28,
-          "video_time_seconds": 1.1666666666666667
-        },
-        {
-          "name": "cast_h3_030",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_030.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 30,
-          "video_time_seconds": 1.25
-        },
-        {
-          "name": "cast_h3_031",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_031.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 31,
-          "video_time_seconds": 1.2916666666666667
-        },
-        {
-          "name": "cast_h3_032",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_032.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 32,
-          "video_time_seconds": 1.3333333333333333
-        },
-        {
-          "name": "cast_h3_033",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_033.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 33,
-          "video_time_seconds": 1.375
-        },
-        {
-          "name": "cast_h3_034",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_034.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 34,
-          "video_time_seconds": 1.4166666666666667
-        },
-        {
-          "name": "cast_h3_035",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_035.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 35,
-          "video_time_seconds": 1.4583333333333333
-        },
-        {
-          "name": "cast_h3_036",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_036.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 36,
-          "video_time_seconds": 1.5
-        },
-        {
-          "name": "cast_h3_037",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_037.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 37,
-          "video_time_seconds": 1.5416666666666667
-        },
-        {
-          "name": "cast_h3_038",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_038.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 38,
-          "video_time_seconds": 1.5833333333333333
-        },
-        {
-          "name": "cast_h3_040",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_040.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 40,
-          "video_time_seconds": 1.6666666666666667
-        },
-        {
-          "name": "cast_h3_044",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_044.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 44,
-          "video_time_seconds": 1.8333333333333333
-        },
-        {
-          "name": "cast_h3_054",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_054.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 54,
-          "video_time_seconds": 2.25
-        },
-        {
-          "name": "cast_h3_062",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_062.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 62,
-          "video_time_seconds": 2.5833333333333335
-        },
-        {
-          "name": "cast_h3_072",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_072.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 72,
-          "video_time_seconds": 3.0
-        },
-        {
-          "name": "cast_h3_080",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_080.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 80,
-          "video_time_seconds": 3.3333333333333335
-        },
-        {
-          "name": "cast_h3_082",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_082.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 82,
-          "video_time_seconds": 3.4166666666666665
-        },
-        {
-          "name": "cast_h3_084",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_084.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 84,
-          "video_time_seconds": 3.5
-        },
-        {
-          "name": "cast_h3_085",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_085.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 85,
-          "video_time_seconds": 3.5416666666666665
-        },
-        {
-          "name": "cast_h3_086",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_086.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 86,
-          "video_time_seconds": 3.5833333333333335
-        },
-        {
-          "name": "cast_h3_087",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_087.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 87,
-          "video_time_seconds": 3.625
-        },
-        {
-          "name": "cast_h3_088",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_088.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 88,
-          "video_time_seconds": 3.6666666666666665
-        },
-        {
-          "name": "cast_h3_089",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_089.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 89,
-          "video_time_seconds": 3.7083333333333335
-        },
-        {
-          "name": "cast_h3_090",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_090.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 90,
-          "video_time_seconds": 3.75
-        },
-        {
-          "name": "cast_h3_096",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_096.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              544
-            ]
-          ],
-          "anchor": [
-            480,
-            480
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 96,
-          "video_time_seconds": 4.0
-        },
-        {
-          "name": "cast_h3_123",
-          "clip": "cast",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_123.png",
           "rects": [
             [
               0,
@@ -4058,10 +1559,2509 @@
           "alpha_noise_cutoff": 0,
           "video_frame": 123,
           "video_time_seconds": 5.125
+        },
+        {
+          "name": "move_h3_006",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "move_h3_007",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_007.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 7,
+          "video_time_seconds": 0.2916666666666667
+        },
+        {
+          "name": "move_h3_008",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "move_h3_009",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "move_h3_010",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "move_h3_011",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583333333333333
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_013",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5416666666666666
+        },
+        {
+          "name": "move_h3_014",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "move_h3_015",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "move_h3_016",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "move_h3_017",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_019",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "move_h3_020",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "move_h3_021",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "move_h3_022",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "move_h3_023",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_025",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "move_h3_026",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "move_h3_027",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_029",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_031",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_033",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_035",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_037",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_039",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_041",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "defend_h3_035",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_038",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_042",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "defend_h3_043",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "defend_h3_044",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "defend_h3_045",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "defend_h3_046",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "defend_h3_048",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "defend_h3_050",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "defend_h3_052",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "defend_h3_054",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "defend_h3_056",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "defend_h3_058",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "defend_h3_060",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "defend_h3_064",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "defend_h3_076",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "defend_h3_082",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "defend_h3_100",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "defend_h3_123",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "hit_h3_004",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "hit_h3_005",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_005.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 5,
+          "video_time_seconds": 0.20833333333333334
+        },
+        {
+          "name": "hit_h3_008",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "hit_h3_009",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "hit_h3_010",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "hit_h3_012",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "hit_h3_014",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "hit_h3_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "hit_h3_018",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_050",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "hit_h3_052",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "hit_h3_054",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "hit_h3_056",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "hit_h3_058",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "hit_h3_060",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "hit_h3_062",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "hit_h3_064",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "hit_h3_066",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "hit_h3_068",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_h3_084",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "hit_h3_086",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "hit_h3_088",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "hit_h3_090",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "hit_h3_092",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "hit_h3_094",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "hit_h3_096",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "hit_h3_098",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "hit_h3_108",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "hit_h3_123",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_030",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_031",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_033",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "cast_h3_034",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "cast_h3_035",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "cast_h3_036",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "cast_h3_037",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "cast_h3_038",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "cast_h3_040",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "cast_h3_044",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "cast_h3_054",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "cast_h3_062",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "cast_h3_072",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "cast_h3_082",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "cast_h3_084",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "cast_h3_085",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5416666666666665
+        },
+        {
+          "name": "cast_h3_086",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "cast_h3_087",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "cast_h3_088",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "cast_h3_089",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083333333333335
+        },
+        {
+          "name": "cast_h3_090",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "cast_h3_096",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "cast_h3_123",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
         }
       ],
       "clips": {
-        "move": {
+        "attack": {
           "indices": [
             0,
             1,
@@ -4100,11 +4100,12 @@
             34,
             35
           ],
-          "frame_msec": 42,
-          "loop": true,
-          "static_frame": 0
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 21
         },
-        "attack": {
+        "death": {
           "indices": [
             36,
             37,
@@ -4141,17 +4142,16 @@
             68,
             69,
             70,
-            71
-          ],
-          "frame_msec": 40,
-          "loop": false,
-          "static_frame": 0,
-          "contact_frame": 21
-        },
-        "defend": {
-          "indices": [
+            71,
             72,
-            73,
+            73
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 37
+        },
+        "move": {
+          "indices": [
             74,
             75,
             76,
@@ -4175,14 +4175,7 @@
             94,
             95,
             96,
-            97
-          ],
-          "frame_msec": 40,
-          "loop": false,
-          "static_frame": 25
-        },
-        "hit": {
-          "indices": [
+            97,
             98,
             99,
             100,
@@ -4194,7 +4187,14 @@
             106,
             107,
             108,
-            109,
+            109
+          ],
+          "frame_msec": 42,
+          "loop": true,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
             110,
             111,
             112,
@@ -4213,21 +4213,21 @@
             125,
             126,
             127,
-            128
-          ],
-          "frame_msec": 35,
-          "loop": false,
-          "static_frame": 0
-        },
-        "cast": {
-          "indices": [
+            128,
             129,
             130,
             131,
             132,
             133,
             134,
-            135,
+            135
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 25
+        },
+        "hit": {
+          "indices": [
             136,
             137,
             138,
@@ -4246,15 +4246,7 @@
             151,
             152,
             153,
-            154
-          ],
-          "frame_msec": 50,
-          "loop": false,
-          "static_frame": 0,
-          "contact_frame": 13
-        },
-        "death": {
-          "indices": [
+            154,
             155,
             156,
             157,
@@ -4266,7 +4258,14 @@
             163,
             164,
             165,
-            166,
+            166
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0
+        },
+        "cast": {
+          "indices": [
             167,
             168,
             169,
@@ -4294,9 +4293,10 @@
             191,
             192
           ],
-          "frame_msec": 45,
+          "frame_msec": 50,
           "loop": false,
-          "static_frame": 37
+          "static_frame": 0,
+          "contact_frame": 13
         }
       },
       "alpha_noise_cutoff": 0,
@@ -4585,45 +4585,9 @@
       },
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Accepted after all124 chronological raw frames of selected takes, enlarged hands/boots/shield/mallet and alpha-edge inspection, gait boundary review, and complete native128px phase overview. Six dedicated actions retain anatomy, grips, scale and grounding. Walk uses newly repaired opposite-leg guides to keep the decorated shield face fixed; selected cycle6-41 is chronological. Original eight-frame idle retains visible near-forearm mallet lift/lower and left-shield adjustment and is accepted unchanged. Attack41-42 and hit6-7 smears excluded. Walk blue/green backdrop ranges measured and keyed with protected100 above original opaque green excess89; all61789 solid reference pixels stay opaque. Continuous video playback route was unavailable; no continuous playback, manual game playtest, full suite or Linux validation claimed."
+        "notes": "Blue-backdrop edges re-solved with tools/rematte_blue_plate.py (2026-10-11): purple fringes from the old blue-minus-max(red, green) matte removed; frames, timing, anchors and scale unchanged. Earlier review: Accepted after all124 chronological raw frames of selected takes, enlarged hands/boots/shield/mallet and alpha-edge inspection, gait boundary review, and complete native128px phase overview. Six dedicated actions retain anatomy, grips, scale and grounding. Walk uses newly repaired opposite-leg guides to keep the decorated shield face fixed; selected cycle6-41 is chronological. Original eight-frame idle retains visible near-forearm mallet lift/lower and left-shield adjustment and is accepted unchanged. Attack41-42 and hit6-7 smears excluded. Walk blue/green backdrop ranges measured and keyed with protected100 above original opaque green excess89; all61789 solid reference pixels stay opaque. Continuous video playback route was unavailable; no continuous playback, manual game playtest, full suite or Linux validation claimed."
       },
       "source_scale_by_image": {
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_006.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_007.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_008.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_009.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_010.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_011.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_012.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_013.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_014.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_015.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_016.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_017.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_018.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_019.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_020.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_021.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_022.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_023.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_024.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_025.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_026.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_027.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_028.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_029.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_030.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_031.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_032.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_033.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_034.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_035.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_036.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_037.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_038.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_039.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_040.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_041.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/attack_h3_v1/matte/rgba_006.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/attack_h3_v1/matte/rgba_008.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/attack_h3_v1/matte/rgba_010.png": 0.5,
@@ -4660,89 +4624,6 @@
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/attack_h3_v1/matte/rgba_100.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/attack_h3_v1/matte/rgba_114.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/attack_h3_v1/matte/rgba_123.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_026.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_028.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_030.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_032.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_034.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_035.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_036.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_038.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_040.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_042.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_043.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_044.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_045.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_046.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_048.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_050.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_052.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_054.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_056.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_058.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_060.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_064.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_076.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_082.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_100.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte/rgba_123.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_004.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_005.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_008.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_009.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_010.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_012.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_014.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_016.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_018.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_032.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_050.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_052.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_054.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_056.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_058.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_060.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_062.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_064.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_066.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_068.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_072.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_084.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_086.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_088.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_090.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_092.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_094.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_096.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_098.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_108.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte/rgba_123.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_028.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_030.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_031.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_032.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_033.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_034.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_035.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_036.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_037.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_038.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_040.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_044.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_054.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_062.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_072.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_080.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_082.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_084.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_085.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_086.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_087.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_088.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_089.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_090.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_096.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte/rgba_123.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/death_h3_v1/matte/rgba_024.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/death_h3_v1/matte/rgba_026.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/death_h3_v1/matte/rgba_028.png": 0.5,
@@ -4780,18 +4661,137 @@
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/death_h3_v1/matte/rgba_100.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/death_h3_v1/matte/rgba_108.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/death_h3_v1/matte/rgba_116.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/death_h3_v1/matte/rgba_123.png": 0.5
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/death_h3_v1/matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_006.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_007.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_009.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_011.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_013.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_015.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_017.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_019.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_021.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_023.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_025.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_027.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_029.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_031.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_033.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_035.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte/rgba_037.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_039.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v4/matte_blue_edges/rgba_041.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_035.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_043.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_045.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/defend_h3_v2/matte_blue_edges/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_004.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_005.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_009.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_098.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/hit_h3_v3/matte_blue_edges/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_031.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_033.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_035.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_037.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_085.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_087.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_089.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/cast_h3_v2/matte_blue_edges/rgba_123.png": 0.5
       },
       "preserved_accepted_clips": [
         "idle"
       ],
       "accepted_clips": [
-        "move",
         "attack",
+        "death",
+        "move",
         "defend",
         "hit",
         "cast",
-        "death",
         "idle"
       ]
     }

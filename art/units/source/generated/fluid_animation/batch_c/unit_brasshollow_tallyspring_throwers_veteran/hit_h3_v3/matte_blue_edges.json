@@ -1,0 +1,37 @@
+{
+  "tool": "tools/rematte_blue_plate.py",
+  "reason": "Blue-plate edges re-solved: the old blue minus max(red, green) matte kept blue in red edges as purple (owner report 2026-10-11); edge pixels now take the nearest clean colour and only their opacity is solved.",
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_tallyspring_throwers_veteran/hit_h3_v3/original_lossless.mkv",
+    "sha256": "892890f7cd4069444d542a4a6e105af14b7181c64814b77b364519ab27bed184"
+  },
+  "old_matte": "this unit's produce.py process() on the original; every published frame reproduced the archived matte/ frame exactly",
+  "recipe": {
+    "version": 1,
+    "edge_px": 2,
+    "reach_px": 3,
+    "min_plate_distance": 80,
+    "threshold": 18
+  },
+  "threshold_source": "painted idle blue minus green p99.9 = 12.0, plus 6",
+  "opacity_removed_mean": 0.00598,
+  "opacity_removed_max": 0.007,
+  "rgba_sha256": {
+    "000": "711398f9f6926368cdd2a0c275f544061672ecadc26b70f066f21bf2454789d6",
+    "020": "5549a3cb6a718d6e3bd5f59e355b536e385118350a7fdba4870e11fa8fe4986b",
+    "022": "9836eb19af52fff1b579614e60371f203f0daab80ede1a2a16595f06c7f44d2b",
+    "024": "64db1b55c56e36cfca45ecc0fac94f33413dab90efd605e9db7669e8f58a533f",
+    "026": "3a0c9de35cf79fff753713db4179805910910818a4a51c5d9f52c0976c74b2a3",
+    "028": "b9d50c279cfc5260c7f807d13f101efa59a719eebd5ac0449514120248bcd8c6",
+    "030": "e253af119e230dc2815979690535f74cb3a113f5e2245284832f80511a502c17",
+    "032": "c88e2fb17a4bb527dbaded9aa50e3afb246c6d9e07088c2dff46307d7d8be223",
+    "048": "edc713b4980b4fd713660e07accd91e94d2811691249d3a63c78aef13e4efe51",
+    "068": "28f0eb107ae325587843f195bcc91b2b7c224cf6b4238cdde39f24b286ec72e7",
+    "072": "e2d3e093f963e482ea91ac094005c954c66b57fa5abbf7fed217198ff1187cb9",
+    "074": "b7013fe181c116d9e5ad3537f386610df1def067080dff6433b8fa21f9888581",
+    "076": "9efc6e1691a928353d2781c494716c1b93a380b2be5b58f52a3fc0340dab8292",
+    "078": "e66b85fa95350938d41000fb8dffbf675a5af74d71bbe12de50af755c57e18d2",
+    "080": "fdd10731ec056b89e7b1053027fa4482f0b9c1b7bd6241da4c1a609d7f44870a",
+    "084": "bbb511dbf4bdf436344c7ea8f3a995f8769936afeb70851c8615044271a535fe"
+  }
+}

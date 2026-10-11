@@ -1,0 +1,37 @@
+{
+  "tool": "tools/rematte_blue_plate.py",
+  "reason": "Blue-plate edges re-solved: the old blue minus max(red, green) matte kept blue in red edges as purple (owner report 2026-10-11); edge pixels now take the nearest clean colour and only their opacity is solved.",
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reedbarge_poles/defend_h3_v1/original_lossless.mkv",
+    "sha256": "f3b4315e294e53c572ec9e8d2d8bf6443480b58d16a78a95d44052abf70b5c16"
+  },
+  "old_matte": "this unit's produce.py process() on the original; every published frame reproduced the archived matte/ frame exactly",
+  "recipe": {
+    "version": 1,
+    "edge_px": 2,
+    "reach_px": 3,
+    "min_plate_distance": 80,
+    "threshold": 9
+  },
+  "threshold_source": "painted idle blue minus green p99.9 = 3.0, plus 6",
+  "opacity_removed_mean": 0.0156,
+  "opacity_removed_max": 0.01773,
+  "rgba_sha256": {
+    "000": "2fec88fd45b7c748e3cd68d9a2cea42b4916201611feae4cf3614b6aacd0ced3",
+    "006": "951abbf6642ea4459227d875f20b4491873944438c1f89ae6f67ec5785ab9f21",
+    "008": "b2fd038195ea9f43f8fdc23411ab7b71eb459f88e74035ec880d63bfb2215944",
+    "010": "083ed2c817a3d3c84a286e75da2951b37cf00d92fcc9afbbc5abcd7b233909db",
+    "012": "de517692ce965f3dc5fad75adab1ebfe616aa43f2092b9a807f01eab1049bce2",
+    "014": "1c0274c941ee9249b3b697db23309d0311130ee853694212b44fb1e6c8476ef5",
+    "016": "7b221f12590f051880c7085e3bbc721f2a0604dc5446ded29b214157b2119710",
+    "018": "75ddd0e1d2ebb0a66254ac9c719fc1a29fe904e352bf8d0ec3ff4cd27eaba09a",
+    "020": "0d0ea9e51ee4dffe38c76acfcbd2e58c3ba798d9dc7ea66d3b4467f1a1d1eb04",
+    "022": "47045ad28f3e0148cbcd862d8022a41b3d55928f3b23a730dfe7ecea7604f171",
+    "024": "baaaafe5b920bbcc0562c0ff8a7f420e204d8881c3f77dad67e79e9fa284cd0a",
+    "026": "a4e9d61cacbc0e53ce3e6ccc706919c5cfd761969b87b4a325ae3dbbd4a87fb9",
+    "028": "4765f10abc0a43ca5a38b954c108ad062ef44fda5c8f6ab91d3466bf648af1fe",
+    "032": "889be4300ff12c0641fb577c7baae56fe7582e17ca546ecc0f096eeff908c551",
+    "040": "49e27ba6f78bac0b08b73cb8c5bb0a6cc62ebd079776226e80baa9ba5c0b6e6d",
+    "048": "c6d454f7350b2ee2cd7e14da6715a6dffef39b8e9613c317eb2e4bed9dc6c3c1"
+  }
+}

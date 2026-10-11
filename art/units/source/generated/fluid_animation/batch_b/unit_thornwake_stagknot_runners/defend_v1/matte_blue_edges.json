@@ -1,0 +1,43 @@
+{
+  "tool": "tools/rematte_blue_plate.py",
+  "reason": "Blue-plate edges re-solved: the old blue minus max(red, green) matte kept blue in red edges as purple (owner report 2026-10-11); edge pixels now take the nearest clean colour and only their opacity is solved.",
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/original_lossless.mkv",
+    "sha256": "c8274d75b901ab8991b5a6b2092406eab02c0fcdf862ce0bbc84387dce138983"
+  },
+  "old_matte": "this unit's produce.py process() on the original; every published frame reproduced the archived matte/ frame exactly",
+  "recipe": {
+    "version": 1,
+    "edge_px": 2,
+    "reach_px": 3,
+    "min_plate_distance": 80,
+    "threshold": 7
+  },
+  "threshold_source": "painted idle blue minus green p99.9 = 1.0, plus 6",
+  "opacity_removed_mean": 0.05133,
+  "opacity_removed_max": 0.05584,
+  "rgba_sha256": {
+    "000": "0631478b52cac0f5b0ea6d5e8b66d44c31ebdeba44b3425b760516db836ba9aa",
+    "024": "c2ca58e5e39fdf4319143fa0a57177e1b6f34d7a4dffa04cded60ec9f373900f",
+    "028": "3a3afd3f4d783e7a8d708f82137756cac00767ec737c61fc9ba956df541a4926",
+    "030": "0bffc175afe2a8659def97304031c692076181f50d75f906a757806fe8301a3e",
+    "032": "34e4175c510dcbc0e6b1b064c42832b90e8f8d882722e9210a2045199e196b83",
+    "034": "44d58dcb4c2572ca336d11c78f61e0cc3daec875bc1f32a194ab5d047b2e783f",
+    "036": "1cbb5d8deb6ed898e4c4c0b40947c5eabbc489d26d71b82a6c40c2bf272f16e9",
+    "038": "09f07616a20aa203e923877076385e4c61232f9b79839e56b3a28925e5e197cd",
+    "040": "b1fcd18a00608da5aba06f5298b38b6e7fb783f80060ea80bbbeaf43ad39401a",
+    "042": "0869948530a97639ec7da6abcb781ca262e8914a82eda9f86db146772dff9818",
+    "044": "5fdec92cf7c149ffac8dde98103aa277baa776cc899bf9c8f51050dfe211207d",
+    "046": "e5c11546f43952c3746aacce94bf838532490e5a6a68a73ff9b5922430ec6c0e",
+    "048": "d62fb738e76be9560f51abb5ea90a8e4645a7d279f6034894e6e916ebcda7815",
+    "050": "ede2e8b788daa05a0b78075026f601582ae6f76411249c4baafd007593453ac5",
+    "052": "fc984d2acb5657742b2fe7db7e5354bcc62ed79811375453892cc6a65d855e02",
+    "054": "890cbe8b47c12f9721f0da4c1689cf6ff2370590cde343acc6188e93efc52eb7",
+    "056": "bbbb7573e4c81e80e0ed98af605ae0f0cf236a32ee1e34293b46e57832f596b0",
+    "058": "1f96bc5583d9652d40406fd0e432151dd84486b5d12e917db9bcd53e8c32f353",
+    "060": "a354028dbc2a4706cd378b31a44a6bb9ff58cca3e405aa1f1c0e1b84d19926c4",
+    "062": "e21981ae301a7025d124154f8c06bf1404791fa910222f33954736e4a9381ab9",
+    "068": "17148c87d30631a6f953fe507eeca81eb32589662fd34ddb2569422b6548dbba",
+    "080": "a09f385d364785c3c9f72fa367257d5bca669545b290eb44f4f1582b8e4bedeb"
+  }
+}

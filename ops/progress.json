@@ -16613,12 +16613,12 @@
   ],
   "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-idle-rife-integration-20261011",
-  "currentSliceId": "art-idle-rife-integration-20261011",
-  "currentSliceNotes": "COMPLETED 2026-10-11. See plannedSlices art-idle-rife-integration-20261011.",
+  "currentSlice": "art-blue-plate-edge-rematte-20261011",
+  "currentSliceId": "art-blue-plate-edge-rematte-20261011",
+  "currentSliceNotes": "COMPLETED 2026-10-11. See plannedSlices art-blue-plate-edge-rematte-20261011.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "RIFE idle loops in the game",
-  "currentSliceUpdatedAt": "2026-10-11T16:00:00Z",
+  "currentSliceTitle": "Clean purple edges on blue-backdrop creature clips",
+  "currentSliceUpdatedAt": "2026-10-11T19:00:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -115092,6 +115092,20 @@
         "docs/fluid-creature-animation.md"
       ],
       "notes": "Owner request 2026-10-11: 'integrate this new idle animations in the game'. tools/integrate_idle_inbetweens.py checks each loop's paintings against the frames the game plays (alpha mass within 3%, alpha difference under 20% after a shift of up to 3 px; roster worst 5%), places the loop by the median offset of its paintings, and writes it as its own sheet art/animation/runtime/idle/<unit>.png (shared crop and ground anchor, even grid of at most 4096 px). The manifest idle clip plays that sheet (sheet, columns, frame_size, ground_margin, anchor_x; from_atlas keeps the atlas idle for reruns). BattleUnitPose.sheet_path/region/grounded_rect and the battle board draw a clip from its own sheet; the overworld idle plays the same sheet through a grid-aware OverworldCreatureIdle shader, and the replaced strips are removed. Action atlases are untouched (Git growth about 0.4 GB instead of about 2.4 GB for rewritten atlases). Registered in docs/battle-unit-animation-acceptance.json (clip_sheet_sha256, checked by tests/test_pack_unit_pose_art.py) and each unit's fluid provenance (idle_inbetweens). publish_fluid_creature_animation keeps a unit's loop and its provenance record unless it delivers a new idle. The frame check found that the first tool run had read superseded idle-v2 paintings for 15 units whose handoff has an 8-frame painted idle and had not mirrored 2 left-facing handoffs; tools/idle_inbetweens.py now follows the publish chain (handoff idle, else baseline idle from packing.json), applies alpha_noise_cutoff before resizing and clears two-step resize specks; those 16 units plus 3 mixed-scale veterans were rerun. Result: 228 units play the loops in battle and on the map; 4 units already at 65-83 ms keep their idle. Sheets 409 MB on disk, 1,275 MB uncompressed in all (about 5.6 MB per unit, loaded per unit); replaced strips were 457 MB uncompressed. Checked in game (isolated profile, 2560x1440) on 8 units incl. mirrored, held-pair, flying, mixed-scale, packed-atlas and 62-frame video idles: grounded, facing and size as before, frames animate, overworld grid sheets play; every painting sits within 3 px of its old ink box (faint-edge specks only, reefbolt crews excepted)."
+    },
+    {
+      "id": "art-blue-plate-edge-rematte-20261011",
+      "title": "Clean purple edges on blue-backdrop creature clips",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "content_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/fluid-creature-animation.md"
+      ],
+      "notes": "Owner report 2026-10-11: the Stag-Knot Runners' antlers turn purple-pink in every clip, a background removal problem. Cause: the blue-plate matte in the per-unit produce.py scripts (and two early video-trial takes) measured backdrop as blue minus max(red, green); on red and orange edges red wins, so mixed-in blue counted as figure. tools/rematte_blue_plate.py reruns the script that keyed each take on its archived lossless original in a scratch folder (every per-take setting applies), requires a pixel-exact match with the archived matte for every published frame, then re-solves only the edge band. An edge pixel takes the colour of the nearest clean opaque pixel within 3 source px and only its opacity is solved; further out it is unmixed against the plate with blue measured against green and clamped above the unit's own palette (painted idle p99.9 + 6). Stripping the blue alone left a bright red rim (the generated video bleeds over-saturated colour into its edges), shown in a three-way comparison. Result: 5,175 frames in 160 takes of 30 units rebuilt into <take>/matte_blue_edges/ (ignored, about 0.8 GB, rebuilt exactly by the tool; SHA-256 in <take>/matte_blue_edges.json), changed clips republished with unchanged frames, timing, anchors and scale, register re-bound. Rootcrown Knotstags, Seedglass Cantors veteran and Worldroot Bastion veteran had blue idles: RIFE loops rebuilt (no flagged pairs) and integrated with an exact frame match. Two cyan-plate takes (Reedbarge Poles cast, Switchback Pikes move) show no purple fringe and stay unchanged. The publisher now writes JSON with LF on Windows. Checked: before/after video and zoom sheet for every unit, an in-engine render of the republished atlases through BattleUnitPose, the acceptance-register test, validate_repo and the core suite (15/15). The new frames are not in the 2026-10-03 source archive; include them in the next snapshot or rebuild them with the tool.",
+      "updatedAt": "2026-10-11T19:00:00Z",
+      "completedAt": "2026-10-11T19:00:00Z"
     }
   ],
   "project": "heroes-like",

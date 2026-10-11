@@ -1,0 +1,38 @@
+{
+  "tool": "tools/rematte_blue_plate.py",
+  "reason": "Blue-plate edges re-solved: the old blue minus max(red, green) matte kept blue in red edges as purple (owner report 2026-10-11); edge pixels now take the nearest clean colour and only their opacity is solved.",
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_tallyspring_throwers_veteran/defend_h3_v2/original_lossless.mkv",
+    "sha256": "3c144a2008e4c2c4cd0cf65bb25ab8772e231080d4651ef5c72c244113bccbb4"
+  },
+  "old_matte": "this unit's produce.py process() on the original; every published frame reproduced the archived matte/ frame exactly",
+  "recipe": {
+    "version": 1,
+    "edge_px": 2,
+    "reach_px": 3,
+    "min_plate_distance": 80,
+    "threshold": 18
+  },
+  "threshold_source": "painted idle blue minus green p99.9 = 12.0, plus 6",
+  "opacity_removed_mean": 0.00623,
+  "opacity_removed_max": 0.00666,
+  "rgba_sha256": {
+    "000": "14c628d2f0ad783a0108f78e94a9aebb3d479d558cdb7f225bdaf4712f0667af",
+    "020": "8e54a1d5a119a237e6452dcbc19d4dd896a7061f9378b2b0022b6b1779eb4121",
+    "024": "66e667850a092ad37d8712864437ca33ce5defcf13db7b807490449a3c65886b",
+    "026": "26b30807fd49a4e73ee0d60ac55bc6ff67624719cc5de07d6be8fec55930e82e",
+    "028": "61924b969cf0203d817497c752494e2f4b2c177ef740867ef68fe4814969ca7e",
+    "030": "0121b0e94bac01837040332e87502f583271704ed9ebb36180d52cef601e8c7b",
+    "032": "01ccc8139960d0742605f48878c2914693c2fcf9f24211852480e5f0b823a6ae",
+    "034": "83a7fdf35f1ac275c77c6875d3e7b1fc6f9ba63d6bd8e6d70fa199018ec51c25",
+    "036": "70fb74bc603c4052de74f8d313f731950f9ba51b0c62cb31749e6f9b50f2217d",
+    "038": "31bda90e9e1335bed6c144f42fb57a6077874e1885c470243b7e5c3e7c10aafc",
+    "040": "3d103f52426bf7e9f943339d4d888322a41f491b2a153cb5de2e59397c7e85ba",
+    "042": "3c47c4b02779b314e3bff087b152eaad037d608651edc5333333e53fc1e282bd",
+    "044": "f6d9f56a3b69bd07ee8e162a3c48b0b67456b07cbfcb39087b73478b0e7ae1e8",
+    "046": "81f819c0f2e40977878f4c87fa988e862c87fe5eda69b25ab17edefffa33ee8b",
+    "048": "98819c0b20b82a16ca82e1ec79c8a6c3e24662a0323bab0f5f3b4e5e81d889bf",
+    "052": "16f53acb1f716ac8c67e4123bec3f5d4bd61292b551fc1a18a5643a62a1432ef",
+    "056": "8b95ecdd5b60706eeb06f6ad91043d5b123f79d1ddfdd6b40a0d7c1703faaa57"
+  }
+}

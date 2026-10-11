@@ -1,0 +1,47 @@
+{
+  "tool": "tools/rematte_blue_plate.py",
+  "reason": "Blue-plate edges re-solved: the old blue minus max(red, green) matte kept blue in red edges as purple (owner report 2026-10-11); edge pixels now take the nearest clean colour and only their opacity is solved.",
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_tallyspring_throwers_veteran/ranged_h3_v3/original_lossless.mkv",
+    "sha256": "6abd01826766a75e20db33f3c444eee6bebf146d5da28637a2037d6128b2441b"
+  },
+  "old_matte": "this unit's produce.py process() on the original; every published frame reproduced the archived matte/ frame exactly",
+  "recipe": {
+    "version": 1,
+    "edge_px": 2,
+    "reach_px": 3,
+    "min_plate_distance": 80,
+    "threshold": 18
+  },
+  "threshold_source": "painted idle blue minus green p99.9 = 12.0, plus 6",
+  "opacity_removed_mean": 0.00609,
+  "opacity_removed_max": 0.00664,
+  "rgba_sha256": {
+    "000": "a540043ac80f0057c8df882688edd9c45f3679063ae0873fe603a780431d600f",
+    "016": "2c1734bab155d137343d9ccaf85531af2845383a64b78011e376b09dfd5a93e3",
+    "022": "24381cb0d35e3df781d36cdb72d309d9c45ef8c37ad875ea05ce38e05e972be0",
+    "026": "c8b489ea6cf04b9b483fdd07fd96a58d64cb223664822609e18433d9b419750a",
+    "030": "d3d642828f57af8518ceec260a848710c87d455266eb5b520e255da416b1f37b",
+    "034": "e5ed1f6748db98f8abe8ee04cb074c1fc7e32844a4ca7fc60df72a547fc690e7",
+    "038": "94fe36d86ef1fbf3f2235c5e331b6515ac4488ec1796b9b061cf3f9790ba7b4e",
+    "042": "bc6959b879444bf24d627c3e38ff7e21fd76a16241182b1ebb262ef187060b3c",
+    "046": "dfa821b3ef07633b0c06e70a8bcb9ff5fa160be547aae2da5ab6a6512311f5e8",
+    "050": "ba4bd8e8e5cadbf0f83f203b5d89d8b16f34e4284f2542c365321c55e919601c",
+    "054": "cf8fc055e7c3a1f8ec4872943d1a16eea9263f3297e1f0868faf88daa0756686",
+    "056": "7e5aa684fd6e6fa99f14d203761d1ae8a8b2a440213e47e6133d62454814060b",
+    "058": "f40f450db11f8451970d82351d644dc7186e35e36dcd26087dcae303ad119b18",
+    "060": "20d899f693d134f8e2b4d42076b4885cb15d072fbaab0a58355c6b2d1cec9cf6",
+    "062": "ff2777527ca9cca65b5d9a4ffd440963155a360bf9b6371a95fb3fe9258a951e",
+    "064": "cf0c2f257fc2cf9731f354619e73c67c6689b34bc24f77cf68ec610fe06134f1",
+    "068": "477d22c01137aa135666f55a0570a64277b278543b433916b8e05265674fbffd",
+    "074": "740bfde3f48eb734f7ed910ef3fb26bd979f8367442653c47223fd21189a7228",
+    "082": "5c55c04366ac85edcdf5ccfb577201505966157b6bbc4d1d4f78f1f5f1691a2c",
+    "090": "8d5ad9fa0d8c704786b50689e1d56c276c379e986f0e87db170e4ad469a11201",
+    "098": "8c742a9117bb052aa02891c2a70b03e65a13c4bd4849078e83c7e38b3d25f6a3",
+    "104": "f75e2356402a48a57ee827dea1d7919a4452d6ce76bc4fb0b12d4d12de2af246",
+    "108": "a968a6facdff20098b84f5a48351402acb78f43ff7ebafe2eccb8f184d4463a7",
+    "112": "231a3f4f265af12421fe0c6c7a6b3265b9f69213cc2d4d1bd2e7c91cf28ba477",
+    "116": "65393459f46344d39f0d6ced4762885ec6f0f50edcbcf641e712da240c57d4a9",
+    "120": "a210fe4e8f34141dddac0011e536c66a47b2ab125e83831c1e4507c1152b9de0"
+  }
+}

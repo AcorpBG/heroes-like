@@ -1,0 +1,38 @@
+{
+  "tool": "tools/rematte_blue_plate.py",
+  "reason": "Blue-plate edges re-solved: the old blue minus max(red, green) matte kept blue in red edges as purple (owner report 2026-10-11); edge pixels now take the nearest clean colour and only their opacity is solved.",
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion_veteran/hit_h3_v1/original_lossless.mkv",
+    "sha256": "47b279b0f6a3c8d7835668007f3b5c966e2d6178dafa0ba1892d68bc5fba44c3"
+  },
+  "old_matte": "this unit's produce.py process() on the original; every published frame reproduced the archived matte/ frame exactly",
+  "recipe": {
+    "version": 1,
+    "edge_px": 2,
+    "reach_px": 3,
+    "min_plate_distance": 80,
+    "threshold": 27
+  },
+  "threshold_source": "painted idle blue minus green p99.9 = 21.0, plus 6",
+  "opacity_removed_mean": 0.00564,
+  "opacity_removed_max": 0.00631,
+  "rgba_sha256": {
+    "072": "322a04ab3369a8c5da085bd76edf4e397374de39b5476107e4d0cf8176097900",
+    "074": "d6ceae7717657398d8849bde4d4c3d385c0a3eaff514d6afe03bf44dc931d87d",
+    "076": "d9ac16dd950f6c7f0ace43e329013cd1e5a6b5faecd9f8808ada6e1ff4556ab8",
+    "078": "e69b616f08f6f47a2bff2c90e7a87f6f718594300c8df0a9613d7d00a7d342b2",
+    "080": "6bba7635de344e8de33e1c226a7ac3a2b92a21567a5f0af33c1d83bfb86b77fb",
+    "082": "aec9992d5e7345f9578a63fc8eb5a5380146ced0a278afb5d10fb9a702713dcb",
+    "084": "2516ad54a10df10a0d7956e672979137197db2c8ee045a6b1ca1e8aacda84832",
+    "086": "c4b1421fc642ea8c8b2493b799657d3606532237cae58a422d818c5123cd6705",
+    "088": "94bbb9e7973052cfe2581a265577622bd3c8b9f252be7e2d90fd8e13a8e87ba9",
+    "090": "51b527a08ec4372429dedc180b109e0efef00caf80a12925241f964bfee66b3c",
+    "092": "0f9e57a9ef0935e90c62810aeca48471f2d03e29882e08d8da26389d1b08a90f",
+    "094": "f2aae35bce2b0e38fba7af5588d7e91f4f3bad2878f3fafd4695fff631131a04",
+    "096": "4d95509f431ab4470cc31cfeb901ce5d7f6fd9057c38b31a0706639b07e063ae",
+    "098": "ebd084cb8301fa24dd7b032b2e9ce3cb6341a3e1704dff6e62b726d80d29c650",
+    "100": "40ed02495ebdfcb7319d9126b2330816b204a40f1b82b7d8f79abd2833ea4437",
+    "102": "28354c5830ac1bdbbfc1b3d0bb1ddbef83ed308a17ded8a39b3958d2b39a82d3",
+    "104": "5fa805a4192057926f49ad734d137acef453a7ba4b0ca782575658d3fb3c5ecb"
+  }
+}

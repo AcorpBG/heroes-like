@@ -1,0 +1,35 @@
+{
+  "tool": "tools/rematte_blue_plate.py",
+  "reason": "Blue-plate edges re-solved: the old blue minus max(red, green) matte kept blue in red edges as purple (owner report 2026-10-11); edge pixels now take the nearest clean colour and only their opacity is solved.",
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/original_lossless.mkv",
+    "sha256": "ab30286fda9860a43992ec9bc9786d4c20ffc58f86ceb5718bb6984be9dd7107"
+  },
+  "old_matte": "this unit's produce.py process() on the original; every published frame reproduced the archived matte/ frame exactly",
+  "recipe": {
+    "version": 1,
+    "edge_px": 2,
+    "reach_px": 3,
+    "min_plate_distance": 80,
+    "threshold": 18
+  },
+  "threshold_source": "painted idle blue minus green p99.9 = 12.0, plus 6",
+  "opacity_removed_mean": 0.01503,
+  "opacity_removed_max": 0.01753,
+  "rgba_sha256": {
+    "090": "0efd217840f069500be1af6abc274028240dfa89b398ba00b553e824509683f7",
+    "094": "c22af5f5594eff6e203c31935e07346a7183779c7617f249b984a8bd346f4691",
+    "095": "2bfc8c72171f81de271c9161840aaf04ac4ea9579bb44e8e9aa7be4e949a7ea5",
+    "096": "2f59888fbc9026b2fc33dd3b6afc5031470e8cd173c9cac31e42a259c5122232",
+    "097": "87e6a7470ae54edf907417541dd6794ec2885df762418b577ada7cb88cfcfca3",
+    "098": "5a09020a923636c3b75a0b360305274d6bdbc4f080e44e1fc52fca1889181ad4",
+    "099": "669f22ef4b412c6ec4e193d7490ad1d06df530886fe6cc339c479881bec4305f",
+    "100": "9830f84614ce070f5cf215eea9d0ab8843f36ca462da3220353fb4f7527f5ee4",
+    "101": "1e49bc4b7c491c7fcc717c225aa80c695529a45317f0662cdd21235c33ed94ed",
+    "102": "95d46704267496093adfcefee56ff9ed040736d94d34d4f84245b70a6879a440",
+    "103": "a8ab639e7b6f7046a9c1cf902f0e79db8fb81ca63d5cea7fba986dcda540b564",
+    "104": "13288ae61cc283a989b94ea451eec6d06c47ad7c8cd26e31ae594e1df9ea5abf",
+    "105": "f4213558ac0b9c2812fd3272ff0a78be7cd9abff0f54ccd506fda5dbf972dae2",
+    "106": "284506a25f83c443cd8de8aa97505cd827ec1438af6504020a08e69457f2b016"
+  }
+}

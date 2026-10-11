@@ -1414,342 +1414,6 @@
           "video_time_seconds": 4.666666666666667
         },
         {
-          "name": "defend_h3_012",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_012.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 12,
-          "video_time_seconds": 0.5
-        },
-        {
-          "name": "defend_h3_014",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_014.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 14,
-          "video_time_seconds": 0.5833333333333334
-        },
-        {
-          "name": "defend_h3_016",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_016.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 16,
-          "video_time_seconds": 0.6666666666666666
-        },
-        {
-          "name": "defend_h3_018",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_018.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 18,
-          "video_time_seconds": 0.75
-        },
-        {
-          "name": "defend_h3_020",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_020.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 20,
-          "video_time_seconds": 0.8333333333333334
-        },
-        {
-          "name": "defend_h3_022",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_022.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 22,
-          "video_time_seconds": 0.9166666666666666
-        },
-        {
-          "name": "defend_h3_024",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_024.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 24,
-          "video_time_seconds": 1.0
-        },
-        {
-          "name": "defend_h3_026",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_026.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 26,
-          "video_time_seconds": 1.0833333333333333
-        },
-        {
-          "name": "defend_h3_028",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_028.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 28,
-          "video_time_seconds": 1.1666666666666667
-        },
-        {
-          "name": "defend_h3_030",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_030.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 30,
-          "video_time_seconds": 1.25
-        },
-        {
-          "name": "defend_h3_032",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_032.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 32,
-          "video_time_seconds": 1.3333333333333333
-        },
-        {
-          "name": "defend_h3_034",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_034.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 34,
-          "video_time_seconds": 1.4166666666666667
-        },
-        {
-          "name": "defend_h3_036",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_036.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 36,
-          "video_time_seconds": 1.5
-        },
-        {
-          "name": "defend_h3_038",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_038.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 38,
-          "video_time_seconds": 1.5833333333333333
-        },
-        {
-          "name": "defend_h3_040",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_040.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 40,
-          "video_time_seconds": 1.6666666666666667
-        },
-        {
-          "name": "defend_h3_042",
-          "clip": "defend",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_042.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 42,
-          "video_time_seconds": 1.75
-        },
-        {
           "name": "cast_h3_014",
           "clip": "cast",
           "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_014.png",
@@ -2441,531 +2105,6 @@
           "alpha_noise_cutoff": 0,
           "video_frame": 110,
           "video_time_seconds": 4.583333333333333
-        },
-        {
-          "name": "death_h3_024",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_024.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 24,
-          "video_time_seconds": 1.0
-        },
-        {
-          "name": "death_h3_026",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_026.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 26,
-          "video_time_seconds": 1.0833333333333333
-        },
-        {
-          "name": "death_h3_028",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_028.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 28,
-          "video_time_seconds": 1.1666666666666667
-        },
-        {
-          "name": "death_h3_030",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_030.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 30,
-          "video_time_seconds": 1.25
-        },
-        {
-          "name": "death_h3_032",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_032.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 32,
-          "video_time_seconds": 1.3333333333333333
-        },
-        {
-          "name": "death_h3_034",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_034.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 34,
-          "video_time_seconds": 1.4166666666666667
-        },
-        {
-          "name": "death_h3_036",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_036.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 36,
-          "video_time_seconds": 1.5
-        },
-        {
-          "name": "death_h3_038",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_038.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 38,
-          "video_time_seconds": 1.5833333333333333
-        },
-        {
-          "name": "death_h3_040",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_040.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 40,
-          "video_time_seconds": 1.6666666666666667
-        },
-        {
-          "name": "death_h3_042",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_042.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 42,
-          "video_time_seconds": 1.75
-        },
-        {
-          "name": "death_h3_044",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_044.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 44,
-          "video_time_seconds": 1.8333333333333333
-        },
-        {
-          "name": "death_h3_046",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_046.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 46,
-          "video_time_seconds": 1.9166666666666667
-        },
-        {
-          "name": "death_h3_048",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_048.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 48,
-          "video_time_seconds": 2.0
-        },
-        {
-          "name": "death_h3_050",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_050.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 50,
-          "video_time_seconds": 2.0833333333333335
-        },
-        {
-          "name": "death_h3_052",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_052.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 52,
-          "video_time_seconds": 2.1666666666666665
-        },
-        {
-          "name": "death_h3_054",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_054.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 54,
-          "video_time_seconds": 2.25
-        },
-        {
-          "name": "death_h3_056",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_056.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 56,
-          "video_time_seconds": 2.3333333333333335
-        },
-        {
-          "name": "death_h3_058",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_058.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 58,
-          "video_time_seconds": 2.4166666666666665
-        },
-        {
-          "name": "death_h3_060",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_060.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 60,
-          "video_time_seconds": 2.5
-        },
-        {
-          "name": "death_h3_062",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_062.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 62,
-          "video_time_seconds": 2.5833333333333335
-        },
-        {
-          "name": "death_h3_064",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_064.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 64,
-          "video_time_seconds": 2.6666666666666665
-        },
-        {
-          "name": "death_h3_066",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_066.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 66,
-          "video_time_seconds": 2.75
-        },
-        {
-          "name": "death_h3_068",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_068.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 68,
-          "video_time_seconds": 2.8333333333333335
-        },
-        {
-          "name": "death_h3_070",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_070.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 70,
-          "video_time_seconds": 2.9166666666666665
-        },
-        {
-          "name": "death_h3_072",
-          "clip": "death",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_072.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            416,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 72,
-          "video_time_seconds": 3.0
         },
         {
           "name": "ranged_h3_v4_ranged_h3_014",
@@ -4052,6 +3191,867 @@
           "alpha_noise_cutoff": 0,
           "video_frame": 112,
           "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_038",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_042",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_042",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
         }
       ],
       "clips": {
@@ -4168,7 +4168,7 @@
           "loop": false,
           "static_frame": 0
         },
-        "defend": {
+        "cast": {
           "indices": [
             67,
             68,
@@ -4185,14 +4185,7 @@
             79,
             80,
             81,
-            82
-          ],
-          "frame_msec": 42,
-          "loop": false,
-          "static_frame": 15
-        },
-        "cast": {
-          "indices": [
+            82,
             83,
             84,
             85,
@@ -4209,7 +4202,17 @@
             96,
             97,
             98,
-            99,
+            99
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 8
+        },
+        "ranged": {
+          "frame_msec": 30,
+          "contact_frame": 15,
+          "indices": [
             100,
             101,
             102,
@@ -4225,15 +4228,7 @@
             112,
             113,
             114,
-            115
-          ],
-          "frame_msec": 35,
-          "loop": false,
-          "static_frame": 0,
-          "contact_frame": 8
-        },
-        "death": {
-          "indices": [
+            115,
             116,
             117,
             118,
@@ -4258,16 +4253,7 @@
             137,
             138,
             139,
-            140
-          ],
-          "frame_msec": 52,
-          "loop": false,
-          "static_frame": 24
-        },
-        "ranged": {
-          "frame_msec": 30,
-          "contact_frame": 15,
-          "indices": [
+            140,
             141,
             142,
             143,
@@ -4276,7 +4262,13 @@
             146,
             147,
             148,
-            149,
+            149
+          ],
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
             150,
             151,
             152,
@@ -4292,7 +4284,14 @@
             162,
             163,
             164,
-            165,
+            165
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 15
+        },
+        "death": {
+          "indices": [
             166,
             167,
             168,
@@ -4319,8 +4318,9 @@
             189,
             190
           ],
+          "frame_msec": 52,
           "loop": false,
-          "static_frame": 0
+          "static_frame": 24
         }
       },
       "alpha_noise_cutoff": 0,
@@ -4713,7 +4713,7 @@
       },
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "All124 originals for each selected take reviewed chronologically, enlarged hands/net/feet/alpha inspected, and all191 selected native Godot action phases inspected. Reciprocal walk, empty-fist melee, gathered-net recoil, held crouched guard, empty-hand support signal and grounded collapse are coherent. Ranged chest toss14-54 joins reviewed recovery56-112 at identical empty follow-through guide; detached projectile separated only across verified empty x640 gap after source44, preserving all body/hand pixels and game projectile ownership. Native join retains feet, body scale and empty hands. Original eight-frame articulated idle retained. Candidate673 focused checks pass. Frame-by-frame review, not continuous video playback or manual playtest."
+        "notes": "Blue-backdrop edges re-solved with tools/rematte_blue_plate.py (2026-10-11): purple fringes from the old blue-minus-max(red, green) matte removed; frames, timing, anchors and scale unchanged. Earlier review: All124 originals for each selected take reviewed chronologically, enlarged hands/net/feet/alpha inspected, and all191 selected native Godot action phases inspected. Reciprocal walk, empty-fist melee, gathered-net recoil, held crouched guard, empty-hand support signal and grounded collapse are coherent. Ranged chest toss14-54 joins reviewed recovery56-112 at identical empty follow-through guide; detached projectile separated only across verified empty x640 gap after source44, preserving all body/hand pixels and game projectile ownership. Native join retains feet, body scale and empty hands. Original eight-frame articulated idle retained. Candidate673 focused checks pass. Frame-by-frame review, not continuous video playback or manual playtest."
       },
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_020.png": 0.5,
@@ -4783,22 +4783,6 @@
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_108.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_110.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_112.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_012.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_014.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_016.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_018.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_020.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_022.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_024.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_026.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_028.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_030.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_032.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_034.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_036.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_038.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_040.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_042.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_014.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_017.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_020.png": 0.5,
@@ -4832,31 +4816,6 @@
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_104.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_107.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_110.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_024.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_026.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_028.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_030.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_032.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_034.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_036.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_038.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_040.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_042.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_044.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_046.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_048.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_050.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_052.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_054.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_056.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_058.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_060.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_062.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_064.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_066.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_068.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_070.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_072.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_014.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_016.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_018.png": 0.5,
@@ -4906,7 +4865,48 @@
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_106.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_108.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_110.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_112.png": 0.5
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_112.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte_blue_edges/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte_blue_edges/rgba_072.png": 0.5
       },
       "preserved_accepted_clips": [
         "idle"
@@ -4915,10 +4915,10 @@
         "move",
         "attack",
         "hit",
-        "defend",
         "cast",
-        "death",
         "ranged",
+        "defend",
+        "death",
         "idle"
       ]
     }

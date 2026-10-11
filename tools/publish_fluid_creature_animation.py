@@ -19,7 +19,7 @@ from pack_overworld_creature_idle import extract, write_strip
 def write(path, value, compact=False):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=None if compact else 2,
-                               separators=(',', ':') if compact else None) + '\n', encoding='utf-8')
+                               separators=(',', ':') if compact else None) + '\n', encoding='utf-8', newline='\n')
 
 
 def select_clips(entry, names):

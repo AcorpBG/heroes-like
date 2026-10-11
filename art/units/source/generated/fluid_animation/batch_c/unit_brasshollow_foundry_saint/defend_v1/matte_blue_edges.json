@@ -1,0 +1,37 @@
+{
+  "tool": "tools/rematte_blue_plate.py",
+  "reason": "Blue-plate edges re-solved: the old blue minus max(red, green) matte kept blue in red edges as purple (owner report 2026-10-11); edge pixels now take the nearest clean colour and only their opacity is solved.",
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint/defend_v1/original_lossless.mkv",
+    "sha256": "f8f4f5cda8d47322505aa5bf60864542ee3bce9fb8fafc9c3043833f942d0885"
+  },
+  "old_matte": "this unit's produce.py process() on the original; every published frame reproduced the archived matte/ frame exactly",
+  "recipe": {
+    "version": 1,
+    "edge_px": 2,
+    "reach_px": 3,
+    "min_plate_distance": 80,
+    "threshold": 10
+  },
+  "threshold_source": "painted idle blue minus green p99.9 = 4.0, plus 6",
+  "opacity_removed_mean": 0.02122,
+  "opacity_removed_max": 0.02496,
+  "rgba_sha256": {
+    "011": "41df344a19019d5629cdac9f81b09ba00f8f5976e655cca41191c674673ba9f8",
+    "013": "9b9e22d6807d3e90543a639ac95d2795a8acccb943c03b9fc084bce2370f0e4f",
+    "015": "f399c57a87dc062142ccb9ee75721a2f369ef032f8e1a91797f42b310caa66fb",
+    "017": "140c08ed5ef2452353fa2f18086702ae75db0911a4f60498a2cd4c68e9a804c2",
+    "019": "1b26bc77279aab9ab4510fbd51f543fed8120e77052f8531d6ae15bc7115de90",
+    "021": "de2c771953123c4b6640660ab02add20f431d35f290b20025439e57e2fdee389",
+    "023": "e6db6a4aecc2ee7ab915b1ae73d07f344cbafb7ab5c0d94ea6f66b21d7febd7b",
+    "025": "798bfff36f66dfd655acca23667b2ba52c1d013a29172ad61a9a83acc83a87ff",
+    "027": "dae7788e72da6778cdc1ec565c9460b4f96f6802503b4ea8665f52b973b7a6da",
+    "029": "222557cc169a2bbc5d911d82c3adc34a3359dd55fea735f508b627f873b81872",
+    "031": "ab8ee2c7a0f6d480306799ed3f5732b004ac349dde7b1d8722c48e3b58da4e8b",
+    "033": "d08ee3954b475eee66f1ecce4bdbe60b8bab54bbaecf8a6f5dab0c8c359c75c8",
+    "035": "62c1af8ab41c12f75764600eebece8af7a33d76b307f51e6b3506d76cba24925",
+    "037": "305fb8bbd29862729f1f8ca1bdcef1f4d42bd2dbeaafd018ddeca8b74be38dd4",
+    "039": "67d63286137c38153ddc7cbf1d38a932569c02d2a12d6963031d32c2aa04d69d",
+    "041": "7efe9968abfe410994d88a2262785123cc9266410148371abac1e30c5a18f3d6"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "tool": "tools/rematte_blue_plate.py",
+  "reason": "Blue-plate edges re-solved: the old blue minus max(red, green) matte kept blue in red edges as purple (owner report 2026-10-11); edge pixels now take the nearest clean colour and only their opacity is solved.",
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mourning_lanterns/attack_v1/original_lossless.mkv",
+    "sha256": "b1ebcd031ab61cc2cb5a366321519478511ff0f05f74ae984d05b8ba9eb3581f"
+  },
+  "old_matte": "this unit's produce.py process() on the original; every published frame reproduced the archived matte/ frame exactly",
+  "recipe": {
+    "version": 1,
+    "edge_px": 2,
+    "reach_px": 3,
+    "min_plate_distance": 80,
+    "threshold": 19
+  },
+  "threshold_source": "painted idle blue minus green p99.9 = 13.0, plus 6",
+  "opacity_removed_mean": 0.02057,
+  "opacity_removed_max": 0.02244,
+  "rgba_sha256": {
+    "054": "6b1e1a9c9302412612948b4521a75b00c9c5744816b794716794b8ba24866e45",
+    "055": "1ed47a6b08e9eee4d27c8686931377e1271ede0f3fe9e1df3ee6b855c0701ece",
+    "056": "20da42ee9c619890265db7ba58766ed9af677def6287bbf966d817e1d57eb3d4",
+    "057": "575466f87356585e188784eb26697f6580781b59336b6394dcb086773b97620d",
+    "058": "f1019567eacb29ec3594541e7ddbba2ab281a3166356c2144eb51111ce2658fa",
+    "059": "925e47f9195d0997c793fd4c0fc8a3f312a50f4f5bb768a9424dffda9bc63c31",
+    "060": "e9bb0f33e61b986f9d058c1db91f76987c8e9b70a8758319c4f947a2b103356b",
+    "061": "22d7f2ee7aa766b6eddc07516651b844eae99fb49f7076e0aa3c2eab0c15ac7c",
+    "062": "29852de2c5a3b18a8783b2a264d76cea9ce438fd3e14aa646e9fd9cf0b8d8407",
+    "063": "65fbd73939b6b63725cd90290d68152562837f1d9b6596576b8b68988fe63672",
+    "064": "52f3a4b6c5af47db8201c30a1b3ce53efef2dc29d22fa7a0e2ec9138d98e6620",
+    "066": "147ec2cdd7114163f4796038af3f160c459f92614507334c1be88917ff0167fd",
+    "068": "4edefdf298a8abe7bae8909d42847a3d17bef5b4dfdbc4987c263ecca85fcff8"
+  }
+}

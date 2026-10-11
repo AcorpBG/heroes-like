@@ -1,0 +1,36 @@
+{
+  "tool": "tools/rematte_blue_plate.py",
+  "reason": "Blue-plate edges re-solved: the old blue minus max(red, green) matte kept blue in red edges as purple (owner report 2026-10-11); edge pixels now take the nearest clean colour and only their opacity is solved.",
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/cast_v2/original_lossless.mkv",
+    "sha256": "8a9c23511a28d572b3b7bd8bc0c91b6099580001b219ad4c181b1689cc1dc990"
+  },
+  "old_matte": "this unit's produce.py process() on the original; every published frame reproduced the archived matte/ frame exactly",
+  "recipe": {
+    "version": 1,
+    "edge_px": 2,
+    "reach_px": 3,
+    "min_plate_distance": 80,
+    "threshold": 9
+  },
+  "threshold_source": "painted idle blue minus green p99.9 = 3.0, plus 6",
+  "opacity_removed_mean": 0.02037,
+  "opacity_removed_max": 0.02386,
+  "rgba_sha256": {
+    "000": "7acdaaf9ef5b5afc3143ada16c31a1b700381948d816235301f18ccb4885e8a5",
+    "021": "b86a6e99913eeca5e4593256cbf8c1d7728a239a15e32a2b97eee83ef02204ea",
+    "022": "744293c49b164a6c289a75d3c4fd0c449dc4c15e4cf09b9c5c1218625dd4349e",
+    "023": "272223344f6e740d5cd7ac7b1522b0d751167f2d90f79467519a2fb9cddaa9fa",
+    "024": "0a5292dc05ecdeb9adf59cdb56fe33a835d5aa67baef8efc0148e3a7a93ed018",
+    "025": "08df7e4aab19267886be3c22a9f6d438e67a2a1217862eb40e330570fee211ff",
+    "026": "8dbd670bcbafe3facb0de3d4187b7518b4383bb068bb238993c06f9c165d5bab",
+    "027": "684641e0f306f0e3ec6f05a445e5c5285df32f309ef650cd938a2d7ad39506cd",
+    "028": "bef96363466e7a1138f5090bdb67d66bd79706fbfda0b1b0b588135546ce01bf",
+    "029": "12fe5cf2beee67621c33ad5f410f950f148bbcaeb650640a43d371eec3af1a81",
+    "030": "b447924a369e273f4ba9eff98964d6c6d54d10029f387697e7b24653ff77974d",
+    "031": "7a5aea9d988c281d78634f7aaa5ac05886be52ced7b8fff9761426a416b75eb8",
+    "032": "29bf463294449a6e8015ef1a6e8a8856f9dc87beb0ef66c18aa77884cacb94bc",
+    "033": "26ad9590a893fbe59091648c148263ca4a3769957c262dc26a9ff99295980de5",
+    "034": "99197301e11300b639376fd9dcfbf6b158754b19898565b59083d753b8fe5b24"
+  }
+}

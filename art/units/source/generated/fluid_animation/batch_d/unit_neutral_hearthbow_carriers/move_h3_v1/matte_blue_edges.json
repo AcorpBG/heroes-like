@@ -1,0 +1,37 @@
+{
+  "tool": "tools/rematte_blue_plate.py",
+  "reason": "Blue-plate edges re-solved: the old blue minus max(red, green) matte kept blue in red edges as purple (owner report 2026-10-11); edge pixels now take the nearest clean colour and only their opacity is solved.",
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_hearthbow_carriers/move_h3_v1/original_lossless.mkv",
+    "sha256": "7f6a25ad163b0abd63a1a7d6e830316a6d197770a4449477cca4d1ae6a595227"
+  },
+  "old_matte": "this unit's produce.py process() on the original; every published frame reproduced the archived matte/ frame exactly",
+  "recipe": {
+    "version": 1,
+    "edge_px": 2,
+    "reach_px": 3,
+    "min_plate_distance": 80,
+    "threshold": 6
+  },
+  "threshold_source": "painted idle blue minus green p99.9 = 0.0, plus 6",
+  "opacity_removed_mean": 0.01684,
+  "opacity_removed_max": 0.018,
+  "rgba_sha256": {
+    "002": "5bd47b07b736a4e7281ffbf46a94b960be02eeb349b953e97c75ba1b9ec285f1",
+    "004": "cede63b01c3ab2292a30b9d9e001218089b41f3287f1b14b6aa5e970cc1c1f1c",
+    "006": "e5d1179f86c276f336975408e0a95917cb5ac8a247543190d69c5a9711657ad1",
+    "008": "49b80e3519eb70b5c8d7ef8a6945d0912a446c41db482f4966e08806c3363742",
+    "010": "03f46cc186f5b04206e9b69e2a2ac6d7a93c15ec5c287b2fd285e39c826ebd8d",
+    "012": "e5bfca4ced96b83c6e6d7bd1c5a052cc59f53821543072ea129f35dd598ebd61",
+    "014": "e42ec5acc785b834655d03ef6dc99ef42042a9523aa73cdd6e216cfaec25ed5b",
+    "016": "b49cfcb4358d8a4b236e9692c7cbfa99eec6003de3b16e7f1fb9647b6a78c628",
+    "018": "d3cd72c46c344545e8f4d1b4f96edd35d0acf3b0e9be51f2f4a8d12cb9ee34f0",
+    "020": "99d2adfa31b434db2682d7dd4bb8ebb475a406327f315c390ac653c946ea436b",
+    "022": "fb5cbe66108e892973e0ece21c2a579ef678b2558d5fdcac0a3243b0b31ff45e",
+    "024": "190bea1578ff03fba01e08398ec76cc610cdc21055562e4006caebb8d2f0d4f3",
+    "026": "1114dcac8c4f26a604a1ea1053bea9b25d9a25d7ed7d9d74d32ce87316d77e36",
+    "028": "0a526fe47c40cf539687fe81d347285b08cc9d501d9d8965ff4dadcf1129fc07",
+    "030": "0bc29756089f708ba26aae868d87c4109178992c377c458ae11d3d3876257346",
+    "032": "75fa37028619b64c850ca71648f1bb2d4613ccef39dd9f6faa3d53533678d0c4"
+  }
+}

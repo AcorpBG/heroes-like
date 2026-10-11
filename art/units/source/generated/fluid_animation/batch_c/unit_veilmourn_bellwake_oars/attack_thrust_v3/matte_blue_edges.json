@@ -1,0 +1,50 @@
+{
+  "tool": "tools/rematte_blue_plate.py",
+  "reason": "Blue-plate edges re-solved: the old blue minus max(red, green) matte kept blue in red edges as purple (owner report 2026-10-11); edge pixels now take the nearest clean colour and only their opacity is solved.",
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/original_lossless.mkv",
+    "sha256": "273df0d273b4d262bbd9fb4d079614fb154c1c00df1491ab134208bfa80648e2"
+  },
+  "old_matte": "this unit's produce.py process() on the original; every published frame reproduced the archived matte/ frame exactly",
+  "recipe": {
+    "version": 1,
+    "edge_px": 2,
+    "reach_px": 3,
+    "min_plate_distance": 80,
+    "threshold": 18
+  },
+  "threshold_source": "painted idle blue minus green p99.9 = 12.0, plus 6",
+  "opacity_removed_mean": 0.01553,
+  "opacity_removed_max": 0.0181,
+  "rgba_sha256": {
+    "000": "64a6f2d4967aa0ede7fa517a64c52c0ecdce6934d0a1a9a0191306f2880d7a4d",
+    "010": "346db835996538728848b05393a8bf4d0655b5121d38adb3565f94257a2ca57c",
+    "012": "16fbf81ade3b7531e8e89aeb2ffa6b2a667075565727e7fe7910ad68928aa227",
+    "014": "8aec627b304df75485fe32a97a5572a9d1fc9153d0235ac85b3e0167cc1344d3",
+    "016": "5e049a2637f30990bf8b807084126501002c32c2ecccc7798c547e10f7cc7c0a",
+    "018": "2bafc6b5b4d6e605812557227e5913bf69f59642a95aea1b875561e94f12a534",
+    "020": "09963dcbc44804a11a0e0808b436ff0b664d9d5e23eaa35002acbd33333e63d6",
+    "024": "b714ffacf0094b5a2a0931bbde85ba93d0d3efbdd7c2370d9c446a99d7d33c8d",
+    "028": "9ea44bb70d5c557133b076be9555795c0f9a9b286c98fc1b80c1daf18a0dc023",
+    "032": "3790643ab1bdfa98135f655cfb576249f4df63221d63c3e8aaf9b385cc70c98d",
+    "033": "9be979a97e59ea76a0c80eda49b6f14a02523631b7cf2f2cd9bdfa33ac4d8d7b",
+    "034": "18143641c2bd76d03dfec98bb12a29535a302a644e10f641281dbd4eebced2f5",
+    "035": "75263bb1fe3e8c0fea214acd682d153e8a64f286547c1329733de3b482052ab9",
+    "036": "01c7925343da677aba10918a249f8fd71b787ed381ce48eb556ed68eb6b299db",
+    "037": "84536a8d2bb7a670290af69f51ed0536a23c6dbc32a40f90bc873c4d1c81592b",
+    "038": "1577102c4e8f865dce859d85d5d6cb6834356e382fc350f2031b73bb0fdc582b",
+    "039": "40b330234962e66801dd7cb87c9ab80bc55d26db7678bf262982e2483cf2dece",
+    "040": "f0583ee9ef63161f12aa71676a240460850e0dba46200a56b251a18d90b62bd4",
+    "041": "f3ef440ec1e5f5047b3a67245f459854082d37c6a77420146c239fc6709323fb",
+    "042": "d6cc8eacf8a29dbe5d69f5bf836b0461a50e0658a9ebae74deb6b18c61e0f9c3",
+    "043": "980877d2e257b3c08363ca1bc95ee5d117da92b6aea17593585d08912c7f4999",
+    "044": "f799a2b38432303a7d1ee1f1e01c06acec000af9057bf3a5c7b96f99e3e583be",
+    "045": "2d1f251c55f6857546ad859960df88967f1690173c7ab109cd8f058df30cd849",
+    "046": "4d62feabc8e2c45abac6c7ccaaaa449864eb06fab0fab8d998bd7318e60402a4",
+    "047": "ea928809d298cf71beda84297fdfc5451f0f0de7c6d7e5a0ed3fb48d3a59d55c",
+    "048": "ac379256f58fd698aad24cf951a559eea31d9a3f57ae137d24225afcce62ff65",
+    "050": "a70144a0aa6e2c7f9097a5ece4fffa244abdbe71a3c9146de7a849ee9314111a",
+    "054": "1f60420e6c3ce3ce3d201bb87848f11ee2530c89b8a2001581a310b23f0fd622",
+    "060": "e26970e1e281625680792418a669fe87ae324e42fe19b1675fd13e8a2aee6e9d"
+  }
+}

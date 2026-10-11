@@ -1,0 +1,35 @@
+{
+  "tool": "tools/rematte_blue_plate.py",
+  "reason": "Blue-plate edges re-solved: the old blue minus max(red, green) matte kept blue in red edges as purple (owner report 2026-10-11); edge pixels now take the nearest clean colour and only their opacity is solved.",
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_hearthbow_carriers/hit_h3_v2/original_lossless.mkv",
+    "sha256": "4c51c6d758f8bcd6c08e42719b3b048c1564b045c56d35f559bb4a8ace5fc693"
+  },
+  "old_matte": "this unit's produce.py process() on the original; every published frame reproduced the archived matte/ frame exactly",
+  "recipe": {
+    "version": 1,
+    "edge_px": 2,
+    "reach_px": 3,
+    "min_plate_distance": 80,
+    "threshold": 6
+  },
+  "threshold_source": "painted idle blue minus green p99.9 = 0.0, plus 6",
+  "opacity_removed_mean": 0.01967,
+  "opacity_removed_max": 0.02208,
+  "rgba_sha256": {
+    "024": "764f4262f6f9c3002040a87cdda8c02d5f1b5bae2f599cda73985a6718a6402d",
+    "030": "7e38192f048dad1dc2a7653da4dfa6bb68351f57ce225ad52a36d1ae9576ffd4",
+    "040": "71a635678ce802dfc297889ce534823b9116cb456cfaa6ab825e837090325b67",
+    "066": "224f88e48b694acb2e1098467a38070be5089ca62b58f7bb3f15c6aa83efc334",
+    "070": "43d2d7c8f7dc74ee763203eccb345374ab1b9604c570ae342eda52dff2de01bf",
+    "071": "f68dabcc945708ee73faf7b3d4d27d63b1f2c3f285a2cd1a40852717697417e0",
+    "072": "f73133024448250f24fb762db58955ec0fe267083b0cefe9dd1eb7ab837552b9",
+    "073": "7965900d94f89736e076a2197c8de4cec538b3207b8c411fc1a905473c467ba7",
+    "074": "e18a6a473ff3d090c81542463c530494342f9a1b4f0315de9a7f70cb110c97db",
+    "075": "a2c379ae248e9a40cadb14bef96b9368dd439bd27c1a470311e68c211e62917c",
+    "076": "df1da5a0957d2108c329d9ff749cf0dd60ab2b80fd4f15f4fd50bdb8949d0528",
+    "078": "e12892a38c5960afd4fcaa02bb32aa4e8b723713f41504bd7a6160ac809c5868",
+    "080": "07b5d9e8775c47ec54ae213fbe5fd656eb2ce5c903ecfd9ec75022e9fd548cd8",
+    "123": "930bf03042b473505059f49b4dedaed4956dfafb62d0a4a667cd8717eeddc669"
+  }
+}

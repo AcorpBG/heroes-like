@@ -1,0 +1,42 @@
+{
+  "tool": "tools/rematte_blue_plate.py",
+  "reason": "Blue-plate edges re-solved: the old blue minus max(red, green) matte kept blue in red edges as purple (owner report 2026-10-11); edge pixels now take the nearest clean colour and only their opacity is solved.",
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint/hit_v1/original_lossless.mkv",
+    "sha256": "340dd1603bf78539105235c5f9253e6c23bbf3c61bd85295bd05860ded3ff551"
+  },
+  "old_matte": "this unit's produce.py process() on the original; every published frame reproduced the archived matte/ frame exactly",
+  "recipe": {
+    "version": 1,
+    "edge_px": 2,
+    "reach_px": 3,
+    "min_plate_distance": 80,
+    "threshold": 10
+  },
+  "threshold_source": "painted idle blue minus green p99.9 = 4.0, plus 6",
+  "opacity_removed_mean": 0.02501,
+  "opacity_removed_max": 0.02654,
+  "rgba_sha256": {
+    "030": "f2b9ffd0a5b5eb28490e9bc590c3a14e600caa85de61878748cb2d7fca9eec94",
+    "032": "e2ee0a99da559af53f9798791ab347adc57587480048bb1084b85cbfb87df9dd",
+    "034": "11a2dc7ef423c4152ccae78947ac7610c7aedc6887c331d736b79361cec5eb78",
+    "036": "f478324e9dfe8e0a5518b07b3657e6d08ae6a2df267fc108ad7ce10b660ef812",
+    "038": "7293f358339006e65e89c8bc8865a1de76495c6c65aae012336e1608aae3f117",
+    "040": "9a8c2ab4f12ae4cede4b09d04b9d3c54e1ef1ffdd9a578811cfa9e3f81996e01",
+    "042": "45d2638d8dd749963a56bb4bfef3ad7ee107442540bac5178fb01c520fa43932",
+    "044": "94cbd3135e98b94c64468d5cf1fabb96099d742a7da5cbee8d499d497de85d6f",
+    "046": "5bda8d11ac622c9013b8f5c18a762199f11a9c31b5f0feb91ab85ed61976252d",
+    "048": "f46cb99b906fce5e0cd5a860e31e7d1210f0735f1ef5e55c191dd053873f3e97",
+    "050": "643227d47ff412dd928fe5350682b03e5e8233f0daf47e64ea37038571b3f9f5",
+    "052": "1b070bd4a9bbad7ae12d2cdcbaad48ca598b32c23f2a5e5df431f5910e967046",
+    "054": "90ed041b2b22ab833e78022afec41703e00cc14aac48c188a2badc8b9973cfa2",
+    "056": "9b8dfdafaf589834ec3edee2a3fe1f27e415bba19a517484159567a6139f18fc",
+    "058": "10536c471cb561c2fc9a7fd8bbcc6c027d7b8f32f1d3d0a73aa54c8a97c7063b",
+    "060": "66f85b5368a5a66ee2ecfb33bbe84c7bb83b36d2ba86577bb72ebcc4efb5d057",
+    "062": "0c884698fe62c8cb7c8094fc6833e9bc47ed1e809ee3d08426555bc9245fc9e3",
+    "064": "db8c1f4f1746312906dbbde3d409a510c3dcc6269ab765040b5676d3ef4da7fa",
+    "066": "caa7cf3b5679fb7d2b4ea01827bb3b612a5326dadff7e2ee8fe5949d6d770697",
+    "068": "61ac1383d394972873d41971384e8e57d29970f10fb4668e07009942bac93701",
+    "070": "3954533c74c2840ff578a56b05e0cfbdf20bfd5601f633c348f6abbc5e511953"
+  }
+}
