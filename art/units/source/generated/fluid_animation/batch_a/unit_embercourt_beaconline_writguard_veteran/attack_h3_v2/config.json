@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_embercourt_beaconline_writguard_veteran",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    370,
+    501
+  ],
+  "scale": 0.51,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101607,
+  "references": [
+    "idle_0",
+    "attack_10",
+    "attack_12"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original stocky armoured guard, the Lanternwall Warden, facing screen right in elevated three-quarter view. Keep the flat-topped bronze greathelm with a narrow dark slit visor and vertical vents, heavy weathered bronze shoulder, arm and leg plates over black chainmail, the long burgundy and black tabard with a cream trident emblem and gold trim, brown belts and dark armoured boots. No face is visible. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE long dark spear with a silver leaf blade and a narrow ivory and gold pennon hanging beneath the blade; the screen-RIGHT arm carries ONE tall rectangular black and steel tower shield with a bronze riveted border, a shallow pointed top and ONE large caged lantern glowing orange mounted on its front. Preserve the spear length, the pennon, the shield, the lantern and the stocky adult proportions. Make ONE powerful spear thrust toward screen right. Swing the spear down from upright until it is level at the hip with the blade pointing at screen right and crouch behind the shield, then lunge forward on the front leg and drive the spear straight out to full reach past the shield, the pennon swinging beneath it, then at once draw it back, step the front foot back and raise the spear upright into the original stance. One thrust only; the shield stays on the screen-right arm. No throw. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full helmet, spear, pennon, shield, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic effects, particles or extra limbs; the lantern keeps only its small steady glow inside the cage. Articulate joints naturally with physical planted-foot support; do not morph the equipment. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour.",
+  "protected_foreground_chroma": 9,
+  "edge_threshold": 10,
+  "palette_measurement": {
+    "bluest_opaque": 7.0,
+    "blue_minus_green_p999": 4.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

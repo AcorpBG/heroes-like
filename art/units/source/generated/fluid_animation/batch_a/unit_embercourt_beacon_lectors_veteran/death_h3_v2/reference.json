@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_embercourt_beacon_lectors_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/idle_v1.png",
+      "source_sha256": "7dc98216497cd713bf26e1f3f88651864be69205a9276e38b55585eee8876468",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "6cef3fda31614e5a01da695dd1ffa79598429530f28cc38f8d61e9afeb2c4b47"
+    },
+    {
+      "frame": "death_42",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/death_v1.png",
+      "source_sha256": "6d6a577dc00bd7c13b439db49edfcb1d6e2944a083e3f306fc578ed12400ab7f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c5597c479c500199fdadb51a760081b171f1e07dd0eb5a85894ad7c5490c7626"
+    },
+    {
+      "frame": "death_44",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/death_v1.png",
+      "source_sha256": "6d6a577dc00bd7c13b439db49edfcb1d6e2944a083e3f306fc578ed12400ab7f",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "957896a8138fcbd683dbfee9c7735f8b1dad2d3747bf7807ec13a86c3718df2b"
+    },
+    {
+      "frame": "death_47",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/death_v1.png",
+      "source_sha256": "6d6a577dc00bd7c13b439db49edfcb1d6e2944a083e3f306fc578ed12400ab7f",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "e8ebdc2065c0b1c443db0c858c3039f40fb14e6681dabb45b596c65edf71e669"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    549,
+    563
+  ],
+  "output_scale": 0.48,
+  "free_pixels_left_top_right_bottom": [
+    126,
+    60,
+    158,
+    59
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_embercourt_beacon_lectors_veteran",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    549,
+    563
+  ],
+  "scale": 0.48,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101559,
+  "references": [
+    "idle_0",
+    "ranged_19",
+    "ranged_20"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      58,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original elderly priest, the Dawnwrit Precentor, facing screen right in elevated three-quarter view. Keep the old man's grey hair and trimmed white beard, the short round bronze crenellated crown with orange slits, the ivory full-length robe with burgundy lining and wide sleeves, the long red and gold embroidered front stole, the brass belt and medallions and dark brown boots. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE tall dark staff with bronze fittings topped by an elongated caged lantern glowing orange; the staff is a little taller than the man. The screen-RIGHT hand holds ONE open brown book with gold trim on its palm. Preserve the staff length, the lantern, the book, the robes and the elderly proportions. A ranged rebuke toward screen right. He raises the open book and reads from it, then lunges forward and thrusts the staff out diagonally toward screen right, holds the pose briefly, then draws back upright into the original stance. The staff and book stay in his hands. Only the body moves; nothing else appears in the frame. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full crown, staff, lantern, book, robe and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic effects, particles or extra limbs; the lantern keeps only its small steady glow inside the cage. Articulate joints naturally with physical planted-foot support; do not morph the equipment. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour.",
+  "protected_foreground_chroma": 8,
+  "edge_threshold": 7,
+  "palette_measurement": {
+    "bluest_opaque": 6.0,
+    "blue_minus_green_p999": 1.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

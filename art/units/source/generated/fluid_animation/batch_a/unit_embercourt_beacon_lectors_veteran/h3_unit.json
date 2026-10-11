@@ -156,6 +156,77 @@
       ],
       "last": 1,
       "action": "Collapse continuously from standing: the old priest staggers, sinks onto his knees leaning on the staff, then the staff tips over and he falls forward onto the ground, finishing lying motionless face down with the crowned head at screen left and the boots at screen right, the staff lying on the ground beyond his head and the book on the ground beside him. No recovery, no floating equipment and no disappearing body."
+    },
+    "idle_h3_v2": {
+      "clip": "idle",
+      "references": [
+        "idle_0",
+        "idle_3"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A calm, devout idle that loops. The old priest breathes slowly, lifts the open book a little higher and reads, his head nodding slightly, while the staff hand shifts its grip on the upright staff, then everything returns smoothly to the original stance. Both boots stay planted; the robe and stole stir gently. No walking and no attack. Only the body moves; nothing else appears in the frame."
+    },
+    "ranged_h3_v2": {
+      "clip": "ranged",
+      "references": [
+        "idle_0",
+        "ranged_19",
+        "ranged_20"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          58,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "A ranged rebuke toward screen right. He raises the open book and reads from it, then lunges forward and thrusts the staff out diagonally toward screen right, holds the pose briefly, then draws back upright into the original stance. The staff and book stay in his hands. Only the body moves; nothing else appears in the frame."
+    },
+    "death_h3_v2": {
+      "clip": "death",
+      "references": [
+        "idle_0",
+        "death_42",
+        "death_44",
+        "death_47"
+      ],
+      "guides": [
+        [
+          36,
+          1
+        ],
+        [
+          64,
+          2
+        ]
+      ],
+      "last": 3,
+      "action": "Collapse continuously from standing: the old priest staggers, sinks onto his knees leaning on the staff, then slumps sideways toward screen left as the staff tips over to screen left, slides down onto his side and settles face down on the ground with the crowned head at screen left and the boots at screen right, the staff lying beyond his head and the book beside him. He never turns onto his back. No recovery, no floating equipment and no disappearing body. Only the body moves; nothing else appears in the frame."
+    },
+    "idle_h3_v3": {
+      "clip": "idle",
+      "references": [
+        "idle_0",
+        "idle_5"
+      ],
+      "guides": [
+        [
+          62,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A calm, devout idle that loops. The old priest breathes slowly, his chest rising and falling, glances down at the open book and back up with a slight nod, and the staff hand shifts its grip on the upright staff; the book stays at chest height. Then everything returns smoothly to the original stance. Both boots stay planted; the robe and stole stir gently. No walking and no attack. Only the body moves; nothing else appears in the frame."
     }
   }
 }

@@ -1,0 +1,46 @@
+{
+  "unit_id": "unit_embercourt_beaconline_writguard_veteran",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    370,
+    501
+  ],
+  "scale": 0.51,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101606,
+  "references": [
+    "idle_0",
+    "death_39"
+  ],
+  "guides": [
+    [
+      90,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "ONE original stocky armoured guard, the Lanternwall Warden, facing screen right in elevated three-quarter view. Keep the flat-topped bronze greathelm with a narrow dark slit visor and vertical vents, heavy weathered bronze shoulder, arm and leg plates over black chainmail, the long burgundy and black tabard with a cream trident emblem and gold trim, brown belts and dark armoured boots. No face is visible. Exactly two arms, two hands and two legs. The screen-LEFT hand holds ONE long dark spear with a silver leaf blade and a narrow ivory and gold pennon hanging beneath the blade; the screen-RIGHT arm carries ONE tall rectangular black and steel tower shield with a bronze riveted border, a shallow pointed top and ONE large caged lantern glowing orange mounted on its front. Preserve the spear length, the pennon, the shield, the lantern and the stocky adult proportions. Collapse continuously from standing: the knees buckle onto the ground and the body slumps behind the shield, then he falls forward onto his front, finishing lying motionless face down with the helmet at screen right and the boots at screen left, the lantern shield lying beside his head and the spear with its pennon lying on the ground. No recovery, no floating equipment and no disappearing body. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full helmet, spear, pennon, shield, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic effects, particles or extra limbs; the lantern keeps only its small steady glow inside the cage. Articulate joints naturally with physical planted-foot support; do not morph the equipment. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour.",
+  "protected_foreground_chroma": 7,
+  "edge_threshold": 9,
+  "palette_measurement": {
+    "bluest_opaque": 5.0,
+    "blue_minus_green_p999": 3.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

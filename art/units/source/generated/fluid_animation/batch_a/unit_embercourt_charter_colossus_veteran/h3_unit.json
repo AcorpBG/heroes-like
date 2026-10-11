@@ -136,6 +136,56 @@
       ],
       "last": 1,
       "action": "Collapse continuously from standing: the stone knees buckle, the massive body sinks down onto the knees, then pitches forward and falls flat onto the ground, finishing lying motionless face down with the shoulder towers toward screen left, the free arm stretched out on the ground and the kite shield lying flat at screen right. The core's glow dims. No recovery, no breaking apart, no floating parts and no disappearing body."
+    },
+    "defend_h3_v2": {
+      "clip": "defend",
+      "references": [
+        "idle_0",
+        "defend_22",
+        "defend_23"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ]
+      ],
+      "last": 2,
+      "action": "Slowly and heavily bring the kite shield across in front of the body while the stone knees bend step by step, lowering the massive body into a crouch behind the shield with the free fist braced behind it, then hold the low covered guard on both planted feet. No attack and no return to the relaxed stance. Only the body moves; nothing else appears in the frame."
+    },
+    "cast_h3_v2": {
+      "clip": "cast",
+      "references": [
+        "idle_0",
+        "cast_28"
+      ],
+      "guides": [
+        [
+          44,
+          1
+        ],
+        [
+          70,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "A commanding physical gesture. Slowly raise the free stone hand high beside the shoulder towers with the palm open toward screen right, hold it there briefly while the shield stays in front, then slowly lower the arm back to the original stance. No spell, glow or aura. Only the body moves; nothing else appears in the frame."
+    },
+    "death_h3_v2": {
+      "clip": "death",
+      "references": [
+        "idle_0",
+        "death_39"
+      ],
+      "guides": [
+        [
+          90,
+          1
+        ]
+      ],
+      "last": 1,
+      "action": "Collapse continuously from standing: the stone knees buckle, the massive body sinks down onto the knees, then slowly tips forward like a toppling statue, the free arm reaching down to the ground first, and settles flat, finishing lying motionless face down with the shoulder towers toward screen left, the free arm stretched out on the ground and the kite shield lying flat at screen right. No recovery, no breaking apart, no floating parts and no disappearing body. Only the body moves; nothing else appears in the frame."
     }
   }
 }

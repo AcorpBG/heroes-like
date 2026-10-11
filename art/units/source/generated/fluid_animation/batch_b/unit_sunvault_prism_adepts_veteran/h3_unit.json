@@ -1,7 +1,7 @@
 {
   "unit_id": "unit_sunvault_prism_adepts_veteran",
   "identity": "ONE original tall slim robed conjurer, the Lattice Conjurer veteran, facing screen right in elevated three-quarter view. Keep the layered ivory, navy and gold robes with long hanging panels, the face completely hidden in darkness inside a tall pointed prismatic blue-violet mitre helmet with a delicate gold geometric frame and small hanging diamond crystals, gold gauntlets over black gloves and pointed dark navy boots. Exactly two arms, two hands and two legs. Both hands hold ONE long dark staff diagonally across the body, a small diamond pommel at the lower screen-left end and a large open gold geometric cage around a blue-violet crystal at the upper screen-right end with hanging diamond pendants. Preserve the full staff, the mitre helmet, the hidden face and the slim adult proportions.",
-  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep both ends of the staff, the mitre, the robes, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, beams, projectiles, sparks, motion trails, particles or extra limbs; the crystals keep only their steady glow, and only the caged crystal may brighten where the action says so. Articulate joints naturally with physical planted-foot support; do not morph the staff.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep both ends of the staff, the mitre, the robes, limbs and boots within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, beams, projectiles, sparks, motion trails, particles or extra limbs; the crystals keep only their steady glow, and only the caged crystal may brighten where the action says so. Articulate joints naturally with physical planted-foot support; do not morph the staff.",
   "canvas": [
     960,
     640
@@ -9,8 +9,8 @@
   "scale": 0.45,
   "key_rgb": [
     0,
-    0,
-    255
+    255,
+    0
   ],
   "seed": 2026103150,
   "takes": {
@@ -90,7 +90,7 @@
         ]
       ],
       "last": 0,
-      "action": "Cast ONE bolt toward screen right. The conjurer braces and draws the staff back, then thrusts it forward level with the caged crystal pointing at screen right as the crystal inside the cage flares bright for a moment, holds, then the glow fades back to its steady light, the staff lowers and the conjurer settles into the original stance. The light stays inside the cage: no beam, bolt or projectile leaves the staff."
+      "action": "Make ONE ranged thrust toward screen right. The conjurer braces and draws the staff back, then thrusts it forward level with the caged crystal pointing at screen right, holds, then the staff lowers and the conjurer settles into the original stance. Only the body moves; nothing else appears in the frame."
     },
     "hit_h3_v1": {
       "clip": "hit",

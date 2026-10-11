@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_embercourt_beaconline_writguard_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/idle_v1.png",
+      "source_sha256": "6dc493af2ea6c282ca9c9d87127e0166f61d1da49e601542b39cb04b977766d7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "cfa5f6359d4366ef661463ba5065ede52b26a2776d1d933862b58fbf2659f911"
+    },
+    {
+      "frame": "death_39",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/death_v1.png",
+      "source_sha256": "c9cc8e2e984d676789637eedbddbee94d4c4849e5a876ea94d1702660de43d06",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "45c0b5dce9f01593299df7d218ca0512f44f03e4bf82b8c5a0be7a83f66c9bb9"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    370,
+    501
+  ],
+  "output_scale": 0.51,
+  "free_pixels_left_top_right_bottom": [
+    99,
+    60,
+    99,
+    60
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

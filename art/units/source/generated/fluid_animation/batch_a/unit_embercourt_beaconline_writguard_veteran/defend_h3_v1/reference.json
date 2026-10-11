@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_embercourt_beaconline_writguard_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/idle_v1.png",
+      "source_sha256": "6dc493af2ea6c282ca9c9d87127e0166f61d1da49e601542b39cb04b977766d7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "cfa5f6359d4366ef661463ba5065ede52b26a2776d1d933862b58fbf2659f911"
+    },
+    {
+      "frame": "defend_21",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/reactions_v1.png",
+      "source_sha256": "21ada7042b8fbc758a22035aaceb9ba68f3e49438bd81711bc9e56b94b243fb5",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "538996261c7399a3bbed00aaa9c6f3e3116f4c99db035faf839e7d35a144f5ec"
+    },
+    {
+      "frame": "defend_23",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/reactions_v1.png",
+      "source_sha256": "21ada7042b8fbc758a22035aaceb9ba68f3e49438bd81711bc9e56b94b243fb5",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "bb26080c7e5e4ddb35288443ce3b6ebed04e702f725aaab78391d063051daed0"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    370,
+    501
+  ],
+  "output_scale": 0.51,
+  "free_pixels_left_top_right_bottom": [
+    99,
+    60,
+    99,
+    60
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

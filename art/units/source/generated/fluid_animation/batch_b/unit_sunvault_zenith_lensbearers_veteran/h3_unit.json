@@ -1,7 +1,7 @@
 {
   "unit_id": "unit_sunvault_zenith_lensbearers_veteran",
   "identity": "ONE original tall armoured humanoid, the Horizon Arbiter veteran, facing screen right in elevated three-quarter view. Keep the ivory and gold streamlined beaked helmet with a horizontal blue visor, the black faceless undersuit at the neck, the white and gold shoulder and forearm plates, golden greaves and boots, the long split ivory coat over a dark blue star-chart tabard with gold linework, and the lavender-blue cape with gold trim. A LARGE round blue lens in a spiked brass ring is fixed on a harness behind the screen-left shoulder, with a gold orbital arc above the helmet; it never detaches. Exactly two arms, two black-gloved hands and two legs. Both hands hold ONE long gold staff angled toward screen right, tipped with ONE large round blue lens in a brass ring and a dangling faceted blue crystal below it. Preserve the back lens, the staff lens, the helmet and the tall adult proportions.",
-  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full staff and its lens, the back lens, the arc, limbs and boots within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, beams, projectiles, sparks, motion trails, particles or extra limbs; the lenses keep only their steady glow, and only the staff lens may brighten where the action says so. Articulate joints naturally with physical planted-foot support; do not morph the staff or lenses.",
+  "plate": "Locked orthographic camera, fixed anatomical scale and centred body. Keep the full staff and its lens, the back lens, the arc, limbs and boots within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, additional weapons, beams, projectiles, sparks, motion trails, particles or extra limbs; the lenses keep only their steady glow, and only the staff lens may brighten where the action says so. Articulate joints naturally with physical planted-foot support; do not morph the staff or lenses.",
   "canvas": [
     960,
     640
@@ -9,8 +9,8 @@
   "scale": 0.5,
   "key_rgb": [
     0,
-    0,
-    255
+    255,
+    0
   ],
   "seed": 2026103350,
   "takes": {
@@ -90,7 +90,7 @@
         ]
       ],
       "last": 0,
-      "action": "Focus ONE burst of light toward screen right. The arbiter braces and levels the staff at screen right, sighting along it, as the staff lens flares bright for a moment, holds, then the glow fades back to its steady light, the staff lowers and the arbiter settles into the original stance. The light stays inside the lens: no beam, ray or projectile leaves it."
+      "action": "Make ONE ranged aim toward screen right. The arbiter braces and levels the staff at screen right, sighting along it, holds, then the staff lowers and the arbiter settles into the original stance. Only the body moves; nothing else appears in the frame."
     },
     "hit_h3_v1": {
       "clip": "hit",

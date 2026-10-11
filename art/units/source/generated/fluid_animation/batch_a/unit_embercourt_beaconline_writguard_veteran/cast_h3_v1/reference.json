@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_embercourt_beaconline_writguard_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/idle_v1.png",
+      "source_sha256": "6dc493af2ea6c282ca9c9d87127e0166f61d1da49e601542b39cb04b977766d7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "cfa5f6359d4366ef661463ba5065ede52b26a2776d1d933862b58fbf2659f911"
+    },
+    {
+      "frame": "cast_27",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/cast_v1.png",
+      "source_sha256": "9baec34db14f3671be45d007d163cfc6517e6146c167b4346648cc98be559509",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "1879d108706298c1179e939b61646dd4534d91e9b7ac9cee7c424e5a82df9061"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    370,
+    501
+  ],
+  "output_scale": 0.51,
+  "free_pixels_left_top_right_bottom": [
+    99,
+    60,
+    99,
+    60
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

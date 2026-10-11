@@ -136,6 +136,26 @@
       ],
       "last": 1,
       "action": "Collapse continuously from standing: the knees buckle onto the ground and the body slumps behind the shield, then he falls forward onto his front, finishing lying motionless face down with the helmet at screen right and the boots at screen left, the lantern shield lying beside his head and the spear with its pennon lying on the ground. No recovery, no floating equipment and no disappearing body."
+    },
+    "attack_h3_v2": {
+      "clip": "attack",
+      "references": [
+        "idle_0",
+        "attack_10",
+        "attack_12"
+      ],
+      "guides": [
+        [
+          30,
+          1
+        ],
+        [
+          54,
+          2
+        ]
+      ],
+      "last": 0,
+      "action": "Make ONE powerful spear thrust toward screen right. Swing the spear down from upright until it is level at the hip with the blade pointing at screen right and crouch behind the shield, then lunge forward on the front leg and drive the spear straight out to full reach past the shield, the pennon swinging beneath it, then at once draw it back, step the front foot back and raise the spear upright into the original stance. One thrust only; the shield stays on the screen-right arm. No throw. Only the body moves; nothing else appears in the frame."
     }
   }
 }

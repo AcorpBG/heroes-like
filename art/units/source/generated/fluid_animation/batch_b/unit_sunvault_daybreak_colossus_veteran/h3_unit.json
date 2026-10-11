@@ -1,7 +1,7 @@
 {
   "unit_id": "unit_sunvault_daybreak_colossus_veteran",
   "identity": "ONE original massive stocky bipedal construct, the Daybreak Colossus veteran, facing screen right in elevated three-quarter view. Keep the ivory-white ceramic and antique-gold armour with dark bronze mechanical joints, the small dark face under a pointed angular gold helmet, the broad winglike white and gold shoulder pauldrons with hanging deep navy-blue panels, the heavy white and gold forearm shells with articulated bronze fingers, the blue crystal inserts on wrists, thighs and shins, the broad segmented armoured feet, the ONE round blue chest aperture with thin gold radial iris spokes, the hanging navy and gold hip plate, and ONE gold mechanical halo ring above and behind the head carrying several oval blue lens medallions. Exactly two arms and two legs, no weapons or shields. Preserve the halo, the chest aperture and the massive proportions.",
-  "plate": "Locked orthographic camera, fixed scale and centred body. Keep the full halo, both hands and both feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, beams, projectiles, sparks, motion trails, particles, weapons or extra limbs; the crystals keep only their steady glow, and only the chest aperture may brighten where the action says so. The halo stays complete and attached behind the head; the armour shells stay rigid and never morph.",
+  "plate": "Locked orthographic camera, fixed scale and centred body. Keep the full halo, both hands and both feet within frame. The background is perfectly flat saturated GREEN throughout, no gradients or changes of hue. The green background stays the same flat saturated green in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, beams, projectiles, sparks, motion trails, particles, weapons or extra limbs; the crystals keep only their steady glow, and only the chest aperture may brighten where the action says so. The halo stays complete and attached behind the head; the armour shells stay rigid and never morph.",
   "canvas": [
     960,
     640
@@ -9,8 +9,8 @@
   "scale": 0.44,
   "key_rgb": [
     0,
-    0,
-    255
+    255,
+    0
   ],
   "seed": 2026102950,
   "takes": {
@@ -90,7 +90,7 @@
         ]
       ],
       "last": 0,
-      "action": "Release ONE burst of light from the chest. The colossus braces its legs and draws both hands in beside the chest aperture, then throws the arms wide open and pushes the chest forward toward screen right as the round chest aperture flares bright for a moment, holds, then the glow fades back to its steady blue, the arms lower and it settles into the original stance. The light stays inside the aperture: no beam, ray or projectile leaves the body."
+      "action": "Make ONE ranged push toward screen right. The colossus braces its legs and draws both hands in beside the chest aperture, then throws the arms wide open and pushes the chest forward toward screen right, holds, then the arms lower and it settles into the original stance. Only the body moves; nothing else appears in the frame."
     },
     "hit_h3_v1": {
       "clip": "hit",
