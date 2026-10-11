@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_embercourt_charter_colossus_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/idle_v1.png",
+      "source_sha256": "df260515d888cd5596a95e6f25074988a4ff22f772b3ca0b9b410827a19f2075",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "46ecde85a4bee3733523d0794020482d1c71faf42bf8efa1c22b89b1eee2e665"
+    },
+    {
+      "frame": "defend_22",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/reactions_v1.png",
+      "source_sha256": "8071028bf396be7cc18db7728702a8942e8f5fe14d9e613b3a6fdabaf3c8f633",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "196f7e5ab59841fb89f19d0205516ff28bd8914a27c2a014be3778e8bd7ff5c8"
+    },
+    {
+      "frame": "defend_23",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/reactions_v1.png",
+      "source_sha256": "8071028bf396be7cc18db7728702a8942e8f5fe14d9e613b3a6fdabaf3c8f633",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "5e828f2b9dbed4026a98a4941525e40c7bf10e06575b601c778919cab21a7fee"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    482,
+    570
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    141,
+    66,
+    141,
+    67
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

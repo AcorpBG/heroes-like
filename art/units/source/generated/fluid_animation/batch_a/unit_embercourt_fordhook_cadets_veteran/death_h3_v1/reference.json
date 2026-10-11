@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_embercourt_fordhook_cadets_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/idle_v1.png",
+      "source_sha256": "5b91d615ee7779771f539559cd9a96296acab98088d557abb8c0b223a83c3267",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "dcabc4823ca3110cc13d5ba925848d39baf6f1e6a3d718d0dbddcc678da88ed5"
+    },
+    {
+      "frame": "death_39",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/death_v1.png",
+      "source_sha256": "71b37f7ba841356bd676aaeb2e2f2288df0b9b6df2ee738e00cb2580dbefd54f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "adb38a96c9908ca6aff1edba3c8d9142df688d3505265bea2a54625df74de42d"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    440,
+    556
+  ],
+  "output_scale": 0.56,
+  "free_pixels_left_top_right_bottom": [
+    213,
+    49,
+    214,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

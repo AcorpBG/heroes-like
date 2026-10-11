@@ -136,6 +136,29 @@
       ],
       "last": 1,
       "action": "Collapse continuously from standing: he doubles over, sinks onto his knees with the hooks dragging on the ground, then topples onto his side and lies stretched out motionless with the head at screen left and the boots at screen right, both hooked batons and the chain lying on the ground in front of him. No recovery, no floating equipment and no disappearing body."
+    },
+    "move_h3_v2": {
+      "clip": "move",
+      "references": [
+        "move_40",
+        "move_44"
+      ],
+      "guides": [
+        [
+          31,
+          1
+        ],
+        [
+          62,
+          0
+        ],
+        [
+          93,
+          1
+        ]
+      ],
+      "last": 0,
+      "action": "Walk in place through two complete reciprocal cycles. Alternate near and far legs through forward contact, weight loading, passing and lift; both knees articulate and each boot alternates taking weight and swinging. The torso stays centred for engine-driven travel. Both hooked batons are held low at the sides with the chain hanging between them; the coat tails swing with the legs. Finish in the original gait phase. Only the body moves; nothing else appears in the frame."
     }
   }
 }

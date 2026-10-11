@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_embercourt_charter_colossus_veteran",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    482,
+    570
+  ],
+  "scale": 0.46,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026101652,
+  "references": [
+    "idle_0",
+    "attack_10",
+    "attack_12"
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original massive stone construct, the Covenant Bastion, facing screen right in elevated three-quarter view. Keep the broad stocky articulated grey weathered stone golem with antique brass and gold edging and black mechanical elbow, hip and knee joints. It is HEADLESS: no head, neck, face or helmet; tall upright golden stone ridges like organ pipes rise from the centre of the shoulders, with one small cylindrical lantern tower glowing orange on top of each shoulder. ONE round glowing orange-gold core sits in the centre of the chest above brass rib-like trim. Two thick stone legs end in massive two-toed block feet. Exactly two arms and two legs. The screen-LEFT arm ends in a large segmented stone hand used as a bare fist; the screen-RIGHT arm bears ONE long pointed charcoal-grey kite shield with gold linework and a round gold boss. Preserve the headless shoulders, lantern towers, core, shield and massive proportions. Make ONE crushing punch toward screen right. Draw the free stone fist back and up beside the shoulder while the knees load, then lunge forward on the front leg and drive the fist straight out to full reach at screen right, then pull it back and settle into the original stance. One punch only; the shield stays on the screen-right arm. Locked orthographic camera, fixed anatomical scale and centred body. Keep the full shoulder towers, shield, arms and feet within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. The blue background stays the same flat saturated blue in every frame and never darkens, flashes or changes colour. No scenery, floor shadow, camera motion, zoom, weapons, magic effects, particles, head or extra limbs; the core and lanterns keep only their small steady glow. Articulate joints naturally with physical planted-foot support; do not morph the stone body or shield.",
+  "protected_foreground_chroma": 12,
+  "edge_threshold": 10,
+  "palette_measurement": {
+    "bluest_opaque": 10.0,
+    "blue_minus_green_p999": 4.0,
+    "rule": "opaque guide interiors (alpha>240, eroded 3 px)"
+  },
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "frames": 124,
+  "fps": 24
+}

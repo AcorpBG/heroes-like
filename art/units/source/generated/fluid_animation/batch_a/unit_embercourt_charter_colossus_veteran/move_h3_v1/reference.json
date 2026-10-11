@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_embercourt_charter_colossus_veteran",
+  "guides": [
+    {
+      "frame": "move_40",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/far_corrections_v2.png",
+      "source_sha256": "fb0e6ace963c1aaf8852be958787ca0a29f4d55525283e9d2754847b284de5ca",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d6a8b1bff8f8fd467f4d4c069201d78d6b642b2fe0972b2e99755e11086dc6fc"
+    },
+    {
+      "frame": "move_44",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/move_far_v1.png",
+      "source_sha256": "ae428ae2ee27b49a183261b04b28e9c8f9def0f1bbb12133bcbd63988e96ce24",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "7a4f3611b9046777d8f0ade5caa39280f9caa9a85c111b89ad29931ddfa826fe"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    482,
+    570
+  ],
+  "output_scale": 0.46,
+  "free_pixels_left_top_right_bottom": [
+    141,
+    66,
+    141,
+    67
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,42 @@
+{
+  "unit_id": "unit_embercourt_fordhook_cadets_veteran",
+  "guides": [
+    {
+      "frame": "idle_0",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/idle_v1.png",
+      "source_sha256": "5b91d615ee7779771f539559cd9a96296acab98088d557abb8c0b223a83c3267",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "dcabc4823ca3110cc13d5ba925848d39baf6f1e6a3d718d0dbddcc678da88ed5"
+    },
+    {
+      "frame": "attack_10",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/attack_v1.png",
+      "source_sha256": "6cc27e3665d88da78d3ffaa86ba0bd01f01257ed83d6b636a38ac6a497097103",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "7f0e84df22457675145a4863d2171b799ad7487df9e4f0a8e80f9aec58a47efb"
+    },
+    {
+      "frame": "attack_12",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/attack_v1.png",
+      "source_sha256": "6cc27e3665d88da78d3ffaa86ba0bd01f01257ed83d6b636a38ac6a497097103",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "b905d995040d6b04451070a9b33e49e8d3c97e8db35d2f21744aa62d14739710"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    440,
+    556
+  ],
+  "output_scale": 0.56,
+  "free_pixels_left_top_right_bottom": [
+    213,
+    49,
+    214,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}

@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_embercourt_fordhook_cadets_veteran",
+  "guides": [
+    {
+      "frame": "move_40",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/move_far_v1.png",
+      "source_sha256": "aad3127e501207f326a3c1f1f1ae8f1eaffff862ffbf0b40a48fdf3b9998fcec",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "597e820863c6c93756a5e76970d0fbdcb442811579e60d2c1c04c683ac43709e"
+    },
+    {
+      "frame": "move_44",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/move_near_v1.png",
+      "source_sha256": "cec27d6260aff5142db6b1df2741df38209d44af58025c5b70c76f71f64e3483",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "adedbcf9b22fdde13af2fa8c52b3b07b3ad308eafc8f7ee7c47f52b1b0ff3c4b"
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    440,
+    556
+  ],
+  "output_scale": 0.56,
+  "free_pixels_left_top_right_bottom": [
+    213,
+    49,
+    214,
+    50
+  ],
+  "rule": "Accepted painted poses at their accepted anchor and scale, divided by the fixed video scale."
+}
